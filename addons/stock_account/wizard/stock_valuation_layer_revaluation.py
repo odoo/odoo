@@ -67,30 +67,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         product_id = self.product_id.with_company(self.company_id)
 
-        remaining_svls = self.env['stock.valuation.layer'].search([
-            ('product_id', '=', product_id.id),
-            ('remaining_qty', '>', 0),
-            ('company_id', '=', self.company_id.id),
-        ])
+        remaining_svls = self._get_revaluation_remaining_svls()
 
         # Create a manual stock valuation layer
-        if self.reason:
-            description = _("Manual Stock Valuation: %s.", self.reason)
-        else:
-            description = _("Manual Stock Valuation: No Reason Given.")
-        if product_id.categ_id.property_cost_method == 'average':
-            description += _(
-                " Product cost updated from %(previous)s to %(new_cost)s.",
-                previous=product_id.standard_price,
-                new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
-            )
-        revaluation_svl_vals = {
-            'company_id': self.company_id.id,
-            'product_id': product_id.id,
-            'description': description,
-            'value': self.added_value,
-            'quantity': 0,
-        }
+        revaluation_svl_vals = self._get_revaluation_svl_vals()
 
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
         remaining_value = self.added_value
@@ -162,3 +142,34 @@ class StockValuationLayerRevaluation(models.TransientModel):
         account_move._post()
 
         return True
+
+    def _get_revaluation_remaining_svls_domain(self):
+        return [
+            ('product_id', '=', self.product_id.id),
+            ('remaining_qty', '>', 0),
+            ('company_id', '=', self.company_id.id),
+        ]
+
+    def _get_revaluation_remaining_svls(self):
+        domain = self._get_revaluation_remaining_svls_domain()
+        return self.env['stock.valuation.layer'].search(domain)
+
+    def _get_revaluation_svl_vals(self):
+        product_id = self.product_id.with_company(self.company_id)
+        if self.reason:
+            description = _("Manual Stock Valuation: %s.", self.reason)
+        else:
+            description = _("Manual Stock Valuation: No Reason Given.")
+        if product_id.categ_id.property_cost_method == 'average':
+            description += _(
+                " Product cost updated from %(previous)s to %(new_cost)s.",
+                previous=product_id.standard_price,
+                new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
+            )
+        return {
+            'company_id': self.company_id.id,
+            'product_id': self.product_id.id,
+            'description': description,
+            'value': self.added_value,
+            'quantity': 0,
+        }
