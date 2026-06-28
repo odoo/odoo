@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_product_shipper_delivery" model="product.product">
+            <field name="name">Shipper Delivery</field>
+            <field name="default_code">Delivery_111</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+        <record id="delivery_carrier_shipper" model="delivery.carrier">
+            <field name="name">Shipper</field>
+            <field name="product_id" ref="delivery_shipper.product_product_shipper_delivery"/>
+            <field name="delivery_type">shipper</field>
+          </record>
+    </data>
+</odoo>

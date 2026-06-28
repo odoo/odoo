@@ -1,0 +1,45 @@
+<odoo>
+    <record id="view_shipper_rate_wizard_form" model="ir.ui.view">
+        <field name="name">shipper.rate.wizard.form</field>
+        <field name="model">shipper.rate.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="delivery_type" invisible="1"/>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="carrier_id"/>
+                            <field name="total_weight"/>
+                            <field name="weight_uom_name"/>
+                        </group>
+                        <group>
+                            <button 
+                                name="update_price" 
+                                type="object"
+                                invisible="delivery_type != 'shipper'">
+                                    Get rate
+                            </button>
+                        </group>
+                        
+                    </group>
+                    
+                    <field name="rate_line_ids" widget="one2many_list" mode="tree">
+                    <tree editable="bottom" delete="false" create="false">
+                        <field name="is_selected"/>
+                        <field name="carrier_name" readonly="True"/>
+                        <field name="service" readonly="True"/>
+                        <field name="final_price" readonly="True"/>
+                        <field name="delivery_time" readonly="True"/>
+                    </tree>
+                </field>
+                </sheet>
+                
+                
+                <footer>
+                    <button string="Apply" type="object" name="action_apply" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
