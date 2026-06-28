@@ -5,6 +5,7 @@
         <t t-if="callParticipantVideoView">
             <video class="o_CallParticipantVideo w-100 h-100 rounded-1 cursor-pointer"
                 t-attf-class="{{ className }}"
+                t-att-class="{o_CallParticipantVideo_mirrored: isVideoMirrored}"
                 playsinline="true"
                 autoplay="true"
                 muted="true"
