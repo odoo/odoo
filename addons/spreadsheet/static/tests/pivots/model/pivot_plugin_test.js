@@ -47,10 +47,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
             });
-            model.dispatch("SET_VALUE", {
-                xc: "C3",
-                text: `=-PIVOT("1","probability","bar","false","foo","2")`,
-            });
+            setCellContent(model, "C3", '=-PIVOT("1","probability","bar","false","foo","2")');
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
             model.dispatch("SELECT_PIVOT", { pivotId });
@@ -70,10 +67,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
             });
-            model.dispatch("SET_VALUE", {
-                xc: "C3",
-                text: `=3*PIVOT("1","probability","bar","false","foo","2")+2`,
-            });
+            setCellContent(model, "C3", '=3*PIVOT("1","probability","bar","false","foo","2")+2');
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
             model.dispatch("SELECT_PIVOT", { pivotId });
@@ -93,10 +87,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 <field name="probability" type="measure"/>
             </pivot>`,
             });
-            model.dispatch("SET_VALUE", {
-                xc: "C3",
-                text: `=SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))`,
-            });
+            setCellContent(
+                model,
+                "C3",
+                '=SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))'
+            );
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
             model.dispatch("SELECT_PIVOT", { pivotId });
@@ -130,10 +125,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                         <field name="probability" type="measure"/>
                     </pivot>`,
             });
-            model.dispatch("SET_VALUE", {
-                xc: "C3",
-                text: `=3*SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))+2*PIVOT("1","probability","bar","false","foo","2")`,
-            });
+            setCellContent(
+                model,
+                "C3",
+                '=3*SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))+2*PIVOT("1","probability","bar","false","foo","2")'
+            );
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
             model.dispatch("SELECT_PIVOT", { pivotId });
