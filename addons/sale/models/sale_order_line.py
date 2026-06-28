@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round
+from odoo.tools import float_is_zero, float_compare, float_round, groupby
 
 
 class SaleOrderLine(models.Model):
@@ -420,16 +420,19 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_pricelist_item_id(self):
-        for line in self:
-            if not line.product_id or line.display_type or not line.order_id.pricelist_id:
-                line.pricelist_item_id = False
-            else:
-                line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
-                    line.product_id,
-                    line.product_uom_qty or 1.0,
-                    uom=line.product_uom,
-                    date=line._get_order_date(),
-                )
+        no_item_lines = self.filtered(
+            lambda rec: not rec.product_id or rec.display_type or not rec.order_id.pricelist_id
+        )
+        other_lines = self - no_item_lines
+        no_item_lines.pricelist_item_id = False
+        for (order, uom, qty, date), lines in groupby(
+            other_lines,
+            lambda rec: (rec.order_id, rec.product_uom, rec.product_uom_qty, rec._get_order_date())):
+            pricelist = order.pricelist_id
+            products = self.env['product.product'].browse({line.product_id.id for line in lines})
+            pricerules = pricelist._compute_price_rule(products, qty, uom=uom, date=date)
+            for line in lines:
+                line.pricelist_item_id = pricerules.get(line.product_id.id, (False, False))[1]
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
