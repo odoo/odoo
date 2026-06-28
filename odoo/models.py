@@ -1510,6 +1510,17 @@ class BaseModel(metaclass=MetaModel):
         """
         res = self.search(domain, limit=limit, count=True)
         return res if isinstance(res, int) else len(res)
+    
+    def dict_to_domain(self, search_dict):
+        """ Convert dict to domain
+
+        :param search_dict: dict of fields and values
+        :return: domain
+        """
+        domain = []
+        for key, value in search_dict.items():
+            domain.append((key, '=', value))
+        return domain
 
     @api.model
     @api.returns('self',
@@ -1530,6 +1541,9 @@ class BaseModel(metaclass=MetaModel):
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: if user is not allowed to access requested information
         """
+        if isinstance(domain, dict):
+            domain = self.dict_to_domain(domain)
+
         res = self._search(domain, offset=offset, limit=limit, order=order, count=count)
         return res if count else self.browse(res)
 
