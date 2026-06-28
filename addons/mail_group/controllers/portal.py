@@ -292,6 +292,8 @@ class PortalMailGroup(http.Controller):
         """
         group_sudo, is_member, partner_id = self._group_subscription_get_group(group_id, email, token)
 
+        print(email)
+
         if not is_member:
             return 'is_not_member'
 
