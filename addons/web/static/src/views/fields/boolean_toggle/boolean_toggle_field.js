@@ -11,6 +11,11 @@ export class BooleanToggleField extends BooleanField {
         autosave: { type: Boolean, optional: true },
     };
 
+    get isReadonly() {
+        const { record, readonly } = this.props;
+        return record.model.config?.mode === 'readonly' || readonly;
+    }
+
     async onChange(newValue) {
         this.state.value = newValue;
         const changes = { [this.props.name]: newValue };
