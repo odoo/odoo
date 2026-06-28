@@ -5,9 +5,13 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook[last()]" position="inside">
-                <page string="Point of Sale" name="point_of_sale" invisible="1"/>
-            </xpath>
+            <form string="Account Journal" __validate__="1">
+                <field name="company_id" invisible="1"/>
+                <field name="bank_statements_source" invisible="1"/>
+                <!-- Add the missing code field here -->
+                <field name="code"/>
+                <!-- Existing fields and configurations -->
+            </form>
         </field>
     </record>
 </odoo>
