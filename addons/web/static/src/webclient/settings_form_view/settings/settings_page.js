@@ -1,6 +1,6 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, computed, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -52,12 +52,11 @@ export class SettingsPage extends Component {
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
-        onWillRender(() => {
-            this.selectedModule = this.props.modules.find(
-                (module) => module.key === this.state.selectedTab
-            );
-        });
     }
+
+    selectedModule = computed(() =>
+        this.props.modules.find((module) => module.key === this.state.selectedTab)
+    );
 
     get invalidApps() {
         const invalidApps = [];
