@@ -443,3 +443,47 @@ class TestFrenchLeaves(TransactionCase):
             leave_1.date_to)
 
         self.assertEqual(work_hours_data[0][1], 7.50)
+
+    def test_extra_hours_leave_different_working_hours(self):
+        company_calendar = self.env['resource.calendar'].create({
+            'name': 'Company Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Extra hours',
+            'request_unit': 'hour',
+            'requires_allocation': 'no'
+        })
+        self.company.write({
+            'resource_calendar_id': company_calendar.id,
+            'l10n_fr_reference_leave_type': leave_type.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': leave_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2018-02-05',
+            'request_date_to': '2018-02-05',
+            'request_hour_from': '8',
+            'request_hour_to': '9',
+            'request_unit_hours': True,
+        })
+        self.assertEqual(leave.number_of_hours, 1.0)
