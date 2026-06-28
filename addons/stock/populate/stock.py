@@ -227,6 +227,9 @@ class StockWarehouseOrderpoint(models.Model):
         }
 
         all_product_ids = set(self.env.registry.populated_models['product.product'])
+        all_products = self.env['product.product'].browse(all_product_ids)
+        all_storable_products = all_products.filtered(lambda p: p.type == 'product')
+        all_storable_product_ids = set(all_storable_products.ids)
 
         supplierinfos = self.env['product.supplierinfo'].browse(self.env.registry.populated_models['product.supplierinfo'])
 
@@ -238,7 +241,7 @@ class StockWarehouseOrderpoint(models.Model):
             if products and products[0].type == 'product':
                 valid_product[suplierinfo.company_id.id] |= set(products.ids)
         valid_product = {company_id: product_ids | valid_product[False] for company_id, product_ids in valid_product.items() if company_id}
-        invalid_product = {company_id: list(all_product_ids - product_ids) for company_id, product_ids in valid_product.items() if company_id}
+        invalid_product = {company_id: list(all_storable_product_ids - product_ids) for company_id, product_ids in valid_product.items() if company_id}
         valid_product = {company_id: list(product_ids) for company_id, product_ids in valid_product.items()}
 
         def get_company_id(values, counter, random):

@@ -28,3 +28,10 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     on_time_rate_perc = fields.Float(string="OTD", related="order_id.on_time_rate_perc")
+
+    @api.model
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
+        res = super()._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
+        if supplier.purchase_requisition_line_id.product_description_variants:
+            res['name'] += '\n' + supplier.purchase_requisition_line_id.product_description_variants
+        return res
