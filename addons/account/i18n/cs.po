@@ -9,13 +9,14 @@
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 03:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 01:31+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-3/account/"
 "cs/>\n"
 "Language: cs\n"
@@ -560,12 +561,11 @@ msgstr ""
 "            dobropis\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (s referenčním číslem: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (s referenčním číslem: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
-"        na částku <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        na částku <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        V případě dotazu nás prosím neváhejte kontaktovat.\n"
@@ -573,8 +573,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -666,12 +666,11 @@ msgstr ""
 "            faktura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (s referenčním číslem: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (s referenčním číslem: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
-"        na částku <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        na částku <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Tato faktura je již uhrazena\n"
@@ -701,8 +700,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -738,15 +737,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený/á <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        Vážený/á <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        Děkujeme za vaši platbu.\n"
 "        Zde je vaše potvrzení platby <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "na částku\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> od <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        V případě dotazu nás prosím neváhejte kontaktovat.\n"
 "        <br/><br/>\n"
@@ -755,8 +754,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1466,7 +1465,6 @@ msgstr "<strong>Typ:</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
-#, fuzzy
 msgid ""
 "<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
 "<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in "
@@ -7243,8 +7241,8 @@ msgstr "Sleva za předčasnou platbu ve výši"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Platební skonto: <b>%(amount)s</b> v případě zaplacení před datem<b>%"
-"(date)s</b>"
+"Platební skonto: <b>%(amount)s</b> v případě zaplacení před datem<b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7370,7 +7368,6 @@ msgstr "Zadejte popis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
 msgid "Enter an email to get notified"
 msgstr "Zadejte e-mailovou adresu, abyste dostávali oznámení"
 
@@ -8162,7 +8159,6 @@ msgstr "Z účtů pohledávek z obchodního styku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__from_transaction_details
-#, fuzzy
 msgid "From Transaction Details"
 msgstr "Z podrobností transakce"
 
@@ -8898,8 +8894,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"Pokud prodáváte zboží a služby zákazníkům "
-"v                                       cizí zemi EU, musíte účtovat DPH na "
+"Pokud prodáváte zboží a služby zákazníkům v"
+"                                       cizí zemi EU, musíte účtovat DPH na "
 "základě dodací "
 "adresy.                                                                                                  "
 "Toto pravidlo platí bez ohledu na to, kde se nacházíte."
@@ -11437,7 +11433,6 @@ msgstr "U vybraných položek není k dispozici žádná akce."
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
-#, fuzzy
 msgid "No search more"
 msgstr "Přestaň hledat"
 
@@ -11795,8 +11790,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"Po instalaci nastavte v nastavení bankovního účtu „Bankovní napojení“ na "
-"„Import souboru“. Tím se přidá tlačítko pro import na dashboardu Účetnictví."
+"Po instalaci nastavte v nastavení bankovního účtu „Bankovní napojení“ na „"
+"Import souboru“. Tím se přidá tlačítko pro import na dashboardu Účetnictví."
 
 #. module: account
 #. odoo-javascript
@@ -11972,8 +11967,8 @@ msgid ""
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání e-"
 "mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
-"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
-"{{object.partner_id.lang}}."
+"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. {"
+"{object.partner_id.lang}}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13345,7 +13340,6 @@ msgstr "Přijmout peníze"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
-#, fuzzy
 msgid "Receive an email for incoming electronic invoices."
 msgstr "Nechte si zasílat e-maily s příchozími elektronickými fakturami."
 
@@ -13492,7 +13486,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Refresh currency rate to the invoice date"
 msgstr "Aktualizovat směnný kurz k datu faktury"
 
@@ -13756,7 +13749,7 @@ msgstr "Omezená auditní stopa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted Only"
-msgstr ""
+msgstr "Pouze s omezením"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__restrictive_audit_trail
@@ -14196,7 +14189,6 @@ msgstr "Vyhledat jméno nebo daňové identifikační číslo..."
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
-#, fuzzy
 msgid "Search a product"
 msgstr "Vyhledat produkt"
 
@@ -14595,8 +14587,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
-msgstr ""
-"Odškrtnutím pole aktivní skryjete štítek účtu, aniž byste jej odebrali."
+msgstr "Odškrtnutím pole aktivní skryjete štítek účtu, aniž byste jej odebrali."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -15070,7 +15061,6 @@ msgstr "Mezisoučet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
-#, fuzzy
 msgid "Successfully unsubscribed from invoice notifications"
 msgstr "Úspěšně jste se odhlásili z odběru oznámení o fakturách"
 
@@ -16221,7 +16211,6 @@ msgstr "Držitelem bankovního účtu tohoto deníku musí být společnost (%s)
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, fuzzy
 msgid ""
 "The incoming e-invoice notification email can only be set on purchase "
 "journals."
@@ -19627,7 +19616,6 @@ msgstr "faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
-#, fuzzy
 msgid "is a key action. Have you reviewed everything?"
 msgstr "je klíčová akce. Zkontrolovali jste vše?"
 
@@ -19896,8 +19884,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Faktura (číslo {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Faktura (číslo {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt

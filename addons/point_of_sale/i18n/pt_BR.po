@@ -8,13 +8,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-04-14 14:26+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"PO-Revision-Date: 2026-06-27 23:45+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s18-3/point_of_sale/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -264,13 +265,13 @@ msgstr ""
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Olá <t t-"
-"out=\"client_name\">Nome do cliente</t>,</t>\n"
+"                        <t t-if=\"client_name\">Olá <t t-out=\"client_name\">"
+"Nome do cliente</t>,</t>\n"
 "                        <t t-else=\"\">Olá,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Agradecemos por comprar da <t t-"
-"out=\"store_name\">Nome da loja</t>!</div>\n"
+"                    <div>Agradecemos por comprar da <t t-out=\"store_name\">"
+"Nome da loja</t>!</div>\n"
 "                    <div> Em anexo, você encontrará o recibo de compra de "
 "<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
@@ -3804,8 +3805,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
-msgstr ""
-"Oculte ou exiba o menu Predefinições na configuração do Ponto de Venda."
+msgstr "Oculte ou exiba o menu Predefinições na configuração do Ponto de Venda."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4315,8 +4315,8 @@ msgid ""
 msgstr ""
 "Parece que o(s) pedido(s) do PDV %(order_ref)s não tem um cliente.\n"
 "\n"
-"Você gostaria de definir %(customer_name)s como o cliente para o(s) "
-"pedido(s) selecionado(s)?"
+"Você gostaria de definir %(customer_name)s como o cliente para o(s) pedido"
+"(s) selecionado(s)?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -6156,8 +6156,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
-msgstr ""
-"Defina a conta de receita para esse produto: '%(product)s' (id:%(id)d)."
+msgstr "Defina a conta de receita para esse produto: '%(product)s' (id:%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript

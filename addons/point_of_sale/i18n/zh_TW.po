@@ -8,13 +8,14 @@
 #
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-23 11:20+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"PO-Revision-Date: 2026-06-28 01:25+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s18-3/point_of_sale/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -267,8 +268,8 @@ msgstr ""
 "                    <br/>\n"
 "                    <div>感謝你在 <t t-out=\"store_name\">商店名稱</t> 選購貨"
 "品。</div>\n"
-"                    <div>附上你的購物收據（<span><t t-"
-"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"                    <div>附上你的購物收據（<span><t t-out=\"format_datetime"
+"(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
 "MMMM&quot;,                          lang_code=lg) or ''\">日期</t> <t t-"
 "out=\"format_time(time=object.date_order, tz=tz, "
 "time_format='short',                          lang_code=lg)\">時間</t>）。</"
@@ -4189,8 +4190,7 @@ msgstr "這是付款變更嗎?"
 msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
-msgstr ""
-"禁止修改未過帳的POS訂單中使用的稅金。在修改稅金之前, 必須關閉POS營業點。"
+msgstr "禁止修改未過帳的POS訂單中使用的稅金。在修改稅金之前, 必須關閉POS營業點。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4417,8 +4417,8 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "留空使用客戶的應收賬款。\n"
-"定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記"
-"帳。\n"
+"定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記帳"
+"。\n"
 "對於現金日記帳，我們通過報表行直接寫入日記帳中的默認帳戶。\n"
 "對於銀行日記帳，我們會寫入此付款方式中指定的未結帳戶。\n"
 "只允許使用現金和銀行日記帳。"
@@ -9001,8 +9001,7 @@ msgstr "您的訂單中必須至少有一種產品，才能對其進行驗證和
 msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a "
 "fallback barcode parser from the PoS settings."
-msgstr ""
-"此條碼不兼容 GS1 標準。你可考慮在 PoS 設定中，配置一個後備的條碼解析器。"
+msgstr "此條碼不兼容 GS1 標準。你可考慮在 PoS 設定中，配置一個後備的條碼解析器。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9265,8 +9264,8 @@ msgid ""
 msgstr ""
 "若要刪除產品，請確保所有銷售點操作時段都已關閉。\n"
 "\n"
-"刪除在操作時段中仍然可用的產品，就像試圖從顧客手中，搶走咬了一半的漢堡包一"
-"樣，會引起大混亂！"
+"刪除在操作時段中仍然可用的產品，就像試圖從顧客手中，搶走咬了一半的漢堡包一樣"
+"，會引起大混亂！"
 
 #. module: point_of_sale
 #. odoo-javascript

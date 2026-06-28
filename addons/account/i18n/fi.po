@@ -10,13 +10,14 @@
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-06-20 22:09+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-06-28 01:14+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/fi/>\n"
 "Language: fi\n"
@@ -563,9 +564,8 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (viite: <t t-out=\"object.invoice_origin or ''\">SUB003</t>),\n"
 "        </t>\n"
-"        summalla <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        summalla <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        lähettäjä: <t t-out=\"object.company_id.name or ''\">YrityksesiNimi</"
 "t>.\n"
 "        <br/><br/>\n"
@@ -574,8 +574,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -694,8 +694,8 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
 "            PS: voit tarkistaa työaikakirjauksesi <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista.</"
-"a>\n"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista.</a>"
+"\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Ota meihin yhteyttä, jos sinulla on kysymyksiä.\n"
@@ -703,8 +703,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -740,16 +740,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
-"><br/>\n"
+"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        Kiitos maksustanne.\n"
-"        Tässä maksukuittinne: <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"        Tässä maksukuittinne: <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "loppusummalla\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> lähettäjä: <t t-out=\"object.company_id.name or ''\">YrityksesiNimi</"
-"t>.\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> lähettäjä: <t t-"
+"out=\"object.company_id.name or ''\">YrityksesiNimi</t>.\n"
 "        <br/><br/>\n"
 "        Ethän epäröi ottaa meihin yhteyttä, mikäli sinulla on kysyttävää.\n"
 "        <br/><br/>\n"
@@ -758,8 +757,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1202,7 +1201,7 @@ msgstr "<span> eräpäivä: </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "<span> on </span>"
-msgstr "<span> päivänä </span>"
+msgstr "<span> summasta </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1296,7 +1295,7 @@ msgstr "<span>Toimenpiteet</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr "<span>Määrä</span>"
+msgstr "<span>Lukumäärä</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1624,8 +1623,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1697,11 +1696,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\">Toimittaja:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-"
-"if=\"inv.amount_total\">\n"
+"                                                <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Summa:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Summa:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1716,11 +1715,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\">\n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\">\n"
 "                                               Avaa laskut\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -5232,8 +5231,8 @@ msgstr "Siistiä. Näyttää siltä, ettei sinulla ole mitään maksettavaa."
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
-"Virheellisiä tietoja päiväkirjamerkinnässä, jonka tunniste on %(id)s (%"
-"(name)s)."
+"Virheellisiä tietoja päiväkirjamerkinnässä, jonka tunniste on %(id)s (%(name)"
+"s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -7046,7 +7045,7 @@ msgstr "Luonnoskirjaus"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Invoice"
-msgstr "Luonnoslasku"
+msgstr "Laskuluonnos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7067,7 +7066,7 @@ msgstr "Proforma-hyvityslaskun luonnos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Invoice"
-msgstr "Proforma-laskun luonnos"
+msgstr "Proforma-laskuluonnos"
 
 #. module: account
 #. odoo-python
@@ -8889,8 +8888,8 @@ msgid ""
 msgstr ""
 "Jos valittu, kirjauksen seurauksena kaikki sekvenssin siirrot hajautetaan "
 "takautuvasti kirjauskohdasta aina viimeiseen hajautettuun kirjaukseen asti. "
-"Hajautus voidaan myös suorittaa pyydettäessä ohjatulla 'suojaa kirjaukset' "
-"-toiminnolla."
+"Hajautus voidaan myös suorittaa pyydettäessä ohjatulla 'suojaa kirjaukset' -"
+"toiminnolla."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9036,8 +9035,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Raportissa '%(report_name)s' rivillä '%(line_name)s' nimikkeellä '%"
-"(label)s',\n"
+"Raportissa '%(report_name)s' rivillä '%(line_name)s' nimikkeellä '%(label)"
+"s',\n"
 "Ristiinraportoinnin tunnuksen tai xml_id:n jäsentäminen epäonnistui.\n"
 
 #. module: account
@@ -9050,11 +9049,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Raportissa '%(report_name)s' rivillä '%(line_name)s' nimikkeellä '%"
-"(label)s',\n"
+"Raportissa '%(report_name)s' rivillä '%(line_name)s' nimikkeellä '%(label)"
+"s',\n"
 "Ristiinraportoinnin lausekkeen muoto on virheellinen.\n"
-"Odotettu: cross_report(<report_id>|<xml_id>) Esimerkki:  "
-"cross_report(my_module.my_report) tai cross_report(123)"
+"Odotettu: cross_report(<report_id>|<xml_id>) Esimerkki:  cross_report"
+"(my_module.my_report) tai cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9279,8 +9278,8 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
-"Sisäinen kenttä expression_ids -luonnin nopeuttamiseksi account_codes "
-"-moottoria varten"
+"Sisäinen kenttä expression_ids -luonnin nopeuttamiseksi account_codes -"
+"moottoria varten"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
@@ -12204,7 +12203,7 @@ msgstr "Tuloslaskelmatilit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PAY IN A FLASH!"
-msgstr "MAKSA SALAMANNOPEASTI!"
+msgstr "MAKSA SALAMANA!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -16160,8 +16159,7 @@ msgstr ""
 msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
-msgstr ""
-"Toimittaja-kenttä on pakollinen, täytä se vahvistaaksesi myyjän laskun."
+msgstr "Toimittaja-kenttä on pakollinen, täytä se vahvistaaksesi myyjän laskun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -18560,8 +18558,7 @@ msgstr "Voit luoda vain myyntiasiakirjoja."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
-msgstr ""
-"Voit rekisteröidä maksun ainoastaan kirjatuille päiväkirjamerkinnöille."
+msgstr "Voit rekisteröidä maksun ainoastaan kirjatuille päiväkirjamerkinnöille."
 
 #. module: account
 #. odoo-python

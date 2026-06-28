@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_contract
+# * hr_contract
 #
 # Translators:
 # Kira Petersen, 2025
 # Wil Odoo, 2025
 #
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-27 23:56+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
+"hr_contract/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
@@ -28,7 +31,7 @@ msgstr "# Kontrakter"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
 msgid "# Contracts using it"
-msgstr "# Kontrakter, der anvender den"
+msgstr "# Kontrakter, der anvender"
 
 #. module: hr_contract
 #. odoo-python
@@ -50,7 +53,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
-"title=\"In Contract Since\">\n"
+"title=\"Ansat siden\">\n"
 "                                    Ansat siden\n"
 "                                </span>"
 
@@ -61,7 +64,7 @@ msgid ""
 "title=\"In Contract Since\"> In Contract Since</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
-"title=\"In Contract Since\"> Ansat siden</span>"
+"title=\"Ansat siden\"> Ansat siden</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -110,7 +113,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "<span>Days</span>"
-msgstr "<span>Dage</dage>"
+msgstr "<span>Dage</span>"
 
 #. module: hr_contract
 #. odoo-python
@@ -119,8 +122,9 @@ msgid ""
 "According to Employee's Working Permit Expiration Date, this contract has "
 "been put in red on the %s. Please advise and correct."
 msgstr ""
-"På baggrund af medarbejderens arbejdstilladelses udløbsdato er denne "
-"kontrakt markeret med rødt i %s. Kom gerne med rettelser og input."
+"På grund af udløbsdatoen for medarbejderens arbejdstilladelse er denne "
+"kontrakt markeret med rødt i %s. Kontrollér venligst oplysningerne og ret "
+"dem om nødvendigt."
 
 #. module: hr_contract
 #. odoo-python
@@ -129,8 +133,8 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
-"På baggrund af kontraktens udløbsdato er denne kontrakt markeret med rødt i "
-"%s. Kom gerne med rettelser og input."
+"I henhold til kontraktens udløbsdato er denne kontrakt markeret med rødt på "
+"siden %s. Vi beder dig venligst om at give besked og rette fejlen."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -161,7 +165,7 @@ msgstr "Aktiviteter"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitetsundtagelsesmarkering"
+msgstr "Markering af undtagelsesaktivitet"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
@@ -172,12 +176,12 @@ msgstr "Aktivitetsstatus"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitetstype-ikon"
+msgstr "Aktivitetstypeikon"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr "Guide til aktivitetsplanlægning"
+msgstr "Assistent til aktivitetsplanlægning"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -199,7 +203,7 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"En medarbejder kan kun have én kontrakt ad gangen (gælder ikke for udkast og "
+"En medarbejder kan kun have én kontrakt ad gangen (gælder ikke for kladde og "
 "annullerede kontrakter).\n"
 "\n"
 "Medarbejder: %(employee_name)s"
@@ -273,7 +277,7 @@ msgstr "Virksomhedens land"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurér indstillinger"
+msgstr "Konfigurationsindstillinger"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
@@ -309,7 +313,7 @@ msgstr "Kontraktens slutdato"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr "Frist for meddelelse ved kontraktens udløb"
+msgstr "Kontraktens opsigelsesfrist"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
@@ -410,8 +414,8 @@ msgid ""
 "<br><br>"
 msgstr ""
 "Kontrakter forbinder en medarbejder og dennes virksomhed.<br>\n"
-"                Den indeholder alle oplysninger om vedkommendes lønpakke."
-"<br><br>"
+"                Den indeholder alle oplysninger om vedkommendes lønpakke.<br>"
+"<br>"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
@@ -505,7 +509,7 @@ msgstr "Afdeling"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Fratrædelsesguide"
+msgstr "Fratrædelsesassistent"
 
 #. module: hr_contract
 #. odoo-python
@@ -538,7 +542,7 @@ msgstr "Detaljer"
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar_leaves__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -673,7 +677,7 @@ msgstr "Sortér efter"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 msgid "HR Contract: update state"
-msgstr "HR-kontrakt: opdatér status"
+msgstr "HR-kontrakt: Opdatér status"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
@@ -740,7 +744,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Hvis det aktive felt er sat til Falsk, vil du kunne gemme ressourcen uden at "
+"Hvis det aktive felt er sat til \"falsk\", kan du gemme ressourcen uden at "
 "fjerne den."
 
 #. module: hr_contract
@@ -764,7 +768,7 @@ msgstr "Stilling"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
 msgid "Kanban State"
-msgstr "Kanbanstatus"
+msgstr "Kanban-status"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
@@ -968,7 +972,7 @@ msgstr "Oplysninger om fravær for denne ressource"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "Ressourcearbejdstid"
+msgstr "Ressourcens arbejdstid"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_resource
@@ -1033,9 +1037,9 @@ msgid ""
 "Select a contract template to auto-fill the contract form with predefined "
 "values. You can still edit the fields as needed after applying the template."
 msgstr ""
-"Vælg en kontraktskabelon for automatisk at udfylde kontraktformularen med de "
-"forudindstillede værdier. Du kan stadig redigere felterne efter behov – også "
-"efter skabelonen er anvendt."
+"Vælg en kontraktskabelon for automatisk at udfylde kontraktformularen med "
+"forudindstillede værdier. Du kan stadig redigere felterne efterfølgende – "
+"også efter at skabelonen er anvendt."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
@@ -1142,12 +1146,12 @@ msgstr "Dagens aktiviteter"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Type in notes about this contract..."
-msgstr "Skriv bemærkninger til kontrakten …"
+msgstr "Skriv bemærkninger til kontrakten ..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Undtagelsesaktivitetstype registreret."
+msgstr "Type registreret undtagelsesaktivitet."
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done

@@ -10,13 +10,14 @@
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-11 22:34+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 00:25+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
 "loyalty/pt/>\n"
 "Language: pt\n"
@@ -129,7 +130,6 @@ msgstr "Cupons de 10% de desconto"
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
-#, fuzzy
 msgid "10% on your order"
 msgstr "10% no seu pedido"
 
@@ -142,7 +142,6 @@ msgstr "2+1 Grátis"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
-#, fuzzy
 msgid ""
 "<div style=\"background: #ffffff\">\n"
 "                <div style=\"margin:0px; font-size:24px; font-family:arial, "
@@ -297,7 +296,6 @@ msgstr "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', "
 "'next_order_coupons')\">Coupons</span>\n"
@@ -339,7 +337,6 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
-#, fuzzy
 msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount "
 "of coupon points defined as the coupon value</span>"
@@ -385,7 +382,6 @@ msgstr "<span>Compra mínima de</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-#, fuzzy
 msgid "<span>Valid for purchase above</span>"
 msgstr "<span>Válido para compras acima de</span>"
 
@@ -483,7 +479,6 @@ msgstr "Foi encontrado um cupom com o mesmo código."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
-#, fuzzy
 msgid "A coupon/loyalty card must have a unique code."
 msgstr "Um cupom/cartão-fidelidade deve ter um código exclusivo."
 
@@ -539,7 +534,6 @@ msgstr "Ativo"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
-#, fuzzy
 msgid "Active loyalty cards"
 msgstr "Cartões-fidelidade ativos"
 
@@ -629,7 +623,6 @@ msgstr "Automática"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Automatic promo: 10% off on orders higher than $50"
 msgstr "Promoção automática: 10% de desconto em pedidos acima de R$ 50"
 
@@ -682,7 +675,6 @@ msgstr "Compre X e leve Y"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
-#, fuzzy
 msgid "Can not generate coupon, no program is set."
 msgstr "Não foi possível gerar o cupom, nenhum programa está definido."
 
@@ -734,7 +726,6 @@ msgstr "Código"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
-#, fuzzy
 msgid "Code for 10% on orders"
 msgstr "Código para 10% em pedidos"
 
@@ -926,13 +917,11 @@ msgstr "Sinal da moeda, a ser utilizado na impressão de montantes."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
-#, fuzzy
 msgid "Current & Future orders"
 msgstr "Pedidos atuais e futuros"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__current
-#, fuzzy
 msgid "Current order"
 msgstr "Pedido atual"
 
@@ -991,7 +980,6 @@ msgstr "Descrição"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
-#, fuzzy
 msgid "Description on order"
 msgstr "Descrição no pedido"
 
@@ -1005,13 +993,11 @@ msgstr "Desconto"
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid "Discount & Loyalty"
 msgstr "Desconto e fidelidade"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
-#, fuzzy
 msgid "Discount Applicability"
 msgstr "Aplicabilidade do desconto"
 
@@ -1164,28 +1150,24 @@ msgstr "Data de Expiração"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
-#, fuzzy
 msgid "Expiration date cannot be set on a loyalty card."
 msgstr "A data de validade não pode ser definida em um cartão de fidelidade."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Fidelity Card"
 msgstr "Cartão-Fidelidade"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Fidelity Cards"
 msgstr "Cartões-Fidelidade"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Fill in your eWallet, to pay future orders"
 msgstr "Cadastre sua carteira digital para pagar pedidos futuros"
 
@@ -1247,7 +1229,6 @@ msgstr "Produto grátis"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__future
-#, fuzzy
 msgid "Future orders"
 msgstr "Pedidos futuros"
 
@@ -1261,7 +1242,6 @@ msgstr "Gerar"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "Generate &amp; share coupon codes manually. It can be used in eCommerce, "
 "Point of Sale or regular orders to claim the Reward. You can define "
@@ -1350,7 +1330,6 @@ msgstr "Cartões de presente"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "Gift Cards are created manually or automatically sent by email when the "
 "customer orders a gift card product.\n"
@@ -1430,7 +1409,6 @@ msgstr "Linhas do histórico"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
-#, fuzzy
 msgid "History for Loyalty cards and Ewallets"
 msgstr "Histórico de cartões de fidelidade e e-Wallets"
 
@@ -1483,7 +1461,6 @@ msgstr "Inativo"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
-#, fuzzy
 msgid "Invalid quantity."
 msgstr "Quantidade inválida."
 
@@ -1515,7 +1492,6 @@ msgstr "É um programa de pagamento"
 #: code:addons/loyalty/controllers/portal.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__issued
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
-#, fuzzy
 msgid "Issued"
 msgstr "Emitido"
 
@@ -1581,7 +1557,6 @@ msgstr "Logótipo"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Loyalty Card"
 msgstr "Cartão-fidelidade"
 
@@ -1590,19 +1565,16 @@ msgstr "Cartão-fidelidade"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
-#, fuzzy
 msgid "Loyalty Cards"
 msgstr "Cartões-fidelidade"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
-#, fuzzy
 msgid "Loyalty Communication"
 msgstr "Comunicação de fidelidade"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
-#, fuzzy
 msgid "Loyalty Coupon"
 msgstr "Cupom de fidelidade"
 
@@ -1623,14 +1595,12 @@ msgstr "Regra de Fidelização"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
-#, fuzzy
 msgid "Loyalty Transaction"
 msgstr "Transação de fidelidade"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Loyalty point(s)"
 msgstr "Ponto(s) de fidelidade"
 
@@ -1676,7 +1646,6 @@ msgstr "Mensagens"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
-#, fuzzy
 msgid "Minimum Amount Tax Mode"
 msgstr "Modo de imposto de quantidade mínima"
 
@@ -1713,7 +1682,6 @@ msgstr "O novo saldo deve ser positivo e diferente do antigo."
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Next Order Coupon"
 msgstr "Cupom para o próximo pedido"
 
@@ -1721,7 +1689,6 @@ msgstr "Cupom para o próximo pedido"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
-#, fuzzy
 msgid "Next Order Coupons"
 msgstr "Cupons para o próximo pedido"
 
@@ -1733,7 +1700,6 @@ msgstr "Nenhum cupom encontrado."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
-#, fuzzy
 msgid "No loyalty program found."
 msgstr "Nenhum programa de fidelidade encontrado."
 
@@ -1777,7 +1743,6 @@ msgstr "Ordem"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
-#, fuzzy
 msgid "Order Model"
 msgstr "Modelo de pedido"
 
@@ -1809,7 +1774,6 @@ msgstr "Exibição de pontos"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid "Points Unit"
 msgstr "Unidade dos pontos"
 
@@ -1958,13 +1922,11 @@ msgstr "Quantidade"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
-#, fuzzy
 msgid "Quantity rewarded"
 msgstr "Quantidade recompensada"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
-#, fuzzy
 msgid "Quantity to generate"
 msgstr "Quantidade a gerar"
 
@@ -2059,7 +2021,6 @@ msgstr "Enviar"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid "Send a coupon after an order, valid for next purchase"
 msgstr "Após um pedido, envie um cupom válido para a próxima compra"
 
@@ -2082,7 +2043,6 @@ msgstr "Sequência"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
@@ -2092,7 +2052,6 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid "Show points Unit"
 msgstr "Mostrar unidade dos pontos"
 
@@ -2104,14 +2063,12 @@ msgstr "Produtos específicos"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
-#, fuzzy
 msgid "Split per unit"
 msgstr "Dividir por unidade"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
-#, fuzzy
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
 "A divisão por unidade não é permitida em programas de Fidelidade e Carteira "
@@ -2140,14 +2097,12 @@ msgstr "O desconto deve ser estritamente positivo."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
-#, fuzzy
 msgid "The end date is included in the validity period of this program"
 msgstr "A data de término está incluída no período de validade deste programa"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
@@ -2170,20 +2125,17 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
-#, fuzzy
 msgid "The reward product quantity must be strictly positive."
 msgstr "A quantidade do produto de recompensa deve ser estritamente positiva."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
-#, fuzzy
 msgid "The start date is included in the validity period of this program"
 msgstr "A data de início está incluída no período de validade deste programa"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-#, fuzzy
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
@@ -2255,7 +2207,6 @@ msgstr "Recarregar carteira digital"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
-#, fuzzy
 msgid "Total Order Count"
 msgstr "Contagem total do pedido"
 
@@ -2274,7 +2225,6 @@ msgstr "Atualizar saldo"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card_update_balance
-#, fuzzy
 msgid "Update Loyalty Card Points"
 msgstr "Atualizar pontos do cartão-fidelidade"
 
@@ -2326,7 +2276,6 @@ msgstr "Válida Até"
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
-#, fuzzy
 msgid "Valid until"
 msgstr "Válido até"
 
@@ -2359,7 +2308,6 @@ msgstr "Ao alcançar"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
@@ -2379,7 +2327,6 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
-#, fuzzy
 msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid..."
@@ -2424,7 +2371,6 @@ msgstr "Você não pode excluir um programa em estado ativo"
 #. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
 #: code:addons/loyalty/models/product_template.py:0
-#, fuzzy
 msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
@@ -2445,13 +2391,11 @@ msgstr ""
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
-#, fuzzy
 msgid "Your Gift Card at {{ object.company_id.name }}"
 msgstr "Seu cartão de presente em {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
-#, fuzzy
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
 msgstr "Seu cupom de recompensa de {{ object.program_id.company_id.name }} "
 
@@ -2501,7 +2445,6 @@ msgstr "Carteiras digitais"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-#, fuzzy
 msgid ""
 "eWallets are created manually or automatically when the customer orders a "
 "eWallet product.\n"
@@ -2523,7 +2466,6 @@ msgstr "itens comprados"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-#, fuzzy
 msgid "loyalty Reward"
 msgstr "Recompensa por fidelidade"
 
@@ -2549,13 +2491,11 @@ msgstr "no produto mais barato"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-#, fuzzy
 msgid "on your next order"
 msgstr "no seu próximo pedido"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-#, fuzzy
 msgid "on your order"
 msgstr "em seu pedido"
 
@@ -2569,14 +2509,12 @@ msgstr "por %s gasta"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
-#, fuzzy
 msgid "per order"
 msgstr "por pedido"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
-#, fuzzy
 msgid "per unit paid"
 msgstr "por unidade paga"
 
@@ -2643,7 +2581,6 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
-#, fuzzy
 msgid "your order"
 msgstr "seu pedido"
 

@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_delivery
+# * stock_delivery
 #
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Martin Trigaux, 2025
-#
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Martin Trigaux, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-28 00:02+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
+"stock_delivery/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/sale_order.py:0
 msgid "%(name)s (Estimated Cost: %(cost)s)"
-msgstr ""
+msgstr "%(name)s (Anslået pris: %(cost)s)"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
@@ -46,27 +48,27 @@ msgstr "<span> - Vægt: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr "<span>Fragt Vægt: </span>"
+msgstr "<span>Fragtvægt: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>Fragtfirma:</strong>"
+msgstr "<strong>Transportfirma:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Transportfirma</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Shipping Method:</strong>"
-msgstr ""
+msgstr "<strong>Forsendelsesmetode:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Fragtvægt: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -74,21 +76,23 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Fragtvægt:</strong>\n"
+"                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Total Weight</strong>"
-msgstr ""
+msgstr "<strong>Samlet vægt</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Sporingsnummer:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Vægt: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -102,7 +106,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Gælder for forsendelsesmetoder"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -114,6 +118,8 @@ msgstr "Annullér"
 msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
+"Annullering af en levering kan muligvis ikke fortrydes. Er du sikker på, at "
+"du vil fortsætte?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -121,17 +127,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
-msgstr "Fragtfirma"
+msgstr "Transportfirma"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "Transportfirmakode"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Transportfirmanavn"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -142,7 +148,7 @@ msgstr "Virksomhed"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Pris: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -157,22 +163,22 @@ msgstr "Oprettet den"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Leveringsvirksomhed valg guide"
+msgstr "Assistent til udvælgelse af transportfirma"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr "Leveringsmetoder"
+msgstr "Forsendelsesmetoder"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Levering pakke valg guide"
+msgstr "Assistent til udvælgelse af leveringspakke"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Leveringspakketype"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -183,7 +189,7 @@ msgstr "Destination"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "Destinationsland"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -205,12 +211,12 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Vis sporing links"
+msgstr "Vis sporingslinks"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -220,12 +226,17 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Anslåede omkostninger: Kunden faktureres de anslåede "
+"forsendelsesomkostninger.\n"
+"Faktiske omkostninger: Kunden faktureres de faktiske "
+"forsendelsesomkostninger, og forsendelsesomkostningerne opdateres på "
+"salgsordren efter levering."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Der opstod en undtagelse med hensyn til transportøren ved overførslen"
 
 #. module: stock_delivery
 #. odoo-python
@@ -244,7 +255,7 @@ msgstr "FedEx"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "HS Code"
-msgstr "HS Kode"
+msgstr "HS-kode"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
@@ -266,7 +277,7 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Routes"
-msgstr "Lager ruter"
+msgstr "Lagerruter"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -276,7 +287,7 @@ msgstr "Faktureringspolitik"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "Er refundering pluk"
+msgstr "Er returplukning"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
@@ -292,28 +303,28 @@ msgstr "Sidst opdateret den"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Manuelle handlinger kan være nødvendige."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__move_line_ids
 msgid "Move Line"
-msgstr "Handling"
+msgstr "Bogføringslinje"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "Ingen fragtfirma integration"
+msgstr "Ingen tranportørintegration"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Varernes oprindelse"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -330,7 +341,7 @@ msgstr "Pakkedetaljer"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 msgid "Package too heavy!"
-msgstr "Pakke er for tung!"
+msgstr "Pakke for tung!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
@@ -341,7 +352,7 @@ msgstr "Pakker"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "Print refunderings mærkat"
+msgstr "Udskriv returseddel"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
@@ -351,7 +362,7 @@ msgstr "Produkt"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produkt bevægelser (Lagerbevægelse linje)"
+msgstr "Produktbevægelser (Lagerbevægelseslinje)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -366,12 +377,12 @@ msgstr "Faktisk omkostning"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "Refunderings mærkat"
+msgstr "Returseddel"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retur plukning"
+msgstr "Returplukning"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -388,6 +399,10 @@ msgid ""
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in "
 "commerce."
 msgstr ""
+"Oprindelsesreglerne fastlægger, hvor varerne stammer fra – det vil sige, "
+"ikke hvorfra de er afsendt, men hvor de er produceret eller fremstillet.\n"
+"'Oprindelse' er således varens \"økonomiske nationalitet\" i handelsmæssig "
+"sammenhæng."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -412,7 +427,7 @@ msgstr "Gem"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Sendt til afsender"
+msgstr "Sendt til transportør"
 
 #. module: stock_delivery
 #. odoo-python
@@ -421,6 +436,7 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
 "(ref)s"
 msgstr ""
+"Forsendelse sendt til transportør %(carrier_name)s med sporingsnummer %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -430,49 +446,49 @@ msgstr "Leveringsomkostninger"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Shipping Information"
-msgstr "Leveringsinformation"
+msgstr "Forsendelsesinformation"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
-msgstr "Leveringsmetoder"
+msgstr "Forsendelsesmetoder"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
 msgid "Shipping Weight"
-msgstr "Forsendelses vægt"
+msgstr "Fragtvægt"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr "Forsendelsesvægt:"
+msgstr "Fragtvægt:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid "Standardized code for international shipping and goods declaration."
-msgstr ""
+msgstr "Standardiseret kode til international forsendelse og vareangivelse."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytning"
+msgstr "Lagerbevægelse"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Lagerpakketype"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "Teknisk felt, der angiver antallet af decimaler i vægten"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
+msgstr "Teknisk felt, der angiver, om vægten er i kg eller ej (dvs. lb)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -491,12 +507,14 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Denne pakke kan ikke oprettes, da den samlede vægt af produkterne i "
+"plukningen er 0,0 %s"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
 msgid "The shipping price will be set once the delivery is done."
-msgstr "Leveringsprisen vil blive fastsat når leveringen er fuldført."
+msgstr "Leveringsprisen fastsættes, når leveringen er fuldført."
 
 #. module: stock_delivery
 #. odoo-python
@@ -506,13 +524,13 @@ msgid ""
 "this package type. Please choose another package type."
 msgstr ""
 "Vægten på din pakke er højere end den maksimalt godkendte vægt for denne "
-"pakke type. Vælg venligt en anden slags pakke."
+"pakketype. Vælg venligt en anden pakketype."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 msgid "There is no matching delivery rule."
-msgstr "Der er ingen tilsvarende leverings regel."
+msgstr "Der er ingen matchende leveringsregel."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
@@ -522,12 +540,12 @@ msgstr "Samlet vægt for alle produkter i pakken."
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr "Samlet vægt på produkter i pluk"
+msgstr "Samlet vægt på produkter i plukningen."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "Sporings URL"
+msgstr "Sporings-URL"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -537,18 +555,18 @@ msgstr "Sporing"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "Sporings reference"
+msgstr "Sporingsreference"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr "Tracking URL"
+msgstr "Sporings-URL"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Sporingslinks for forsendelse:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -571,19 +589,19 @@ msgstr "Vægt"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr "Vægt på levering"
+msgstr "Fragtvægt"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Vægtens måleenhed for mærkat"
+msgstr "Vægtens måleenhed på etiket"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Vægt:"
 
 #. module: stock_delivery
 #. odoo-python
@@ -593,11 +611,14 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and "
 "are using the same carrier)."
 msgstr ""
+"Du kan ikke lægge produkter i samme pakke, hvis de har forskellige "
+"transportører. Kontrollér derfor, at alle forsendelser er tildelt en "
+"transportør, og at de bruger samme transportør."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr "Du har flere sporings links, de er tilgængelige i chatteren."
+msgstr "Du har flere sporingslinks. De er tilgængelige i chatteren."
 
 #. module: stock_delivery
 #. odoo-python
@@ -606,23 +627,23 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Din leveringsmetode har ingen omdirigering på kurerudbyderens hjemmeside til "
-"at spore denne ordre."
+"Din forsendelsesmetode har ingen omdirigering til kurerudbyderens hjemmeside "
+"for sporing af denne ordre."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr "Zip præfiks"
+msgstr "Postnummerpræfiks"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDForsendelsesvægt:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDVægt:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
@@ -632,12 +653,12 @@ msgstr "^FO310,200"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 msgid "^FO35, 180 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 180 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FO35, 220 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 220 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label

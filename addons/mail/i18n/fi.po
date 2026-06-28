@@ -8,12 +8,13 @@
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2026-06-08 10:23+0000\n"
+"PO-Revision-Date: 2026-06-28 00:34+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/mail/"
 "fi/>\n"
@@ -519,8 +520,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Keskustele kollegoiden kanssa</b> reaaliajassa käyttäen viestejä.</"
-"p><p><i>Käyttäjä pitää mahdollisesti kutusa ensin 'Asetukset'-sovelluksen "
+"<p><b>Keskustele kollegoiden kanssa</b> reaaliajassa käyttäen viestejä.</p>"
+"<p><i>Käyttäjä pitää mahdollisesti kutusa ensin 'Asetukset'-sovelluksen "
 "kautta.</i></p>"
 
 #. module: mail
@@ -1356,9 +1357,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) on jo linkitetty %"
-"(alias_model_name)s (%(matching_id)s) ja sitä käytetään %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) on jo linkitetty %(alias_model_name)"
+"s (%(matching_id)s) ja sitä käytetään %(parent_name)s %(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1367,8 +1367,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) on jo linkitetty %"
-"(alias_model_name)s (%(matching_id)s) kanssa."
+"Alias %(matching_name)s (%(current_id)s) on jo linkitetty %(alias_model_name)"
+"s (%(matching_id)s) kanssa."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -3482,8 +3482,7 @@ msgstr "Toimitus epäonnistui"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr ""
-"Poistettu käytöstä 'default_res_id', pitäisi käyttää 'default_res_ids'."
+msgstr "Poistettu käytöstä 'default_res_id', pitäisi käyttää 'default_res_ids'."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -4392,7 +4391,7 @@ msgstr "Lisäkommentit..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Extra info"
-msgstr "Lisätieto"
+msgstr "Lisätiedot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -5989,18 +5988,17 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside "
 "of Odoo"
 msgstr ""
-"Viittaa selaimen näppäimiin, joita ilmoitus käyttää:\n"
+"Viittaa ilmoituksen käyttämiin sovellusavaimiin:\n"
 "- p256dh: Se on selaimen luoma tilauksen julkinen avain. Selain\n"
 "          pitää yksityisen avaimen salassa ja käyttää sitä hyötykuorman "
-"purkamiseen\n"
+"salauksen purkamiseen\n"
 "- auth: Auth-arvoa on käsiteltävä salaisuutena, eikä sitä saa jakaa Odoon "
 "ulkopuolelle"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
-"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+msgstr "JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -7715,8 +7713,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"Ilmoituksen tulisi vastaanottaa liitetietueet ID-luettelona (received %"
-"(aids)s)"
+"Ilmoituksen tulisi vastaanottaa liitetietueet ID-luettelona (received %(aids)"
+"s)"
 
 #. module: mail
 #. odoo-python
@@ -11028,8 +11026,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid ""
 "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
-msgstr ""
-"Suunnitelma \"%(plan_name)s\" voidaan käynnistää seuraavin vaikutuksin:"
+msgstr "Suunnitelma \"%(plan_name)s\" voidaan käynnistää seuraavin vaikutuksin:"
 
 #. module: mail
 #. odoo-python
@@ -11653,8 +11650,8 @@ msgstr ""
 "(Viestintä)\n"
 "- 'Lähetä tekstiviesti': lähettää tekstiviestejä, kirjaa ne asiakirjoihin "
 "(Tekstiviesti)\n"
-"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia "
-"(Viestintä)\n"
+"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia (Viestintä)"
+"\n"
 "- 'Luo kirjaus': luo uuden kirjauksen uusilla arvoilla\n"
 "- 'Suorita koodi': pätkä Python-koodia, joka suoritetaan\n"
 "- 'Lähetä Webhook-ilmoitus': lähettää JULKAISU-pyynnön ulkoiseen "
@@ -12296,19 +12293,19 @@ msgstr "Katso %s"
 #: code:addons/mail/static/src/core/web/recipients_popover.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
-msgstr "Näytä profiili"
+msgstr "Katso profiili"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "View Reactions"
-msgstr "Näytä reaktiot"
+msgstr "Katso reaktiot"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/message_actions.js:0
 msgid "View Thread"
-msgstr "Katso ketju"
+msgstr "Katso viestiketju"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
@@ -12320,13 +12317,13 @@ msgstr "Näkymän tyyppi"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 msgid "View all activities"
-msgstr "Näytä kaikki aktiviteetit"
+msgstr "Katso kaikki toimenpiteet"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
-msgstr "Kanavien katselu tai niihin liittyminen"
+msgstr "Katso kanavia tai liity niihin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12343,12 +12340,12 @@ msgstr "Ääni"
 #. module: mail
 #: model:ir.ui.menu,name:mail.menu_call_settings
 msgid "Voice & Video"
-msgstr "Ääni ja video"
+msgstr "Ääni & video"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
-msgstr "Puhe- ja videoasetukset"
+msgstr "Ääni- & videoasetukset"
 
 #. module: mail
 #. odoo-javascript
@@ -13179,7 +13176,7 @@ msgstr "on juuri antanut sinulle seuraavan tehtävän:"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "id"
-msgstr "tunniste"
+msgstr "tunnus"
 
 #. module: mail
 #. odoo-javascript

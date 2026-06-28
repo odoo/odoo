@@ -1,29 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_stock
+# * purchase_stock
 #
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
 #
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-28 00:27+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
+"purchase_stock/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr "% Leveret til Tiden"
+msgstr "% Leveret til tiden"
 
 #. module: purchase_stock
 #. odoo-python
@@ -41,7 +44,7 @@ msgstr "+ %d dag(e)"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s dag(e)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -71,7 +74,7 @@ msgstr "<span class=\"text-muted small\">Månedlig efterspørgsel: </span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "<span invisible=\"on_time_rate &gt;= 0\">No data yet</span>"
-msgstr "<span invisible=\"on_time_rate &gt;= 0\">Endnu ingen data</span>"
+msgstr "<span invisible=\"on_time_rate &gt;= 0\">Ingen data endnu!</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -86,7 +89,7 @@ msgstr "<span> dage</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Forsendelsesadresse</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
@@ -119,8 +122,8 @@ msgid ""
 msgstr ""
 "Ifølge produktkonfigurationen kan modtagne mængder automatisk udregnes efter "
 "følgende mekanismer:\n"
-"  - Manuel: Mængden angivet manuelt på linjen\n"
-"  - Lagerbevægelser: Mængden baseres på bekræftede pluk\n"
+"  – Manuel: Mængden angivet manuelt på linjen\n"
+"  – Lagerbevægelser: Mængden baseres på bekræftede pluk\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -140,7 +143,7 @@ msgstr "Alle lagre"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
 msgid "Arrival"
-msgstr "Ankomst"
+msgstr "Varemodtagelse"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_suggest__based_on
@@ -184,7 +187,7 @@ msgstr "Virksomheder"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr "Færdiggørelses dato for første kvitterings ordre."
+msgstr "Dato for gennemførsel af den første indgående ordre."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -194,7 +197,7 @@ msgstr "Beregn"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurér indstillinger"
+msgstr "Konfigurationsindstillinger"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_partner
@@ -236,12 +239,12 @@ msgstr "Valuta"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "Currency exchange rate difference"
-msgstr "Valutakurs difference"
+msgstr "Kursdifference"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr "Tilpasset Beskrivelse"
+msgstr "Tilpasset beskrivelse"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
@@ -251,15 +254,15 @@ msgstr "Dage til varemodtagelse"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr "Antal dage, der kræves for at bekræfte en indkøbsordre."
+msgstr "Antal dage, der kræves for at bekræfte en indkøbsordre"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
-"Dage påkrævet til at bekræfte en Købsordre, definer når en Købsordre bør "
-"valideres"
+"Antal dage, der kræves for at bekræfte en indkøbsordre, bestemmer, hvornår "
+"ordren skal valideres"
 
 #. module: purchase_stock
 #. odoo-python
@@ -267,7 +270,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days to Purchase"
-msgstr "Dage til Køb"
+msgstr "Dage til indkøb"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -287,14 +290,13 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Afhængig af modulerne der er installeret, vil dette gøre det muligt for dig "
-"at definere ruten for produktet: hvorvidt det vil blive købt, produceret, "
-"genopfyldt ved bestilling, osv."
+"Valget af rute afhænger af de installerede moduler og bestemmer, om "
+"produktet skal købes, produceres eller genopfyldes automatisk osv."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr "Lokationstypen for destinationen"
+msgstr "Lokationstype for destination"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -332,7 +334,7 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
@@ -342,7 +344,7 @@ msgstr "Alternative nedstrøms posteringer"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr "Dropship adresse"
+msgstr "Dropshipadresse"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
@@ -353,12 +355,12 @@ msgstr "Dropshipping"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
 msgid "Effective Date"
-msgstr "Effektiv dato"
+msgstr "Ikrafttrædelsesdato"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr "Effektiv Dato Forrige År"
+msgstr "Ikrafttrædelsesdato sidste år"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
@@ -368,7 +370,7 @@ msgstr "Faktiske dage til varemodtagelse"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Undtagelse(r) forekom på købs ordre(ne):"
+msgstr "Undtagelse(r) forekom på indkøbsordre(ne):"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -399,7 +401,7 @@ msgstr "Helt modtaget"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Generate the draft vendor bill."
-msgstr "Generere kladde leverandørfaktura."
+msgstr "Generér udkast til leverandørfaktura."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -410,7 +412,7 @@ msgstr "Få anbefalinger af produkter til indkøb hos"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr "Gå tilbage til købsordren for at generere leverandørfaktura."
+msgstr "Gå tilbage til indkøbsordren for at generere leverandørfaktura."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_suggest__hide_warehouse
@@ -468,7 +470,7 @@ msgstr "Indkommende leverancer"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Incoterm lokation"
+msgstr "Incoterm-lokation"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -478,22 +480,22 @@ msgstr "Er afsendt"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr "Er modulet Salg installeret"
+msgstr "Er salgsmodulet installeret"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Journalpost"
+msgstr "Posteringslinje"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__one_year
 msgid "Last 12 months"
-msgstr "Sidste 12 måneder"
+msgstr "Seneste 12 måneder"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__three_months
@@ -548,7 +550,7 @@ msgstr "Logistik"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Lot/serienummer"
+msgstr "Parti- og serienummer"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -562,14 +564,14 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier "
 "to cope with unexpected vendor delays."
 msgstr ""
-"Fejlmargin for leverandør lede tider. Når systemet generere købsordre for "
-"genbestilling af produkter, vil de blive planlagt så mange dage tidligere, "
-"for at håndtere uventede leverandør forsinkelser."
+"Fejlmargin på leverandørernes gennemløbstider. Når systemet genererer "
+"indkøbsordrer for genbestilling af produkter, planlægges de tidligere med et "
+"antal dage for at imødekomme uventede forsinkelser fra leverandøren."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Minimum lager regel"
+msgstr "Regel for minimumsbeholdning"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
@@ -594,13 +596,13 @@ msgstr "Næste måned sidste år"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr "Næste overførsle(r) påvirket:"
+msgstr "Næste overførsel/overførsler påvirket:"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No Vendor Found"
-msgstr ""
+msgstr "Ingen leverandør fundet"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -628,7 +630,7 @@ msgstr "Ikke modtaget"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_dashboard/purchase_dashboard.xml:0
 msgid "OTD"
-msgstr "OTD"
+msgstr "LTT"
 
 #. module: purchase_stock
 #. odoo-python
@@ -637,8 +639,8 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of "
 "%s is zero."
 msgstr ""
-"Odoo er ikke i stand til at generere anglesaksiske posteringer. Den totale "
-"evaluering af %s er nul."
+"Odoo kan ikke generere de angelsaksiske poster, da den samlede værdi for %s "
+"er nul."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -651,28 +653,28 @@ msgstr "Levering til Tiden"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr "Levering til Tiden Andel"
+msgstr "Rate for levering til tiden"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr "Mængde til Tiden"
+msgstr "Mængde leveret til tiden"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr "Levering til Tiden"
+msgstr "Levering til tiden"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr "Andel til Tiden"
+msgstr "Rate for til tiden"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
 msgid "Orderpoint"
-msgstr "Ordrepoint"
+msgstr "Genbestillingspunkt"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
@@ -683,9 +685,9 @@ msgid ""
 "number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"De sidste x dage, antal modtagne produkter divideret med antal bestilte "
+"De sidste x dage; antal modtagne produkter divideret med antal bestilte "
 "produkter.x er enten systemparameteren purchase_stock.on_time_delivery_days "
-"eller standardværdien 365."
+"eller standardværdien 365"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -713,7 +715,7 @@ msgstr "Konto for prisdifferencer"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Process all the receipt quantities."
-msgstr "Processer alle kvitteringsmængder."
+msgstr "Behandl alle indgående mængder."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_procurement_group
@@ -742,12 +744,12 @@ msgstr "Produktkategori"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_suggest__product_count
 msgid "Product Count"
-msgstr "Produkt mængde"
+msgstr "Produktmængde"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_replenish
 msgid "Product Replenish"
-msgstr "Produkt genopfyldning"
+msgstr "Produktgenopfyldning"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
@@ -763,7 +765,7 @@ msgstr "Produktleverdandør"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -779,7 +781,7 @@ msgstr "Formér annullering"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr "Indkøb Linjer"
+msgstr "Indkøbslinjer"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -791,7 +793,7 @@ msgstr "Indkøbsordre"
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "Indkøbsordrelinie"
+msgstr "Indkøbsordrelinje"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_suggest
@@ -815,7 +817,7 @@ msgstr "Indkøbsrapport"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Purchase Security Lead Time"
-msgstr "Indkøb Sikkerhed Ledetid"
+msgstr "Sikkerhedsgennemløbstid for indkøb"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
@@ -825,7 +827,7 @@ msgstr "Synlighedsdage for indkøb"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr "Antal købsordre"
+msgstr "Antal indkøbsordrer"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
@@ -833,13 +835,14 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"Indsæt en adresse hvis du ønsker at levere direkte fra leverandøren til "
-"kunden. Hold den ellers tom hvis du ønsker levering til din egen virksomhed."
+"Indtast en adresse, hvis varen skal leveres direkte fra leverandøren til "
+"kunden. Lad feltet stå tomt, hvis leveringen skal ske til din egen "
+"virksomhed."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Modtagelse"
+msgstr "Varemodtagelse"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -860,12 +863,12 @@ msgstr "Modtag de bestilte produkter."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr "Modtaget kvantitet metode"
+msgstr "Metode for modtaget mængde"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
 msgid "Receptions"
-msgstr "Modtagelser"
+msgstr "Varemodtagelser"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__receipt_status
@@ -874,7 +877,7 @@ msgid ""
 "            Orange: To process today\n"
 "            Green: On time"
 msgstr ""
-"Red: forsinket\n"
+"Rød: forsinket\n"
 "            Orange: skal behandles i dag\n"
 "            Grøn: til tiden"
 
@@ -892,7 +895,7 @@ msgstr "Anmod dine leverandører om at levere til dine kunder"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 msgid "Requests for quotation"
-msgstr "Anmodninger for tilbud"
+msgstr "Tilbudsanmodninger"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -902,7 +905,7 @@ msgstr "Reservation"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retur plukning"
+msgstr "Returplukning"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
@@ -926,6 +929,9 @@ msgid ""
 "Set a reference period to estimate sales, and use the percentage to take "
 "into account seasonability and the increase/decrease of business."
 msgstr ""
+"Fastlæg en referenceperiode for at estimere omsætningen, og brug "
+"procenttallet til at tage højde for sæsonudsving og stigninger/fald i "
+"omsætningen."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -946,38 +952,38 @@ msgstr "Vis leverandør"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
-msgstr "Vis leverandør kolonne"
+msgstr "Vis leverandørkolonne"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytning"
+msgstr "Lagerbevægelse"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Lagerflytning"
+msgstr "Lagerbevægelser"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "Lager Genopfyldning Rapport"
+msgstr "Rapport om genopfyldning af lager"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Lager regel"
+msgstr "Lagerregel"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_valuation_layer
 msgid "Stock Valuation Layer"
-msgstr "Lager vurdering lag"
+msgstr "Lagerværdiniveau"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Lager regel rapport"
+msgstr "Lagerregelrapport"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
@@ -1002,33 +1008,36 @@ msgid ""
 "products              in this catalog in order to cover this amount of days "
 "of average demand."
 msgstr ""
+"For alle filtrerede produkter i dette katalog beregnes de anbefalede "
+"genopfyldningsmængder\n"
+"             for at dække det gennemsnitlige behov i den pågældende periode."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Supplier"
-msgstr ""
+msgstr "Leverandør"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Leverandør prisliste"
+msgstr "Leverandørens prisliste"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
 msgid "Supplierinfo"
-msgstr "Leverandørinfo"
+msgstr "Leverandøroplysninger"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "Teknisk felt til visning af dropshipping adressen"
+msgstr "Teknisk felt til visning af dropshipping-adressen"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "The following replenishment order has been generated"
-msgstr "Den følgende genopfyldnings ordre er blevet genereret"
+msgstr "Den følgende genopfyldningsordre er blevet genereret"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1037,7 +1046,7 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"Kvantiteterne på din købsordre indikere færre en faktureret. Du bør spørge "
+"Mængderne på din indkøbsordre er lavere end det fakturerede. Du bør anmode "
 "om en refundering."
 
 #. module: purchase_stock
@@ -1061,10 +1070,10 @@ msgid ""
 "%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
 "Go on the product form and complete the list of vendors."
 msgstr ""
-"Der er ingen matchende leverandørpris til at generere købsordren for "
-"produktet %s (ingen leverandør defineret, minimums kvantitet ikke opnået, "
-"ugyldige datoer, ...). Gå til produkt formularen og fuldfør listen over "
-"leverandører."
+"Der findes ingen matchende leverandørpris til at oprette en købsordre for "
+"produktet %s (f.eks. fordi der ikke er angivet en leverandør, "
+"minimumskvantiteten ikke er opfyldt, eller datoerne er ugyldige). Gå til "
+"produktkortet, og udfyld leverandørlisten."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -1074,9 +1083,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
-"Denne konto bruges i en automatiseret værdiansættelse af lageret til at "
-"registrere prisforskellen mellem købsordre og dens relaterede "
-"leverandørregning, ved godkendelse af denne leverandørregning."
+"Denne konto bruges ved automatisk lagerværdiansættelse til at registrere "
+"prisforskellen mellem en indkøbsordre og den tilhørende leverandørfaktura, "
+"når fakturaen godkendes."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
@@ -1084,8 +1093,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
-"Denne konto vil blive brugt til at værdisætte pris forskellen mellem "
-"købspris og regnskabs omkostninger."
+"Denne konto bruges til at registrere prisforskellen mellem indkøbsprisen og "
+"regnskabsmæssige omkostninger."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1096,16 +1105,16 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"Dette tilføjer en dropship rute til anvendelse på produkter, for at kunne "
-"anmode dine leverandører om at levere til dine kunder. Et produkt til "
-"dropship vil generere en købsanmodning om tilbud, når salgsordren bekræftes. "
-"Dette er et efterspørgsels flow. Den anmodede leverings adresse vil være "
-"kundens leveringsadresse, og ikke dit varehus."
+"Dette tilføjer en dropship-rute, som kan anvendes på produkter for at bede "
+"dine leverandører om at levere direkte til dine kunder. Et produkt med "
+"dropship genererer en anmodning om tilbud, når salgsordren bekræftes. Det er "
+"et efterspørgselsbaseret flow, hvor leveringsadressen er kundens adresse og "
+"ikke dit lager."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr "Dette vil afgøre operations typen af indgående forsendelse"
+msgstr "Dette bestemmer operationstypen for den indgående forsendelse"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1132,7 +1141,7 @@ msgstr "Valg af periode"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
-msgstr "Total antal/sum"
+msgstr "Samlet mængde/sum"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
@@ -1158,7 +1167,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Validate the receipt of all ordered products."
-msgstr "Valider modtagelsen af alle bestilte produkter."
+msgstr "Validér modtagelsen af alle bestilte produkter."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id
@@ -1173,18 +1182,18 @@ msgstr "Leverandør"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_vendor_delay_report
 msgid "Vendor Delay Report"
-msgstr "Leverandør Forsinkelsesrapport"
+msgstr "Rapport om leverandørforsinkelser"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Vendor Lead Time"
-msgstr "Leverandør Ledetid"
+msgstr "Gennemløbstid for leverandør"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr "Leverandør Levering til Tiden analyse"
+msgstr "Analyse af leverandørens levering til tiden"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -1206,7 +1215,7 @@ msgstr "Lagerstyring"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Når produkter er købt, kan de leveres til dette lager"
+msgstr "Når produkter købes, kan de leveres til dette lager"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1224,18 +1233,18 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Du kan finde en leverandør ud fra navn, TIN, email, eller intern reference."
+"Du kan finde en leverandør ud fra navn, TIN, e-mail, eller interne reference."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Du skal angive en Leverandørlokation for denne partner %s"
+msgstr "Du skal angive en leverandørlokation for denne partner %s"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "based on stock on hand, and expected sales volumes."
-msgstr ""
+msgstr "baseret på lagerbeholdningen og det forventede salgsomfang."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -1262,4 +1271,4 @@ msgstr "dette produkt bør genopfyldes manuelt."
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "x"
-msgstr ""
+msgstr "x"

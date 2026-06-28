@@ -9,13 +9,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Nusara Boonma <nuboo@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-06 12:13+0000\n"
-"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"PO-Revision-Date: 2026-06-27 23:57+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "th/>\n"
 "Language: th\n"
@@ -582,8 +583,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        สวัสดีค่ะ <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        สวัสดีค่ะ <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        เรายินดีที่จะแจ้งให้คุณทราบว่าคำสั่งซื้อของคุณได้รับการจัดส่งแล้ว\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -593,8 +594,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -615,8 +616,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1724,7 +1725,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนตำแหน่งโดยไม่ต้องลบออกได้"
+msgstr ""
+"เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนตำแหน่งโดยไม่ต้องลบออกได้"
 
 #. module: stock
 #. odoo-python
@@ -1834,11 +1836,11 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
-"บางประเทศใช้การหัก ณ ที่จ่ายตามจำนวนใบแจ้งหนี้ ตามกฎหมายภายในของตน ลูกค้าจะจ่ายเงินหัก ณ "
-"ที่จ่าย ณ ที่จ่ายให้กับหน่วยงานด้านภาษี บริษัทของฉัน (ชิคาโก) "
-"ไม่สามารถมีส่วนร่วมในค่าใช้จ่ายที่เกี่ยวข้องกับกฎหมายของประเทศได้ไม่ว่าในสถานการณ์ใดก็ตาม "
-"ดังนั้นจำนวนเงินในใบแจ้งหนี้จะถึงกำหนดชำระให้กับ My Company (Chicago) ทั้งหมด "
-"และไม่รวมค่าใช้จ่ายใดๆ ที่เกี่ยวข้องกับกฎหมายของประเทศที่ลูกค้าตั้งอยู่"
+"บางประเทศใช้การหัก ณ ที่จ่ายตามจำนวนใบแจ้งหนี้ ตามกฎหมายภายในของตน ลูกค้าจะจ่ายเงินหัก ณ ที่"
+"จ่าย ณ ที่จ่ายให้กับหน่วยงานด้านภาษี บริษัทของฉัน (ชิคาโก) ไม่สามารถมีส่วนร่วมในค่าใช้จ่ายที่เกี่ยวข้อ"
+"งกับกฎหมายของประเทศได้ไม่ว่าในสถานการณ์ใดก็ตาม ดังนั้นจำนวนเงินในใบแจ้งหนี้จะถึงกำหนดชำระให้"
+"กับ My Company (Chicago) ทั้งหมด และไม่รวมค่าใช้จ่ายใดๆ ที่เกี่ยวข้องกับกฎหมายของประเทศที่ลูก"
+"ค้าตั้งอยู่"
 
 #. module: stock
 #. odoo-python
@@ -4154,22 +4156,24 @@ msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and "
 "only one label will be printed for this lot."
 msgstr ""
-"หาก UoM ของล็อตไม่ใช่ 'หน่วย' "
-"ล็อตจะถือเป็นหน่วยทันทีและจะมีการพิมพ์ฉลากเพียงป้ายเดียวสำหรับล็อตนี้"
+"หาก UoM ของล็อตไม่ใช่ 'หน่วย' ล็อตจะถือเป็นหน่วยทันทีและจะมีการพิมพ์ฉลากเพียงป้ายเดียวสำหรับล็อ"
+"ตนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น False จะช่วยให้คุณสามารถซ่อนจุดสั่งซื้อโดยไม่ต้องลบออก"
+msgstr ""
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น False จะช่วยให้คุณสามารถซ่อนจุดสั่งซื้อโดยไม่ต้องลบออก"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น False จะช่วยให้คุณสามารถซ่อนเส้นทางโดยไม่ต้องลบออก"
+msgstr ""
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น False จะช่วยให้คุณสามารถซ่อนเส้นทางโดยไม่ต้องลบออก"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4187,8 +4191,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์สลิปการส่งมอบของการเบิกสินค้าโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์สลิปการส่งมอบของการเบิกสินค้าโดยอัตโนมัติเมื่อได้รับการตรว"
+"จสอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4196,8 +4200,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ฉลากล็อต/SN "
-"ของการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ฉลากล็อต/SN ของการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอ"
+"บความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -4212,8 +4216,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์บรรจุภัณฑ์และเนื้อหาในการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์บรรจุภัณฑ์และเนื้อหาในการเลือกโดยอัตโนมัติเมื่อได้รับการตรว"
+"จสอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -4221,8 +4225,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์ฉลากผลิตภัณฑ์ของการหยิบสินค้าโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ฉลากผลิตภัณฑ์ของการหยิบสินค้าโดยอัตโนมัติเมื่อได้รับการตรวจ"
+"สอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
@@ -4230,8 +4234,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์ป้ายรายงานการรับของการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ป้ายรายงานการรับของการเลือกโดยอัตโนมัติเมื่อได้รับการตรว"
+"จสอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -4239,8 +4243,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์รายงานการรับของการเลือกโดยอัตโนมัติเมื่อมีการตรวจสอบและกำหนดการย้ายแล้ว"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์รายงานการรับของการเลือกโดยอัตโนมัติเมื่อมีการตรวจสอบแล"
+"ะกำหนดการย้ายแล้ว"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -4248,8 +4252,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of "
 "a picking when it is validated."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ Odoo "
-"จะพิมพ์ใบส่งคืนของการรับสินค้าโดยอัตโนมัติเมื่อมีการตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ใบส่งคืนของการรับสินค้าโดยอัตโนมัติเมื่อมีการตรวจสอบความถู"
+"กต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -4257,8 +4261,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
-"หากทำเครื่องหมายที่ช่องนี้ Odoo จะแสดงรายงานการรับโดยอัตโนมัติ "
-"(หากมีการเคลื่อนไหวที่ต้องจัดสรร) เมื่อตรวจสอบความถูกต้อง"
+"หากทำเครื่องหมายที่ช่องนี้ Odoo จะแสดงรายงานการรับโดยอัตโนมัติ (หากมีการเคลื่อนไหวที่ต้องจัดสร"
+"ร) เมื่อตรวจสอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4280,8 +4284,8 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
-"หากเลือกไว้เท่านั้น ระบบจะถือว่าคุณต้องการสร้างล็อต/หมายเลขซีเรียลใหม่ "
-"เพื่อให้คุณสามารถระบุในช่องข้อความได้"
+"หากเลือกไว้เท่านั้น ระบบจะถือว่าคุณต้องการสร้างล็อต/หมายเลขซีเรียลใหม่ เพื่อให้คุณสามารถระบุในช่อ"
+"งข้อความได้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -4292,9 +4296,8 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"หากเลือกตัวเลือกนี้ คุณจะสามารถเลือกล็อต/หมายเลขซีเรียลได้ "
-"คุณยังสามารถตัดสินใจที่จะไม่ใส่ล็อตในการดำเนินการประเภทนี้ได้ "
-"หมายความว่าจะสร้างสต็อกไม่มีล็อตหรือไม่จำกัดล็อตที่เบิกไป"
+"หากเลือกตัวเลือกนี้ คุณจะสามารถเลือกล็อต/หมายเลขซีเรียลได้ คุณยังสามารถตัดสินใจที่จะไม่ใส่ล็อตในก"
+"ารดำเนินการประเภทนี้ได้ หมายความว่าจะสร้างสต็อกไม่มีล็อตหรือไม่จำกัดล็อตที่เบิกไป"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -4372,10 +4375,10 @@ msgid ""
 "        In case of incoming flow, validate the transfer before this date in "
 "order to have these products in stock at the date promised by the supplier"
 msgstr ""
-"ในกรณีที่กระแสไหลออก "
-"ให้ตรวจสอบการโอนก่อนวันที่นี้เพื่อให้สามารถส่งมอบให้กับลูกค้าตามวันที่สัญญาไว้\n"
-"        ในกรณีที่มีกระแสไหลเข้า ให้ตรวจสอบการโอนก่อนวันที่นี้เพื่อให้มีสินค้าในสต็อก ณ "
-"วันที่ที่ซัพพลายเออร์สัญญาไว้"
+"ในกรณีที่กระแสไหลออก ให้ตรวจสอบการโอนก่อนวันที่นี้เพื่อให้สามารถส่งมอบให้กับลูกค้าตามวันที่สัญญาไ"
+"ว้\n"
+"        ในกรณีที่มีกระแสไหลเข้า ให้ตรวจสอบการโอนก่อนวันที่นี้เพื่อให้มีสินค้าในสต็อก ณ วันที่ที่ซัพพลา"
+"ยเออร์สัญญาไว้"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -5617,12 +5620,10 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
-"บริษัทของฉัน (ชิคาโก) "
-"รับรองว่าจะพยายามอย่างดีที่สุดเพื่อให้บริการที่มีประสิทธิภาพภายในเวลาที่กำหนดตามกรอบเวลาที่ตกลงกันไว้ "
-"อย่างไรก็ตาม ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบรรลุผล บริษัทของฉัน "
-"(ชิคาโก) "
-"ไม่สามารถถูกกำหนดโดยลูกค้าให้ปรากฏเป็นบุคคลที่สามในบริบทของการเรียกร้องค่าเสียหายใดๆ "
-"ที่ผู้บริโภคปลายทางยื่นต่อลูกค้า"
+"บริษัทของฉัน (ชิคาโก) รับรองว่าจะพยายามอย่างดีที่สุดเพื่อให้บริการที่มีประสิทธิภาพภายในเวลาที่กำหนด"
+"ตามกรอบเวลาที่ตกลงกันไว้ อย่างไรก็ตาม ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบ"
+"รรลุผล บริษัทของฉัน (ชิคาโก) ไม่สามารถถูกกำหนดโดยลูกค้าให้ปรากฏเป็นบุคคลที่สามในบริบทของการเ"
+"รียกร้องค่าเสียหายใดๆ ที่ผู้บริโภคปลายทางยื่นต่อลูกค้า"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9217,10 +9218,9 @@ msgid ""
 msgstr ""
 "หมายเลขซีเรียล (%(serial_number)s) ถูกใช้แล้วในตำแหน่ง: %(location_list)s\n"
 "\n"
-"คาดหวังสิ่งนี้หรือไม่? ตัวอย่างเช่น "
-"สิ่งนี้สามารถเกิดขึ้นได้หากมีการตรวจสอบการดำเนินการจัดส่งก่อนที่จะมีการตรวจสอบการดำเนินการรับสินค้าที่เกี่ยวข้อง "
-"ในกรณีนี้ ปัญหาจะได้รับการแก้ไขโดยอัตโนมัติเมื่อทุกขั้นตอนเสร็จสิ้น ไม่เช่นนั้น "
-"ควรแก้ไขหมายเลขซีเรียลเพื่อป้องกันข้อมูลที่ไม่สอดคล้องกัน"
+"คาดหวังสิ่งนี้หรือไม่? ตัวอย่างเช่น สิ่งนี้สามารถเกิดขึ้นได้หากมีการตรวจสอบการดำเนินการจัดส่งก่อนที่จะ"
+"มีการตรวจสอบการดำเนินการรับสินค้าที่เกี่ยวข้อง ในกรณีนี้ ปัญหาจะได้รับการแก้ไขโดยอัตโนมัติเมื่อทุกขั้น"
+"ตอนเสร็จสิ้น ไม่เช่นนั้น ควรแก้ไขหมายเลขซีเรียลเพื่อป้องกันข้อมูลที่ไม่สอดคล้องกัน"
 
 #. module: stock
 #. odoo-python
@@ -9241,10 +9241,9 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"ลูกค้าได้สละสิทธิ์ในข้อกำหนดและเงื่อนไขมาตรฐานของตนเองอย่างชัดเจน "
-"แม้ว่าข้อกำหนดเหล่านี้จะถูกร่างขึ้นหลังจากข้อกำหนดและเงื่อนไขมาตรฐานในการขายเหล่านี้ก็ตาม "
-"เพื่อให้มีผลบังคับใช้ "
-"การเสื่อมเสียและความเสียหายใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
+"ลูกค้าได้สละสิทธิ์ในข้อกำหนดและเงื่อนไขมาตรฐานของตนเองอย่างชัดเจน แม้ว่าข้อกำหนดเหล่านี้จะถูกร่า"
+"งขึ้นหลังจากข้อกำหนดและเงื่อนไขมาตรฐานในการขายเหล่านี้ก็ตาม เพื่อให้มีผลบังคับใช้ การเสื่อมเสียแล"
+"ะความเสียหายใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
 
 #. module: stock
 #. odoo-python
@@ -9547,7 +9546,8 @@ msgstr ""
 msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
-msgstr "ช่องทำเครื่องหมายนี้เป็นเพียงการบ่งชี้เท่านั้น ไม่ได้ตรวจสอบหรือสร้างการเคลื่อนย้ายสินค้าใดๆ"
+msgstr ""
+"ช่องทำเครื่องหมายนี้เป็นเพียงการบ่งชี้เท่านั้น ไม่ได้ตรวจสอบหรือสร้างการเคลื่อนย้ายสินค้าใดๆ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9706,9 +9706,8 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation "
 "type."
 msgstr ""
-"คำนำหน้าลำดับนี้ถูกใช้แล้วโดยประเภทการดำเนินการอื่น "
-"ขอแนะนำให้คุณเลือกคำนำหน้าที่ไม่ซ้ำกันเพื่อหลีกเลี่ยงปัญหาและ/หรือค่าอ้างอิงที่ซ้ำกัน "
-"หรือกำหนดลำดับการอ้างอิงที่มีอยู่ให้กับประเภทการดำเนินการนี้"
+"คำนำหน้าลำดับนี้ถูกใช้แล้วโดยประเภทการดำเนินการอื่น ขอแนะนำให้คุณเลือกคำนำหน้าที่ไม่ซ้ำกันเพื่อหลีก"
+"เลี่ยงปัญหาและ/หรือค่าอ้างอิงที่ซ้ำกัน หรือกำหนดลำดับการอ้างอิงที่มีอยู่ให้กับประเภทการดำเนินการนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10277,8 +10276,8 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
-"การอัปเดตตำแหน่งการโอนย้ายนี้จะส่งผลให้มีการยกเลิกการจองรายการที่ได้รับมอบหมายในปัจจุบัน "
-"จะพยายามจองรายการในตำแหน่งใหม่ และลิงก์กับการโอนย้ายครั้งก่อนจะถูกยกเลิก\n"
+"การอัปเดตตำแหน่งการโอนย้ายนี้จะส่งผลให้มีการยกเลิกการจองรายการที่ได้รับมอบหมายในปัจจุบัน จะพย"
+"ายามจองรายการในตำแหน่งใหม่ และลิงก์กับการโอนย้ายครั้งก่อนจะถูกยกเลิก\n"
 "\n"
 "เพื่อหลีกเลี่ยงปัญหานี้ โปรดยกเลิกการเปลี่ยนแปลงตำแหน่งแหล่งที่มาก่อนบันทึก"
 
@@ -10784,7 +10783,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
-msgstr "เมื่อตรวจสอบความถูกต้องของการโอนย้าย สินค้าจะถูกมอบหมายให้กับเจ้าของรายนี้"
+msgstr ""
+"เมื่อตรวจสอบความถูกต้องของการโอนย้าย สินค้าจะถูกมอบหมายให้กับเจ้าของรายนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id

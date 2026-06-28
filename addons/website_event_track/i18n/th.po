@@ -7,13 +7,14 @@
 # Rasareeyar Lappiam, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:40+0000\n"
-"PO-Revision-Date: 2025-11-16 22:53+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 00:27+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/"
 "website_event_track/th/>\n"
 "Language: th\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -133,20 +134,20 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    เรียน <t t-out=\"object.partner_id.name or object.partner_name or "
-"''\">Brandon Freeman</t><br/>\n"
-"    เรายินดีที่จะแจ้งให้คุณทราบว่าข้อเสนอของคุณ<t t-out=\"object.name or "
-"''\">กิจกรรมนี้เกี่ยวกับอะไร</t>ได้รับการยอมรับและยืนยันเข้าร่วมกิจกรรม<t t-"
-"out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>แล้ว\n"
+"    เรียน <t t-out=\"object.partner_id.name or object.partner_name or ''\">"
+"Brandon Freeman</t><br/>\n"
+"    เรายินดีที่จะแจ้งให้คุณทราบว่าข้อเสนอของคุณ<t t-out=\"object.name or ''\">กิจกรรมนี้เกี่"
+"ยวกับอะไร</t>ได้รับการยอมรับและยืนยันเข้าร่วมกิจกรรม<t t-out=\"object.event_id.name "
+"or ''\">OpenWood Collection Online Reveal</t>แล้ว\n"
 "    <br/>\n"
 "    คุณสามารถค้นพบรายละเอียดเพิ่มเติมได้ที่นี่:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
-"{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: "
-"14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
-"decoration: none !important; background-color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}}; border-"
-"radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ "
+"object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">"
+"\n"
 "            ดูการพูดคุย\n"
 "        </a>\n"
 "    </div>\n"
@@ -155,8 +156,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>"
 
@@ -1021,8 +1022,8 @@ msgid ""
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
 msgstr ""
-"คิดจะสร้างบ้านไม้? ดูวิดีโอนี้เพื่อค้นหาข้อมูลเพิ่มเติมเกี่ยวกับขั้นตอนการก่อสร้างและผลลัพธ์ขั้นสุดท้าย "
-"อธิบายง่าย ๆ ทีละขั้นตอน! สนใจไหม?"
+"คิดจะสร้างบ้านไม้? ดูวิดีโอนี้เพื่อค้นหาข้อมูลเพิ่มเติมเกี่ยวกับขั้นตอนการก่อสร้างและผลลัพธ์ขั้นสุดท้าย อธิบ"
+"ายง่าย ๆ ทีละขั้นตอน! สนใจไหม?"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
@@ -1585,7 +1586,8 @@ msgstr "ไอคอนเพื่อระบุการยกเว้นก
 msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
-msgstr "หากเลือกไว้ จะเผยแพร่แทร็กโดยอัตโนมัติเพื่อให้เข้าถึงลิงก์ไปยังลูกค้าได้"
+msgstr ""
+"หากเลือกไว้ จะเผยแพร่แทร็กโดยอัตโนมัติเพื่อให้เข้าถึงลิงก์ไปยังลูกค้าได้"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1852,8 +1854,8 @@ msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
 msgstr ""
-"ลิงค์ไปที่ Q&A ที่นี่! เวลาที่จะซ่อนกำแพงบล็อกเก่าๆ มาถึงแล้ว "
-"เราชื่นชอบโปรเจ็กต์ที่เรียบง่ายและสามารถสร้างความเปลี่ยนแปลงได้! :)-"
+"ลิงค์ไปที่ Q&A ที่นี่! เวลาที่จะซ่อนกำแพงบล็อกเก่าๆ มาถึงแล้ว เราชื่นชอบโปรเจ็กต์ที่เรียบง่ายและสามา"
+"รถสร้างความเปลี่ยนแปลงได้! :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -2169,8 +2171,8 @@ msgid ""
 "woodworking! In this video I share with you how/why I started building "
 "furniture!"
 msgstr ""
-"อาจเป็นหนึ่งในคำถามที่ถูกถามบ่อยที่สุดที่ฉันได้รับ นั้นคือสามารถเริ่มงานไม้ได้อย่างไร! ในวิดีโอนี้ "
-"ฉันจะแบ่งปันกับคุณว่าเหตุใดฉันจึงเริ่มสร้างเฟอร์นิเจอร์!"
+"อาจเป็นหนึ่งในคำถามที่ถูกถามบ่อยที่สุดที่ฉันได้รับ นั้นคือสามารถเริ่มงานไม้ได้อย่างไร! ในวิดีโอนี้ ฉันจะแ"
+"บ่งปันกับคุณว่าเหตุใดฉันจึงเริ่มสร้างเฟอร์นิเจอร์!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -2551,8 +2553,8 @@ msgid ""
 "There are a lot of ideas worth exploring so start with the 10 DIY furniture "
 "ideas for absolute beginners."
 msgstr ""
-"มีแนวคิดมากมายที่ควรค่าแก่การสำรวจ ดังนั้นให้เริ่มต้นด้วยแนวคิดเกี่ยวกับเฟอร์นิเจอร์ DIY 10 "
-"ชิ้นสำหรับผู้เริ่มต้นอย่างแท้จริง"
+"มีแนวคิดมากมายที่ควรค่าแก่การสำรวจ ดังนั้นให้เริ่มต้นด้วยแนวคิดเกี่ยวกับเฟอร์นิเจอร์ DIY 10 ชิ้นสำหรั"
+"บผู้เริ่มต้นอย่างแท้จริง"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5

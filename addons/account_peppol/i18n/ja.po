@@ -8,13 +8,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:31+0000\n"
-"PO-Revision-Date: 2026-04-11 11:53+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-06-27 23:57+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_peppol/ja/>\n"
 "Language: ja\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -206,26 +207,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            請求書を送付\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -241,11 +242,11 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p> <t t-out=\"object.name or "
-"''\">YourCompany</t>様</p>\n"
+"                                    <p> <t t-out=\"object.name or ''\">"
+"YourCompany</t>様</p>\n"
 "\n"
-"                                    <p>貴社を<strong>Peppol Networkネットワー"
-"ク</strong>に追加いたしました。</p>\n"
+"                                    <p>貴社を<strong>Peppol Network"
+"ネットワーク</strong>に追加いたしました。</p>\n"
 "\n"
 "                                    <p>Odoo経由で電子請求書を <strong>送信<t "
 "t-if=\"object.account_peppol_proxy_state == 'receiver'\">・  受信</t></"
@@ -498,8 +499,8 @@ msgid ""
 "of the MSH, with respect to supported features."
 msgstr ""
 "メッセージドキュ券とは構文的にもスキーマ的にも正しいものの、いくつかの要素や"
-"属性の有無が、サポートされている機能に関する MSH の対応能力と一致していませ"
-"ん。"
+"属性の有無が、サポートされている機能に関する MSH の対応能力と一致していません"
+"。"
 
 #. module: account_peppol
 #. odoo-python
@@ -656,8 +657,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用されるコー"
-"ド。\n"
+"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用される"
+"コード。\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -709,8 +710,7 @@ msgstr "連絡先メールと電話番号が必要です。"
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
-msgstr ""
-"識別子を持つドキュメントを検証するための XSD が見つかりませんでした\"%s\""
+msgstr "識別子を持つドキュメントを検証するための XSD が見つかりませんでした\"%s\""
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -741,8 +741,7 @@ msgstr "作成日"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
-msgstr ""
-"顧客はPeppolを使用していますが、ドキュメントの受信を有効にしていません。"
+msgstr "顧客はPeppolを使用していますが、ドキュメントの受信を有効にしていません。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -905,8 +904,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "If you want to be invoiced by Peppol, your configuration must be valid."
-msgstr ""
-"Peppolから顧客請求書を受取りたい場合は、設定が検証済である必要があります。"
+msgstr "Peppolから顧客請求書を受取りたい場合は、設定が検証済である必要があります。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1697,9 +1695,9 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added "
 "or the SOAP Body is not empty."
 msgstr ""
-"href 属性が有効な MIME データパートを参照していない、またはメッセージ内にフラ"
-"グメントヘッダーおよびデータパート以外の MIME パートが含まれている、あるいは "
-"SOAP Body が空でない可能性があります。"
+"href 属性が有効な MIME データパートを参照していない、またはメッセージ内に"
+"フラグメントヘッダーおよびデータパート以外の MIME パートが含まれている、ある"
+"いは SOAP Body が空でない可能性があります。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1740,8 +1738,8 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
-"セキュリティヘッダー内の \"ebms\" SOAP アクター向けの署名を、セキュリティモ"
-"ジュールで検証できませんでした。 "
+"セキュリティヘッダー内の \"ebms\" SOAP アクター向けの署名を、"
+"セキュリティモジュールで検証できませんでした。 "
 
 #. module: account_peppol
 #. odoo-python
@@ -1975,8 +1973,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
-msgstr ""
-"このPeppol IDを使用して、Odoo経由で電子顧客請求書の送受信を行っています。"
+msgstr "このPeppol IDを使用して、Odoo経由で電子顧客請求書の送受信を行っています。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

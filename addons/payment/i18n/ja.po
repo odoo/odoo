@@ -7,13 +7,14 @@
 # Junko Augias, 2025
 #
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-14 14:26+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-06-27 23:50+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "payment/ja/>\n"
 "Language: ja\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -61,8 +62,8 @@ msgid ""
 "first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> これらのプロパティは\n"
-"                                この支払に関してプロバイダとOdooとの統一のビ"
-"ヘイビアと\n"
+"                                この支払に関してプロバイダとOdooとの統一の"
+"ビヘイビアと\n"
 "一致するよう定義されます。 変更によりエラーが発生する可能性があり、\n"
 "                                まずはテストデータベースでテストされる必要が"
 "あります。"
@@ -82,10 +83,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
-"transactions you intend to capture can only be captured in full. Handle the "
-"transactions individually to capture a partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Some of the transactions you intend to capture can "
+"only be captured in full. Handle the transactions individually to capture a "
+"partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -208,8 +209,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成はサポー"
-"トされていません。\n"
+"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成は"
+"サポートされていません。\n"
 "                        代わりに <em>複製</em>アクションを使用して下さい。"
 
 #. module: payment
@@ -255,8 +256,7 @@ msgstr "参照%(ref)sの取引が開始されました (%(provider_name)s)"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr ""
-"参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
+msgstr "参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
 
 #. module: payment
 #. odoo-python
@@ -1343,8 +1343,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
-"す。\n"
+"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されます"
+"。\n"
 "このモードは、プロバイダを設定する際に推奨されます。"
 
 #. module: payment
@@ -2198,8 +2198,7 @@ msgstr "Pix"
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr ""
-" %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
+msgstr " %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
 
 #. module: payment
 #. odoo-python
@@ -2644,8 +2643,7 @@ msgstr ""
 msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
-msgstr ""
-"この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
+msgstr "この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
 
 #. module: payment
 #. odoo-python
@@ -2852,8 +2850,7 @@ msgstr ""
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error (%"
 "(provider_name)s)."
-msgstr ""
-"参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
+msgstr "参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
 
 #. module: payment
 #. odoo-python
@@ -2887,8 +2884,7 @@ msgstr ""
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending (%"
 "(provider_name)s)."
-msgstr ""
-"取引 (参照番号:%(ref)s  金額: %(amount)s)は保留中です(%(provider_name)s)。"
+msgstr "取引 (参照番号:%(ref)s  金額: %(amount)s)は保留中です(%(provider_name)s)。"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -3225,8 +3221,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
-"プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されます"
-"が、管理フォームでのみ表示されます。"
+"プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されますが"
+"、管理フォームでのみ表示されます。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3281,8 +3277,8 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
-"決済プロバイダを削除することはできません%s;代わりに無効にするか、アンインス"
-"トールして下さい。"
+"決済プロバイダを削除することはできません%s;代わりに無効にするか、"
+"アンインストールして下さい。"
 
 #. module: payment
 #. odoo-python
