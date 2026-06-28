@@ -135,6 +135,20 @@ class test_search(TransactionCase):
         self.assertEqual(found_ids, expected_ids)
 
     def test_13_m2o_order_loop_multi(self):
+        """
+        Test self referential search.
+
+        It will first search on the references but will stop
+        dereferencing on itself...
+
+        create_uid of a res.partner references a res.users
+
+        So the following test will search for:
+
+        partner_id.create_uid.login desc,
+        partner_id.name,
+        login desc
+        """
         Users = self.env['res.users']
 
         # will sort by login desc of the creator, then by name
@@ -144,13 +158,21 @@ class test_search(TransactionCase):
         kw = dict(groups_id=[Command.set([self.ref('base.group_system'),
                                      self.ref('base.group_partner_manager')])])
 
-        u1 = Users.create(dict(name='Q', login='m', **kw)).id
+        # Use ZZ as login for base creator as __system__ may change order
+        # based on the collate thus the test will work regardless of
+        # the database collate being in use.
+        bb = Users.create(dict(name='Od', login='ZZ', **kw)).id
+
+        u1 = Users.with_user(bb).create(dict(name='Q', login='m', **kw)).id
         u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
-        u3 = Users.create(dict(name='C', login='c', **kw)).id
+        u3 = Users.with_user(bb).create(dict(name='C', login='c', **kw)).id
         u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]
-        found_ids = Users.search([('id', 'in', expected_ids)]).ids
+        search_ids = [u1, u2, u3, u4]
+
+        records = Users.search([('id', 'in', search_ids)])
+        found_ids = records.ids
         self.assertEqual(found_ids, expected_ids)
 
     def test_20_x_active(self):
