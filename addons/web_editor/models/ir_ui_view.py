@@ -510,6 +510,8 @@ class IrUiView(models.Model):
         key = snippet_view.key.split('.')[1]
         custom_key = self._get_snippet_addition_view_key(template_key, key)
         snippet_addition_view = self.search([('key', '=', custom_key)])
+        if not name or snippet_addition_view.name.split()[0] == name:
+            return False
         if snippet_addition_view:
             snippet_addition_view.name = name + ' Block'
         snippet_view.name = name
