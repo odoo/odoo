@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="action_event_question_view" model="ir.actions.act_window">
+        <field name="name">Event questions</field>
+        <field name="res_model">event.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new questions
+            </p>
+            <p>
+                Questions can be used for each of your events.
+            </p>
+        </field>
+    </record>
+
+    <record id="event_question_view_list" model="ir.ui.view">
+        <field name="name">event.question.view.list</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="title"/>
+                <field name="is_mandatory_answer" string="Mandatory"/>
+                <field name="once_per_order" string="Once per Order"/>
+                <field name="question_type" string="Type"/>
+                <field name="answer_ids" widget="many2many_tags" invisible="question_type != 'simple_choice'"/>
+                <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1"
+                        string="Stats"
+                        title="Answer Breakdown" invisible="question_type not in ['simple_choice', 'text_box']"/>
+            </list>
+        </field>
+    </record>
+
     <record id="event_question_view_form" model="ir.ui.view">
         <field name="name">event.question.view.form</field>
         <field name="model">event.question</field>
         <field name="arch" type="xml">
             <form string="Question">
                 <sheet>
-                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
+                    <h1 class="d-flex">
+                        <field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/>
+                    </h1>
                     <group>
                         <group>
                             <field name="is_mandatory_answer"/>
@@ -32,4 +67,46 @@
             </form>
         </field>
     </record>
+
+    <record id="event_question_menu" model="ir.ui.menu">
+        <field name="action" ref="event.action_event_question_view"/>
+    </record>
+
+    <record id="action_event_registration_answer_reporting" model="ir.actions.act_window">
+        <field name="name">Question</field>
+        <field name="res_model">event.registration.answer</field>
+        <field name="view_mode">graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No answer yet!
+            </p><p>
+                From this dashboard you can report, analyze and detect trends regarding the answers of your registered attendees.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_answer_graph">
+        <field name="name">event.registration.answer.graph</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <graph string="Question" type="bar">
+                    <field name="question_id" type="col"/>
+                    <field name="value_answer_id" type="row" stacked="1"/>
+                    <field name="event_id" type="row"/>
+<!--                <field name="value_answer_id" type="row"/>-->
+<!--                <field name="event_id" type="col"/>-->
+            </graph>
+        </field>
+        <field name="domaine">
+            ('question_id.question_type', '=', 'simple_choice')
+        </field>
+    </record>
+
+    <menuitem name="Question"
+        id="menu_action_event_registration_answer_reporting"
+        parent="event.menu_reporting_events"
+        sequence="4"
+        action="action_event_registration_answer_reporting"
+        groups="event.group_event_user"/>
+
 </odoo>

@@ -19,7 +19,7 @@ class EventQuestion(models.Model):
         ('phone', 'Phone'),
         ('company_name', 'Company'),
     ], default='simple_choice', string="Question Type", required=True)
-    event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
+    event_type_ids = fields.Many2many('event.type', string="Event Type")
     event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)
     sequence = fields.Integer(default=10)
@@ -30,7 +30,7 @@ class EventQuestion(models.Model):
 
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
-        if any(question.event_type_id and question.event_id for question in self):
+        if any(question.event_type_ids and question.event_id for question in self):
             raise UserError(_("Question cannot be linked to both an Event and an Event Type."))
 
     def write(self, vals):
