@@ -99,7 +99,12 @@ export class PaymentScreen extends Component {
         return this.pos.get_order();
     }
     get paymentLines() {
-        return this.currentOrder.get_paymentlines();
+        const payments = this.currentOrder.get_paymentlines();
+        const invalidPayments = payments.filter(line => line.amount === 0)
+        for (const line of invalidPayments) {
+            this.currentOrder.remove_paymentline(line);
+        }
+        return payments.filter(line => line.amount !== 0);
     }
     get selectedPaymentLine() {
         return this.currentOrder.selected_paymentline;
@@ -495,8 +500,8 @@ export class PaymentScreen extends Component {
         if (
             Math.abs(
                 this.currentOrder.get_total_with_tax() -
-                    this.currentOrder.get_total_paid() +
-                    this.currentOrder.get_rounding_applied()
+                this.currentOrder.get_total_paid() +
+                this.currentOrder.get_rounding_applied()
             ) > 0.00001
         ) {
             if (!this.pos.payment_methods.some((pm) => pm.is_cash_count)) {
