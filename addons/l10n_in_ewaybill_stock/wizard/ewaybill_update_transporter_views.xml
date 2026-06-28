@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_ewaybill_update_transporter" model="ir.actions.act_window">
+        <field name="name">Update Transporter</field>
+        <field name="res_model">ewaybill.update.transporter</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_ewaybill_update_transporter" model="ir.ui.view">
+        <field name="name">Update Transporter</field>
+        <field name="model">ewaybill.update.transporter</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="ewaybill_id" invisible="1"/>
+                        <field name="transporter_id"/>
+                    </group>
+                    <group>
+                    </group>
+                </group>
+                <footer>
+                    <button name="update_transporter" string="Update" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
