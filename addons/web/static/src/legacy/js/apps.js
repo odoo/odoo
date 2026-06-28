@@ -91,7 +91,13 @@ var Apps = AbstractAction.extend({
                 });
             },
             'Model': function(m) {
-                return self._rpc({model: m.model, method: m.args[0], args: m.args[1]})
+                let kwargs = {};
+                if (typeof(m.args[1][1]) === 'object' && !Array.isArray(m.args[1][1]) && m.args[1][1] !== null){
+                    // when method is search_read the second args cound be an array
+                    // but when method is button_immediate_upgrade the second args is {}
+                    kwargs = m.args[1][1];
+                }
+                return self._rpc({model: m.model, method: m.args[0], args: [m.args[1][0]], kwargs: kwargs})
                     .then(function(r) {
                         var w = self.$ifr[0].contentWindow;
                         w.postMessage({id: m.id, result: r}, client.origin);
