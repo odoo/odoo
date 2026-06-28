@@ -84,6 +84,19 @@ class TestCompanyCheck(common.TransactionCase):
             'company_id': self.company_b.id,
         })
 
+    def test_company_check_company_dependent(self):
+        """ Test that check_company works correctly when the model has a company_dependent field. """
+        with self.assertRaises(UserError):
+            self.env['test_new_api.model_child_company_dependent'].with_company(self.company_b).create({
+                'name': 'M1',
+                'parent_id': self.parent_company_a_id.id,
+            })
+
+        self.env['test_new_api.model_child_company_dependent'].create({
+            'name': 'M1',
+            'parent_id': self.parent_company_a_id.id,
+        })
+
     def test_company_environment(self):
         """ Check the company context on the environment is verified. """
 
