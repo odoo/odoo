@@ -131,7 +131,7 @@ class ReportSaleDetails(models.AbstractModel):
                         for account_payment in account_payments:
                             if payment['id'] == account_payment.pos_payment_method_id.id:
                                 payment['final_count'] = payment['total']
-                                payment['money_counted'] = account_payment.amount
+                                payment['money_counted'] = account_payment.amount_signed
                                 payment['money_difference'] = payment['money_counted'] - payment['final_count']
                                 payment['cash_moves'] = []
                                 if payment['money_difference'] > 0:
