@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='product.group_discount_per_so_line')
-    group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
+    group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom', group='base.group_user,base.group_portal')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_loyalty = fields.Boolean("Promotions, Coupons, Gift Card & Loyalty Program")
