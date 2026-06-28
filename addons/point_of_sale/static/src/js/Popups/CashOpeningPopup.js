@@ -39,6 +39,15 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         closeDetailsPopup() {
             this.state.displayMoneyDetailsPopup = false;
         }
+        _onAmountKeypress(event) {
+            if (event.code === "NumpadDecimal") {
+                event.preventDefault();
+                let from = event.target.selectionStart;
+                let to = event.target.selectionEnd;
+                let current_value = this.openingCashInputRef.el.value
+                this.openingCashInputRef.el.value = current_value.substring(0, from) + this.decimalSeparator + current_value.substring(to);
+            }
+        }
         updateCashOpening({ total, moneyDetailsNotes }) {
             this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;

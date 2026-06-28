@@ -58,6 +58,12 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 this.state.inputType = this.state.inputType === 'out' ? 'in' : 'out';
                 this.handleInputChange();
             }
+            if (event.code === "NumpadDecimal") {
+                event.preventDefault();
+                let from = event.target.selectionStart;
+                let to = event.target.selectionEnd;
+                this.state.inputAmount = this.state.inputAmount.substring(0, from) + this.decimalSeparator + this.state.inputAmount.substring(to);
+            }
         }
         onClickButton(type) {
             let amount = this.state.inputAmount;
