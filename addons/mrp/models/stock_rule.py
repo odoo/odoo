@@ -220,6 +220,21 @@ class ProcurementGroup(models.Model):
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)
+                    # Remove from product_description_variants in procurement values
+                    # any description that does not apply to the actual component
+                    if values.get("product_description_variants"):
+                        lang = self._get_product_description_variants_lang(values)
+                        kit_product_description_variants_list = values.get("product_description_variants").lstrip("\n").split("\n")
+                        valid_product_ptavs = bom_line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+                        product_description_variant_list = [
+                            kpdvl
+                            for kpdvl in kit_product_description_variants_list
+                            if kpdvl.split(":")[0] in [
+                                vpptavs.split(":")[0]
+                                for vpptavs in valid_product_ptavs.with_context(lang=lang).mapped("display_name")
+                            ]
+                        ]
+                        values["product_description_variants"] = "\n\n%s" % "\n".join(product_description_variant_list)
                     component_qty, procurement_uom = bom_line_uom._adjust_uom_quantities(bom_line_data['qty'], quant_uom)
                     procurements_without_kit.append(self.env['procurement.group'].Procurement(
                         bom_line.product_id, component_qty, procurement_uom,
@@ -228,6 +243,9 @@ class ProcurementGroup(models.Model):
             else:
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
+
+    def _get_product_description_variants_lang(self, values):
+        return self.env["res.partner"].browse(values.get("partner_id")).lang or "en_US"
 
     def _get_moves_to_assign_domain(self, company_id):
         domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
