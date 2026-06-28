@@ -438,7 +438,7 @@ class AccountPayment(models.Model):
             available_payment_method_lines = pay.available_payment_method_line_ids
 
             # Select the first available one by default.
-            if pay.payment_method_line_id in available_payment_method_lines:
+            if pay.payment_method_line_id.id in available_payment_method_lines.ids:
                 pay.payment_method_line_id = pay.payment_method_line_id
             elif available_payment_method_lines:
                 pay.payment_method_line_id = available_payment_method_lines[0]._origin
