@@ -33,6 +33,7 @@ IGNORED_IN_EXPRESSION = {
     'current_date',
     'today',
     'now',
+    'utc_now',
     'abs',
     'len',
     'bool',
