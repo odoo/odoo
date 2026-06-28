@@ -8,9 +8,6 @@
                         <i class="fa fa-share-alt" aria-label="Share certification" title="Share certification"/>
                         Share your certification
                     </a>
-                    <t t-call="website_slides.slide_share_modal">
-                        <t t-set="record" t-value="channel_id"/>
-                    </t>
                 </t>
             </xpath>
             <xpath expr="//div[hasclass('o_survey_finished')]/div[last()]" position="after">
@@ -21,6 +18,21 @@
                         Go back to course
                     </a>
                 </div>
+            </xpath>
+        </template>
+
+        <template id="survey_fill_form_inherit_website_slides" inherit_id="survey.survey_fill_form">
+        <!-- This needs to be here and not in the 'survey_fill_form_done' inherit because 'slide_share_modal' contains
+             a <form> tag and forms cannot be nested within each other. We need to put it AFTER the survey main form.
+
+             We also cannot condition the modal to the answer being 'completed' as this part of the template is not
+             refreshed when submitting the survey form (as it's done in ajax and not with a full reload).
+             It needs to be inserted no matter where we are in the survey completion. -->
+            <xpath expr="//form" position="after">
+                <t t-if="channel_id" t-call="website_slides.slide_share_modal">
+                    <t t-set="record" t-value="channel_id"/>
+                    <t t-set="email_sharing" t-value="channel_id.share_channel_template_id"/>
+                </t>
             </xpath>
         </template>
 
