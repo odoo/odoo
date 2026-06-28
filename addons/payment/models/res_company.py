@@ -28,6 +28,7 @@ class ResCompany(models.Model):
         self.env.company.get_chart_of_accounts_or_fail()
 
         self._install_modules(['payment_stripe'])
+        self._install_modules(['payment_razorpay'])
 
         # Create a new env including the freshly installed module(s)
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
@@ -37,8 +38,19 @@ class ResCompany(models.Model):
             *self.env['payment.provider']._check_company_domain(self.env.company),
             ('code', '=', 'stripe')
         ], limit=1)
+        razorpay_provider = new_env['payment.provider'].search([
+            *self.env['payment.provider']._check_company_domain(self.env.company),
+            ('code', '=', 'razorpay')
+        ], limit=1)
         if not stripe_provider:
             base_provider = self.env.ref('payment.payment_provider_stripe')
+            # Use sudo to access payment provider record that can be in different company.
+            stripe_provider = base_provider.sudo().with_context(
+                stripe_connect_onboarding=True,
+            ).copy(default={'company_id': self.env.company.id})
+
+        if not razorpay_provider:
+            base_provider = self.env.ref('payment.payment_provider_razorpay')
             # Use sudo to access payment provider record that can be in different company.
             stripe_provider = base_provider.sudo().with_context(
                 stripe_connect_onboarding=True,
