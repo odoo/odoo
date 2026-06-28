@@ -1,0 +1,70 @@
+<templates xml:space="preserve">
+    <t t-name="ethiopian_date_picker.DateTimeEthiopiaField" owl="1">
+        <div class="ethiopian-date-picker" t-ref="wrapper">
+            <input
+                type="text"
+                t-att-value="state.inputValue"
+                t-on-click="onInputClick"
+                t-on-input="onInputChange"
+            />
+            <div 
+            t-if="state.showCalendar" 
+            class="calendar-popup"
+            >
+                    <div class="calendar-header">
+                        <button t-on-click="() => changeMonth(-1)" t-if="state.viewMode === 'days'" class="nav-button">&lt;</button>
+                        <span class="current-month-year" t-on-click="onCalendarHeaderClick">
+                            <t t-if="state.viewMode === 'days'">
+                                <t t-esc="ETHIOPIAN_MONTHS[state.currentMonth]"/> 
+                                <t> </t> 
+                                <t t-esc="state.currentYear"/>
+                            </t>
+                            <t t-if="state.viewMode === 'months'">
+                                <t  t-esc="state.currentYear"/>
+                            </t>
+                        </span>
+                        <button t-on-click="() => changeMonth(1)" t-if="state.viewMode === 'days'" class="nav-button">&gt;</button>
+ 
+                </div>
+                <div class="calendar-body">
+                    <!-- Show Days -->
+                    <div t-if="state.viewMode === 'days'">
+                        <div class="weekdays">
+                            <t t-foreach="ETHIOPIAN_DAYS" t-as="day" t-key="day">
+                                <div class="weekday"><t t-esc="day"/></div>
+                            </t>
+                        </div>
+                        <div class="days">
+                            <t t-foreach="getDaysInMonth(state.currentYear, state.currentMonth)" t-as="day" t-key="day">
+                                <div class="day"
+                                     t-att-class="{ 'today': isToday(day), 'selected': state.selectedDate &amp;&amp; state.selectedDate.day === day &amp;&amp; state.selectedDate.month === state.currentMonth + 1 &amp;&amp; state.selectedDate.year === state.currentYear }"
+                                     t-on-click="() => onDateSelect(day)"
+                                     t-att-style="day === 1 ? 'grid-column-start:' + (getDayOfWeek(state.currentYear, state.currentMonth, day) + 1) : ''">
+                                    <t t-esc="day"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Show Months -->
+                    <div t-if="state.viewMode === 'months'" class="months">
+                        <t t-foreach="ETHIOPIAN_MONTHS" t-as="month" t-key="month">
+                            <div class="month" t-on-click="() => onMonthSelect(month)">
+                                <t t-esc="month"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Show Years -->
+                    <div t-if="state.viewMode === 'years'" class="years">
+                        <t t-foreach="getAvailableYears()" t-as="year" t-key="year">
+                            <div class="year" t-on-click="() => onYearSelect(year)">
+                                <t t-esc="year"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
