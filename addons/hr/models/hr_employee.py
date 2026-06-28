@@ -36,7 +36,7 @@ class HrEmployeePrivate(models.Model):
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
+    name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True,translate=True)
     user_id = fields.Many2one(
         'res.users', 'User',
         related='resource_id.user_id',
