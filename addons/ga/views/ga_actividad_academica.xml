@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_actividad_academica_list" >
+            <field name="name">Ga Acatividad Academica List</field>
+            <field name="model">ga.actividad.academica</field>
+            <field name="arch" type="xml">
+                <tree string="Actividad Academica " create="true" edit="true">
+                    <field name="codigo"/>
+                    <field name="descripcion"/>
+                    <field name="fecha_registro"/>
+                    <field name="fecha_entrega"/>
+                    <field name="ponderacion"/>
+                    <field name="paralelo_profesor_id"/>
+                    <field name="ciclo_academico_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="ga_actividad_academica" >
+            <field name="name">Ga Actividad Academica Form</field>
+            <field name="model">ga.actividad.academica</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="codigo"/>
+                        <field name="descripcion"/>
+                        <field name="fecha_registro"/>
+                        <field name="fecha_entrega"/>
+                        <field name="ponderacion"/>
+                        <field name="paralelo_profesor_id"/>
+                        <field name="ciclo_academico_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+      
+    </data>
+</odoo>
