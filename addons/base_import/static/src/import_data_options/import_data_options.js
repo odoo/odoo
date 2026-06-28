@@ -28,7 +28,8 @@ export class ImportDataOptions extends Component {
         );
     }
     async loadOptions() {
-        const options = [["prevent", _t("Prevent import")]];
+        const options = [["prevent", _t("Prevent import")],
+                         ["import_skip_records", _t("Skip record")]];
         if (this.props.fieldInfo.type === "boolean") {
             options.push(["false", _t("Set to: False")]);
             options.push(["true", _t("Set to: True")]);
@@ -38,7 +39,6 @@ export class ImportDataOptions extends Component {
         if (["many2one", "many2many", "selection"].includes(this.props.fieldInfo.type)) {
             if (!this.props.fieldInfo.required) {
                 options.push(["import_set_empty_fields", _t("Set value as empty")]);
-                options.push(["import_skip_records", _t("Skip record")]);
             }
             if (this.props.fieldInfo.type === "selection") {
                 const fields = await this.orm.call(this.currentModel, "fields_get");
