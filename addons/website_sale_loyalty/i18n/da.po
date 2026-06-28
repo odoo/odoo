@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-11-15 11:19+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-27 23:47+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
 "website_sale_loyalty/da/>\n"
 "Language: da\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -36,13 +37,13 @@ msgstr "<strong>Kuponer - </strong>"
 #. odoo-python
 #: code:addons/website_sale_loyalty/wizard/coupon_share.py:0
 msgid "A coupon is needed for coupon programs."
-msgstr "En kupon er nødvendig for kuponprogrammer."
+msgstr "En rabatkupon er påkrævet for kuponprogrammer."
 
 #. module: website_sale_loyalty
 #. odoo-python
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 msgid "A coupon with the same code was found."
-msgstr "Der blev fundet en kupon med samme kode."
+msgstr "Der blev fundet en rabankupon med samme kode."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
@@ -90,12 +91,13 @@ msgstr "Kunne ikke anvende kampagnekoden:"
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__coupon_id
 msgid "Coupon"
-msgstr "Kupon"
+msgstr "Rabatkupon"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
-msgstr "Opret links, der anvender en kupon og omdirigerer til en bestemt side"
+msgstr ""
+"Opret links, der anvender en rabatkupon og omdirigerer til en bestemt side"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_uid
@@ -110,12 +112,12 @@ msgstr "Oprettet den"
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__disabled_auto_rewards
 msgid "Disabled Auto Rewards"
-msgstr "Deaktiveret automatiske belønninger"
+msgstr "Deaktiverede automatiske belønninger"
 
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr "Rabat & Loyalitet"
+msgstr "Rabat og loyalitet"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.cart_discount
@@ -125,7 +127,7 @@ msgstr "Rabat:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.cart_discount
 msgid "Discounted amount"
-msgstr "Rabat"
+msgstr "Rabatbeløb"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
@@ -136,7 +138,7 @@ msgstr "Rabat"
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__display_name
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
@@ -151,17 +153,17 @@ msgstr "Udløbsdato:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Generate Short Link"
-msgstr "Generer kort link"
+msgstr "Generér kort link"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.sale_coupon_result
 msgid "Gift card or discount code..."
-msgstr "Gavekort eller rabatkode..."
+msgstr "Gavekort eller rabatkode ..."
 
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr "Gavekort og eWallet"
+msgstr "Gavekort og digital tegnebog"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__id
@@ -177,7 +179,7 @@ msgstr "ID"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Invalid or expired promo code."
-msgstr "Ugyldig eller udløbet kampagne kode."
+msgstr "Ugyldig eller udløbet kampagnekode."
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__write_uid
@@ -197,7 +199,7 @@ msgstr "Loyalitet"
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Loyalitetskupon"
+msgstr "Loyalitetsprogamkupon"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_program
@@ -212,17 +214,17 @@ msgstr "Loyalitetsprogrammer"
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Loyalitet regel"
+msgstr "Loyalitetsregel"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
-msgstr "Betal med eWallet"
+msgstr "Betal med digital pung"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -232,7 +234,7 @@ msgstr "Program"
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_website_id
 msgid "Program Website"
-msgstr "Program hjemmeside"
+msgstr "Programhjemmeside"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__promo_code
@@ -243,12 +245,12 @@ msgstr "Kampagnekode"
 #. odoo-python
 #: code:addons/website_sale_loyalty/wizard/coupon_share.py:0
 msgid "Provide either a coupon or a program."
-msgstr "Giv enten en kupon eller et program."
+msgstr "Tilbyd enten en rabatkupon eller et loyalitetsprogram."
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__redirect
 msgid "Redirect"
-msgstr "Redirect"
+msgstr "Omdirigér"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,help:website_sale_loyalty.field_coupon_share__program_website_id
@@ -289,7 +291,7 @@ msgstr "Del link"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Share Loyalty Card"
-msgstr "Del loyalitetskort"
+msgstr "Del medlemskort"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.snippet_options
@@ -307,7 +309,8 @@ msgstr "Vis advarsel for ikke offentliggjort produkt"
 msgid ""
 "The coupon will be automatically applied when you add something in your cart."
 msgstr ""
-"Kuponen bliver automatisk tilføjet, når til lægger noget i din indkøbskurv."
+"Rabatkuponen bliver automatisk tilføjet, når til lægger noget i din "
+"indkøbskurv."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.layout
@@ -362,8 +365,8 @@ msgid ""
 "                            It will be applied at checkout when the customer "
 "uses this link."
 msgstr ""
-"Du kan dele denne kampagne med dine kunder.\n"
-"Det vil blive anvendt ved kassen, når kunden bruger dette link."
+"Du kan dele denne kampagnekode med dine kunder.\n"
+"Den anvendes automatisk ved kassen, når kunden benytter dette link."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -378,4 +381,4 @@ msgstr "Du har anvendt følgende kode:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "in your ewallet"
-msgstr "i din eWallet"
+msgstr "i din digitale pung"

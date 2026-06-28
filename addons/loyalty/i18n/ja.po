@@ -8,13 +8,14 @@
 #
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-11 22:35+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 00:58+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "loyalty/ja/>\n"
 "Language: ja\n"
@@ -213,19 +214,19 @@ msgstr ""
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
 "style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">カード期"
-"限 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></"
-"h3>\n"
+"限 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>"
+"\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;"
-"\">\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
 "target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
-"'helvetica neue', helvetica, sans-serif; font-size:22px; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
-"border-width:20px 30px; display:inline-block; background-color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
 "font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
 "align:center\">ご利用お待ちしております!</a>\n"
 "                    </span>\n"
@@ -373,7 +374,6 @@ msgstr "<strong>ギフトカードコード</strong>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
 "margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
@@ -2032,8 +2032,7 @@ msgstr "開始日はこのプログラムの有効期間内です。"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
-msgstr ""
-"有効期間の開始日は、その終了日よりも前であるか、または等しい必要があります。"
+msgstr "有効期間の開始日は、その終了日よりも前であるか、または等しい必要があります。"
 
 #. module: loyalty
 #. odoo-javascript

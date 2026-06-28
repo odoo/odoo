@@ -7,12 +7,13 @@
 # Ujjawal Pathak, 2025
 #
 # "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-02-21 12:17+0000\n"
+"PO-Revision-Date: 2026-06-28 00:41+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "sales_team/hi/>\n"
@@ -21,19 +22,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid "%(user_name)s already in other teams (%(team_names)s)."
-msgstr ""
+msgstr "%(user_name)s पहले से ही अन्य टीमों (%(team_names)s) में हैं।"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "%(user_names)s already in other teams (%(team_names)s)."
-msgstr ""
+msgstr "%(user_names)s पहले से ही अन्य टीमों (%(team_names)s) में हैं।"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -42,6 +43,8 @@ msgid ""
 "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -68,28 +71,29 @@ msgstr "कार्रवाई की ज़रूरत है"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Activate \"Multi-team\""
-msgstr ""
+msgstr "\"मल्टी-टीम\" चालू करें"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
-msgstr "सक्रिय"
+msgstr "ऐक्टिव"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
-msgstr ""
+msgstr "ऐक्टिविटी टाइप"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "टीम का सदस्य जोड़ें"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"टीम में सदस्य जोड़ें, ताकि उनके दस्तावेज़ अपने-आप इस सेल्स टीम को असाइन हो जाएं।"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -100,7 +104,7 @@ msgstr "एडमिन"
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
-msgstr ""
+msgstr "मल्टी-टीम विकल्प को सक्रिय करते समय कोई गड़बड़ी हुई।"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
@@ -121,24 +125,24 @@ msgstr "अटैचमेंट की संख्या"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Avatar"
-msgstr ""
+msgstr "अवतार"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "बड़ा सुंदर बटन :)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "सीआरएम टैग"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "डिफ़ॉल्ट टीम \"%s\" को हटाया नहीं जा सकता"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -165,22 +169,22 @@ msgstr "कॉन्फ़िगरेशन"
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "कंसल्टिंग"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "सीआरएम टैग बनाएं"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "सेल्स टीम बनाएं"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "ऐक्टिविटी टाइप बनाएं"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -204,18 +208,18 @@ msgstr "करेंसी"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "डैशबोर्ड बटन"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr ""
+msgstr "एक नई सेल्स टीम तय करें"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "डिज़ाइन"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -233,12 +237,13 @@ msgstr "ईमेल"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "पसंदीदा सदस्य"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"डैशबोर्ड में दिखाने के लिए पसंदीदा टीमें और उन्हें आसानी से ऐक्सेस करें।"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -283,18 +288,20 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"अगर सही है, तो यूज़र्स कई सेल्स टीमों के सदस्य हो सकते हैं. अन्यथा सदस्यता सिर्फ़ एक ही सेल्स "
+"टीम तक सीमित है।"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं."
+msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं।"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है."
+msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है।"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -302,6 +309,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"अगर सक्रिय फ़ील्ड को गलत पर सेट किया गया है, तो यह आपको सेल्स टीम को हटाए बिना "
+"छिपाने की अनुमति देगा।"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -311,7 +320,7 @@ msgstr "इमेज"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "इमेज (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -344,26 +353,28 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"मुख्य उपयोगकर्ता सेल्स टीम. इसका उपयोग खास तौर पर पाइपलाइन के लिए या इनवॉइसिंग या "
+"सदस्यता में सेल्स टीम निर्धारित करने के लिए किया जाता है।"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "मेंबर कंपनी"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "सदस्यों के लिए चेतावनी"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Members"
-msgstr ""
+msgstr "सदस्य"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "मेंबरशिप से जुड़ी समस्या की चेतावनी"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -381,7 +392,7 @@ msgstr "मैसेज"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "कई सदस्यताओं की अनुमति है"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -425,12 +436,12 @@ msgstr "फ़ोन"
 #. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
-msgstr ""
+msgstr "पॉइंट ऑफ़ सेल"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "प्री-सेल्स"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -453,12 +464,12 @@ msgstr "सेल्स"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "सेल्स मेन"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Sales Person"
-msgstr ""
+msgstr "सेल्स पर्सन"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -468,30 +479,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr ""
+msgstr "सेल्स टीम"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "सेल्स टीम के सदस्य"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "सेल्स टीम के सदस्य"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "सेल्स टीम के सदस्य (निष्क्रिय सदस्यों के साथ)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
 msgid "Sales Teams"
-msgstr ""
+msgstr "सेल्स टीम"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_id
@@ -501,12 +512,12 @@ msgstr "सेल्सपर्सन"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Salespersons"
-msgstr ""
+msgstr "सेल्सपर्सन"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "सेल्सटीम सर्च"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -521,12 +532,12 @@ msgstr "सर्विस"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "डैशबोर्ड पर दिखाएं"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "सॉफ़्टवेयर"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -536,7 +547,7 @@ msgstr "टैग नाम"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "टैग नाम पहले से ही मौजूद है!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -548,38 +559,39 @@ msgstr "टैग"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "टीम की जानकारी"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Team Leader"
-msgstr ""
+msgstr "टीम लीडर"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_member_action
 msgid "Team Members"
-msgstr ""
+msgstr "टीम के सदस्य"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
 msgstr ""
+"टीम के सदस्य वे सेल्सपर्सन हैं जिन्हें खास टीमों में असाइन किया जाता है।"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
 msgid "Teams"
-msgstr ""
+msgstr "टीमें"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "चैनल का रंग"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "इस उपयोगकर्ता के लिए डिफ़ॉल्ट कंपनी।"
 
 #. module: sales_team
 #. odoo-python
@@ -588,6 +600,8 @@ msgid ""
 "The following team members are not allowed in company '%(company)s' of the "
 "Sales Team '%(team)s': %(users)s"
 msgstr ""
+"नीचे दी गई टीम के सदस्यों को कंपनी '%(company)s' की सेल्स टीम '%(team)s' में शामिल "
+"होने की अनुमति नहीं है: %(users)s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
@@ -595,34 +609,38 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"ये आपके द्वारा किए जाने वाले कामों की अलग-अलग कैटगरी को दर्शाते हैं (जैसे \"कॉल\" या "
+"\"मीटिंग की तैयारी\")।"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "ट्रेनिंग"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: डुप्लीकेट से बचने के लिए उपयोगकर्ताओं को वर्तमान में चुनी गई टीम में जोड़ने की अनुमति न दें"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: टीम कंपनी तक सीमित करें या अगर कोई कंपनी नहीं है, तो सभी के लिए"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "सेल्स टीम के लिए तय नहीं किया गया ग्राफ़ मॉडल: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"अपने सेल्स विभागों को व्यवस्थित करने और रिपोर्ट तैयार करने के लिए सेल्स टीमों का उपयोग करें।"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -631,6 +649,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"अपने सेल्स विभागों को व्यवस्थित करने के लिए सेल्स टीमों का उपयोग करे.।\n"
+"                हर टीम एक अलग पाइपलाइन के साथ काम करेगी।"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -638,6 +658,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"अपने अवसरों (प्रॉडक्ट स्ट्रक्चर, सेल्स टाइप, ...) को मैनेज और ट्रैक करने के लिए टैग्स का "
+"उपयोग करें"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -651,36 +673,38 @@ msgid ""
 "User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
 "Team '%(team)s'."
 msgstr ""
+"उपयोगकर्ता '%(user)s' को सेल्स टीम '%(team)s' की कंपनी '%(company)s' में अनुमति नहीं "
+"है।"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "उपयोगकर्ता की कंपनी"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "टीम में उपयोगकर्ता"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "उपयोगकर्ता सेल्स टीम"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "उपयोगकर्ता: सभी दस्तावेज़"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "उपयोगकर्ता: सिर्फ़ अपने दस्तावेज़"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "इस टीम में असाइन किए गए उपयोगकर्ता।"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -696,7 +720,7 @@ msgstr "वेबसाइट"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Working in multiple teams?"
-msgstr ""
+msgstr "कई टीमों में काम कर रहे हैं?"
 
 #. module: sales_team
 #. odoo-python
@@ -705,16 +729,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that %"
 "(duplicates)s already exist(s)."
 msgstr ""
+"आप डुप्लीकेट मेंबरशिप बनाने की कोशिश कर रहे हैं. हमें पता चला है कि %(duplicates)s पहले से "
+"मौजूद है।"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "जैसे, उत्तरी अमेरिका"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "जैसे, सर्विस"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
@@ -722,11 +748,12 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
+"उपयोगकर्ता के पास सेल्स ऐप्लिकेशन में सभी लोगों के सभी रिकॉर्ड का ऐक्सेस होगा।"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr ""
+msgstr "उपयोगकर्ता के पास सेल्स ऐप्लिकेशन में अपने खुद के डेटा का ऐक्सेस होगा।"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -734,3 +761,4 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic "
 "reports."
 msgstr ""
+"उपयोगकर्ता के पास सेल्स कॉन्फ़िगरेशन के साथ-साथ सांख्यिकी रिपोर्टों का ऐक्सेस होगा।"

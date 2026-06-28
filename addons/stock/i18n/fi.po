@@ -9,12 +9,13 @@
 #
 # Saara Hakanen <sahak@odoo.com>, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-20 22:09+0000\n"
+"PO-Revision-Date: 2026-06-28 00:16+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "fi/>\n"
@@ -601,8 +602,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        Meillä on ilo ilmoittaa, että tilauksesi on lähetetty.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -612,8 +613,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -634,8 +635,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1910,8 +1911,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr ""
-"Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
+msgstr "Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
 
 #. module: stock
 #. odoo-python
@@ -4264,8 +4264,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
-"Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
+msgstr "Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -7162,7 +7161,7 @@ msgstr "Tuotemalli"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr "Tuotemalli"
+msgstr "Tuotepohja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -8637,8 +8636,8 @@ msgstr ""
 "Lähin sijainti: kohdepaikkaa lähimpänä olevat tuotteet/erät siirretään ulos "
 "ensin.\n"
 "FEFO: tuotteet/erät, joiden poistopäivämäärä on lähimpänä, siirretään ulos "
-"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" "
-"-asetuksesta).\n"
+"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" -asetuksesta)"
+".\n"
 "Vähiten paketteja: FIFO, mutta mahdollisimman vähillä paketeilla, kun samaa "
 "tuotetta sisältäviä paketteja on useita."
 
@@ -11812,7 +11811,7 @@ msgstr "paikasta"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "id"
-msgstr "tunniste"
+msgstr "tunnus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

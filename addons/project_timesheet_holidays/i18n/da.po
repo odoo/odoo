@@ -7,13 +7,14 @@
 # Kira Petersen, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-11-15 11:14+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-27 23:51+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
 "project_timesheet_holidays/da/>\n"
 "Language: da\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -31,7 +32,7 @@ msgstr "Analytisk linje"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
 msgid "Analytic Lines"
-msgstr "Analyselinjer"
+msgstr "Analytiske linjer"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -41,7 +42,7 @@ msgstr "Virksomheder"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurér indstillinger"
+msgstr "Konfigurationsindstillinger"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
@@ -57,7 +58,7 @@ msgstr "Opret en opgave"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -94,7 +95,7 @@ msgstr "Projekt"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Resource fritid detaljer"
+msgstr "Oplysninger om medarbejderens fritid"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
@@ -129,25 +130,25 @@ msgstr ""
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 msgid "Time Off"
-msgstr "Fri"
+msgstr "Fravær"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/hr_leave.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 msgid "Time Off (%(index)s/%(total)s)"
-msgstr "Fri (%(index)s/%(total)s)"
+msgstr "Fravær (%(index)s/%(total)s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Fri opgave"
+msgstr "Fraværsopgave"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Antal fraværstyper"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -180,7 +181,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "View Time Off"
-msgstr ""
+msgstr "Vis fravær"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -189,14 +190,16 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
-"Du kan ikke oprette timesedler på en opgave, der er forbundet til en "
-"fritype. Venligst anvend Fri app'en til at anmode om nye fridage i stedet."
+"Du kan ikke oprette tidsregistreringer for en opgave, der er knyttet til en "
+"fraværstype. Brug i stedet Fraværsappen til at anmode om nyt fravær."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"Du kan slette tidsregistreringer, der er knyttet til en samlet "
+"fraværsregistrering."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -205,8 +208,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
-"Du kan ikke slette timesedler, der er forbundet til frianmodninger. Venligst "
-"annullér din anmodning om fri i Fri app'en i stedet."
+"Du kan ikke slette tidsregistreringer, der er knyttet til en "
+"fraværsanmodning. Annullér i stedet fraværsanmodningen i Fraværsappen."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -215,14 +218,14 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"Du kan ikke ændre timesedler, der er forbundet til anmodninger om fri. "
-"Venligst anvend Fri app'en til at ændre dine frianmodninger i stedet."
+"Du kan ikke ændre tidsregistreringer, der er knyttet til en fraværstype. "
+"Brug i stedet Fraværsappen til at ændre fraværsanmodningen."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
-msgstr ""
+msgstr "allow_timesheets"
 
 #~ msgid ""
 #~ "Use these keywords in the title to set new tasks:\n"

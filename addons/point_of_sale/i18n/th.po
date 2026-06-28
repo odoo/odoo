@@ -9,12 +9,13 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Nusara Boonma <nuboo@odoo.com>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-06-06 11:38+0000\n"
+"PO-Revision-Date: 2026-06-28 00:51+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/th/>\n"
@@ -433,8 +434,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"ตัวระบุที่ไม่ซ้ำกันทั่วโลกสำหรับการกำหนดค่า pos นี้ "
-"ซึ่งใช้เพื่อป้องกันความขัดแย้งในข้อมูลที่สร้างโดยลูกค้า"
+"ตัวระบุที่ไม่ซ้ำกันทั่วโลกสำหรับการกำหนดค่า pos นี้ ซึ่งใช้เพื่อป้องกันความขัดแย้งในข้อมูลที่สร้างโดยลูกค้"
+"า"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
@@ -2900,8 +2901,8 @@ msgid ""
 "identity of the device where the UI is opened. And as such, it is the LL "
 "part of the pos_reference field of the pos.order model."
 msgstr ""
-"ระบุจำนวนครั้งที่มีการเปิดหน้า UI โดยใช้เป็นตัวแทนของอุปกรณ์ที่เปิด UI ดังกล่าว และด้วยเหตุนี้ "
-"ค่านี้จึงเป็นส่วน LL ของฟิลด์ pos_reference ในโมเดล pos.order"
+"ระบุจำนวนครั้งที่มีการเปิดหน้า UI โดยใช้เป็นตัวแทนของอุปกรณ์ที่เปิด UI ดังกล่าว และด้วยเหตุนี้ ค่านี้จึ"
+"งเป็นส่วน LL ของฟิลด์ pos_reference ในโมเดล pos.order"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2938,7 +2939,7 @@ msgstr "รับประทานอาหารในร้าน"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr "ลด%"
+msgstr "ส่วนลด%"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -4200,7 +4201,8 @@ msgstr "การชำระเงินนี้มีการเปลี่
 msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
-msgstr "ห้ามแก้ไขภาษีที่ใช้ในใบสั่ง POS ที่ไม่ได้ผ่านรายการ คุณต้องปิดเซสชัน POS ก่อนแก้ไขภาษี"
+msgstr ""
+"ห้ามแก้ไขภาษีที่ใช้ในใบสั่ง POS ที่ไม่ได้ผ่านรายการ คุณต้องปิดเซสชัน POS ก่อนแก้ไขภาษี"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4427,10 +4429,10 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "เว้นว่างไว้เพื่อใช้บัญชีลูกหนี้ของลูกค้า\n"
-"กำหนดสมุดรายวันที่จะจองการชำระเงินสะสม (หรือการชำระเงินแต่ละรายการ ถ้าระบุลูกค้าเป็นจริง) "
-"หลังจากการปิดเซสชัน\n"
-"สำหรับสมุดรายวันเงินสด "
-"เราจะเขียนโดยตรงไปยังบัญชีเริ่มต้นในสมุดรายวันผ่านทางรายการใบแจ้งยอด\n"
+"กำหนดสมุดรายวันที่จะจองการชำระเงินสะสม (หรือการชำระเงินแต่ละรายการ ถ้าระบุลูกค้าเป็นจริง) ห"
+"ลังจากการปิดเซสชัน\n"
+"สำหรับสมุดรายวันเงินสด เราจะเขียนโดยตรงไปยังบัญชีเริ่มต้นในสมุดรายวันผ่านทางรายการใบแจ้งยอ"
+"ด\n"
 "สำหรับสมุดรายวันธนาคาร เราจะเขียนไปยังบัญชีคงค้างที่ระบุไว้ในวิธีการชำระเงินนี้\n"
 "อนุญาตให้เฉพาะเงินสดและสมุดรายวันธนาคารเท่านั้น"
 
@@ -4632,9 +4634,9 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
-"จัดทำรายการราคาหลายรายการในจุดขาย "
-"คุณยังสามารถใช้รายการราคากับลูกค้าเฉพาะจากแบบฟอร์มการติดต่อของพวกเขา (ในแท็บการขาย) "
-"เพื่อให้ถูกต้อง รายการราคานี้ต้องแสดงอยู่ที่นี่เป็นรายการราคาที่มีอยู่ มิเช่นนั้นจะใช้รายการราคาเริ่มต้น"
+"จัดทำรายการราคาหลายรายการในจุดขาย คุณยังสามารถใช้รายการราคากับลูกค้าเฉพาะจากแบบฟอร์มกา"
+"รติดต่อของพวกเขา (ในแท็บการขาย) เพื่อให้ถูกต้อง รายการราคานี้ต้องแสดงอยู่ที่นี่เป็นรายการราคาที่มี"
+"อยู่ มิเช่นนั้นจะใช้รายการราคาเริ่มต้น"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8605,9 +8607,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"คำสั่งซื้อคืนเงินต่อไปนี้ไม่สามารถรวมอยู่ในใบแจ้งหนี้รวมได้ "
-"เนื่องจากคำสั่งซื้อคืนเงินที่เรียกเก็บเงินแล้วเป็นคำสั่งซื้อที่คืนเงินแล้ว "
-"คำสั่งซื้อคืนเงินแต่ละคำสั่งซื้อควรได้รับการจัดการแยกกัน\n"
+"คำสั่งซื้อคืนเงินต่อไปนี้ไม่สามารถรวมอยู่ในใบแจ้งหนี้รวมได้ เนื่องจากคำสั่งซื้อคืนเงินที่เรียกเก็บเงินแล้วเ"
+"ป็นคำสั่งซื้อที่คืนเงินแล้ว คำสั่งซื้อคืนเงินแต่ละคำสั่งซื้อควรได้รับการจัดการแยกกัน\n"
 "\n"
 "%s"
 
@@ -9026,7 +9027,8 @@ msgstr ""
 msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
-msgstr "ต้องมีสินค้าอย่างน้อยหนึ่งรายการในคำสั่งซื้อของคุณก่อนจึงจะสามารถตรวจสอบและออกใบแจ้งหนี้ได้"
+msgstr ""
+"ต้องมีสินค้าอย่างน้อยหนึ่งรายการในคำสั่งซื้อของคุณก่อนจึงจะสามารถตรวจสอบและออกใบแจ้งหนี้ได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9070,7 +9072,8 @@ msgstr ""
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
-msgstr "ช่องนี้มีไว้เพื่อส่งรหัสของกลุ่มผู้จัดการ POS ไปยังลูกค้าบนการขายหน้าร้าน"
+msgstr ""
+"ช่องนี้มีไว้เพื่อส่งรหัสของกลุ่มผู้จัดการ POS ไปยังลูกค้าบนการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -9302,8 +9305,8 @@ msgid ""
 msgstr ""
 "หากต้องการลบสินค้า ตรวจสอบให้แน่ใจว่าเซสชั่นการขายหน้าร้านทั้งหมดปิดแล้ว\n"
 "\n"
-"การลบผลิตภัณฑ์ที่มีอยู่ในเซสชันก็เหมือนกับการพยายามแย่งแฮมเบอร์เกอร์จากมือลูกค้าที่กำลังรับประทานอยู่ "
-"ความวุ่นวายจะตามมาเมื่อซอสมะเขือเทศและมายองเนสกระจัดกระจายไปทั่ว!"
+"การลบผลิตภัณฑ์ที่มีอยู่ในเซสชันก็เหมือนกับการพยายามแย่งแฮมเบอร์เกอร์จากมือลูกค้าที่กำลังรับประทานอ"
+"ยู่ ความวุ่นวายจะตามมาเมื่อซอสมะเขือเทศและมายองเนสกระจัดกระจายไปทั่ว!"
 
 #. module: point_of_sale
 #. odoo-javascript

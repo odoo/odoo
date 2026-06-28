@@ -3,13 +3,14 @@
 # * account_peppol_selfbilling
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2026-06-12 09:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 00:16+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_peppol_selfbilling/da/>\n"
 "Language: da\n"
@@ -21,7 +22,6 @@ msgstr ""
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -136,7 +136,6 @@ msgstr ""
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -219,86 +218,74 @@ msgstr ""
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move_send
-#, fuzzy
 msgid "Account Move Send"
-msgstr "Send kontobevægelse"
+msgstr "Send postering"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_bank_statement_line__can_send_as_self_invoice
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move__can_send_as_self_invoice
 msgid "Can Send As Self Invoice"
-msgstr ""
+msgstr "Kan sendes som selvfaktura"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move_send__display_name
-#, fuzzy
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move__id
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move_send__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_journal
-#, fuzzy
 msgid "Journal"
 msgstr "Journal"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move
-#, fuzzy
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__is_self_billing
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
-#, fuzzy
 msgid "Self Billing"
 msgstr "Selvfakturering"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
-#, fuzzy
 msgid "Self Billing Credit Note"
 msgstr "Selvfakturerende kreditnota"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
-#, fuzzy
 msgid "Self-billing credit note: Sending"
 msgstr "Selvfakturerende kreditnota: sender"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_invoice
-#, fuzzy
 msgid "Self-billing invoice: Sending"
 msgstr "Selvfaktureringsfaktura: sender"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
-#, fuzzy
 msgid "Sent to customers with the self-billing credit note in attachment"
 msgstr "Sendt til kunder med selvfaktureret kreditnota som vedhæftet fil"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_invoice
-#, fuzzy
 msgid "Sent to customers with their self-billing invoices in attachment"
 msgstr "Sendt til kunder med selvfakturerede regninger som vedhæftede filer"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,help:account_peppol_selfbilling.field_account_journal__is_self_billing
-#, fuzzy
 msgid ""
 "This journal is for self-billing invoices. If the company has activated self-"
 "billing sending on Peppol, vendor bills will be available to be sent as self-"
@@ -310,25 +297,21 @@ msgstr ""
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_edi_xml_ubl_bis3
-#, fuzzy
 msgid "UBL BIS Billing 3.0.12"
 msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
-#, fuzzy
 msgid "Vendor Bill"
 msgstr "Leverandørfaktura"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
-#, fuzzy
 msgid "Vendor Credit Note"
-msgstr "Leverandør kreditnota"
+msgstr "Leverandørkreditnota"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
-#, fuzzy
 msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
@@ -338,7 +321,6 @@ msgstr ""
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
-#, fuzzy
 msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"

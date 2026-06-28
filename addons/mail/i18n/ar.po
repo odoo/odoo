@@ -8,13 +8,14 @@
 # Wil Odoo, 2025
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2026-04-11 11:55+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"PO-Revision-Date: 2026-06-28 00:56+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s18-3/mail/"
 "ar/>\n"
 "Language: ar\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -1341,9 +1342,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"اللقب %(matching_name)s (%(current_id)s) مرتبط بالفعل مع %"
-"(alias_model_name)s (%(matching_id)s) ومستخدَم من قِبَل %(parent_name)s %"
-"(parent_model_name)s. "
+"اللقب %(matching_name)s (%(current_id)s) مرتبط بالفعل مع %(alias_model_name)"
+"s (%(matching_id)s) ومستخدَم من قِبَل %(parent_name)s %(parent_model_name)s. "
 
 #. module: mail
 #. odoo-python
@@ -1352,8 +1352,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"اللقب %(matching_name)s (%(current_id)s) مرتبط بالفعل مع %"
-"(alias_model_name)s (%(matching_id)s). "
+"اللقب %(matching_name)s (%(current_id)s) مرتبط بالفعل مع %(alias_model_name)"
+"s (%(matching_id)s). "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -5393,8 +5393,8 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
-"إذا كانت القيمة صحيحة، لا تذهب الإجابات إلى مناقشة المستند الأصلي. عوضاً عن "
-"ذلك، سوف يتحقق من reply_to في تعقب message-id ثم إعادة التوجيه بناءً على ذلك. "
+"إذا كانت القيمة صحيحة، لا تذهب الإجابات إلى مناقشة المستند الأصلي. عوضاً عن ذلك، "
+"سوف يتحقق من reply_to في تعقب message-id ثم إعادة التوجيه بناءً على ذلك. "
 "يتسبب ذلك في التأثير على message-id المنشأ. "
 
 #. module: mail
@@ -7631,8 +7631,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"يجب أن تتسلم الإشعارات المرفقات كقائمة لقائمة أو قوائم tuple (تم استلام %"
-"(aids)s) "
+"يجب أن تتسلم الإشعارات المرفقات كقائمة لقائمة أو قوائم tuple (تم استلام %(aids)"
+"s) "
 
 #. module: mail
 #. odoo-python
@@ -7641,8 +7641,7 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"يجب أن تتسلم الإشعارات سجلات المرفقات كقائمة من المعرفات (تم استلام %"
-"(aids)s) "
+"يجب أن تتسلم الإشعارات سجلات المرفقات كقائمة من المعرفات (تم استلام %(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -7650,8 +7649,7 @@ msgstr ""
 msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
-msgstr ""
-"يجب أن تتسلم الإشعارات الشركاء كقائمة من المعرفات (تم استلام %(pids)s) "
+msgstr "يجب أن تتسلم الإشعارات الشركاء كقائمة من المعرفات (تم استلام %(pids)s) "
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8068,8 +8066,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"معرف اختياري لمناقشة (سجل) سيتم إرفاق كافة رسائل البريد الإلكتروني الواردة "
-"فيه، حتى لو لم يتم الرد عليها. إذا تم تعيين قيمة له، سيعطل هذا إنشاء السجلات "
+"معرف اختياري لمناقشة (سجل) سيتم إرفاق كافة رسائل البريد الإلكتروني الواردة فيه"
+"، حتى لو لم يتم الرد عليها. إذا تم تعيين قيمة له، سيعطل هذا إنشاء السجلات "
 "الجديدة بالكامل. "
 
 #. module: mail
@@ -8097,10 +8095,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
-"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
-"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: "
-"{{ object.partner_id.lang }}. "
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم "
+"تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر "
+"النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}"
+". "
 
 #. module: mail
 #. odoo-javascript
@@ -8118,8 +8116,8 @@ msgid ""
 " This has an impact on the generated message-id."
 msgstr ""
 "المناقشة الأصلية: تذهب الإجابات إلى مناقشة المستند الأصلية.\n"
-"عنوان بريد إلكتروني آخر: تذهب الإجابات إلى عنوان البريد الإلكتروني المذكور "
-"في معرّف رسائل التتبع عوضاً عن مناقشة المستند الأصلية.\n"
+"عنوان بريد إلكتروني آخر: تذهب الإجابات إلى عنوان البريد الإلكتروني المذكور في "
+"معرّف رسائل التتبع عوضاً عن مناقشة المستند الأصلية.\n"
 "يُحدث هذا تأثيراً على معرّف الرسائل الذي تم إنشاؤه. "
 
 #. module: mail
@@ -8679,8 +8677,8 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
-"يجب أن يؤدي إرسال رسالة إلى تسلم سجلات المرفقات كقائمة من المعرفات (تم "
-"استلام %(aids)s) "
+"يجب أن يؤدي إرسال رسالة إلى تسلم سجلات المرفقات كقائمة من المعرفات (تم استلام %"
+"(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -8689,8 +8687,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"يجب أن يؤدي إرسال رسالة إلى تسلم الشركاء كقائمة من المعرفات (تم استلام %"
-"(pids)s) "
+"يجب أن يؤدي إرسال رسالة إلى تسلم الشركاء كقائمة من المعرفات (تم استلام %(pids)"
+"s) "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -10720,8 +10718,8 @@ msgid ""
 "%(anchor_start)sextension%(anchor_end)s."
 msgstr ""
 "يمكن الوصول إلى خاصية الضغط والتحدث فقط من خلال التركيز على علامة التبويب. "
-"لتمكين وظيفة الضغط والتحدث خارج علامة التبويب هذه، نوصي بتنزيل %"
-"(anchor_start)s الملحق%(anchor_end)s. "
+"لتمكين وظيفة الضغط والتحدث خارج علامة التبويب هذه، نوصي بتنزيل %(anchor_start)"
+"s الملحق%(anchor_end)s. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -12145,8 +12143,8 @@ msgid ""
 msgstr ""
 "لا يمكن التحقق من صحة قيمة %(allowed_domains)s "
 "`mail.catchall.domain.allowed`.\n"
-"يجب أن تكون قائمة مجالات مفصولة بفواصل، على سبيل المثال. "
-"example.com،example.org."
+"يجب أن تكون قائمة مجالات مفصولة بفواصل، على سبيل المثال. example.com،"
+"example.org."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__evaluation_type

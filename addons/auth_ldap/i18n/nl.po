@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_ldap
-# 
+# * auth_ldap
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"PO-Revision-Date: 2026-06-28 00:43+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-3/"
+"auth_ldap/nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -35,11 +38,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Filter dat wordt gebruikt om gebruikersaccounts op te zoeken in de LDAP-database. Het is een willekeurig LDAP-filter in tekenreeksweergave. Elke `%s` tijdelijke aanduiding wordt vervangen door de login (identifier) die door de gebruiker is opgegeven, het filter moet ten minste één dergelijke tijdelijke aanduiding bevatten.\n"
+"    Filter dat wordt gebruikt om gebruikersaccounts op te zoeken in de LDAP-"
+"database. Het is een willekeurig LDAP-filter in tekenreeksweergave. Elke "
+"`%s` tijdelijke aanduiding wordt vervangen door de login (identifier) die "
+"door de gebruiker is opgegeven, het filter moet ten minste één dergelijke "
+"tijdelijke aanduiding bevatten.\n"
 "\n"
-"    Het filter moet precies één (1) resultaat opleveren, anders wordt de login als ongeldig beschouwd.\n"
+"    Het filter moet precies één (1) resultaat opleveren, anders wordt de "
+"login als ongeldig beschouwd.\n"
 "\n"
-"    Voorbeeld (werkelijke kenmerken zijn afhankelijk van LDAP-server en setup):\n"
+"    Voorbeeld (werkelijke kenmerken zijn afhankelijk van LDAP-server en "
+"setup):\n"
 "\n"
 "     (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"

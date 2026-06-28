@@ -7,13 +7,14 @@
 # Tony Ng, 2025
 #
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-08-15 23:50+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"PO-Revision-Date: 2026-06-28 00:05+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s18-3/website_slides_survey/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
@@ -74,15 +75,15 @@ msgstr ""
 "        親愛的 <t t-out=\"object.partner_id.name or '參加者' or ''\">參加者</"
 "t><br/><br/>\n"
 "        抱歉你未能通過認證，你現時不再是以下課程的成員： <t t-"
-"out=\"object.slide_partner_id.channel_id.name or ''\">園藝基礎</t>。<br/><br/"
-">\n"
+"out=\"object.slide_partner_id.channel_id.name or ''\">園藝基礎</t>。<br/>"
+"<br/>\n"
 "        歡迎你再次報名參加！\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-"
-"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"            <a t-att-href=\""
+"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                立即報名\n"
 "            </a>\n"
@@ -175,8 +176,7 @@ msgstr "<span class=\"text-muted\">證書</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid ""
 "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
-msgstr ""
-"<span>現在開始</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgstr "<span>現在開始</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id

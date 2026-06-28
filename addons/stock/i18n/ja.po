@@ -9,13 +9,14 @@
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Ryoko Tsuda <ryoko@quartile.co>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-12 11:37+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-28 00:48+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock/ja/>\n"
 "Language: ja\n"
@@ -593,8 +594,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様<br/"
-"><br/>\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様<br/>"
+"<br/>\n"
 "        お客様のご注文が発送されました。\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -604,8 +605,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -626,8 +627,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1856,10 +1857,10 @@ msgid ""
 "legislation of the country in which the client is located."
 msgstr ""
 "一部の国では、国内法に従い、請求書の金額に対して源泉徴収が適用されます。源泉"
-"徴収は、クライアントが税務当局に支払うことになります。いかなる場合において"
-"も、My Company（Chicago）は、その国の法律に関連する費用に関与することはできま"
-"せん。従って、請求書の金額は、その全額がMy Company (Chicago)に対するものであ"
-"り、顧客が所在する国の法律に関連する費用は含まれません。"
+"徴収は、クライアントが税務当局に支払うことになります。いかなる場合においても"
+"、My Company（Chicago）は、その国の法律に関連する費用に関与することはできませ"
+"ん。従って、請求書の金額は、その全額がMy Company (Chicago)に対するものであり"
+"、顧客が所在する国の法律に関連する費用は含まれません。"
 
 #. module: stock
 #. odoo-python
@@ -1881,8 +1882,8 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
-"この時点でこのレコードの会社を変更することは禁止されています。むしろアーカイ"
-"ブして新しいレコードを作成する必要があります。"
+"この時点でこのレコードの会社を変更することは禁止されています。むしろ"
+"アーカイブして新しいレコードを作成する必要があります。"
 
 #. module: stock
 #. odoo-python
@@ -2198,8 +2199,8 @@ msgid ""
 "replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
-"ジャスト・イン・タイムの場合は0に設定し、プロダクト補充時に先の日にちのプロダ"
-"クト予測を検討します。\n"
+"ジャスト・イン・タイムの場合は0に設定し、プロダクト補充時に先の日にちの"
+"プロダクト予測を検討します。\n"
 "値はルートのタイプ（購買または製造）に依存します。"
 
 #. module: stock
@@ -4203,8 +4204,8 @@ msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and "
 "only one label will be printed for this lot."
 msgstr ""
-"ロットの単位が'units'でない場合、そのロットは1単位とみなされ、そのロットのラ"
-"ベルは1枚のみ印刷されます。"
+"ロットの単位が'units'でない場合、そのロットは1単位とみなされ、そのロットの"
+"ラベルは1枚のみ印刷されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -4336,8 +4337,8 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
-"これがチェックされている場合は、新しいロット/シリアルナンバーを作成して、テキ"
-"ストフィールドに入力することができます。"
+"これがチェックされている場合は、新しいロット/シリアルナンバーを作成して、"
+"テキストフィールドに入力することができます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -4348,9 +4349,9 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"これをチェックすると、ロット/シリアル番号を選択できるようになります。このオペ"
-"レーションタイプにロットを入れないこともできます。これは、ロットなしで在庫を"
-"作成するか、取得するロットに制限を設けないことを意味します。"
+"これをチェックすると、ロット/シリアル番号を選択できるようになります。この"
+"オペレーションタイプにロットを入れないこともできます。これは、ロットなしで在"
+"庫を作成するか、取得するロットに制限を設けないことを意味します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -9241,8 +9242,7 @@ msgstr ""
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
-msgstr ""
-"”割り当て”ボタンを表示するかどうかを決定するために使用される技術フィールド。"
+msgstr "”割り当て”ボタンを表示するかどうかを決定するために使用される技術フィールド。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__lot_sequence_id
@@ -9311,9 +9311,9 @@ msgstr ""
 "(location_list)s\n"
 "\n"
 "これは予測していたことですか？例えば、配送処理が、対応する入荷処理が検証され"
-"る前に検証された場合、これが発生する可能性があります。この場合、全てのステッ"
-"プが完了すると、問題は自動的に解決されます。そうでない場合は、データの不整合"
-"を防ぐためにシリアル番号を修正する必要があります。"
+"る前に検証された場合、これが発生する可能性があります。この場合、全ての"
+"ステップが完了すると、問題は自動的に解決されます。そうでない場合は、データの"
+"不整合を防ぐためにシリアル番号を修正する必要があります。"
 
 #. module: stock
 #. odoo-python
@@ -11290,8 +11290,7 @@ msgstr ""
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
-msgstr ""
-"空の転送は確認できません。先に進む前に転送するプロダクトを追加して下さい。"
+msgstr "空の転送は確認できません。先に進む前に転送するプロダクトを追加して下さい。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -11803,8 +11802,7 @@ msgstr "単位"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} 出荷オーダ (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 出荷オーダ (Ref {{ object.name or 'n/a' }})"
 
 #~ msgid "1.00"
 #~ msgstr "1.00"
