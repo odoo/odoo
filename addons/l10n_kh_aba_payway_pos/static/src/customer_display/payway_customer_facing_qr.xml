@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="aba_payway_qr_payment_pos_odoo.PaywayCustomerFacingQR">
+        <t t-if="props.qrCodeMethod == 'abapay_khqr'">
+            <Dialog footer="false" header="false">
+                <div 
+                    class="text-center d-flex flex-column gap-3 justify-content-center align-items-center"
+                    style="gap: 2rem; padding: 1rem; border-radius: 16px;"
+                >
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content khqr">                    
+                        <div>
+                            <div class="payment-banner khqr">
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/khqr.svg'" alt="Banner" />
+                            </div>
+                            <div class="khqr-triangle-container">
+                                <div class="khqr-triangle"></div>
+                            </div>
+                            <div class="payment-info khqr">
+                                <div class="payment-merc-name">
+                                    <t t-out="props.merchantDisplayName" />
+                                </div>
+                                <div class="payment-amt-value">
+                                    <t t-out="props.displayAmount" />
+                                    <span class="payment-amt-ccy khqr">
+                                        <t t-out="props.currency_name"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="payment-line-divider"></div>
+                        </div>
+                        <div class="payment-qr-content khqr">
+                            <t t-if="props.currency_name == 'USD'"> 
+                                <img 
+                                    t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                    alt="Currency Logo" 
+                                    class="payment-qr-ccy khqr"
+                                />
+                            </t>
+                            <t t-elif="props.currency_name == 'KHR'">
+                                <img 
+                                    t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/riel.svg'" 
+                                    alt="Currency Logo" 
+                                    class="payment-qr-ccy khqr"
+                                />
+                            </t>
+                            <img 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc khqr">Scan with ABA Mobile or any KHQR supported banking app</p>
+                </div>  
+            </Dialog>
+        </t>
+        
+        <t t-elif="props.qrCodeMethod == 'alipay'">
+            <Dialog footer="false" header="false">
+                <div 
+                    class="text-center d-flex flex-column gap-3 justify-content-center align-items-center"
+                    style="gap: 2rem; padding: 1rem; border-radius: 16px;"
+                >
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content"> 
+                        <div> 
+                            <div class="payment-banner alipay"> 
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/alipay.svg'" alt="Banner" />
+                            </div>
+
+                            <div class="payment-info">
+                                <div class="payment-merc-name">
+                                    <t t-out="props.merchantDisplayName" />
+                                </div>
+
+                                <div class="payment-amt-value">
+                                    <span class="payment-amt-ccy">$</span>
+                                    <t t-out="props.displayAmount" />
+                                </div>
+                            </div>
+
+                            <div class="payment-line-divider"></div>
+                        </div>
+
+                        <div class="payment-qr-content">
+                            <img 
+                                t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                alt="Currency Logo" 
+                                class="payment-qr-ccy"
+                            />
+                            <img 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc">Scan with Alipay app</p>
+                </div>
+            </Dialog>
+        </t>
+
+        <t t-elif="props.qrCodeMethod == 'wechat'">
+            <Dialog footer="false" header="false">
+                <div 
+                    class="text-center d-flex flex-column gap-3 justify-content-center align-items-center"
+                    style="gap: 2rem; padding: 1rem; border-radius: 16px;"
+                >
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content">
+                        <div>
+                            <div class="payment-banner wechat">
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/wechat.svg'" alt="Banner" />
+                            </div>
+
+                            <div class="payment-info wechat">
+                                <div class="payment-merc-name">
+                                    <t t-out="props.merchantDisplayName" />
+                                </div>
+                                <div class="payment-amt-value wechat">
+                                    <span class="payment-amt-ccy">$</span>
+                                    <t t-out="props.displayAmount" />
+                                </div>
+                            </div>
+                            <div class="payment-line-divider"></div>
+                        </div>
+
+                        <div class="payment-qr-content">
+                            <img 
+                                t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                alt="Currency Logo" 
+                                class="payment-qr-ccy"
+                            />
+                            <img 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc">Scan with WeChat app</p>
+                </div> 
+            </Dialog>
+        </t>
+    </t>
+</templates>

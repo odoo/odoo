@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.QRConfirmationDialog" t-inherit-mode="extension">
+        
+        <xpath expr="//div[@class='mt-1']" position="after">
+            <t t-if="
+                paywayQRState.qrCodeMethod === 'abapay_khqr' 
+                || paywayQRState.qrCodeMethod === 'wechat' 
+                || paywayQRState.qrCodeMethod === 'alipay'"
+            >
+                <div class="mt-2 text-center">
+                    <p>
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        <t t-out="paywayQRState.countDown" />
+                    </p>
+                </div>        
+            </t>
+        </xpath>
+
+        <xpath expr="//img[contains(@t-att-src, 'props.qrCode')]" position="after">
+            <t t-if="
+                paywayQRState.qrCodeMethod === 'abapay_khqr' 
+                || paywayQRState.qrCodeMethod === 'wechat' 
+                || paywayQRState.qrCodeMethod === 'alipay'"
+            >
+                
+                <div t-if="paywayQRState.qrCodeMethod === 'abapay_khqr'"> 
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content khqr">
+                        <div>
+                            <div class="payment-banner khqr">
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/khqr.svg'" alt="Banner" />
+                            </div>
+                            <div class="khqr-triangle-container">
+                                <div class="khqr-triangle"></div>
+                            </div>
+                            <div class="payment-info khqr">
+                                <div class="payment-merc-name">
+                                    <t t-out="paywayQRState.merchantDisplayName" />
+                                </div>
+                                <div class="payment-amt-value">
+                                    <t t-out="paywayQRState.displayAmount" />
+                                    <span class="payment-amt-ccy khqr">
+                                        <t t-out="paywayQRState.currency_name"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="payment-line-divider"></div>
+                        </div>
+                        <div class="payment-qr-content khqr">
+                            <t t-if="paywayQRState.currency_name == 'USD'"> 
+                                <img 
+                                    t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                    alt="Currency Logo" 
+                                    class="payment-qr-ccy khqr"
+                                />
+                            </t>
+                            <t t-elif="paywayQRState.currency_name == 'KHR'">
+                                <img 
+                                    t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/riel.svg'" 
+                                    alt="Currency Logo" 
+                                    class="payment-qr-ccy khqr"
+                                />
+                            </t>
+                            <img 
+                                class="my-1" 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                                width="150"
+                                height="150"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc khqr">Scan with ABA Mobile or any KHQR supported banking app</p>
+                </div>
+
+                <div t-elif="paywayQRState.qrCodeMethod === 'alipay'">
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content"> 
+                        <div> 
+                            <div class="payment-banner alipay"> 
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/alipay.svg'" alt="Banner" />
+                            </div>
+
+                            <div class="payment-info">
+                                <div class="payment-merc-name">
+                                    <t t-out="paywayQRState.merchantDisplayName" />
+                                </div>
+
+                                <div class="payment-amt-value">
+                                    <span class="payment-amt-ccy">$</span>
+                                    <t t-out="paywayQRState.displayAmount" />
+                                </div>
+                            </div>
+
+                            <div class="payment-line-divider"></div>
+                        </div>
+
+                        <div class="payment-qr-content">
+                            <img 
+                                t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                alt="Currency Logo" 
+                                class="payment-qr-ccy"
+                            />
+                            <img    
+                                class="my-1" 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                                width="150"
+                                height="150"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc">Scan with Alipay app</p>
+                </div>
+
+                <div t-elif="paywayQRState.qrCodeMethod === 'wechat'">
+                    <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/aba-pay.svg'" alt="ABA Pay Logo" />
+                    <div class="payment-content">
+                        <div>
+                            <div class="payment-banner wechat">
+                                <img t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/wechat.svg'" alt="Banner" />
+                            </div>
+
+                            <div class="payment-info wechat">
+                                <div class="payment-merc-name">
+                                    <t t-out="paywayQRState.merchantDisplayName" />
+                                </div>
+                                <div class="payment-amt-value wechat">
+                                    <span class="payment-amt-ccy">$</span>
+                                    <t t-out="paywayQRState.displayAmount" />
+                                </div>
+                            </div>
+                            <div class="payment-line-divider"></div>
+                        </div>
+
+                        <div class="payment-qr-content">
+                            <img 
+                                t-att-src="'/aba_payway_qr_payment_pos_odoo/static/src/img/dollar.svg'" 
+                                alt="Currency Logo" 
+                                class="payment-qr-ccy"
+                            />
+                            <img 
+                                class="my-1" 
+                                t-att-src="props.qrCode" 
+                                alt="QR Code"
+                                width="150"
+                                height="150"
+                            />
+                        </div>
+                    </div>
+                    <p class="payment-scan-desc">Scan with WeChat app</p>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Hide the orignal QR code -->
+        <xpath expr="//img[contains(@t-att-src, 'props.qrCode')]" position="attributes">
+            <attribute name="style"></attribute>
+            <attribute name="t-att-class">
+                paywayQRState.qrCodeMethod == 'abapay_khqr' || paywayQRState.qrCodeMethod == 'wechat' || paywayQRState.qrCodeMethod == 'alipay' ? 'visually-hidden' : ''
+            </attribute>
+        </xpath>
+
+        <!-- Hide confirm button -->
+        <xpath expr="//button[@t-on-click='_confirm']" position="attributes">
+            <attribute name="t-att-class">
+                paywayQRState.qrCodeMethod == 'abapay_khqr' || paywayQRState.qrCodeMethod == 'wechat' || paywayQRState.qrCodeMethod == 'alipay' ? 'visually-hidden' : ''
+            </attribute>
+        </xpath>        
+    </t>
+</templates>
