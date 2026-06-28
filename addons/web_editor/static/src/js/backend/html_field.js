@@ -218,6 +218,7 @@ export class HtmlField extends Component {
                                             validateCallback: this.onDynamicPlaceholderValidate.bind(this),
                                             closeCallback: this.onDynamicPlaceholderClose.bind(this),
                                             positionCallback: this.positionDynamicPlaceholder.bind(this),
+                                            preventClose: () => this.wysiwyg.$iframe[0].closest(".o_popover"),
                                         }
                                     );
                                 });
