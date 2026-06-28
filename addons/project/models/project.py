@@ -1909,6 +1909,9 @@ class Task(models.Model):
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
             vals['user_ids'] = user_ids
+        is_portal_user = self.env.user.has_group('base.group_portal')
+        if is_portal_user and 'user_ids' in vals and 'default_user_ids' not in vals:
+            vals['user_ids'] = self.env['project.task'].sudo().browse(self.env.context.get('default_parent_id')).user_ids.ids
 
         return vals
 
@@ -2109,6 +2112,11 @@ class Task(models.Model):
         was_in_sudo = self.env.su
         if is_portal_user:
             vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
+            if project_id and not "user_ids" in vals_list:
+                for vals in vals_list:
+                    parent_id = self.env["project.task"].sudo().browse(vals.get('parent_id'))
+                    parent_id.read()
+                    vals["user_ids"] = parent_id.sudo().user_ids.ids
             self_no_sudo, self = self, self.with_context(self._get_portal_sudo_context()).sudo()
         tasks = super(Task, self).create(vals_list)
         if is_portal_user:
@@ -2196,7 +2204,7 @@ class Task(models.Model):
             vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
 
         # Track user_ids to send assignment notifications
-        old_user_ids = {t: t.user_ids for t in self}
+        old_user_ids = {t: t.user_ids for t in tasks}
 
         if "personal_stage_type_id" in vals and not vals['personal_stage_type_id']:
             del vals['personal_stage_type_id']
