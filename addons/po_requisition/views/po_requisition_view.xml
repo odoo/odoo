@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    
+
+    <record model="ir.ui.view" id="po_requisition_tree">
+        <field name="name">po.requisition.tree</field>
+        <field name="model">po.requisition</field>
+        <field name="arch" type="xml">
+            <tree default_order='create_date desc' string="PO Requisition">
+                <field name="id" column_invisible="1"/>
+                <field name="name" string="Name"/>
+                <field name="warehouse_id" column_invisible='1'/>
+                <field name="create_uid" string='Requested By'/>
+                <field name="delivery_date"/>
+                <field name='user'/>
+                <field name="total" sum="Total"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="po_requisition_form">
+        <field name="name">po.requisition.form</field>
+        <field name="model">po.requisition</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="PO Requisition">
+                <header>
+                    <button confirm="Are you sure you want to Submit this Requsition?" name="submit_btn" invisible="state != 'draft'" string="SUBMIT" type="object" class="oe_highlight"/>
+                    <button confirm="Are you sure you want to Approve this Requsition?" name="submit_for_approval" invisible="state != 'submitted'" string="APPROVE" type="object" class="oe_highlight" groups="po_requisition.purchase_group_manager"/>
+                    <button confirm="Are you sure you want to Approve this Requsition?" name="action_approve_po_requisition" invisible="state != 'approved'" string="SUBMIT TO RFQ/PO" type="object" class="oe_highlight" groups="po_requisition.purchase_group_manager"/>
+                    <button name="cancel" confirm="Are you sure you want to cancel this Requisition?" invisible="state not in ('draft','submitted')" string="Cancel" type="object" groups="po_requisition.purchase_group_user"/>
+                    <button name="reject" confirm="Are you sure you want to reject this Requisition?" invisible="state != 'submitted'" string="Reject" type="object" groups="po_requisition.purchase_group_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,done"/>
+                </header>
+                <sheet>
+                    <field name="id" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button invisible="state not in ('done')" type="action" class="oe_stat_button" name="%(purchase.purchase_rfq)d" context="{'search_default_po_requisition_id': active_id, 'default_po_requisition_id': active_id}" icon="fa-list">
+                            <field string="RFQs/POs" name="po_count" widget="statinfo"/>
+
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+
+                    <group>
+                        <group>
+
+                            <field name="warehouse_id" invisible='1'/>
+                           
+                            <field name="requested_by" string='Requested By' readonly='1' force_save="1"/>
+                            <field name="request_employee_id" required="1" force_save="1"/>
+
+                        </group>
+                        <group>
+                            <field name="department_id" string='Department' readonly='1' force_save="1"/>
+                            <field name='user' readonly='1' force_save="1"/>
+                            <field name="delivery_date" readonly="state in ('approved', 'cancel','rejected','done')"/>
+                            <field name="rejection_reason" invisible="state != 'cancel'"/>
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page string="Products">
+
+                            <field name="order_line" readonly="state not in ('draft')" invisible="state in ('submitted','approved','done')">
+                                <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="product_id" required="1"/>
+                                    <field name="name" required="1"/>
+                                    <field name="product_qty" required="1"/>
+                                    <field name="product_uom"/>
+                                </tree>
+                            </field>
+
+                            <field name="order_line2" readonly="state not in ('draft','submitted','approved')" invisible="state in ('draft','cancel','rejected')">
+                                <tree string="Purchase Order Lines" editable="bottom" create="false" delete="false">
+                                    <field name="partner_id" string="Vendor/Supplier" invisible="0"/>
+                                    <field name="currency" invisible="1"/>
+                                    <field name="product_id" readonly="1" force_save="1"/>
+                                    <field name="product_qty" readonly="1" force_save="1"/>
+                                    <field name="product_uom" readonly="1" force_save="1"/>
+                                    <field name="price_unit" groups="po_requisition.purchase_group_manager"/>
+                                    <field name="total" readonly="1" force_save="1" groups="po_requisition.purchase_group_manager"/>
+                                </tree>
+                            </field>
+
+                            <group>
+                                <group></group>
+                                <group>
+                                    <field name="total" string="Total Requisition" readonly="1" force_save="1" groups="po_requisition.purchase_group_manager"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="po_with_requsition_form">
+        <field name="name">PO with Requisition</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="date_approve" position="after">
+                <field name="po_requisition_id" readonly='1' invisible="po_requisition_id == False"/>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="vendors" widget="many2many_tags"/>
+            </field>
+            <xpath expr="//notebook/page[@name='products']" position="after">
+                <page string="Vendor Lines" name="vendor_lines">
+                    <field name="vendor_line_ids">
+                        <tree editable="bottom">
+                            <field name="partner_id" required="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Bids">
+                    <field name="bid_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_search_form_rfq_po_inherit" model="ir.ui.view">
+        <field name="name">po.search.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position='after'>
+                <field name='po_requisition_id'/>
+            </field>
+
+        </field>
+    </record>
+</odoo>
