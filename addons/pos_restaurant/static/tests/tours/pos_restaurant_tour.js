@@ -634,6 +634,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
             Dialog.confirm("Open Register"),
             Dialog.isNot(),
             FloorScreen.clickTable("2"),
+            Chrome.waitRequest(),
             ProductScreen.clickCustomer("Partner Full"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
@@ -643,6 +644,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.confirm("ok"),
             Dialog.isNot(),
+            Chrome.waitRequest(),
             FloorScreen.hasTable("2"),
         ].flat(),
 });

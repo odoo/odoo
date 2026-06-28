@@ -39,6 +39,7 @@ export class PosData {
             offline: false,
             loading: true,
             unsyncData: [],
+            requestCount: 0,
         });
 
         await this.checkConnectivity();
@@ -535,6 +536,7 @@ export class PosData {
 
             let result = true;
             let limitedFields = false;
+            this.network.requestCount++;
             if (fields.length === 0) {
                 fields = this.fields[model] || [];
             }
@@ -548,10 +550,10 @@ export class PosData {
 
             switch (type) {
                 case "write":
-                    result = await this.orm.write(model, ids, values);
+                    result = await this.orm.write(model, ids, values, kwargs);
                     break;
                 case "delete":
-                    result = await this.orm.unlink(model, ids);
+                    result = await this.orm.unlink(model, ids, kwargs);
                     break;
                 case "call":
                     result = await this.orm.call(model, method, args, kwargs);
@@ -561,6 +563,7 @@ export class PosData {
                     result = await this.orm.read(model, ids, fields, {
                         ...options,
                         load: false,
+                        context: kwargs.context,
                     });
                     break;
                 case "search_read":
@@ -568,6 +571,7 @@ export class PosData {
                     result = await this.orm.searchRead(model, args, fields, {
                         ...options,
                         load: false,
+                        context: kwargs.context,
                     });
             }
 
@@ -681,6 +685,7 @@ export class PosData {
                 throw error;
             }
         } finally {
+            this.network.requestCount--;
             this.network.loading = false;
         }
     }

@@ -610,10 +610,21 @@ export class PosStore extends WithLazyGetterTrap {
 
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
         const ordersToDelete = [];
+        const orderToCancelOnServer = [];
         const actionPosOrderCancelCall = async (orderIds) => {
+            const orderContext = orderIds.reduce((acc, id) => {
+                const order = this.models["pos.order"].get(id);
+                if (!order || typeof order.id !== "number") {
+                    return acc;
+                }
+
+                acc[order.id] = order.raw.write_date;
+                return acc;
+            }, {});
             await this.data.call("pos.order", "action_pos_order_cancel", [orderIds], {
                 context: {
                     device_identifier: this.device.identifier,
+                    last_orders_date: orderContext,
                 },
             });
         };
@@ -635,13 +646,20 @@ export class PosStore extends WithLazyGetterTrap {
                         }
                     }
 
-                    if (order.isSynced) {
-                        await actionPosOrderCancelCall([order.id]);
+                    if (typeof order.id === "number") {
+                        orderToCancelOnServer.push(order);
+                    } else {
+                        ordersToDelete.push(order);
                     }
-                    ordersToDelete.push(order);
                 } else {
                     return false;
                 }
+            }
+
+            if (orderToCancelOnServer.length) {
+                const ids = orderToCancelOnServer.map((order) => order.id);
+                await actionPosOrderCancelCall(ids);
+                ordersToDelete.push(...orderToCancelOnServer);
             }
 
             if (serverIds.length > 0) {
