@@ -6,7 +6,7 @@ import logging
 import werkzeug.exceptions
 from werkzeug.urls import url_parse
 
-from odoo import http
+from odoo import http, tools
 from odoo.http import content_disposition, request
 from odoo.tools.misc import html_escape
 from odoo.tools.safe_eval import safe_eval, time
@@ -100,6 +100,10 @@ class ReportController(http.Controller):
             if type_ in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type_ == 'qweb-pdf' else 'text'
                 extension = 'pdf' if type_ == 'qweb-pdf' else 'txt'
+                # In case of test environment without enough workers to perform calls to wkhtmltopdf,
+                # fallback to render_html.
+                if (tools.config['test_enable'] or tools.config['test_file']) and not request.env.context.get('force_report_rendering'):
+                    extension = 'html'
 
                 pattern = '/report/pdf/' if type_ == 'qweb-pdf' else '/report/text/'
                 reportname = url.split(pattern)[1].split('?')[0]
