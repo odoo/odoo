@@ -17,6 +17,7 @@ export class DynamicModelFieldSelectorChar extends CharField {
         resModel: { type: String, optional: true },
         onlySearchable: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
+        required: { type: Boolean, optional: true },
     };
 
     /**
@@ -87,6 +88,7 @@ export const dynamicModelFieldSelectorChar = {
         return {
             followRelations: options.follow_relations ?? true,
             onlySearchable: exprToBoolean(options.only_searchable),
+            required: dynamicInfo.required,
             resModel: options.model,
         };
     },
