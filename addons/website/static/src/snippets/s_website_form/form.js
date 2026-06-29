@@ -318,7 +318,7 @@ export class Form extends Interaction {
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
-            if (inputElement && inputElement.type !== 'file') {
+            if (inputElement && !(value instanceof File)) {
                 formFields.push({ name: key, value: value });
             }
         });
