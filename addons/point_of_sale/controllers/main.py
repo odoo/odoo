@@ -224,8 +224,8 @@ class PosController(PortalAccount):
                 additional_partner_fields + additional_invoice_fields
             )
             form_values.update({
-                'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
-                'messages': form_values.get('messages', []) + error_messages
+                'invalid_fields': form_values.get('invalid_fields', []) + list(missing_fields),
+                'error_message': form_values.get('error_message', []) + error_messages
             })
             if not form_values.get('invalid_fields'):
                 return self._get_invoice(partner, invoice_values, pos_order, additional_invoice_fields, kwargs)
