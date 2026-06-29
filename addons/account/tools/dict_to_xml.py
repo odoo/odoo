@@ -11,6 +11,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
         '_tag': 'tag_name',  # '_tag' is rendered as the node's tag
         '_text': 'content',  # '_text' is rendered as the node's text content
         '_dummy': 'dummy_value',  # Keys starting with '_' are not rendered
+        '_empty': True/False,  # Allows a specific empty element to be rendered
 
         # Simple values are rendered as attributes
         'attribute_name': 'attribute_value',
@@ -96,7 +97,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
             if template is not None and child_tag not in template and not child_is_empty:
                 raise ValueError(f"The following child node is not defined in the template: {path}/{child_tag}")
 
-    if not render_empty_nodes and not element.attrib and not element.text and len(element) == 0:
+    if not node.get('_empty', render_empty_nodes) and not element.attrib and not element.text and len(element) == 0:
         return None
 
     return element
