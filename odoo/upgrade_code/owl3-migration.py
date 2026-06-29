@@ -1100,6 +1100,7 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
