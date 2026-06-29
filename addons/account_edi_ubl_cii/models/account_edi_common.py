@@ -807,6 +807,7 @@ class AccountEdiCommon(models.AbstractModel):
         update_discount = defaultdict(set)
         update_price_unit = defaultdict(set)
         update_product_uom_id = defaultdict(set)
+        default_uom_unit = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
 
         taxes_map = defaultdict()
         for tax_nodes, invoice_line, inv_line_vals in zip(all_tax_nodes, invoice_lines, all_inv_line_vals):
@@ -858,8 +859,10 @@ class AccountEdiCommon(models.AbstractModel):
             # Set the values on the line_form
             invoice_line.quantity = inv_line_vals['quantity']
             if not inv_line_vals.get('product_uom_id'):
+                # If no uom found, we set the default one and log a warning.
+                update_product_uom_id[default_uom_unit].add(invoice_line.id)
                 logs.append(
-                    _("Could not retrieve the unit of measure for line with label '%s'.", invoice_line.name))
+                    _("Could not retrieve the unit of measure for line with label '%s'. Defaulting it to Units", invoice_line.name))
             elif not invoice_line.product_id:
                 # no product set on the line, no need to check uom compatibility
                 update_product_uom_id[inv_line_vals['product_uom_id']].add(invoice_line.id)
