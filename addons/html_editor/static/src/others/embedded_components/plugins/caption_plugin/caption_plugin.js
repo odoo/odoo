@@ -57,11 +57,7 @@ export class CaptionPlugin extends Plugin {
             }
             return [];
         },
-        is_formattable_node_predicates: (node) => {
-            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
-                return false;
-            }
-        },
+        region_properties: { within: CAPTION_SPAN_SELECTOR, formattable: false },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge

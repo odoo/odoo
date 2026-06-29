@@ -82,12 +82,8 @@ export class DatePlugin extends Plugin {
         /** Overrides */
         apply_color_overrides: this.applyColorToDateNodes.bind(this),
 
-        /** Predicates */
-        is_formattable_node_predicates: (node) => {
-            if (node.matches?.(EMBEDDED_DATE_SELECTOR)) {
-                return true;
-            }
-        },
+        /** Regions */
+        region_properties: { is: EMBEDDED_DATE_SELECTOR, formattable: true },
     };
 
     setup() {

@@ -19,7 +19,7 @@ class AnimatedNumberOptionPlugin extends Plugin {
         can_format_content_predicates: this.canFormatContent.bind(this),
         color_target_providers: this.getStyleTargetElement.bind(this),
         formattable_node_providers: this.getStyleTargetElement.bind(this),
-        is_formattable_node_predicates: (node) => (this.getValueElement(node) ? true : undefined),
+        region_properties: { within: VALUE_SELECTOR, formattable: true },
         is_node_editable_predicates: (node) => (this.getValueElement(node) ? true : undefined),
         can_have_scroll_effect_predicates: (el) => !el.matches(ANIMATED_NUMBER_SELECTOR),
     };
