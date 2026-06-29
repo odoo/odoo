@@ -16,7 +16,7 @@
                 t-att-class="{'d-flex' : !props.isComboPopup, 'my-1': !(props.isComboPopup and !props.imageUrl)}">
                 <div class="overflow-hidden lh-sm product-name"
                     t-att-class="{
-                        'no-image d-flex justify-content-center align-items-center text-center': !props.imageUrl,
+                        'no-image d-flex text-center w-100 flex-column': !props.imageUrl,
                         'mt-1': props.isComboPopup and !props.imageUrl
                     }"
                     t-attf-id="article_product_{{props.productId}}"
