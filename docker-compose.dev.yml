@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+  # ======================================================================
+  # PostgreSQL（開発用データベース）
+  # ----------------------------------------------------------------------
+  # ・Odoo のテーブルを保存する DB
+  # ・開発環境なのでバックアップ目的で永続化はするが、
+  #   prod ほど厳格にしない
+  # ・healthcheck により、DB が正常に起動してから
+  #   Odoo が起動するよう制御
+  # ======================================================================
+  db:
+    image: postgres:16
+    container_name: odoo19-db
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: odoo
+    volumes:
+      # PostgreSQL データ永続化（開発用）
+      - db-data:/var/lib/postgresql/data
+    # DB 起動確認（Odoo が DB 用意前に起動して落ちるのを防ぐ）
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ======================================================================
+  # Odoo（開発用 Web サーバ + デバッガ enabled）
+  # ----------------------------------------------------------------------
+  # ・Dockerfile.debug により debugpy を起動
+  # ・VSCode などからブレークポイントを利用可能
+  # ・--dev=all によりホットリロード（Python/XML/JS）を有効化
+  # ・custom_addons はボリュームマウントして即時反映
+  # ======================================================================
+  odoo-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    container_name: odoo19-web-debug
+
+    # DB が正常起動したら Odoo を起動（順序制御）
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+      # extra-addons パス（custom_addons のマウント先）
+      ODOO_EXTRA_ADDONS: /mnt/extra-addons
+
+    ports:
+      - "8069:8069"    # Odoo Web
+      - "5678:5678"    # debugpy（VSCode 用）
+
+    volumes:
+      # Odoo のデータ永続化
+      - odoo-data:/var/lib/odoo
+      # Odoo 設定ファイル（odoo.conf）
+      - ./config:/etc/odoo
+      # カスタムモジュールのホットリロード
+      - ./custom_addons:/mnt/extra-addons
+
+    restart: unless-stopped
+
+# ======================================================================
+# ボリューム定義（開発用のデータ永続化領域）
+# ======================================================================
+volumes:
+  db-data:
+  odoo-data:

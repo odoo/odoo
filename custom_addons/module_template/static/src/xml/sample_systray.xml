@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--
+        template の name は JS 側で指定した
+        SampleSystray.template に対応する
+        "module_template.SampleSystray"
+    -->
+    <templates xml:space="preserve">
+        <t t-name="module_template.SampleSystray">
+            <!--
+                systray 用のボタン（シンプルな例）
+                - t-on-click で JS メソッドを呼び出す
+                - t-esc="state.count" で state 表示
+            -->
+            <button type="button"
+                    class="btn btn-link o_systray_item"
+                    t-on-click="increment">
+                <span>Sample: <t t-esc="state.count"/></span>
+            </button>
+        </t>
+    </templates>
+</odoo>

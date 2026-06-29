@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 親メニュー（大カテゴリ） -->
+    <menuitem id="menu_sample_root"
+              name="Sample Dev"
+              sequence="10"/>
+
+    <!-- 子メニュー（一覧ビューを開く） -->
+    <menuitem id="menu_sample_item"
+              name="Sample Items"
+              parent="menu_sample_root"
+              action="action_sample_item"
+              sequence="10"/>
+
+</odoo>
