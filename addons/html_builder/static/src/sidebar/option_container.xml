@@ -36,6 +36,8 @@
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(this.props.editingElement)"/>
                 </t>
+                <button title="Copy Styles" class="fa fa-copyright o-hb-btn btn" t-on-click="this.copyStyles"></button>
+                <button title="Paste Styles" class="fa fa-pinterest-p o-hb-btn btn" t-on-click="this.pasteStyles"></button>
                 <t t-if="this.props.isClonable || this.props.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="this.props.cloneDisabledReason" t-att-aria-label="this.props.cloneDisabledReason">

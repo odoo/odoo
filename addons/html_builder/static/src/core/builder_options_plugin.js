@@ -96,7 +96,10 @@ import { omit } from "@web/core/utils/objects";
  * @typedef {CSSSelector[]} no_parent_containers
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} should_keep_overlay_options_predicates
  * @typedef {{[key: string]: string}[]} builder_options_render_context
+ * @property { BuilderOptionsPlugin['copyStyles'] } copyStyles
+ * @property { BuilderOptionsPlugin['getStylesToPaste'] } getStylesToPaste
  */
+
 /**
  * @typedef {((
  *      el: HTMLElement
@@ -133,8 +136,10 @@ export class BuilderOptionsPlugin extends Plugin {
         "checkElement",
         "closestWithOption",
         "computeContainers",
+        "copyStyles",
         "findOption",
         "getContainers",
+        "getStylesToPaste",
         "updateContainers",
         "deactivateContainers",
         "getTarget",
@@ -464,6 +469,91 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getContainers() {
         return this.lastContainers;
+    }
+
+    /**
+     * Reads all stylistic DOM state from `sourceEl` and stores it internally
+     * so it can later be pasted onto another element.
+     *
+     * Captured state:
+     *  - CSS classes  (via `classAction`)
+     *  - Inline styles (via `styleAction`)
+     *  - Dataset entries (via `dataAttributeAction`)
+     *
+     * @param {HTMLElement} sourceEl
+     */
+    copyStyles(sourceEl) {
+        const actions = [];
+
+        // --- Classes ---
+        for (const cls of sourceEl.classList) {
+            actions.push({
+                actionId: "classAction",
+                actionParam: { mainParam: cls },
+                actionValue: undefined,
+            });
+        }
+
+        // --- Inline styles ---
+        for (let i = 0; i < sourceEl.style.length; i++) {
+            const prop = sourceEl.style[i];
+            actions.push({
+                actionId: "styleAction",
+                actionParam: { mainParam: prop },
+                actionValue: sourceEl.style.getPropertyValue(prop),
+            });
+        }
+
+        // --- Data attributes ---
+        for (const [key, value] of Object.entries(sourceEl.dataset)) {
+            actions.push({
+                actionId: "dataAttributeAction",
+                actionParam: { mainParam: key },
+                actionValue: value,
+            });
+        }
+
+        // Remember which Option selectors applied to the source element so we
+        // can do a compatibility check on paste.
+        const sourceSelectors = new Set(
+            this.lastContainers.flatMap((c) => c.options.map((o) => o.selector)).filter(Boolean)
+        );
+
+        this._copiedStyles = { actions, sourceSelectors };
+    }
+
+    /**
+     * Returns the list of copied action descriptors that are compatible with
+     * `targetEl`.  An action is considered compatible when:
+     *  - the target element has at least one option whose selector matches
+     *    one of the source selectors, OR the target has any options at all
+     *    (same generic DOM-mutation actions apply everywhere), AND
+     *  - for `classAction`: always compatible (generic class application).
+     *  - for `styleAction` / `dataAttributeAction`: always compatible.
+     *
+     * @param {HTMLElement} targetEl
+     * @returns {{ actionId: string, actionParam: object, actionValue: * }[] | null}
+     */
+    getStylesToPaste(targetEl) {
+        if (!this._copiedStyles) {
+            return null;
+        }
+        const { actions, sourceSelectors } = this._copiedStyles;
+
+        // Compute target containers (uses already-computed lastContainers since
+        // targetEl IS the currently selected element when paste is invoked).
+        const targetContainers = this.lastContainers;
+        const targetSelectors = new Set(
+            targetContainers.flatMap((c) => c.options.map((o) => o.selector)).filter(Boolean)
+        );
+
+        // At least one common option selector between source and target.
+        const hasCommonOption = [...sourceSelectors].some((s) => targetSelectors.has(s));
+        if (!hasCommonOption && targetSelectors.size > 0 && sourceSelectors.size > 0) {
+            return null;
+        }
+
+        return actions;
     }
 
     hasOverlayOptions(el) {

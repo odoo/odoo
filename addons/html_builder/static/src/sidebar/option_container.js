@@ -5,6 +5,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
 import { BaseOptionComponent } from "../core/base_option_component";
+import { _t } from "@web/core/l10n/translation";
 import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { browser } from "@web/core/browser/browser";
@@ -110,5 +111,44 @@ export class OptionsContainer extends BaseOptionComponent {
                 activateClone: false,
             });
         });
+    }
+
+    /**
+     * Reads all stylistic DOM state (classes, inline styles, data attributes)
+     * from the currently active editing element and stores it in the plugin.
+     */
+    copyStyles() {
+        this.dependencies.builderOptions.copyStyles(this.props.editingElement);
+        this.notification.add(_t("Styles copied"), { type: "success" });
+    }
+
+    /**
+     * Applies the previously copied styles onto the current editing element,
+     * provided the target element has at least one compatible option plugin.
+     */
+    pasteStyles() {
+        const actionsToApply = this.dependencies.builderOptions.getStylesToPaste(
+            this.props.editingElement
+        );
+        if (!actionsToApply || !actionsToApply.length) {
+            return;
+        }
+
+        this.callOperation(async () => {
+            const getAction = this.env.editor.shared.builderActions.getAction;
+            for (const { actionId, actionParam, actionValue } of actionsToApply) {
+                const action = getAction(actionId);
+                if (action?.apply) {
+                    await action.apply({
+                        editingElement: this.props.editingElement,
+                        params: actionParam,
+                        value: actionValue,
+                        dependencyManager: this.env.dependencyManager,
+                        selectableContext: this.env.selectableContext,
+                    });
+                }
+            }
+        });
+        this.notification.add(_t("Styles pasted"), { type: "success" });
     }
 }
