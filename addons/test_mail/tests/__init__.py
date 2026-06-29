@@ -25,6 +25,7 @@ from . import test_mail_template
 from . import test_mail_template_preview
 from . import test_message_management
 from . import test_message_post
+from . import test_message_post_concurrent
 from . import test_message_track
 from . import test_performance
 from . import test_public_binary_controller

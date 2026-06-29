@@ -714,7 +714,9 @@ class MailMail(models.Model):
                     })
                     # `test_mail_bounce_during_send`, force immediate update to obtain the lock.
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
-                    notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
+                    # Use savepoint to prevent the next transactions from remaining aborted on concurrency failures
+                    with self.env.cr.savepoint(flush=False):
+                        notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # protect against ill-formatted email_from when formataddr was used on an already formatted email
                 emails_from = tools.mail.email_split_and_format_normalize(mail.email_from)
