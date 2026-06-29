@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_maestro_event_list" model="ir.ui.view">
+        <field name="name">hr.maestro.event.list</field>
+        <field name="model">hr.maestro.event</field>
+        <field name="arch" type="xml">
+            <list string="Eventos Maestro">
+                <field name="event_date"/>
+                <field name="event_type"/>
+                <field name="risk_level" decoration-danger="risk_level in ('high', 'critical')" decoration-warning="risk_level == 'medium'"/>
+                <field name="department_id"/>
+                <field name="summary"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_maestro_event_form" model="ir.ui.view">
+        <field name="name">hr.maestro.event.form</field>
+        <field name="model">hr.maestro.event</field>
+        <field name="arch" type="xml">
+            <form string="Evento Maestro">
+                <sheet>
+                    <group>
+                        <field name="event_type"/>
+                        <field name="event_date"/>
+                        <field name="risk_level"/>
+                        <field name="department_id"/>
+                        <field name="summary"/>
+                        <field name="maestro_company_id"/>
+                        <field name="external_event_id"/>
+                    </group>
+                    <field name="data" widget="text"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_maestro_event" model="ir.actions.act_window">
+        <field name="name">Eventos Maestro (Clima / NR-1)</field>
+        <field name="res_model">hr.maestro.event</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_maestro_event"
+              name="Maestro (Clima / NR-1)"
+              parent="hr.hr_menu_hr_reports"
+              action="action_hr_maestro_event"
+              groups="hr.group_hr_user"
+              sequence="50"/>
+
+</odoo>
