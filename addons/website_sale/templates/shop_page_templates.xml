@@ -256,20 +256,6 @@
                                         or (show_price_filter and isFilteringByPrice)
                                     )"
                                 />
-                                <div t-if="has_active_filters" class="py-3 border-bottom">
-                                    <a
-                                        t-att-href="keep(
-                                            **reset_attribute_value_params, tags=0,
-                                            min_price=0, max_price=0,
-                                            on_sale=0, in_stock=0,
-                                        )"
-                                        t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
-                                        title="Clear Filters"
-                                    >
-                                        <small class="mx-auto"><b>Clear Filters</b></small>
-                                        <i class="oi" data-icon="close_small" role="presentation"/>
-                                    </a>
-                                </div>
                                 <div
                                     t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}} {{'pt-3' if not is_sidebar_collapsible else ''}}"
                                 />
@@ -284,6 +270,23 @@
                                     class="d-flex flex-wrap gap-2 py-3 border-top"
                                 >
                                     <t t-call="website_sale.ribbon_filter_pills"/>
+                                </div>
+                                <div t-if="has_active_filters" class="border-top py-3 border-bottom">
+                                    <a
+                                        t-att-href="keep(
+                                            **reset_attribute_value_params,
+                                            tags=0,
+                                            min_price=0,
+                                            max_price=0,
+                                            on_sale=0,
+                                            in_stock=0,
+                                        )"
+                                        t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
+                                        title="Clear Filters"
+                                    >
+                                        <small class="mx-auto"><b>Clear Filters</b></small>
+                                        <i class="oi" data-icon="close_small" role="presentation"/>
+                                    </a>
                                 </div>
                                 <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                             </div>
@@ -494,7 +497,10 @@
                                     </t>
                                 </section>
                             </div>
-                            <div t-else="" class="text-center mt128 mb256">
+                            <div
+                                t-else=""
+                                class="o_wsale_empty_products_grid text-center mt128 mb256"
+                            >
                                 <t groups="base.group_public">
                                     <t t-if="not search">
                                         <div class="mt-5 mb-3">
@@ -504,13 +510,10 @@
                                             class="mt8"
                                             style="text-align: center;"
                                         >
-                                            No product defined
+                                            No results
                                         </h3>
-                                        <p
-                                            t-if="category"
-                                            style="text-align: center;"
-                                        >
-                                            No product defined in this category.
+                                        <p style="text-align: center;">
+                                            Try to refine your search criteria.
                                         </p>
                                     </t>
                                     <t t-else="">
@@ -854,7 +857,7 @@
                 />
                 <div
                     t-if="current_attribute_pavs"
-                    t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
+                    t-attf-class="accordion-item {{'border-top-0' if isMobile else 'nav-item mb-1 rounded-0'}}"
                 >
                     <h2
                         t-if="isMobile"
@@ -1107,7 +1110,15 @@
                         role="presentation"
                     >
                         <a
-                            t-att-href="keep(c.website_url)"
+                            t-att-href="keep(
+                                c.website_url,
+                                **reset_attribute_value_params,
+                                tags=0,
+                                min_price=0,
+                                max_price=0,
+                                on_sale=0,
+                                in_stock=0,
+                            )"
                             class="o_wsale_filmstrip_link d-block w-100 h-100 text-decoration-none"
                             draggable="false"
                             role="menuitem"
