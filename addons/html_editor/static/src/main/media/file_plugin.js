@@ -55,19 +55,17 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
-        properties: {
-            predicate: (node) => closestElement(node, ".o_file_box"),
-            powerbox: false,
-            toolbar: DISABLED_NAMESPACE,
-        },
+        properties: [
+            {
+                predicate: (node) => closestElement(node, ".o_file_box"),
+                powerbox: false,
+                toolbar: DISABLED_NAMESPACE,
+            },
+            { predicate: ".o_file_box", editable: false },
+        ],
         is_functional_empty_node_predicates: (node) => {
             if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
                 return true;
-            }
-        },
-        is_node_editable_predicates: (node) => {
-            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
-                return false;
             }
         },
         are_shorthands_available_predicates: (node) => {

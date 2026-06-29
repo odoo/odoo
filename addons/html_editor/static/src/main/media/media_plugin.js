@@ -119,7 +119,6 @@ export class MediaPlugin extends Plugin {
                 return false;
             }
         },
-        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
         is_selectable_on_click_predicates: (el) => {
             // Clicking an icon puts the cursor inside of it, where there is
             // nothing to edit: select the icon itself instead.
@@ -131,6 +130,12 @@ export class MediaPlugin extends Plugin {
             if (isMediaElement(node)) {
                 return true;
             }
+        },
+
+        /** Properties */
+        properties: {
+            predicate: this.isEditableMediaElement.bind(this),
+            editable: true,
         },
 
         selectors_for_feff_providers: () =>
