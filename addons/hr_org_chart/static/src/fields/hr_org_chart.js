@@ -68,14 +68,18 @@ export class HrOrgChart extends Field {
         onWillStart(async () => {
             this.employee = this.props.record.data;
             // the widget is either dispayed in the context of a hr.employee form or a res.users form
-            this.state.employee_id =
-                this.employee.employee_ids !== undefined
-                    ? this.employee.employee_ids.resIds[0]
-                    : this.employee.id;
-            const parentId =
-                this.employee.parent_id && this.employee.parent_id[0]
-                    ? this.employee.parent_id[0]
-                    : false;
+            this.state.employee_id = (
+                this.employee.employee_ids &&
+                this.employee.employee_ids.resIds &&
+                this.employee.employee_ids.resIds[0]
+            ) || this.employee.id || false;
+            const parentId = (
+                this.employee.employee_parent_id &&
+                this.employee.employee_parent_id[0]
+            ) || (
+                this.employee.parent_id &&
+                this.employee.parent_id[0]
+            ) || false;
             const forceReload =
                 this.lastRecord !== this.props.record || this.lastParent != parentId;
             this.lastParent = parentId;
@@ -84,11 +88,19 @@ export class HrOrgChart extends Field {
         });
 
         onWillUpdateProps(async (nextProps) => {
-            const newParentId =
-                nextProps.record.data.parent_id && nextProps.record.data.parent_id[0]
-                    ? nextProps.record.data.parent_id[0]
-                    : false;
-            const newEmployeeId = nextProps.record.data.id || false;
+            const data = nextProps.record.data;
+            const newParentId = (
+                data.employee_parent_id &&
+                data.employee_parent_id[0]
+            ) || (
+                data.parent_id &&
+                data.parent_id[0]
+            ) || false;
+            const newEmployeeId = (
+                data.employee_ids &&
+                data.employee_ids.resIds &&
+                data.employee_ids.resIds[0]
+            ) || data.id || false;
             if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
