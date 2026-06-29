@@ -2879,7 +2879,7 @@ class BaseModel(metaclass=MetaModel):
         elif field.translate and not self.env.context.get('prefetch_langs'):
             sql_field = SQL.identifier(alias, fname)
             langs = field.get_translation_fallback_langs(self.env)
-            sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
+            sql_field_langs = [SQL("(%s->>%s)", sql_field, lang) for lang in langs]
             if len(sql_field_langs) == 1:
                 return sql_field_langs[0]
             return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
