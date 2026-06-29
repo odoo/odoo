@@ -71,9 +71,14 @@ class ProductWishlist(Controller):
 
         product = self.env["product.product"].browse(int(product_id))
         partner = self.env["mail.thread"].sudo()._partner_find_from_emails_single([email])
+        website = self.env.website
 
-        if not product._has_stock_notification(partner):
-            product.sudo().stock_notification_partner_ids += partner
+        if not product._has_stock_notification(partner, website):
+            self.env["product.stock.notification"].sudo().create({
+                "product_id": product.id,
+                "website_id": website.id,
+                "partner_id": partner.id,
+            })
 
         if self.env.website.is_public_user():
             request.session["product_with_stock_notification_enabled"] = list(

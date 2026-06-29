@@ -967,7 +967,8 @@ class ProductTemplate(models.Model):
             )
             free_qty = float_round(computed_qty, precision_digits=0, rounding_method="DOWN")
             has_stock_notification = product_sudo._has_stock_notification(
-                self.env.user.partner_id
+                self.env.user.partner_id,
+                website,
             ) or (
                 request
                 and product_sudo.id

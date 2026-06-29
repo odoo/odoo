@@ -286,13 +286,14 @@
 
         <record id="email_template_back_in_stock" model="mail.template">
             <field name="name">Product: Back in Stock Email</field>
-            <field name="model_id" ref="product.model_product_product"/>
-            <field name="subject">{{ object.name or 'Product' }} is back in stock</field>
+            <field name="model_id" ref="model_product_stock_notification"/>
+            <field name="subject">{{ object.product_id.name or 'Product' }} is back in stock</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="False"/>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-                <t t-set="website" t-value="object.website_id or object.website_id.get_current_website()"/>
+                <t t-set="website" t-value="object.website_id"/>
+                <t t-set="product" t-value="object.product_id"/>
                 <div style="margin: 0px; padding: 0px;">
                     <t
                         t-if="website"
@@ -321,7 +322,7 @@
                     </div>
                     <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
                         <a
-                            t-att-href="object.website_url"
+                            t-att-href="product.with_context(notification_website_id=website.id).website_url"
                             t-attf-style="background-color: {{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;"
                         >
                             Order Now
@@ -339,29 +340,29 @@
                                     style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;"
                                 >
                                     <img
-                                        t-att-src="website.image_url(object, 'image_1920')"
+                                        t-att-src="website.image_url(product, 'image_1920')"
                                         style="width: 100px; height: 100px; object-fit: contain;"
                                         alt="Product image"
                                     />
                                 </td>
                                 <td style="padding-bottom: 8px; vertical-align: top;">
                                     <h2 t-att-style="'margin:0; font-size:14px; color:%s;' % ((website and website.company_id.email_secondary_color) or '#875A7B')">
-                                        <strong t-out="object.name or ''">Desk Combination</strong>
+                                        <strong t-out="product.name or ''">Desk Combination</strong>
                                     </h2>
                                     <p
-                                        t-if="object.product_template_attribute_value_ids"
+                                        t-if="product.product_template_attribute_value_ids"
                                         style="margin: 4px 0;"
                                     >
-                                        ( <t t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))">Wood</t> )
+                                        ( <t t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))">Wood</t> )
                                     </p>
-                                    <t t-out="object.description_ecommerce or ''">Desk Description</t>
+                                    <t t-out="product.description_ecommerce or ''">Desk Description</t>
                                 </td>
                                 <td
                                     width="19%"
                                     align="right"
                                     style="max-width: 100%; vertical-align: top;"
                                 >
-                                    <t t-out="format_amount(object.list_price, object.currency_id)">$ 450</t>
+                                    <t t-out="format_amount(product.list_price, product.currency_id)">$ 450</t>
                                 </td>
                             </tr>
                         </table>

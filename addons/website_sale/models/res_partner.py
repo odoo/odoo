@@ -7,6 +7,10 @@ from odoo.fields import Domain
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    stock_notification_ids = fields.One2many(
+        "product.stock.notification", "partner_id", string="Back in stock Notifications"
+    )
+
     wishlist_ids = fields.One2many(
         string="Wishlist",
         comodel_name="product.wishlist",
