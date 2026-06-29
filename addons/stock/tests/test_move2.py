@@ -2599,6 +2599,232 @@ class TestSinglePicking(TestStockCommon):
             { 'location_id': new_location.id, 'location_dest_id': new_destination.id }
         ])
 
+    def test_onchange_lot_ids_for_lot_tracked_product_without_reservation(self):
+        """
+        Check that updating the lot_ids field of the moves accurately adapts
+        the quantity and updates the existing move lines following these rules:
+        - Existing move lines with a valid lot or lot name should be kept unchanged.
+        - Removing a lot should delete its related move lines and adjust the move quantity accordingly.
+        - Each newly assigned lot must be linked to at least one move line of the move.
+        - Assignment should be performed, in priority, on an existing free move line.
+        - If no suitable free move line exists, a new move line should be created with the largest possible
+          quantity that does not cause the total assigned quantity to exceed the move demand.
+        - If such a quantity cannot be assigned, the new move line should be created with a quantity of 1
+          in the product.uom_id.
+        """
+        product_serial, product_lot = self.product, self.productA
+        product_serial.write({'is_storable': True, 'tracking': 'serial'})
+        product_lot.write({'is_storable': True, 'tracking': 'lot', 'uom_id': self.uom_dunit.id})
+        serials = self.env['stock.lot'].create([
+            {'name': f'SuperSerial {i + 1}', 'product_id': product_serial.id} for i in range(5)
+        ])
+        lots = self.env['stock.lot'].create([
+            {'name': f'Superlot {i + 1}', 'product_id': product_lot.id} for i in range(5)
+        ])
+        receipt = self.env['stock.picking'].create({
+            'name': 'Lovely Receipt',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': product_serial.id,
+                    'product_uom_qty': 3 / 10,
+                    'product_uom': self.uom_dunit.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+                Command.create({
+                    'product_id': product_lot.id,
+                    'product_uom_qty': 50,
+                    'product_uom': self.uom_unit.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ]
+        })
+        receipt.action_confirm()
+        with Form(receipt) as receipt_form:
+            with receipt_form.move_ids.edit(0) as move_form:
+                # Adds S1, S2
+                move_form.lot_ids = serials[:2]
+                self.assertEqual(move_form.quantity, 3 / 10)
+            with receipt_form.move_ids.edit(1) as move_form:
+                # Adds lot1
+                move_form.lot_ids = lots[0]
+                self.assertEqual(move_form.quantity, 50.0)
+        self.assertRecordValues(receipt.move_ids, [{'quantity': 3 / 10}, {'quantity': 50.0}])
+        self.assertRecordValues(receipt.move_ids[0].move_line_ids, [
+            {'quantity': 1.0, 'lot_id': serials[0].id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 1.0, 'lot_id': serials[1].id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 0.1, 'lot_id': False, 'product_uom_id': self.uom_dunit.id},
+        ])
+        self.assertRecordValues(receipt.move_ids[1].move_line_ids, [
+            {'quantity': 50.0, 'lot_id': lots[0].id},
+        ])
+
+        with Form(receipt) as receipt_form:
+            with receipt_form.move_ids.edit(0) as move_form:
+                # Removes S2 but adds S3 -> S5
+                move_form.lot_ids = serials[0] + serials[2:]
+                self.assertEqual(move_form.quantity, 4 / 10)
+            with receipt_form.move_ids.edit(1) as move_form:
+                move_form.lot_ids = self.env['stock.lot']
+                self.assertEqual(move_form.quantity, 0)
+                move_form.lot_ids = lots[3]
+                self.assertEqual(move_form.quantity, 50)
+                move_form.lot_ids = lots[0] + lots[3]
+                self.assertEqual(move_form.quantity, 60)
+                # remove lot1 and adds lot2 -> lot5
+                move_form.lot_ids = lots[3] | lots[1:]
+                self.assertEqual(move_form.quantity, 50)
+        self.assertRecordValues(receipt.move_ids, [{'quantity': 4 / 10}, {'quantity': 50.0}])
+        self.assertRecordValues(receipt.move_ids[0].move_line_ids, [
+            {'quantity': 1.0, 'lot_id': serials[0].id},
+            {'quantity': 1.0, 'lot_id': serials[2].id},
+            {'quantity': 1.0, 'lot_id': serials[3].id},
+            {'quantity': 1.0, 'lot_id': serials[4].id},
+        ])
+        self.assertRecordValues(receipt.move_ids[1].move_line_ids, [
+            {'quantity': 20, 'lot_id': lots[3].id},
+            {'quantity': 10, 'lot_id': lots[1].id},
+            {'quantity': 10, 'lot_id': lots[2].id},
+            {'quantity': 10, 'lot_id': lots[4].id},
+        ])
+
+    def test_onchange_lot_ids_for_lot_tracked_product_with_reservation(self):
+        """
+        Check that updating the lot_ids field of the moves accurately adapts
+        the quantity and updates the existing move lines following these rules:
+        - Existing move lines with a valid lot or lot name should be kept unchanged.
+        - Removing a lot should delete its related move lines and adjust the move quantity accordingly.
+        - Each newly assigned lot must be linked to at least one move line of the move with a minimum
+          quantity of 1 in product.uom_id.
+        - Each new lot should be assigned from an existing quants with the maximum available quantity
+          to satisfy at best the remaining demand.
+        - If no available quantity can be assigned from existing quants, the lot should be assigned a
+          minimum quantity of 1 in product.uom_id.
+        """
+        sublocations = self.env['stock.location'].create([
+            {'name': f'Super location{i + 1}', 'location_id': self.stock_location.id} for i in range(3)
+        ])
+        product_serial, product_lot = self.product, self.productA
+        product_serial.write({'is_storable': True, 'tracking': 'serial'})
+        product_lot.write({'is_storable': True, 'tracking': 'lot', 'uom_id': self.uom_dunit.id})
+        serials = self.env['stock.lot'].create([
+            {'name': f'SuperSerial {i + 1}', 'product_id': product_serial.id} for i in range(9)
+        ])
+        lots = self.env['stock.lot'].create([
+            {'name': f'Superlot {i + 1}', 'product_id': product_lot.id} for i in range(9)
+        ])
+        delivery = self.env['stock.picking'].create({
+            'name': 'Lovely Delivery',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': product_serial.id,
+                    'product_uom_qty': 5 / 10,
+                    'product_uom': self.uom_dunit.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+                Command.create({
+                    'product_id': product_lot.id,
+                    'product_uom_qty': 80,
+                    'product_uom': self.uom_unit.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ]
+        })
+        self.picking_type_out.reservation_method = 'at_confirm'
+        delivery.action_confirm()
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.edit(0) as move_form:
+                move_form.quantity = 5 / 10
+            with delivery_form.move_ids.edit(1) as move_form:
+                move_form.quantity = 80.0
+        self.assertRecordValues(delivery.move_ids, [{'quantity': 5 / 10}, {'quantity': 80.0}])
+
+        # Put serials and lots in stock
+        self.env['stock.quant']._update_available_quantity(product_lot, sublocations[0], 1.0, lot_id=lots[1])
+        self.env['stock.quant']._update_available_quantity(product_lot, sublocations[2], 2.0, lot_id=lots[3])
+        for i in range(8):
+            self.env['stock.quant']._update_available_quantity(product_serial, sublocations[i % 3], 1.0, lot_id=serials[i])
+            self.env['stock.quant']._update_available_quantity(product_lot, sublocations[i % 3], 2.0, reserved_quantity=i % 2, lot_id=lots[i])
+
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.edit(0) as move_form:
+                # Adds S1, S2, S3
+                move_form.lot_ids = serials[:3]
+                self.assertEqual(move_form.quantity, 5 / 10)
+            with delivery_form.move_ids.edit(1) as move_form:
+                # Adds lot1, lot2, lot3
+                move_form.lot_ids = lots[:3]
+                self.assertEqual(move_form.quantity, 80.0)
+        self.assertRecordValues(delivery.move_ids, [{'quantity': 5 / 10}, {'quantity': 80.0}])
+        self.assertRecordValues(delivery.move_ids[0].move_line_ids, [
+            {'quantity': 1.0, 'lot_id': serials[0].id, 'location_id': sublocations[0].id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 1.0, 'lot_id': serials[1].id, 'location_id': sublocations[1].id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 1.0, 'lot_id': serials[2].id, 'location_id': sublocations[2].id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 1.0, 'lot_id': False, 'location_id': self.stock_location.id, 'product_uom_id': self.uom_unit.id},
+            {'quantity': 1.0, 'lot_id': False, 'location_id': self.stock_location.id, 'product_uom_id': self.uom_unit.id},
+        ])
+        self.assertRecordValues(delivery.move_ids[1].move_line_ids, [
+            {'quantity': 20.0, 'lot_id': lots[0].id, 'location_id': sublocations[0].id},
+            {'quantity': 10.0, 'lot_id': lots[1].id, 'location_id': sublocations[0].id},
+            {'quantity': 10.0, 'lot_id': lots[1].id, 'location_id': sublocations[1].id},
+            {'quantity': 20.0, 'lot_id': lots[2].id, 'location_id': sublocations[2].id},
+            {'quantity': 20.0, 'lot_id': False, 'location_id': self.stock_location.id},
+        ])
+
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.edit(0) as move_form:
+                # Removes S1, S2 but adds S4 -> S9, 2 additional units required
+                move_form.lot_ids = serials[2:]
+                self.assertEqual(move_form.quantity, 7 / 10)
+                # Add back S1, 1 additional unit required
+                move_form.lot_ids = serials[0] + serials[2:]
+                self.assertEqual(move_form.quantity, 8 / 10)
+            with delivery_form.move_ids.edit(1) as move_form:
+                # Remove lot1 and lot2 which frees 40 units
+                # adds lot4 -> lot9 (6 new lots) which should
+                # not affect the quantity since the 6 new lot
+                # can be added with a quantity of 6 * 10
+                move_form.lot_ids = lots[2:]
+                self.assertEqual(move_form.quantity, 80)
+                # Add back lot1 -> 20 additional units will be required
+                move_form.lot_ids = lots[0] + lots[2:]
+                self.assertEqual(move_form.quantity, 100)
+                # Add 30 units to force more reservation than the minimal required
+                move_form.quantity = 130
+        self.assertRecordValues(delivery.move_ids, [{'quantity': 8 / 10}, {'quantity': 130.0}])
+        # Since S9 is not available it should be reserved from stock
+        self.assertRecordValues(delivery.move_ids[0].move_line_ids, [
+            {'quantity': 1.0, 'lot_id': serials[0].id, 'location_id': sublocations[0].id},
+            {'quantity': 1.0, 'lot_id': serials[2].id, 'location_id': sublocations[2].id},
+            {'quantity': 1.0, 'lot_id': serials[3].id, 'location_id': sublocations[0].id},
+            {'quantity': 1.0, 'lot_id': serials[4].id, 'location_id': sublocations[1].id},
+            {'quantity': 1.0, 'lot_id': serials[5].id, 'location_id': sublocations[2].id},
+            {'quantity': 1.0, 'lot_id': serials[6].id, 'location_id': sublocations[0].id},
+            {'quantity': 1.0, 'lot_id': serials[7].id, 'location_id': sublocations[1].id},
+            {'quantity': 1.0, 'lot_id': serials[8].id, 'location_id': self.stock_location.id},
+        ])
+        # Since Lot9 is not available it should be reserved from stock
+        self.assertRecordValues(delivery.move_ids[1].move_line_ids, [
+            {'quantity': 20.0, 'lot_id': lots[0].id, 'location_id': sublocations[0].id},
+            {'quantity': 20.0, 'lot_id': lots[2].id, 'location_id': sublocations[2].id},
+            {'quantity': 20.0, 'lot_id': lots[3].id, 'location_id': sublocations[2].id},
+            {'quantity': 10.0, 'lot_id': lots[3].id, 'location_id': sublocations[0].id},
+            {'quantity': 20.0, 'lot_id': lots[4].id, 'location_id': sublocations[1].id},
+            {'quantity': 10.0, 'lot_id': lots[5].id, 'location_id': sublocations[2].id},
+            {'quantity': 10.0, 'lot_id': lots[6].id, 'location_id': sublocations[0].id},
+            {'quantity': 10.0, 'lot_id': lots[7].id, 'location_id': sublocations[1].id},
+            {'quantity': 10.0, 'lot_id': lots[8].id, 'location_id': self.stock_location.id},
+        ])
+
     def test_validate_picking_twice(self):
         """
         Check that validating an already validated picking bypasses the call.
