@@ -321,12 +321,6 @@ class SaleOrderLine(models.Model):
             values = self._timesheet_create_task_prepare_values(project)
             task = self.env['project.task'].sudo().create(values)
         self.task_id = task
-        # post message on task
-        task_msg = _("This task has been created from: %(order_link)s (%(product_name)s)",
-            order_link=self.order_id._get_html_link(),
-            product_name=self.product_id.name,
-        )
-        task.message_post(body=task_msg)
         return task
 
     def _get_so_lines_task_global_project(self):
