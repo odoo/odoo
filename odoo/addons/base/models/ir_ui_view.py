@@ -1535,16 +1535,6 @@ actual arch.
         """ Return the group expression object that represents the users who
         can perform ``operation`` on model ``model_name``.
         """
-        if not self.env.registry.ready:
-            access_domain = [
-                ('model_id.model', '=', model_name),
-                ('group_id', '!=', False),
-                ('operation', 'in', sorted(ir_access.IN_SELECTION['read'])),
-                ('active', '=', True),
-            ]
-            accesses = self.env['ir.access'].sudo().search_fetch(access_domain, ['group_id'], order='id')
-            return group_definitions.from_ids(accesses.group_id.ids)
-
         accesses = self.env['ir.access']._get_all_access().get(model_name, ())
         operations = ir_access.IN_SELECTION['read']
         return group_definitions.from_ids(
