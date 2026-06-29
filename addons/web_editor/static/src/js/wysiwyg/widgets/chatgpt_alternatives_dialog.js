@@ -1,5 +1,5 @@
 /** @odoo-module **/
-
+import { _t } from "@web/core/l10n/translation";
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
 import { useState, status } from "@odoo/owl";
 
@@ -13,12 +13,12 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     };
     static defaultProps = {
         alternativesModes: {
-            correct: 'Correct',
-            short: 'Shorten',
-            long: 'Lengthen',
-            friendly: 'Friendly',
-            professional: 'Professional',
-            persuasive: 'Persuasive',
+            correct: _t("Correct"),
+            short: _t("Shorten"),
+            long: _t("Lengthen"),
+            friendly: _t("Friendly"),
+            professional: _t("Professional"),
+            persuasive: _t("Persuasive"),
         },
         numberOfAlternatives: 3,
     };
