@@ -1,4 +1,4 @@
-import { markRaw } from "@odoo/owl";
+import { markRaw, onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -56,54 +56,84 @@ class OfflineManager extends Reactive {
         this._visited[IS_READY] = null;
         this._ormToSync = {}; // store items that need to be sync once we go online.
         this._timeout = null; // used to repeatedly ping the server when offline
+        this._startupSyncTimeout = null;
         this._observer = null; // used to detect DOM mutations and disable the UI when offline
         this._offline = false;
         this._syncingORM = false;
+        this._destroyed = false;
 
         // Use "offline" and "online" events for instant detection of connection lost/restored.
-        browser.addEventListener("offline", () => {
+        this._onBrowserOffline = () => {
             if (!this.offline) {
                 this.checkConnection();
             }
-        });
-        browser.addEventListener("online", () => {
+        };
+        this._onBrowserOnline = () => {
             if (this.offline) {
                 this.checkConnection();
             }
-        });
+        };
+        browser.addEventListener("offline", this._onBrowserOffline);
+        browser.addEventListener("online", this._onBrowserOnline);
 
         // Use RPC:RESPONSE to validate the current offline status, which is more accurate than
         // the "offline"/"online" events (e.g. server is down).
-        rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
+        this._onRpcResponse = async (ev) => {
             this.offline = ev.detail.error instanceof ConnectionLostError;
-        });
+        };
+        rpcBus.addEventListener("RPC:RESPONSE", this._onRpcResponse);
 
         // When the "CLEAR-CACHES" event is triggered, the rpc cache is wiped out, so we must also
         // clear the information about elements that are available offline, as they aren't anymore.
-        rpcBus.addEventListener("CLEAR-CACHES", () => {
+        this._onClearCaches = () => {
             this._idb.invalidate([
                 OfflineManager.VISITED_UI_TABLE_NAME,
                 OfflineManager.VISITED_UI_TABLE_NAME_DEBUG,
                 new RegExp(`^${OfflineManager.MANY2X_TABLE_PREFIX}`),
             ]);
             this._visited = {};
-        });
+        };
+        rpcBus.addEventListener("CLEAR-CACHES", this._onClearCaches);
 
         this._updateScheduledORMList().then(async () => {
-            if (!this._offline) {
+            if (!this._offline && !this._destroyed) {
                 // wait a bit for the webclient to be started before synchronizing
-                await new Promise((r) => browser.setTimeout(r, 3000));
-                this._syncORM();
+                await new Promise((r) => (this._startupSyncTimeout = browser.setTimeout(r, 3000)));
+                this._startupSyncTimeout = null;
+                if (!this._destroyed) {
+                    this._syncORM();
+                }
             }
         });
 
-        registry
-            .category("services")
-            .addEventListener("CLEANUP", () => (this.offline = false), { once: true });
+        this._onServicesCleanup = () => (this.offline = false);
+        registry.category("services").addEventListener("CLEANUP", this._onServicesCleanup, {
+            once: true,
+        });
+        onWillDestroy(() => this.destroy());
     }
 
     get offline() {
         return this._offline;
+    }
+
+    destroy() {
+        if (this._destroyed) {
+            return;
+        }
+        this._destroyed = true;
+        browser.removeEventListener("offline", this._onBrowserOffline);
+        browser.removeEventListener("online", this._onBrowserOnline);
+        rpcBus.removeEventListener("RPC:RESPONSE", this._onRpcResponse);
+        rpcBus.removeEventListener("CLEAR-CACHES", this._onClearCaches);
+        registry.category("services").removeEventListener("CLEANUP", this._onServicesCleanup);
+        this._observer?.disconnect();
+        browser.clearTimeout(this._timeout);
+        browser.clearTimeout(this._startupSyncTimeout);
+        this._timeout = null;
+        this._startupSyncTimeout = null;
+        this._visited = {};
+        this._offline = false;
     }
 
     /**

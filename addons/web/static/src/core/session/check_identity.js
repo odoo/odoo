@@ -1,4 +1,5 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -155,17 +156,19 @@ export class CheckIdentity {
     setup(env, services) {
         this.dialogService = services["dialog"];
         this.fingerprint = null;
+        this._destroyed = false;
 
         this.identityCheckPromise = null;
         this.identityCheckCleanUp = null;
 
         // Multi-tab sync: if another tab verified the identity, clean up locally
-        this.channel = new BroadcastChannel("check_identity");
-        this.channel.addEventListener("message", (event) => {
+        this.channel = new browser.BroadcastChannel("check_identity");
+        this._onChannelMessage = (event) => {
             if (event.data === "identityChecked" && this.identityCheckCleanUp) {
                 this.identityCheckCleanUp();
             }
-        });
+        };
+        this.channel.addEventListener("message", this._onChannelMessage);
 
         registry
             .category("error_handlers")
@@ -173,7 +176,7 @@ export class CheckIdentity {
 
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
-        env.bus.addEventListener("WEB_CLIENT_READY", () => {
+        this._onWebClientReady = () => {
             if (session.device_salt) {
                 this.updateFingerprint()
                     .then((result) => !result && this.run())
@@ -184,7 +187,21 @@ export class CheckIdentity {
                 // client side and the error will be `TypeError: Failed to
                 // fetch`. This is a false positive.
             }
-        });
+        };
+        env.bus.addEventListener("WEB_CLIENT_READY", this._onWebClientReady);
+        onWillDestroy(() => this.destroy());
+    }
+
+    destroy() {
+        if (this._destroyed) {
+            return;
+        }
+        this._destroyed = true;
+        this.channel.removeEventListener("message", this._onChannelMessage);
+        this.channel.close();
+        this.env.bus.removeEventListener("WEB_CLIENT_READY", this._onWebClientReady);
+        this.identityCheckPromise = null;
+        this.identityCheckCleanUp = null;
     }
 
     async getFingerprint() {

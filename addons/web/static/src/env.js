@@ -72,7 +72,7 @@ export async function startServices(env, app) {
     // we start all plugins first (in particular the localization plugin)
     await app.pluginManager.ready;
     const toStart = new Map();
-    serviceRegistry.addEventListener("UPDATE", async (ev) => {
+    async function onRegistryUpdate(ev) {
         // Wait for all synchronous code so that if new services that depend on
         // one another are added to the registry, they're all present before we
         // start them regardless of the order they're added to the registry.
@@ -90,6 +90,11 @@ export async function startServices(env, app) {
         } else {
             await _startServices(env, toStart, app);
         }
+    }
+
+    serviceRegistry.addEventListener("UPDATE", onRegistryUpdate);
+    app.pluginManager.onDestroy(() => {
+        serviceRegistry.removeEventListener("UPDATE", onRegistryUpdate);
     });
     await _startServices(env, toStart, app);
 }
