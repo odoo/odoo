@@ -295,16 +295,18 @@
 
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
         <div t-attf-class="d-flex #{classes}">
-            <div class="o_portal_sidebar_content flex-grow-1 mb-4 mb-lg-0 pe-lg-4" id="sidebar_content">
-                <div t-if="title" class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
-                    <t t-out="title"/>
+            <div class="o_portal_sidebar_content flex-grow-1 min-w-0 mb-4 mb-lg-0" id="sidebar_content">
+                <div t-if="title" class="d-none d-lg-flex flex-column">
+                    <div id="sidebar_price" class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
+                        <t t-out="title"/>
+                    </div>
+                    <span class="text-muted small">Tax Included</span>
                 </div>
                 <t t-if="entries" t-out="entries"/>
-                <div class="d-none d-lg-block mt-5 small text-center text-muted">
+                <div class="d-none d-lg-block mt-4 small text-center text-muted">
                     Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/img/logo.png" alt="Odoo Logo" height="15"/></a>
                 </div>
             </div>
-            <div class="vr d-none d-lg-block bg-300"/>
         </div>
     </template>
 
@@ -437,15 +439,31 @@
     </template>
 
     <template id="portal_my_contact">
+        <hr/>
         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 #{_spacingClass}">
-            <div class="d-flex gap-2">
+            <a t-if="_contactLink" href="#discussion" class="d-flex mt-1 gap-2 text-decoration-none text-reset">
                 <img class="o_avatar rounded" t-att-src="_contactAvatar" alt="Contact"/>
-                <div>
-                    <span t-attf-class="d-block lh-1 mb-1 {{ 'pt-1' if not _contactLink else '' }}" t-out="_contactName"/>
-                    <a t-if="_contactLink" href="#discussion" class="d-flex align-items-center gap-2 small lh-1">Send message</a>
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                    <small class="fw-semibold" t-out="_contactName"/>
+                    <span class="small text-muted">Your Contact</span>
+                </div>
+                <i class="fa fa-envelope-o m-auto ms-auto me-3" role="img" aria-label="Send Message"/>
+            </a>
+            <t t-if="_contactLink"><t t-out="0"/></t>
+            <t t-elif="_contactNoCard">
+                <div class="d-flex align-items-center gap-2">
+                    <img class="o_avatar rounded flex-shrink-0" t-att-src="_contactAvatar" alt="Contact"/>
+                    <span class="fw-semibold" t-out="_contactName"/>
+                </div>
+                <t t-out="0"/>
+            </t>
+            <div t-else="" class="d-flex align-items-stretch overflow-hidden border">
+                <img class="o_avatar rounded" t-att-src="_contactAvatar" alt="Contact"/>
+                <div class="d-flex flex-column justify-content-center px-3 py-2">
+                    <span class="fw-semibold" t-out="_contactName"/>
+                    <t t-out="0"/>
                 </div>
             </div>
-            <t t-out="0"/>
         </div>
     </template>
 
@@ -681,7 +699,7 @@
     <template id="message_thread">
         <h3 t-if="not hide_header">Communication History</h3>
         <div id="discussion" data-anchor="true"
-            class="d-print-none o_portal_chatter o_not_editable p-0"
+            class="d-print-none o_portal_chatter o_not_editable p-0 mx-n3"
             t-att-data-token="token"
             t-att-data-res_model="object._name"
             t-att-data-pid="pid"
