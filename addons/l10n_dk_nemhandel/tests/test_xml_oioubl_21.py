@@ -237,7 +237,8 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         self._send_patched(invoice)
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
-        new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
+        with patch('odoo.addons.l10n_dk_nemhandel.models.res_partner.ResPartner._nemhandel_lookup_participant'):
+            new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, [line_vals])
 
     @freeze_time('2017-01-01')
