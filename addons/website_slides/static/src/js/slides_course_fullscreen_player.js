@@ -486,6 +486,7 @@
     var Fullscreen = SlideCoursePage.extend({
         events: Object.assign({}, SlideCoursePage.prototype.events, {
             'click .o_wslides_fs_toggle_sidebar': '_onClickToggleSidebar',
+            'click .o_wslides_fs_exit_fullscreen': '_onClickExitFullScreen',
         }),
         custom_events: Object.assign({}, SlideCoursePage.prototype.custom_events, {
             'change_slide': '_onChangeSlideRequest',
@@ -526,6 +527,17 @@
             const backendNavEl = document.querySelector('.o_frontend_to_backend_nav');
             if (backendNavEl) {
                 backendNavEl.remove();
+            }
+            document.addEventListener('keydown', function (event) {
+                if (event.key === "Escape") {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return false;
+                }
+            }, true);
+            const o_web_client = window.parent.document.querySelector(".o_web_client");
+            if (o_web_client) {
+                o_web_client.classList.toggle("o_website_fullscreen", true);
             }
             return this._super.apply(this, arguments).then(function () {
                 return self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
@@ -792,6 +804,20 @@
         _onClickToggleSidebar: function (ev){
             ev.preventDefault();
             this._toggleSidebar();
+        },
+        /**
+         * Called when the Exit FullScreen will click
+         *
+         * @private
+         */
+        _onClickExitFullScreen: function (ev){
+            var slideSlug = this.get('slide').slug;
+            var newUrl = `/slides/slide/${slideSlug}`;
+            history.pushState(null, '', newUrl);
+            const o_web_client = window.parent.document.querySelector(".o_web_client");
+            if (o_web_client) {
+                o_web_client.classList.remove("o_website_fullscreen");
+            }
         },
         /**
          * Toggles sidebar visibility.
