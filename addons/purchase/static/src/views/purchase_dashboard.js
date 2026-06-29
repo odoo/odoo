@@ -1,23 +1,25 @@
-import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { asyncComputed, Component, computed, onWillStart, plugin } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
 
 export class PurchaseDashBoard extends Component {
     static template = "purchase.PurchaseDashboard";
     static props = { list: { type: Object, optional: true } };
-    setup() {
-        this.orm = useService("orm");
-        this.action = useService("action");
 
+    orm = plugin(ORM);
+
+    purchaseData = asyncComputed(() => {
+        this.props.list;
+        return this.orm.call("purchase.order", "retrieve_dashboard");
+    });
+
+    multiuser = computed(
+        () => JSON.stringify(this.purchaseData().global) !== JSON.stringify(this.purchaseData().my)
+    );
+
+    setup() {
         onWillStart(async () => {
-            await this.updateDashboardState();
+            await this.purchaseData.currentPromise();
         });
-        onWillUpdateProps(async () => {
-            await this.updateDashboardState();
-        });
-    }
-    async updateDashboardState() {
-        this.purchaseData = await this.orm.call("purchase.order", "retrieve_dashboard");
-        this.multiuser = JSON.stringify(this.purchaseData.global) !== JSON.stringify(this.purchaseData.my);
     }
 
     /**
