@@ -125,6 +125,7 @@ export class DateTimeField extends Component {
         const dateTimePicker = useDateTimePicker({
             target: "root",
             showSeconds: this.props.showSeconds,
+            showTime: this.props.showTime,
             condensed: this.props.condensed,
             get pickerProps() {
                 return getPickerProps();

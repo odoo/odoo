@@ -597,8 +597,8 @@ test("datetime field in list with show_time option", async () => {
     });
     await click(dates[0]);
     await animationFrame();
-    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00:00", {
-        message: "for datetime field both date and time should be visible with datetime widget",
+    expect(".o_field_datetime input:first").toHaveValue("02/08/2017", {
+        message: "for datetime field only date should be visible with date widget after click",
     });
 });
 
