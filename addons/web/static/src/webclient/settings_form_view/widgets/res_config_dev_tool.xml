@@ -9,7 +9,7 @@
                         <li><button t-if="!this.isAssets" class="btn btn-link btn-link-inline" t-on-click="() => this.activateDebug('assets')">Activate the developer mode (with assets)</button></li>
                         <li><button t-if="!this.isTests" class="btn btn-link btn-link-inline" t-on-click="() => this.activateDebug('assets,tests')">Activate the developer mode (with tests assets)</button></li>
                         <li><button t-if="this.isDebug" class="btn btn-link btn-link-inline" t-on-click="() => this.activateDebug(0)">Deactivate the developer mode</button></li>
-                        <li><button t-if="this.isDebug and !this.isDemoDataActive" t-on-click="this.onClickForceDemo" class="o_web_settings_force_demo btn btn-link btn-link-inline">Load demo data</button></li>
+                        <li><button t-if="this.isDebug and !this.isDemoDataActive.value" t-on-click="this.onClickForceDemo" class="o_web_settings_force_demo btn btn-link btn-link-inline">Load demo data</button></li>
                     </ul>
                 </Setting>
             </SettingsBlock>

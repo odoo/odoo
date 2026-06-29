@@ -28,7 +28,6 @@ declare module "services" {
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
     import { lazySession } from "@web/webclient/session_service";
-    import { demoDataService } from "@web/webclient/settings_form_view/widgets/demo_data_service";
     import { userInviteService } from "@web/webclient/settings_form_view/widgets/user_invite_service";
     import { shareTargetService } from "@web/webclient/share_target/share_target_service";
 
@@ -42,7 +41,6 @@ declare module "services" {
         action: typeof actionService;
         command: typeof commandService;
         datetime_picker: typeof datetimePickerService;
-        demo_data: typeof demoDataService;
         dialog: typeof dialogService;
         effect: typeof effectService;
         field: typeof fieldService;

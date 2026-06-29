@@ -1,9 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
-import { tick } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     defineModels,
     fields,
+    getMockEnv,
     models,
     mountView,
     onRpc,
@@ -21,9 +22,7 @@ class ResConfigSettings extends models.Model {
 defineModels([ResConfigSettings]);
 
 test("Simple render", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     redirect("/odoo");
     await mountView({
         type: "form",
@@ -46,9 +45,7 @@ test("Simple render", async () => {
 });
 
 test("Activate the developer mode", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -73,9 +70,7 @@ test("Activate the developer mode", async () => {
 });
 
 test("Activate the developer mode (with assets)", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -100,9 +95,7 @@ test("Activate the developer mode (with assets)", async () => {
 });
 
 test("Activate the developer mode (with tests assets)", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -129,9 +122,7 @@ test("Activate the developer mode (with tests assets)", async () => {
 
 test("Activate the developer modeddd (with tests assets)", async () => {
     serverState.debug = "assets,tests";
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("lazy_session_info", () => ({ is_demo: true }));
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -148,6 +139,8 @@ test("Activate the developer modeddd (with tests assets)", async () => {
             </form>`,
         resModel: "res.config.settings",
     });
+    getMockEnv().bus.trigger("WEB_CLIENT_READY");
+    await animationFrame();
     expect(router.current).toEqual({ debug: "assets,tests" });
 
     expect(queryAllTexts`#developer_tool .o_setting_right_pane button`).toEqual([
