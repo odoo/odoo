@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, useProps, t } from "@odoo/owl";
+import { Component, proxy, useProps, t, useEffect } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 
@@ -16,11 +16,11 @@ export class InvisibleElementsPanel extends Component {
     setup() {
         this.state = proxy({ invisibleEntries: null });
 
-        onWillStart(() => this.updateInvisibleElementsPanel(this.props.invisibleEls));
-
-        onWillUpdateProps((nextProps) => {
-            const { invisibleEls, invisibleSelector } = nextProps;
-            this.updateInvisibleElementsPanel(invisibleEls, invisibleSelector);
+        useEffect(() => {
+            this.updateInvisibleElementsPanel(
+                this.props.invisibleEls,
+                this.props.invisibleSelector
+            );
         });
     }
 
@@ -84,8 +84,23 @@ export class InvisibleElementsPanel extends Component {
         this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls);
     }
 
+    findEntry(el, entries = this.state.invisibleEntries) {
+        for (const entry of entries) {
+            if (entry.snippetEl === el) {
+                return entry;
+            }
+            const entryInDescendant = this.findEntry(el, entry.children);
+            if (entryInDescendant) {
+                return entryInDescendant;
+            }
+        }
+    }
+
     toggleElementVisibility(invisibleEntry) {
         const snippetEl = invisibleEntry.snippetEl;
+        // The entry object referenced from the rendered template may be
+        // outdated (not in this.state.invisibleEntries anymore)
+        invisibleEntry = this.findEntry(snippetEl);
         if (invisibleEntry.isVisible) {
             // Toggle the entry visibility to "Hide".
             invisibleEntry.isVisible = false;
