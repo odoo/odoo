@@ -2,7 +2,7 @@ import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calen
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
-import { asyncComputed, onWillStart } from "@odoo/owl";
+import { asyncComputed, computed, onWillStart } from "@odoo/owl";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
@@ -36,13 +36,24 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         this.currentDateTime = luxon.DateTime.now();
 
         this.specialDays = asyncComputed(() => this.getSpecialDays());
-        this.holidays = asyncComputed(() => this.getHolidayData());
+        this.holidays = asyncComputed(() => this.getHolidayData(), { initial: [] });
+        this.bankHolidays = computed(() =>
+            this._mapIsoToDatetimes(this.specialDays().bankHolidays || [])
+        );
+        this.mandatoryDays = computed(() =>
+            this._mapIsoToDatetimes(this.specialDays().mandatoryDays || [])
+        );
 
         onWillStart(async () => {
-            await Promise.all([
-                this.specialDays.currentPromise(),
-                this.holidays.currentPromise(),
-            ]);
+            await Promise.all([this.specialDays.currentPromise(), this.holidays.currentPromise()]);
+        });
+    }
+
+    _mapIsoToDatetimes(days) {
+        return days.map((day) => {
+            day.start = luxon.DateTime.fromISO(day.start);
+            day.end = luxon.DateTime.fromISO(day.end);
+            return day;
         });
     }
 
@@ -62,7 +73,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
 
     async getHolidayData() {
         if (!this.env.isSmall) {
-            return;
+            return [];
         }
         const promises = [];
         for (const section of this.props.model.filterSections) {
@@ -78,7 +89,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         const filterData = {};
         const [data] = await Promise.all(promises);
         if (!data) {
-            return;
+            return [];
         }
         data.forEach((leave) => {
             filterData[leave[3]] = leave;
@@ -88,26 +99,6 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
 
     async getSpecialDays() {
         const { rangeStart, rangeEnd } = this.props.model;
-        const specialDays = await this._specialDaysCache.read(rangeStart, rangeEnd);
-        specialDays["bankHolidays"].forEach((bankHoliday) => {
-            bankHoliday.start = luxon.DateTime.fromISO(bankHoliday.start);
-            bankHoliday.end = luxon.DateTime.fromISO(bankHoliday.end);
-        });
-        specialDays["mandatoryDays"].forEach((mandatoryDay) => {
-            mandatoryDay.start = luxon.DateTime.fromISO(mandatoryDay.start);
-            mandatoryDay.end = luxon.DateTime.fromISO(mandatoryDay.end);
-        });
-        return {
-            bankHolidays: specialDays.bankHolidays,
-            mandatoryDays: specialDays.mandatoryDays,
-        };
-    }
-
-    get leaveState() {
-        return {
-            bankHolidays: this.specialDays()?.bankHolidays || [],
-            mandatoryDays: this.specialDays()?.mandatoryDays || [],
-            holidays: this.holidays() || [],
-        };
+        return await this._specialDaysCache.read(rangeStart, rangeEnd);
     }
 }
