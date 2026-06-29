@@ -1,0 +1,39 @@
+<odoo>
+    <record id="library_mangement_borrow_view_form" model="ir.ui.view">
+        <field name="name">library.mangement.borrow.form</field>
+        <field name="model">library.mangement.borrow</field>
+        <field name="arch" type="xml">
+            <form string="book">
+                <sheet>
+                    <group >
+                        <field name="book_id"/>
+                        <field name="customer_id"/>
+                        <field name="browwed_date"/>
+                        <field name="return_date"/>
+                        <field name="payment" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="library_mangement_borrow_view_list" model="ir.ui.view">
+        <field name="name">library.mangement.borrow.list</field>
+        <field name="model">library.mangement.borrow</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'refused'" decoration-success="state == 'accepted'" decoration-info="state == 'returned'" decoration-warning="state == 'proposed'">
+                <field name="book_id"/>
+                <field name="customer_id"/>
+                <field name="browwed_date"/>
+                <field name="return_date"/>
+                <field name="payment"/>
+                <button name="action_confirm" string="Confirm"  type="object" icon="fa-check" invisible="state != 'proposed'"/>
+                <button name="action_cancel" string="Cancel"  type="object" icon="fa-times" invisible="state != 'proposed'"/>
+                <button name="action_return" string="Return"  type="object" icon="fa-undo" invisible="state != 'accepted'"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+</odoo>
