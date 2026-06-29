@@ -977,6 +977,34 @@ class TestOnchange(SavepointCaseWithUserDemo):
             ],
         })
 
+    def test_triangular_dependencies(self):
+        # 'total' depends on 'base' and 'line_ids.subtotal'
+        # 'subtotal' depends on 'price' and 'order_id.base'
+        Model = self.env['test_orm.onchange.order']
+        record = Model.create({'base': 1, 'line_ids': [Command.create({'price': 10})]})
+        self.assertEqual(record.total, 10)
+        self.assertEqual(record.line_ids.subtotal, 10)
+
+        with Form(record) as form:
+            # triggers a call to onchange
+            #  - values: {'base': 2}
+            #  - result: {'total': 20, 'line_ids': [(1, ..., {'subtotal': 20})]}
+            form.base = 2
+            self.assertEqual(form.total, 20)
+
+            # triggers another call to onchange
+            #  - values: {'base': 1, 'total': 20, 'line_ids': [(1, ..., {'subtotal': 20})]}
+            #  - result: {'total': 10, 'line_ids': [(1, ..., {'subtotal': 10})]}
+            #
+            # Bug: when putting values in cache, setting 'subtotal' invalidates
+            # field 'total'. Then onchange() makes an initial snapshot of field
+            # values, which causes 'total' to be recomputed to value 10. When
+            # onchange() compares the final snapshot to the initial one,
+            # field 'total' is not different and is therefore not returned to
+            # the form view!
+            form.base = 1
+            self.assertEqual(form.total, 10)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeOnchange2(TransactionCase):
