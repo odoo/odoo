@@ -18,10 +18,10 @@
                 <t t-else="" t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
                         toggleOverlayPreview.bind="this.toggleOverlayPreview"
-                        folded="optionsContainer.folded"
-                        toggleFold="() => {
-                            optionsContainer.folded = !optionsContainer.folded;
-                            optionsContainer.foldedIntent = optionsContainer.folded;
+                        unfolded="optionsContainer.unfolded"
+                        toggleUnfold="() => {
+                            optionsContainer.unfolded = !optionsContainer.unfolded;
+                            optionsContainer.forceUnfold = optionsContainer.unfolded;
                         }"
                         editingElement="optionsContainer.element"
                         options="optionsContainer.options"

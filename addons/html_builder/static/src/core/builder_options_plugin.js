@@ -159,17 +159,19 @@ export class BuilderOptionsPlugin extends Plugin {
         reload_context_processors: (context, el) => {
             if (el) {
                 context.selector = this.getReloadSelector(el);
-                context.folded = this.lastContainers.map((c) => c.folded);
+                context.unfolded = this.lastContainers.map((c) => c.unfolded);
             }
             return context;
         },
         on_editor_started_handlers: () => {
             if (this.config.reloadContext) {
-                const { selector, folded } = this.config.reloadContext;
+                const { selector, unfolded } = this.config.reloadContext;
                 this.updateContainers(this.editable.querySelector(selector));
-                for (let i = 0; i < this.lastContainers.length && i < folded.length; i++) {
-                    this.lastContainers[i].folded &&= folded[i];
-                    this.lastContainers[i].foldedIntent &&= this.config.initialFolded[i];
+                for (let i = 0; i < this.lastContainers.length && i < unfolded.length; i++) {
+                    if (unfolded[i]) {
+                        this.lastContainers[i].unfolded = true;
+                        this.lastContainers[i].forceUnfold ||= true;
+                    }
                 }
             }
         },
@@ -406,7 +408,7 @@ export class BuilderOptionsPlugin extends Plugin {
         const previousElementToIdAndStateMap = new Map(
             this.lastContainers.map((c) => [
                 c.element,
-                { id: c.id, folded: c.folded, foldedIntent: c.foldedIntent },
+                { id: c.id, unfolded: c.unfolded, forceUnfold: c.forceUnfold },
             ])
         );
         let containers = proxy(
@@ -414,8 +416,8 @@ export class BuilderOptionsPlugin extends Plugin {
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({
                     id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
-                    folded: previousElementToIdAndStateMap.get(element)?.foldedIntent ?? true,
-                    foldedIntent: previousElementToIdAndStateMap.get(element)?.foldedIntent,
+                    unfolded: previousElementToIdAndStateMap.get(element)?.forceUnfold ?? false,
+                    forceUnfold: previousElementToIdAndStateMap.get(element)?.forceUnfold,
                     element,
                     options: Options,
                     optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
@@ -440,7 +442,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
         const lastContainerWithOptions = containers.findLast((c) => c.options.length);
         if (lastContainerWithOptions) {
-            lastContainerWithOptions.folded = false;
+            lastContainerWithOptions.unfolded = true;
             // The following is used in case the options in the last container
             // are not likely the ones the user wants. After we re-organize the
             // options to avoid these cases, this will be removed
@@ -450,7 +452,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 if (lastContainerWithOptions.element.matches(selector)) {
                     const ancestorContainer = containers.findLast((c) => c.element.matches(target));
                     if (ancestorContainer) {
-                        ancestorContainer.folded = ancestorContainer.foldedIntent ?? false;
+                        ancestorContainer.unfolded = ancestorContainer.forceUnfold ?? true;
                     }
                 }
             }
@@ -539,8 +541,8 @@ export class BuilderOptionsPlugin extends Plugin {
         // group, or the last group will disappear in favor of the one with
         // the new target.
         for (const container of this.lastContainers) {
-            if (!container.folded) {
-                container.foldedIntent = false;
+            if (container.unfolded) {
+                container.forceUnfold = true;
             }
         }
         // Store the next target to activate in the current step.
