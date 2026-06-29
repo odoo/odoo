@@ -5756,7 +5756,7 @@ class BaseModel(metaclass=MetaModel):
                         vals = {
                             f.name: convert(record, f, dirty_field_cache[f][id_])
                             for f, ids in dirty_field_ids.items()
-                            if id_ in ids
+                            if id_ in ids and f in dirty_field_cache and id_ in dirty_field_cache[f]
                         }
                         vals_ids[frozendict(vals)].append(id_)
                 except KeyError:
