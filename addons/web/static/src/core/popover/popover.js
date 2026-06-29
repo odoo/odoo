@@ -47,8 +47,18 @@ function useClickAway(popover, callback) {
     useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
     useEarlyExternalListener(window, "popstate", navigationHandler, { capture: true });
     for (const iframeEl of document.querySelectorAll("iframe")) {
+        // Reading any property of a cross-origin frame's window (here
+        // addEventListener) throws a SecurityError. Such frames cannot be
+        // listened to anyway, so skip them instead of crashing.
+        let iframeWindow;
+        try {
+            iframeWindow = iframeEl.contentWindow;
+            iframeWindow.addEventListener;
+        } catch {
+            continue;
+        }
         useEarlyExternalListener(
-            iframeEl.contentWindow,
+            iframeWindow,
             "pointerdown",
             () => {
                 const popupEl = popover.popoverRef.el;
