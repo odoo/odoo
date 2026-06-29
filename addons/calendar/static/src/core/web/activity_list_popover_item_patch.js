@@ -3,14 +3,12 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ActivityListPopoverItem.prototype, {
     get hasEditButton() {
-        return super.hasEditButton && !this.props.activity.calendar_event_id;
+        return super.hasEditButton && !this.activity().calendar_event_id;
     },
-
     get hasRescheduleMeetingButton() {
-        return this.props.activity.calendar_event_id;
+        return this.activity().calendar_event_id;
     },
-
-    async onClickReschedule() {
-        await this.props.activity.rescheduleMeeting();
+    onClickReschedule() {
+        this.activity().rescheduleMeeting();
     },
 });

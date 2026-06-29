@@ -99,7 +99,7 @@
                                                     'o-green': this.message.bubbleColor === 'green',
                                                     'o-orange': this.message.bubbleColor === 'orange',
                                                 }"/>
-                                                <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.props.onParentMessageClick"/>
+                                                <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': this.message.isNote,
                                                             'fs-1': !this.isEditing and !this.env.inChatter and this.message.onlyEmojis,

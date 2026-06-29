@@ -151,13 +151,13 @@ export class AttachmentUploadService {
     }
 
     /**
-     * @param {import("models").Thread} thread
-     * @param {() => void} onFileUploaded
+     * @param {import("@odoo/owl").Signal<import("models").Thread>} thread
+     * @param {(thread: import("models").Thread) => void} onFileUploaded
      */
     onFileUploaded(thread, onFileUploaded) {
         this._fileUploadBus.addEventListener("UPLOAD", ({ detail }) => {
-            if (thread.eq(detail)) {
-                onFileUploaded();
+            if (thread()?.eq(detail)) {
+                onFileUploaded(detail);
             }
         });
     }

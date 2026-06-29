@@ -1,27 +1,32 @@
-import { patch } from "@web/core/utils/patch";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { useOnChange } from "@mail/utils/common/hooks";
+
 import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 patch(Chatter.prototype, {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.applyConditionalAttachmentVisibility();
+        useOnChange(
+            () => [this.thread()],
+            (thread) => {
+                this.applyConditionalAttachmentVisibility(thread);
+            }
+        );
     },
 
-     async applyConditionalAttachmentVisibility() {
+    async applyConditionalAttachmentVisibility(thread) {
         try {
-            if (this.props.threadModel === "hr.leave" && this.props.threadId) {
+            if (thread?.model === "hr.leave" && thread?.id) {
                 const record = await this.orm.read(
                     "hr.leave",
-                    [this.props.threadId],
+                    [thread.id],
                     ["attachment_is_visible"]
                 );
                 const isVisible = record?.[0]?.attachment_is_visible;
                 if (!isVisible) {
-                    if (this.state.thread) {
-                        this.state.thread.attachments = [];
-                    }
+                    thread.attachments = [];
                 }
             }
         } catch (error) {

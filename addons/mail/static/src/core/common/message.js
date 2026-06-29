@@ -90,12 +90,15 @@ export class Message extends Component {
             messageRefs: t.instanceOf(Map).optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
-            onParentMessageClick: t.function([]).optional(),
             previousMessage: t.instanceOf(this.store["mail.message"].Class).optional(),
             showDates: t.boolean().optional(true),
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
+        this.onParentMessageClick = props.static(
+            "onParentMessageClick",
+            t.function([t.instanceOf(this.store["mail.message"].Class)]).optional()
+        );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             isHovered: false,
@@ -195,8 +198,8 @@ export class Message extends Component {
                     "span",
                     this.message.showTranslation
                         ? this.message.richTranslationValue
-                        : (this.props.messageSearch?.highlight(this.message.richBody) ??
-                              this.message.richBody)
+                        : this.props.messageSearch?.highlight(this.message.richBody) ??
+                              this.message.richBody
                 );
                 const roots = this.prepareMessageBody(bodyEl) ?? [];
                 shadowRoot.appendChild(bodyEl);
@@ -212,7 +215,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : (this.prepareMessageBody(this.messageBody.el) ?? []);
+                    : this.prepareMessageBody(this.messageBody.el) ?? [];
                 return () => {
                     for (const root of roots) {
                         root.destroy();
@@ -252,8 +255,8 @@ export class Message extends Component {
                           ? "left-end"
                           : "left-start"
                       : this.message.threadAsNewest
-                        ? "right-end"
-                        : "right-start",
+                      ? "right-end"
+                      : "right-start",
                   name: this.expandText,
               })
             : undefined;

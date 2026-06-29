@@ -1,9 +1,9 @@
 import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
+import { propComputed, useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -16,15 +16,22 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.props = props({
-            composer: t.boolean().optional(true),
-            threadId: t.or([t.number(), t.literal(false)]).optional(false),
-            threadModel: t.string(),
-            twoColumns: t.boolean().optional(false),
+        this.composer = propComputed("composer", t.boolean().optional(true));
+        this.threadId = propComputed(
+            "threadId",
+            t.or([t.number(), t.literal(false)]).optional(false)
+        );
+        this.threadModel = propComputed("threadModel", t.string());
+        this.twoColumns = propComputed("twoColumns", t.boolean().optional(false));
+        this.thread = signal(null, {
+            type: t.instanceOf(this.store["mail.thread"].Class),
         });
         this.state = proxy({
             jumpThreadPresent: 0,
-            /** @type {import("models").Thread} */
+            /**
+             * @deprecated use the `this.thread` signal instead
+             * @type {import("models").Thread}
+             */
             thread: undefined,
         });
         this.messageHighlight = useMessageScrolling({
@@ -40,7 +47,7 @@ export class Chatter extends Component {
         onMounted(this._onMounted);
 
         useOnChange(
-            () => [this.props.threadId, this.props.threadModel],
+            () => [this.threadId(), this.threadModel()],
             (threadId, threadModel) => this.changeThread(threadModel, threadId),
             { initialRun: false }
         );
@@ -97,19 +104,20 @@ export class Chatter extends Component {
         if (this.highlightMessage) {
             data.highlightMessage = this.highlightMessage;
         }
-        this.state.thread = this.store["mail.thread"].insert(data);
+        this.thread.set(this.store["mail.thread"].insert(data));
+        this.state.thread = this.thread();
         if (threadId === false) {
-            if (this.state.thread.messages.length === 0) {
-                const { effectiveSelf } = this.state.thread;
+            if (this.thread().messages.length === 0) {
+                const { effectiveSelf } = this.thread();
                 const authorModelName = effectiveSelf.Model.getName();
-                this.state.thread.messages.push({
+                this.thread().messages.push({
                     id: this.store.getNextTemporaryId(),
                     is_transient: true,
                     author_id: authorModelName === "res.partner" ? effectiveSelf : undefined,
                     author_guest_id: authorModelName === "mail.guest" ? effectiveSelf : undefined,
                     body: _t("Creating a new record..."),
                     message_type: "notification",
-                    thread: this.state.thread,
+                    thread: this.thread(),
                     res_id: threadId,
                     model: threadModel,
                 });
@@ -136,7 +144,7 @@ export class Chatter extends Component {
     }
 
     _onMounted() {
-        this.changeThread(this.props.threadModel, this.props.threadId);
+        this.changeThread(this.threadModel(), this.threadId());
         if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
             if (this.env.chatter) {
                 this.env.chatter.fetchThreadData = false;

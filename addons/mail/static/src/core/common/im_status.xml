@@ -4,10 +4,10 @@
     <t t-name="mail.ImStatus">
         <t t-call-slot="pre_icon"/>
         <t name="icon">
-            <i t-if="(!this.props.member or !this.showTypingIndicator) and this.persona" t-att-class="this.class" t-att-style="this.props.style" t-att-title="this.title" role="img" t-att-aria-label="this.title"/>
+            <i t-if="(!this.member() or !this.showTypingIndicator) and this.persona" t-att-class="this.class" t-att-style="this.style()" t-att-title="this.title" role="img" t-att-aria-label="this.title"/>
             <div t-if="this.showTypingIndicator" class="o-mail-ImStatus-typingContainer rounded-pill" t-att-class="this.class">
                 <div class="o-mail-ImStatus-typingBg bg-success rounded-pill">
-                    <Typing member="this.props.member" size="['sm', 'smaller'].includes(this.props.size) ? 'sm' : 'md'" displayText="false" />
+                    <Typing member="this.member()" size="['sm', 'smaller'].includes(this.size()) ? 'sm' : 'md'" displayText="false" />
                 </div>
             </div>
         </t>

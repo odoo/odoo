@@ -3,9 +3,10 @@ import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { computeDelay } from "@mail/utils/common/dates";
+import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, computed, props, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -19,27 +20,35 @@ export class ActivityListPopoverItem extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            activity: t.instanceOf(this.store["mail.activity"].Class),
-            onActivityChanged: t.function([]).optional(),
-            onClickDoneAndScheduleNext: t.function([]).optional(),
-            onClickEditActivityButton: t.function([]).optional(),
-        });
+        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.onActivityChanged = props.static("onActivityChanged", t.function([]).optional());
+        this.onClickDoneAndScheduleNext = props.static(
+            "onClickDoneAndScheduleNext",
+            t.function([]).optional()
+        );
+        this.onClickEditActivityButtonProp = props.static(
+            "onClickEditActivityButton",
+            t.function([]).optional()
+        );
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
-        if (this.props.activity.activity_category === "upload_file") {
+        // bound once so `close` can be passed as a stable (props.static) handler
+        this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
+        if (this.activity().activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
-                this.store["mail.thread"].insert({
-                    model: this.props.activity.res_model,
-                    id: this.props.activity.res_id,
-                })
+                computed(() =>
+                    this.store["mail.thread"].insert({
+                        model: this.activity().res_model,
+                        id: this.activity().res_id,
+                    })
+                )
             );
         }
     }
 
     get delayLabel() {
-        const diff = computeDelay(this.props.activity.date_deadline);
+        const diff = computeDelay(this.activity().date_deadline);
         if (diff === 0) {
             return _t("Today");
         } else if (diff === -1) {
@@ -54,27 +63,29 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get hasEditButton() {
-        const activity = this.props.activity;
+        const activity = this.activity();
         return activity.state !== "done" && activity.can_write;
     }
 
     get hasAssignButton() {
-        const activity = this.props.activity;
+        const activity = this.activity();
         return activity.state !== "done" && activity.can_write && !activity.user_id;
     }
 
     get hasFileUploader() {
-        const activity = this.props.activity;
+        const activity = this.activity();
         return activity.state !== "done" && activity.activity_category === "upload_file";
     }
 
     get hasMarkDoneButton() {
-        return this.props.activity.state !== "done" && !this.hasFileUploader;
+        return this.activity().state !== "done" && !this.hasFileUploader;
     }
 
     onClickEditActivityButton() {
-        this.props.onClickEditActivityButton();
-        this.props.activity.edit().then(() => this.props.onActivityChanged?.());
+        this.onClickEditActivityButtonProp?.();
+        this.activity()
+            .edit()
+            .then(() => this.onActivityChanged?.());
     }
 
     onClickAssignButton(ev) {
@@ -83,17 +94,18 @@ export class ActivityListPopoverItem extends Component {
             return;
         }
         this.assignPopover.open(ev.currentTarget, {
-            activity: this.props.activity,
+            activity: this.activity,
             hasHeader: true,
-            onActivityChanged: (thread) => this.props.onActivityChanged?.(thread),
+            onActivityChanged: (thread) => this.onActivityChanged?.(thread),
         });
     }
 
     async onFileUploaded(data) {
+        const activity = this.activity();
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity: this.props.activity,
+            activity,
         });
-        await this.props.activity.markAsDone([attachmentId]);
-        this.props.onActivityChanged?.();
+        await activity.markAsDone([attachmentId]);
+        this.onActivityChanged?.();
     }
 }

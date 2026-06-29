@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
         <div class="o-mail-ActivityMarkAsDone">
-            <h6 t-if="this.props.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Mark Done</h6>
+            <h6 t-if="this.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Mark Done</h6>
             <div class="py-2 px-3">
-                <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.props.activity.feedback" t-custom-ref="textarea"/>
+                <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-custom-ref="textarea"/>
                 <div class="mt-2">
                     <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
                         Done &amp; Schedule Next
@@ -12,7 +12,7 @@
                     <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
                         Done
                     </button>
-                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.props.close">
+                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
                         Discard
                     </button>
                 </div>

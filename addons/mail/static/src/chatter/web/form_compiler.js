@@ -35,8 +35,7 @@ function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerXml = createElement("t");
     setAttributes(webClientViewAttachmentViewContainerXml, {
         "t-component": "__comp__.mailComponents.AttachmentView",
-        threadId: "__comp__.props.record.resId or undefined",
-        threadModel: "__comp__.props.record.resModel",
+        thread: "__comp__.thread",
     });
     append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
     return webClientViewAttachmentViewContainerHookXml;
@@ -81,7 +80,7 @@ patch(FormCompiler.prototype, {
         if (webClientViewAttachmentViewHookXml) {
             // in sheet bg (attachment viewer present)
             setAttributes(webClientViewAttachmentViewHookXml, {
-                "t-if": `__comp__.mailLayout(${hasPreview}).includes("COMBO")`,
+                "t-if": `__comp__.mailLayout(${hasPreview}) == "COMBO"`,
             });
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg", "w-auto");

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
+    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.thread().id === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-custom-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.isSearchOpen" class="flex-grow-1">
@@ -13,17 +13,17 @@
                         'btn-primary': this.state.composerType !== 'note',
                         'btn-secondary': this.state.composerType === 'note',
                         'active': this.state.composerType === 'message',
-                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                    }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
                     <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
                         'btn-primary active': this.state.composerType === 'note',
                         'btn-secondary': this.state.composerType !== 'note',
-                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId and this.props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                    }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id and this.thread().id" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
                     <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
-                            t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId"
+                            t-att-disabled="!this.state.thread.canPostMessage and this.thread().id"
                             data-hotkey="shift+a" t-on-click="this.scheduleActivity">
                         <span>Activity</span>
                     </button>
@@ -61,7 +61,7 @@
                 <Composer composer="this.state.thread.composer"
                     autofocus="true" className="this.state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'"
                     onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback"
-                    dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.props.threadId"
+                    dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.thread().id"
                     withMessageFields="true"
                 />
             </t>
@@ -127,7 +127,7 @@
         </div>
         <t t-if="this.state.showActivities">
             <t t-foreach="this.activities" t-as="activity" t-key="activity.id">
-                <Activity activity="activity" onActivityChanged.bind="this.onActivityChanged" reloadParentView.bind="this.reloadParentView"/>
+                <Activity activity="activity" onActivityChanged="this.onActivityChanged" reloadParentView="this.reloadParentView"/>
             </t>
         </t>
     </div>
