@@ -1,0 +1,89 @@
+.mk_apps_sidebar_panel {
+    @include mk-disable-scrollbar();
+    background-color: $mk-appbar-background;
+    width: var(--mk-sidebar-width, 0);
+    overflow-y: auto;
+    .mk_apps_sidebar {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+	    white-space: nowrap;
+	    .mk_apps_sidebar_menu {
+	    	padding: 0;
+		    > li > a {
+		        cursor: pointer;
+	            font-size: 13px;
+	            font-weight: 300;
+	            overflow: hidden;
+	            padding: 8px 11px;
+	            text-decoration: none;
+	            color: $mk-appbar-color;
+	            text-overflow: ellipsis;
+	            .mk_apps_sidebar_icon {
+				    width: 22px;
+				    height: 22px;
+	    			margin-right: 5px;
+				}
+		    }
+	        > li.active > a {
+			    background: $mk-appbar-active;
+	        }
+	        > li:hover > a {
+			    background: $mk-appbar-active;
+	        }
+	    }
+	}
+}
+
+.mk_sidebar_type_large {
+	--mk-sidebar-width: #{$mk-sidebar-large-width};
+}
+
+.mk_sidebar_type_small {
+	--mk-sidebar-width: #{$mk-sidebar-small-width};
+	.mk_apps_sidebar_name {
+		display: none;
+	}
+	.mk_apps_sidebar_icon {
+		margin-right: 0 !important;
+	}
+   	.mk_apps_sidebar_logo {
+		display: none;
+	}
+}
+
+.mk_sidebar_type_invisible {
+	--mk-sidebar-width: 0;
+}
+
+.editor_has_snippets_hide_backend_navbar,
+.o_home_menu_background,
+.o_fullscreen {
+	--mk-sidebar-width: 0;
+}
+
+.editor_has_snippets_hide_backend_navbar .mk_apps_sidebar_panel {
+    transition: width 300ms;
+}
+
+@include media-breakpoint-only(md) {
+	.mk_sidebar_type_large {
+		--mk-sidebar-width: #{$mk-sidebar-small-width};
+		.mk_apps_sidebar_name {
+			display: none;
+		}
+		.mk_apps_sidebar_icon {
+			margin-right: 0 !important;
+		}
+	   	.mk_apps_sidebar_logo {
+			display: none;
+		}
+	}
+}
+
+@include media-breakpoint-down(md) {
+	.mk_sidebar_type_large, .mk_sidebar_type_small {
+		--mk-sidebar-width: 0;
+	}
+}

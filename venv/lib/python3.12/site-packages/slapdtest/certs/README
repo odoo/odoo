@@ -1,0 +1,24 @@
+python-ldap test certificates
+=============================
+
+Certificates and keys
+---------------------
+
+* ``ca.pem``: internal root CA certificate
+* ``server.pem``: TLS server certificate for slapd, signed by root CA. The
+  server cert is valid for DNS Name ``localhost`` and IPs ``127.0.0.1`` and
+  ``:1``.
+* ``server.key``: private key for ``server.pem``, no password protection
+* ``client.pem``: certificate for TLS client cert authentication, signed by
+  root CA.
+* ``client.key``: private key for ``client.pem``, no password protection
+
+Configuration and scripts
+-------------------------
+
+* ``ca.conf`` contains the CA definition as well as extensions for the
+  client and server certificates.
+* ``client.conf`` and ``server.conf`` hold the subject and base configuration
+  for server and client certs.
+* ``gencerts.sh`` creates new CA, client and server certificates.
+* ``gennssdb.sh`` can be used to create a NSSDB for all certs and keys.

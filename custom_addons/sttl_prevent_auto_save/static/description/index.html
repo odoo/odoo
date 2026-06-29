@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html style="box-sizing: border-box;--bs-breakpoint-xs: 0;--bs-breakpoint-sm: 576px;--bs-breakpoint-md: 768px;--bs-breakpoint-lg: 992px;--bs-breakpoint-xl: 1200px;--bs-breakpoint-xxl: 1400px;">
+<head style="box-sizing: border-box;">
+
+
+    <meta charset="utf-8" style="box-sizing: border-box;">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" style="box-sizing: border-box;">
+    <title style="box-sizing: border-box;">odoo</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" style="box-sizing: border-box;">
+</head>
+<body style="box-sizing: border-box;margin: 0;font-family: 'Poppins', sans-serif;font-size: var(--bs-body-font-size);font-weight: var(--bs-body-font-weight);line-height: var(--bs-body-line-height);color: var(--bs-body-color);text-align: var(--bs-body-text-align);background-color: var(--bs-body-bg);-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;padding: 0;">
+
+<!-- oddo bussiness start -->
+<section class="bussiness space"
+         style="overflow-x: hidden; box-sizing: border-box; padding: 70px 0; position: relative; padding:5px;">
+    <div class="container-fluid"
+         style="margin-right: auto; margin-left: auto; max-width: 1440px; margin: 0 auto;">
+        <div>
+            <div class="bussiness_content d-flex flex-wrap align-items-center justify-content-between">
+                <!-- Text Content Section -->
+                <div class="text-content w-100 w-md-50 mb-4 mb-md-0" style="text-align: left;">
+                    <h1 id="portal-title" class="fw-bold text-primary mb-1"
+                        style="font-size: 36px; font-weight: bold; line-height: 1.2;">
+                       Prevent AutoSave
+                    </h1>
+                    <h3 class="mb-3" style="font-size: 24px; line-height: 1.3;">
+                            Prevents the Auto save Feature of Odoo
+</h3>
+                </div>
+                <!-- Image Content Section -->
+                <div class="image-content w-100 w-md-50 text-center mt-3 mt-md-0" style="text-align: center;">
+                    <img src="no_autosave_laptop.png" id="no_autosave_laptop-img" alt="no_autosave_laptop"
+                         class="img-fluid" style="max-width: 100%; width: 100%; max-width: 400px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+            <div class="bussiness_award" style="box-sizing: border-box;">
+                <div class="row">
+                    <div class="col-3 col-md-1">
+                        <img
+                            src="image/15.png"
+                            style="box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <img
+                            src="image/16A.png"
+                            style="box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <img
+                            src="image/17.png"
+                            style="box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="bussiness_btn row" style="box-sizing: border-box; margin: 15px 0;">
+                <a class="orange_btn  btn btn-block mb-2 " href="#"
+                   style="box-sizing: border-box; text-decoration: none; color: #ffff; transition: 0.5s all ease-out; display: inline-block; padding: 13px 17px; font-size: 22px; line-height: 27px; font-weight: 600; background-color: #ff6420; border-radius: 8px; border: 1px solid transparent; position: relative;">
+                    Demo Available
+                </a>
+                <a class="trans_btn btn btn-block " href="#"
+                   style="box-sizing: border-box; text-decoration: none; color: #ff6420; transition: 0.5s all ease-out; display: inline-block; padding: 13px 17px; font-size: 22px; line-height: 27px; font-weight: 600; background: transparent; border: 1px solid #ff6420; border-radius: 8px;">
+                    30 Days Support
+                </a>
+            </div>
+            <div class="bussiness_suggest d-md-flex justify-content-start align-items-center"
+                 style="box-sizing: border-box;">
+                <div class="suggestion"
+                     style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                    <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                        <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                    </div>
+                    <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo Community</span>
+                </div>
+                <div class="suggestion"
+                     style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                    <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                        <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                    </div>
+                    <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo Enterprise</span>
+                </div>
+                <div class="suggestion"
+                     style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                    <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                        <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                    </div>
+                    <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo.SH</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12"
+         style="box-sizing: border-box;flex-shrink: 0;width: 50%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+
+
+    </div>
+</section>
+
+<!-- oddo bussiness end -->
+<!-- consultion start -->
+<section class="consultion d-flex flex-wrap align-items-center justify-content-between"
+         style="overflow-x: hidden; position: relative; margin-top: 10px; background-color: #1465b4; padding: 15px; border-radius: 15px;">
+
+    <div class="cons_text w-100 w-md-75">
+        <h2 style="margin-top: 0; margin-bottom: 2px; font-weight: 400; line-height: 50px; font-size: 40px; color: #fff;">
+            <strong style="font-weight: bolder; color: #ff6420;">CONSULT OUR EXPERTS</strong>
+        </h2>
+        <p style="color: white; margin-top: 0; margin-bottom: 1rem; font-size: 14px; line-height: 18px; font-weight: 600;">
+            Unlock the potential of your business with Silver Touch! Avail a complimentary 1-hour Odoo consulting
+            session and discover tailored solutions for your unique needs.
+        </p>
+
+        <div class="cons_info d-flex flex-wrap align-items-center">
+    <div class="cons_btn me-3 mb-3 mb-md-0">
+        <a class="orange_btn" href="mailto:info@silvertouch.com"
+           style="text-decoration: none; color: #fff; background-color: #ff6420; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: bold; display: inline-block;">
+            Let's Connect
+        </a>
+    </div>
+    <div class="cons_con_details d-flex align-items-center">
+        <div style="position: relative; z-index: 2;">
+            <img src="image/support.svg" style="max-width: 100%; height: auto;">
+        </div>
+        <div style="padding: 8px 12px 8px 35px; background: #276CD6; border-radius: 0 19px 19px 0; margin-left: -25px;">
+            <span style="font-size: 14px; line-height: 18px; display: inline-block; margin-right: 10px;">
+                <i class="fa fa-envelope" style="color:white"></i>
+                <a href="mailto:info@silvertouch.com" style="color: #FFF; font-size: 14px; transition: 0.5s;">info@silvertouch.com</a>
+            </span>
+            <span style="font-size: 14px; line-height: 18px; display: inline-block;">
+                <i class="fa fa-phone" style="color:white"></i>
+                <a href="skype:+91 79-4002-2770/1/2/3/4?chat"
+                   style="color: #FFF; font-size: 14px; transition: 0.5s;">+91 79-4002-2770/1/2/3/4</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <div class="one_circle_hours d-flex justify-content-center align-items-center w-100 w-md-auto mt-3 mt-md-0"
+         style="background-color: #fff; width: 110px; height: 110px; border-radius: 100px; padding: 15px; text-align: center;">
+        <span style="color: #ff6420; font-size: 16px; font-weight: bold;">
+            01<br>HOUR<br>DISCUSSION
+        </span>
+    </div>
+</section>
+<!-- consultion end -->
+<section class="oe_container" style="overflow-x: hidden; margin-top: 2rem !important;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div style="width: 100%;">
+            <img src="assets/icons/footer.png" alt="Silver Touch Footer" width="100%"/>
+        </div>
+    </div>
+</section>
+<!-- features start -->
+<section class="features" style="box-sizing: border-box; padding: 70px 0;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text " style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Features</h3>
+                    <center>
+                        <hr
+                            style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+                <div class="row">
+                    <!-- View Leave Allocations -->
+                    <div class="col-12 col-sm-6 mt-3 mb-3"
+                         style="padding: 0px; border: 3px solid #1465b4; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-deck" style="height: 100%">
+                            <div class="card-body p-2" style="height: 100%">
+                                <h5 class="card-title p-2" style="color: #1465b4;">
+                                    <i class="fa fa-arrow-right" style="margin-right: 10px;"></i>Prevent accidental data loss
+                                </h5>
+                                <p class="card-text">
+                                    Stop automatic saving of form data when users reload or leave the page which prevents accidental data loss and provide control over when changes are saved.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 mt-3 mb-3"
+                         style="padding: 0px; border: 3px solid #1465b4; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-deck" style="height: 100%">
+                            <div class="card-body p-2" style="height: 100%">
+                                <h5 class="card-title p-2" style="color: #1465b4;">
+                                    <i class="fa fa-arrow-right" style="margin-right: 10px;"></i>Customizable Settings
+                                </h5>
+                                <p class="card-text">
+                                    Configure module behavior with customizable settings. The user can enable the feature globally for all the masters in the instance or can enable the feature for specific masters as per the user's needs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 col-sm-6 mt-3 mb-3"
+                         style="padding: 0px; border: 3px solid #1465b4; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-deck" style="height: 100%">
+                            <div class="card-body p-2" style="height: 100%">
+                                <h5 class="card-title p-2" style="color: #1465b4;">
+                                    <i class="fa fa-arrow-right" style="margin-right: 10px;"></i>User-Friendly Interface
+                                </h5>
+                                <p class="card-text">
+                                    Seamless integration with Odoo's interface featuring intuitive controls. Enhance user experience by offering a familiar and user-friendly environment.
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 col-sm-6 mt-3 mb-3"
+                         style="padding: 0px; border: 3px solid #1465b4; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-deck" style="height: 100%">
+                            <div class="card-body p-2" style="height: 100%">
+                                <h5 class="card-title p-2" style="color: #1465b4;">
+                                    <i class="fa fa-arrow-right" style="margin-right: 10px;"></i>Flexible Configuration Options
+                                </h5>
+                                <p class="card-text">Enable customization and versatility in module usage for both form and list views.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 25px;">
+                    <!-- Website info -->
+                    <div class="col-12 col-md-5 d-flex justify-content-center align-items-center mb-3 mb-md-0"
+                         style="padding: 13px; color: #ff6420; font-size: 20px; line-height: 18px; font-weight: bold;">
+                        <span>Website :</span>
+                        <span style="font-size: 14px; padding: 8px; border-radius: 15px; color: white; background-color: #1465b4;"
+                              class="ms-2">
+                            www.silvertouch.com
+                        </span>
+                    </div>
+
+                    <!-- Empty column for spacing on larger screens -->
+                    <div class="col-1 d-none d-md-block"></div>
+
+                    <!-- For any queries info -->
+                     <div class="col-12 col-md-5 d-flex" style="padding: 0px; align-items: center;">
+                        <div style="width: 100%; padding: 10px 0px; color: #ff6420; font-size: 18px; line-height: 18px; font-weight: bold; display: flex; align-items: center; flex-wrap: nowrap; white-space: nowrap;">
+                            <span style="font-size: 18px; margin-left: 10px;">For any queries :</span>
+                            <a href="https://www.silvertouch.com/contact"
+                               style="font-size: 12px; padding: 6px; border-radius: 15px; color: white; background-color: #1465b4; margin-left: 6px;">
+                                www.silvertouch.com/contact
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- features end -->
+
+<!-- screenshots start -->
+<section class="screenshots"
+         style="overflow-x: hidden; box-sizing: border-box;background-color: #e1f0ed; padding: 20px 0; border-radius:9px;">
+    <div class="container"
+         style="box-sizing: border-box;max-width: 1440px;margin: 0 auto;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title_text">
+                    <h3 class="text-center"
+                        style="font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;">
+                        App Preview
+                    </h3>
+                    <center>
+                        <hr style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+
+                    <!-- Video Preview -->
+                     <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <div class="pl-md-2 pl-0">
+                                        <h3 class="mb-3 text-center text-md-start"
+                                            style="font-weight:bold;font-size:calc(1.1rem + 1vw);color:#2B5FB2">
+                                            YouTube Preview
+                                        </h3>
+                                        <p class="text-center text-md-start"
+                                           style="font-weight:500; font-size:16px; color:#535456">
+                                             Witness the power of our module through the comprehensive
+                                            demonstration in the linked YouTube video.                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 text-center">
+                                    <div class="p-3 shadow-sm" style="background-color:#fff; border-radius:10px">
+                                           <a href="https://www.youtube.com/watch?v=Nvf_YIFqxpo" target="new"><img width="825px" height="400px" src="youtube_thumbnail.png" class="img-fluid"/></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row">
+                                <div class="col-md-8 text-center mb-4">
+                                    <div class="p-3 shadow-sm" style="background-color:#fff; border-radius:10px">
+                                        <img class="img-fluid" src="settings_configuration.png" width="825px"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center mb-3 mb-sm-0">
+                                    <div class="pl-md-2 pl-0 w-100">
+                                        <h3 class="mb-3 text-center text-md-start"
+                                            style="font-weight:bold;font-size:calc(1.1rem + 1vw);color:#2B5FB2">
+                                           Configuration in Settings
+                                        </h3>
+                                        <p class="text-center text-md-start"
+                                           style="font-weight:500; font-size:16px; color:#535456">
+                                            For configuring the feature, the user needs to navigate to
+                                            <b>Settings > Prevent Auto Save</b>.
+                                            </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row">
+                                <div class="col-md-8 order-md-2 text-center mb-4">
+                                    <div class="p-3 shadow-sm" style="background-color:#fff; border-radius:10px">
+                                        <img class="img-fluid" src="no_autosave_globally.png" width="825px"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 order-md-1 d-flex align-items-center mb-3 mb-sm-0">
+                                    <div class="pl-md-2 pl-0 w-100">
+                                        <h3 class="mb-3 text-center text-md-start"
+                                            style="font-weight:bold;font-size:calc(1.1rem + 1vw);color:#2B5FB2">
+                                           <b>   Enabling the feature for all masters  </b>
+                                        </h3>
+                                        <p class="text-center text-md-start"
+                                           style="font-weight:500; font-size:16px; color:#535456">
+                                            To enable the feature for preventing auto save for all masters, the user should check on <b>Prevent Auto Save Globally</b>.
+                                            <br/>This will prevent auto saving the records in both form and list views for all masters available in the instance.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row">
+                                <div class="col-md-8 text-center mb-4">
+                                    <div class="p-3 shadow-sm" style="background-color:#fff; border-radius:10px">
+                                        <img class="img-fluid" src="no_autosave_modelwise.png" width="825px"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center mb-3 mb-sm-0">
+                                    <div class="pl-md-2 pl-0 w-100">
+                                        <h3 class="mb-3 text-center text-md-start"
+                                            style="font-weight:bold;font-size:calc(1.1rem + 1vw);color:#2B5FB2">
+                                            Enabling the feature for specific masters
+                                        </h3>
+                                        <p class="text-center text-md-start"
+                                           style="font-weight:500; font-size:16px; color:#535456">
+                                            To enable the feature for preventing auto save for some specific masters, the user should check
+                                            <b>Prevent Auto Save for specific Model</b> and add the masters from clicking <b>Add a model</b>.
+                                            <br/> This will prevent auto saving in both form and list views only for the masters the user has selected.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+</div>
+
+
+
+                </div> <!-- End of title_text -->
+            </div> <!-- End of col-md-12 -->
+        </div> <!-- End of row -->
+    </div> <!-- End of container -->
+    </section>
+
+
+<!-- screenshots end -->
+
+
+<!-- other apps start -->
+<section class="other_app space" style=" overflow-x: hidden; box-sizing: border-box;padding: 35px 0;">
+    <div class="container"
+         style="box-sizing: border-box; --bs-gutter-x: 1.5rem; --bs-gutter-y: 0; width: 100%; padding-right: calc(var(--bs-gutter-x) * 0.5); padding-left: calc(var(--bs-gutter-x) * 0.5); margin-right: auto; margin-left: auto; max-width: 1440px; margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box; --bs-gutter-x: 1.5rem; --bs-gutter-y: 0; display: flex; flex-wrap: wrap; margin-top: calc(-1 * var(--bs-gutter-y)); margin-right: calc(-0.5 * var(--bs-gutter-x)); margin-left: calc(-0.5 * var(--bs-gutter-x));">
+
+            <!-- Title Section -->
+            <div class="col-md-12 col-sm-6"
+                 style="box-sizing: border-box; flex-shrink: 0; width: 100%; max-width: 100%; padding-right: calc(var(--bs-gutter-x) * 0.5); padding-left: calc(var(--bs-gutter-x) * 0.5); margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box; margin-bottom: 15px;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700; line-height: 60px; color: #1465b4; font-size: 40px; text-align: center;">
+                        Other Apps By Silver Touch
+                    </h3>
+                    <center>
+                        <hr style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+
+            <!-- Wrapper Div for App Sections  -->
+            <div>
+                <div class="row" style="margin-left: 0px;">
+                    <!-- App 1 -->
+                    <div class="col-sm-12 col-md-3" style="margin: 16px 0; padding: 10px;">
+                        <div class="app_sec" style="margin: 16px 0;">
+                            <div class="app_img" style="border-radius: 12px; min-height: 170px; margin: 0 10px;">
+                                <a href="https://apps.odoo.com/apps/modules/16.0/sttl_email_validation">
+                                    <img src="app_images/email_validation.png"
+                                         style="vertical-align: middle; height: auto; max-width: 100%; width: 100%;"/>
+                                </a>
+                            </div>
+                            <div class="app_text">
+                            <span class="text"
+                                  style="text-align: center; font-size: 20px; line-height: 30px; font-weight: 600; display: block; color: black;">
+                                Email Validation
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App 2 -->
+                    <div class="col-sm-12 col-md-3" style="margin: 16px 0; padding: 10px;">
+                        <div class="app_sec" style="margin: 16px 0;">
+                            <div class="app_img" style="border-radius: 12px; min-height: 170px; margin: 0 10px;">
+                                <a href="https://apps.odoo.com/apps/modules/16.0/sttl_timesheet_calendar">
+                                    <img src="app_images/timesheet_calendar.png"
+                                         style="vertical-align: middle; height: auto; max-width: 100%; width: 100%;"/>
+                                </a>
+                            </div>
+                            <div class="app_text">
+                            <span class="text"
+                                  style="text-align: center; font-size: 20px; line-height: 30px; font-weight: 600; display: block; color: black;">
+                                Timesheet Calendar
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App 3 -->
+                    <div class="col-sm-12 col-md-3" style="margin: 16px 0; padding: 10px;">
+                        <div class="app_sec" style="margin: 16px 0;">
+                            <div class="app_img" style="border-radius: 12px; min-height: 170px; margin: 0 10px;">
+                                <a href="https://apps.odoo.com/apps/modules/16.0/sttl_timesheet_forecasting">
+                                    <img src="app_images/timesheet_forecasting.png"
+                                         style="vertical-align: middle; height: auto; max-width: 100%; width: 100%;"/>
+                                </a>
+                            </div>
+                            <div class="app_text">
+                            <span class="text"
+                                  style="text-align: center; font-size: 20px; line-height: 30px; font-weight: 600; display: block; color: black;">
+                                Timesheet Forecasting
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App 4 -->
+                    <div class="col-sm-12 col-md-3" style="margin: 16px 0; padding: 10px;">
+                        <div class="app_sec" style="margin: 16px 0;">
+                            <div class="app_img" style="border-radius: 12px; min-height: 170px; margin: 0 10px;">
+                                <a href="https://apps.odoo.com/apps/modules/16.0/sttl_product_catalog">
+                                    <img src="app_images/product_catalog.png"
+                                         style="vertical-align: middle; height: auto; max-width: 100%; width: 100%;"/>
+                                </a>
+                            </div>
+                            <div class="app_text">
+                            <span class="text"
+                                  style="text-align: center; font-size: 20px; line-height: 30px; font-weight: 600; display: block; color: black;">
+                                Product Catalog
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-top: 25px;">
+        <!-- Empty column for spacing -->
+        <div class="col-md-4 col-sm-0"></div>
+
+        <!-- Button for Silver Touch Apps -->
+        <div class="d-flex justify-content-center">
+            <a href="https://apps.odoo.com/apps/modules/browse?search=silver+touch" target="_blank"
+               class="col-sm-12 col-md-3 btn mb-2 deep_hover text-white fw-bold"
+               style="transition: 0.5s all ease-out;
+              background-color: #ff6420;
+              border-radius: 8px;
+              border: 1px solid transparent;
+              padding: 12px 20px;
+              font-size: 19px;
+              line-height: 18px;
+              text-align: center;
+              width: auto;">
+
+                All Silver Touch Apps
+            </a>
+        </div>
+        <!-- Empty column for spacing -->
+        <div class="col-md-5"></div>
+    </div>
+
+
+    </div>
+</section>
+<!-- other apps end -->
+<!-- service start -->
+<section class="service" style="overflow-x: hidden; box-sizing: border-box;background-color: #e1f0ed;padding: 70px 0; border-radius:15px;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Our Expertise</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+                <img src="assets/icons/services1.png" style="width: 99.8%;"/>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <a href="mailto:info@silvertouch.com"
+               class="btn btn-block mb-10 deep_hover"
+               style="color: #ffff; transition: 0.5s all ease-out; -webkit-transition: 0.5s all ease-out; -moz-transition: 0.5s all ease-out;
+              background-color: #ff6420; border-radius: 8px; border: 1px solid transparent; position: relative; padding: 20px 20px;
+              font-size: 19px; line-height: 18px; font-weight: bold; display: inline-block; width: auto; margin: 0 auto;">
+                Get in Touch
+            </a>
+        </div>
+
+    </div>
+
+</section>
+<!-- service end -->
+<!-- industries start -->
+<!--industries 2.0 start-->
+<section class="oe_container" style="overflow-x: hidden; margin-top: 6rem !important; margin-right:10px; margin-left:10px">
+    <div class="container"
+         style="--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1  var(--bs-gutter-y));margin-right: calc(-0.5  var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Industries</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color: #f4f4f4">
+            <div class="col-md-5 col-sm-12" style="background-color: #f4f4f4">
+                <div>
+                    <p style="color:rgb(30,30,30); margin-top:30px; font-size:25px; font-weight:bold; margin-left:30px">
+                        Industries we grow</p>
+                </div>
+                <div>
+                    <p style="width:75%; margin-top:10px; font-size:17px; color:#347cc9; margin-left:30px">Tech
+                        Solutions for Industries to improve the way they operate.</p>
+                </div>
+                <div>
+                    <p style="width:95%; margin-top:10px; font-size:15px; margin-left:30px">Every industry has special
+                        needs and all those special needs ask for a special solution.
+                        At Silvertouch we offer solutions that are especially built to aid special characteristics
+                        of that specific industry.</p>
+                </div>
+            </div>
+            <div class="col-md-7 col-sm-12" style="background-color: #f4f4f4;">
+                <img src="assets/icons/industry.png" alt="Industries Icons" width="100%">
+            </div>
+        </div>
+    </div>
+</section>
+<!--industries 2.0 end-->
+<!-- industries end -->
+
+<!-- contact details start -->
+<section class="oe_container" id="presense" style="overflow-x: hidden; margin-top: 6rem !important;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);margin-right: auto;max-width: 1440px;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1  var(--bs-gutter-y));margin-right: calc(-0.5  var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Our Presence</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/india-flag.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">India</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies Limited</p>
+                    <p style="padding-top:10px">2nd Floor, Saffron Tower, Opp. Central Mall, Panchvati Cross Road,
+                        Ahmedabad - 380006 Gujarat,
+                        India</p>
+                    <div style="padding-top:5px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+91 79-4002-2770/1/2/3/4"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +91 79-4002-2770/1/2/3/4</a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.com">info@silvertouch.com</a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a href="https://www.silvertouch.com/">https://www.silvertouch.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/united-state-flag.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">USA</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies INC</p>
+                    <p style="padding-top:16px; ">1149 Green Street, Iselin, NJ 08830, United States of America</p>
+                    <div style="padding-top:20px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+1 (201) 331-9818"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +1 (201) 331-9818
+                    </a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.com">info@silvertouch.com</a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouchinc.com/">https://www.silvertouchinc.com</a></div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/uk-flag-img.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">UK</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies UK Limited</p>
+                    <p style="padding-top:16px; ">4th Floor, Victoria House, Victoria Road, Chelmsford, Essex,
+                        United Kingdom - CM1 1JR</p>
+                    <div><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+44 203-872-5140"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +44 203-872-5140
+                    </a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a
+                            href="mailto:info@silvertouchtech.co.uk">info@silvertouchtech.co.uk
+                    </a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouchtech.co.uk/">https://www.silvertouchtech.co.uk</a></div>
+                </div>
+            </div>
+            <div class="col-md-3" style="padding:10px; font-size: 14px;">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/canada-flag.png" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">Canada</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies CA</p>
+                    <p style="padding-top:16px; ">55 Albert Street, Suite 100,
+                        Markham, ON, L3P 2T4,
+                        Canada</p>
+                    <div style="padding-top:20px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+1 (647) 829-2482"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +1 (647) 829-2482</a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.ca">info@silvertouch.ca
+                    </a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouch.ca/">https://www.silvertouch.ca</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- contact details end -->
+<!-- Footer Logos Start -->
+
+
+</body>
+</html>

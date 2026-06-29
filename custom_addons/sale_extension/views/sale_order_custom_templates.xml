@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record id="order_note_pdf" model="ir.actions.report">
+            <field name="name">Nota de Pedido</field>
+            <field name="model">sale.order</field> 
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_extension.order_note_template</field> 
+            <field name="report_file">sale_extension.order_note_template</field>
+            <field name="print_report_name">"%s" % (object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+    
+        <template id="order_note_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            
+                            
+                            <h2><strong>Nota de Pedido</strong> <span t-field="doc.name"/></h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Lugar de Entrega:</strong>
+                                    <div t-field="doc.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_options": {"show_span": True}}'/>
+                                    <span t-if="doc.partner_shipping_id.vat">TIN: <span t-field="doc.partner_shipping_id.vat"/></span>
+                                </div>
+                            </div>
+                            <p><strong>Fecha del Pedido:</strong> <span t-field="doc.date_order"/></p>
+
+                            <table class="table table-sm mt16">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Nombre</th>
+                                        <th class="text-left">Descripción</th>
+                                        <th class="text-right">Cantidad</th>
+                                        <th class="text-left">Marca</th>
+                                        <th class="text-left">Modelo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.order_line" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.product_id.name"/></td>
+                                            <td><span t-field="line.product_id.item_description"/></td>
+                                            <td class="text-right"><span t-field="line.product_uom_qty"/></td>
+                                            <td><span t-field="line.product_id.item_brand"/></td>
+                                            <td><span t-field="line.product_id.item_model"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
