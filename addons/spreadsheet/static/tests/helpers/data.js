@@ -388,6 +388,12 @@ export class Partner extends models.Model {
         groupable: true,
         searchable: true,
     });
+    product_ids = fields.Many2many({
+        string: "Products",
+        relation: "product",
+        store: true,
+        searchable: true,
+    });
     tag_ids = fields.Many2many({
         string: "Tags",
         relation: "tag",
