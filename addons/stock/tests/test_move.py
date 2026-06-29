@@ -6126,6 +6126,47 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 15)
 
+    def test_move_line_aggregated_product_quantities_overprocessed_single_move(self):
+        """ Test `_get_aggregated_product_quantities` with one overprocessed move and no
+        backorder: qty_ordered must stay equal to the move demand, while quantity must
+        reflect the done quantity.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 25)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+        })
+
+        move = self.env['stock.move'].create({
+            'name': 'test_overprocessed_move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move.id,
+            'product_id': move.product_id.id,
+            'quantity': 20.0,
+            'product_uom_id': move.product_uom.id,
+            'picking_id': picking.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+        })
+
+        aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
+        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+
+        self.assertEqual(aggregated_val['qty_ordered'], 10.0)
+        self.assertEqual(aggregated_val['quantity'], 20.0)
+
     def test_move_line_aggregated_product_quantities_two_packages(self):
         """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
         which returns data used to print delivery slips, with two packages
