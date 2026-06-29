@@ -23,7 +23,7 @@
                     <attribute name="column_invisible">parent.is_gs1_nomenclature</attribute>
                 </xpath>
                 <xpath expr="//field[@name='pattern']" position="after">
-                    <field name="is_gs1_nomenclature" invisible="1"/> <!-- Needed to toggle fields in the barcode rule form without saving this field -->
+                    <field name="is_gs1_nomenclature" column_invisible="1"/> <!-- Needed to toggle fields in the barcode rule form without saving this field -->
                     <field name="gs1_content_type" column_invisible="not parent.is_gs1_nomenclature"/>
                     <field name="gs1_decimal_usage" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
                     <field name="associated_uom_id" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
