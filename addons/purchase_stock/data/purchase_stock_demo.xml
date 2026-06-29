@@ -37,6 +37,7 @@
         <record id="product.product_product_20" model="product.product">
             <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
             <field name="tracking">lot</field>
+            <field name="lot_sequence_id" ref="stock.sequence_production_lots"/>
             <field name="lot_valuated">1</field>
         </record>
 

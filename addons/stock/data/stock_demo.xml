@@ -12,6 +12,7 @@
 
         <record id="product.product_product_27" model="product.product">
             <field name="tracking">lot</field>
+            <field name="lot_sequence_id" ref="stock.sequence_production_lots"/>
         </record>
 
          <record id="lot_product_27" model="stock.lot">
