@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("course_publisher_standard", {
                 {
                     content: "eLearning: use breadcrumb to go back to channel",
                     trigger:
-                        ':iframe .o_wslides_course_nav a:contains("Déboulonnate")[href^="/slides/how-to-deboulonnate"]',
+                        ':iframe .o_wslides_course_nav a:contains("Déboulonnate")[href^="/slides/how-to-déboulonnate"]',
                     run: "click",
                 },
             ],

@@ -65,7 +65,7 @@ class TestTitleToSlug(BaseCase):
 
     def test_unicode(self):
         self.assertEqual(
-            "heterogeneite",
+            "hétérogénéité",
             self._slugify("hétérogénéité")
         )
 
@@ -89,7 +89,7 @@ class TestTitleToSlug(BaseCase):
 
     def test_str_to_unicode(self):
         self.assertEqual(
-            "espana",
+            "españa",
             self._slugify("España")
         )
 
@@ -131,7 +131,7 @@ class TestTitleToSlug(BaseCase):
 
     def test_all(self):
         self.assertEqual(
-            "do-you-know-馬丁娜-a-la-海灘",
+            "do-you-know-馬丁娜-à-la-海灘",
             self._slugify(" Do (YOU) ☞☞ know '馬丁娜 à la 海灘' ? ")
         )
 

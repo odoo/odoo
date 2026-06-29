@@ -9,6 +9,7 @@ import logging
 import re
 import requests
 import types
+import unicodedata
 import werkzeug.routing
 
 from collections import defaultdict
@@ -1336,11 +1337,20 @@ class Website(models.CachedModel):
         # in case of duplicate, page manager will allow you to manage this case
         website_id = self.env.context.get('website_id') or self.env.context.get('host_id') or False
         domain_static = [('website_id', '=', website_id)]  # .website_domain()
-        page_temp = page_url
-        while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
-            inc += 1
-            page_temp = page_url + (inc and "-%s" % inc or "")
-        return page_temp
+        # Normalize the url and strip combining marks (so accents like 'é' become 'e' instead of 'e-')
+        page_url_normalized = ''.join(c for c in unicodedata.normalize('NFKD', page_url) if unicodedata.category(c) != 'Mn')
+        page_temp_normalized = page_url_normalized
+        website_pages = self.env['website.page'].with_context(active_test=False).sudo().search(domain_static)
+        website_urls = [page.url for page in website_pages]
+
+        for url in website_urls:
+            url_normalized = ''.join(c for c in unicodedata.normalize('NFKD', url) if unicodedata.category(c) != 'Mn')
+            if url_normalized == page_temp_normalized:
+                inc += 1
+                page_temp_normalized = f"{page_url_normalized}-{inc}"
+            elif inc:
+                break
+        return page_url + (f"-{inc}" if inc else "")
 
     def _is_tracking_enabled(self, main_object):
         if self.env['ir.http'].is_a_bot():
