@@ -182,7 +182,7 @@ export class NameAndSignature extends Component {
     }
 
     onSelectFont(index) {
-        this.currentFont = this.fonts[index];
+        this.currentFont = index;
         this.drawCurrentName();
     }
 
