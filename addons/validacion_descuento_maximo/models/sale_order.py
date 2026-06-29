@@ -1,12 +1,19 @@
-from odoo import models, fields, api
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+
+DISCOUNT_LIMIT_ERROR = (
+    "¡Alerta de Control (MVP)! Este pedido supera el 15% de descuento permitido. "
+    "El presupuesto ha sido retenido en estado 'Requiere Revisión' para la aprobación de Diego."
+)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     # Campo personalizado para el 15% del MVP
     descuento_maximo_permitido = fields.Float(
-        string='Descuento Máximo Permisible (%)', 
+        string='Descuento Máximo Permisible (%)',
         default=15.0
     )
 
@@ -16,18 +23,52 @@ class SaleOrder(models.Model):
         ondelete={'requires_review': 'set default'}
     )
 
-    # Forzamos la validación tanto al guardar como al hacer clic en Confirmar
-    def action_confirm(self):
+    def _has_discount_above_limit(self):
+        self.ensure_one()
+        return any(
+            line.discount > self.descuento_maximo_permitido
+            for line in self.order_line
+            if not line.display_type
+        )
+
+    def _raise_discount_limit_error(self):
         for order in self:
-            # Revisa si alguna línea de producto supera el límite establecido
-            supera_limite = any(line.discount > order.descuento_maximo_permitido for line in order.order_line)
-            
-            if supera_limite:
-                # Cambiamos el estado del documento a tu estado personalizado
-                order.write({'state': 'requires_review'})
-                
-                # Lanzamos el aviso en la pantalla que detiene la confirmación automática
-                raise UserError("¡Alerta de Control (MVP)! Este pedido supera el 15% de descuento permitido. El presupuesto ha sido retenido en estado 'Requiere Revisión' para la aprobación de Diego.")
-        
-        # Si no hay ningún descuento inflado, Odoo sigue su camino normal de confirmación
+            if order._has_discount_above_limit():
+                order.with_context(skip_discount_limit_validation=True).write({
+                    'state': 'requires_review',
+                })
+                raise UserError(DISCOUNT_LIMIT_ERROR)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        if not self.env.context.get('skip_discount_limit_validation'):
+            orders._raise_discount_limit_error()
+        return orders
+
+    def write(self, vals):
+        result = super().write(vals)
+        if not self.env.context.get('skip_discount_limit_validation'):
+            self._raise_discount_limit_error()
+        return result
+
+    def action_confirm(self):
+        self._raise_discount_limit_error()
         return super(SaleOrder, self).action_confirm()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        if not self.env.context.get('skip_discount_limit_validation'):
+            lines.order_id._raise_discount_limit_error()
+        return lines
+
+    def write(self, vals):
+        result = super().write(vals)
+        if not self.env.context.get('skip_discount_limit_validation'):
+            self.order_id._raise_discount_limit_error()
+        return result
