@@ -74,7 +74,7 @@ class LunchProduct(models.Model):
 
     def _compute_is_available_at(self):
         """
-            Is available_at is always false when browsing it
+            Is available_at is always False when browsing it
             this field is there only to search (see _search_is_available_at)
         """
         self.is_available_at = False
