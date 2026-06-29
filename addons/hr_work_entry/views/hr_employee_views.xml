@@ -20,6 +20,12 @@
             <separator name="schedule" position="after">
                 <field name="work_entry_source" invisible="1"/>
             </separator>
+            <xpath expr="//page[@name='payroll_information']//group[@name='payroll_group']//field[@name='resource_calendar_id']" position='attributes'>
+                <attribute name="required">
+                    work_entry_source_calendar_invalid == True
+                </attribute>
+                <attribute name="placeholder">e.g. Half-Time, 40h/week, Flexible 20h, ...</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
