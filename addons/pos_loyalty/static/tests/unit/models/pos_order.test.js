@@ -177,6 +177,65 @@ describe("pos.order - loyalty", () => {
         expect(result.discountable).toBe(25);
     });
 
+    test("_getDiscountableOnCheapest excludes fixed tax for non-ewallet program", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Tax #1 (15%) becomes a fixed tax, tax #2 (25%) stays as percent
+        const fixedTax = models["account.tax"].get(1);
+        const percentTax = models["account.tax"].get(2);
+        fixedTax.amount_type = "fixed";
+        models["product.template"].get(5).taxes_id = [fixedTax, percentTax];
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+        });
+
+        // Reward #4 - cheapest discount, program type "promotion"
+        const reward = models["loyalty.reward"].get(4);
+        reward.all_discount_product_ids = [models["product.product"].get(5)];
+
+        order.triggerRecomputeAllPrices();
+        const result = order._getDiscountableOnCheapest(reward);
+
+        const taxKeys = Object.keys(result.discountablePerTax);
+        expect(taxKeys.length).toBe(1);
+        const taxIds = taxKeys[0].split(",").map(Number);
+        expect(taxIds).toInclude(percentTax.id);
+        expect(taxIds).not.toInclude(fixedTax.id);
+    });
+
+    test("_getDiscountableOnSpecific excludes fixed tax for non-ewallet program", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const fixedTax = models["account.tax"].get(1);
+        const percentTax = models["account.tax"].get(2);
+        fixedTax.amount_type = "fixed";
+        models["product.template"].get(5).taxes_id = [fixedTax, percentTax];
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+        });
+
+        const reward = models["loyalty.reward"].get(4);
+        reward.discount_applicability = "specific";
+        reward.all_discount_product_ids = [models["product.product"].get(5)];
+
+        order.triggerRecomputeAllPrices();
+        const result = order._getDiscountableOnSpecific(reward);
+
+        const taxKeys = Object.keys(result.discountablePerTax);
+        expect(taxKeys.length).toBe(1);
+        const taxIds = taxKeys[0].split(",").map(Number);
+        expect(taxIds).toInclude(percentTax.id);
+        expect(taxIds).not.toInclude(fixedTax.id);
+    });
+
     test("_computeNItems", async () => {
         const store = await setupPosEnv();
         const models = store.models;
