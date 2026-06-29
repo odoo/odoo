@@ -462,6 +462,6 @@ class PeppolRegistration(models.TransientModel):
             },
         }
         return self._action_send_notification(
-            title=None,
+            title=False,
             message=notifications[self.company_id.account_peppol_proxy_state]['message'],
         )
