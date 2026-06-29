@@ -2457,3 +2457,30 @@ class TestCompanyDefaultFor(models.Model):
 
     credit_limit = fields.Float(company_dependent=True)
     partner_id = fields.Many2one('res.partner', company_dependent=True)
+
+
+class TestOrmOnchangeOrder(models.Model):
+    _name = _description = 'test_orm.onchange.order'
+
+    base = fields.Integer(default=1)
+    total = fields.Integer(compute='_compute_total')
+    line_ids = fields.One2many('test_orm.onchange.order.line', 'order_id')
+
+    # IMPORTANT: 'total' depends on `line_ids.subtotal' but does not use it!
+    @api.depends('base', 'line_ids.subtotal')
+    def _compute_total(self):
+        for order in self:
+            order.total = order.base * sum(order.line_ids.mapped('price'))
+
+
+class TestOrmOnchangeOrderLine(models.Model):
+    _name = _description = 'test_orm.onchange.order.line'
+
+    order_id = fields.Many2one('test_orm.onchange.order')
+    price = fields.Integer()
+    subtotal = fields.Integer(compute='_compute_subtotal', store=True)
+
+    @api.depends('order_id.base', 'price')
+    def _compute_subtotal(self):
+        for line in self:
+            line.subtotal = line.order_id.base * line.price
