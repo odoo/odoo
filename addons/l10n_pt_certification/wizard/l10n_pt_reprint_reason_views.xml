@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_pt_reprint_reason" model="ir.ui.view">
+            <field name="name">l10n_pt.reprint.reason.form</field>
+            <field name="model">l10n_pt.reprint.reason</field>
+            <field name="arch" type="xml">
+                <form string="Reprint Reason">
+                    <group>
+                        <field name="reason"/>
+                    </group>
+                    <footer>
+                        <button string='Print' name="action_log_and_print" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_open_reprint_wizard" model="ir.actions.act_window">
+            <field name="name">Reprint Reason</field>
+            <field name="res_model">l10n_pt.reprint.reason</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_l10n_pt_reprint_reason"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

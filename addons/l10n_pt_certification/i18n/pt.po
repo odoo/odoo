@@ -1,0 +1,1619 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_pt_certification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-04 15:35+0000\n"
+"PO-Revision-Date: 2025-11-04 15:35+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series_line__type
+msgid ""
+" * Invoice (FT): Series for Customer Invoices.\n"
+" * Simplified Invoice (FS): Series for Sales Receipts.\n"
+" * Invoice/Receipt (FR): Series for PoS Orders."
+msgstr ""
+" * Fatura (FT): Série para facturas de clientes.\n"
+" * Fatura Simplificada (FS): Série para recibos de vendas.\n"
+" * Fatura-Recibo (FR): Série para recibos de Ponto de Vendas.\n"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid ""
+")\n"
+"                                <br/>\n"
+"                                <b>First hash: </b>"
+msgstr ""
+")\n"
+"                                <br/>\n"
+"                                <b>Primeiro hash: </b>"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid ""
+")\n"
+"                                to"
+msgstr ""
+")\n"
+"                                até"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_note_certified_program
+msgid "- Processado por programa certificado n.º"
+msgstr ""
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "- The `ATCUD` is not defined. Please verify the AT series"
+msgstr ""
+"- O `ATCUD` não está definido. Por favor, verifique a série documental"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"- The `VAT` of your company should be defined and match the following "
+"format: PT123456789\n"
+msgstr ""
+"- O `IVA` da sua empresa deve ser definido e corresponder ao seguinte "
+"formato: PT123456789\n"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "- The `hash` is not defined. You can contact the support."
+msgstr "- O `hash` não está definido. Pode contactar o suporte."
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_note_certified_program
+msgid "/AT"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_address_training_mode
+msgid "1367 Ramillies"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid ""
+"<br/>\n"
+"                                <b>Last hash: </b>"
+msgstr ""
+"<br/>\n"
+"                                <b>Último hash: </b>"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation
+msgid "<span class=\"text-danger\"> - Documento Cancelado</span>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation
+msgid "<span id=\"l10n_pt_print_version\">Original</span>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "<span>-</span>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "<span>Accumulated</span>"
+msgstr "<span>Acumulado</span>"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "<strong>Internal Number</strong>"
+msgstr "<strong>Número Interno</strong>"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "<strong>Motivos de isenção de IVA:</strong>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid "A Payment Journal is required when you have Payment Receipt lines."
+msgstr ""
+"Um Diário de Pagamento é necessário quando existem linhas de Recibo de "
+"Pagamento."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"A Sales Journal is required for account move document types (FT, FS, NC, "
+"ND)."
+msgstr ""
+"Um Diário de Vendas é necessário quando existem linhas de documentos de "
+"movimentação de conta (FT, FS, NC, ND)."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_at_series_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_at_series_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_at_series_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment_register__l10n_pt_at_series_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__at_series_id
+msgid "AT Series"
+msgstr "Série Documental"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__at_code
+msgid "AT Validation Code"
+msgstr "Código de Validação da AT"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_payment_receipt_document_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "ATCUD:"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Modelo de Plano de Contas"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Reversão de Movimento Contabilístico"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_move_send
+msgid "Account Move Send"
+msgstr "Envio de Movimento de Conta"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__active
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__at_series_active
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Active"
+msgstr "Ativo"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid "Add an AT Series"
+msgstr "Adicione uma série documental"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_region__pt-all
+msgid "All Regions"
+msgstr "Todas as regiões"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid "An inactive series cannot be used."
+msgstr "Uma série arquivada não pode ser utilizada."
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Archived"
+msgstr "Arquivada"
+
+#. module: l10n_pt_certification
+#: model:ir.actions.act_window,name:l10n_pt_certification.action_open_l10n_pt_at_series_series_list_view
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_form
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_tree
+msgid "Autoridade Tributária (AT) Series"
+msgstr "Série Documental da Autoridade Tributária (AT)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment_register__available_l10n_pt_at_series_ids
+msgid "Available L10N Pt At Series"
+msgstr "Séries Documentais Disponíveis"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_region__pt-ac
+msgid "Azores"
+msgstr "Açores"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__ch
+msgid "Bank Check"
+msgstr "Cheque Bancário"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__tb
+msgid "Bank Transfer or Authorized Direct Debit"
+msgstr "Transferência Bancária ou Débito Direto Autorizado"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_address_training_mode
+msgid "Belgium"
+msgstr "Bélgica"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__lc
+msgid "Bill of Exchange"
+msgstr "Letra Comercial"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_account_payment_form_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_pt_certification
+#: model:ir.actions.act_window,name:l10n_pt_certification.action_l10n_pt_cancel
+msgid "Cancel Document"
+msgstr "Cancelar Documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__l10n_pt_cancel_reason
+msgid "Cancel Reason"
+msgstr "Motivo do Cancelamento"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.pt_cancel_wizard_view
+msgid "Cancel document"
+msgstr "Cancelar documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__cancelled
+msgid "Canceled"
+msgstr "Cancelado"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__nu
+msgid "Cash"
+msgstr "Numerário"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_address_training_mode
+msgid "Chaussée de Namur 40"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__cs
+msgid "Clearing Balances in Current Account"
+msgstr "Compensação de Saldos em Conta Corrente"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__company_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__company_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__company_id
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move_send.py:0
+msgid "Company Settings"
+msgstr "Configurações da empresa"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__create_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__create_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__create_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__create_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__create_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__create_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__create_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__create_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__cc
+msgid "Credit Card"
+msgstr "Cartão de Crédito"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_document_type__out_refund
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_document_type__out_refund
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__l10n_pt_at_series_line__type__out_refund
+msgid "Credit Note (NC)"
+msgstr "Nota de Crédito (NC)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__cd
+msgid "Debit Card"
+msgstr "Cartão de Débito"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_document_type__debit_note
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_document_type__debit_note
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__l10n_pt_at_series_line__type__debit_note
+msgid "Debit Note (ND)"
+msgstr "Nota de Débito (ND)"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid "Disc.%"
+msgstr "Desc.%"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.pt_cancel_wizard_view
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_reprint_reason
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "Discount amounts should be between 0% and 100%."
+msgstr "Descontos devem situar-se no intervalo entre 0% e 100%."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__display_name
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__display_name
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__display_name
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__display_name
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__display_name
+msgid "Display Name"
+msgstr "Nome de exibição"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__document_identifier
+msgid "Document Identifier"
+msgstr "Identificador do Documento"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_account_payment_tree_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_out_invoice_tree_inherit_pt
+msgid "Document Number"
+msgstr "Identificação do Documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__type
+msgid "Document Type"
+msgstr "Tipo do Documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__at_series_line_ids
+msgid "Document Types"
+msgstr "Tipo do Documento Dentro da Série"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_at_series_line_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_at_series_line_id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_at_series_line_id
+msgid "Document-specific AT Series"
+msgstr "Série específica ao documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_l10n_pt_at_series_line
+msgid "Document-specific Autoridade Tributária (AT) Series"
+msgstr "Série específica ao documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__prefix
+msgid "Document-specific Series Prefix"
+msgstr "Prefixo específico ao documento"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_note_document_purpose
+msgid "Documento emitido para fins de Formação<br/>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__de
+msgid "E-money"
+msgstr "Dinheiro eletrônico"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_note_certified_program
+msgid "Emitido por programa certificado n.º"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__date_end
+msgid "End Date"
+msgstr "Data de término"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_note_document_purpose
+msgid "Este documento não serve de fatura<br/>"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__pr
+msgid "Exchange of Goods"
+msgstr "Permuta de Bens"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__company_exclusive_series
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__company_exclusive_series
+msgid "Exclusive Series"
+msgstr "Série Exclusiva"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_category__e
+msgid "Exempt"
+msgstr "Isento"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_tax.py:0
+msgid "Exempt taxes require an exemption reason."
+msgstr "Os impostos isentos requerem um motivo de isenção."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__tr
+msgid "Extra-salary Compensation"
+msgstr "Títulos de Compensação Extrassalarial"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_payment_receipt_document_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "FS 2023/0001"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__report_binary
+msgid "File Binary"
+msgstr "Binário do ficheiro"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/wizard/account_move_reversal.py:0
+msgid "For Credit Notes issued in Portugal, you need to specify a Reason."
+msgstr "Para as notas de crédito emitidas em Portugal, é necessário indicar um "
+"motivo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__co
+msgid "Gift Card"
+msgstr "Cheque ou Cartão Oferta"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_global_discount
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_global_discount
+msgid "Global Discount %"
+msgstr "Desconto Global %"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "Global Discount:"
+msgstr "Desconto Global:"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid "Hash Integrity Result -"
+msgstr "Resultado de Integridade de Hash -"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_hashed_on
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_hashed_on
+msgid "Hashed On"
+msgstr "Hash criado em"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__id
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "INV/2023/00001"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_payment_receipt_document_inherit
+msgid "INV0001"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series__company_exclusive_series
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series_line__company_exclusive_series
+msgid ""
+"If checked, this series will only be used by one company and not shared "
+"across branches"
+msgstr ""
+"Se selecionado, esta série será utilizada apenas por uma empresa e não será "
+"partilhada entre filiais."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_category__i
+msgid "Intermediate"
+msgstr "Intermediário"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_payment_receipt_document_inherit
+msgid "Internal Number:"
+msgstr "Número Interno:"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_document_number
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_move__l10n_pt_document_number
+msgid ""
+"Internal identifier for Portuguese documents, made up of the document type "
+"code,the series name, and the number of the document within the series."
+msgstr ""
+"Identificador único dos documentos portugueses, constituído pelo código "
+"interno de tipo de documento, pelo nome da série e pelo número do documento "
+"na série."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__ci
+msgid "International Letter of Credit"
+msgstr "Crédito Documentário Internacional"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_document_type__out_invoice
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_document_type__out_invoice
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__l10n_pt_at_series_line__type__out_invoice
+msgid "Invoice (FT)"
+msgstr "Fatura (FT)"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "Invoice lines with an amount of 0 are not allowed."
+msgstr "Não são permitidas linhas de fatura com valor 0."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/ir_actions_report.py:0
+msgid ""
+"It is not possible to print documents with the template %s for Portuguese "
+"and non-Portuguese companies at the same time."
+msgstr ""
+"Não é possível imprimir documentos para empresas portuguesas e não-"
+"portuguesas ao mesmo tempo."
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento em Diário"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_move_line
+msgid "Journal Item"
+msgstr "Item no Diário"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_res_company__l10n_pt_region_code
+msgid "Region Code"
+msgstr "Código da região"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_show_future_date_warning
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_show_future_date_warning
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_show_future_date_warning
+msgid "L10N Pt Show Future Date Warning"
+msgstr "Mostrar aviso de data futura"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__write_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__write_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__write_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__write_uid
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__write_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__write_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__write_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_cancel__write_date
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move_line__l10n_pt_line_discount
+msgid "Line Discount"
+msgstr "Desconto de Linha"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m01
+msgid "M01 - Artigo 16.º, n.º 6 do CIVA ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m02
+msgid "M02 - Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de Junho"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m03
+msgid "M03 - Exigibilidade de caixa (revogado)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m04
+msgid "M04 - Artigo 13.º do CIVA ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m05
+msgid "M05 - Artigo 14.º do CIVA ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m06
+msgid "M06 - Artigo 15.º do CIVA ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m07
+msgid "M07 - Artigo 9.º do CIVA ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m08
+msgid "M08 - IVA - autoliquidação (revogado)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m09
+msgid "M09 - IVA - não confere direito a dedução"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m10
+msgid "M10 - IVA - Regime de isenção (Artigo 57.º do CIVA)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m11
+msgid "M11 - Regime particular do tabaco"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m12
+msgid "M12 - Regime da margem de lucro - Agências de viagens"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m13
+msgid "M13 - Regime da margem de lucro - Bens em segunda mão"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m14
+msgid "M14 - Regime da margem de lucro - Objetos de arte"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m15
+msgid "M15 - Regime da margem de lucro - Objetos de coleção e antiguidades"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m16
+msgid "M16 - Artigo 14.º do RITI ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m19
+msgid "M19 - Outras isenções"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m20
+msgid "M20 - IVA - regime forfetário"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m21
+msgid "M21 - IVA – não confere direito à dedução"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m25
+msgid "M25 - Mercadorias à consignação"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m30
+msgid "M30 - IVA - autoliquidação (2.1.i)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m31
+msgid "M31 - IVA - autoliquidação (2.1.j)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m32
+msgid "M32 - IVA - autoliquidação (2.1.l)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m33
+msgid "M33 - IVA - autoliquidação (2.1.m)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m40
+msgid "M40 - IVA - autoliquidação (6.6.a)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m41
+msgid "M41 - IVA - autoliquidação (8.3.R)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m42
+msgid "M42 - IVA - autoliquidação (21.2007)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m43
+msgid "M43 - IVA - autoliquidação (362.99)"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax__l10n_pt_tax_exemption_reason__m99
+msgid "M99 - Não sujeito; não tributado ou similar"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_region__pt-ma
+msgid "Madeira"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_region__pt
+msgid "Mainland Portugal"
+msgstr "Portugal Continental"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_l10n_pt_at_series
+msgid ""
+"Mapping between Odoo Series and the Official Series for the Autoridade "
+"Tributária (AT)"
+msgstr ""
+"Mapeamento entre a Série Odoo e a Série Oficial para a Autoridade Tributária"
+" (AT)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__res_model
+msgid "Model"
+msgstr "Modelo"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_form
+msgid "Model Name"
+msgstr "Nome do Modelo"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__mb
+msgid "Multibanco Reference"
+msgstr "Referências de Pagamento para Multibanco"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__name
+msgid "Name of the Series"
+msgstr "Nome da Série"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "No documents were provided to sign."
+msgstr "Não foram fornecidos documentos para assinar"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Non-Training Series"
+msgstr "Séries não formativas"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_category__n
+msgid "Normal"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.l10n_pt_report_template_address_training_mode
+msgid "Odoo"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__original
+msgid "Original Print"
+msgstr "Versão Original"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_print_version__original
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_print_version__original
+msgid "Original print"
+msgstr "Versão original"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment_method_line__l10n_pt_payment_mechanism__ou
+msgid "Other Mechanism"
+msgstr "Outros Meios"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_invoice_document
+msgid "PROFORMA"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_payment_register
+msgid "Pay"
+msgstr "Pagar"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__payment_journal_id
+msgid "Payment Journal"
+msgstr "Diário de Pagamento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment_method_line__l10n_pt_payment_mechanism
+msgid "Payment Mechanism"
+msgstr "Meio de Pagamento"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_payment_method_line
+msgid "Payment Methods"
+msgstr "Métodos de Pagamento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_document_type__payment_receipt
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_document_type__payment_receipt
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__l10n_pt_at_series_line__type__payment_receipt
+msgid "Payment Receipt (RG)"
+msgstr "Recibo Geral (RG)"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_payment
+msgid "Payments"
+msgstr "Pagamentos"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move_send.py:0
+msgid "Please define the VAT on your company (e.g. PT123456789)"
+msgstr "Por favor, defina o IVA da sua empresa (por exemplo, PT123456789)"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "Please select a series for this move."
+msgstr "Por favor selecione uma série para esse documento."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid "Please select a series for this payment."
+msgstr "Selecione uma série para este pagamento."
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid "Portugal"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid "Portugal Info"
+msgstr "Informações Portugal"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_account_payment_form_inherit_pt
+msgid "Portugal Information"
+msgstr "Informações Portugal"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_atcud
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_atcud
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_atcud
+msgid "Portuguese ATCUD"
+msgstr "ATCUD"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_document_type
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_document_type
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_document_type
+msgid "Portuguese Document Type"
+msgstr "Tipo de Documento (PT)"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.res_config_settings_view_form_inherit_pt
+msgid "Portuguese Localization"
+msgstr "Localização Portuguesa"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_qr_code_str
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_qr_code_str
+msgid "Portuguese QR Code"
+msgstr "Código QR (PT)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_inalterable_hash_version
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_inalterable_hash_version
+msgid "Portuguese hash version"
+msgstr "Versão do hash (PT)"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_account_payment_form_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_reprint_reason
+msgid "Print"
+msgstr "Imprimir"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_product_template
+msgid "Product"
+msgstr "Artigo"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_product_product
+msgid "Product Variant"
+msgstr "Categoria do Artigo"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/res_product.py:0
+msgid "Product names have to be at least 2 characters long."
+msgstr "Os nomes dos produtos devem ter pelo menos 2 caracteres."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_cancel_reason
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_cancel_reason
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_cancel_reason
+msgid "Reason for Cancellation"
+msgstr "Motivo do Cancelamento"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/wizard/l10n_pt_reprint_reason.py:0
+msgid "Reason for reprinting document %(name)s:<br/>%(reason)s"
+msgstr "Motivo para reimpressão do documento %(name)s:<br/>%(reason)s"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_reprint_reason__reason
+msgid "Reason for reprinting the document"
+msgstr "Razão para nova impressão do documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_cancel_reason
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_move__l10n_pt_cancel_reason
+msgid "Reason given by the user for cancelling this move"
+msgstr "Motivo fornecido pelo utilizador para cancelar esta movimentação"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_payment__l10n_pt_cancel_reason
+msgid "Reason given by the user for cancelling this payment"
+msgstr "Motivo fornecido pelo utilizador para cancelar este pagamento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_cancel__l10n_pt_cancel_reason
+msgid "Reason to cancel this document."
+msgstr "Motivo para cancelar este documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__res_id
+msgid "Record id"
+msgstr "Id. do Registo"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_tax_group__l10n_pt_tax_category__r
+msgid "Reduced"
+msgstr "Reduzido"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_tax_group__l10n_pt_tax_region
+msgid "Region (PT)"
+msgstr "Região (PT)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_attachment__report_name
+msgid "Report"
+msgstr "Relatório"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_ir_actions_report
+msgid "Report Action"
+msgstr "Relatar Ação"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_l10n_pt_attachment
+msgid "Report Binaries for Portugal"
+msgstr "Binários de Relatórios Portugueses"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_print_version__reprint
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_print_version__reprint
+msgid "Reprint"
+msgstr "Reimpressão"
+
+#. module: l10n_pt_certification
+#: model:ir.actions.act_window,name:l10n_pt_certification.action_open_reprint_wizard
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_reprint_reason
+msgid "Reprint Reason"
+msgstr "Motivo para Reimpressão"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_l10n_pt_reprint_reason
+msgid "Reprint Reason Wizard"
+msgstr "Assitente para definir Motivo para Reimpressão"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__sale_journal_id
+msgid "Sales Journal"
+msgstr "Diário de Vendas"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid "Series"
+msgstr "Séries"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_form
+msgid "Series per Document Type"
+msgstr "Série por Tipo de Documento"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid ""
+"Setting the invoice date in the future will prevent new documents with an "
+"invoice date before"
+msgstr ""
+"Definir a data da fatura no futuro impedirá o lançamento de novos documentos"
+" com uma data de faturação anterior a"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_inalterable_hash_short
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_inalterable_hash_short
+msgid "Short version of the Portuguese hash"
+msgstr "Versão curta do hash (PT)"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Show active series"
+msgstr "Mostrar séries ativas"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Show archived series"
+msgstr "Mostrar séries arquivadas"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_move__l10n_pt_document_type__out_receipt
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__account_payment__l10n_pt_document_type__out_receipt
+#: model:ir.model.fields.selection,name:l10n_pt_certification.selection__l10n_pt_at_series_line__type__out_receipt
+msgid "Simplified Invoice (FS)"
+msgstr "Fatura Simplificada (FS)"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"Some fields required for the generation of the document are missing or "
+"invalid. Please verify them:\n"
+msgstr ""
+"Alguns campos obrigatórios para a geração do documento estão em falta ou "
+"inválido. Por favor, verifique-os:\n"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move_send.py:0
+msgid ""
+"Some partners have a language with a date format that does not match "
+"Portugal'srequirements (either 'YYYY-MM-DD' or 'DD-MM-YYYY'). Please "
+"configure the date format in these languages."
+msgstr ""
+"A linguagem de alguns contactos tem um formato de data que difere dos "
+"requerimentos de Portugal ('%(format1)s' ou '%(format2)s'). Por favor "
+"configure o formato de data destas linguagens."
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_tax
+msgid "Tax"
+msgstr "Imposto"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_tax_group__l10n_pt_tax_category
+msgid "Tax Category (PT)"
+msgstr "Categoria de Imposto (PT)"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_tax__l10n_pt_tax_exemption_reason
+msgid "Tax Exemption Reason"
+msgstr "Motivo da isenção fiscal"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_account_tax_group
+msgid "Tax Group"
+msgstr "Grupo de Imposto"
+
+#. module: l10n_pt_certification
+#: model:ir.model.constraint,message:l10n_pt_certification.constraint_l10n_pt_at_series_name_company_uniq
+msgid "The AT Series name must be unique."
+msgstr "O nome da série documental deve ser único."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid ""
+"The AT Series of a payment being processed, paid or canceled cannot be "
+"changed."
+msgstr ""
+"A série documental de um pagamento que está a ser processado, está pago ou "
+"cancelado não pode ser alterada."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "The AT Series of a posted account move cannot be changed."
+msgstr ""
+"A série documental de um movimento de conta lançado não pode ser modificada."
+
+#. module: l10n_pt_certification
+#: model:ir.model.constraint,message:l10n_pt_certification.constraint_l10n_pt_at_series_line_at_code_uniq
+msgid "The AT code must be unique."
+msgstr "O código AT tem de ser único."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid ""
+"The document number (%s) is invalid. It must start with the internal code of"
+" the document type, a space, the name of the series followed by a slash and "
+"the number of the document within the series (e.g. INV 2025A/1). Please "
+"check if the series selected fulfill these requirements."
+msgstr ""
+"O identificador único do documento (%s) é inválido. Tem de começar com o "
+"tipo de documento interno, um espaço, o nome da série seguido de uma barra e"
+" o número do documento dentro da série (por exemplo, INV 2025A/1). Verifique"
+" se a série selecionada cumpre estes requisitos."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid ""
+"The document number (%s) is invalid. It must start with the internal of the "
+"document type, a space, the name of the series followed by a slash and the "
+"number of the document within the series (e.g. RG 2025A/1). Please check if "
+"the series selected fulfill these requirements."
+msgstr ""
+"O identificador único do documento (%s) é inválido. Tem de começar com o "
+"tipo de documento interno, um espaço, o nome da série seguido de uma barra e"
+" o número do documento dentro da série (por exemplo, RG 2025A/1). Verifique "
+"se a série selecionada cumpre estes requisitos."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"The documents provided are not in the correct format. Please contact Odoo "
+"support."
+msgstr ""
+"Os documentos fornecidos não estão no formato correto. Contacte o suporte "
+"Odoo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series_line__prefix
+msgid ""
+"The internal code of the document type that will be combined with the Series"
+" Name to form the unique identification of documents."
+msgstr ""
+"O código interno do documento que será combinado com o identificador da "
+"série para formar a identificação única dos documentos"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"The name of the series (%s) is invalid. It must consist of only letters and "
+"numbers (e.g. 2025, 2025B)."
+msgstr ""
+"O nome da série (%s) é inválido. Deve ser constituído apenas por letras e "
+"números (por exemplo, 2025, 2025B)."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series__name
+msgid "The name of the series will be part of the document number sequence."
+msgstr ""
+"O nome da série fará parte da sequência da identificação do documento."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"The prefix of the series (%s) is invalid. It must consist of only letters "
+"and numbers (e.g. INV, RINV)."
+msgstr ""
+"O prefixo da série (%s) é inválido. Deve ser constituído apenas por letras e"
+" números (por exemplo, INV, RINV)."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid "The series %(prefix)s is not active."
+msgstr "A série %(prefixo)s não está ativa."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series_line__document_identifier
+msgid ""
+"The unique identification of documents of this series and type made up of "
+"the document type prefix and the series name, followed by '/' and the number"
+" of the document."
+msgstr ""
+"A identificação única dos documentos desta série e tipo é constituída pelo "
+"prefixo do tipo de documento e pelo nome da série, seguidos de “/” e do "
+"número do documento."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid ""
+"There exists secured invoices with a lock date ahead of the present time."
+msgstr ""
+"Existem faturas com hash com data de bloqueio anterior à fatura atual."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid ""
+"There is no AT series for payments registered under the series name "
+"%(series_name)s. Create a new series or view existing series via the "
+"Accounting Settings."
+msgstr ""
+"Não existe uma série documental para pagamentos registada na série "
+"%(series_name)s. Crie uma nova série ou visualize as existentes por meio das"
+" Configurações de Contabilidade."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid ""
+"There is no AT series for the document type %(move_type)s registered under "
+"the series name %(series_name)s. Create a new series or view existing series"
+" via the Accounting Settings."
+msgstr ""
+"Não existe uma série documental para este tipo de documento %(move_type)s "
+"registada na série %(series_name)s. Crie uma nova série ou visualize as "
+"existentes por meio das Configurações de Contabilidade."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/res_company.py:0
+msgid ""
+"This company has AT Series shared across branches, and other companies also "
+"have hashed documents under this series. To generate the report, please also"
+" select %s in the company selector."
+msgstr ""
+"Esta empresa possui a série documental partilhada entre filiais, e outras "
+"empresas também possuem documentos com hash nesta série. Para gerar o "
+"relatório, selecione também %s no seletor de empresas."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"This database does not have a valid subscription. Please contact Odoo "
+"support."
+msgstr ""
+"Esta base de dados não tem uma assinatura válida. Entre em contacto com o "
+"suporte da Odoo"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"This database is not a production database. Please contact Odoo support."
+msgstr ""
+"Esta base de dados não é uma base de dados de produção. Contacte o suporte "
+"da Odoo."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "This database is not activated. Please activate it first."
+msgstr "Esta base de dados não está ativada. Por favor, ative-a primeiro."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "This database is not known by Odoo. Please contact Odoo support."
+msgstr ""
+"Esta base de dados não é conhecida pela Odoo. Contacte o suporte da Odoo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.constraint,message:l10n_pt_certification.constraint_l10n_pt_at_series_line_type_per_series_uniq
+msgid "This document type already exists for this series."
+msgstr "Este tipo de documento já existe nesta série."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid "This operator is not supported"
+msgstr "Este operador não é suportado"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_payment_method_line__l10n_pt_payment_mechanism
+msgid "This payment method's mechanism according to Portuguese requirements."
+msgstr ""
+"O meio de pagamento deste método, de acordo com os requisitos portugueses."
+
+#. module: l10n_pt_certification
+#: model:ir.model.constraint,message:l10n_pt_certification.constraint_l10n_pt_at_series_line_prefix_per_series_uniq
+msgid "This prefix has already been used in this series."
+msgstr "Este prefixo já é utilizado nesta série."
+
+#. module: l10n_pt_certification
+#: model:ir.model.constraint,message:l10n_pt_certification.constraint_l10n_pt_attachment_report_res_id_uniq
+msgid "This report already exists for this record and model."
+msgstr "Este relatório já existe para este registo e modelo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series__sale_journal_id
+msgid ""
+"This series will be available for account moves belonging to this, and only "
+"this, journal."
+msgstr ""
+"Esta série estará disponível para movimentos de contas pertencentes a este, "
+"e apenas a este, diário."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_l10n_pt_at_series__payment_journal_id
+msgid ""
+"This series will be available for payments belonging to this, and only this,"
+" journal."
+msgstr ""
+"Esta série estará disponível para pagamentos pertencentes a este, e apenas a"
+" este, diário."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series__training_series
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_search
+msgid "Training Series"
+msgstr "Séries de Formação"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_l10n_pt_at_series_line__type_name
+msgid "Type Name"
+msgstr "Nome do Tipo de Documento"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid ""
+"Unable to connect to the IAP endpoint to sign the documents. Please try "
+"later. If the problem persists, please contact Odoo support."
+msgstr ""
+"Não é possível conectar ao IAP para assinar os documentos. Tente mais tarde."
+" Se o problema persistir, contacte o suporte do Odoo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_document_number
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_document_number
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_document_number
+msgid "Unique Document Number"
+msgstr "Identificação do Documento"
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_payment__l10n_pt_atcud
+msgid ""
+"Unique document code formed by the AT series validation code and the number "
+"of the document."
+msgstr ""
+"Código único do documento formado pelo código de validação da série "
+"documental e pelo número do documento."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_atcud
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_move__l10n_pt_atcud
+msgid ""
+"Unique document code formed by the AT series validation code and the number "
+"of the document. Only assigned once the document is secured."
+msgstr ""
+"Código único do documento formado pelo código de validação da série "
+"documental e pelo número do documento. Só é atribuído quando o documento é "
+"protegido."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,help:l10n_pt_certification.field_account_payment__l10n_pt_document_number
+msgid ""
+"Unique identifier for Portuguese documents, made up of the internal document"
+" type code, the series name, and the number of the document within the "
+"series."
+msgstr ""
+"Identificador único dos documentos portugueses, constituído pelo código "
+"interno de tipo de documento, pelo nome da série e pelo número do documento "
+"na série."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/utils/hashing.py:0
+msgid "Unknown error %s while contacting IAP. Please contact Odoo support."
+msgstr "Erro desconhecido %s ao contactar o IAP. Contacte o suporte da Odoo."
+
+#. module: l10n_pt_certification
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_bank_statement_line__l10n_pt_print_version
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_move__l10n_pt_print_version
+#: model:ir.model.fields,field_description:l10n_pt_certification.field_account_payment__l10n_pt_print_version
+msgid "Version of Printed Document"
+msgstr "Versão do Documento Impresso"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.res_config_settings_view_form_inherit_pt
+msgid "View Autoridade Tributária (AT) Series"
+msgstr "Ver Séries Documentais da Autoridade Tributária (AT)"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move_send.py:0
+msgid "View Language(s)"
+msgstr "Ver Língua(s)"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.pt_cancel_wizard_view
+msgid "Wizard to Cancel Document"
+msgstr "Assistente para Cancelamento de Documentos"
+
+#. module: l10n_pt_certification
+#: model:ir.model,name:l10n_pt_certification.model_l10n_pt_cancel
+msgid "Wizard to allow the cancellation of documents"
+msgstr "Assistente para permitir o cancelamento de documentos"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/res_partner.py:0
+msgid ""
+"You cannot change the VAT number of a partner that already has issued "
+"documents"
+msgstr ""
+"Não é possível alterar o número de IVA de um parceiro que já emitiu "
+"documentos"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/res_partner.py:0
+msgid "You cannot change the name of a partner without a VAT number"
+msgstr "Não é possível alterar o nome de um parceiro sem um número de IVA"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the name, training status or exclusivity setting of a "
+"series that has already been used."
+msgstr ""
+"Não é possível alterar o nome, estado de formação ou a configuração "
+"dexclusividade de uma série que já tenha sido utilizada."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the type, prefix or AT code of a series that has already "
+"been used in a move."
+msgstr ""
+"Não pode alterar o tipo, prefixo ou código AT de uma série que já foi "
+"utilizada numa movimentação."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the type, prefix or AT code of a series that has already "
+"been used in a payment."
+msgstr ""
+"Não se pode alterar o tipo, prefixo ou código AT de uma série que já foi "
+"utilizada num pagamento."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "You cannot create a move line without VAT tax."
+msgstr "Não é possível criar uma linha de movimentação sem imposto IVA."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_payment.py:0
+msgid ""
+"You cannot create a payment with a date earlier than the date of the last "
+"payment issued in this AT series."
+msgstr ""
+"Não se pode criar um pagamento com uma data anterior à data do último "
+"pagamento emitido nesta série documental."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid ""
+"You cannot create an invoice with a date earlier than the date of the last "
+"invoice issued in this AT series."
+msgstr ""
+"Não é possível criar uma fatura com uma data anterior à data da última "
+"fatura emitida nesta série documental."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid ""
+"You cannot create an invoice with negative lines on it. To add a discount, "
+"add a Line Discount or a Global Discount."
+msgstr ""
+"Não é possível criar uma fatura com linhas negativas. Para adicionar um "
+"desconto, adicione um Desconto de Linha ou um Desconto Global."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot delete a series that is used. It will automatically be archived "
+"after the End Date"
+msgstr ""
+"Não é possível eliminar uma série que é utilizada. Será arquivada "
+"automaticamente após a data final"
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/res_product.py:0
+msgid ""
+"You cannot modify the name of a product that has been used in an accounting "
+"entry."
+msgstr ""
+"Não é possível modificar o nome de um produto que foi utilizado num "
+"lançamento contabilístico."
+
+#. module: l10n_pt_certification
+#. odoo-python
+#: code:addons/l10n_pt_certification/models/account_move.py:0
+msgid "You cannot reverse an invoice that has already been fully reversed."
+msgstr "Não é possível reverter uma fatura que já foi totalmente revertida."
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_l10n_pt_at_series_form
+msgid "e.g. 2025"
+msgstr ""
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.report_hash_integrity_content
+msgid "from"
+msgstr "desde"
+
+#. module: l10n_pt_certification
+#: model_terms:ir.ui.view,arch_db:l10n_pt_certification.view_move_form_inherit_pt
+msgid "from being posted."
+msgstr "."
