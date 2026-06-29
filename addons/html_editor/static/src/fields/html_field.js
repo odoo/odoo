@@ -29,6 +29,7 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { ZenPlugin } from "@html_editor/main/zen/zen_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -301,6 +302,7 @@ export class HtmlField extends Component {
                 ...(this.props.embeddedComponents
                     ? EMBEDDED_COMPONENT_PLUGINS
                     : NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS),
+                ZenPlugin,
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),
