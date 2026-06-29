@@ -6,6 +6,43 @@ import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { shallowEqual } from "@web/core/utils/arrays";
 
+export function useSelectMenuHandler(
+    menuRef,
+    { onSelectMenuOpened, onSelectMenuClosed, onNavigatedAway, onNavigatedBack } = {}
+) {
+    let removeListeners;
+    const addListener = (menuEl, event, callback) => {
+        if (typeof callback !== "function") {
+            return () => {};
+        }
+        menuEl.addEventListener(event, callback);
+        return () => menuEl.removeEventListener(event, callback);
+    };
+    return {
+        removeMenuListeners: () => {
+            removeListeners?.();
+        },
+        onOpened: () => {
+            const menuEl = menuRef();
+            if (menuEl) {
+                removeListeners?.();
+                const removeNavigatedAway = addListener(menuEl, "pointerleave", onNavigatedAway);
+                const removeNavigatedBack = addListener(menuEl, "pointerenter", onNavigatedBack);
+                removeListeners = () => {
+                    removeListeners = undefined;
+                    removeNavigatedAway();
+                    removeNavigatedBack();
+                };
+            }
+            onSelectMenuOpened?.();
+        },
+        onClosed: () => {
+            removeListeners?.();
+            onSelectMenuClosed?.();
+        },
+    };
+}
+
 class SelectMany2XCreate extends Component {
     static template = "html_builder.SelectMany2XCreate";
     props = useProps({
@@ -60,26 +97,13 @@ export class SelectMany2X extends Component {
             this.state.searchResults = [];
         });
         this.menuRef = signal.ref();
-        onWillDestroy(() => this.removeListeners?.());
-    }
-    onOpened() {
-        const menuEl = this.menuRef();
-        if (menuEl) {
-            this.removeListeners?.();
-            const onNavigatedAway = this.onNavigatedAway.bind(this);
-            const onNavigatedBack = this.onNavigatedBack.bind(this);
-            menuEl.addEventListener("pointerleave", onNavigatedAway);
-            menuEl.addEventListener("pointerenter", onNavigatedBack);
-            this.removeListeners = () => {
-                delete this.removeListeners;
-                menuEl.removeEventListener("pointerleave", onNavigatedAway);
-                menuEl.removeEventListener("pointerenter", onNavigatedBack);
-            };
-        }
-    }
-    onClosed() {
-        this.removeListeners?.();
-        this.onNavigatedAway();
+        const { removeMenuListeners, onOpened, onClosed } = useSelectMenuHandler(this.menuRef, {
+            onSelectMenuClosed: this.onNavigatedAway.bind(this),
+            onNavigatedAway: this.onNavigatedAway.bind(this),
+            onNavigatedBack: this.onNavigatedBack.bind(this),
+        });
+        Object.assign(this, { removeMenuListeners, onOpened, onClosed });
+        onWillDestroy(() => this.removeMenuListeners?.());
     }
     searchInvalidationKey(props) {
         return JSON.stringify([props.model, props.fields, props.domain, props.displayNameField]);
