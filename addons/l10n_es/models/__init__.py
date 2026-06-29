@@ -13,5 +13,4 @@ from . import template_es_common
 from . import template_es_common_mainland
 from . import template_es_coop_full
 from . import template_es_coop_pymes
-from . import template_es_full
-from . import template_es_pymes
+from . import template_es_general
