@@ -86,7 +86,6 @@ import {
  * @typedef {((range: RangeLike) => void | true)[]} delete_forward_line_overrides
  * @typedef {((range: RangeLike) => void | true)[]} delete_range_overrides
  *
- * @typedef {((node: Node) => boolean | undefined)[]} is_functional_empty_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {((node: Node) => Node[])[]} removable_descendants_providers
@@ -110,7 +109,14 @@ export const removableNodePredicates = [
 ];
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "input",
+        "userCommand",
+        "properties",
+    ];
     static id = "delete";
     static shared = [
         "deleteBackward",
@@ -1327,7 +1333,7 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        if (this.checkPredicates("is_functional_empty_node_predicates", leaf) ?? false) {
+        if (this.dependencies.properties.get(leaf, "functionalEmpty", false)) {
             return false;
         }
         if (isEmpty(leaf) || isZWS(leaf)) {

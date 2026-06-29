@@ -161,12 +161,11 @@ export class DomPlugin extends Plugin {
             return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
-        /** Predicates */
-        is_functional_empty_node_predicates: (node) => {
-            if (isSelfClosingElement(node) || isEditorTab(node)) {
-                return true;
-            }
+        properties: {
+            predicate: (node) => isSelfClosingElement(node) || isEditorTab(node),
+            functionalEmpty: true,
         },
+        /** Predicates */
         is_mutation_savable_predicates: (mutation) => {
             if (isMarkerMutation(mutation)) {
                 return false;
