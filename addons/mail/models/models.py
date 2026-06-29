@@ -704,15 +704,7 @@ class Base(models.AbstractModel):
         # begin with aliases (independent from company, alias_domain_id on alias wins)
         reply_to_email = {}
         if model and res_ids:
-            mail_aliases = self.env['mail.alias'].sudo().search([
-                ('alias_domain_id', '!=', False),
-                ('alias_parent_model_id.model', '=', model),
-                ('alias_parent_thread_id', 'in', res_ids),
-                ('alias_name', '!=', False)
-            ])
-            # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-            for alias in mail_aliases:
-                reply_to_email.setdefault(alias.alias_parent_thread_id, alias.alias_full_name)
+            reply_to_email = _records_sudo._notify_get_alias_reply_to(res_ids)
 
         # continue with company alias
         left_ids = set(_res_ids) - set(reply_to_email)
@@ -733,6 +725,21 @@ class Base(models.AbstractModel):
             )
 
         return reply_to_formatted
+
+    def _notify_get_alias_reply_to(self, res_ids):
+        """ Returns a dict of record id to alias full name for records that
+        have a valid alias. """
+        mail_aliases = self.env['mail.alias'].sudo().search([
+            ('alias_domain_id', '!=', False),
+            ('alias_parent_model_id.model', '=', self._name),
+            ('alias_parent_thread_id', 'in', res_ids),
+            ('alias_name', '!=', False),
+        ])
+        # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
+        reply_to_email = {}
+        for alias in mail_aliases:
+            reply_to_email.setdefault(alias.alias_parent_thread_id, alias.alias_full_name)
+        return reply_to_email
 
     def _notify_get_reply_to_formatted_email(self, record_email, author_id=False):
         """ Compute formatted email for reply_to and try to avoid refold issue
