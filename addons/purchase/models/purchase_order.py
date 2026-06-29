@@ -144,7 +144,15 @@ class PurchaseOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
     amount_total_cc = fields.Monetary(string="Total in currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position',
+        string='Fiscal Position',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        compute="_compute_fiscal_data",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -165,15 +173,25 @@ class PurchaseOrder(models.Model):
         readonly=False,
         required=True,
     )
-    payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    payment_term_id = fields.Many2one(
+        'account.payment.term',
+        'Payment Terms',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        compute="_compute_fiscal_data",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm',
         compute="_compute_incoterm_id", store=True, readonly=False,
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location', compute='_compute_incoterm_location', store=True, readonly=False)
+
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True, tracking=True,
-        default=lambda self: self.env.user, check_company=True)
+        default=lambda self: self.env.user, check_company=True,
+        compute="_compute_fiscal_data", precompute=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
@@ -501,19 +519,20 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return 'Purchase Order-%s' % (self.name)
 
-    @api.onchange('partner_id', 'company_id')
-    def onchange_partner_id(self):
-        # Ensures all properties and fiscal positions
-        # are taken with the company of the order
-        # if not defined, with_company doesn't change anything.
-        self = self.with_company(self.company_id)
-        if not self.partner_id:
-            self.fiscal_position_id = False
-        else:
-            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
-            self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            if self.partner_id.buyer_id:
-                self.user_id = self.partner_id.buyer_id
+    @api.depends('partner_id', 'company_id')
+    def _compute_fiscal_data(self):
+        for order in self:
+            # Ensures all properties and fiscal positions
+            # are taken with the company of the order
+            # if not defined, with_company doesn't change anything.
+            order = order.with_company(order.company_id)
+            if not order.partner_id:
+                order.fiscal_position_id = False
+            else:
+                order.fiscal_position_id = order.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
+                order.payment_term_id = order.partner_id.property_supplier_payment_term_id.id
+                if order.partner_id.buyer_id:
+                    order.user_id = order.partner_id.buyer_id
         return {}
 
     @api.depends('partner_id', 'company_id')
@@ -524,13 +543,6 @@ class PurchaseOrder(models.Model):
                 order.currency_id = order.company_id.currency_id
             else:
                 order.currency_id = order.partner_id.property_purchase_currency_id or order.company_id.currency_id
-
-    @api.onchange('fiscal_position_id', 'company_id')
-    def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the PO.
-        """
-        self.order_line._compute_tax_id()
 
     @api.depends('company_id')
     def _compute_document_tax_mode(self):
