@@ -2,7 +2,7 @@
 
 from odoo import _, fields, models
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import groupby
 
@@ -33,23 +33,37 @@ class DeliveryCarrier(models.Model):
     # -------------------------- #
 
     def send_shipping(self, pickings):
-        ''' Send the package to the service provider
+        """ Send the package to the service provider
 
         :param pickings: A recordset of pickings
-        :returns: A list of dictionaries (one per picking) containing of
-            the form::
+        :returns: A list of dictionaries (one per picking) containing of the form::
+                {
+                    'picking': {
+                        'exact_price': price,
+                        'tracking_number': number,
+                        'delivery_labels': attachment_ids,
+                        'return_labels': attachment_ids,
+                        'shipping_docs': attachment_ids,
+                        'error_messages': [string],
+                    }
+                }
+        :rtype: dict[dict] | None
+        """
+        pickings_by_carrier = pickings.grouped('carrier_id')
 
-                         { 'exact_price': price,
-                           'tracking_number': number }
-        :rtype: list[dict] | None
-        '''
-        # TODO missing labels per package
-        # TODO missing currency
-        # TODO missing success, error, warnings
-        self.ensure_one()
-        if hasattr(self, '%s_send_shipping' % self.delivery_type):
-            return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
-        return None
+        results = {}
+        for carrier, picks in pickings_by_carrier.items():
+            if hasattr(carrier, '%s_send_shipping' % carrier.delivery_type):
+                results |= getattr(carrier, '%s_send_shipping' % carrier.delivery_type)(picks)
+            else:
+                results |= {p: {
+                    'exact_price': 0.0,
+                    'delivery_labels': self.env['ir.attachment'],
+                    'return_labels': self.env['ir.attachment'],
+                    'delivery_docs': self.env['ir.attachment'],
+                    'error_messages': [_("%s_send_shipping method not found!", carrier.delivery_type)],
+                } for p in picks}
+        return results
 
     def get_return_label(self, pickings, tracking_number=None, origin_date=None):
         self.ensure_one()
@@ -246,10 +260,16 @@ class DeliveryCarrier(models.Model):
     # ------------------------------------------------ #
 
     def fixed_send_shipping(self, pickings):
-        res = []
+        res = {}
         for p in pickings:
-            res = res + [{'exact_price': p.carrier_id.fixed_price,
-                          'tracking_number': False}]
+            res[p] = {
+                'exact_price': p.carrier_id.fixed_price,
+                'tracking_number': False,
+                'delivery_labels': self.env['ir.attachment'],
+                'return_labels': self.env['ir.attachment'],
+                'delivery_docs': self.env['ir.attachment'],
+                'error_messages': [],
+            }
         return res
 
     def fixed_get_tracking_link(self, picking):
@@ -265,13 +285,20 @@ class DeliveryCarrier(models.Model):
     # ----------------------------------- #
 
     def base_on_rule_send_shipping(self, pickings):
-        res = []
+        res = {}
         for p in pickings:
             carrier = self._match_address(p.partner_id)
+            error_messages = []
             if not carrier:
-                raise ValidationError(_('There is no matching delivery rule.'))
-            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
-                          'tracking_number': False}]
+                error_messages.append(_('There is no matching delivery rule.'))
+            res[p] = {
+                'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
+                'tracking_number': False,
+                'delivery_labels': self.env['ir.attachment'],
+                'return_labels': self.env['ir.attachment'],
+                'delivery_docs': self.env['ir.attachment'],
+                'error_messages': error_messages,
+            }
         return res
 
     def base_on_rule_get_tracking_link(self, picking):

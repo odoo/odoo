@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from markupsafe import Markup
 import json
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -97,65 +96,88 @@ class StockPicking(models.Model):
         # However, since a UserError of any of the picking will cause a rollback of the entire batch
         # on Odoo's side and since pickings that were already processed on the carrier's side must
         # stay validated, UserErrors might need to be replaced by activity warnings.
-
-        processed_carrier_picking = False
-
-        for pick in self:
-            try:
-                if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                    pick.sudo().send_to_shipper()
-                if pick.carrier_id:
-                    processed_carrier_picking = True
-            except (UserError) as e:
-                if processed_carrier_picking:
-                    # We can not raise a UserError at this point
-                    exception_message = str(e)
-                    pick.message_post(body=exception_message, message_type='notification')
-                    pick.sudo().activity_schedule(
-                        'mail.mail_activity_data_warning',
-                        date.today(),
-                        note=pick._carrier_exception_note(exception_message),
-                        user_id=pick.user_id.id or self.env.uid,
-                        )
-                else:
-                    raise e
-
+        self.filtered(lambda pick: pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label).sudo().send_to_shipper()
         return super(StockPicking, self)._send_confirmation_email()
 
     def send_to_shipper(self):
-        self.ensure_one()
-        res = self.carrier_id.send_shipping(self)[0]
-        if self.carrier_id.free_over and self.sale_id:
-            amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
-            if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
-                res['exact_price'] = 0.0
-        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'], self.sale_id)
-        if res['tracking_number']:
-            related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
-            accessed_moves = previous_moves = self.move_ids.move_orig_ids
-            while previous_moves:
-                related_pickings |= previous_moves.picking_id
-                previous_moves = previous_moves.move_orig_ids - accessed_moves
-                accessed_moves |= previous_moves
-            accessed_moves = next_moves = self.move_ids.move_dest_ids
-            while next_moves:
-                related_pickings |= next_moves.picking_id
-                next_moves = next_moves.move_dest_ids - accessed_moves
-                accessed_moves |= next_moves
-            without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
-            without_tracking.carrier_tracking_ref = res['tracking_number']
-            for p in related_pickings - without_tracking:
-                p.carrier_tracking_ref += "," + res['tracking_number']
-        order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s",
-                carrier_name=self.carrier_id.name,
-                ref=self.carrier_tracking_ref) + \
-              Markup("<br/>") + \
-              _("Cost: %(price).2f %(currency)s",
-                price=self.carrier_price,
-                currency=order_currency.name)
-        self.message_post(body=msg)
-        self._add_delivery_cost_to_so()
+        results = self.carrier_id.send_shipping(self)
+        for picking, result in results.items():
+            if picking.carrier_id.free_over and picking.sale_id:
+                amount_without_delivery = picking.sale_id._compute_amount_total_without_delivery()
+                if picking.carrier_id._compute_currency(picking.sale_id, amount_without_delivery, 'pricelist_to_company') >= picking.carrier_id.amount:
+                    result['exact_price'] = 0.0
+            picking.carrier_price = picking.carrier_id._apply_margins(result.get('exact_price', 0.0), picking.sale_id)
+            picking._add_delivery_cost_to_so()
+        self._update_tracking_number(results)
+        self._post_shipping_information(results)
+
+    def _update_tracking_number(self, results):
+        for picking, res in results.items():
+            if res.get('tracking_number', False):
+                related_pickings = picking.env['stock.picking'] if picking.carrier_tracking_ref and res['tracking_number'] in picking.carrier_tracking_ref else picking
+                accessed_moves = previous_moves = picking.move_ids.move_orig_ids
+                while previous_moves:
+                    related_pickings |= previous_moves.picking_id
+                    previous_moves = previous_moves.move_orig_ids - accessed_moves
+                    accessed_moves |= previous_moves
+                accessed_moves = next_moves = picking.move_ids.move_dest_ids
+                while next_moves:
+                    related_pickings |= next_moves.picking_id
+                    next_moves = next_moves.move_dest_ids - accessed_moves
+                    accessed_moves |= next_moves
+                without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
+                without_tracking.carrier_tracking_ref = res['tracking_number']
+                for p in related_pickings - without_tracking:
+                    p.carrier_tracking_ref += "," + res['tracking_number']
+
+    def _post_shipping_information(self, results):
+        for picking, res in results.items():
+            order_currency = picking.sale_id.currency_id or picking.company_id.currency_id
+            carrier_name = picking.carrier_id.name
+
+            if len(res.get("delivery_docs", [])):
+                doc_msg = Markup('<b>%(header)s</b>') % {'header': _("Shipping Documents Attached")}
+                picking.message_post(body=doc_msg, attachment_ids=res["delivery_docs"].ids)
+
+            if len(res.get("return_labels", [])):
+                ret_msg = Markup('<b>%(header)s</b>') % {'header': _("Return Labels Generated")}
+                picking.message_post(body=ret_msg, attachment_ids=res["return_labels"].ids)
+
+            if len(res.get("delivery_labels", [])):
+                del_msg = Markup("<b>%(header)s</b>") % {'header': _("Delivery Labels Generated")}
+                picking.message_post(body=del_msg, attachment_ids=res["delivery_labels"].ids)
+
+            main_msg = Markup("""
+                <h6 class="mb-0 fw-bold">%(header)s</h6>
+                <ul class="mb-2">
+                    <li><b>%(tracking_label)s:</b> %(tracking_ref)s</li>
+                    <li><b>%(cost_label)s:</b> %(price).2f %(currency)s</li>
+                </ul>
+            """) % {
+                'header': _("Shipment Processed by %(carrier_name)s", carrier_name=carrier_name),
+                'tracking_label': _("Tracking Number"),
+                'tracking_ref': picking.carrier_tracking_ref or _("N/A"),
+                'cost_label': _("Cost"),
+                'price': picking.carrier_price,
+                'currency': order_currency.name,
+            }
+            picking.message_post(body=main_msg)
+
+            if res.get("error_messages"):
+                li_elements = [Markup("<li>%s</li>") % error for error in res.get('error_messages')]
+                errors_html = Markup('<ul class="mb-2">%s</ul>') % Markup("").join(li_elements)
+                error_msg = Markup("""
+                    <div class="alert alert-warning border-warning border-1 p-3" role="alert">
+                        <h6 class="alert-heading mb-0 fw-bold">%(header)s</h6>
+                        <div class="mb-2">
+                            %(error_text)s
+                        </div>
+                    </div>
+                """) % {
+                    'header': _("Notice from %(carrier_name)s", carrier_name=carrier_name),
+                    'error_text': errors_html,
+                }
+                picking.message_post(body=error_msg)
 
     def print_return_label(self):
         self.ensure_one()

@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch, DEFAULT
+from unittest.mock import patch
 from odoo import Command
-from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -276,13 +275,13 @@ class TestCarrierPropagation(TransactionCase):
             choose_delivery_carrier = delivery_wizard.save()
             choose_delivery_carrier.button_confirm()
 
-        def fail_send_to_shipper(pick):
+        def fail_send_shipment(pick):
             # side effect to throw an error for a given picking but resolve the normal call for the other
-            def _throw_error_on_chosen_picking(self):
-                if self == pick:
-                    raise UserError("Something went wrong, parcel not returned from Sendcloud: {'weight': ['The weight must be less than 10.001 kg']}")
+            def _throw_error_on_chosen_picking(_, pickings):
+                if pickings[0].id == pick.id:
+                    return {"error_messages": ["Something went wrong, parcel not returned from Sendcloud: {'weight': ['The weight must be less than 10.001 kg']}"]}
                 else:
-                    return DEFAULT
+                    return {pick: {'exact_price': 123, 'tracking_number': False}}
             return _throw_error_on_chosen_picking
 
         sale_orders.action_confirm()
@@ -291,12 +290,9 @@ class TestCarrierPropagation(TransactionCase):
             self.assertEqual(sale_orders[i].picking_ids.carrier_id.id, sale_orders[i].carrier_id.id)
         pickings = sale_orders.picking_ids
         pickings.action_assign()
-        picking_class = 'odoo.addons.stock_delivery.models.stock_picking.StockPicking'
-        with patch(picking_class + '.send_to_shipper', new=fail_send_to_shipper(pickings[1])):
+        with patch('odoo.addons.stock_delivery.models.delivery_carrier.DeliveryCarrier.fixed_send_shipping', new=fail_send_shipment(pickings[1])):
             pickings.with_user(alien).button_validate()
-        # both pickings should be validated but and activity should have been created for the invalid picking
         self.assertEqual(pickings.mapped('state'), ['done', 'done'])
-        self.assertTrue(self.env['mail.activity'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', pickings[1].id), ('user_id', '=', alien.id)], limit=1))
 
     def test_carrier_tracking_ref_propagation(self):
         """Ensure that the carrier tracking reference is propagated across pickings

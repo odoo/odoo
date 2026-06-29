@@ -241,10 +241,20 @@ class TestPackingDelivery(TestPackingCommon):
         picking_ship.move_ids.picked = True
         picking_ship.button_validate()
 
+        mocked_return = {
+                p: {
+                    "exact_price": 123,
+                    "tracking_number": "666",
+                    "delivery_labels": self.env["ir.attachment"],
+                    "return_labels": self.env["ir.attachment"],
+                    "delivery_docs": self.env["ir.attachment"],
+                    "error_messages": [],
+                } for p in picking_ship
+            }
         # Mock carrier delivery method
         with patch(
             'odoo.addons.stock_delivery.models.delivery_carrier.DeliveryCarrier.fixed_send_shipping',
-            return_value=[{'exact_price': 0, 'tracking_number': "666"}]
+            return_value=mocked_return
         ):
             picking_ship.send_to_shipper()
 
