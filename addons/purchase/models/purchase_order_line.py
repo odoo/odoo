@@ -30,7 +30,15 @@ class PurchaseOrderLine(models.Model):
         compute='_compute_price_unit_and_discount',
         digits='Discount',
         store=True, readonly=False)
-    tax_ids = fields.Many2many('account.tax', string='Taxes', context={'active_test': False, 'hide_original_tax_ids': True})
+    tax_ids = fields.Many2many(
+        'account.tax',
+        string='Taxes',
+        context={'active_test': False, 'hide_original_tax_ids': True},
+        compute="_compute_tax_ids",
+        store=True,
+        readonly=False,
+        precompute=True,
+    )
     document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
@@ -159,6 +167,10 @@ class PurchaseOrderLine(models.Model):
     def _compute_matched_invoice_count(self):
         for line in self:
             line.matched_invoice_count = len(line.invoice_lines.move_id)
+
+    @api.depends('order_id.fiscal_position_id', 'order_id.company_id')
+    def _compute_tax_ids(self):
+        self._compute_tax_id()
 
     def _compute_tax_id(self):
         for line in self:
