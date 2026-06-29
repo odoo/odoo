@@ -62,13 +62,10 @@ export class AnimateOptionPlugin extends Plugin {
                 isDisabled: this.isAnimatedTextDisabled.bind(this),
             },
         ],
-        toolbar_namespace_providers: [
-            withSequence(90, (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.commonAncestorContainer, ".o_animated_text")
-                    ? "compact"
-                    : undefined
-            ),
-        ],
+        properties: withSequence(20, {
+            predicate: (node) => closestElement(node, ".o_animated_text"),
+            toolbar: "compact",
+        }),
         system_classes: ["o_animating"],
         builder_actions: {
             SetAnimationModeAction,
