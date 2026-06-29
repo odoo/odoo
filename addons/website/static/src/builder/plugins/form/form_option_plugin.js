@@ -43,6 +43,7 @@ import { omit } from "@web/core/utils/objects";
 import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { getParsedDataFor } from "@website/js/utils";
 import { RANGE_COMPARATORS } from "./form_field_option";
@@ -178,6 +179,7 @@ export class FormOptionPlugin extends Plugin {
             SetDependencyValueListAction,
             SetCustomErrorMessageAction,
             SetRequirementComparatorAction,
+            SetDateRequirementBoundAction,
             SetMultipleFilesAction,
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
@@ -1573,6 +1575,35 @@ export class SetRequirementComparatorAction extends BuilderAction {
         }
     }
 }
+
+/**
+ * Sets one of the two date requirement bounds (`requirementCondition` /
+ * `requirementBetween`). On commit (not while previewing), warns the user when
+ * a "between"/"!between" range is inverted (start date later than end date).
+ */
+export class SetDateRequirementBoundAction extends DataAttributeAction {
+    static id = "setDateRequirementBound";
+    apply(context) {
+        super.apply(context);
+        if (context.isPreviewing) {
+            return;
+        }
+        const { requirementComparator, requirementCondition, requirementBetween } =
+            context.editingElement.dataset;
+        if (
+            RANGE_COMPARATORS.includes(requirementComparator) &&
+            requirementCondition &&
+            requirementBetween &&
+            parseInt(requirementCondition) > parseInt(requirementBetween)
+        ) {
+            this.services.notification.add(
+                _t("The start date should be earlier than the end date."),
+                { type: "warning" }
+            );
+        }
+    }
+}
+
 /**
  * Sets the dataset value of custom-error attribute which is further used to
  * determine if the input for custom error message should be visible or not.

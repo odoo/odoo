@@ -206,6 +206,15 @@ export class FormFieldOption extends BaseOptionComponent {
         return RANGE_COMPARATORS.includes(this.domState.elDataset.requirementComparator);
     }
     /**
+     * Label of the date requirement condition (start) row, depending on the
+     * selected comparator.
+     *
+     * @returns {string}
+     */
+    get dateRequirementConditionLabel() {
+        return this.isRangeComparator ? _t("Start date") : _t("Date");
+    }
+    /**
      * Determines the visibility of the character limit checkbox used for
      * validation.
      *
