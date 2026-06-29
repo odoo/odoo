@@ -232,7 +232,7 @@ class IrBinary(models.AbstractModel):
                 default_mimetype=default_mimetype,
             )
         except UserError:
-            if request.params.get('download'):
+            if record.env.context.get('download_attachments'):
                 raise
 
         if not stream or stream.size == 0:
