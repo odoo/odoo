@@ -96,6 +96,13 @@ class TestPersonalStages(TestProjectCommon):
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
 
+    def test_personal_stage_read_grouping_sets(self):
+        groups = self.env['project.task'].with_context(read_group_expand=True).with_user(self.user_projectuser).formatted_read_grouping_sets(
+            [('user_ids', '=', self.user_projectuser.id)],
+            grouping_sets=[['personal_stage_type_id']],
+        )[0]
+        self.assertEqual(len(self.user_stages), len(groups))
+
     def test_delete_personal_stage(self):
         """
         When deleting personal stages, the task of this stage are transfered to the one following it sequence-wise.
