@@ -319,17 +319,16 @@ export function cloneContentEls(content, keepScripts = false) {
  * @returns {string} The slugified string.
  */
 export function slugify(value) {
-    // `NFKD` as in `http_routing` python `slugify()`
+    // `NFKC` as in `http_routing` python `slugify()`
     return !value
         ? ""
         : value
               .trim()
-              .normalize("NFKD")
+              .normalize("NFKC")
               .toLowerCase()
-              .replace(/['’]/g, "-") // Replace apostrophes with hyphens
-              .replace(/\s+/g, "-") // Replace spaces with -
-              .replace(/[^\w-]+/g, "") // Remove all non-word chars
-              .replace(/--+/g, "-"); // Replace multiple - with single -
+              .replace(/[\p{P}\s]+/gu, "-") // Replace punctuation and spaces with hyphens
+              .replace(/[^\p{L}\p{M}\p{N}\w-]+/gu, "") // Remove all non-unicode-word chars
+              .replace(/^-+|-+$/g, ""); // Remove leading and trailing hyphens
 }
 
 patch(urlUtils, {

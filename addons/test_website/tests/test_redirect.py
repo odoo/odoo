@@ -332,11 +332,11 @@ class TestRedirect(HttpCase):
         # expecting 301 to slugified record. E.g. /shop/1 => /shop/2 ==> /shop/old-prod-1 -> /shop/new-prod-2
         r = self.url_open('/fr' + url_rec1, allow_redirects=False)
         self.assertEqual(r.status_code, 301)
-        self.assertURLEqual(r.headers.get('Location'), '/fr/test_website/200/nom-publie-%d' % rec_published.id)
+        self.assertURLEqual(r.headers.get('Location'), '/fr/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
 
         r = self.url_open('/fr' + url_rec1, allow_redirects=True)
         self.assertEqual(r.status_code, 200)
-        self.assertURLEqual(r.url, '/fr/test_website/200/nom-publie-%d' % rec_published.id)
+        self.assertURLEqual(r.url, '/fr/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
 
     @mute_logger('odoo.http')
     def test_09_redirect_absolute_url(self):
