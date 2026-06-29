@@ -183,6 +183,11 @@ class IrHttp(models.AbstractModel):
     _description = "HTTP Routing"
 
     @classmethod
+    def _is_valid_char(cls, ch: str) -> bool:
+        """Returns True for any character allowed in a url"""
+        return unicodedata.category(ch).startswith("M") or (re.match(r"\w", ch) and ch != '_')
+
+    @classmethod
     def _slugify_one(cls, value: str, max_length: int | None = None) -> str:
         """ Transform a string to a slug that can be used in a url path.
             This method will first try to do the job with python-slugify if present.
@@ -193,17 +198,15 @@ class IrHttp(models.AbstractModel):
         if slugify_lib:
             # There are 2 different libraries only python-slugify is supported
             try:
-                return slugify_lib.slugify(value, max_length=max_length)
+                return slugify_lib.slugify(value, max_length=max_length, allow_unicode=True)
             except TypeError:
                 pass
-        uni = unicodedata.normalize('NFKD', value)
+        uni = unicodedata.normalize('NFKC', value)
 
-        # Strip combining marks (so accents like 'é' become 'e' instead of 'e-')
-        cleaned = ''.join(c for c in uni if unicodedata.category(c) != 'Mn')
         # Replace all non-word chars AND underscores with a single dash
-        slug = re.sub(r'[\W_]+', '-', cleaned).strip('-').lower()
-        slugified_str = unicodedata.normalize('NFC', slug)
-        return slugified_str[:max_length]
+        slug = ''.join(char if cls._is_valid_char(char) else '-' for char in uni).strip("-").lower()
+        slug = re.sub(r'-+', '-', slug)
+        return slug[:max_length]
 
     @classmethod
     def _slugify(cls, value: str, max_length: int | None = None, path: bool = False) -> str:

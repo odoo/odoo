@@ -25,7 +25,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check if the 'url' input is correctly slugified.",
-            trigger: ".modal-dialog .o_website_dialog input:eq(1):value('zoe-s-diner')",
+            trigger: ".modal-dialog .o_website_dialog input:eq(1):value('zoé-s-diner')",
         },
         {
             content: "Edit the 'url' input",
@@ -41,7 +41,7 @@ registerWebsitePreviewTour(
             content:
                 "Edit the 'url' input again (with a character that will be ignored at creation)",
             trigger: ".modal-dialog .o_website_dialog input:eq(1)",
-            run: "edit zoe-s-di,ner",
+            run: "edit zoé-s-di,ner",
         },
         {
             content: "Check that the page is not found.",
@@ -81,8 +81,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Wait to land on '/zoe-s-di-ner' page",
-            trigger: ':iframe a[href="/zoe-s-di-ner"].nav-link.active',
+            content: "Wait to land on '/zoé-s-di-ner' page",
+            trigger: ':iframe a[href="/zoé-s-di-ner"].nav-link.active',
         },
         {
             content: "Wait edit mode",
@@ -111,7 +111,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that we are on the new page.",
-            trigger: ":iframe a[href='/zoe-s-di-ner'].nav-link.active",
+            trigger: ":iframe a[href='/zoé-s-di-ner'].nav-link.active",
         },
         {
             content: "Check that it is not a 404 page.",
@@ -123,7 +123,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Zoé’s Diner' link.",
-            trigger: ":iframe a[href='/zoe-s-di-ner'].nav-link.active span",
+            trigger: ":iframe a[href='/zoé-s-di-ner'].nav-link.active span",
             run: "click",
         },
         {
