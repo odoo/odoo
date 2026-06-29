@@ -142,7 +142,8 @@ export class Chatter extends Component {
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
-            "o-mail-Chatter-dropzone"
+            "o-mail-Chatter-dropzone",
+            () => this.state.thread.canPostMessage || this.state.thread.id === false,
         );
 
         onMounted(() => {
