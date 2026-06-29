@@ -607,7 +607,8 @@ class HrLeave(models.Model):
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         work_days_data_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
+            (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
+                    compute_leave_duration=True)._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         for leave in self:
@@ -654,7 +655,8 @@ class HrLeave(models.Model):
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
-                    hours, days = work_days_data['hours'], work_days_data['days']
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    hours, days = leave._get_worked_days_and_hours(work_days_data, work_time_per_day_list)
             else:
                 today_hours = calendar.get_work_hours_count(
                     datetime.combine(leave.date_from.date(), time.min),
@@ -666,6 +668,10 @@ class HrLeave(models.Model):
                 days = ceil(days)
             result[leave.id] = (days, hours)
         return result
+
+    def _get_worked_days_and_hours(self, work_days_data, work_time_per_day_list):
+        self.ensure_one()
+        return work_days_data['hours'], work_days_data['days']
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id')
     def _compute_duration(self):
