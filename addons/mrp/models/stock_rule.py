@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.fields import Domain, Command
 from odoo.tools import OrderedSet
+from odoo.tools.misc import get_lang
 
 
 class StockRule(models.Model):
@@ -228,8 +229,10 @@ class StockRule(models.Model):
         manufacture_delay = bom.produce_delay
         delays['total_delay'] += manufacture_delay
         delays['manufacture_delay'] += manufacture_delay
+        today = fields.Date.context_today(self)
+        format_date = get_lang(self.env).date_format
         if not bypass_delay_description:
-            delay_description.append((_('Production End Date'), manufacture_delay))
+            delay_description.append((_('Production End Date'), (today + relativedelta(days=manufacture_delay)).strftime(format_date)))
             delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
         if bom.type == 'normal':
             # pre-production rules
@@ -244,7 +247,7 @@ class StockRule(models.Model):
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
-            delay_description.append((_('Production Start Date'), days_to_order))
+            delay_description.append((_('Production Start Date'), (today + relativedelta(days=days_to_order)).strftime(format_date)))
             delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
         return delays, delay_description
 

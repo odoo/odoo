@@ -11,7 +11,12 @@ export class JsonPopOver extends Component {
     static template = "";
     static props = {...standardFieldProps};
     get jsonValue() {
-        return JSON.parse(this.props.record.data[this.props.name]);
+        const data = JSON.parse(this.props.record.data[this.props.name]);
+        const lead = data.lead_days_description || [];
+        const idx = lead.findIndex((desc) => desc[0] === "Time Horizon");
+        const [time_horizon] = lead.splice(idx, 1);
+        lead.push(time_horizon);
+        return data;
     }
 }
 

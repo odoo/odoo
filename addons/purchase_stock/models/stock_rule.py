@@ -10,6 +10,7 @@ from odoo.tools import float_compare
 from odoo import api, fields, models, SUPERUSER_ID, _, Command
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
+from odoo.tools.misc import get_lang
 
 
 class StockRule(models.Model):
@@ -224,17 +225,19 @@ class StockRule(models.Model):
                 delay_description.append((_('No Vendor Found'), _('+ %s day(s)', 365)))
             return delays, delay_description
         buy_rule.ensure_one()
+        today = fields.Date.context_today(self)
+        format_date = get_lang(self.env).date_format
         if not self.env.context.get('ignore_vendor_lead_time'):
             supplier_delay = seller[:1].delay
             delays['total_delay'] += supplier_delay
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), supplier_delay))
+                delay_description.append((_('Receipt Date'), (today + relativedelta(days=supplier_delay)).strftime(format_date)))
                 delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
-            delay_description.append((_('Order Deadline'), days_to_order))
+            delay_description.append((_('Order Deadline'), (today + relativedelta(days=days_to_order)).strftime(format_date)))
             delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
         return delays, delay_description
 
