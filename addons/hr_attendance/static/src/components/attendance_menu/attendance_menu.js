@@ -20,6 +20,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useState(useService("ui"));
+        this.companyService = useService("company");
         this.notification = useService("notification");
         this.employee = false;
         this.state = useState({
@@ -34,7 +35,9 @@ export class ActivityMenu extends Component {
     }
 
     async searchReadEmployee(){
-        const result = await rpc("/hr_attendance/attendance_user_data");
+        const result = await rpc("/hr_attendance/attendance_user_data", {
+            company_id: this.companyService.currentCompany.id,
+        });
         this.employee = result;
         if (this.employee.id) {
             this.hoursToday = this.date_formatter(
@@ -58,8 +61,9 @@ export class ActivityMenu extends Component {
     async checking(latitude = false, longitude = false) {
         try {
             await rpc("/hr_attendance/systray_check_in_out", {
-                latitude,
-                longitude
+                latitude: latitude,
+                longitude: longitude,
+                company_id: this.companyService.currentCompany.id,
             })
             this.searchReadEmployee();
         } catch (error) {

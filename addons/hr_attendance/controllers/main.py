@@ -183,8 +183,9 @@ class HrAttendance(http.Controller):
         return []
 
     @http.route('/hr_attendance/systray_check_in_out', type="json", auth="user")
-    def systray_attendance(self, latitude=False, longitude=False):
-        employee = request.env.user.employee_id
+    def systray_attendance(self, latitude=False, longitude=False, company_id=False):
+        company_id = company_id or request.env.company
+        employee = request.env.user.with_company(company_id).employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude)
@@ -192,8 +193,9 @@ class HrAttendance(http.Controller):
         return self._get_employee_info_response(employee)
 
     @http.route('/hr_attendance/attendance_user_data', type="json", auth="user", readonly=True)
-    def user_attendance_data(self):
-        employee = request.env.user.employee_id
+    def user_attendance_data(self, company_id=None):
+        company_id = company_id or request.env.company
+        employee = request.env.user.with_company(company_id).employee_id
         return self._get_user_attendance_data(employee)
 
     def has_password(self):
