@@ -306,7 +306,6 @@ class PurchaseOrderLine(models.Model):
                 received_qties[line] = 0.0
         return received_qties
 
-    @api.onchange('qty_received')
     def _inverse_qty_received(self):
         """ When writing on qty_received, if the value should be modify manually (`qty_received_method` = 'manual' only),
             then we put the value in `qty_received_manual`. Otherwise, `qty_received_manual` should be False since the
