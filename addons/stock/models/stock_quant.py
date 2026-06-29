@@ -233,7 +233,7 @@ class StockQuant(models.Model):
                 continue
             quant.inventory_quantity = quant.inventory_quantity_auto_apply
             quant_to_inventory |= quant
-        quant_to_inventory.with_context({'set_inventory_quantity_auto_apply': True}).action_apply_inventory()
+        quant_to_inventory.with_context(set_inventory_quantity_auto_apply=True).action_apply_inventory()
 
     def _search_on_hand(self, operator, value):
         """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
