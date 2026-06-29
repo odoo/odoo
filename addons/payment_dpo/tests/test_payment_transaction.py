@@ -15,6 +15,7 @@ class TestPaymentTransaction(DPOCommon):
         transaction_token = "dummy_token"
         expected_values = {
             "api_url": "https://secure.3gdirectpay.com/payv2.php",
+            "http_method": "get",
             "url_params": {"ID": transaction_token},
         }
         with patch(

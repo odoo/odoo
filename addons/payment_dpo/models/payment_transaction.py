@@ -30,6 +30,7 @@ class PaymentTransaction(models.Model):
         transaction_token = self._dpo_create_token()
         return {
             "api_url": "https://secure.3gdirectpay.com/payv2.php",
+            "http_method": "get",  # `payv2.php` redirects to `payv3.php`, dropping POSTed params.
             "url_params": {"ID": transaction_token},
         }
 
