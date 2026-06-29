@@ -469,11 +469,11 @@ class MrpProduction(models.Model):
     @api.depends('bom_id')
     def _compute_product_qty(self):
         for production in self:
-            if production.state != 'draft':
+            if production._origin.id:
                 continue
-            if production.bom_id and production._origin.bom_id != production.bom_id:
+            if production.bom_id:
                 production.product_qty = production.bom_id.product_qty
-            elif not production.bom_id:
+            else:
                 production.product_qty = 1.0
 
     @api.depends('move_raw_ids')

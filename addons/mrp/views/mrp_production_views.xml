@@ -335,6 +335,22 @@
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
+                            <label for="bom_id" name="bom_label"/>
+                            <div class='o_row' name="bom_div">
+                                <field name='is_outdated_bom' invisible='1'/>
+                                <field name="bom_id"
+                                    context="{'default_product_tmpl_id': product_tmpl_id}"
+                                    invisible="state != 'draft' and not bom_id"
+                                    readonly="state != 'draft'"/>
+                                <button name="action_generate_bom" type="object" icon="fa-plus"
+                                    title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
+                                    invisible="not show_generate_bom">
+                                    <span>Generate BOM</span>
+                                </button>
+                                <button name="action_update_bom" string="Update BoM" type="object"
+                                    title="Note that another version of this BOM is available." class="text-danger"
+                                    invisible="not is_outdated_bom or state not in ['draft', 'confirmed']"/>
+                            </div>
                             <label for="product_qty" string="Quantity" class="d-touch-none"/>
                             <div class="o_row g-0 d-flex" name="qty">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
@@ -354,22 +370,6 @@
                                 <span name="to_produce" class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
-                            </div>
-                            <label for="bom_id" name="bom_label"/>
-                            <div class='o_row' name="bom_div">
-                                <field name='is_outdated_bom' invisible='1'/>
-                                <field name="bom_id"
-                                    context="{'default_product_tmpl_id': product_tmpl_id}"
-                                    invisible="state != 'draft' and not bom_id"
-                                    readonly="state != 'draft'"/>
-                                <button name="action_generate_bom" type="object" icon="fa-plus"
-                                    title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
-                                    invisible="not show_generate_bom">
-                                    <span>Generate BOM</span>
-                                </button>
-                                <button name="action_update_bom" string="Update BoM" type="object"
-                                    title="Note that another version of this BOM is available." class="text-danger"
-                                    invisible="not is_outdated_bom or state not in ['draft', 'confirmed']"/>
                             </div>
                             <label for="lot_producing_ids" invisible="state in ('draft', 'cancel') or product_tracking in ('none', False) or (state == 'done' and product_tracking == 'serial' and product_qty > 1)"/>
                             <div class="o_row" invisible="state in ('draft', 'cancel') or product_tracking in ('none', False) or (state == 'done' and product_tracking == 'serial' and product_qty > 1)">

@@ -2862,6 +2862,43 @@ class TestBoM(TestMrpCommon):
         self.env['mrp.routing.workcenter'].search([]).unlink()
         self.assertFalse(self.bom_1.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
 
+    def test_preserve_product_qty_on_bom_change(self):
+        """This test ensures that the quantity is initialized from the BoM (if any,
+        or defaults to 1.0) while the MO is not saved. Once saved, changing or removing
+        the BoM must not recompute the quantity.
+        """
+        bom_1, bom_2 = self.bom_1, self.bom_3
+
+        # Create MO form (not saved yet)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom_1
+        # Quantity should be initialized from bom_1 (should be 4)
+        self.assertEqual(mo_form.product_qty, bom_1.product_qty)
+
+        # Change BoM before save → quantity recomputed (should be 2)
+        mo_form.bom_id = bom_2
+        self.assertEqual(mo_form.product_qty, bom_2.product_qty)
+
+        # Save MO
+        mo = mo_form.save()
+        # User explicitly sets quantity
+        mo.product_qty = 7.0
+
+        # Change BoM after save → quantity must NOT change
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_1
+        self.assertEqual(mo.product_qty, 7.0)
+
+        # Remove BoM after save → quantity must still NOT change
+        with Form(mo) as mo_form:
+            mo_form.bom_id = self.env['mrp.bom']
+        self.assertEqual(mo.product_qty, 7.0)
+
+        # Again add BoM after save → quantity should still NOT change
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+        self.assertEqual(mo.product_qty, 7.0)
+
 
 class TestTourBoM(HttpCase):
     @classmethod
