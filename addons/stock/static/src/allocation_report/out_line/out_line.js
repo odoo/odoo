@@ -10,6 +10,7 @@ export class OutLine extends Component {
         allocateQuantity: types.signal(types.number()),
         availableQuantity: types.number(),
         isReserved: types.signal(types.boolean()),
+        isSmall: types.boolean().optional(),
         moves: types.array(),
         productUom: types.object(),
         reservedQuantity: types.signal(types.number()),
