@@ -99,7 +99,7 @@ class OfflineManager extends Reactive {
 
         registry
             .category("services")
-            .addEventListener("CLEANUP", () => (this.offline = false), { once: true });
+            .addEventListener("CLEANUP", this._cleanup.bind(this), { once: true });
     }
 
     get offline() {
@@ -158,10 +158,8 @@ class OfflineManager extends Reactive {
             // Retrieve the information about visited items from indexeddb.
             this._visited[IS_READY] = this._populateVisited();
         } else {
-            this._onlineUI();
             this._syncORM();
-            this._observer?.disconnect();
-            browser.clearTimeout(this._timeout);
+            this._cleanup();
         }
     }
 
@@ -326,6 +324,15 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _cleanup() {
+        this._onlineUI();
+        this._observer?.disconnect();
+        browser.clearTimeout(this._timeout);
+    }
 
     async _decryptAndFormat(offlineRes) {
         const decrytedRes = [];
