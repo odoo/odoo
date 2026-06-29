@@ -500,7 +500,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_negative_factor_percent(self):
         account_1 = self.company_data['default_account_tax_sale'].copy()
-        with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor \(\+\) equals to 100\."):
+        with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor equals to 0% or 100%\."):
             self.env['account.tax'].create({
                 'name': "tax",
                 'amount': 15.0,
@@ -524,6 +524,53 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                         'repartition_type': 'tax',
                         'account_id': account_1.id,
                     }),
+                ],
+            })
+
+    def test_asymmetric_repartition_lines_neutral_tail(self):
+        tax = self.env['account.tax'].create({
+            'name': "tax",
+            'amount': 15.0,
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+            ],
+        })
+
+        self.assertRecordValues(tax.invoice_repartition_line_ids.sorted(lambda line: (line.sequence, line.id)), [
+            {'repartition_type': 'base', 'factor_percent': 100.0},
+            {'repartition_type': 'tax', 'factor_percent': 100.0},
+            {'repartition_type': 'tax', 'factor_percent': -100.0},
+            {'repartition_type': 'tax', 'factor_percent': 100.0},
+        ])
+
+    def test_zero_amount_tax_without_tax_repartition_lines(self):
+        self.env['account.tax'].create({
+            'name': "zero tax",
+            'amount': 0.0,
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+            ],
+        })
+
+        with self.assertRaisesRegex(ValidationError, "Invoice or credit note repartition should have at least one tax repartition line."):
+            self.env['account.tax'].create({
+                'name': "tax",
+                'amount': 15.0,
+                'invoice_repartition_line_ids': [
+                    Command.create({'repartition_type': 'base'}),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({'repartition_type': 'base'}),
                 ],
             })
 

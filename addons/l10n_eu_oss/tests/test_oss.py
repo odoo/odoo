@@ -38,7 +38,7 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
         self.sub_child_company.vat = "BE0477472701"
         self.sub_child_company._map_eu_taxes()
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.sub_child_company.country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
         self.assertTrue(tax_oss)
         self.assertEqual(tax_oss.company_id, self.sub_child_company)
 
@@ -173,7 +173,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
         self.sub_child_company._map_eu_taxes()
 
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.sub_child_company.country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
 
         self.assertTrue(tax_oss)
         self.assertEqual(tax_oss.company_id, self.sub_child_company)

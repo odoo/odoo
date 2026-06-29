@@ -554,6 +554,17 @@ class AccountTax(models.Model):
         if len(base_line) != 1:
             raise ValidationError(_("Invoice and credit note distribution should each contain exactly one line for the base."))
 
+        tax_reps = lines.filtered(lambda tax_rep: tax_rep.repartition_type == 'tax')
+        if not tax_reps:
+            return
+
+        total_factor = sum(tax_reps.mapped('factor'))
+        if (
+            float_compare(total_factor, 0.0, precision_digits=2)
+            and float_compare(total_factor, 1.0, precision_digits=2)
+        ):
+            raise ValidationError(_("Invoice and credit note distribution should have a total factor equals to 0% or 100%."))
+
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids', 'repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
@@ -568,28 +579,25 @@ class AccountTax(models.Model):
             record._check_repartition_lines(invoice_repartition_line_ids)
             record._check_repartition_lines(refund_repartition_line_ids)
 
-            if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
-                raise ValidationError(_("Invoice and credit note distribution should have the same number of lines."))
+            if (
+                not float_is_zero(record.amount, precision_digits=4)
+                and not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+                and not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+            ):
+                raise ValidationError(_("Invoice or credit note repartition should have at least one tax repartition line."))
 
-            if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
-                    not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
-                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
-
-            index = 0
-            while index < len(invoice_repartition_line_ids):
-                inv_rep_ln = invoice_repartition_line_ids[index]
-                ref_rep_ln = refund_repartition_line_ids[index]
+            min_length = min(len(invoice_repartition_line_ids), len(refund_repartition_line_ids))
+            for inv_rep_ln, ref_rep_ln in zip(invoice_repartition_line_ids, refund_repartition_line_ids):
                 if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
                     raise ValidationError(_("Invoice and credit note distribution should match (same percentages, in the same order)."))
-                index += 1
 
-            tax_reps = invoice_repartition_line_ids.filtered(lambda tax_rep: tax_rep.repartition_type == 'tax')
-            total_pos_factor = sum(tax_reps.filtered(lambda tax_rep: tax_rep.factor > 0.0).mapped('factor'))
-            if float_compare(total_pos_factor, 1.0, precision_digits=2):
-                raise ValidationError(_("Invoice and credit note distribution should have a total factor (+) equals to 100."))
-            total_neg_factor = sum(tax_reps.filtered(lambda tax_rep: tax_rep.factor < 0.0).mapped('factor'))
-            if total_neg_factor and float_compare(total_neg_factor, -1.0, precision_digits=2):
-                raise ValidationError(_("Invoice and credit note distribution should have a total factor (-) equals to 100."))
+            extra_repartition_lines = invoice_repartition_line_ids[min_length:] or refund_repartition_line_ids[min_length:]
+            if extra_repartition_lines:
+                if any(line.repartition_type != 'tax' for line in extra_repartition_lines):
+                    raise ValidationError(_("Exceeding invoice or credit note repartition lines must be tax lines."))
+                total_extra_factor = sum(extra_repartition_lines.mapped('factor_percent'))
+                if float_compare(total_extra_factor, 0.0, precision_digits=2):
+                    raise ValidationError(_("Exceeding invoice or credit note tax repartition lines should sum to 0%."))
 
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
