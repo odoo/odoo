@@ -297,12 +297,15 @@ export class KanbanRecord extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onGlobalClick(ev) {
+    async onGlobalClick(ev) {
         if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
             return;
         }
         const { archInfo, forceGlobalClick, openRecord, record } = this.props;
         if (!forceGlobalClick && archInfo.openAction) {
+            if (this.props.record.isDirty()) {
+                await this.props.record.save();
+            }
             this.action.doActionButton({
                 name: archInfo.openAction.action,
                 type: archInfo.openAction.type,
