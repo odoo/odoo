@@ -1,31 +1,22 @@
-import { offlineService } from "@web/core/offline/offline_service";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 /**
- * Patch the default Odoo offline service to customize behavior for the POS.
+ * In POS / Self-Ordering mode we *want the UI to remain functional offline*.
  *
- * In the standard implementation, when Odoo detects it is offline,
- * it disables all interactive UI elements (buttons, inputs, etc.)
- * by adding the `disabled` attribute and the `o_disabled_offline` CSS class.
- *
- * However, for the Point of Sale (POS) and Self-Ordering mode, we *want it to
- * remain functional offline*,
- *
- * This patch prevents the offline service from disabling UI components
+ * The offline plugin is started automatically by the plugin manager (it is
+ * registered as a global plugin), so it would otherwise install its listeners
+ * and disable interactive UI elements when offline. We neutralize it here by
+ * skipping its setup, and disabling the crypto so its offline ORM/many2x
+ * caching becomes a no-op.
  */
-patch(offlineService, {
-    async start() {
-        // Skip offline UI disabling if we’re in POS or Self-Ordering mode.
+patch(OfflinePlugin.prototype, {
+    setup() {
         if (odoo.pos_config_id || session.data?.config_id) {
-            return {
-                status: {},
-                _checkConnection: () => Promise.resolve(),
-                isAvailableOffline: () => false,
-                scheduledORM: {},
-                cacheMany2XSearch: () => {},
-            };
+            this._crypto = false;
+            return;
         }
-        return super.start(...arguments);
+        super.setup();
     },
 });
