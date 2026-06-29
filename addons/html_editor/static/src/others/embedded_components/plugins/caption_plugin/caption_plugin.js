@@ -57,7 +57,11 @@ export class CaptionPlugin extends Plugin {
             }
             return [];
         },
-        region_properties: { within: CAPTION_SPAN_SELECTOR, formattable: false },
+        region_properties: {
+            within: CAPTION_SPAN_SELECTOR,
+            formattable: false,
+            toolbar: DISABLED_NAMESPACE,
+        },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
@@ -71,14 +75,6 @@ export class CaptionPlugin extends Plugin {
                 return true;
             }
         },
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, CAPTION_SPAN_SELECTOR))
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
         html_drop_overrides: this.onDrop.bind(this),
         paste_text_overrides: this.onPaste.bind(this),
         paste_html_overrides: this.onPaste.bind(this),

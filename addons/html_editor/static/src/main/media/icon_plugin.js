@@ -9,15 +9,12 @@ import {
     getIconType,
     isElement,
     isIconElement,
-    isTextNode,
-    isZwnbsp,
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "color", "dialog"];
-    toolbarNamespace = "icon";
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -65,17 +62,7 @@ export class IconPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespace_providers: [
-            (targetedNodes) => {
-                if (!targetedNodes.length) {
-                    return;
-                }
-                const textNodes = targetedNodes.filter(isTextNode);
-                if (textNodes.every(isZwnbsp) && targetedNodes.some(isIconElement)) {
-                    return this.toolbarNamespace;
-                }
-            },
-        ],
+        region_properties: [{ is: isIconElement, toolbar: "icon" }],
         toolbar_groups: [
             withSequence(2, { id: "icon_size", namespaces: ["icon"] }),
             withSequence(3, { id: "icon_spin", namespaces: ["icon"] }),
