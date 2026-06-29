@@ -38,3 +38,17 @@ class TestL10nInCompany(L10nInTestInvoicingCommon):
 
         # Audit Trail should remain True
         self.assertTrue(in_company.restrictive_audit_trail)
+
+    def test_l10n_in_cash_rounding_created_per_company(self):
+        """
+        Each IN company must have its own `Half Up` cash rounding record
+        Creating a new IN company must not reassign the existing record
+        """
+        in_company = self._create_company(country_code='IN')
+        in_cash_rounding_ids = self.env['account.cash.rounding'].search([
+            ('name', '=', 'Half Up'), ('company_id.partner_id.country_code', '=', 'IN')
+        ])
+        self.assertRecordValues(in_cash_rounding_ids, [
+            {'company_id': self.env.company.id},
+            {'company_id': in_company.id},
+        ])

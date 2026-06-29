@@ -37,7 +37,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'data/res_country_group.xml',
         'data/uom_data.xml',
         'data/res_partner_industry.xml',
-        'data/account_cash_rounding.xml',
         'data/account_tax_report_tcs_data.xml',
         'data/account_tax_report_tds_data.xml',
         'data/account_tax_report_tcs_it_act_25_data.xml',

@@ -42,8 +42,9 @@ class AccountChartTemplate(models.AbstractModel):
     @template('in', 'account.cash.rounding')
     def _get_in_account_cash_rounding(self):
         return {
-            'l10n_in.cash_rounding_in_half_up': {
-                'company_id': self.env.company.id,
+            'cash_rounding_in_half_up': {
+                'name': 'Half Up',
+                'rounding': 1,
                 'profit_account_id': 'p213202',
                 'loss_account_id': 'p213201',
             }
