@@ -96,6 +96,23 @@ class TestPersonalStages(TestProjectCommon):
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
 
+    def test_personal_stage_read_grouping_sets(self):
+        # Ensure user doesnt have any tasks before hand
+        (self.env['project.task'].sudo().search([("user_ids", "in", (self.task_1.user_ids + self.user_projectmanager).ids)]) - self.task_1).unlink()
+
+        self.task_1.user_ids += self.user_projectmanager
+        self.task_1.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
+        self.env.flush_all()
+
+        grouped = self.env['project.task'].with_context(read_group_expand=True).with_user(self.user_projectuser).formatted_read_grouping_sets(
+            [('user_ids', '=', self.user_projectuser.id)],
+            grouping_sets=[['personal_stage_type_id']],
+            aggregates=['__count'],
+        )
+        groups = grouped[0]
+        self.assertEqual(len(self.user_stages), len(groups))
+        self.assertEqual(1, sum(group['__count'] for group in groups))
+
     def test_delete_personal_stage(self):
         """
         When deleting personal stages, the task of this stage are transfered to the one following it sequence-wise.
