@@ -1342,6 +1342,37 @@ class TestReports(TestReportsCommon):
             }
         ])
 
+    def test_report_forecast_14_reserved_from_sublocations(self):
+        sublocation = self.env['stock.location'].create({
+            'name': 'Sublocation',
+            'location_id': self.stock_location.id
+        })
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': sublocation.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [(0, 0, {
+                'name': '10 OUT',
+                'location_id': sublocation.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'product_id': self.product.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        delivery.action_confirm()
+
+        delivery.move_ids.quantity = 10  # No quantity on hand, force the reservation
+        self.assertEqual(delivery.move_ids.quantity, 10)
+        self.assertEqual(delivery.move_ids.location_id.id, sublocation.id)
+
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(bool(lines[0]['move_out']), True)
+        self.assertEqual(bool(lines[0]['reservation']), True)
+        self.assertEqual(lines[0]['quantity'], 10)
+        self.assertEqual(lines[1]['in_transit'], False)
+        self.assertEqual(lines[1]['quantity'], -10)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
