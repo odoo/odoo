@@ -239,5 +239,6 @@ class TestSyncGoogle(HttpCase):
                 'user_id': calendar_user.id,
                 'access_role': 'owner',
                 'is_primary': is_primary,
+                'label': name,
             })]
         })

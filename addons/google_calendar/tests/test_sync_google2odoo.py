@@ -36,6 +36,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'user_id': cls.env.user.id,
                 'access_role': 'owner',
                 'is_primary': True,
+                'label': 'Odoo Calendar',
             })],
         })
         cls.cal = cls.env.user.primary_calendar

@@ -59,7 +59,6 @@ class ResUsers(models.Model):
         default_privacy = self.env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public')
         calendar_vals_list = [
             {
-                'name': 'Primary Calendar',
                 'calendar_default_privacy': default_privacy,
                 'calendar_users': [
                     Command.create({
@@ -68,6 +67,7 @@ class ResUsers(models.Model):
                         'is_primary': True,
                         'is_filter_active': True,
                         'is_filter_checked': True,
+                        'label': 'Primary Calendar',
                     }),
                 ],
             }

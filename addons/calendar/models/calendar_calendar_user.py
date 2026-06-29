@@ -14,6 +14,7 @@ class CalendarCalendarUser(models.Model):
     calendar_id = fields.Many2one('calendar.calendar', string='Calendar', ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', ondelete='cascade')
     is_primary = fields.Boolean('Primary')
+    label = fields.Char('Label')
 
     # Access roles matching those of Google Calendar
     access_role = fields.Selection([
@@ -42,7 +43,7 @@ class CalendarCalendarUser(models.Model):
                     continue
                 raise AccessError(_("Only the owner of a calendar can grant access to other users."))
 
-        """ Assign a random unused color to each new filter."""
+        # Assign a random unused color to each new filter.
         excluded_colors = []
         for vals in vals_list:
             if not vals.get('filter_color'):
@@ -61,7 +62,7 @@ class CalendarCalendarUser(models.Model):
 
     @api.model
     def _get_writeable_fields(self):
-        return {'is_filter_active', 'is_filter_checked', 'filter_color'}
+        return {'is_filter_active', 'is_filter_checked', 'filter_color', 'label'}
 
     @api.model
     def _get_random_unused_color(self, user_id, excluded_colors):

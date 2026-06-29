@@ -10,7 +10,6 @@ def post_init_hook(env):
     users = env['res.users'].search([('calendar_users', 'not any', [('is_primary', '=', True)])])
     env['calendar.calendar'].create([
         {
-            'name': 'Primary Calendar',
             'calendar_default_privacy': user.res_users_settings_id.calendar_default_privacy or
                 env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public'),
             'calendar_users': [Command.create({
@@ -19,6 +18,7 @@ def post_init_hook(env):
                 'access_role': 'owner',
                 'is_filter_active': True,
                 'is_filter_checked': True,
+                'label': 'Primary Calendar',
             })],
         }
         for user in users

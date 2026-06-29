@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _, Command
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, AccessError
 
 
@@ -26,15 +26,17 @@ class CalendarCalendar(models.Model):
                 'access_role': 'owner',
                 'is_filter_active': True,
                 'is_filter_checked': True,
+                'label': 'Calendar'
             })]
 
         return defaults
 
+    calendar_user = fields.Many2one('calendar.calendar.user', compute='_compute_calendar_user')
     color = fields.Integer(string='Color', compute='_compute_color', inverse='_inverse_color')
     event_ids = fields.One2many('calendar.event', 'calendar_id', "Events")
     recurrence_ids = fields.One2many('calendar.recurrence', 'calendar_id', "Recurrences")
     is_primary = fields.Boolean('Primary Calendar', compute="_compute_is_primary")
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', compute='_compute_name', inverse='_inverse_name')
     calendar_users = fields.One2many('calendar.calendar.user', inverse_name='calendar_id', string='Users')
     owner = fields.Many2one('res.users', compute='_compute_owner')
     user_access_role = fields.Selection([
@@ -66,33 +68,46 @@ class CalendarCalendar(models.Model):
                     _("You are not allowed to change the calendar default privacy of another user due to privacy constraints."))
         return super().write(vals)
 
+    @api.depends_context('uid')
+    def _compute_calendar_user(self):
+        for calendar in self:
+            user_calendar = self.env['calendar.calendar.user'].search([
+                ('calendar_id', 'in', calendar.ids),
+                ('user_id', '=', self.env.uid),
+            ], limit=1)
+            calendar.calendar_user = user_calendar
+
+    @api.depends_context('uid')
+    @api.depends('calendar_users.filter_color')
+    def _compute_name(self):
+        for calendar in self:
+            calendar.name = calendar.calendar_user.label
+
+    def _inverse_name(self):
+        for calendar in self:
+            if calendar.calendar_user:
+                calendar.calendar_user.label = calendar.name
+
     @api.depends('calendar_users.access_role', 'calendar_users.user_id')
     def _compute_owner(self):
         for calendar in self:
             calendar.owner = calendar.calendar_users.filtered(lambda l: l.access_role == 'owner').user_id
 
     @api.depends_context('uid')
+    @api.depends('calendar_users.filter_color')
     def _compute_color(self):
-        for record in self:
-            user_calendar = self.env['calendar.calendar.user'].search([
-                ('calendar_id', 'in', record.ids),
-                ('user_id', '=', self.env.uid),
-            ], limit=1)
-            record.color = user_calendar.filter_color if user_calendar else 1
+        for calendar in self:
+            calendar.color = calendar.calendar_user.filter_color if calendar.calendar_user else 1
 
     def _inverse_color(self):
-        for record in self:
-            user_cal = self.env['calendar.calendar.user'].search([
-                ('calendar_id', 'in', record.ids),
-                ('user_id', '=', self.env.uid),
-            ], limit=1)
-            if user_cal:
-                user_cal.filter_color = record.color
+        for calendar in self:
+            if calendar.calendar_user:
+                calendar.calendar_user.filter_color = calendar.color
 
     @api.depends('calendar_users')
     def _compute_is_primary(self):
         for calendar in self:
-            calendar.is_primary = calendar.calendar_users.filtered(lambda l: l.user_id == self.env.user).is_primary
+            calendar.is_primary = calendar.calendar_user.is_primary
 
     @api.depends_context('uid')
     @api.depends('calendar_users.access_role')

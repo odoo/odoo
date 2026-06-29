@@ -66,6 +66,7 @@ class GoogleCalendarService:
                 'access_role': calendar_data.get('accessRole') or 'freeBusyReader',
                 'is_filter_active': True,
                 'is_filter_checked': True,
+                'label': calendar_data.get('summary'),
             })],
         })
 

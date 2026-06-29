@@ -117,19 +117,22 @@ class CalendarCalendar(models.Model):
     def _odoo_values(self, google_record: GoogleCalendar):
         existing_calendar_user = self.calendar_users.filtered(lambda c: c.user_id == self.env.user and c.calendar_id.id == google_record.odoo_id(self.env))
         if existing_calendar_user and google_record.accessRole:
-            command = Command.update(existing_calendar_user.id, {'access_role': google_record.accessRole})
+            command = Command.update(existing_calendar_user.id, {
+                'access_role': google_record.accessRole,
+                'label': google_record.summary,
+            })
         else:
             command = Command.create({
                 'user_id': self.env.user.id,
                 'access_role': google_record.accessRole or 'freeBusyReader',
                 'is_filter_active': True,
                 'is_filter_checked': True,
+                'label': google_record.summary,
             })
 
         return {
             'calendar_users': [command],
             'google_id': google_record.id,
-            'name': google_record.summary,
         }
 
     @after_commit
