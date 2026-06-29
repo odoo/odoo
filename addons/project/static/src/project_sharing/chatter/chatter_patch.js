@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
 
-import { props, t } from "@odoo/owl";
+import { plugin, props, providePlugins, t } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
@@ -18,11 +18,9 @@ patch(Chatter.prototype, {
             isFollower: this.projectSharingProps.isFollower,
         });
         this.orm = useService("orm");
-        useSubEnv({
-            // 'inFrontendPortalChatter' is specific to the frontend portal chatters
-            // and should not be set to 'true' in the project sharing chatter environment.
-            projectSharingId: this.projectSharingProps.projectSharingId,
-        });
+        providePlugins([ProjectSharingPlugin]);
+        this.projectSharingPlugin = plugin(ProjectSharingPlugin);
+        this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
     },
 
     get extraMessageFetchRouteParams() {

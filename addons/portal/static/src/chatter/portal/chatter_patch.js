@@ -1,5 +1,7 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
+import { maybePlugin } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 import { onWillPatch } from "@odoo/owl";
@@ -7,6 +9,7 @@ import { onWillPatch } from "@odoo/owl";
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
+        this.portalChatterPlugin = maybePlugin(PortalChatterPlugin);
         this.topRef = useRef("top");
         onWillPatch(() => {
             // Keep the composer position under the page header on scrolling
