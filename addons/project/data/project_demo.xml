@@ -2132,5 +2132,133 @@ Send it ASAP, its urgent.</field>
             <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>
+
+        <!--Deletable Embedded actions & associated filters -->
+        <record id="project_my_tasks_embedded_action" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="name">My Tasks</field>
+            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="is_deletable">True</field>
+            <field name="parent_res_id" ref="project.project_project_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="ir_filter_my_tasks" model="ir.filters">
+            <field name="name">My tasks filter</field>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="model_id">project.task</field>
+            <field name="domain">["&amp;", ("is_closed", "=", False), ("user_ids", "in", uid)]</field>
+            <field name="embedded_action_id" ref="project.project_my_tasks_embedded_action"/>
+            <field name="embedded_parent_res_id" ref="project.project_project_2"/>
+            <field name="is_default">True</field>
+            <field name="context">{'group_by': ['stage_id']}</field>
+        </record>
+
+        <record id="project_my_tasks_calendar_embedded_action" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="name">My Tasks (Calendar)</field>
+            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="is_deletable">True</field>
+            <field name="parent_res_id" ref="project.project_project_2"/>
+            <field name="default_view_mode">calendar</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="ir_filter_my_tasks_calendar" model="ir.filters">
+            <field name="name">My tasks (calendar) filter</field>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="model_id">project.task</field>
+            <field name="domain">["&amp;", ("is_closed", "=", False), ("user_ids", "in", uid)]</field>
+            <field name="embedded_action_id" ref="project.project_my_tasks_calendar_embedded_action"/>
+            <field name="embedded_parent_res_id" ref="project.project_project_2"/>
+            <field name="is_default">True</field>
+        </record>
+
+        <record id="project_urgent_tasks_embedded_action" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="name">Urgent Tasks</field>
+            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="is_deletable">True</field>
+            <field name="parent_res_id" ref="project.project_project_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="ir_filter_urgent_tasks" model="ir.filters">
+            <field name="name">Urgent tasks filter</field>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="model_id">project.task</field>
+            <field name="domain">["&amp;", ("is_closed", "=", False), ("priority", "=", "3")]</field>
+            <field name="embedded_action_id" ref="project.project_urgent_tasks_embedded_action"/>
+            <field name="embedded_parent_res_id" ref="project.project_project_2"/>
+            <field name="is_default">True</field>
+            <field name="context">{'group_by': ['stage_id']}</field>
+        </record>
+
+        <record id="project_unassigned_tasks_embedded_action" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="name">Unassigned Tasks</field>
+            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="is_deletable">True</field>
+            <field name="parent_res_id" ref="project.project_project_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="ir_filter_unassigned_tasks" model="ir.filters">
+            <field name="name">Unassigned tasks filter</field>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="model_id">project.task</field>
+            <field name="domain">["&amp;", ("is_closed", "=", False), ("user_ids", "=", False)]</field>
+            <field name="embedded_action_id" ref="project.project_unassigned_tasks_embedded_action"/>
+            <field name="embedded_parent_res_id" ref="project.project_project_2"/>
+            <field name="is_default">True</field>
+            <field name="context">{'group_by': ['stage_id']}</field>
+        </record>
+
+        <record id="project_update_off_track_embedded_action" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="name">Off Track</field>
+            <field name="parent_action_id" ref="project.project_update_all_action"/>
+            <field name="action_id" ref="project.project_update_all_action"/>
+            <field name="is_deletable">True</field>
+            <field name="parent_res_id" ref="project.project_project_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="ir_filter_update_off_track" model="ir.filters">
+            <field name="name">Off track filter</field>
+            <field name="action_id" ref="project.project_update_all_action"/>
+            <field name="model_id">project.update</field>
+            <field name="domain">[("status", "=", "on_track")]</field>
+            <field name="embedded_action_id" ref="project.project_update_off_track_embedded_action"/>
+            <field name="embedded_parent_res_id" ref="project.project_project_2"/>
+            <field name="is_default">True</field>
+        </record>
+
+        <record id="admin_settings_embedded_action_view_task" model="res.users.settings.embedded.action">
+            <field name="user_setting_id" model="res.users.settings" search="[('user_id', '=', ref('base.user_admin'))]"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="res_model">project.project</field>
+            <field name="res_id" ref="project.project_project_2"/>
+            <field name="embedded_actions_order"
+                   eval="','.join([
+                        'false',
+                        str(ref('project.project_my_tasks_embedded_action')),
+                        str(ref('project.project_my_tasks_calendar_embedded_action')),
+                        str(ref('project.project_urgent_tasks_embedded_action')),
+                        str(ref('project.project_unassigned_tasks_embedded_action')),
+                        str(ref('project.project_update_off_track_embedded_action')),
+                    ])"
+            />
+            <field name="embedded_actions_visibility"
+                   eval="','.join([
+                        'false',
+                        str(ref('project.project_my_tasks_embedded_action')),
+                        str(ref('project.project_my_tasks_calendar_embedded_action')),
+                        str(ref('project.project_urgent_tasks_embedded_action')),
+                        str(ref('project.project_unassigned_tasks_embedded_action')),
+                        str(ref('project.project_update_off_track_embedded_action')),
+                    ])"
+            />
+            <field name="embedded_visibility">True</field>
+        </record>
     </data>
 </odoo>
