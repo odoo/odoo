@@ -118,12 +118,6 @@ export class ListController extends Component {
             }
         });
 
-        this.archiveEnabled =
-            "active" in this.props.fields
-                ? !this.props.fields.active.readonly
-                : "x_active" in this.props.fields
-                ? !this.props.fields.x_active.readonly
-                : false;
         useSubEnv({ model: this.model }); // do this in useModelWithSampleData?
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
@@ -431,6 +425,15 @@ export class ListController extends Component {
             action: [...staticActionItems, ...(actionMenus?.action || [])],
             print: actionMenus?.print,
         };
+    }
+
+    // enable the archive feature in Actions menu only if the active field is in the view
+    get archiveEnabled() {
+        return "active" in this.model.root.activeFields
+            ? !this.props.fields.active.readonly
+            : "x_active" in this.model.root.activeFields
+            ? !this.props.fields.x_active.readonly
+            : false;
     }
 
     async onSelectDomain() {
