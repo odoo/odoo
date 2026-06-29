@@ -2208,8 +2208,19 @@ class ProjectTask(models.Model):
             # appear in read_group, but this has no functional utility
             groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
             if order:
-                order = order.replace('personal_stage_type_id', 'personal_stage_type_ids')
+                order = re.sub(r'\bpersonal_stage_type_id\b', 'personal_stage_type_ids', order)
         return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
+
+    @api.model
+    def _read_grouping_sets(self, domain, grouping_sets, aggregates=(), order=None):
+        if any('personal_stage_type_id' in groupby for groupby in grouping_sets):
+            grouping_sets = [
+                ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
+                for groupby in grouping_sets
+            ]
+            if order:
+                order = re.sub(r'\bpersonal_stage_type_id\b', 'personal_stage_type_ids', order)
+        return super()._read_grouping_sets(domain, grouping_sets, aggregates, order)
 
     # ---------------------------------------------------
     # Project Sharing
