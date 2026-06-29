@@ -103,7 +103,7 @@
             closingMode="choice.enabled ? 'all' : 'none'"
             onSelected="() => choice.enabled and this.onItemSelected(choice.value)"
             class="this.getItemClass(choice)"
-            attrs="{ 'data-choice-index': choice_index }"
+            attrs="{ 'data-choice-index': choice_index, ...choice.attrs}"
         >
             <t t-if="this.props.slots and this.props.slots.choice" t-call-slot="choice" data="choice"/>
             <t t-else="">
