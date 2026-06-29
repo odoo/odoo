@@ -1,10 +1,9 @@
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { SettingsBlock } from "../settings/settings_block";
 import { Setting } from "../../../views/form/setting/setting";
 
-import { Component, onWillStart, useProps } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { router } from "@web/core/browser/router";
 
@@ -29,9 +28,8 @@ export class ResConfigDevTool extends Component {
         this.isTests = odoo.debug.includes("tests");
 
         this.action = useService("action");
-        onWillStart(async () => {
-            this.isDemoDataActive = await rpc("/base_setup/demo_active", {}, { cache: true });
-        });
+        this.isDemoDataActive = proxy({ value: true });
+        useService("lazy_session").getValue("is_demo", (v) => (this.isDemoDataActive.value = !!v));
     }
 
     activateDebug(value) {
