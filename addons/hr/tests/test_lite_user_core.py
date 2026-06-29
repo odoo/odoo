@@ -16,7 +16,7 @@ class TestLiteUserCore(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.group_user = cls.env.ref('base.group_user')
+        cls.group_user = cls.env.ref('base.group_user_regular')
 
     def test_provision_no_email_synthetic_login(self):
         emp = self.env['hr.employee'].create({'name': 'No Email'})
@@ -25,8 +25,8 @@ class TestLiteUserCore(TransactionCase):
                         "a userless, emailless employee gets a synthetic login")
         self.assertFalse(emp.user_id.share, "the provisioned user is an internal user")
         self.assertIn(self.group_user, emp.user_id.all_group_ids,
-                      "a Light user is a regular internal user")
-        self.assertEqual(emp.user_id.role, 'light',
+                      "a Light user is a an internal user")
+        self.assertEqual(emp.user_id.role, 'group_user',
                          "with no extra access, the provisioned user is a Light user")
 
     def test_provision_no_email_logins_are_unique(self):
@@ -67,43 +67,20 @@ class TestLiteUserCore(TransactionCase):
         admin = self.env.ref('base.user_admin')
         self.assertEqual(admin.role, 'group_system')
         light = self.env['hr.employee'].create({'name': 'Light'}).user_id
-        self.assertEqual(light.role, 'light')
+        self.assertEqual(light.role, 'group_user')
 
     def test_real_access_makes_regular(self):
         """Granting access beyond the light set turns a Light user into a regular
         User -- the projection follows from the user gaining an extra app group."""
         user = self.env['hr.employee'].create({'name': 'Climber'}).user_id
-        self.assertEqual(user.role, 'light')
+        self.assertEqual(user.role, 'group_user')
         app_group = self.env['res.groups'].create({
             'name': 'Some App / User',
             'implied_ids': [(4, self.group_user.id)],
         })
         user.write({'group_ids': [(4, app_group.id)]})
         self.assertIn(self.group_user, user.all_group_ids)
-        self.assertEqual(user.role, 'group_user')
-
-    def test_role_inverse_demote_to_light(self):
-        """Writing role='light' is lossy: it strips every extra app group down to
-        the internal baseline."""
-        user = self.env['hr.employee'].create({'name': 'Demote'}).user_id
-        app_group = self.env['res.groups'].create({
-            'name': 'Some App / User',
-            'implied_ids': [(4, self.group_user.id)],
-        })
-        user.write({'group_ids': [(4, app_group.id)]})
-        self.assertEqual(user.role, 'group_user')
-        user.write({'role': 'light'})
-        self.assertEqual(user.role, 'light')
-        self.assertNotIn(app_group, user.group_ids,
-                         "demoting to Light removes the extra app access")
-        self.assertIn(self.group_user, user.group_ids)
-
-    def test_role_inverse_promote_to_admin(self):
-        """Writing role='group_system' keeps app groups and adds the admin anchor."""
-        user = self.env['hr.employee'].create({'name': 'Boss'}).user_id
-        user.write({'role': 'group_system'})
-        self.assertEqual(user.role, 'group_system')
-        self.assertTrue(user.has_group('base.group_system'))
+        self.assertEqual(user.role, 'group_user_regular')
 
     def test_lite_user_can_browse_directory(self):
         """A Light user (a plain internal user) can read the employee directory

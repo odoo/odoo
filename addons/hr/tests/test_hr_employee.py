@@ -518,7 +518,7 @@ class TestHrEmployee(TestHrCommon):
         })
         self.assertTrue(employee.user_id)
         self.assertTrue(employee.user_id.login.startswith('__emp_'))
-        self.assertEqual(employee.user_id.role, 'light')
+        self.assertEqual(employee.user_id.role, 'group_user')
 
     def test_user_creation_from_employee_emails(self):
         # A new email creates a lite user with that login.

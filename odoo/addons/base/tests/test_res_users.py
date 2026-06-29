@@ -346,7 +346,7 @@ class TestUsers2(UsersCommonCase):
         f.login = "bob"
         user = f.save()
 
-        group_user = self.env.ref('base.group_user')
+        group_user = self.env.ref('base.group_user_regular')
 
         self.assertIn(group_user, user.group_ids)
         self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
