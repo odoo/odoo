@@ -1660,11 +1660,6 @@ class AccountMove(models.Model):
             base_lines += [self._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
             tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
-            if round_from_tax_lines == 'reapply_currency_rate':
-                for tax_line in tax_lines:
-                    rate = self.invoice_currency_rate
-                    if rate:
-                        tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)

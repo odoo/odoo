@@ -27,34 +27,34 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
         invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -30})]
 
         self.assertRecordValues(invoice.line_ids, [
-            {'amount_currency': -100},
-            {'amount_currency': -30},
-            {'amount_currency': 130},
+            {'amount_currency': -100.0},
+            {'amount_currency': -30.0},
+            {'amount_currency': 130.0},
         ])
 
         invoice.currency_id = self.eur
 
         self.assertRecordValues(invoice.line_ids, [
-            {'amount_currency': -100, 'balance': -50},
-            {'amount_currency': -30, 'balance': -15},
-            {'amount_currency': 130, 'balance': 65},
+            {'amount_currency': -100.0, 'balance': -50.0},
+            {'amount_currency': -30.0, 'balance': -15.0},
+            {'amount_currency': 130.0, 'balance': 65.0},
         ])
 
         tax_line = invoice.line_ids.filtered('tax_line_id')
-        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -30})]
+        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -30.0})]
 
         self.assertRecordValues(invoice.line_ids, [
-            {'amount_currency': -100, 'balance': -50},
-            {'amount_currency': -30, 'balance': -15},
-            {'amount_currency': 130, 'balance': 65},
+            {'amount_currency': -100.0, 'balance': -50.0},
+            {'amount_currency': -30.0, 'balance': -15.0},
+            {'amount_currency': 130.0, 'balance': 65.0},
         ])
 
         invoice.invoice_date = '2018-01-01'
 
         self.assertRecordValues(invoice.line_ids, [
-            {'amount_currency': -100, 'balance': -25},
-            {'amount_currency': -30, 'balance': -7.5},
-            {'amount_currency': 130, 'balance': 32.5},
+            {'amount_currency': -100.0, 'balance': -25.0},
+            {'amount_currency': -30.0, 'balance': -7.5},
+            {'amount_currency': 130.0, 'balance': 32.5},
         ])
 
     def test_manual_tax_amount_adding_removing_lines(self):
@@ -212,24 +212,24 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
             currency_id=self.eur.id,
         )
         self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
-            {'amount_currency': -100, 'balance': -50},
-            {'amount_currency': -21, 'balance': -10.5},
-            {'amount_currency': 121, 'balance': 60.5},
+            {'amount_currency': -100.0, 'balance': -50.0},
+            {'amount_currency': -21.0, 'balance': -10.5},
+            {'amount_currency': 121.0, 'balance': 60.5},
         ])
 
         tax_line = invoice.line_ids.filtered('tax_line_id')
-        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -19})]
+        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -19.0})]
         self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
-            {'amount_currency': -100, 'balance': -50},
-            {'amount_currency': -19, 'balance': -9.5},
-            {'amount_currency': 119, 'balance': 59.5},
+            {'amount_currency': -100.0, 'balance': -50.0},
+            {'amount_currency': -19.0, 'balance': -9.5},
+            {'amount_currency': 119.0, 'balance': 59.5},
         ])
 
         invoice.invoice_date = '2018-01-01'
         self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
-            {'amount_currency': -100, 'balance': -25},
-            {'amount_currency': -19, 'balance': -4.75},
-            {'amount_currency': 119, 'balance': 29.75},
+            {'amount_currency': -100.0, 'balance': -25.0},
+            {'amount_currency': -19.0, 'balance': -4.75},
+            {'amount_currency': 119.0, 'balance': 29.75},
         ])
 
     def test_python_tax_and_regular_tax_on_same_line(self):

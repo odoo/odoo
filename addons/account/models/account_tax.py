@@ -3158,6 +3158,14 @@ class AccountTax(models.Model):
         :return: The dict returned by '_prepare_tax_lines' with 'tax_lines_to_update' adjusted.
         """
 
+        for base_line in old_base_lines + new_base_lines:
+            if not base_line.get('grouping_key'):
+                base_line['grouping_key'] = self._prepare_base_line_grouping_key(base_line)
+
+        for tax_line in old_tax_lines + new_tax_lines:
+            if not tax_line.get('grouping_key'):
+                tax_line['grouping_key'] = self._prepare_tax_line_repartition_grouping_key(tax_line)
+
         # Track base lines taxes values.
 
         def track_base_lines_taxes_values(base_lines):
@@ -3170,27 +3178,27 @@ class AccountTax(models.Model):
             for base_line in base_lines:
                 # Reuse the grouping key cached by '_add_accounting_data_in_base_lines_tax_details'
                 # when present; fall back to recomputing it for the unrounded "before" snapshot.
-                base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
+                grouping_key = base_line['grouping_key']
 
                 # Changing the currency is handled by 'rates' because it won't necessarily
                 # change the taxes amounts.
-                base_line_key.pop('currency_id')
+                grouping_key.pop('currency_id')
 
                 # Changing the analytic distribution might impact the taxes amounts or not
                 # depending if 'analytic' is ticked on the tax or if the repartition lines
                 # are 'use_in_tax_closing' or not.
-                base_line_key.pop('analytic_distribution')
+                grouping_key.pop('analytic_distribution')
 
                 # Manage formula taxes: include product / uom in the key as soon as ANY tax on
                 # the line depends on them, so old/new snapshots bucket consistently regardless
                 # of the order returned by '_flatten_taxes_and_sort_them'.
                 flat_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
-                base_line_key['product_id'] = (
+                grouping_key['product_id'] = (
                     base_line['product_id']
                     if any(t._eval_taxes_computation_prepare_product_fields() for t in flat_taxes)
                     else None
                 )
-                base_line_key['product_uom_id'] = (
+                grouping_key['product_uom_id'] = (
                     base_line['product_uom_id']
                     if any(t._eval_taxes_computation_prepare_product_uom_fields() for t in flat_taxes)
                     else None
@@ -3201,7 +3209,7 @@ class AccountTax(models.Model):
                     base_line['quantity'],
                     base_line['discount'],
                 )
-                values = base_line_tracked_values[frozendict(base_line_key)]
+                values = base_line_tracked_values[frozendict(grouping_key)]
                 values['base_lines'].append(base_line)
                 values['amounts'].append(amounts)
                 values['rates'].add(base_line['rate'])
@@ -3223,8 +3231,7 @@ class AccountTax(models.Model):
             for base_line in new_values.get('base_lines', []):
 
                 if amounts_has_changed or rates_has_changed:
-                    base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
-                    base_keys_recompute_amounts.add(frozendict(base_line_key))
+                    base_keys_recompute_amounts.add(frozendict(base_line['grouping_key']))
 
                 tax_details = base_line['tax_details']
                 for tax_data in tax_details['taxes_data']:
@@ -3232,33 +3239,35 @@ class AccountTax(models.Model):
                         tax_rep_grouping_key = frozendict({
                             k: v for k, v in tax_rep_data['grouping_key'].items() if not k.startswith('__')
                         })
-                        new_analytic_distributions = new_values.get('analytic_distributions', [])
-                        old_analytic_distributions = old_values.get('analytic_distributions', [])
-                        if (tax_rep_data['tax_rep'].tax_id.analytic or not tax_rep_data['tax_rep'].use_in_tax_closing) and new_analytic_distributions != old_analytic_distributions:
-                            for analytic_distribution in set(
-                                [frozendict(x) if x else False for x in new_analytic_distributions]
-                                + [frozendict(x) if x else False for x in old_analytic_distributions]
-                            ):
-                                tax_keys_recompute_amounts.add(frozendict({
-                                    **tax_rep_grouping_key,
-                                    'analytic_distribution': analytic_distribution,
-                                }))
-                        elif amounts_has_changed:
+                        if amounts_has_changed:
                             tax_keys_recompute_amounts.add(tax_rep_grouping_key)
                         elif rates_has_changed:
                             tax_keys_recompute_rates.add(tax_rep_grouping_key)
+                        else:
+                            new_analytic_distributions = new_values.get('analytic_distributions', [])
+                            old_analytic_distributions = old_values.get('analytic_distributions', [])
+                            if (tax_rep_data['tax_rep'].tax_id.analytic or not tax_rep_data[
+                                'tax_rep'].use_in_tax_closing) and new_analytic_distributions != old_analytic_distributions:
+                                for analytic_distribution in set(
+                                    [frozendict(x) if x else False for x in new_analytic_distributions]
+                                    + [frozendict(x) if x else False for x in old_analytic_distributions]
+                                ):
+                                    tax_keys_recompute_amounts.add(frozendict({
+                                        **tax_rep_grouping_key,
+                                        'analytic_distribution': analytic_distribution,
+                                    }))
 
         # Track base lines values.
 
         def track_base_lines_values(base_lines):
             base_line_tracked_values = defaultdict(list)
             for base_line in base_lines:
-                base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
+                grouping_key = base_line['grouping_key']
                 if (
                     (amount_currency := base_line.get('amount_currency')) is not None
                     and (balance := base_line.get('balance')) is not None
                 ):
-                    base_line_tracked_values[frozendict(base_line_key)].append((amount_currency, balance, base_line['tax_ids']))
+                    base_line_tracked_values[frozendict(grouping_key)].append((amount_currency, balance))
             return base_line_tracked_values
 
         old_base_line_tracked_values = track_base_lines_values(old_base_lines)
@@ -3269,8 +3278,8 @@ class AccountTax(models.Model):
         def track_tax_lines_values(tax_lines):
             tax_line_tracked_values = defaultdict(list)
             for tax_line in tax_lines:
-                tax_line_key = self._prepare_tax_line_repartition_grouping_key(tax_line)
-                tax_line_tracked_values[frozendict(tax_line_key)].append((tax_line['amount_currency'], tax_line['balance']))
+                grouping_key = tax_line['grouping_key']
+                tax_line_tracked_values[frozendict(grouping_key)].append((tax_line['amount_currency'], tax_line['balance']))
             return tax_line_tracked_values
 
         old_tax_line_tracked_values = track_tax_lines_values(old_tax_lines)
@@ -3283,48 +3292,90 @@ class AccountTax(models.Model):
         )
 
         # Preserve the base amounts.
-        base_line_protected_keys = set()
-        for key in new_base_line_tracked_values.keys() | old_base_line_tracked_values.keys():
-            if new_base_line_tracked_values.get(key) and new_base_line_tracked_values.get(key) != old_base_line_tracked_values.get(key):
-                base_line_protected_keys.add(key)
+        base_line_protected_keys = defaultdict(set)
+        if old_base_line_tracked_values.keys() == new_base_line_tracked_values.keys():
+            for base_line in new_base_lines:
+                grouping_key = frozendict(base_line['grouping_key'])
+                new_values = new_base_line_tracked_values[grouping_key]
+                old_values = old_base_line_tracked_values[grouping_key]
+
+                # Modifying manually the amount of a tax line.
+                for index, field_name in enumerate(('amount_currency', 'balance')):
+                    if sorted([x[index] for x in new_values]) != sorted([x[index] for x in old_values]):
+                        base_line_protected_keys[grouping_key].add(field_name)
 
         base_lines_to_update = []
         for base_line, to_update in tax_results['base_lines_to_update']:
-            grouping_key = frozendict(dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line)))
-            if grouping_key in base_line_protected_keys:
-                continue
-            if grouping_key in base_keys_recompute_amounts:
-                base_lines_to_update.append((base_line, to_update))
+            grouping_key = frozendict(base_line['grouping_key'])
+            protected_field_names = base_line_protected_keys[grouping_key]
 
+            if grouping_key in base_keys_recompute_amounts:
+                # Recompute completely the base line.
+                if 'amount_currency' in protected_field_names:
+                    to_update.pop('amount_currency')
+                    to_update.pop('balance')
+                elif 'balance' in protected_field_names:
+                    to_update.pop('balance')
+
+                base_lines_to_update.append((base_line, to_update))
         tax_results['base_lines_to_update'] = base_lines_to_update
 
         # Preserve the tax amounts if possible.
-        tax_line_protected_keys = set()
-        for key in new_tax_line_tracked_values.keys() | old_tax_line_tracked_values.keys():
-            if new_tax_line_tracked_values.get(key) and new_tax_line_tracked_values.get(key) != old_tax_line_tracked_values.get(key):
-                tax_line_protected_keys.add(key)
+        tax_line_protected_keys = defaultdict(set)
+        if old_tax_line_tracked_values.keys() == new_tax_line_tracked_values.keys():
+            for tax_line in new_tax_lines:
+                grouping_key = frozendict(tax_line['grouping_key'])
+                new_values = new_tax_line_tracked_values[grouping_key]
+                old_values = old_tax_line_tracked_values[grouping_key]
+
+                # Modifying manually the amount of a tax line.
+                for index, field_name in enumerate(('amount_currency', 'balance')):
+                    if sorted([x[index] for x in new_values]) != sorted([x[index] for x in old_values]):
+                        tax_line_protected_keys[grouping_key].add(field_name)
 
         tax_lines_to_update = []
-        for tax_line_vals, grouping_key, to_update in tax_results['tax_lines_to_update']:
-            if grouping_key in tax_line_protected_keys:
-                # Preserve the tax line amounts since they have been written manually.
-                new_to_update = dict(to_update)
-                new_to_update.pop('amount_currency')
-                new_to_update.pop('balance')
-                tax_lines_to_update.append((tax_line_vals, grouping_key, new_to_update))
-            elif grouping_key in tax_keys_recompute_amounts:
+        for tax_line, grouping_key, to_update in tax_results['tax_lines_to_update']:
+            grouping_key = frozendict(tax_line['grouping_key'])
+            protected_field_names = tax_line_protected_keys[grouping_key]
+
+            if grouping_key in tax_keys_recompute_amounts:
                 # Recompute completely the tax line.
-                tax_lines_to_update.append((tax_line_vals, grouping_key, to_update))
+                if 'amount_currency' in protected_field_names:
+                    to_update.pop('amount_currency')
+                    to_update.pop('balance')
+                elif 'balance' in protected_field_names:
+                    to_update.pop('balance')
+
+                tax_lines_to_update.append((tax_line, grouping_key, to_update))
             elif grouping_key in tax_keys_recompute_rates:
                 # Recompute partially the tax line.
+
+                # A new rate has already been forced on the tax lines.
+                if 'balance' in protected_field_names:
+                    continue
+
                 # Only adapt the new currency rate.
                 rate = to_update['amount_currency'] / to_update['balance'] if to_update['balance'] else 0.0
-                new_to_update = dict(to_update)
-                new_to_update.pop('amount_currency')
-                new_to_update['balance'] = tax_line_vals['currency_id'].round(tax_line_vals['amount_currency'] / rate if rate else 0.0)
-                tax_lines_to_update.append((tax_line_vals, grouping_key, new_to_update))
-
+                amount_currency = tax_line['amount_currency']
+                balance = tax_line['currency_id'].round(amount_currency / rate if rate else 0.0)
+                tax_lines_to_update.append((tax_line, grouping_key, {
+                    **to_update,
+                    'amount_currency': amount_currency,
+                    'balance': balance,
+                }))
         tax_results['tax_lines_to_update'] = tax_lines_to_update
+
+        tax_lines_to_delete = []
+        for tax_line in tax_results['tax_lines_to_delete']:
+            grouping_key = frozendict(tax_line['grouping_key'])
+            if grouping_key not in tax_line_protected_keys:
+                tax_lines_to_delete.append(tax_line)
+        tax_results['tax_lines_to_delete'] = tax_lines_to_delete
+
+        tax_lines_to_add = []
+        for tax_line in tax_results['tax_lines_to_add']:
+            tax_lines_to_add.append(tax_line)
+        tax_results['tax_lines_to_add'] = tax_lines_to_add
 
         return tax_results
 
