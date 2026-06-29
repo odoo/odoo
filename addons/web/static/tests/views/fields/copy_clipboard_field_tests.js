@@ -99,11 +99,11 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(
+        assert.containsNone(
             target,
             '.o_field_CopyClipboardChar[name="char_field"] .o_clipboard_button'
         );
-        assert.containsOnce(
+        assert.containsNone(
             target,
             '.o_field_CopyClipboardText[name="text_field"] .o_clipboard_button'
         );
@@ -128,7 +128,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            assert.containsOnce(
+            assert.containsNone(
                 target,
                 '.o_field_CopyClipboardChar[name="display_name"] .o_clipboard_button'
             );
