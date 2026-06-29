@@ -40,6 +40,8 @@ export class BuilderDateTimePicker extends Component {
         type: t.selection(["date", "datetime"]).optional("datetime"),
         format: t.string().optional(),
         acceptEmptyDate: t.boolean().optional(true),
+        minDate: t.any().optional(() => DateTime.fromObject({ year: 1000 })),
+        maxDate: t.any().optional(() => DateTime.now().plus({ year: 200 })),
     });
     static components = {
         BuilderComponent,
@@ -73,12 +75,10 @@ export class BuilderDateTimePicker extends Component {
             preview(userInputValue);
         };
 
-        const minDate = DateTime.fromObject({ year: 1000 });
-        const maxDate = DateTime.now().plus({ year: 200 });
         const getPickerProps = () => ({
             type: this.props.type,
-            minDate,
-            maxDate,
+            minDate: this.props.minDate,
+            maxDate: this.props.maxDate,
             value: this.getCurrentValueDateTime(),
             rounding: 1,
         });
