@@ -281,6 +281,12 @@ export class TablePlugin extends Plugin {
             }
         },
 
+        /** Properties */
+        properties: {
+            predicate: (node) => closestElement(node, "TD, TH"),
+            powerButtons: false,
+        },
+
         /** Selectors */
         move_node_whitelist_selectors: `${TABLE_WRAPPER_SELECTOR}, :not(${TABLE_WRAPPER_SELECTOR}) > table`,
     };

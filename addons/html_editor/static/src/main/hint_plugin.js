@@ -40,11 +40,10 @@ export class HintPlugin extends Plugin {
         on_pending_mutations_staged_handlers: this.updateHints.bind(this),
         on_content_updated_handlers: this.updateHints.bind(this),
 
-        /** Predicates */
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (!closestElement(anchorNode, ".o-we-hint")) {
-                return false;
-            }
+        /** Properties */
+        properties: {
+            predicate: (node) => closestElement(node, ".o-we-hint"),
+            powerButtons: true,
         },
 
         /** Processors */

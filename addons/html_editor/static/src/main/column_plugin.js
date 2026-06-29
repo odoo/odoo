@@ -109,10 +109,9 @@ export class ColumnPlugin extends Plugin {
                 return false;
             }
         },
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (closestElement(anchorNode, ".o_text_columns")) {
-                return false;
-            }
+        properties: {
+            predicate: (node) => closestElement(node, ".o_text_columns"),
+            powerButtons: false,
         },
         move_node_whitelist_selectors: ".o_text_columns",
         move_node_blacklist_selectors: ".o_text_columns *",
