@@ -25,13 +25,35 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
-            content: "Open contract end date",
-            trigger: ".o_field_widget[name='contract_date_end'] .o_input",
+            content: "Version should have no contract",
+            trigger: ".o_arrow_button_wrapper[data-tooltip='No contract']",
+        },
+        {
+            content: "Set a contract date start on the version",
+            trigger: ".o_field_widget[name='contract_date_start'] .o_input",
             run: "click",
         },
         {
             content: "Choose date X + 1",
             trigger: ".o_datetime_picker .o_date_item_cell:nth-child(11) > div",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o_datetime_picker))",
+        },
+        ...stepUtils.saveForm(),
+        {
+            content: "Tooltip should now reflect the new contract date start",
+            trigger: ".o_arrow_button_wrapper[data-tooltip^='Employee:']",
+        },
+        {
+            content: "Open contract end date",
+            trigger: ".o_field_widget[name='contract_date_end'] .o_input",
+            run: "click",
+        },
+        {
+            content: "Choose date X + 2",
+            trigger: ".o_datetime_picker .o_date_item_cell:nth-child(12) > div",
             run: "click",
         },
         {
@@ -53,17 +75,15 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
-            content: "Go to the next month",
-            trigger: ".o_next",
+            content: "Choose date X + 3",
+            trigger: ".o_datetime_picker .o_date_item_cell:nth-child(13) > div",
             run: "click",
         },
         {
-            content: "Choose date X + 2",
-            trigger: ".o_datetime_picker .o_date_item_cell:nth-child(12) > div",
-            run: "click",
+            trigger: "body:not(:has(.o_datetime_picker))",
         },
         {
-            content: "Wait until the form is saved",
+            content: "Wait until new version is created and form reloads",
             trigger: "body .o_form_saved",
         },
     ],
