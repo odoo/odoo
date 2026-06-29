@@ -9,10 +9,10 @@
                     <field name="description"/>
                 </p>
                 <field name="show_lots" invisible="1"/>
-                <field name="lot_ids" invisible="not show_lots">
-                    <list string="Expired Lot(s)">
+                <field name="move_line_ids" invisible="not show_lots">
+                    <list string="Expired Product(s)">
                         <field name="product_id"/>
-                        <field name="name"/>
+                        <field name="lot_id"/>
                     </list>
                 </field>
                 <footer>

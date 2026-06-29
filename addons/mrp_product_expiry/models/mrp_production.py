@@ -18,22 +18,22 @@ class MrpProduction(models.Model):
         # user already confirmed the wizard about using expired lots.
         if self.env.context.get('skip_expired'):
             return False
-        expired_lot_ids = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
-        if expired_lot_ids:
+        expired_move_lines = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert)
+        view_id = self.env.ref('product_expiry.confirm_expiry_view').id
+        context = dict(self.env.context)
+
+        context.update({
+            'default_move_line_ids': [(6, 0, expired_move_lines.ids)],
+            'default_production_ids': self.ids,
+        })
+        if expired_move_lines:
             return {
                 'name': _('Confirmation'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'expiry.picking.confirmation',
                 'view_mode': 'form',
-                'views': [(False, 'form')],
+                'views': [(view_id, 'form')],
+                'view_id': view_id,
                 'target': 'new',
-                'context': self._get_expired_context(expired_lot_ids),
+                'context': context,
             }
-
-    def _get_expired_context(self, expired_lot_ids):
-        context = dict(self.env.context)
-        context.update({
-            'default_lot_ids': [(6, 0, expired_lot_ids)],
-            'default_production_ids': self.ids,
-        })
-        return context
