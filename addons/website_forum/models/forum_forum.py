@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
-from collections import defaultdict
-from operator import itemgetter
 
 from markupsafe import Markup
 
@@ -190,7 +188,6 @@ class ForumForum(models.Model):
         tags_by_forum = tags.grouped('forum_id')
         for forum in self:
             forum.tag_most_used_ids = tags_by_forum.get(forum, self.env['forum.tag'])
-
 
     @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
     def _compute_tag_unused_ids(self):
