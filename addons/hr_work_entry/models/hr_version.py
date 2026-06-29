@@ -229,8 +229,10 @@ class HrVersion(models.Model):
 
             leaves = mapped_leaves[resource.id]
             worked_leaves = mapped_worked_leaves[resource.id]
-
-            real_attendances = attendances - leaves - worked_leaves
+            if calendar.duration_based:
+                real_attendances = attendances
+            else:
+                real_attendances = attendances - leaves - worked_leaves
             if not calendar:
                 real_leaves = leaves
                 real_worked_leaves = worked_leaves - real_leaves
@@ -252,8 +254,12 @@ class HrVersion(models.Model):
 
             elif version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
-                real_worked_leaves = attendances - real_attendances - leaves
-                real_leaves = attendances - real_attendances - real_worked_leaves
+                if calendar.duration_based:
+                    real_leaves = leaves
+                    real_worked_leaves = worked_leaves
+                else:
+                    real_worked_leaves = attendances - real_attendances - leaves
+                    real_leaves = attendances - real_attendances - real_worked_leaves
             else:
                 # In the case of attendance based versions use regular attendances to generate leave intervals
                 static_attendances = calendar._attendance_intervals_batch(
@@ -261,7 +267,10 @@ class HrVersion(models.Model):
                 real_leaves = static_attendances & leaves
                 real_worked_leaves = (static_attendances & worked_leaves) - real_leaves
 
-            real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
+            if calendar.duration_based:
+                real_attendances = attendances
+            else:
+                real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
 
             if not version.has_static_work_entries():
                 # An attendance based version might have an invalid planning, by definition it may not happen with
@@ -601,7 +610,24 @@ class HrVersion(models.Model):
                 employee = version.employee_id
                 tz = _get_tz(vals['version_id'])
                 vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
+                if vals.get('leave_id') and calendar.duration_based:
+                    work_date = date_start.astimezone(tz).date()
+                    scheduled_hours = sum(
+                        att.duration_hours
+                        for att in calendar.attendance_ids
+                        if not att.display_type
+                        and int(att.dayofweek) == work_date.weekday()
+                    )
+                    actual_hours = (
+                        date_stop - date_start
+                    ).total_seconds() / 3600
+
+                    vals['duration'] = min(
+                        scheduled_hours,
+                        actual_hours
+                    )
+                else:
+                    vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
             vals.pop('date_start', False)
             vals.pop('date_stop', False)
 
@@ -621,6 +647,36 @@ class HrVersion(models.Model):
                 merged_vals[key]['duration'] += vals.get('duration', 0.0)
             else:
                 merged_vals[key] = vals.copy()
+
+        for vals in merged_vals.values():
+            if vals.get('work_entry_type_id') != 1:  # Attendance
+                continue
+
+            version = self.env['hr.version'].browse(vals['version_id'])
+
+            if not version.resource_calendar_id.duration_based:
+                continue
+
+            leave_hours = sum(
+                leave_vals['duration']
+                for leave_vals in merged_vals.values()
+                if leave_vals.get('leave_id')
+                and leave_vals['employee_id'] == vals['employee_id']
+                and leave_vals['version_id'] == vals['version_id']
+                and leave_vals['date'] == vals['date']
+            )
+
+            vals['duration'] = max(
+                0.0,
+                vals['duration'] - leave_hours
+            )
+
+        for key in list(merged_vals.keys()):
+            if float_is_zero(
+                merged_vals[key].get('duration', 0.0),
+                precision_digits=3,
+            ):
+                del merged_vals[key]
         return list(merged_vals.values())
 
     def _remove_work_entries(self):

@@ -630,6 +630,51 @@ Versions:
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                elif calendar.duration_based and leave.request_unit_hours:
+                    employee_tz = pytz.timezone(leave.employee_id._get_tz())
+                    start_local = pytz.utc.localize(leave.date_from).astimezone(employee_tz)
+                    end_local = pytz.utc.localize(leave.date_to).astimezone(employee_tz)
+                    one_day = timedelta(days=1)
+                    schedule = {}
+                    for attendance in calendar.attendance_ids:
+                        if not attendance.display_type and attendance.day_period != 'lunch':
+                            weekday = int(attendance.dayofweek)
+                            work_hours, work_days = schedule.get(weekday, (0.0, 0.0))
+                            schedule[weekday] = (work_hours + attendance.duration_hours, work_days + attendance.duration_days)
+                    leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                    if not leave.holiday_status_id.include_public_holidays_in_duration:
+                        public_holidays = self.env['resource.calendar.leaves'].search([
+                            ('resource_id', '=', False),
+                            ('date_from', '<', leave.date_to),
+                            ('date_to', '>', leave.date_from),
+                            ('calendar_id', 'in', [False, calendar.id]),
+                            ('company_id', '=', leave.company_id.id)
+                        ])
+                        if public_holidays:
+                            public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                            leave_intervals = leave_intervals - public_holidays_intervals
+                    total_hours = total_days = 0.0
+                    current_date = start_local.date()
+                    end_date = end_local.date()
+                    while current_date <= end_date:
+                        scheduled_hours, scheduled_days = schedule.get(current_date.weekday(), (0.0, 0.0))
+                        if not scheduled_hours:
+                            current_date += one_day
+                            continue
+                        day_start_utc = employee_tz.localize(datetime.combine(current_date, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+                        day_end_utc = employee_tz.localize(datetime.combine(current_date, time.max)).astimezone(pytz.utc).replace(tzinfo=None)
+                        day_hours = sum(
+                            (min(stop, day_end_utc) - max(start, day_start_utc)).total_seconds() / 3600
+                            for start, stop, _ in leave_intervals
+                            if start < day_end_utc and stop > day_start_utc
+                        )
+                        consumed_hours = min(day_hours, scheduled_hours)
+                        if consumed_hours > 0:
+                            total_hours += consumed_hours
+                            total_days += scheduled_days * (consumed_hours / scheduled_hours)
+                        current_date += one_day
+                    result[leave.id] = (total_days, total_hours)
+                    continue
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
