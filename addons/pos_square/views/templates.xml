@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_square.direct_display" name="POS Customer Display">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+                <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="mobile-web-app-capable" content="yes" />
+                <link rel="icon" href="/point_of_sale/static/src/img/favicon.ico" type="image/x-icon"/>
+                <t t-call-assets="point_of_sale.base_app" />
+            </head>
+            <body>
+                <div class="container d-flex align-items-center justify-content-center min-vh-100 py-4">
+                    <div class="card shadow-sm border-0" style="max-width: 400px; width: 100%;">
+                        <div class="card-body p-4 text-center">
+                            <h1 class="h2 fw-bold mb-2">Redirecting to Square...</h1>
+                            <div id="checking">
+                                <div class="spinner-border text-primary mb-2" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mb-0 small">Checking for app...</p>
+                            </div>
+                            <div id="download-button" class="d-none">
+                                <p class="text-muted mb-4">We were unable to open the Square POS automatically, if you have it installed you can manually open it below. Otherwise, please download below and re-send the payment request in Odoo</p>
+                                <a t-att-href="fallback_url"
+                                    class="btn btn-primary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center gap-2"
+                                    id="app-store">
+                                    Download the Square POS app
+                                </a>
+                                <a t-att-href="redirect_url"
+                                    class="btn btn-secondary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
+                                   Open the Square POS app
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    const redirectURL = '<t t-out="redirect_url"/>';
+
+                    // If the document has had it's visibility changed
+                    // most likely that means the app opened or we
+                    // were redirected to the app store so we can close
+                    // the tab. However, android doesn't redirect back properly
+                    // so we can't close it.
+                    const isAndroid = /Android/i.test(navigator.userAgent);
+                    if (!isAndroid) {
+                        document.addEventListener('visibilitychange', () => {
+                            if (document.hidden ) {
+                                window.close();
+                            }
+                        });
+                    }
+
+                    // Close the tab if we don't get a redirect URL passed
+                    // as we would then be coming from the callback from
+                    // square.
+                    if (!redirectURL) {
+                        window.close();
+                    } else {
+                        // Try to open the app if that doesn't work show the download button
+                        // after the fact.
+                        if (isAndroid) {
+                            window.open(redirectURL);
+                        } else {
+                            window.location.href = redirectURL;
+                        }
+                        setTimeout(() => {
+                            document.getElementById('checking').classList.add('d-none');
+                            document.getElementById('download-button').classList.remove('d-none');
+                        }, 2000);
+                    }
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>
