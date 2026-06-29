@@ -115,6 +115,45 @@ export function useActionInfo(props, options) {
 }
 
 /**
+ * Updates/returns the items environment when a builder component's items are
+ * props objects rather than sub-components.
+ *
+ * @param {object} item
+ * @param {object} extension
+ */
+export function useItemEnv(item, extension) {
+    if (extension) {
+        const itemEnv = Object.create(item.env);
+        const descrs = Object.getOwnPropertyDescriptors(extension);
+        const env = Object.freeze(Object.defineProperties(itemEnv, descrs));
+        item.env = env;
+    }
+    return item?.env || {};
+}
+
+/**
+ * Sets up the `selectableContext` required for options to correctly handle
+ * selectable items, which may be managed differently by each component.
+ *
+ * @param {{
+ *  add?: () => void;
+ *  remove?: () => void;
+ *  clean?: () => void;
+ *  [key: string]: any;
+ * }} params
+ */
+export function useSelectableContext({ add, remove, clean, ...config } = {}) {
+    useSubEnv({
+        selectableContext: {
+            addSelectableItem: add,
+            removeSelectableItem: remove,
+            cleanSelectedItem: clean,
+            ...config,
+        },
+    });
+}
+
+/**
  * @param {DefaultBuilderProps} props
  */
 export function useBuilderComponent(props) {
@@ -165,8 +204,12 @@ export function useBuilderComponent(props) {
             builder: localization.direction,
         };
     }
-
-    useSubEnv(newEnv);
+    // Some component items are plain props objects rather than Owl
+    // components (e.g. `BuilderSearchSelect`). Since `useSubEnv` only
+    // works with components, those objects cannot inherit the parent
+    // environment automatically. In that case, we update their `env`
+    // manually here.
+    props.useItemEnv ? props.useItemEnv(newEnv) : useSubEnv(newEnv);
 }
 
 /**
@@ -662,7 +705,7 @@ export function revertPreview(editor) {
  */
 export function useClickableBuilderComponent(props) {
     useBuilderComponent(props);
-    const env = useEnv();
+    const env = props.useItemEnv?.() || useEnv();
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(props);
     const getAction = env.editor.shared.builderActions.getAction;
 
