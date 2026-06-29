@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyTextNode, isVisible, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -109,7 +109,6 @@ export const DISABLED_NAMESPACE = "disabled";
  */
 
 /**
- * @typedef {((targetedNodes: Node[], editableSelection: EditorSelection) => string | undefined)[]} toolbar_namespace_providers
  * @typedef {string[]} expandable_toolbar_namespaces_providers
  */
 
@@ -161,7 +160,7 @@ export const DISABLED_NAMESPACE = "disabled";
 
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
-    static dependencies = ["overlay", "selection", "userCommand"];
+    static dependencies = ["overlay", "properties", "selection", "userCommand"];
     static shared = ["getToolbarInfo", "getIsToolbarOpen"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -189,13 +188,35 @@ export class ToolbarPlugin extends Plugin {
             description: _t("Expand toolbar"),
             icon: "more_vert",
         },
-        toolbar_namespace_providers: [
-            withSequence(100, (targetedNodes, editableSelection) =>
-                this.isToolbarVisible(targetedNodes, editableSelection) ? "compact" : undefined
-            ),
-        ],
         expandable_toolbar_namespaces_providers: "compact",
     };
+
+    /**
+     * Determine the toolbar namespace for the current selection: a namespace
+     * declared by the `toolbar` property (when every visible targeted node has
+     * the same one), else the default "compact" when the toolbar should be
+     * visible.
+     *
+     * @param {Node[]} targetedNodes
+     * @param {EditorSelection} selection
+     * @returns {string | undefined}
+     */
+    computeNamespace(targetedNodes, selection) {
+        const visibleNodes = targetedNodes.filter(isVisible);
+        const parents = new Set(visibleNodes.map((node) => node.parentNode));
+        const contentNodes = visibleNodes.filter((node) => !parents.has(node));
+        if (contentNodes.length) {
+            const getNamespace = (node) => this.dependencies.properties.get(node, "toolbar");
+            const namespace = getNamespace(contentNodes[0]);
+            if (
+                namespace !== undefined &&
+                contentNodes.every((node) => getNamespace(node) === namespace)
+            ) {
+                return namespace;
+            }
+        }
+        return this.isToolbarVisible(targetedNodes, selection) ? "compact" : undefined;
+    }
 
     setup() {
         const groupIds = new Set();
@@ -433,15 +454,11 @@ export class ToolbarPlugin extends Plugin {
             return;
         }
         // Determine the namespace to use
-        let currentNamespace = null;
-        let filteredtargetedNodes = [];
-        filteredtargetedNodes = this.getFilteredTargetedNodes(targetedNodes);
-        for (const fn of this.getResource("toolbar_namespace_providers")) {
-            currentNamespace = fn(filteredtargetedNodes, selectionData.editableSelection);
-            if (currentNamespace) {
-                break;
-            }
-        }
+        const filteredtargetedNodes = this.getFilteredTargetedNodes(targetedNodes);
+        let currentNamespace = this.computeNamespace(
+            filteredtargetedNodes,
+            selectionData.editableSelection
+        );
 
         if (currentNamespace === DISABLED_NAMESPACE) {
             this.closeToolbar();

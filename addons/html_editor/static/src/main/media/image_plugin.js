@@ -50,7 +50,6 @@ export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection"];
     static shared = ["getTargetedImage", "previewImage"];
-    toolbarNamespace = "image";
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -75,16 +74,7 @@ export class ImagePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespace_providers: [
-            (targetedNodes) => {
-                if (
-                    targetedNodes.length &&
-                    targetedNodes.every((node) => node.nodeName === "IMG")
-                ) {
-                    return this.toolbarNamespace;
-                }
-            },
-        ],
+        properties: [{ predicate: "IMG", toolbar: "image" }],
         toolbar_groups: [
             withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
             withSequence(28, { id: "image_actions", namespaces: ["image"] }),

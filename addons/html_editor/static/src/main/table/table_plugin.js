@@ -117,7 +117,6 @@ export class TablePlugin extends Plugin {
         "unmergeSelectedCell",
         "buildTableGrid",
     ];
-    toolbarNamespace = "table";
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -170,14 +169,6 @@ export class TablePlugin extends Plugin {
         ],
 
         /** Providers */
-        toolbar_namespace_providers: [
-            withSequence(
-                90,
-                (targetedNodes, editableSelection) =>
-                    closestElement(editableSelection.anchorNode, ".o_selected_td") &&
-                    this.toolbarNamespace
-            ),
-        ],
         expandable_toolbar_namespaces_providers: "table",
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
@@ -282,10 +273,15 @@ export class TablePlugin extends Plugin {
         },
 
         /** Properties */
-        properties: {
-            predicate: (node) => closestElement(node, "TD, TH"),
-            powerButtons: false,
-        },
+        properties: [
+            { predicate: (node) => closestElement(node, "TD, TH"), powerButtons: false },
+            // Before the other `toolbar` declarations, so that the content of the
+            // selected cells (images, inline code...) gets the table toolbar too.
+            withSequence(5, {
+                predicate: (node) => closestElement(node, ".o_selected_td"),
+                toolbar: "table",
+            }),
+        ],
 
         /** Selectors */
         move_node_whitelist_selectors: `${TABLE_WRAPPER_SELECTOR}, :not(${TABLE_WRAPPER_SELECTOR}) > table`,
