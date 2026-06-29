@@ -893,7 +893,7 @@ class SaleOrder(models.Model):
             line._is_reorder_allowed() for line in self.order_line if line.product_id
         )
 
-    def _filter_can_send_abandoned_cart_mail(self):
+    def _filter_can_send_abandoned_cart_followup(self):
         self.website_id.ensure_one()
         abandoned_datetime = datetime.utcnow() - relativedelta(
             hours=self.website_id.cart_abandoned_delay
@@ -947,6 +947,9 @@ class SaleOrder(models.Model):
                 and abandoned_sale_order._all_product_available()
             )
         )
+
+    def _filter_can_send_abandoned_cart_email(self):
+        return self.filtered("partner_id.email")._filter_can_send_abandoned_cart_followup()
 
     def _has_deliverable_products(self):
         """Return whether the order has lines with products that should be delivered.

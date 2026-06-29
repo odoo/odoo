@@ -2,11 +2,11 @@
 <odoo>
 
     <record id="ir_cron_send_abandoned_email" model="ir.cron">
-        <field name="name">eCommerce: send follow-up messages to customers about their abandoned cart</field>
+        <field name="name">eCommerce: send email to customers about their abandoned cart</field>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
         <field name="model_id" ref="model_website"/>
-        <field name="code">model._send_abandoned_cart_followup()</field>
+        <field name="code">model._send_abandoned_cart_email()</field>
         <field name="state">code</field>
     </record>
 

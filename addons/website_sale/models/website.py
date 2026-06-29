@@ -91,9 +91,9 @@ class Website(models.Model):
     contact_us_link_url = fields.Char(string="Link URL", translate=True, default="/contactus")
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_followup = fields.Boolean(string="Send Follow-up")
-    send_abandoned_cart_email_activation_time = fields.Datetime(
+    send_abandoned_cart_followup_activation_time = fields.Datetime(
         string="Time when the 'Send abandoned cart email' feature was activated.",
-        compute="_compute_send_abandoned_cart_email_activation_time",
+        compute="_compute_send_abandoned_cart_followup_activation_time",
         store=True,
     )
     send_order_rating_emails = fields.Boolean(string="Request ratings", default=False)
@@ -306,10 +306,10 @@ class Website(models.Model):
         raise ValueError(msg)  # depends on request
 
     @api.depends("send_abandoned_cart_followup")
-    def _compute_send_abandoned_cart_email_activation_time(self):
+    def _compute_send_abandoned_cart_followup_activation_time(self):
         for website in self:
             if website.send_abandoned_cart_followup:
-                website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
+                website.send_abandoned_cart_followup_activation_time = fields.Datetime.now()
 
     @api.depends("company_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
@@ -931,23 +931,25 @@ class Website(models.Model):
         )
 
     @api.model
-    def _send_abandoned_cart_followup(self):
-        website_domain = Domain("send_abandoned_cart_followup", "=", True) & Domain.OR([
-            Domain(field, "!=", False)
-            for field in self._get_abandoned_cart_followup_template_fields()
+    def _send_abandoned_cart_email(self):
+        website_domain = Domain([
+            ("send_abandoned_cart_followup", "=", True),
+            ("cart_recovery_mail_template_id", "!=", False),
         ])
-        followup_sent_fields = self._get_abandoned_cart_followup_sent_fields()
 
         all_abandoned_carts = self.env["sale.order"].search(
-            Domain([("is_abandoned_cart", "=", True), ("website_id", "in", website_domain)])
+            Domain([
+                ("is_abandoned_cart", "=", True),
+                ("website_id", "in", website_domain),
+                ("cart_recovery_email_sent", "=", False),
+            ])
             & Domain.custom(
                 to_sql=lambda table: SQL(
                     "%s >= %s",
                     table.date_order,
-                    table._join("website_id").send_abandoned_cart_email_activation_time,
+                    table._join("website_id").send_abandoned_cart_followup_activation_time,
                 )
             )
-            & Domain.OR([Domain(field, "=", False) for field in followup_sent_fields])
         )
         if not all_abandoned_carts:
             return
@@ -957,30 +959,17 @@ class Website(models.Model):
         # `_filter_can_send_abandoned_cart_mail` has to be called by `website_id`
         for cart_group in all_abandoned_carts.grouped("website_id").values():
             for carts_batch in split_every(10, cart_group.ids, self.env["sale.order"].browse):
-                abandoned_carts = carts_batch._filter_can_send_abandoned_cart_mail()
-                self._send_filtered_abandoned_cart_followup(abandoned_carts)
+                abandoned_carts = carts_batch._filter_can_send_abandoned_cart_followup()
+                abandoned_carts.filtered(
+                    lambda cart: (
+                        not cart.cart_recovery_email_sent
+                        and cart.website_id.cart_recovery_mail_template_id
+                    )
+                )._cart_recovery_email_send()
                 # Mark abandoned carts that failed the filter as sent to avoid rechecking them more
                 # than once.
-                (carts_batch - abandoned_carts).write({field: True for field in followup_sent_fields})
+                (carts_batch - abandoned_carts).write({"cart_recovery_email_sent": True})
                 self.env["ir.cron"]._commit_progress(len(carts_batch))
-
-    def _get_abandoned_cart_followup_template_fields(self):
-        return ["cart_recovery_mail_template_id"]
-
-    def _get_abandoned_cart_followup_sent_fields(self):
-        return ["cart_recovery_email_sent"]
-
-    def _send_filtered_abandoned_cart_followup(self, abandoned_carts):
-        """Send abandoned cart follow-up email for the given abandoned carts.
-
-        This method can be overridden to extend the way abandoned carts are sent
-        """
-        # Send via emails
-        abandoned_carts.filtered(
-            lambda cart: (
-                not cart.cart_recovery_email_sent and cart.website_id.cart_recovery_mail_template_id
-            )
-        )._cart_recovery_email_send()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1179,8 +1168,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]
