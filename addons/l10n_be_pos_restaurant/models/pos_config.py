@@ -10,17 +10,43 @@ class PosConfig(models.Model):
         tax_6 = ChartTemplate.ref('attn_VAT-OUT-06-L', raise_if_not_found=False)
 
         if tax_21 and tax_12 and tax_6:
-            fp = self.env['account.fiscal.position'].create({
-                'name': 'Take out',
-            })
-            tax_6.copy({
-                'name': f"{tax_6.name} Take out",
-                'fiscal_position_ids': [Command.set(fp.ids)],
-                'original_tax_ids': [Command.set((tax_12 | tax_21).ids)],
-            })
-            takeaway_preset = self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False)
-            if takeaway_preset:
-                takeaway_preset.write({'fiscal_position_id': fp.id})
+            prefix = f"l10n_be_pos_restaurant.{self.env.company.id}"
+            fp = self.env.ref(f"{prefix}_fiscal_position_take_out", raise_if_not_found=False)
+            if not fp:
+                fp = self.env['account.fiscal.position'].create({
+                    'name': 'Take out',
+                })
+                self.env['ir.model.data']._update_xmlids([
+                    {
+                        'xml_id': f"{prefix}_fiscal_position_take_out",
+                        'record': fp,
+                        'noupdate': True,
+                    }
+                ])
+            tax_6_copy = self.env.ref(f"{prefix}_tax_6_take_out", raise_if_not_found=False)
+            if not tax_6_copy:
+                tax_6_copy = tax_6.copy({
+                    'name': f"{tax_6.name} Take out",
+                    'fiscal_position_ids': [Command.set(fp.ids)],
+                    'original_tax_ids': [Command.set((tax_12 | tax_21).ids)],
+                })
+                self.env['ir.model.data']._update_xmlids([
+                    {
+                        'xml_id': f"{prefix}_tax_6_take_out",
+                        'record': tax_6_copy,
+                        'noupdate': True,
+                    }
+                ])
+            elif fp.id not in tax_6_copy.fiscal_position_ids.ids or (tax_12 | tax_21).ids != tax_6_copy.original_tax_ids.ids:
+                tax_6_copy.write({
+                    'fiscal_position_ids': [Command.set(fp.ids)],
+                    'original_tax_ids': [Command.set((tax_12 | tax_21).ids)],
+                })
+            presets = self.env['pos.preset']
+            presets |= self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False) or presets
+            presets |= self.env.ref('pos_restaurant.pos_delivery_preset', raise_if_not_found=False) or presets
+            if presets:
+                presets.write({'fiscal_position_id': fp.id})
 
     def _load_bar_demo_data(self, with_demo_data=True):
         super()._load_bar_demo_data(with_demo_data)
