@@ -79,8 +79,16 @@
                                 <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
                                     <t name="cancelled_credit_note_title">Cancelled Credit Note</t>
                                 </span>
+                                <span
+                                    t-elif="o.move_type == 'in_refund' and 'is_self_billing' in o.journal_id._fields and o.journal_id.is_self_billing">
+                                    <t name="self_billing_credit_note_title">Self Billing Credit Note</t>
+                                </span>
                                 <span t-elif="o.move_type == 'in_refund'">
                                     <t name="vendor_credit_note_title">Vendor Credit Note</t>
+                                </span>
+                                <span
+                                    t-elif="o.move_type == 'in_invoice' and 'is_self_billing' in o.journal_id._fields and o.journal_id.is_self_billing">
+                                    <t name="self_billing_invoice_title">Self Billing</t>
                                 </span>
                                 <span t-elif="o.move_type == 'in_invoice'">
                                     <t name="vendor_bill_title">Vendor Bill</t>
