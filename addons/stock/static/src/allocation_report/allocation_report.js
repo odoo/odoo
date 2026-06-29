@@ -36,6 +36,7 @@ export class AllocationReport extends Component {
     setup() {
         this.actionService = useService("action");
         this.ormService = useService("orm");
+        this.ui = useService("ui");
         this.context = this.props.action.context;
         this.mutex = new Mutex();
 
