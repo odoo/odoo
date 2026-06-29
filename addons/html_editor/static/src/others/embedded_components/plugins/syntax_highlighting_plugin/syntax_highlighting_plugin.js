@@ -29,12 +29,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     };
     /** @type {import("plugins").EditorResources} */
     resources = {
-        // Ensure focus can be preserved within the textarea:
-        is_node_editable_predicates: (node) => {
-            if (node?.classList?.contains("o_prism_source")) {
-                return true;
-            }
-        },
         system_attributes: "data-syntax-highlighting-autofocus",
 
         /** Handlers */
@@ -53,10 +47,11 @@ export class SyntaxHighlightingPlugin extends Plugin {
         },
 
         /** Regions */
-        region_properties: {
-            within: ".o_syntax_highlighting",
-            toolbar: DISABLED_NAMESPACE,
-        },
+        region_properties: [
+            { within: ".o_syntax_highlighting", toolbar: DISABLED_NAMESPACE },
+            // Ensure focus can be preserved within the textarea:
+            { is: ".o_prism_source", editable: true },
+        ],
 
         /** Processors */
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),

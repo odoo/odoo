@@ -194,14 +194,13 @@ function scrollToSelection(selection) {
  *
  * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} is_node_fully_selected_predicates
  * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
- * @typedef {((node: Node) => boolean | undefined)[]} is_node_editable_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
 
 export class SelectionPlugin extends Plugin {
     static id = "selection";
-    static dependencies = ["domReferenceMap", "domObserver"];
+    static dependencies = ["domReferenceMap", "domObserver", "region"];
     static shared = [
         "getSelectionData",
         "getEditableSelection",
@@ -1318,7 +1317,7 @@ export class SelectionPlugin extends Plugin {
 
     isNodeEditable(node) {
         return (
-            this.checkPredicates("is_node_editable_predicates", node) ??
+            this.dependencies.region.getProperty(node, "editable") ??
             !!node.parentElement?.isContentEditable
         );
     }

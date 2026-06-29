@@ -108,10 +108,9 @@ test("Element is not editable if any plugin marks it non-editable", async () => 
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            is_node_editable_predicates: (node) => {
-                if (node.classList.contains("o-will-break-if-edited")) {
-                    return false;
-                }
+            region_properties: {
+                is: ".o-will-break-if-edited",
+                editable: false,
             },
         };
     }
