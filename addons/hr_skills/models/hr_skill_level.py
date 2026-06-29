@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class HrSkillLevel(models.Model):
@@ -51,3 +52,9 @@ class HrSkillLevel(models.Model):
         if vals.get('default_level'):
             self.skill_type_id.skill_level_ids.filtered(lambda r: r.id != self.id).default_level = False
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _except_if_last_level(self):
+        if len(self.skill_type_id.skill_level_ids) < 2:
+            raise ValidationError(
+                _("The following skill type must contain at least one skill level: %s", self.skill_type_id.name))
