@@ -94,9 +94,14 @@ export const FileModelMixin = (T) =>
             return videoMimeTypes.includes(this.mimetype);
         }
 
+        get isAudio() {
+            const audioMimeTypes = ["audio/mpeg", "audio/x-wav"];
+            return audioMimeTypes.includes(this.mimetype);
+        }
+
         get isViewable() {
             return (
-                (this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube) &&
+                (this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube || this.isAudio) &&
                 !this.uploading
             );
         }
