@@ -16,6 +16,7 @@ declare module "plugins" {
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
+    import { properties, PropertiesShared } from "@html_editor/core/properties_plugin";
     import { ProtectedNodeShared } from "@html_editor/core/protected_node_plugin";
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
     import { double_click_overrides, fix_selection_on_no_inline_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_node_editable_predicates, is_no_inline_root_predicates, is_selectable_on_click_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
@@ -79,6 +80,7 @@ declare module "plugins" {
         history: HistoryShared;
         lineBreak: LineBreakShared;
         overlay: OverlayShared;
+        properties: PropertiesShared;
         protectedNode: ProtectedNodeShared;
         sanitize: SanitizeShared;
         selection: SelectionShared;
@@ -290,6 +292,7 @@ declare module "plugins" {
         powerbox_blacklist_selectors: powerbox_blacklist_selectors;
         powerbox_categories: powerbox_categories;
         powerbox_items: powerbox_items;
+        properties: properties;
         shortcuts: shortcuts;
         shorthands: shorthands;
         system_attributes: system_attributes;
