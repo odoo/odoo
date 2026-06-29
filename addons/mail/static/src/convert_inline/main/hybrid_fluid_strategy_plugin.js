@@ -277,25 +277,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return isHybridFluidCandidate;
     }
 
-    /**
-     * TODO EGGMAIL: test how this works/find a more optimized solution?
-     * Evaluate which children in emailNode are related to a given cluster
-     * of nodes
-     */
-    getClusterEmailNodes(emailNode, cluster) {
-        const range = this.getNodeClusterRange(cluster.nodes.at(0), cluster.nodes.at(-1));
-        const clusterEmailNodes = [];
-        for (const childEmailNode of emailNode.children) {
-            if (
-                childEmailNode.referenceNodes.length &&
-                range.comparePoint(childEmailNode.firstReferenceNode, 0) === 0
-            ) {
-                clusterEmailNodes.push(childEmailNode);
-            }
-        }
-        return clusterEmailNodes;
-    }
-
     buildHybridRow() {
         return new EmailNode({ layout: new HybridFluidRow() });
     }

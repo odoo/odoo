@@ -16,6 +16,7 @@ import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 import { computeRect } from "../core/utils";
 import { parseCssValue } from "../css_parsers";
+import { isAllowedContent } from "@html_editor/utils/dom_info";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -37,7 +38,7 @@ export class TableStrategyPlugin extends Plugin {
         "rules",
         "spacing",
     ];
-    static shared = ["extractRowsFromBands", "fillTableContainer"];
+    static shared = ["extractRowsFromBands", "fillTableContainer", "getClusterEmailNodes"];
     resources = {
         element_layout_analysis_processors: [
             this.analyzeElementLayout.bind(this),
@@ -335,11 +336,6 @@ export class TableStrategyPlugin extends Plugin {
                     );
                 }
                 if (analysis.facts.acceptCellNewWidth) {
-                    // TODO EGGMAIL: working here
-                    // this approach can work but seems very complex
-                    // need to think of a way to simplify that
-                    // offset might be counted as a margin
-                    // offset cells are not properly counted
                     facts.cellMargin = this.containerPadding(
                         marginRect,
                         report.spacing.referenceRect
@@ -424,26 +420,19 @@ export class TableStrategyPlugin extends Plugin {
     // - unknown case (add mega wrapper table -> can use "reference" element for this, if mega table strategy was not applied
     // below)
     analyzeElementLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
-        // TODO EGGMAIL: enable this function when ready
-        return;
-        // TODO EGGMAIL NOW: check that `hasTableLayout` can capture a table
-        // if so, maybe we shouldn't hardcode "table" here, because we want to
-        // allow a table to be an "hybrid" and match other strategies.
-        if (analysis.facts.isMainTable || !this.detectTableLayout(referenceNode)) {
-            // See MainTableStrategyPlugin (more specific representation of a table)
-
-            // look at element tag, if it's a table.
-            // look in // at desktopBlocks and mobileBlocks, they should have:
-            // - always the same amount of bands, and the same amount of clusters per band?
-            // parent should only have bands with 1 block cluster
-            // block cluster should have only 1 band, and at least 1 block cluster band should have 2 clusters
-            // look for a block with multiple bands, every band has 1 cluster
+        const div = this.config.referenceDocument.createElement("DIV");
+        if (
+            referenceNode.nodeName === "TR" ||
+            analysis.facts.isMainTable ||
+            !isAllowedContent(referenceNode, [div]) ||
+            !this.detectTableLayout(referenceNode)
+        ) {
             return;
         }
-        if (parentEmailNode.layout.descendantTag === "TABLE") {
-            analysis.parsingFacts.canParentMerge = true;
-        }
-        analysis.parsingFacts.canMerge = false;
+        Object.assign(analysis.parsingFacts, {
+            canMerge: false,
+            needSyntheticEmailNode: true,
+        });
         analysis.facts.isTableContainer = true;
         layout.pluginIds.add(TableStrategyPlugin.id);
     }
@@ -474,7 +463,7 @@ export class TableStrategyPlugin extends Plugin {
         // => re-evaluate strategy of parent in such a case
         // => match a table tagName directly and handle it from that node,
         // aggregate unsupported sub-parts
-        let isTableCandidate;
+        let isTableCandidate = false;
         const mobileBlock = this.getLayoutBlock(referenceNode, MOBILE);
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
         if (
@@ -489,42 +478,11 @@ export class TableStrategyPlugin extends Plugin {
             if (dBand.clusters.length !== mBand.clusters.length) {
                 return;
             }
-            if (
-                dBand.clusters.length === 1 &&
-                dBand.clusters[0].isBlock &&
-                mBand.clusters[0].isBlock
-            ) {
-                // matching a real table row
-                const dRowEl = dBand.clusters[0].nodes[0];
-                const mRowEl = mBand.clusters[0].nodes[0];
-                const dRowBlock = this.getLayoutBlock(dRowEl, MOBILE);
-                const mRowBlock = this.getLayoutBlock(mRowEl, DESKTOP);
-                if (
-                    !dRowBlock ||
-                    !mRowBlock ||
-                    dRowBlock.bands.length !== mRowBlock.bands.length ||
-                    dRowBlock.bands.length !== 1 ||
-                    dRowBlock.bands[0].clusters.length !== dRowBlock.bands[0].clusters.length
-                ) {
-                    return;
-                }
-                if (dRowBlock.bands[0].clusters.length > 1) {
-                    isTableCandidate = true;
-                }
-            } else if (
-                dBand.clusters.length === mBand.clusters.length &&
-                dBand.clusters.length > 1
-            ) {
-                // matching a table-like row where the row is implicit
-                // matching a table-like (eg bootstrap) where rows are implicit
-                // (need synthetic nodes)
+            if (dBand.clusters.length > 1) {
                 isTableCandidate = true;
-            } else {
-                return;
             }
         }
-        // TODO EGGMAIL: enable when ready
-        // return isTableCandidate;
+        return isTableCandidate;
     }
 
     // TODO EGGMAIL NOW (remark from hybrid_fluid_strategy_plugin)
@@ -584,7 +542,6 @@ export class TableStrategyPlugin extends Plugin {
                     const cell = builders["emptyCell"](cellMeasure);
                     cell.analysis.facts.rowWidth = width;
                     rowEmailNode.appendChild(cell);
-
                 } else if (cellMeasure.type === "cell") {
                     const cell = builders["cell"](cellMeasure);
                     cell.analysis.facts.rowWidth = width;
@@ -684,6 +641,25 @@ export class TableStrategyPlugin extends Plugin {
             lastRowMeasure.isLast = true;
         }
         return rowMeasures;
+    }
+
+    /**
+     * TODO EGGMAIL: test how this works/find a more optimized solution?
+     * Evaluate which children in emailNode are related to a given cluster
+     * of nodes
+     */
+    getClusterEmailNodes(emailNode, cluster) {
+        const range = this.getNodeClusterRange(cluster.nodes.at(0), cluster.nodes.at(-1));
+        const clusterEmailNodes = [];
+        for (const childEmailNode of emailNode.children) {
+            if (
+                childEmailNode.referenceNodes.length &&
+                range.comparePoint(childEmailNode.firstReferenceNode, 0) === 0
+            ) {
+                clusterEmailNodes.push(childEmailNode);
+            }
+        }
+        return clusterEmailNodes;
     }
 
     buildTable(rows) {
