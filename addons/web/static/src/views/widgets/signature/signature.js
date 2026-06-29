@@ -21,6 +21,11 @@ export class SignatureWidget extends Component {
     }
 
     onClickSignature() {
+        const dialogProps = this.getDialogProps();
+        this.dialogService.add(SignatureDialog, dialogProps);
+    }
+
+    getDialogProps() {
         const nameAndSignatureProps = {
             mode: "draw",
             displaySignatureRatio: 3,
@@ -42,12 +47,11 @@ export class SignatureWidget extends Component {
 
         nameAndSignatureProps.defaultFont = this.props.defaultFont;
 
-        const dialogProps = {
+        return {
             defaultName,
             nameAndSignatureProps,
             uploadSignature: (data) => this.uploadSignature(data),
-        };
-        this.dialogService.add(SignatureDialog, dialogProps);
+        }
     }
 
     async uploadSignature({ signatureImage }) {
