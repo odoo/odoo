@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import date
 
 from odoo import _, fields, models
 
@@ -33,23 +34,37 @@ class DeliveryCarrier(models.Model):
     # -------------------------- #
 
     def send_shipping(self, pickings):
-        ''' Send the package to the service provider
+        """ Send the package to the service provider
 
         :param pickings: A recordset of pickings
         :returns: A list of dictionaries (one per picking) containing of
             the form::
-
-                         { 'exact_price': price,
-                           'tracking_number': number }
+                {
+                    'picking_id': number,
+                    'exact_price': price,
+                    'tracking_number': number,
+                    'delivery_label': attachments,
+                    'return_label': attachments,
+                    'delivery_doc': attachments,
+                }
         :rtype: list[dict] | None
-        '''
-        # TODO missing labels per package
-        # TODO missing currency
-        # TODO missing success, error, warnings
-        self.ensure_one()
-        if hasattr(self, '%s_send_shipping' % self.delivery_type):
-            return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
-        return None
+        """
+        results = []
+        for pick in pickings:
+            if hasattr(self, '%s_send_shipping' % self.delivery_type):
+                try:
+                    results += getattr(self, '%s_send_shipping' % self.delivery_type)(pick)
+                except (UserError) as e:
+                    # We can not raise a UserError at this point
+                    exception_message = str(e)
+                    pick.message_post(body=exception_message, message_type='notification')
+                    pick.sudo().activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        date.today(),
+                        note=pick._carrier_exception_note(exception_message),
+                        user_id=pick.user_id.id or self.env.uid,
+                    )
+        return results
 
     def get_return_label(self, pickings, tracking_number=None, origin_date=None):
         self.ensure_one()
