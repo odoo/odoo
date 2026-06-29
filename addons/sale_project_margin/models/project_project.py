@@ -29,7 +29,6 @@ class ProjectProject(models.Model):
             'search_default_Customer': 0,
         }
         if embedded_action_context:
-            action['views'] = [(self.env.ref('sale_project_margin.sale_report_project_margins_list_inherit').id, 'list')]
             action_context.update({
                 'search_default_filter_order_date': 0,
             })
