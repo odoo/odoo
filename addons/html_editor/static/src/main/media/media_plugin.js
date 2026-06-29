@@ -103,17 +103,11 @@ export class MediaPlugin extends Plugin {
                 return false;
             }
         },
-        is_functional_empty_node_predicates: (node) => {
-            if (isMediaElement(node)) {
-                return true;
-            }
-        },
-
         /** Regions */
-        region_properties: {
-            is: this.isEditableMediaElement.bind(this),
-            editable: true,
-        },
+        region_properties: [
+            { is: this.isEditableMediaElement.bind(this), editable: true },
+            { is: isMediaElement, functionalEmpty: true },
+        ],
 
         selectors_for_feff_providers: () =>
             `:is(${paragraphRelatedElementsSelector}, ${FORMATTABLE_TAGS.join(

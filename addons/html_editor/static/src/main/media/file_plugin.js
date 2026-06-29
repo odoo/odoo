@@ -56,13 +56,8 @@ export class FilePlugin extends Plugin {
         selectors_for_feff_providers: () => ".o_file_box",
         region_properties: [
             { within: ".o_file_box", toolbar: DISABLED_NAMESPACE },
-            { is: ".o_file_box", editable: false },
+            { is: ".o_file_box", editable: false, functionalEmpty: true },
         ],
-        is_functional_empty_node_predicates: (node) => {
-            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
-                return true;
-            }
-        },
     };
 
     setup() {
