@@ -167,6 +167,18 @@ class Base(models.AbstractModel):
 
                 field_spec_order = field_spec.get('order')
                 field_spec_has_fields = 'fields' in field_spec
+                field_spec_domain = field_spec.get('domain')
+
+                # Apply view domain (set via domain attribute in view XML)
+                if field_spec_domain:
+                    co_records = co_records.filtered_domain(field_spec_domain)
+                    co_records_ids_after_domain = set(co_records.ids)
+                    for values in values_list:
+                        values[field_name] = [
+                            id_ for id_ in values[field_name]
+                            if id_ in co_records_ids_after_domain
+                        ]
+
                 has_co_records = any(co_records.ids)
                 has_model_read_access = (
                     has_co_records

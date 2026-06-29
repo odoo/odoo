@@ -47,6 +47,7 @@ export function makeActiveField({
     onChange,
     forceSave,
     isHandle,
+    domain,
 } = {}) {
     return {
         context: context || "{}",
@@ -56,6 +57,7 @@ export function makeActiveField({
         onChange: onChange || false,
         forceSave: forceSave || false,
         isHandle: isHandle || false,
+        domain: domain || undefined,
     };
 }
 
@@ -212,6 +214,7 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
             onChange: fieldNode.onChange,
             forceSave: fieldNode.forceSave,
             isHandle: fieldNode.isHandle,
+            domain: fieldNode.domain,
         });
         if (["one2many", "many2many"].includes(fields[fieldName].type)) {
             activeField.related = {
@@ -392,6 +395,26 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
                     const orderBy = orderBys?.[fieldName] || defaultOrderBy || [];
                     if (orderBy.length) {
                         fieldsSpec[fieldName].order = orderByToString(orderBy);
+                    }
+                    const fieldDomain = activeFields[fieldName].domain;
+                    if (fieldDomain) {
+                        try {
+                            const evaluatedDomain = new Domain(
+                                evaluateExpr(fieldDomain, evalContext)
+                            ).toList();
+                            const hasEmptyIn = evaluatedDomain.some(
+                                (leaf) =>
+                                    Array.isArray(leaf) &&
+                                    leaf[1] === "in" &&
+                                    Array.isArray(leaf[2]) &&
+                                    leaf[2].length === 0
+                            );
+                            if (evaluatedDomain.length && !hasEmptyIn) {
+                                fieldsSpec[fieldName].domain = evaluatedDomain;
+                            }
+                        } catch {
+                            // domain references fields not yet in evalContext; skip
+                        }
                     }
                 }
                 break;
