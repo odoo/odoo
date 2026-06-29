@@ -1,0 +1,46 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="smartclass.list">
+      <field name="name">smartclass list</field>
+      <field name="model">smartclass.volume</field>
+      <field name="arch" type="xml">
+        <list editable="top" multi_edit="1">
+          <field name="name"/>
+          <field name="depth"/>
+          <field name="width"/>
+          <field name="height"/>
+          <field name="volume" readonly="1" widget="human_readable_widget"/>
+          <field name="category" readonly="1"/>
+        </list>
+      </field>
+    </record>
+    <!-- Form view -->
+    <record model="ir.ui.view" id="smartclass.form">
+      <field name="name">smartclass form</field>
+      <field name="model">smartclass.volume</field>
+      <field name="arch" type="xml">
+        <form string="Awesome Calculator">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="depth"/>
+              <field name="width"/>
+              <field name="height"/>
+              <field name="volume" readonly="1" widget="human_readable_widget"/>
+              <field name="category" readonly="1"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="smartclass.action_window">
+      <field name="name">smartclass</field>
+      <field name="res_model">smartclass.volume</field>
+      <field name="view_mode">list,form</field>
+    </record>
+    <!-- Top menu item -->
+    <menuitem name="smartclass" id="smartclass.menu_root" action="smartclass.action_window"/>
+  </data>
+</odoo>
