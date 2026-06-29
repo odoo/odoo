@@ -98,6 +98,13 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
     return denormalize(roundedValue);
 }
 
+function formatFixedDecimals(value, decimals) {
+    const rounded = roundDecimals(value, decimals);
+    const [intPart, decPart = ""] = rounded.toString().split(".");
+    const paddedDecimals = decPart.padEnd(decimals, "0").slice(0, decimals);
+    return decimals === 0 ? intPart : `${intPart}.${paddedDecimals}`;
+}
+
 export function roundDecimals(value, decimals) {
     /**
      * The following decimals introduce numerical errors:
@@ -199,7 +206,8 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @param {Object} [options]
  * @param {number[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
- * @param {nummber} [optinos.minDigits] the minimum number of decimal digits to display.
+ * @param {number} [options.minDigits] the minimum number of decimal digits to display.
+ *   Displays maximum 6 decimal places if no precision is provided.
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {string} [options.decimalPoint] decimal separating character
@@ -216,15 +224,17 @@ export function formatFloat(value, options = {}) {
     if (options.digits && options.digits[1] !== undefined) {
         precision = options.digits[1];
     } else if (options.minDigits) {
-        const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
-        // We estimate the maximum decimal digits we can display without showing rounding errors,
-        // by substracting the number of integer digits to 15, as floats have 15-16 digits precision.
-        const maxDecDigits = Math.max(15 - intDigitsCount, 0);
-        // We display maximum 6 digits or the number of significant digits (if it's lower)
-        precision = Math.min(6, maxDecDigits);
+        precision = 6;
     } else {
         precision = 2;
     }
+    const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
+    // Within 15 digits, we have a float with no parasite digits.
+    // 14 is chosen here, as roundPrecision will add a digit when performing its computations.
+    const maxDecDigits = Math.max(14 - intDigitsCount, 0);
+    // We display maximum 6 digits or the number of significant digits (if it's lower)
+    precision = Math.min(precision, maxDecDigits);
+
     const minPrecision = options.minDigits || precision;
     if (floatIsZero(value, precision)) {
         value = 0.0;
@@ -235,7 +245,7 @@ export function formatFloat(value, options = {}) {
     const grouping = options.grouping || l10n.grouping;
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
-    const formatted = value.toFixed(precision).split(".");
+    const formatted = formatFixedDecimals(value, precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
