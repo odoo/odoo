@@ -59,14 +59,9 @@ export class InlineCodePlugin extends Plugin {
         region_properties: {
             within: "code.o_inline_code",
             formattable: false,
+            powerbox: false,
         },
 
-        /** Predicates */
-        is_powerbox_available_predicates: (node) => {
-            if (closestElement(node, "code.o_inline_code")) {
-                return false;
-            }
-        },
         is_link_allowed_on_selection_predicates: () => {
             const targetedNodes = this.dependencies.selection.getTargetedNodes();
             if (

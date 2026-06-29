@@ -235,10 +235,9 @@ export class FontTypePlugin extends Plugin {
                 return false;
             }
         },
-        is_powerbox_available_predicates: (node) => {
-            if (closestElement(node, "pre")) {
-                return false;
-            }
+        region_properties: {
+            within: "pre",
+            powerbox: false,
         },
 
         /** Processors */
