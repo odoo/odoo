@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="ubl_en16931_common_type" inherit_id="account_edi_ubl_cii.ubl_20_CommonType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='TaxCurrencyCode']" position="after">
+            <cbc:TaxPointDate t-out="vals.get('tax_point_date')"/>
+            <cbc:AccountingCost t-out="vals.get('accounting_cost')"/>
+            <cac:ContractDocumentReference>
+                <cbc:ID t-out="vals.get('contract_document_reference')"/>
+            </cac:ContractDocumentReference>
+            <cac:ReceiptDocumentReference>
+                <cbc:ID t-out="vals.get('receipt_document_reference')"/>
+            </cac:ReceiptDocumentReference>
+            <cac:DespatchDocumentReference>
+                <cbc:ID t-out="vals.get('despatch_document_reference')"/>
+            </cac:DespatchDocumentReference>
+            <cac:OriginatorDocumentReference>
+                <cbc:ID t-out="vals.get('originator_document_reference')"/>
+            </cac:OriginatorDocumentReference>
+            <cac:PayeeParty>
+                <cac:PartyName>
+                    <cbc:Name t-out="vals.get('party_name')"/>
+                </cac:PartyName>
+                <cac:PartyIdentification>
+                    <cbc:ID t-att-schemeID="vals.get('party_identification_scheme_id')" t-out="vals.get('party_identification')"/>
+                </cac:PartyIdentification>
+                <cac:PartyLegalEntity>
+                    <cbc:CompanyID t-att-schemeID="vals.get('party_legal_entity_scheme_id')" t-out="vals.get('party_legal_entity')"/>
+                </cac:PartyLegalEntity>
+            </cac:PayeeParty>
+            <t t-set="tax_representative_party" t-value="vals.get('tax_representative_party', {})"/>
+            <cac:TaxRepresentativeParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="tax_representative_party.get('party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </cac:TaxRepresentativeParty>
+        </xpath>
+        <xpath expr="//*[local-name()='AdditionalDocumentReference']" position="inside">
+            <cac:Attachment>
+                <cac:ExternalReference>
+                    <cbc:URI t-out="foreach_vals.get('external_reference_uri')"/>
+                </cac:ExternalReference>
+                <cbc:EmbeddedDocumentBinaryObject
+                        t-att-mimeCode="foreach_vals.get('mime_code')"
+                        t-att-filename="foreach_vals.get('filename')"
+                        t-out="foreach_vals.get('embedded_document_binary_object')"/>
+            </cac:Attachment>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_PartyType" inherit_id="account_edi_ubl_cii.ubl_20_PartyType" primary="True"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='PartyLegalEntity']" position="inside">
+            <cbc:CompanyLegalForm t-out="foreach_vals.get('company_legal_form')"/>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_AddressType" inherit_id="account_edi_ubl_cii.ubl_20_AddressType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='AdditionalStreetName']" position="after">
+            <cac:AddressLine>
+                <cbc:Line t-out="vals.get('address_line')"/>
+            </cac:AddressLine>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_PaymentMeansType" inherit_id="account_edi_ubl_cii.ubl_20_PaymentMeansType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='PaymentID']" position="after">
+            <cac:CardAccount>
+                <cbc:PrimaryAccountNumberID t-out="vals.get('primary_account_number_id')"/>
+                <cbc:HolderName t-out="vals.get('holder_name')"/>
+            </cac:CardAccount>
+            <cac:PaymentMandate>
+                <cbc:ID t-out="vals.get('payment_mandate_id')"/>
+            </cac:PaymentMandate>
+            <cac:PayerFinancialAccount>
+                <cbc:ID t-out="vals.get('payer_financial_account_id')"/>
+            </cac:PayerFinancialAccount>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_CreditNoteLineType" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteLineType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='Note']" position="after">
+            <cac:DocumentReference>
+                <cbc:ID t-att-schemeID="vals.get('document_reference_scheme_id')" t-out="vals.get('document_reference_id')"/>
+            </cac:DocumentReference>
+            <cac:OrderLineReference>
+                <cbc:ID t-att-schemeID="vals.get('order_line_reference_scheme_id')" t-out="vals.get('order_line_reference_id')"/>
+            </cac:OrderLineReference>
+            <cbc:AccountingCost t-out="vals.get('line_accounting_cost')"/>
+        </xpath>
+
+        <xpath expr="//*[local-name()='Item']" position="inside">
+            <cac:OriginCountry>
+                <cbc:IdentificationCode t-out="item_vals.get('identification_code')"/>
+            </cac:OriginCountry>
+            <cac:AdditionalItemProperty t-foreach="item_vals.get('additional_item_property', [])" t-as="additional_item_property_vals">
+                <cbc:Name t-out="additional_item_property_vals.get('name')"/>
+                <cbc:Value t-out="additional_item_property_vals.get('value')"/>
+            </cac:AdditionalItemProperty>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_DebitNoteLineType" inherit_id="account_edi_ubl_cii.ubl_21_DebitNoteLineType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='Note']" position="after">
+            <cac:DocumentReference>
+                <cbc:ID t-att-schemeID="vals.get('document_reference_scheme_id')" t-out="vals.get('document_reference_id')"/>
+            </cac:DocumentReference>
+            <cac:OrderLineReference>
+                <cbc:ID t-att-schemeID="vals.get('document_reference_scheme_id')" t-out="vals.get('order_line_reference_id')"/>
+            </cac:OrderLineReference>
+            <cbc:AccountingCost t-out="vals.get('line_accounting_cost')"/>
+        </xpath>
+
+        <xpath expr="//*[local-name()='Item']" position="inside">
+            <cac:OriginCountry>
+                <cbc:IdentificationCode t-out="item_vals.get('identification_code')"/>
+            </cac:OriginCountry>
+            <cac:AdditionalItemProperty t-foreach="item_vals.get('additional_item_property', [])" t-as="additional_item_property_vals">
+                <cbc:Name t-out="additional_item_property_vals.get('name')"/>
+                <cbc:Value t-out="additional_item_property_vals.get('value')"/>
+            </cac:AdditionalItemProperty>
+        </xpath>
+    </template>
+</odoo>

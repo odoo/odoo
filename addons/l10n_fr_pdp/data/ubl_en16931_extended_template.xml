@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="ubl_en16931_extended_common_type" inherit_id="ubl_en16931_common_type" primary="True"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    >
+        <xpath expr="//*[local-name()='ContractDocumentReference']" position="inside">
+            <cbc:DocumentType t-out="vals.get('document_type')"/>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AdditionalDocumentReference']/*[local-name()='ID']" position="attributes">
+            <attribute name="t-att-schemeId">vals.get('additional_document_reference_scheme_id')</attribute>
+        </xpath>
+
+        <xpath expr="//*[local-name()='PayeeParty']/*[local-name()='PartyIdentification']" position="replace"/>
+        <xpath expr="//*[local-name()='PayeeParty']/*[local-name()='PartyLegalEntity']" position="replace"/>
+        <xpath expr="//*[local-name()='PayeeParty']" position="inside">
+            <t t-call="{{AgentParty_template}}">
+                <t t-set="agent_party_vals" t-value="vals.get('agent_party_vals', {})"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='AccountingCustomerParty']" position="inside">
+            <t t-set="service_provider_party" t-value="vals.get('service_provider_party', {})"/>
+            <cac:ServiceProviderParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="service_provider_party.get('party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </cac:ServiceProviderParty>
+        </xpath>
+        <xpath expr="//*[local-name()='AccountingSupplierParty']" position="inside">
+            <t t-set="service_provider_party" t-value="vals.get('service_provider_party', {})"/>
+            <cac:ServiceProviderParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="service_provider_party.get('party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </cac:ServiceProviderParty>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_extended_PartyType" inherit_id="ubl_en16931_PartyType" primary="True"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    >
+        <xpath expr="//*[local-name()='PartyLegalEntity']" position="after">
+            <cac:AgentParty>
+                <t t-call="{{AgentParty_template}}">
+                    <t t-set="agent_party_vals" t-value="vals.get('agent_party_vals', {})"/>
+                </t>
+            </cac:AgentParty>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_extended_agent_party"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    >
+        <cac:PartyLegalEntity>
+            <cbc:RegistrationName t-out="agent_party_vals.get('registration_name')"/>
+            <cbc:CompanyID t-att-schemeID="agent_party_vals.get('company_scheme_id')" t-out="agent_party_vals.get('company_id')"/>
+        </cac:PartyLegalEntity>
+        <cbc:IndustryClassificationCode t-out="agent_party_vals.get('industry_classification_code')"/>
+        <cac:PartyName>
+            <cbc:Name t-out="agent_party_vals.get('party_name')"/>
+        </cac:PartyName>
+        <cac:PartyIdentification>
+            <t t-foreach="party_identification" t-as="party_identification_vals">
+                <cbc:ID t-att-schemeID="party_identification_vals.get('scheme_id')" t-out="party_identification_vals.get('id')"/>
+            </t>
+        </cac:PartyIdentification>
+        <cac:PartyTaxScheme>
+            <cbc:CompanyID t-out="agent_party_vals.get('party_tax_scheme_company_id')"/>
+            <cac:TaxScheme>
+                <cbc:ID t-out="agent_party_vals.get('party_tax_scheme_id')"/>
+            </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cbc:EndpointID t-att-schemeID="agent_party_vals.get('endpoint_scheme_id')" t-out="agent_party_vals.get('endpoint_id')"/>
+        <cac:PostalAddress>
+            <t t-call="{{AddressType_template}}">
+                <t t-set="vals" t-value="agent_party_vals.get('address_vals', {})"/>
+            </t>
+        </cac:PostalAddress>
+        <cac:Contact>
+            <t t-set="contact_vals" t-value="agent_party_vals.get('contact_vals', {})"/>
+            <cbc:ID t-out="contact_vals.get('id')"/>
+            <cbc:Name t-out="contact_vals.get('name')"/>
+            <cbc:Telephone t-out="contact_vals.get('telephone')"/>
+            <cbc:ElectronicMail t-out="contact_vals.get('electronic_mail')"/>
+        </cac:Contact>
+    </template>
+
+    <template id="ubl_en16931_extended_PaymentMeansType" inherit_id="ubl_en16931_PaymentMeansType" primary="True"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    >
+        <xpath  expr="//*[local-name()='PayerFinancialAccount']" position="after">
+            <cac:PayerParty>
+                <t t-call="{{AgentParty_template}}">
+                    <t t-set="agent_party_vals" t-value="vals.get('agent_party_vals', {})"/>
+                </t>
+            </cac:PayerParty>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_extended_CreditNoteLineType" inherit_id="ubl_en16931_CreditNoteLineType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='DocumentReference']" position="replace">
+            <cac:DocumentReference t-foreach="item_vals.get('document_reference', [])" t-as="document_reference_vals">
+                <cbc:ID t-att-schemeID="document_reference_vals.get('scheme_id')" t-out="document_reference_vals.get('id')"/>
+            </cac:DocumentReference>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AccountingCost']" position="after">
+            <cac:BillingReference>
+                <t t-set="billing_reference_vals" t-value="vals.get('billing_reference_vals', {})"/>
+                <cac:InvoiceDocumentReference>
+                    <cbc:ID t-out="billing_reference_vals.get('id')"/>
+                    <cbc:IssueDate t-out="billing_reference_vals.get('issue_date')"/>
+                    <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
+                </cac:InvoiceDocumentReference>
+            </cac:BillingReference>
+            <cac:DespatchLineReference>
+                <t t-set="despatch_line_reference" t-value="vals.get('despatch_line_reference_vals', {})"/>
+                <cac:DocumentReference>
+                    <cbc:ID t-out="despatch_line_reference.get('id')"/>
+                </cac:DocumentReference>
+                <cbc:LineID t-out="despatch_line_reference.get('line_id')"/>
+            </cac:DespatchLineReference>
+            <cac:ReceiptLineReference>
+                <t t-set="receipt_line_reference" t-value="vals.get('receipt_line_reference_vals', {})"/>
+                <cac:DocumentReference>
+                    <cbc:ID t-out="receipt_line_reference.get('id')"/>
+                </cac:DocumentReference>
+                <cbc:LineID t-out="receipt_line_reference.get('line_id')"/>
+            </cac:ReceiptLineReference>
+        </xpath>
+        <xpath expr="//*[local-name()='OrderLineReference']" position="inside">
+            <cac:OrderReference>
+                <t t-set="order_reference" t-value="vals.get('order_reference_vals', {})"/>
+                <cbc:ID t-out="order_reference.get('id')"/>
+                <cbc:SalesOrderID t-out="order_reference.get('sales_order_id')"/>
+            </cac:OrderReference>
+            <cbc:SalesOrderLineID t-out="vals.get('sales_order_line_id')"/>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_extended_DebitNoteLineType" inherit_id="ubl_en16931_DebitNoteLineType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='DocumentReference']" position="replace">
+            <cac:DocumentReference t-foreach="item_vals.get('document_reference', [])" t-as="document_reference_vals">
+                <cbc:ID t-att-schemeID="document_reference_vals.get('scheme_id')" t-out="document_reference_vals.get('id')"/>
+            </cac:DocumentReference>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AccountingCost']" position="after">
+            <cac:BillingReference>
+                <t t-set="billing_reference_vals" t-value="vals.get('billing_reference_vals', {})"/>
+                <cac:InvoiceDocumentReference>
+                    <cbc:ID t-out="billing_reference_vals.get('id')"/>
+                    <cbc:IssueDate t-out="billing_reference_vals.get('issue_date')"/>
+                    <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
+                </cac:InvoiceDocumentReference>
+            </cac:BillingReference>
+            <cac:DespatchLineReference>
+                <t t-set="despatch_line_reference" t-value="vals.get('despatch_line_reference_vals', {})"/>
+                <cac:DocumentReference>
+                    <cbc:ID t-out="despatch_line_reference.get('id')"/>
+                </cac:DocumentReference>
+                <cbc:LineID t-out="despatch_line_reference.get('line_id')"/>
+            </cac:DespatchLineReference>
+            <cac:ReceiptLineReference>
+                <t t-set="receipt_line_reference" t-value="vals.get('receipt_line_reference_vals', {})"/>
+                <cac:DocumentReference>
+                    <cbc:ID t-out="receipt_line_reference.get('id')"/>
+                </cac:DocumentReference>
+                <cbc:LineID t-out="receipt_line_reference.get('line_id')"/>
+            </cac:ReceiptLineReference>
+        </xpath>
+        <xpath expr="//*[local-name()='OrderLineReference']" position="inside">
+            <cac:OrderReference>
+                <t t-set="order_reference" t-value="vals.get('order_reference_vals', {})"/>
+                <cbc:ID t-out="order_reference.get('id')"/>
+                <cbc:SalesOrderID t-out="order_reference.get('sales_order_id')"/>
+            </cac:OrderReference>
+            <cbc:SalesOrderLineID t-out="vals.get('sales_order_line_id')"/>
+        </xpath>
+    </template>
+
+    <template id="ubl_en16931_extended_DeliveryType" inherit_id="account_edi_ubl_cii.ubl_20_DeliveryType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    >
+        <xpath expr="//*[local-name()='DeliveryParty']" position="after">
+            <cac:DeliveryLocation t-foreach="vals.get('delivery_location', [])" t-as="delivery_location_vals">
+                <cbc:ID t-att-schemeID="delivery_location_vals.get('order_reference_scheme_id')" t-out="delivery_location_vals.get('order_reference_id')"/>
+            </cac:DeliveryLocation>
+        </xpath>
+    </template>
+</odoo>
