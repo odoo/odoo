@@ -15,7 +15,7 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, users
-from odoo.tools import BinaryBytes, html_escape, mute_logger
+from odoo.tools import BinaryBytes, convert_file, html_escape, mute_logger
 
 
 class TestChannelInternals(MailCommon, HttpCase):
@@ -97,6 +97,14 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel = self.env["discuss.channel"].create({"name": "Archive Access Test"})
         channel.write({"active": False})
         self.assertFalse(channel.active)
+
+    def test_builtin_channel_recreated_on_upgrade(self):
+        """A deleted built-in channel recreated on upgrade should get its default name."""
+        self.env.ref("mail.channel_admin").unlink()
+        convert_file(self.env, "mail", "data/discuss_channel_data.xml", idref={}, mode="update")
+        channel_admin = self.env.ref("mail.channel_admin")
+        self.assertEqual(channel_admin.name, "Administrators")
+        self.assertEqual(channel_admin.description, "General channel for administrators.")
 
     @users('employee')
     @freeze_time("2020-03-22 10:42:06")
