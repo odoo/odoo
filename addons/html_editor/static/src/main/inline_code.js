@@ -55,12 +55,13 @@ export class InlineCodePlugin extends Plugin {
             }
         },
 
-        /** Predicates */
-        is_formattable_node_predicates: (node) => {
-            if (closestElement(node, "code.o_inline_code")) {
-                return false;
-            }
+        /** Regions */
+        region_properties: {
+            within: "code.o_inline_code",
+            formattable: false,
         },
+
+        /** Predicates */
         is_powerbox_available_predicates: (node) => {
             if (closestElement(node, "code.o_inline_code")) {
                 return false;

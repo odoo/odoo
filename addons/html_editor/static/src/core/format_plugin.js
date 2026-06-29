@@ -74,7 +74,6 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {((node: Node, formatName: string, options: { applyStyle: boolean, formatProps: object }) => Node | undefined)[]} formattable_node_providers
  * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
- * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  *
  * @typedef {(({
@@ -87,7 +86,7 @@ const NOT_A_NUMBER = /[^\d]/g;
 
 export class FormatPlugin extends Plugin {
     static id = "format";
-    static dependencies = ["selection", "history", "input", "split", "delete"];
+    static dependencies = ["selection", "history", "input", "split", "delete", "region"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "areSimilarElements",
@@ -376,9 +375,9 @@ export class FormatPlugin extends Plugin {
     getFormattableNodes(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         return targetedNodes.filter((node) => {
-            const predicatesResult = this.checkPredicates("is_formattable_node_predicates", node);
-            if (predicatesResult !== undefined) {
-                return predicatesResult;
+            const formattable = this.dependencies.region.getProperty(node, "formattable");
+            if (formattable !== undefined) {
+                return formattable;
             }
             if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
                 return false;
@@ -513,7 +512,7 @@ export class FormatPlugin extends Plugin {
                     }
                     if (
                         target &&
-                        (this.checkPredicates("is_formattable_node_predicates", target) ?? true) &&
+                        (this.dependencies.region.getProperty(target, "formattable") ?? true) &&
                         // Format can only be applied to block if it can
                         // be neutralized.
                         (!isBlock(target) || formatSpec.addNeutralStyle)

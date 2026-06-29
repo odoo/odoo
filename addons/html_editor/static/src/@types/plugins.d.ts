@@ -11,7 +11,7 @@ declare module "plugins" {
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, serializable_descendants_processors, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
     import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
     import { DomReferenceMapShared } from "@html_editor/core/dom_reference_map_plugin";
-    import { can_format_content_predicates, format_specs, is_format_class_predicates, is_formattable_node_predicates, before_format_handlers, formattable_node_providers, FormatShared, has_format_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
+    import { can_format_content_predicates, format_specs, is_format_class_predicates, before_format_handlers, formattable_node_providers, FormatShared, has_format_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
     import { HistoryShared, history_commit_data_properties, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, save_point_history_commit_data_processors, snapshot_history_commit_data_processors } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
@@ -218,7 +218,6 @@ declare module "plugins" {
         is_classlist_mutation_savable_predicates: is_classlist_mutation_savable_predicates;
         is_empty_link_legit_predicates: is_empty_link_legit_predicates;
         is_format_class_predicates: is_format_class_predicates;
-        is_formattable_node_predicates: is_formattable_node_predicates;
         is_functional_empty_node_predicates: is_functional_empty_node_predicates;
         is_history_commit_reversible_predicates: is_history_commit_reversible_predicates;
         is_link_allowed_on_selection_predicates: is_link_allowed_on_selection_predicates;
