@@ -2162,3 +2162,65 @@ test("Odoo charts can have a background color", async () => {
         );
     }
 });
+
+test("chart getData wraps monetary data points with currency format", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { bar: false, currency_id: 1, pognon: 100 },
+        { bar: true, currency_id: 1, pognon: 200 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "bar",
+        serverData,
+        definition: {
+            dataSource: {
+                metaData: { groupBy: ["bar"], measure: "pognon", order: null, resModel: "partner" },
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+
+    const { datasets } = model.getters.getChartDataSource(chartId).getData();
+    expect(datasets[0].data).toEqual([
+        { value: 100, format: "[$$]#,##0.00" },
+        { value: 200, format: "[$$]#,##0.00" },
+    ]);
+});
+
+test("chart getHierarchicalData wraps monetary labels with currency format", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { bar: false, currency_id: 1, pognon: 100 },
+        { bar: true, currency_id: 1, pognon: 200 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "treemap",
+        serverData,
+        definition: {
+            dataSource: {
+                metaData: { groupBy: ["bar"], measure: "pognon", order: null, resModel: "partner" },
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+
+    const { labels } = model.getters.getChartDataSource(chartId).getHierarchicalData();
+    expect(labels[0].format).toBe("[$$]#,##0.00");
+    expect(labels[1].format).toBe("[$$]#,##0.00");
+});
+
+test("chart getData has undefined format for non-monetary measure", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+
+    const { datasets } = model.getters.getChartDataSource(chartId).getData();
+    for (const dataPoint of datasets[0].data) {
+        expect(dataPoint.format).toBe(undefined);
+    }
+});
