@@ -62,14 +62,12 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 params.block = this.convertToParagraph(block);
             }
         },
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, ".o_syntax_highlighting"))
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
+
+        /** Properties */
+        properties: {
+            predicate: (node) => closestElement(node, ".o_syntax_highlighting"),
+            toolbar: DISABLED_NAMESPACE,
+        },
 
         /** Processors */
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),
