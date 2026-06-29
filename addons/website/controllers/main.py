@@ -709,6 +709,8 @@ class Website(Home):
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
+            '.o_we_shape{top:-2px;bottom:-2px;}'
+            'section{margin-bottom:-2px;}'
             '</style>'
         )
 
