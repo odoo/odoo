@@ -117,11 +117,10 @@ export class TranslationPlugin extends Plugin {
             }
             return container;
         }),
-        toolbar_namespace_providers: [
-            (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.anchorNode, ".o_translation_select") &&
-                DISABLED_NAMESPACE,
-        ],
+        properties: {
+            predicate: (node) => closestElement(node, ".o_translation_select"),
+            toolbar: DISABLED_NAMESPACE,
+        },
     };
 
     setup() {
