@@ -25,6 +25,22 @@ export class FormFieldOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.customFieldsData = [
+            { name: "Text", value: "char" },
+            { name: "Long Text", value: "text" },
+            { name: "Email", value: "email" },
+            { name: "Telephone", value: "tel" },
+            { name: "Url", value: "url" },
+            { name: "Number", value: "integer" },
+            { name: "Decimal Number", value: "float" },
+            { name: "Checkbox", value: "boolean", id: "custom_field_boolean_opt" },
+            { name: "Multiple Checkboxes", value: "one2many" },
+            { name: "Radio Buttons", value: "selection" },
+            { name: "Selection", value: "many2one" },
+            { name: "Date", value: "date" },
+            { name: "Date & Time", value: "datetime" },
+            { name: "File Upload", value: "binary" },
+        ];
         const { loadFieldOptionData } = this.dependencies.websiteFormOption;
         this.state = proxy({
             availableFields: [],
@@ -32,6 +48,7 @@ export class FormFieldOption extends BaseOptionComponent {
             conditionValueList: [],
             dependencyEl: null,
             valueList: null,
+            fieldTypeItems: [],
         });
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
@@ -119,6 +136,7 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+            this.computeFieldTypeItems(fieldOptionData);
         });
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
@@ -131,6 +149,7 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.length = 0;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+            this.computeFieldTypeItems(fieldOptionData);
         });
         // TODO select field's hack ?
     }
@@ -287,5 +306,39 @@ export class FormFieldOption extends BaseOptionComponent {
             return this.domState.elDataset.type;
         }
         return this.domState.fieldName;
+    }
+    /**
+     * Generate the entries for the field type selector.
+     */
+    computeFieldTypeItems(fieldOptionData) {
+        const customFieldItems = this.customFieldsData.map((field) => ({
+            label: field.name,
+            value: field.value,
+            id: field.id,
+            props: {
+                action: "customField",
+                actionValue: field.value,
+            },
+            attrs: {
+                "data-action-id": "customField",
+                "data-action-value": field.value,
+            },
+        }));
+        const existingFieldItems = fieldOptionData.availableFields.map((field) => ({
+            label: field.string,
+            value: field.name,
+            props: {
+                action: "existingField",
+                actionValue: field.name,
+            },
+            attrs: {
+                "data-action-id": "existingField",
+                "data-action-value": field.name,
+            },
+        }));
+        this.state.fieldTypeItems = [
+            { label: "Custom Field", choices: customFieldItems },
+            { label: "Existing fields", choices: existingFieldItems },
+        ];
     }
 }

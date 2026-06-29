@@ -133,7 +133,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Open field Type selector",
-            trigger: "[data-container-title=Field] button#type_opt",
+            trigger: "[data-container-title=Field] [data-label=Type] button",
             run: "click",
         },
         {
