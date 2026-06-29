@@ -256,6 +256,29 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             )
             self.assertEqual(patch_file_read.call_count, 0)
 
+    def test_16_upload_file(self):
+        # Only try the attachment creation without the indexation
+        with (
+            patch(
+                "odoo.addons.base.models.ir_attachment.IrAttachment._index",
+                new=lambda *args, **kwargs: None,
+            ),
+            file_open('base/i18n/base.pot', 'rb') as f,
+        ):
+            # create the file
+            a = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+            self.assertTrue(a.raw.size, "No bytes written")
+            # create the file again
+            f.seek(0)
+            a = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+            self.assertTrue(a.raw.size, "No bytes written")
+
     def test_16_from_file_takes_little_memory(self):
         # The biggest file we reliably have is "i18n/base.pot" which is
         # only 1.3MiB. We use tracemalloc to make sure _upload_file uses
@@ -491,9 +514,8 @@ class TestPermissions(TransactionCaseWithUserDemo):
     def test_write_error(self):
         # try to write a file in a place where we have no access
         # /proc is not writeable, check if we have an error raised
-        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: ('dummy_test', '/proc/dummy_test'))
-        with self.assertRaises(OSError):
-            self.env['ir.attachment']._file_write(b'test', 'test')
+        with patch.object(IrAttachment, '_full_path', lambda self, path: '/proc/dummy_test'), self.assertRaises(OSError):
+            self.env['ir.attachment']._file_write('test', io.BytesIO(b'test'))
 
     def test_write_create_url_binary_attachment(self):
         with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):

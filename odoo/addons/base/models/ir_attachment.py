@@ -17,7 +17,6 @@ import warnings
 from collections import defaultdict
 
 import psycopg2
-import werkzeug.security
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -127,30 +126,16 @@ class IrAttachment(models.Model):
             attach.write({'raw': attach.raw, 'mimetype': attach.mimetype})
 
     @api.model
-    def _full_path(self, path):
+    def _full_path(self, fname):
         # sanitize path
-        path = re.sub('[.:]', '', path)
-        path = path.strip('/\\')
-        return os.path.join(self._filestore(), path)
+        fname = re.sub(r'[.:]', '', fname).strip('/\\')
+        return os.path.join(self._filestore(), fname)
 
     @api.model
-    def _get_path(self, file, sha):
+    def _file_fname(self, sha: str) -> str:
         # scatter files across 256 dirs
         # we use '/' in the db (even on windows)
-        fname = sha[:2] + '/' + sha
-        full_path = self._full_path(fname)
-        dirname = os.path.dirname(full_path)
-        if not os.path.isdir(dirname):
-            os.makedirs(dirname, exist_ok=True)
-
-        # prevent sha-1 collision
-        try:
-            with open(full_path, 'rb') as existing_file:
-                if not self._same_content(file, existing_file):
-                    raise UserError(_("The attachment collides with an existing file."))
-        except FileNotFoundError:
-            pass
-        return fname, full_path
+        return sha[:2] + '/' + sha
 
     @api.model
     def _file_read(self, fname: str) -> BinaryValue:
@@ -163,36 +148,59 @@ class IrAttachment(models.Model):
             return EMPTY_BINARY
 
     @api.model
-    def _file_write(self, bin_value, checksum):
+    def _file_write(self, fname: str, bin_value: io.IOBase) -> None:
+        """ Persist the data for the given fname. """
         assert isinstance(self, IrAttachment)
-        fname, full_path = self._get_path(io.BytesIO(bin_value), checksum)
-        if not os.path.exists(full_path):
+        assert hasattr(bin_value, 'read') and hasattr(bin_value, 'seek'), f'expecting a seekable IO object, got {bin_value}'
+        full_path = self._full_path(fname)
+        try:
+            # check if file exists and prevent sha-1 collision
             try:
-                # add fname to checklist, in case the transaction aborts
-                self._mark_for_gc(fname)
-                with open(full_path, 'wb') as fp:
-                    fp.write(bin_value)
-            except OSError:
-                _logger.info("_file_write writing %s", full_path)
-                raise
-        return fname
-
-    @api.model
-    def _file_delete(self, fname):
-        # simply add fname to checklist, it will be garbage-collected later
-        self._mark_for_gc(fname)
-
-    def _mark_for_gc(self, fname):
-        """ Add ``fname`` in a checklist for the filestore garbage collection. """
-        assert isinstance(self, IrAttachment)
-        fname = re.sub('[.:]', '', fname).strip('/\\')
-        # we use a spooldir: add an empty file in the subdirectory 'checklist'
-        full_path = os.path.join(self._full_path('checklist'), fname)
-        if not os.path.exists(full_path):
+                with open(full_path, 'rb') as existing_file:
+                    if self._same_content(bin_value, existing_file):
+                        return
+                    raise RuntimeError(f"The attachment {fname} collides with an existing file.")
+            except FileNotFoundError:
+                pass
+            # make sure the directory exists
             dirname = os.path.dirname(full_path)
             if not os.path.isdir(dirname):
-                with contextlib.suppress(OSError):
-                    os.makedirs(dirname)
+                os.makedirs(dirname)
+            # add fname to checklist, in case the transaction aborts
+            self._mark_for_gc(fname)
+            # write and set permissions
+            with open(full_path, 'wb') as fp:
+                shutil.copyfileobj(bin_value, fp)
+            # Prevent changing the content of the file, as it would
+            # break the checksum and store_fname fields. This doesn't
+            # prevent removing it thought. Sysadmins can use umask(1) to
+            # restrict the permissions further.
+            os.chmod(full_path, 0o444)  # r--r--r--
+        except OSError as e:
+            e.add_note(f"_file_write writing {full_path}")
+            raise
+
+    @api.model
+    def _file_delete(self, fname: str) -> None:
+        """ Add ``fname`` to checklist of files to delete. """
+        # Deletion may not be done immediately, because this is called within
+        # the transaction that could fail later.
+        self._mark_for_gc(fname)
+
+    def _mark_for_gc(self, fname: str) -> None:
+        """ Add ``fname`` in a checklist for the filestore garbage collection. """
+        assert isinstance(self, IrAttachment)
+        fname = re.sub(r'[.:]', '', fname).strip('/\\')
+        # we use a spooldir: add an empty file in the subdirectory 'checklist'
+        full_path = os.path.join(self._full_path('checklist'), fname)
+        # touch the full_path
+        try:
+            # create the file
+            open(full_path, 'ab').close()
+        except FileNotFoundError:
+            # raised when directory does not exist, create the dir and the file
+            dirname = os.path.dirname(full_path)
+            os.makedirs(dirname, exist_ok=True)
             open(full_path, 'ab').close()
 
     @api.autovacuum
@@ -276,34 +284,33 @@ class IrAttachment(models.Model):
         return self.raw
 
     def _inverse_raw(self):
-        self._set_attachment_data(lambda a: a.raw or EMPTY_BINARY)
-
-    def _set_attachment_data(self, get_data):
-        old_fnames = []
-        checksum_raw_map = {}
+        old_fnames = OrderedSet()
+        raw_map = {}
 
         for attach in self:
             # compute the fields that depend on raw
-            bin_data = get_data(attach)
+            bin_data = attach.raw or EMPTY_BINARY
             vals = self._get_datas_related_values(bin_data, attach.mimetype)
-            if bin_data:
-                checksum_raw_map[vals['checksum']] = bin_data
 
             # take current location in filestore to possibly garbage-collect it
-            if attach.store_fname:
-                old_fnames.append(attach.store_fname)
+            if fname := attach.store_fname:
+                old_fnames.add(fname)
 
             # write as superuser, as user probably does not have write access
             super(IrAttachment, attach.sudo()).write(vals)
+            if bin_data and (fname := attach.store_fname):
+                raw_map[fname] = bin_data
 
-        if self._storage() != 'db':
+        if raw_map or old_fnames:
             # before touching the filestore, flush to prevent the GC from
             # running until the end of the transaction
             self.flush_recordset(['checksum', 'store_fname'])
-            for fname in old_fnames:
+        for fname in old_fnames:
+            if fname not in raw_map:
                 self._file_delete(fname)
-            for checksum, raw in checksum_raw_map.items():
-                self._file_write(raw, checksum)
+        for fname, raw in raw_map.items():
+            with raw.open() as f:
+                self._file_write(fname, f)
 
     def _get_datas_related_values(self, data: BinaryValue, mimetype):
         checksum = self._compute_checksum(data)
@@ -322,7 +329,7 @@ class IrAttachment(models.Model):
             'db_datas': data or False,
         }
         if data and self._storage() != 'db':
-            values['store_fname'], _full_path = self._get_path(io.BytesIO(data), checksum)
+            values['store_fname'] = self._file_fname(checksum)
             values['db_datas'] = False
         return values
 
@@ -335,7 +342,7 @@ class IrAttachment(models.Model):
         return hashlib.sha1(bin_data or b'').hexdigest()
 
     @api.model
-    def _same_content(self, file1, file2):
+    def _same_content(self, file1: io.IOBase, file2: io.IOBase) -> bool:
         with contextlib.ExitStack() as exit_stack:
             exit_stack.callback(file1.seek, file1.tell())
             file1.seek(0)
@@ -795,13 +802,14 @@ class IrAttachment(models.Model):
                 in vals.items()
                 if key not in ('file_size', 'checksum', 'store_fname')
             } for vals in vals_list]
-        checksum_raw_map = {}
+        raw_map = {}
 
         for values in vals_list:
             values = self._check_contents(values)
             if raw := values.pop('raw', None):
                 values.update(self._get_datas_related_values(raw, values['mimetype']))
-                checksum_raw_map[values['checksum']] = raw.content
+                if fname := values.get('store_fname'):
+                    raw_map[fname] = raw
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when
@@ -816,9 +824,9 @@ class IrAttachment(models.Model):
         if any(self._inaccessible_comodel_records(model_and_ids, 'write')):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
         records = super().create(vals_list)
-        if self._storage() != 'db':
-            for checksum, raw in checksum_raw_map.items():
-                self._file_write(raw, checksum)
+        for fname, raw in raw_map.items():
+            with raw.open() as f:
+                self._file_write(fname, f)
         records._check_serving_attachments()
         return records
 
@@ -902,7 +910,7 @@ class IrAttachment(models.Model):
             raise ValueError(e)
 
         if self._storage() == 'db':
-            return self.create(dict(create_vals, raw=file.read()))
+            return self.create(dict(create_vals, raw=BinaryBytes(file.read())))
 
         # Check permissions first, so we don't read the entire file if
         # it is gonna fail.
@@ -914,8 +922,8 @@ class IrAttachment(models.Model):
 
         with contextlib.ExitStack() as exit_stack:
 
-            # For os.link and _get_path/_same_content, we need the
-            # file to be seekable and accessible on the file-system.
+            # For os.link and _same_content, we need the file to be seekable and
+            # accessible on the file-system.
             # When it is not, we save it in a named temporary file.
             src_path = getattr(file, 'name', None)
             try:
@@ -944,8 +952,9 @@ class IrAttachment(models.Model):
             # Read the file's content in chunks to compute its checksum,
             # size and destination file name. Save it in the temporary
             # file if necessary.
+            # Similar to `_compute_checksum`.
             computed_fields = {'file_size': 0}
-            sha = hashlib.sha1()  # sha2 checked in _get_path
+            sha = hashlib.sha1()
             while chunk := file.read(io.DEFAULT_BUFFER_SIZE):  # 16kiB
                 sha.update(chunk)
                 computed_fields['file_size'] += len(chunk)
@@ -953,14 +962,23 @@ class IrAttachment(models.Model):
                     file_upload.write(chunk)
             if file_upload:
                 file_upload.flush()
+            else:
+                # reset the position to the beginning to save the data
+                file.seek(0)
             computed_fields['checksum'] = sha.hexdigest()
-            computed_fields['store_fname'], dst_path = (
-                self._get_path(file_upload or file, computed_fields['checksum']))
+            computed_fields['store_fname'] = self._file_fname(computed_fields['checksum'])
             if 'mimetype' not in create_vals:
                 computed_fields['mimetype'] = guess_file_mimetype(src_path)
+            # check the destination (overrides of _file_fname)
+            dst_path = self._full_path(computed_fields['store_fname'])
+            if computed_fields['store_fname'] not in dst_path:
+                # overwrite of _file_fname or _full_path are possibly not local
+                # anymore, use the super
+                return self.create(dict(create_vals, raw=BinaryBytes(file.read())))
 
             # The order of the next lines matters for _gc_file_store. It
             # MUST be create => _mark_for_gc => link => commit/rollback.
+            # Similar to `_file_write`.
             attach = (
                 self.with_context(ir_attachment_from_stream=CREATE_FROM_STREAM_FLAG)
                     .create(create_vals | computed_fields)
@@ -969,20 +987,9 @@ class IrAttachment(models.Model):
             self._mark_for_gc(attach.store_fname)
             try:
                 os.link(src_path, dst_path)  # Fast hardlink
-            except FileExistsError:
-                pass
+                os.chmod(dst_path, 0o444)  # r--r--r--
             except OSError:
-                shutil.copyfile(src_path, dst_path)  # Slow copy
-
-            # Prevent changing the content of the file, as it would
-            # break the checksum and store_fname fields. This doesn't
-            # prevent removing it thought. Sysadmins can use umask(1) to
-            # restrict the permissions further.
-            # Note: doing it after link/copyfile makes for a very small
-            #  time window where the file is rw-rw-r--, ideally the file
-            #  would immediately have the rights permission, but I don't
-            #  know how to do that... :(
-            os.chmod(dst_path, 0o444)  # r--r--r--
+                self._file_write(computed_fields['store_fname'], file_upload or file)
 
         attach.index_content = attach._index(attach.raw, attach.mimetype, attach.checksum)
         return attach
