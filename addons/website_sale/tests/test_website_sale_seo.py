@@ -22,3 +22,19 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
             {'res_id': public_categ.id, 'res_model': 'product.public.category'},
         )
         self.assertTrue(res['can_edit_seo'])
+
+    def test_website_product_page_seo_works_with_duplicate_images(self):
+        test_product = self.env["product.product"].create(
+            {
+                "name": "SEO Test Product 1",
+                "website_published": True,
+                "sale_ok": True,
+                "list_price": 500,
+            },
+        )
+
+        self.start_tour(
+            test_product.website_url,
+            "website_sale.product_editor_seo_dialog",
+            login="admin",
+        )
