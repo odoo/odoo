@@ -133,8 +133,8 @@
                         <group>
                             <field name="start_date" widget="daterange" options="{'end_date_field': 'stop_date'}" invisible="not allday" required="allday" readonly="not user_can_edit"/>
                             <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday" readonly="not user_can_edit"/>
-                            <field name="stop_date" invisible="1"/>
-                            <field name="stop" invisible="1" />
+                            <field name="stop_date" required="allday" invisible="1"/>
+                            <field name="stop" required="not allday" invisible="1" />
                             <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
                             <label for="duration" class="fw-bold text-900 opacity-100"/>
                             <div class="d-flex gap-2">
