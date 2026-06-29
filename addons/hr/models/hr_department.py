@@ -5,6 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 
 
@@ -17,14 +18,14 @@ class HrDepartment(models.Model):
     _parent_store = True
 
     name = fields.Char('Department Name', required=True, translate=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, search='_search_complete_name')
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', compute_sudo=True, recursive=True, search='_search_complete_name')
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True)
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
-    has_read_access = fields.Boolean(search="_search_has_read_access", store=False, export_string_translation=False)
+    has_read_access = fields.Boolean(search="_search_has_read_access", compute="_compute_has_read_access", store=False, export_string_translation=False)
     total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee',
         export_string_translation=False)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
@@ -44,12 +45,36 @@ class HrDepartment(models.Model):
             record.display_name = record.name
 
     def _search_has_read_access(self, operator, value):
-        if operator != 'in':
+        if operator != 'in' or True not in value:
             return NotImplemented
-        if self.env['hr.employee'].has_access('read'):
-            return [(1, "=", 1)]
-        departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
+        if self.env.user.has_group('hr.group_hr_user'):        # if self.env['hr.employee'].has_access('read'):
+            return [(1, '=', 1)]
+        departments_ids = self.env['hr.department'].sudo().search(
+            Domain.OR([
+                Domain('manager_id', 'in', self.env.user.employee_ids.ids),
+                Domain('manager_id', 'in', self.env.user.employee_id.subordinate_ids.ids)]
+            )
+        ).ids
         return [('id', 'child_of', departments_ids)]
+
+    @api.depends_context('uid', 'company')
+    @api.depends('manager_id')
+    def _compute_has_read_access(self):
+        if self.env.user.has_group('hr.group_hr_user'):        # if self.env['hr.employee'].has_access('read'):
+            for r in self:
+                r.has_read_access = True
+        else:
+            departments_ids = self.env['hr.department'].sudo().search(
+                Domain.OR([
+                    Domain('manager_id', 'in', self.env.user.employee_ids.ids),
+                    Domain('manager_id', 'in', self.env.user.employee_id.subordinate_ids.ids)]
+                )
+            ).get_children_department_ids()
+            for r in self:
+                if r.id in departments_ids.ids:
+                    r.has_read_access = True
+                else:
+                    r.has_read_access = False
 
     def _search_complete_name(self, operator, value):
         supported_operators = ["=", "!=", "ilike", "not ilike", "in", "not in", "=ilike"]
@@ -213,13 +238,13 @@ class HrDepartment(models.Model):
     def get_department_hierarchy(self):
         if not self:
             return {}
-
+        parent = self.parent_id.sudo()
         hierarchy = {
             'parent': {
-                'id': self.parent_id.id,
-                'name': self.parent_id.name,
-                'employees': self.parent_id.total_employee,
-            } if self.parent_id else False,
+                'id': parent.id,
+                'name': parent.name,
+                'employees': parent.total_employee,
+            } if parent else False,
             'self': {
                 'id': self.id,
                 'name': self.name,
@@ -230,7 +255,7 @@ class HrDepartment(models.Model):
                     'id': child.id,
                     'name': child.name,
                     'employees': child.total_employee
-                } for child in self.child_ids
+                } for child in self.sudo().child_ids
             ]
         }
 
