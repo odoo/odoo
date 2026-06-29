@@ -502,5 +502,23 @@
             </field>
         </record>
 
+        <record id="view_form_test_orm_bug" model="ir.ui.view">
+            <field name="name">view_form_test_orm_bug</field>
+            <field name="model">test_orm.onchange.order</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="base"/>
+                    <field name="total"/>
+                    <field name="line_ids">
+                        <list>
+                            <field name="price"/>
+                            <field name="subtotal"/>
+                        </list>
+                    </field>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

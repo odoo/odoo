@@ -2230,7 +2230,7 @@ class Base(models.AbstractModel):
             cache_values = {fname: self[fname] for fname in fields_spec}
             record = self.new(cache_values, origin=self)
             # apply initial values on top of the values of self
-            record._update_cache(initial_values)
+            record._update_cache(initial_values, validate=False)
         else:
             # set changed values to null in initial_values; not setting them
             # triggers default_get() on the new record when creating snapshot0
