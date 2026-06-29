@@ -242,3 +242,17 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_import_credit_note_from_negative_invoice(self):
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+        invoice = self._import_invoice_as_attachment_on(test_name='credit_note_from_invoice_with_negative_lines')
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [{
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': tax_21.ids,
+            }]
+        )
+        self.assertRecordValues(invoice, [{'amount_total': 121.0}])

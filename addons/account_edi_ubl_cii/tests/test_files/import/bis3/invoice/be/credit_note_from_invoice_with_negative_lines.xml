@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>RINV/2026/00006</cbc:ID>
+  <cbc:IssueDate>2026-06-23</cbc:IssueDate>
+  <cbc:InvoiceTypeCode>384</cbc:InvoiceTypeCode>
+  <cbc:Note>Terms &amp; Conditions: https://115135081-19-0-design-theme.runbot306.odoo.com/terms</cbc:Note>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>RINV/2026/00006</cbc:ID>
+  </cac:OrderReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>RINV_2026_00006.pdf</cbc:ID>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0208">0897223670</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="0208">0897223670</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyIdentification>
+        <cbc:ID>0897223670</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>My Belgian Company</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Rue du Paradis</cbc:StreetName>
+        <cbc:CityName>Eghezee</cbc:CityName>
+        <cbc:PostalZone>6870</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>BE0897223670</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>My Belgian Company</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0208">0897223670</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>My Belgian Company</cbc:Name>
+        <cbc:Telephone>061928374</cbc:Telephone>
+        <cbc:ElectronicMail>becompany@example.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0208">0246697724</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="0208">0246697724</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>BE Company CoA</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>1021 Sint-Bernardsesteenweg</cbc:StreetName>
+        <cbc:CityName>Antwerpen</cbc:CityName>
+        <cbc:PostalZone>2660</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>BE0246697724</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>BE Company CoA</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0208">0246697724</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>BE Company CoA</cbc:Name>
+        <cbc:ElectronicMail>info@example.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>1021 Sint-Bernardsesteenweg</cbc:StreetName>
+        <cbc:CityName>Antwerpen</cbc:CityName>
+        <cbc:PostalZone>2660</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+    <cac:DeliveryParty>
+      <cac:PartyName>
+        <cbc:Name>BE Company CoA</cbc:Name>
+      </cac:PartyName>
+    </cac:DeliveryParty>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode>57</cbc:PaymentMeansCode>
+    <cbc:PaymentID>RINV/2026/00006</cbc:PaymentID>
+  </cac:PaymentMeans>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">-21.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">-100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">-21.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">-100.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">-100.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">-121.00</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="EUR">-121.00</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">-1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">-100.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Name>percent_21</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21.00</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
+      <cbc:BaseQuantity>1.000</cbc:BaseQuantity>         
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>
