@@ -86,7 +86,10 @@ export class ToggleBlockPlugin extends Plugin {
         split_element_block_overrides: withSequence(1, this.handleSplitElementBlock.bind(this)),
         tab_overrides: this.handleTab.bind(this),
 
-        should_show_power_buttons_predicates: this.showPowerButtons.bind(this),
+        region_properties: {
+            within: `${toggleSelector} ${titleSelector}`,
+            powerButtons: false,
+        },
 
         before_insert_processors: this.handleInsert.bind(this),
     };
@@ -614,11 +617,5 @@ export class ToggleBlockPlugin extends Plugin {
                 initialText,
             })
         );
-    }
-
-    showPowerButtons(selection) {
-        if (selection.isCollapsed) {
-            return !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`);
-        }
     }
 }
