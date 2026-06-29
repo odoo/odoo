@@ -45,10 +45,6 @@ class HrWorkEntryType(models.Model):
         default=1.0,
         tracking=True,
         help="If you want the hours to be paid double, the rate should be set to 200%.")
-    is_extra_hours = fields.Boolean(
-        string="Added to Monthly Pay",
-        tracking=True,
-        help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
     description = fields.Text(translate=True, tracking=True)
 
     @api.constrains('code', 'country_id')
