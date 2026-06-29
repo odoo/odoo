@@ -4801,14 +4801,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Test invoice_currency_rate with 0 value
         with self.assertRaises(ValidationError):
-            with Form(invoice) as move_form:
-                move_form.invoice_currency_rate = 0
+            invoice.invoice_currency_rate = 0
+
         self.assertEqual(invoice.invoice_currency_rate, 2.0)
 
         # Test invoice_currency_rate with negative value
         with self.assertRaises(ValidationError):
-            with Form(invoice) as move_form:
-                move_form.invoice_currency_rate = -420
+            invoice.invoice_currency_rate = -420
+
         self.assertEqual(invoice.invoice_currency_rate, 2.0)
 
     def test_invoice_currency_rate_manually_changed(self):

@@ -119,11 +119,9 @@
                                            groups="base.group_multi_currency"/>
                                 </div>
                                 <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="currency_id == company_currency_id == source_currency_id">
-                                    <span>1</span>
-                                    <field name="company_currency_id" readonly="1" options="{'no_open': True}"/>
-                                    <span>=</span>
-                                    <field name="exchange_rate" readonly="True"/>
-                                    <field name="exchange_rate_currency_code" readonly="True"/>
+                                    <field name="company_currency_id" invisible="1"/>
+                                    <field name="exchange_rate" invisible="1"/>
+                                    <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate'}"/>
                                 </div>
                             </div>
                             <field

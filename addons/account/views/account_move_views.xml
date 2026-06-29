@@ -1236,11 +1236,9 @@
                                         <div name="currency_conversion_div"
                                              class="d-flex gap-1 text-muted"
                                              invisible="currency_id == company_currency_id">
-                                            <span>1</span>
-                                            <field name="company_currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
-                                            <span>=</span>
-                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'" style="max-width: 21ch;"/>
-                                            <field name="currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
+                                            <field name="company_currency_id" invisible="1"/>
+                                            <field name="invoice_currency_rate" invisible="1"/>
+                                            <widget name="account_currency_exchange_rate" readonly="state != 'draft'" options="{'rate_field': 'invoice_currency_rate'}"/>
                                             <div
                                              invisible="show_journal or state != 'draft' or invoice_currency_rate == expected_currency_rate">
                                             <button type="object"
