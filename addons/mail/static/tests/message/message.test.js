@@ -1972,3 +1972,20 @@ test("Copy Message Link", async () => {
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });
+
+test("Remove link preview when message no longer contains the link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "EditPreviewTest" });
+    onRpcBefore("/mail/link_preview", () => expect.step("link_preview"));
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-LinkPreviewCard");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "Hi", { replace: true });
+    await press("Enter");
+    await contains(".o-mail-Message:has(:text('Hi (edited)'))");
+    expect.verifySteps(["link_preview", "link_preview"]);
+});
