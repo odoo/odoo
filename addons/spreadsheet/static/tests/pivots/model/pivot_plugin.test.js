@@ -2451,6 +2451,12 @@ test("Pivot headers day of week are still correct after updating the locale's we
     expect(getEvaluatedGrid(model, "A22:A24")).toEqual([["Monday"], ["Thursday"], ["Friday"]]);
 });
 
+test("Pivot normalization of many2one is a string in case of account.root", () => {
+    expect(
+        pivotNormalizationValueRegistry.get("many2one")({ value: 1 }, { relation: "account.root" })
+    ).toBe("1");
+});
+
 test("Groupable fields in pivot", async function () {
     const groupableFieldTypes = [
         "boolean",
