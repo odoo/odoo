@@ -128,6 +128,14 @@ class BlogBlog(models.Model):
             items.append((self.name, self.website_url))
         return items
 
+    def get_dummy_records(self, **kwargs):
+        template_key = kwargs.get('template_key', 'dynamic_filter_template_blog_post_list')
+        num_of_elements = kwargs.get('limit', 3)
+        dynamic_filter = self.env.ref("website_blog.dynamic_filter_latest_blog_posts")
+        if dynamic_filter:
+            data = dynamic_filter._prepare_sample(num_of_elements, res_model=None)
+            return data
+        return False
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
