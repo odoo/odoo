@@ -94,7 +94,7 @@ patch(Composer.prototype, {
 
     get postData() {
         const postData = super.postData;
-        if (this.env.displayRating && !this.message) {
+        if (this.portalChatterPlugin?.displayRating() && !this.message) {
             postData.rating_value = this.portalState.ratingValue;
         }
         this.portalState.ratingValue = DEFAULT_STAR_RATING;

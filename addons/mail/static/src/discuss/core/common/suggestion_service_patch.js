@@ -23,7 +23,7 @@ const suggestionServicePatch = {
             }))
             .filter(({ condition }) => !condition || condition({ store: this.store, channel }));
     },
-    getSupportedDelimiters(thread, env) {
+    getSupportedDelimiters(thread, owner) {
         const res = super.getSupportedDelimiters(...arguments);
         return thread?.channel ? [...res, [SUGGESTION_DELIMITERS.CHANNEL_COMMAND, 0]] : res;
     },

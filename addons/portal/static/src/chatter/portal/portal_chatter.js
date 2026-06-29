@@ -1,8 +1,8 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, xml } from "@odoo/owl";
+import { Component, plugin, providePlugins, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class PortalChatter extends Component {
@@ -14,10 +14,10 @@ export class PortalChatter extends Component {
     static props = ["resId", "resModel", "composer", "twoColumns", "displayRating"];
 
     setup() {
-        useSubEnv({
-            displayRating: this.props.displayRating,
-            inFrontendPortalChatter: true,
-        });
+        providePlugins([PortalChatterPlugin]);
+        const portalChatterPlugin = plugin(PortalChatterPlugin);
+        portalChatterPlugin.displayRating.set(this.props.displayRating);
+        portalChatterPlugin.inFrontendPortalChatter.set(true);
         this.overlayService = useService("overlay");
         this.store = useService("mail.store");
         this.env.bus.addEventListener("reload_chatter_content", (ev) =>

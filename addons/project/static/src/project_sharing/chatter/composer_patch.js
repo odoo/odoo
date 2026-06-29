@@ -1,4 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
+import { maybePlugin } from "@mail/utils/common/misc";
+import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
@@ -7,6 +9,7 @@ import { onWillStart } from "@odoo/owl";
 patch(Composer.prototype, {
     setup() {
         super.setup();
+        this.projectSharingPlugin = maybePlugin(ProjectSharingPlugin);
         onWillStart(() => {
             if (this.thread && !this.thread.id) {
                 this.state.active = false;
@@ -15,7 +18,7 @@ patch(Composer.prototype, {
     },
 
     get placeholder() {
-        if (this.env.projectSharingId) {
+        if (this.projectSharingPlugin?.projectSharingId()) {
             return _t("Write a message…");
         }
         return super.placeholder;
@@ -23,8 +26,9 @@ patch(Composer.prototype, {
 
     get extraData() {
         const extraData = super.extraData;
-        if (this.env.projectSharingId) {
-            extraData.project_sharing_id = this.env.projectSharingId;
+        const projectSharingId = this.projectSharingPlugin?.projectSharingId();
+        if (projectSharingId) {
+            extraData.project_sharing_id = projectSharingId;
         }
         return extraData;
     },

@@ -31,7 +31,7 @@ export class SuggestionService {
      * @param {import('models').Thread} thread
      * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
-    getSupportedDelimiters(thread, env) {
+    getSupportedDelimiters(thread, owner) {
         const delimiters = [
             [SUGGESTION_DELIMITERS.PARTNER],
             [SUGGESTION_DELIMITERS.CANNED_RESPONSE],

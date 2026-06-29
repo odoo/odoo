@@ -152,7 +152,7 @@ export class UseSuggestion {
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
-            this.comp.env
+            this.comp
         );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
