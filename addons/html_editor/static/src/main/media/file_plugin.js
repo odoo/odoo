@@ -70,11 +70,7 @@ export class FilePlugin extends Plugin {
                 return false;
             }
         },
-        is_powerbox_available_predicates: (node) => {
-            if (closestElement(node, ".o_file_box")) {
-                return false;
-            }
-        },
+        region_properties: { within: ".o_file_box", powerbox: false },
         are_shorthands_available_predicates: (node) => {
             if (closestElement(node, ".o_file_box")) {
                 return false;
