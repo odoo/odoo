@@ -49,3 +49,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'pcg_61241',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code == 'ma':
+            # The COA (Chart of Accounts) data is loaded after the initial compute methods are called.
+            # During initial journal setup, the payment methods and accounts may not exist yet,
+            # causing the payment method lines to not be properly configured.
+            # We call these helper methods again in _post_load_data to ensure all payment method lines
+            # are correctly assigned once all COA data is fully available.
+            bank_journals = company.bank_journal_ids
+            bank_journals._update_payment_method_lines_account_for_bank_journals('inbound', 'ma')
+            bank_journals._update_payment_method_lines_account_for_bank_journals('outbound', 'ma')

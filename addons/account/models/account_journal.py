@@ -1059,6 +1059,29 @@ class AccountJournal(models.Model):
             }
         )
 
+    def _update_payment_method_lines_account_for_bank_journals(self, payment_type, chart_template=None):
+        """ Update the payment method lines account for bank journals based on the chart template. Used in localizations """
+        bank_journals = self.filtered(lambda j: j.type == "bank" and j.company_id.chart_template == chart_template)
+        if not bank_journals:
+            return
+
+        account_xmlid = 'account_journal_payment_debit_account_id' if payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
+        lines_to_update = bank_journals[f"{payment_type}_payment_method_line_ids"].filtered(
+            lambda l: l.payment_method_id.code == 'manual'
+        )
+        if not lines_to_update:
+            return
+
+        account_company_map = {
+            company: self.env['account.chart.template']
+                .with_company(company)
+                .ref(account_xmlid, raise_if_not_found=False)
+            for company in lines_to_update.mapped('company_id')
+        }
+        for company, lines in lines_to_update.grouped('company_id').items():
+            if account := account_company_map[company]:
+                lines.payment_account_id = account
+
     @api.depends('currency_id')
     def _compute_display_name(self):
         for journal in self:
