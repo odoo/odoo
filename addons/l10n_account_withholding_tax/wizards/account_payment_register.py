@@ -50,6 +50,10 @@ class AccountPaymentRegister(models.TransientModel):
     )
     withholding_payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
     withholding_hide_tax_base_account = fields.Boolean(compute='_compute_withholding_hide_tax_base_account')
+    withholding_hide_name = fields.Boolean(
+        compute='_compute_withholding_hide_name',
+        help="If True, the name field will be hidden on the withholding lines"
+    )
 
     @api.model
     def default_get(self, fields_list):
@@ -221,6 +225,11 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 if wizard.payment_difference == withholding_residual:
                     wizard.show_payment_difference = False
+
+    @api.depends("withholding_line_ids.withholding_sequence_id")
+    def _compute_withholding_hide_name(self):
+        for wizard in self:
+            wizard.withholding_hide_name = not any(line.withholding_sequence_id for line in wizard.withholding_line_ids)
 
     # ----------------------------
     # Onchange, Constraint methods

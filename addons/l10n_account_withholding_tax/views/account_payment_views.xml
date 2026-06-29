@@ -25,10 +25,11 @@
                                 <field name="placeholder_value" column_invisible="True"/> <!-- Needed for the placeholder widget -->
                                 <field name="name"
                                        string="Sequence Number"
-                                       required="not withholding_sequence_id"
+                                       column_invisible="parent.withholding_hide_name"
                                        widget="char_with_placeholder_field"
                                        options="{'placeholder_field': 'placeholder_value'}"
-                                       width="92px"/>
+                                       width="92px"
+                                       optional="show"/>
                                 <field name="account_id"
                                        column_invisible="parent.withholding_hide_tax_base_account"
                                        width="184px"
