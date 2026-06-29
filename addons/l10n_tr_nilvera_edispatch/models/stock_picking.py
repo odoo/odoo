@@ -217,6 +217,7 @@ class StockPicking(models.Model):
             self.date_done,
         )
         values = {
+            'id': self._get_nilvera_document_serial_number(),
             'ubl_version_id': 2.1,
             'customization_id': 'TR1.2.1',
             'uuid': dispatch_uuid,
@@ -270,3 +271,12 @@ class StockPicking(models.Model):
         self.filtered(
             lambda p: p.country_code == 'TR' and p.picking_type_code == 'outgoing'
         ).l10n_tr_nilvera_dispatch_state = 'sent'
+
+    def _get_nilvera_document_serial_number(self):
+        """
+        Returns the serial number for the e-Dispatch document in a format accepted by Nilvera.
+        The format is: '[Picking Type Code][Year (YYYY)][Sequence Number of 9 digits padded with 0]'
+        Example: 'OUT2025123456789'
+        """
+        sequence_number = self.name.removeprefix(self.picking_type_id.sequence_id.prefix or '').removesuffix(self.picking_type_id.sequence_id.suffix or '')
+        return f"{self.picking_type_id.sequence_code.upper()}{self.scheduled_date.year}{sequence_number.zfill(9)}"
