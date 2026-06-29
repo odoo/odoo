@@ -45,6 +45,10 @@ class Lead(models.Model):
         return fields_info
 
     def website_form_input_filter(self, request, values):
+        if 'partner_id' in values:
+            values.pop('email_from', None)
+            values.pop('phone', None)
+
         values['medium_id'] = values.get('medium_id') or \
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
                               self.env['utm.medium']._fetch_or_create_utm_medium('website').id
