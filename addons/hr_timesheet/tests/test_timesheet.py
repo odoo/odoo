@@ -28,13 +28,12 @@ class TestCommonTimesheet(TransactionCase):
             'phone': '42',
         })
 
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({
-            'name': 'Timesheet Plan Test',
-        })
+        cls.project_plan, cls.other_plans = cls.env['account.analytic.plan']._get_all_plans()
+        cls.second_plan = cls.other_plans[0] if cls.other_plans else cls.env['account.analytic.plan'].create({'name': 'secondary plan'})
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Analytic Account for Test Customer',
             'partner_id': cls.partner.id,
-            'plan_id': cls.analytic_plan.id,
+            'plan_id': cls.project_plan.id,
             'code': 'TEST'
         })
 
@@ -434,18 +433,16 @@ class TestTimesheet(TestCommonTimesheet):
         company_2 = self.env['res.company'].create({'name': 'Company 2'})
         company_3 = self.env['res.company'].create({'name': 'Company 3'})
 
-        analytic_plan = self.env['account.analytic.plan'].create({
-            'name': 'Plan Test',
-        })
+        plan_name = f'{self.second_plan._column_name()}'
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'Aa Aa',
-            'plan_id': analytic_plan.id,
+            'plan_id': self.second_plan.id,
             'company_id': company_3.id,
         })
         project = self.env['project.project'].create({
             'name': 'Aa Project',
             'company_id': company_3.id,
-            'account_id': analytic_account.id,
+            plan_name: analytic_account.id,
         })
         task = self.env['project.task'].create({
             'name': 'Aa Task',
@@ -732,7 +729,7 @@ class TestTimesheet(TestCommonTimesheet):
     def test_analytic_plan_timesheet_creation(self):
         child_analytic_plan = self.env['account.analytic.plan'].create({
             'name': 'Child Analytic Plan',
-            'parent_id': self.analytic_plan.id,
+            'parent_id': self.project_plan.id,
         })
         child_analytic_account = self.env['account.analytic.account'].create({
             'name': 'Analytic Account for Child Analytic Plan',
@@ -740,7 +737,7 @@ class TestTimesheet(TestCommonTimesheet):
             'plan_id': child_analytic_plan.id,
             'code': 'TEST',
         })
-        plan_name = f'{self.analytic_plan._column_name()}'
+        plan_name = f'{self.project_plan._column_name()}'
         self.project_customer[plan_name] = child_analytic_account
         timesheet = self.env['account.analytic.line'].create({
             'name': 'Timesheet',
@@ -758,16 +755,13 @@ class TestTimesheet(TestCommonTimesheet):
             'project_id': self.project_customer.id,
             'employee_id': self.empl_employee.id,
         })
-        analytic_plan = self.env['account.analytic.plan'].create({
-            'name': 'Analytic Plan'
-        })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'Analytic Account',
             'partner_id': self.partner.id,
-            'plan_id': analytic_plan.id,
+            'plan_id': self.second_plan.id,
             'code': 'TEST',
         })
-        plan_name = f'{analytic_plan._column_name()}'
+        plan_name = f'{self.second_plan._column_name()}'
         other_project = self.env['project.project'].create({
             'name': 'Other Project',
             'allow_timesheets': True,
@@ -778,13 +772,19 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(other_project[plan_name], timesheet[plan_name])
 
     def test_mandatory_plan_timesheet_applicability(self):
+        self.env['account.analytic.account'].create({
+            'name': 'Analytic Account for Test Customer',
+            'partner_id': self.partner.id,
+            'plan_id': self.second_plan.id,
+            'code': 'TEST'
+        })
         self.env['account.analytic.applicability'].create({
             'business_domain': 'timesheet',
             'applicability': 'mandatory',
-            'analytic_plan_id': self.analytic_plan.id,
+            'analytic_plan_id': self.second_plan.id,
         })
         with self.assertRaises(ValidationError):
-            # The analytic plan 'self.analytic_plan' is mandatory on the project linked to the timesheet
+            # The analytic plan 'second' is mandatory on the project linked to the timesheet
             self.env['account.analytic.line'].create({
                 'name': 'Timesheet',
                 'unit_amount': 1,
@@ -804,18 +804,18 @@ class TestTimesheet(TestCommonTimesheet):
             })
 
     def test_keep_create_account_values_at_timesheet_creation(self):
-        field_name = self.analytic_plan._column_name()
+        field_name = self.project_plan._column_name()
         analytic_account, another_account = self.env['account.analytic.account'].create([
             {
                 'name': 'Analytic Account',
                 'partner_id': self.partner.id,
-                'plan_id': self.analytic_plan.id,
+                'plan_id': self.project_plan.id,
                 'code': 'TEST',
             },
             {
                  'name': 'Another Analytic Account',
                  'partner_id': self.partner.id,
-                 'plan_id': self.analytic_plan.id,
+                 'plan_id': self.project_plan.id,
                  'code': 'TEST2',
             },
        ])
@@ -834,18 +834,18 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(line[field_name].id, analytic_account.id, f"The value of {field_name} shouldn't get overwritten by the project's account")
 
     def test_keep_write_account_values_at_timesheet_update(self):
-        field_name = self.analytic_plan._column_name()
+        field_name = self.project_plan._column_name()
         analytic_account, another_account = self.env['account.analytic.account'].create([
             {
                 'name': 'Analytic Account',
                 'partner_id': self.partner.id,
-                'plan_id': self.analytic_plan.id,
+                'plan_id': self.project_plan.id,
                 'code': 'TEST',
             },
             {
                 'name': 'Another Analytic Account',
                 'partner_id': self.partner.id,
-                'plan_id': self.analytic_plan.id,
+                'plan_id': self.project_plan.id,
                 'code': 'TEST2',
             },
         ])

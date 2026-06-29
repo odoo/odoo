@@ -15,7 +15,6 @@ class Expense(models.Model):
                 expenses_to_recompute += expense
                 prefetch_ids.update(self.env['analytic.mixin']._get_analytic_account_ids_from_distributions(expense.analytic_distribution))
                 prefetch_ids.update(self.env['analytic.mixin']._get_analytic_account_ids_from_distributions(expense.sale_order_id.project_id._get_analytic_distribution()))
-
             if expenses_to_recompute:
                 analytic_account_model = self.env['account.analytic.account'].with_prefetch(prefetch_ids)
                 for expense in expenses_to_recompute:
