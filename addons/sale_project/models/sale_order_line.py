@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.tools import float_is_zero
 
 
@@ -432,14 +432,6 @@ class SaleOrderLine(models.Model):
                         task_templates |= so_line.product_id.task_template_id
                         so_line._timesheet_create_task(project)
                     so_line._handle_milestones(project)
-
-                elif not project:
-                    raise UserError(_(
-                        "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-                        "The following product need a project in which to put its task: %(product_name)s",
-                        order=so_line.order_id.name,
-                        product_name=so_line.product_id.name,
-                    ))
 
     def _handle_milestones(self, project):
         self.ensure_one()
