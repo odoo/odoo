@@ -66,7 +66,7 @@ class TestInvitationLink(TransactionCase):
         user = self.Users.search([('login', '=', login)])
         self.assertTrue(user, "the invited user must be created")
         self.assertFalse(user.share, "the invited user is an internal user")
-        self.assertEqual(user.role, 'light',
+        self.assertEqual(user.role, 'group_user',
                          "the invited user must be a Light, non-billable user")
         self.assertTrue(user.employee_ids, "an employee must be created for the invited user")
         self.assertEqual(link.used_count, 1, "the link use must be recorded")
