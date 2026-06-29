@@ -60,6 +60,12 @@ export class Thread extends Component {
     /** @type {number} */
     smoothScrollingTimeout;
     isSmoothScrolling = false;
+    /**
+     * Bumped by every `reset()`. Used as a dependency of the effect mirroring
+     * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
+     * reset without making `mountedAndLoaded` depend on itself.
+     */
+    resetCount = 0;
 
     setup() {
         super.setup();
@@ -206,11 +212,16 @@ export class Thread extends Component {
                 this.state.mountedAndLoaded = isLoaded;
             },
             /**
-             * Observe `mountedAndLoaded` as well because it might change from
-             * other parts of the code without `useLayoutEffect` detecting any change
-             * for `isLoaded`, and it should still be reset when patching.
+             * `reset()` forces `mountedAndLoaded` false and this effect writes
+             * it too, so it can't be its own dependency: `useLayoutEffect`
+             * records dependencies before running the body, hence a `reset()`
+             * landing while this effect is being applied would leave the
+             * recorded value matching the current one and strand
+             * `mountedAndLoaded` at false. Depend on `resetCount`, bumped by
+             * `reset()`, so every reset re-syncs `mountedAndLoaded` with
+             * `isLoaded`.
              */
-            () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
+            () => [this.props.thread.isLoaded, this.resetCount]
         );
         useLayoutEffect(
             () => {
@@ -580,6 +591,7 @@ export class Thread extends Component {
     }
 
     reset() {
+        this.resetCount++;
         this.state.mountedAndLoaded = false;
         this.loadOlderState.ready = false;
         this.loadNewerState.ready = false;
