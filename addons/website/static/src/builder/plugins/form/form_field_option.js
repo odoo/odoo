@@ -205,6 +205,25 @@ export class FormFieldOption extends BaseOptionComponent {
         return RANGE_COMPARATORS.includes(this.domState.elDataset.requirementComparator);
     }
     /**
+     * Label of the date requirement condition (start) row, depending on the
+     * selected comparator.
+     *
+     * @returns {string}
+     */
+    get dateRequirementConditionLabel() {
+        return this.isRangeComparator ? _t("Start date") : _t("Date");
+    }
+    /**
+     * Start date of a range requirement, used to restrict the end date picker
+     * so it cannot be set before the start date.
+     *
+     * @returns {DateTime|undefined}
+     */
+    get requirementStartDate() {
+        const value = parseInt(this.domState.elDataset.requirementCondition);
+        return Number.isNaN(value) ? undefined : DateTime.fromSeconds(value);
+    }
+    /**
      * Determines the visibility of the character limit checkbox used for
      * validation.
      *

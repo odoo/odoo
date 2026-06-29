@@ -995,6 +995,8 @@ export class FormOptionPlugin extends Plugin {
     /**
      * Drops requirement comparators left without their value(s): a comparator
      * with no condition (nor end value for ranges) is a no-op requirement.
+     * Also drops ranges whose start is after their end, as they can never be
+     * satisfied and would make the field impossible to fill.
      *
      * @param {HTMLElement} rootEl
      */
@@ -1007,8 +1009,10 @@ export class FormOptionPlugin extends Plugin {
                 requirementCondition: condition,
                 requirementBetween: between,
             } = fieldEl.dataset;
-            const missingEnd = RANGE_COMPARATORS.includes(comparator) && !between;
-            if (!condition || condition === "[]" || missingEnd) {
+            const isRange = RANGE_COMPARATORS.includes(comparator);
+            const missingEnd = isRange && !between;
+            const invalidRange = isRange && parseInt(condition) > parseInt(between);
+            if (!condition || condition === "[]" || missingEnd || invalidRange) {
                 delete fieldEl.dataset.requirementComparator;
                 this.clearValidationDataset(fieldEl);
             }
@@ -1669,6 +1673,7 @@ export class SetRequirementComparatorAction extends BuilderAction {
         }
     }
 }
+
 /**
  * Sets the dataset value of custom-error attribute which is further used to
  * determine if the input for custom error message should be visible or not.
