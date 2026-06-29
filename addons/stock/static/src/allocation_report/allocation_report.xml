@@ -27,7 +27,7 @@
                             <span t-out="this.data.reason"/>
                         </t>
                     </h2>
-                    <div t-if="this.hasContent" class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none text-nowrap">
+                    <div t-if="this.hasContent" class="d-flex gap-1 d-empty-none d-print-none text-nowrap">
                         <button t-on-click="() => this.onClickPrint()"
                                 type="button" class="btn btn-primary"
                                 title="Print">
@@ -46,28 +46,39 @@
                     </div>
                 </div>
                 <t t-if="this.hasContent">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>Available</th>
-                                <th class="ps-3" style="min-width: 100px;">Quantity</th>
-                                <th class="text-center">Assigned</th>
-                                <th><i class="fa fa-star opacity-0 me-2"/>For</th>
-                                <th>Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-view">
-                            <t t-foreach="this.productLines" t-as="line" t-key="line.id">
-                                <ProductLine t-props="line"/>
-                            </t>
-                        </tbody>
-                    </table>
+                    <t t-if="this.ui.isSmall" t-call="stock.AllocationReport.MobileContent"/>
+                    <t t-else="" t-call="stock.AllocationReport.Content"/>
                 </t>
                 <p t-else="">
                     No allocation need found.
                 </p>
             </div>
         </div>
+    </t>
+
+    <t t-name="stock.AllocationReport.MobileContent">
+        <t t-foreach="this.productLines" t-as="line" t-key="line.id">
+            <ProductLine t-props="line" isSmall="true"/>
+        </t>
+    </t>
+
+    <t t-name="stock.AllocationReport.Content">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Available</th>
+                    <th class="ps-3" style="min-width: 100px;">Quantity</th>
+                    <th class="text-center">Assigned</th>
+                    <th><i class="fa fa-star opacity-0 me-2"/>For</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="bg-view">
+                <t t-foreach="this.productLines" t-as="line" t-key="line.id">
+                    <ProductLine t-props="line"/>
+                </t>
+            </tbody>
+        </table>
     </t>
 </templates>
