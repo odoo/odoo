@@ -55,11 +55,11 @@ kbd {
 //== Badges
 .badge {
   min-width: $o-badge-min-width;
-  line-height: 1.1;
+  line-height: var(--o-Badge-lineHeight, 1.166);
   border: 0;
-  font-size: 0.85em;
+  font-size:  var(--o-Badge-fontSize, 0.85714em);
   user-select: none;
-  font-weight: 500;
+  font-weight: var(--o-Badge-fontWeight, 500);
   @include o-text-overflow;
   transition: none; // remove transition to prevent badges from flickering at reload
   color: $o-black;
