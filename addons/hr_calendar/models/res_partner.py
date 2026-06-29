@@ -50,6 +50,11 @@ class ResPartner(models.Model):
         # Compute employee's calendars's period and order employee by his involved calendars
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
         calendar_periods_by_employee = employees._get_calendar_periods(start_period, stop_period)
+        # optionally use the employee calendar for the whole period if employee doesn't use versions
+        if self.env.context.get('fallback_employee_schedule_on_missing_contract'):
+            for employee in employees:
+                if len(employee.version_ids) <= 1 and not employee.version_ids.contract_date_start:
+                    calendar_periods_by_employee[employee] = [(start_period, stop_period, employee.resource_calendar_id)]
         for employee, calendar_periods in calendar_periods_by_employee.items():
             for _start, _stop, calendar in calendar_periods:
                 calendar = calendar or self.env.company.resource_calendar_id
