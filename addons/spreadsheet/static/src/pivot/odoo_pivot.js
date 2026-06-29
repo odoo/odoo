@@ -568,6 +568,15 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         }
     }
 
+    createPivotDimension(fields, dimension) {
+        const dim = super.createPivotDimension(fields, dimension);
+        const field = fields[dimension.fieldName];
+        if (field?.relation) {
+            dim.relation = field.relation;
+        }
+        return dim;
+    }
+
     get domain() {
         return this._domain;
     }
