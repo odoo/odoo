@@ -46,11 +46,13 @@ class DiscussChannel(models.Model):
         string="Agents",
         compute="_compute_livechat_agent_partner_ids",
         store=True,
+        context={"im_livechat.hide_partner_company": True}
     )
     livechat_bot_partner_ids = fields.Many2many(
         "res.partner",
         string="Bots",
         compute="_compute_livechat_bot_partner_ids",
+        context={"active_test": False}
     )
     livechat_customer_partner_ids = fields.Many2many(
         "res.partner",
