@@ -25,6 +25,7 @@ import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { InputPlugin } from "@html_editor/core/input_plugin";
 import { LineBreakPlugin } from "@html_editor/core/line_break_plugin";
 import { OverlayPlugin } from "@html_editor/core/overlay_plugin";
+import { PropertiesPlugin } from "@html_editor/core/properties_plugin";
 import { SanitizePlugin } from "@html_editor/core/sanitize_plugin";
 import { SelectionPlugin } from "@html_editor/core/selection_plugin";
 import { SplitPlugin } from "@html_editor/core/split_plugin";
@@ -62,6 +63,7 @@ export const MAIL_TEXT_PLUGINS = [
     MessageLinkPlugin,
     OverlayPlugin,
     PersistSelectionPlugin,
+    PropertiesPlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,
