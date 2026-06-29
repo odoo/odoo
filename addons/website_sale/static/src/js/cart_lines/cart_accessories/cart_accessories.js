@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class CartAccessories extends Component {
     static template = "website_sale.CartAccessories";
-    static props = {
-        isQuantityViewActive: Boolean,
-        templateData: Object,
-        accessories: Object,
-    };
+    props = props({
+        isQuantityViewActive: t.boolean(),
+        templateData: t.object(),
+        accessories: t.object(),
+    });
 
     setup() {
         this.cartService = useService("cart");

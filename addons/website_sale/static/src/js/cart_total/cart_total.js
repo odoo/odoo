@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, proxy, props, t } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -6,14 +6,14 @@ import { useService, useBus } from "@web/core/utils/hooks";
 
 export class CartTotal extends Component {
     static template = "website_sale.CartTotal";
-    static props = {
-        templateData: Object,
-        orderId: { type: Number, optional: true },
-        hidePromotions: { type: Boolean },
-    };
+    props = props({
+        templateData: t.object(),
+        orderId: t.number().optional(),
+        hidePromotions: t.boolean(),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             totals: {},
             notification: {
                 success: false,
