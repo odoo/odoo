@@ -1,4 +1,4 @@
-Hungary, 2023-05-24
+Hungary, 2026-06-29
 
 OdooTech Zrt. agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 
@@ -12,4 +12,5 @@ List of contributors:
 
 Csaba Tóth csaba.toth@odootech.hu https://github.com/tsabi
 Csaba Geier geier.csaba@dotech.hu https://github.com/geiercsaba
-Dávid Ötvös otvos.david@dotech.hu https://github.com/davidotvos
+Tamás Ágoston agoston.tamas@dotech.hu https://github.com/odootechatamas
+Tamás Bajusz bajusz.tamas@dotech.hu https://github.com/bajusztamas-odootech
