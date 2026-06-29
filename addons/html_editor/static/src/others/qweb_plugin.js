@@ -73,11 +73,6 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
-        is_formattable_node_predicates: (node) => {
-            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
-                return true;
-            }
-        },
         can_format_content_predicates: (selection) => {
             const targetedNodes = new Set(
                 this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
@@ -93,6 +88,12 @@ export class QWebPlugin extends Plugin {
             if (anchorNode === focusNode && closestElement(anchorNode, PROTECTED_QWEB_SELECTOR)) {
                 return true;
             }
+        },
+
+        /** Regions */
+        region_properties: {
+            is: PROTECTED_QWEB_SELECTOR,
+            formattable: true,
         },
 
         /** Providers */
