@@ -44,6 +44,7 @@ class TestEmployeeUi(HttpCase):
         })
 
         self.start_tour("/odoo", 'version_timeline_auto_save_tour', login="alice")
+<<<<<<< 8fc41530df7b85e9a454bf6da9b9bbd09fd3d647
         self.assertFalse(bob_employee.version_ids[-1].contract_date_start)
 
     def test_create_employee_with_hr_rights(self):
@@ -52,3 +53,7 @@ class TestEmployeeUi(HttpCase):
 
         emp = self.env['hr.employee'].search([('name', 'ilike', 'My Employee')])
         self.assertTrue(emp)
+||||||| 161715c850496d3683baa5d1600380470d0b5ff5
+        self.assertFalse(bob_employee.version_ids[-1].contract_date_start)
+=======
+>>>>>>> e2613823c74f5fa80608f049a06de14776132b1d
