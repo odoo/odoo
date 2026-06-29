@@ -327,6 +327,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                     if (res.isValid) {
                         await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
                         invalidated = true;
+                        if (apiKey) {
+                            this.notification.add(
+                                _t(
+                                    "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                ),
+                                { type: "warning", sticky: true }
+                            );
+                        }
                         if (close) {
                             close();
                         } else {
