@@ -1,17 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import {
-    getIframeAdjustedBoundingRect,
-    isEditorTab,
-    isEmptyBlock,
-} from "@html_editor/utils/dom_info";
-import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import { getIframeAdjustedBoundingRect } from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
-/** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 /**
  * @typedef {Object} PowerButton
@@ -21,10 +16,6 @@ import { debounce } from "@web/core/utils/timing";
  * @property {string} [icon] Can be inferred from the user command
  * @property {string} [text] Mandatory if `icon` is not provided
  * @property {string} [isAvailable] Can be inferred from the user command
- */
-
-/**
- * @typedef {((selection: EditorSelection) => boolean)[]} should_show_power_buttons_predicates
  */
 
 /**
@@ -65,7 +56,9 @@ export class PowerButtonsPlugin extends Plugin {
         "position",
         "localOverlay",
         "powerbox",
+        "region",
         "userCommand",
+        "hint",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -157,13 +150,10 @@ export class PowerButtonsPlugin extends Plugin {
             documentSelection.isCollapsed &&
             block?.matches(baseContainerGlobalSelector) &&
             editableRect.bottom > blockRect.top &&
-            isEmptyBlock(block) &&
-            !descendants(block).some(isEditorTab) &&
             this.editable.offsetWidth >= MIN_WIDTH_FOR_POWER_BUTTONS &&
-            !closestElement(documentSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
-            (this.checkPredicates("should_show_power_buttons_predicates", documentSelection) ??
-                true)
+            (this.dependencies.region.getProperty(documentSelection.anchorNode, "powerButtons") ??
+                false)
         ) {
             const direction = closestElement(block, "[dir]")?.getAttribute("dir");
             // Hide/show buttons based on their availability.

@@ -170,6 +170,12 @@ export class ListPlugin extends Plugin {
 
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
+        /** Regions */
+        region_properties: {
+            within: "LI",
+            powerButtons: false,
+        },
+
         /** Handlers */
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),

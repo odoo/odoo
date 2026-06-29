@@ -1,12 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import {
-    closestElement,
-    descendants,
-    firstLeaf,
-    selectElements,
-} from "@html_editor/utils/dom_traversal";
+import { descendants, firstLeaf, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 import { debounce } from "@web/core/utils/timing";
 
@@ -39,11 +34,10 @@ export class HintPlugin extends Plugin {
         on_pending_mutations_staged_handlers: this.updateHints.bind(this),
         on_content_updated_handlers: this.updateHints.bind(this),
 
-        /** Predicates */
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (!closestElement(anchorNode, ".o-we-hint")) {
-                return false;
-            }
+        /** Regions */
+        region_properties: {
+            within: ".o-we-hint",
+            powerButtons: true,
         },
 
         /** Processors */

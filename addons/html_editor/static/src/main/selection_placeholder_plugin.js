@@ -52,10 +52,9 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
-                return false;
-            }
+        region_properties: {
+            within: PLACEHOLDER_SELECTOR,
+            powerButtons: false,
         },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,

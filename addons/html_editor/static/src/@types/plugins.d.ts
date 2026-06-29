@@ -46,7 +46,7 @@ declare module "plugins" {
     import { media_dialog_extra_tabs, MediaShared, on_media_added_handlers, on_media_dialog_saved_handlers, on_will_save_media_dialog_handlers, on_media_replaced_handlers } from "@html_editor/main/media/media_plugin";
     import { move_node_blacklist_selectors, move_node_whitelist_selectors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
     import { on_layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
-    import { power_buttons, should_show_power_buttons_predicates } from "@html_editor/main/power_buttons_plugin";
+    import { power_buttons } from "@html_editor/main/power_buttons_plugin";
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
@@ -232,7 +232,6 @@ declare module "plugins" {
         is_valid_contenteditable_predicates: is_valid_contenteditable_predicates;
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
-        should_show_power_buttons_predicates: should_show_power_buttons_predicates;
         would_feff_be_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
 
