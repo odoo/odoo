@@ -1786,10 +1786,13 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_get_payment_means_payee_financial_account_node_from_partner_bank(self, vals, partner_bank):
-        return {
+        node = {
             'cbc:ID': {'_text': partner_bank.sanitized_acc_number},
             'cac:FinancialInstitutionBranch': self._ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(vals, partner_bank),
         }
+        if account_holder_name := partner_bank._get_edi_payee_account_holder_name():
+            node['cbc:Name'] = {'_text': account_holder_name}
+        return node
 
     def _ubl_add_payment_means_nodes(self, vals):
         vals['document_node']['cac:PaymentMeans'] = []
@@ -2726,6 +2729,30 @@ class AccountEdiUBL(models.AbstractModel):
         partner_bank_values['partner_banks'] = partner_banks
         if partner_banks:
             collected_values['to_write']['partner_bank_id'] = partner_banks[:1].id
+
+    def _import_ubl_invoice_enrich_partner_bank(self, collected_values):
+        partner_banks = collected_values.get('partner_bank_values', {}).get('partner_banks')
+        if not partner_banks:
+            return
+
+        tree = collected_values['tree']
+        type_code = tree.findtext('./{*}InvoiceTypeCode') or tree.findtext('./{*}CreditNoteTypeCode')
+        payee_values, is_factoring = self._edi_parse_payee_party_from_ubl_tree(tree)
+        if self._edi_is_factoring_document_type_code(type_code):
+            is_factoring = True
+
+        if not payee_values and not is_factoring:
+            return
+
+        if payee_values:
+            payee_values['acc_holder_partner'] = self._edi_retrieve_payee_partner_from_values(
+                collected_values['company'],
+                payee_values,
+            )
+
+        write_vals = self._edi_get_partner_bank_payee_write_vals(payee_values, is_factoring)
+        if write_vals:
+            partner_banks[:1].write(write_vals)
 
     def _import_ubl_invoice_add_ref(self, collected_values):
         tree = collected_values['tree']
@@ -3854,6 +3881,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # partner_bank_id
         self._import_ubl_retrieve_partner_bank(collected_values)
+        self._import_ubl_invoice_enrich_partner_bank(collected_values)
 
         # ref / invoice_origin / narration / payment_reference / delivery_date
         self._import_ubl_invoice_add_ref(collected_values)

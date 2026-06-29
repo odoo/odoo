@@ -565,6 +565,171 @@ class AccountEdiCommon(models.AbstractModel):
                 invoice._message_log(body=_("The bank account couldn't be fetched: %s", str(e)))
         if banks:
             invoice.partner_bank_id = banks[0]
+        self._import_enrich_partner_bank_payee(invoice, bank_details=banks)
+
+    def _import_enrich_partner_bank_payee(self, invoice, bank_details=None):
+        """ Hook for localization modules to set payee data on imported bank accounts. """
+
+    def _edi_is_factoring_document_type_code(self, type_code):
+        return type_code in {'393', '396', '472', '502', '501'}
+
+    def _edi_get_partner_siret(self, partner):
+        commercial_partner = partner.commercial_partner_id
+        if 'siret' in commercial_partner._fields and commercial_partner.siret:
+            return commercial_partner.siret
+        return False
+
+    def _edi_get_partner_siren(self, partner):
+        commercial_partner = partner.commercial_partner_id
+        if 'siren' in commercial_partner._fields and commercial_partner.siren:
+            return commercial_partner.siren
+        siret = self._edi_get_partner_siret(partner)
+        if siret and len(siret) >= 9:
+            return siret[:9]
+        return False
+
+    def _edi_retrieve_payee_partner_from_values(self, company, payee_values):
+        if not payee_values.get('name') and not payee_values.get('siret') and not payee_values.get('siren'):
+            return self.env['res.partner']
+
+        Partner = self.env['res.partner'].with_company(company)
+        domain = [('company_id', 'in', [False, company.id])]
+        if payee_values.get('siret') and 'siret' in Partner._fields:
+            partner = Partner.search(domain + [('siret', '=', payee_values['siret'])], limit=1)
+            if partner:
+                return partner
+        if payee_values.get('siren'):
+            if 'siren' in Partner._fields:
+                partner = Partner.search(domain + [('siren', '=', payee_values['siren'])], limit=1)
+                if partner:
+                    return partner
+            if 'siret' in Partner._fields:
+                partner = Partner.search(domain + [('siret', '=like', payee_values['siren'] + '%')], limit=1)
+                if partner:
+                    return partner
+        if payee_values.get('vat'):
+            partner = Partner.search(domain + [('vat', '=', payee_values['vat'])], limit=1)
+            if partner:
+                return partner
+
+        if not payee_values.get('name'):
+            return self.env['res.partner']
+
+        create_vals = {
+            'name': payee_values['name'],
+            'company_id': company.id,
+            'is_company': True,
+            **{
+                key: payee_values[key]
+                for key in ('vat', 'country_id')
+                if payee_values.get(key)
+            },
+        }
+        if payee_values.get('siret') and 'siret' in Partner._fields:
+            create_vals['siret'] = payee_values['siret']
+        if payee_values.get('siren') and 'siren' in Partner._fields:
+            create_vals['siren'] = payee_values['siren']
+        if payee_values.get('nic') and 'nic' in Partner._fields:
+            create_vals['nic'] = payee_values['nic']
+        return Partner.create(create_vals)
+
+    def _edi_get_partner_bank_payee_write_vals(self, payee_values, is_factoring):
+        write_vals = {}
+        if payee_values.get('acc_holder_name'):
+            write_vals['acc_holder_name'] = payee_values['acc_holder_name']
+        if payee_values.get('acc_holder_partner'):
+            write_vals['acc_holder_partner_id'] = payee_values['acc_holder_partner'].id
+            write_vals.setdefault('acc_holder_name', payee_values['acc_holder_partner'].name)
+        if is_factoring:
+            write_vals['is_factoring'] = True
+        return write_vals
+
+    def _edi_parse_payee_party_from_ubl_tree(self, tree):
+        payee_values = {}
+        payee_party = tree.find('./{*}PayeeParty')
+        if payee_party is None:
+            return payee_values, False
+
+        role_code = payee_party.findtext('./{*}IndustryClassificationCode')
+        is_factoring = role_code == 'DL'
+        party_node = payee_party.find('./{*}Party')
+        if party_node is None:
+            party_node = payee_party
+
+        for node in party_node.findall('./{*}PartyIdentification/{*}ID'):
+            if node.attrib.get('schemeID') == '0009' and node.text:
+                payee_values['siret'] = node.text
+                payee_values['siren'] = node.text[:9]
+                payee_values['nic'] = node.text[9:] or False
+
+        company_id_node = party_node.find('./{*}PartyLegalEntity/{*}CompanyID')
+        if company_id_node is not None and company_id_node.text and company_id_node.attrib.get('schemeID') == '0002':
+            payee_values['siren'] = company_id_node.text
+
+        vat_node = party_node.find('./{*}PartyTaxScheme/{*}CompanyID')
+        if vat_node is not None and vat_node.text:
+            payee_values['vat'] = vat_node.text
+
+        name = party_node.findtext('./{*}PartyLegalEntity/{*}RegistrationName')
+        if not name:
+            name = party_node.findtext('./{*}PartyName/{*}Name')
+        if name:
+            payee_values['name'] = name
+
+        account_name = tree.findtext('./{*}PaymentMeans/{*}PayeeFinancialAccount/{*}Name')
+        if account_name:
+            payee_values['acc_holder_name'] = account_name
+
+        country_code = party_node.findtext('./{*}PostalAddress/{*}Country/{*}IdentificationCode')
+        if country_code:
+            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            if country:
+                payee_values['country_id'] = country.id
+
+        return payee_values, is_factoring
+
+    def _edi_parse_payee_party_from_cii_tree(self, tree):
+        payee_values = {}
+        payee_party = tree.find('.//{*}PayeeTradeParty')
+        if payee_party is None:
+            return payee_values, False
+
+        role_code = payee_party.findtext('./{*}RoleCode')
+        is_factoring = role_code == 'DL'
+
+        siret_node = payee_party.find('./{*}RegisteredID')
+        if siret_node is None or not siret_node.text:
+            siret_node = payee_party.find('./{*}GlobalID')
+        if siret_node is not None and siret_node.text and siret_node.attrib.get('schemeID') == '0009':
+            payee_values['siret'] = siret_node.text
+            payee_values['siren'] = siret_node.text[:9]
+            payee_values['nic'] = siret_node.text[9:] or False
+
+        legal_id = payee_party.find('./{*}SpecifiedLegalOrganization/{*}ID')
+        if legal_id is not None and legal_id.text and legal_id.attrib.get('schemeID') == '0002':
+            payee_values['siren'] = legal_id.text
+
+        vat_node = payee_party.find('./{*}SpecifiedTaxRegistration/{*}ID')
+        if vat_node is not None and vat_node.text:
+            payee_values['vat'] = vat_node.text
+
+        name = payee_party.findtext('./{*}Name')
+        if name:
+            payee_values['name'] = name
+
+        account_name = tree.findtext(
+            './/{*}PayeePartyCreditorFinancialAccount/{*}AccountName'
+        )
+        if account_name:
+            payee_values['acc_holder_name'] = account_name
+
+        country_code = payee_party.findtext('./{*}PostalTradeAddress/{*}CountryID')
+        if country_code:
+            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            if country:
+                payee_values['country_id'] = country.id
+
+        return payee_values, is_factoring
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []

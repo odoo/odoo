@@ -1114,6 +1114,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_accounting_supplier_party_nodes(document_node, vals)
         self._add_invoice_accounting_customer_party_nodes(document_node, vals)
         self._add_invoice_seller_supplier_party_nodes(document_node, vals)
+        self._add_invoice_payee_party_nodes(document_node, vals)
 
         if vals['document_type'] == 'invoice':
             self._add_invoice_delivery_nodes(document_node, vals)
@@ -1284,6 +1285,49 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _add_invoice_seller_supplier_party_nodes(self, document_node, vals):
         pass
 
+    def _add_invoice_payee_party_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        partner_bank = invoice.partner_bank_id
+        if not partner_bank:
+            return
+        payee_partner = partner_bank._get_edi_payee_partner()
+        if not payee_partner:
+            return
+        # PayeeParty is not PartyType: children (PartyName, PartyIdentification, …) sit
+        # directly under cac:PayeeParty, without a nested cac:Party wrapper (UBL Invoice XSD).
+        payee_party_node = self._get_payee_party_node({
+            **vals, 'partner': payee_partner, 'partner_bank': partner_bank,
+        })
+        self._ubl_add_payee_party_wrapper_nodes(payee_party_node, {**vals, 'partner_bank': partner_bank})
+        document_node['cac:PayeeParty'] = payee_party_node
+
+    def _ubl_add_payee_party_wrapper_nodes(self, payee_party_node, vals):
+        """ Hook for localization modules to enrich PayeeParty wrapper nodes. """
+        role_code = vals['partner_bank']._get_edi_payee_role_code()
+        if role_code:
+            payee_party_node['cbc:IndustryClassificationCode'] = {'_text': role_code}
+
+    def _get_payee_party_node(self, vals):
+        party_node = self._get_party_node(vals)
+        partner_bank = vals['partner_bank']
+        if account_holder_name := partner_bank._get_edi_payee_account_holder_name():
+            party_node['cac:PartyName']['cbc:Name']['_text'] = account_holder_name
+        self._ubl_add_payee_party_identification_nodes({
+            **vals,
+            'party_node': party_node,
+            'party_vals': vals,
+        })
+        return party_node
+
+    def _ubl_add_payee_party_identification_nodes(self, vals):
+        """ Hook for localization modules to enrich PayeeParty identification. """
+
+    def _ubl_get_payment_means_instruction_note(self, invoice):
+        partner_bank = invoice.partner_bank_id
+        if partner_bank and partner_bank.payment_note:
+            return partner_bank.payment_note
+        return False
+
     def _add_invoice_delivery_nodes(self, document_node, vals):
         invoice = vals['invoice']
         partner_shipping = vals['partner_shipping']
@@ -1314,6 +1358,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if invoice.partner_id.country_code == 'DK':
             payment_means_code, payment_means_name = 1, 'unknown'
 
+        instruction_note = self._ubl_get_payment_means_instruction_note(invoice)
+
         document_node['cac:PaymentMeans'] = {
             'cbc:PaymentMeansCode': {
                 '_text': payment_means_code,
@@ -1322,6 +1368,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cbc:PaymentDueDate': {'_text': invoice.invoice_date_due or invoice.invoice_date},
             'cbc:InstructionID': {'_text': invoice.payment_reference},
             'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+            'cbc:InstructionNote': {'_text': instruction_note} if instruction_note else None,
             'cac:PayeeFinancialAccount': self._get_financial_account_node({
                 **vals, 'partner_bank': invoice.partner_bank_id
             }) if invoice.partner_bank_id else None
@@ -1677,10 +1724,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'cac:Address': self._get_address_node({**vals, 'partner': bank})
                 }
             }
-        return {
+        financial_account_node = {
             'cbc:ID': {'_text': partner_bank.acc_number.replace(' ', '')},
-            'cac:FinancialInstitutionBranch': financial_institution_branch
+            'cac:FinancialInstitutionBranch': financial_institution_branch,
         }
+        if account_holder_name := partner_bank._get_edi_payee_account_holder_name():
+            financial_account_node['cbc:Name'] = {'_text': account_holder_name}
+        return financial_account_node
 
     # -------------------------------------------------------------------------
     # EXPORT: Generic templates for tax-related nodes
