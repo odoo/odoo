@@ -135,24 +135,26 @@
                 <t t-if="preset and preset.get('identification') != 'none'">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr class="preset-info">
-                            <td style="padding: 0;"><strong t-out="preset.get('name')" style="font-size: 1.2em;"/></td>
+                            <td style="padding: 0;">
+                                <strong t-out="preset.get('name')" style="font-size: 1.2em;"/>
+                                <div style="text-align: start;">
+                                    <t t-if="partner">
+                                        <span t-out="partner.get('name')"/>
+                                        <div t-if="partner['vat']">
+                                            <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
+                                        </div>
+                                        <div t-if="partner.get('street')"><span t-out="partner['street']"/></div>
+                                        <div t-if="partner.get('city') or partner.get('zip')">
+                                            <span t-out="partner.get('zip', '')"/>&#160;<span t-out="partner.get('city', '')"/>
+                                        </div>
+                                    </t>
+                                    <div t-if="order['mobile']"><span t-out="order['mobile']"/></div>
+                                    <div t-elif="(partner and partner.get('phone'))"><span t-out="(partner and partner.get('phone'))"/></div>
+                                </div>
+                            </td>
                             <td t-if="extra_data.get('preset_datetime')" style="padding: 0; text-align: end;"><strong t-out="extra_data['preset_datetime']" style="font-size: 1.2em;"/></td>
                         </tr>
                     </table>
-                    <div style="text-align: start;">
-                        <t t-if="partner">
-                            <span t-out="partner.get('name')"/>
-                            <div t-if="partner['vat']">
-                                <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
-                            </div>
-                            <div t-if="partner.get('street')"><span t-out="partner['street']"/></div>
-                            <div t-if="partner.get('city') or partner.get('zip')">
-                                <span t-out="partner.get('zip', '')"/>&#160;<span t-out="partner.get('city', '')"/>
-                            </div>
-                        </t>
-                        <div t-if="order['mobile']"><span t-out="order['mobile']"/></div>
-                        <div t-elif="(partner and partner.get('phone'))"><span t-out="(partner and partner.get('phone'))"/></div>
-                    </div>
                 </t>
                 <t t-elif="not preset or preset.get('identification') == 'none'">
                     <div class="w-100 text-center">
