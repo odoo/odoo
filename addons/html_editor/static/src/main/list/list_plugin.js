@@ -179,6 +179,12 @@ export class ListPlugin extends Plugin {
 
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
+        /** Properties */
+        properties: {
+            predicate: (node) => closestElement(node, "LI"),
+            powerButtons: false,
+        },
+
         /** Handlers */
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),
