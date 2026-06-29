@@ -28,10 +28,53 @@ class Project(models.Model):
         'mail.tracking.duration.mixin',
         'analytic.plan.fields.mixin',
     ]
+    contract_id = fields.Many2one('contract.model', string='Contrat unique')
+
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _systray_view = 'activity'
     _track_duration_field = 'stage_id'
+
+    actual_amount = fields.Float(string="Montant Réel")
+    allocated_amount = fields.Float(string="Montant Alloué")
+
+    def action_confirm_project(self):
+        for project in self:
+            project.actual_amount = project.allocated_amount
+            project.message_post(body="Projet confirmé via le bouton.")
+        return True
+
+    def action_open_or_create_contract(self):
+        self.ensure_one()
+
+        # Rechercher un contrat existant lié à ce projet
+        existing_contract = self.env['contract.model'].search([('project_id', '=', self.id)], limit=1)
+
+        if existing_contract:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Contrat',
+                'res_model': 'contract.model',
+                'view_mode': 'form',
+                'res_id': existing_contract.id,
+                'target': 'current',
+            }
+
+        # Sinon, créer un contrat et le lier
+        contract = self.env['contract.model'].create({
+            'project_id': self.id,
+            'name': f"Contrat de {self.name}",
+        })
+        self.contract_id = contract.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Contrat',
+            'res_model': 'contract.model',
+            'view_mode': 'form',
+            'res_id': contract.id,
+            'target': 'current',
+        }
 
     def __compute_task_count(self, count_field='task_count', additional_domain=None):
         count_fields = {fname for fname in self._fields if 'count' in fname}
@@ -135,7 +178,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'), inverse='_inverse_allow_task_dependencies')
+    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
@@ -382,35 +425,6 @@ class Project(models.Model):
         )
         for project in self:
             project.update_count = update_count_per_project.get(project, 0)
-
-    def _inverse_allow_task_dependencies(self):
-        """ Reset state for waiting tasks in the project if the feature is disabled
-            or recompute the tasks with dependencies if the project has the feature enabled again
-        """
-        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
-        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
-        ProjectTask = self.env['project.task']
-        if (
-            project_with_task_dependencies_feature
-            and (
-                open_tasks_with_dependencies := ProjectTask.search([
-                    ('project_id', 'in', project_with_task_dependencies_feature.ids),
-                    ('depend_on_ids.state', 'in', ProjectTask.OPEN_STATES),
-                    ('state', 'in', ProjectTask.OPEN_STATES),
-                ])
-            )
-        ):
-            open_tasks_with_dependencies.state = '04_waiting_normal'
-        if (
-            projects_without_task_dependencies_feature
-            and (
-                waiting_tasks := ProjectTask.search([
-                    ('project_id', 'in', projects_without_task_dependencies_feature.ids),
-                    ('state', '=', '04_waiting_normal'),
-                ])
-            )
-        ):
-            waiting_tasks.state = '01_in_progress'
 
     @api.model
     def _map_tasks_default_values(self, project):
