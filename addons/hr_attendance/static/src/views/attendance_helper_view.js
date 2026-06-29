@@ -7,19 +7,19 @@ export class AttendanceActionHelper extends Component {
     static template = "hr_attendance.AttendanceActionHelper";
     static props = ["noContentHelp"];
     setup() {
-        this.orm = useService("orm");
         this.actionService = useService("action");
         this.uiService = useService("ui");
         this.state = proxy({
-            hasDemoData: false,
+            hasDemoData: true,
         });
+        const lazySession = useService("lazy_session");
         onWillStart(async () => {
             [this.isHrUser, this.hasAttendanceRight] = await Promise.all([
                 user.hasGroup("hr.group_hr_user"),
                 user.hasGroup("hr_attendance.group_hr_attendance_user"),
             ]);
             if (this.hasAttendanceRight && this.isHrUser) {
-                this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
+                lazySession.getValue("is_demo", (v) => (this.state.hasDemoData = !!v));
             }
         });
     }
