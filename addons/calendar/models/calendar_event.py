@@ -380,7 +380,7 @@ class CalendarEvent(models.Model):
     @api.depends('user_id')
     def _compute_show_calendar_in_form(self):
         for event in self:
-            event.show_calendar_in_form = event.calendar_id.owner == self.env.user
+            event.show_calendar_in_form = self.env.user in event.calendar_id.owners
 
     @api.depends('user_id')
     def _compute_available_calendar_ids(self):

@@ -51,7 +51,7 @@ class CalendarCalendar(models.Model):
         if self.env.user._get_google_sync_status() == "sync_active":
             google_service = GoogleCalendarService(self.env['google.service'])
             for record in self:
-                if record.need_sync and record.google_id and record.active:
+                if record.need_sync and record.google_id and record.active and self.env.user in record.owners:
                     record._google_calendar_patch(google_service)
 
         return result
@@ -62,7 +62,7 @@ class CalendarCalendar(models.Model):
         google_service = GoogleCalendarService(self.env['google.service'])
         if self.env.user._get_google_sync_status() == "sync_active":
             for record in records:
-                if record.need_sync and record.owner == self.env.user and record.active:
+                if record.need_sync and self.env.user in record.owners and record.active:
                     record._google_calendar_insert(google_service)
         return records
 
@@ -79,7 +79,7 @@ class CalendarCalendar(models.Model):
         # Create
         self._create_odoo_calendars(new)
         # Delete
-        deleted_odoo = self.browse(deleted.odoo_ids(self.env)).filtered(lambda c: c.owner == self.env.user and not c.is_primary)
+        deleted_odoo = self.browse(deleted.odoo_ids(self.env)).filtered(lambda c: self.env.user in c.owners and not c.is_primary)
         if deleted_odoo:
             deleted_odoo.with_context(dont_notify=True).write({'google_id': False})
             deleted_odoo.unlink()

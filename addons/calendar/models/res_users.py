@@ -12,6 +12,7 @@ class ResUsers(models.Model):
 
     calendar_users = fields.One2many('calendar.calendar.user', 'user_id')
     calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_calendar_ids')
+    owned_calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_owned_calendar_ids')
     writable_calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_writeable_calendar_ids')
     primary_calendar = fields.Many2one('calendar.calendar', compute='_compute_primary_calendar', store=True)
 
@@ -25,6 +26,11 @@ class ResUsers(models.Model):
     def _compute_calendar_ids(self):
         for user in self:
             user.sudo().calendar_ids = user.calendar_users.mapped('calendar_id')
+
+    @api.depends('calendar_users')
+    def _compute_owned_calendar_ids(self):
+        for user in self:
+            user.owned_calendar_ids = user.calendar_users.filtered(lambda l: l.access_role == 'owner').mapped('calendar_id')
 
     @api.depends('calendar_users')
     def _compute_writeable_calendar_ids(self):

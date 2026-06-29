@@ -38,7 +38,7 @@ class CalendarCalendar(models.Model):
     is_primary = fields.Boolean('Primary Calendar', compute="_compute_is_primary")
     name = fields.Char('Name', compute='_compute_name', inverse='_inverse_name')
     calendar_users = fields.One2many('calendar.calendar.user', inverse_name='calendar_id', string='Users')
-    owner = fields.Many2one('res.users', compute='_compute_owner')
+    owners = fields.Many2many('res.users', compute='_compute_owners')
     user_access_role = fields.Selection([
         ('owner', 'owner'),
         ('writer', 'write'),
@@ -63,7 +63,7 @@ class CalendarCalendar(models.Model):
     def write(self, vals):
         """ Forbid the calendar default privacy update from different users for keeping private events secured. """
         if 'calendar_default_privacy' in vals:
-            if any(calendar.owner != self.env.user for calendar in self):
+            if any(self.env.user not in calendar.owners for calendar in self):
                 raise AccessError(
                     _("You are not allowed to change the calendar default privacy of another user due to privacy constraints."))
         return super().write(vals)
@@ -89,9 +89,9 @@ class CalendarCalendar(models.Model):
                 calendar.calendar_user.label = calendar.name
 
     @api.depends('calendar_users.access_role', 'calendar_users.user_id')
-    def _compute_owner(self):
+    def _compute_owners(self):
         for calendar in self:
-            calendar.owner = calendar.calendar_users.filtered(lambda l: l.access_role == 'owner').user_id
+            calendar.owners = calendar.calendar_users.filtered(lambda l: l.access_role == 'owner').mapped('user_id')
 
     @api.depends_context('uid')
     @api.depends('calendar_users.filter_color')

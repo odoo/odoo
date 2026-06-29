@@ -24,7 +24,7 @@ class TestCalendarCalendar(TransactionCase):
         """Creating a calendar without explicit memberships must auto-add the current user as owner."""
         # No calendar_users provided -> default_get should inject an owner membership for self.user.
         calendar = self.env["calendar.calendar"].with_user(self.user).create({"name": "My Calendar"})
-        self.assertEqual(calendar.owner, self.user, "The creator must become the calendar owner")
+        self.assertIn(self.user, calendar.owners, "The creator must become the calendar owner")
         # Exactly one membership, for the creator, with role owner.
         self.assertEqual(len(calendar.calendar_users), 1)
         self.assertEqual(calendar.calendar_users.user_id, self.user)

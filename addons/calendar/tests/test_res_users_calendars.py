@@ -13,7 +13,7 @@ class TestResUsersCalendars(TransactionCase):
     def test_new_user_has_one_owned_primary_calendar(self):
         """Each new user should own one primary calendar."""
         self.assertTrue(self.user.primary_calendar)
-        self.assertEqual(self.user.primary_calendar.owner, self.user)
+        self.assertIn(self.user, self.user.primary_calendar.owners)
         primary_memberships = self.user.calendar_users.filtered(
             lambda m: m.is_primary and m.access_role == "owner"
         )

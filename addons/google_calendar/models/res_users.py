@@ -80,8 +80,8 @@ class ResUsers(models.Model):
 
         # Odoo -> Google
         # Local calendars, which have not yet been synchronized with Google or need to be updated
-        # FRBIN TODO: chcek what writer access can do, might need to restrict to owner (Google 403: `You need to have owner access to this calendar`)
-        calendars_to_sync = self.writable_calendar_ids.filtered(lambda c: c.need_sync or (not c.google_id and not c.is_primary))
+        # You need to have owner access to be able to edit calendar properties on google.
+        calendars_to_sync = self.owned_calendar_ids.filtered(lambda c: c.need_sync or (not c.google_id and not c.is_primary))
         _logger.info("User %s, Calendar sync - Odoo2Google : %s", self.env.user.login, calendars_to_sync)
         calendars_to_sync.with_user(self)._sync_calendars_odoo2google(calendar_service)
 
