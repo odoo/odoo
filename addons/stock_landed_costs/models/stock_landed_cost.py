@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
 
@@ -68,6 +68,7 @@ class StockLandedCost(models.Model):
     vendor_bill_id = fields.Many2one(
         'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')], index='btree_not_null')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids')
 
     @api.depends('cost_lines.price_unit')
     def _compute_total_amount(self):
@@ -78,6 +79,11 @@ class StockLandedCost(models.Model):
     def _compute_pickings_count(self):
         for cost in self:
             cost.pickings_count = len(cost.picking_ids)
+
+    @api.depends('picking_ids')
+    def _compute_allowed_product_ids(self):
+        for cost in self:
+            cost.allowed_product_ids = cost._get_targeted_move_ids().product_id
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
@@ -160,7 +166,7 @@ class StockLandedCost(models.Model):
 
     def get_valuation_lines(self):
         self.ensure_one()
-        lines = []
+        move_values = []
 
         for move in self._get_targeted_move_ids():
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
@@ -174,78 +180,80 @@ class StockLandedCost(models.Model):
                 'quantity': qty,
                 'former_cost': move._get_value(),
                 'weight': move.product_id.weight * qty,
-                'volume': move.product_id.volume * qty
+                'volume': move.product_id.volume * qty,
             }
-            lines.append(vals)
+            move_values.append(vals)
 
-        if not lines:
+        if not move_values:
             target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
-        return lines
+            raise UserError(self.env._(
+                "You cannot apply landed costs on the chosen %s. Landed costs can only be applied for products with FIFO or average costing method.",
+                target_model_descriptions[self.target_model],
+            ))
+
+        valuation_line_values = []
+        for cost_line in self.cost_lines:
+            apply_on_product_ids = set(cost_line.apply_on_product_ids.ids)
+            total_qty = total_weight = total_volume = total_cost = total_line = 0.0
+            for move_value in move_values:
+                if apply_on_product_ids and move_value['product_id'] not in apply_on_product_ids:
+                    continue
+                total_qty += move_value['quantity']
+                total_weight += move_value['weight']
+                total_volume += move_value['volume']
+                total_cost += self.currency_id.round(move_value['former_cost'])
+                total_line += 1
+
+            if not total_line:
+                continue
+
+            cost_line_valuation_values = []
+            allocated_cost = 0.0
+            for move_value in move_values:
+                if apply_on_product_ids and move_value['product_id'] not in apply_on_product_ids:
+                    continue
+                additional_cost = 0.0
+                if cost_line.split_method == 'by_quantity' and total_qty:
+                    unit_cost = (cost_line.price_unit / total_qty)
+                    additional_cost = move_value['quantity'] * unit_cost
+                elif cost_line.split_method == 'by_weight' and total_weight:
+                    unit_cost = (cost_line.price_unit / total_weight)
+                    additional_cost = move_value['weight'] * unit_cost
+                elif cost_line.split_method == 'by_volume' and total_volume:
+                    unit_cost = (cost_line.price_unit / total_volume)
+                    additional_cost = move_value['volume'] * unit_cost
+                elif cost_line.split_method == 'equal':
+                    additional_cost = (cost_line.price_unit / total_line)
+                elif cost_line.split_method == 'by_current_cost_price' and total_cost:
+                    unit_cost = (cost_line.price_unit / total_cost)
+                    additional_cost = move_value['former_cost'] * unit_cost
+                else:
+                    additional_cost = (cost_line.price_unit / total_line)
+
+                additional_cost = self.currency_id.round(additional_cost)
+                allocated_cost += additional_cost
+                cost_line_valuation_values.append({
+                    **move_value,
+                    'cost_id': self.id,
+                    'cost_line_id': cost_line.id,
+                    'additional_landed_cost': additional_cost,
+                })
+
+            rounding_diff = self.currency_id.round(cost_line.price_unit - allocated_cost)
+            if not self.currency_id.is_zero(rounding_diff):
+                cost_line_valuation_values[-1]['additional_landed_cost'] += rounding_diff
+            valuation_line_values.extend(cost_line_valuation_values)
+
+        return valuation_line_values
 
     def compute_landed_cost(self):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        towrite_dict = {}
         for cost in self.filtered(lambda cost: cost._get_targeted_move_ids()):
             cost = cost.with_company(cost.company_id)
-            rounding = cost.currency_id.rounding
-            total_qty = 0.0
-            total_cost = 0.0
-            total_weight = 0.0
-            total_volume = 0.0
-            total_line = 0.0
-            all_val_line_values = cost.get_valuation_lines()
-            for val_line_values in all_val_line_values:
-                for cost_line in cost.cost_lines:
-                    val_line_values.update({'cost_id': cost.id, 'cost_line_id': cost_line.id})
-                    self.env['stock.valuation.adjustment.lines'].create(val_line_values)
-                total_qty += val_line_values.get('quantity', 0.0)
-                total_weight += val_line_values.get('weight', 0.0)
-                total_volume += val_line_values.get('volume', 0.0)
-
-                former_cost = val_line_values.get('former_cost', 0.0)
-                # round this because former_cost on the valuation lines is also rounded
-                total_cost += cost.currency_id.round(former_cost)
-
-                total_line += 1
-
-            for line in cost.cost_lines:
-                value_split = 0.0
-                for valuation in cost.valuation_adjustment_lines:
-                    value = 0.0
-                    if valuation.cost_line_id and valuation.cost_line_id.id == line.id:
-                        if line.split_method == 'by_quantity' and total_qty:
-                            per_unit = (line.price_unit / total_qty)
-                            value = valuation.quantity * per_unit
-                        elif line.split_method == 'by_weight' and total_weight:
-                            per_unit = (line.price_unit / total_weight)
-                            value = valuation.weight * per_unit
-                        elif line.split_method == 'by_volume' and total_volume:
-                            per_unit = (line.price_unit / total_volume)
-                            value = valuation.volume * per_unit
-                        elif line.split_method == 'equal':
-                            value = (line.price_unit / total_line)
-                        elif line.split_method == 'by_current_cost_price' and total_cost:
-                            per_unit = (line.price_unit / total_cost)
-                            value = valuation.former_cost * per_unit
-                        else:
-                            value = (line.price_unit / total_line)
-
-                        if rounding:
-                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='HALF-UP')
-                            value_split += value
-
-                        if valuation.id not in towrite_dict:
-                            towrite_dict[valuation.id] = value
-                        else:
-                            towrite_dict[valuation.id] += value
-                rounding_diff = cost.currency_id.round(line.price_unit - value_split)
-                if not cost.currency_id.is_zero(rounding_diff):
-                    towrite_dict[max(towrite_dict.keys())] += rounding_diff
-        for key, value in towrite_dict.items():
-            AdjustementLines.browse(key).write({'additional_landed_cost': value})
+            if valuation_line_values := cost.get_valuation_lines():
+                AdjustementLines.create(valuation_line_values)
         return True
 
     def action_view_pickings(self):
@@ -312,6 +320,9 @@ class StockLandedCostLines(models.Model):
              "By Volume: Cost will be divided depending on its volume.")
     account_id = fields.Many2one('account.account', 'Account')
     currency_id = fields.Many2one('res.currency', related='cost_id.currency_id')
+    apply_on_product_ids = fields.Many2many(
+        'product.product', string="Apply On", compute='_compute_apply_on_product_ids',
+        readonly=False, store=True)
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -320,6 +331,13 @@ class StockLandedCostLines(models.Model):
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['expense']
+
+    @api.depends('product_id', 'cost_id.allowed_product_ids')
+    def _compute_apply_on_product_ids(self):
+        for line in self:
+            line.apply_on_product_ids = (
+                line.apply_on_product_ids._origin | line.product_id.landed_cost_on_product_ids
+            ) & line.cost_id.allowed_product_ids._origin
 
 
 class StockValuationAdjustmentLines(models.Model):
