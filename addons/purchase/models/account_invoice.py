@@ -131,7 +131,7 @@ class AccountMove(models.Model):
     def _compute_purchase_order_name(self):
         for move in self:
             if move.purchase_order_count == 1:
-                move.purchase_order_name = move.invoice_line_ids.purchase_order_id.display_name
+                move.purchase_order_name = move.line_ids.purchase_line_id.order_id.display_name
             else:
                 move.purchase_order_name = False
 
