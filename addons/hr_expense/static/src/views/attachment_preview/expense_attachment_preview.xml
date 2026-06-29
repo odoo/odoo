@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.AttachmentPreview">
+        <div class="o_attachment_control toggle" t-on-click="this.togglePreview"/>
+
+        <div t-if="this.previewEnabled"
+             class="o_attachment_preview d-print-none"
+             t-att-class="{'hidden': !this.attachmentPreviewState.displayAttachment}">
+
+            <t t-if="this.attachmentPreviewState.thread and this.attachmentPreviewState.thread.attachmentsInWebClientView.length > 0">
+                <ExpenseAttachmentView
+                    threadId="this.attachmentPreviewState.thread.id"
+                    threadModel="this.attachmentPreviewState.thread.model"
+                    openInPopout="0"
+                />
+            </t>
+            <t t-elif="!this.attachmentPreviewState.selectedRecord">
+                <p class="text-center mt-4 text-muted">Choose a line to preview its attachments.</p>
+            </t>
+            <t t-else="">
+                <p class="text-center mt-4 text-muted">No attachments linked.</p>
+            </t>
+
+        </div>
+    </t>
+</templates>

@@ -1,6 +1,9 @@
 import { render } from "@web/owl2/utils";
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
+import { ExpenseAttachmentPreviewMixin } from "./attachment_preview/expense_attachment_preview";
+import { ExpenseAttachmentView } from "./attachment_preview/expense_attachment_view";
+import { makeActiveField} from "@web/model/relational_model/utils"
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
@@ -11,7 +14,24 @@ import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
 
-export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
+export class ExpenseListController extends ExpenseDocumentUpload(ExpenseAttachmentPreviewMixin(ListController)) {
+    static components = { ...ListController.components, ExpenseAttachmentView };
+    get previewStorageKey() {
+        return "hr_expense_list.pdf_previewer_hidden";
+    }
+    get modelParams() {
+        const params = super.modelParams;
+        params.config.activeFields.attachment_ids = makeActiveField();
+        params.config.activeFields.attachment_ids.related = {
+            fields: {
+                mimetype: { name: "mimetype", type: "char" },
+            },
+            activeFields: {
+                mimetype: makeActiveField(),
+            },
+        };
+        return params;
+    }
     static template = `hr_expense.ListView`;
 
     setup() {
@@ -23,6 +43,46 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
             this.userIsExpenseTeamApprover = await user.hasGroup("hr_expense.group_hr_expense_team_approver");
             this.userIsAccountInvoicing = await user.hasGroup("account.group_account_invoice");
         });
+    }
+
+    get actionMenuItems() {
+        const menuItems = super.actionMenuItems || {};
+        if (menuItems.print) {
+            menuItems.print = [];
+        }
+        return menuItems;
+    }
+
+    // 2. Add a direct print function
+    async onClickPrint() {
+        // Collect IDs from selected records
+        const resIds = this.model.root.selection.map(r => r.resId);
+
+        // Execute your custom PDF report action directly
+        this.env.services.action.doAction('hr_expense.action_report_hr_expense', {
+            additionalContext: { active_ids: resIds },
+        });
+    }
+
+    async setSelectedRecord(expenseRecord) {
+        this.attachmentPreviewState.selectedRecord = expenseRecord;
+        const attachments = expenseRecord?.data?.attachment_ids?.records || [];
+        if (!expenseRecord || !attachments.length) {
+            this.attachmentPreviewState.thread = null;
+            return;
+        }
+        const thread = this.store["mail.thread"].insert({
+            attachments: attachments.map((a) => ({
+                id: a.resId,
+                mimetype: a.data.mimetype,
+            })),
+            id: expenseRecord.resId,
+            model: "hr.expense",
+        });
+        if (!thread.message_main_attachment_id && thread.attachmentsInWebClientView.length > 0) {
+            thread.update({ message_main_attachment_id: thread.attachmentsInWebClientView[0] });
+        }
+        this.attachmentPreviewState.thread = thread;
     }
 
     displaySubmit() {
@@ -66,6 +126,24 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
 export class ExpenseListRenderer extends ExpenseDocumentDropZone(ListRenderer, listRendererProps) {
     static template = "hr_expense.ListRenderer";
+    static props = [...ListRenderer.props, "setSelectedRecord", "uploadDocument"];
+
+    async onCellClicked(record, column, ev) {
+        this.props.setSelectedRecord(record);
+        if (record.selected || column.name === "name") {
+            await super.onCellClicked(record, column, ev);
+        }
+    }
+
+    findFocusFutureCell(cell, cellIsInGroupRow, direction) {
+        const futureCell = super.findFocusFutureCell(cell, cellIsInGroupRow, direction);
+        if (futureCell) {
+            const dataPointId = futureCell.closest("tr").dataset.id;
+            const record = this.props.list.records.find((x) => x.id === dataPointId);
+            this.props.setSelectedRecord(record);
+        }
+        return futureCell;
+    }
 }
 
 export class ExpenseDashboardListRenderer extends ExpenseListRenderer {

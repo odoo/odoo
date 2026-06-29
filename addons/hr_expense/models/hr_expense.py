@@ -115,7 +115,7 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, digits='Product Unit', default=1)
     description = fields.Text(string="Internal Notes")
     message_main_attachment_checksum = fields.Char(related='message_main_attachment_id.checksum')
-    nb_attachment = fields.Integer(string="Number of Attachments", compute='_compute_nb_attachment')
+    nb_attachment = fields.Integer(string="Attachment", compute='_compute_nb_attachment')
     attachment_ids = fields.One2many(
         comodel_name='ir.attachment',
         inverse_name='res_id',

@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
-        <xpath expr="." position="inside">
-            <button t-if="this.displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit')">
-                Submit
-            </button>
-            <button t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve')">
-                Approve
-            </button>
-            <button t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_refuse')">
-                Refuse
-            </button>
-            <button t-if="this.displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_post')">
-                Post Entries
-            </button>
-        </xpath>
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
             <input type="file" name="ufile" class="d-none" t-custom-ref="fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput"/>
             <button t-if="!this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="this.uploadDocument">
@@ -27,8 +13,39 @@
     </t>
 
     <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//div[@t-custom-ref='root']" position="attributes" type="add">
+            <attribute name="class" add="o_expense_list_preview" separator=" "/>
+        </xpath>
+
         <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">this.uploadDocument</attribute>
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+
+        <xpath expr="//Layout" position="inside">
+            <t t-call="hr_expense.AttachmentPreview"/>
+        </xpath>
+
+        <xpath expr="//t[@t-set-slot='control-panel-selection-actions']//t[@t-if='this.props.info.actionMenus']" position="before">
+            <button t-if="this.displaySubmit()"
+                    class="d-none d-md-block btn btn-secondary"
+                    t-on-click="() => this.onClick('action_submit')">
+                Submit
+            </button>
+            <button t-if="this.displayApprove()"
+                    class="d-none d-md-block btn btn-secondary"
+                    t-on-click="() => this.onClick('action_approve')">
+                Approve
+            </button>
+            <button t-if="this.displayPost()"
+                    class="d-none d-md-block btn btn-secondary"
+                    t-on-click="() => this.onClick('action_post')">
+                Post Entries
+            </button>
+            <button class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClickPrint()">
+                <i class="fa fa-print me-1"/>
+                Print
+            </button>
         </xpath>
     </t>
 

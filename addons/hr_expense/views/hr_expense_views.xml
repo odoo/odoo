@@ -4,7 +4,7 @@
             <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
+                    <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree">
                     <field name="is_editable" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -15,7 +15,7 @@
 
                     <!--  Always Shown start -->
                     <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
-                    <field name="name" readonly="not is_editable"/>
+                    <field name="name" readonly="not is_editable" decoration-info="1" class="o_cursor_pointer"/>
 
                     <!--  Optional -->
                     <field name="department_id" optional="hide" readonly="True"/>
@@ -24,7 +24,7 @@
                     <field name="payment_mode" optional="show" readonly="not is_editable"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="analytic_distribution" widget="analytic_distribution"
-                           optional="show"
+                           optional="hide"
                            groups="analytic.group_analytic_accounting"
                            readonly="not is_editable"
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
@@ -35,7 +35,7 @@
                     <field name="payment_method_line_id" optional="hide" groups="account.group_account_readonly"
                            readonly="not is_editable"/>
                     <field name="manager_id" optional="hide" readonly="not is_editable"/>
-                    <field name="company_id" optional="show" groups="base.group_multi_company" readonly="True"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company" readonly="True"/>
                     <field name="price_unit" string="Unit Price" optional="hide" widget="monetary"
                            options="{'currency_field': 'company_currency_id', 'field_digits': True}" readonly="True"/>
                     <field name="quantity" optional="hide" readonly="not is_editable or not product_has_cost"/>
@@ -44,7 +44,7 @@
                            readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_amount" sum="Total Taxes" readonly="True"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
-                    <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
+                    <field name="nb_attachment" optional="show" widget="nb_attachment" nolabel="0" readonly="True"/>
                     <field name="total_amount" sum="Total Amount" widget='monetary'
                            readonly="not is_editable or product_has_cost"
                            options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
