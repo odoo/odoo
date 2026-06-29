@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.OptionsContainer">
-    <div t-if="this.options.length"
+    <div t-if="this.options().length"
         class="options-container mb-1" t-custom-ref="root" t-att-data-container-title="this.title">
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-custom-ref="content">
-            <t t-foreach="this.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
+            <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
                 <BuilderContext applyTo="OptionClass.applyTo">
                     <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
                 </BuilderContext>

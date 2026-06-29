@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { onWillStart, onWillUpdateProps, props, t, useListener } from "@odoo/owl";
+import { asyncComputed, onWillStart, props, t, useListener } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -45,14 +45,9 @@ export class OptionsContainer extends BaseOptionComponent {
 
         this.callOperation = useOperation();
 
-        this.options = [];
         this.hasGroup = {};
-        onWillStart(async () => {
-            this.options = await this.filterAccessGroup(this.props.options);
-        });
-        onWillUpdateProps(async (nextProps) => {
-            this.options = await this.filterAccessGroup(nextProps.options);
-        });
+        this.options = asyncComputed(() => this.filterAccessGroup(this.props.options), { initial: [] });
+        onWillStart(() => this.options.currentPromise());
     }
 
     async filterAccessGroup(options) {
@@ -78,7 +73,7 @@ export class OptionsContainer extends BaseOptionComponent {
 
     get title() {
         let title;
-        for (const option of this.options) {
+        for (const option of this.options()) {
             title = option.title || title;
         }
         const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo
