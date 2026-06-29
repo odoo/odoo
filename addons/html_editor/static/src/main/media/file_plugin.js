@@ -55,11 +55,11 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
-        toolbar_namespace_providers: withSequence(
-            80,
-            (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.anchorNode, ".o_file_box") && DISABLED_NAMESPACE
-        ),
+        region_properties: {
+            within: ".o_file_box",
+            powerbox: false,
+            toolbar: DISABLED_NAMESPACE,
+        },
         is_functional_empty_node_predicates: (node) => {
             if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
                 return true;
@@ -70,7 +70,6 @@ export class FilePlugin extends Plugin {
                 return false;
             }
         },
-        region_properties: { within: ".o_file_box", powerbox: false },
         are_shorthands_available_predicates: (node) => {
             if (closestElement(node, ".o_file_box")) {
                 return false;
