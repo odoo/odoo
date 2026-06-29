@@ -15,9 +15,9 @@ export class SearchableSetting extends Setting {
     setup() {
         this.state = proxy({
             search: this.env.searchState,
-            showAllContainer: this.env.showAllContainer,
             highlightClass: {},
         });
+        this.showAllContainer = this.env.showAllContainer;
         this.labels = [this.labelString, this.props.title].filter(Boolean);
         super.setup();
         onMounted(() => {
@@ -38,7 +38,7 @@ export class SearchableSetting extends Setting {
         if (!this.state.search.value) {
             return true;
         }
-        if (this.state.showAllContainer.showAllContainer) {
+        if (this.showAllContainer()) {
             return true;
         }
         if (normalize(this.labels.join()).includes(this.state.search.value)) {

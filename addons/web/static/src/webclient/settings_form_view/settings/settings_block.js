@@ -1,7 +1,7 @@
-import { onWillRender, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, computed, proxy } from "@odoo/owl";
 import { normalize } from "@web/core/l10n/utils";
 
 export class SettingsBlock extends Component {
@@ -19,11 +19,8 @@ export class SettingsBlock extends Component {
         this.state = proxy({
             search: this.env.searchState,
         });
-        this.showAllContainerState = proxy({
-            showAllContainer: false,
-        });
         useChildSubEnv({
-            showAllContainer: this.showAllContainerState,
+            showAllContainer: this.showAllContainer,
         });
         this.settingsContainerRef = useRef("settingsContainer");
         this.settingsContainerTitleRef = useRef("settingsContainerTitle");
@@ -32,9 +29,7 @@ export class SettingsBlock extends Component {
             () => {
                 const force =
                     this.state.search.value &&
-                    !normalize([this.props.title, this.props.tip].join()).includes(
-                        this.state.search.value
-                    ) &&
+                    !this.showAllContainer() &&
                     !this.settingsContainerRef.el.querySelector(
                         ".o_setting_box.o_searchable_setting"
                     );
@@ -42,18 +37,12 @@ export class SettingsBlock extends Component {
             },
             () => [this.state.search.value]
         );
-        onWillRender(() => {
-            if (
-                normalize([this.props.title, this.props.tip].join()).includes(
-                    this.state.search.value
-                )
-            ) {
-                this.showAllContainerState.showAllContainer = true;
-            } else {
-                this.showAllContainerState.showAllContainer = false;
-            }
-        });
     }
+
+    showAllContainer = computed(() =>
+        normalize([this.props.title, this.props.tip].join()).includes(this.state.search.value)
+    );
+
     toggleContainer(force) {
         if (this.settingsContainerTitleRef.el) {
             this.settingsContainerTitleRef.el.classList.toggle("d-none", force);
