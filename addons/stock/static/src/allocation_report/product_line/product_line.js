@@ -12,6 +12,7 @@ export class ProductLine extends Component {
     props = props({
         freeQty: types.signal(types.number()),
         id: types.number(),
+        isSmall: types.boolean().optional(),
         name: types.string,
         needs: types.array(),
         totalQty: types.number(),
