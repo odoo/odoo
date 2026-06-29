@@ -10,7 +10,7 @@
                     <t t-set="display_in_lang_sec" t-value="o.company_id.l10n_gcc_country_is_gcc and o.company_id.l10n_gcc_dual_language_invoice"/>
                     <t t-set="display_in_ar" t-value="display_in_lang_sec and lang_sec == 'ar_001'"/>
                     <t t-set="display_in_en" t-value="display_in_lang_sec and lang_sec == 'en_US'"/>
-                    <t t-set="invoice_gcc_title" t-value="o._l10n_gcc_get_invoice_title()"/>
+                    <t t-set="invoice_gcc_title" t-value="o.with_context(lang=lang)._l10n_gcc_get_invoice_title()"/>
                     <t t-set="invoice_gcc_title_sec" t-value="o_sec._l10n_gcc_get_invoice_title()"/>
                 </t>
             </xpath>
