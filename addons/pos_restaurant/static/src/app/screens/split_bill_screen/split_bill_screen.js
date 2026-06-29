@@ -149,12 +149,14 @@ export class SplitBillScreen extends Component {
         const newOrder = this.pos.createNewOrder({
             preset_id: originalOrder.preset_id,
             preset_time: originalOrder.preset_time,
+            fiscal_position_id: originalOrder.fiscal_position_id,
         });
         const prepOrder = originalOrder.prep_order_ids?.length
             ? this.pos.models["pos.prep.order"].create({
                   pos_order_id: newOrder,
               })
             : null;
+        newOrder.setPricelist(originalOrder.pricelist_id);
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
