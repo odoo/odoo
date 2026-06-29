@@ -87,6 +87,10 @@ export class AttachmentList extends Component {
         });
     }
 
+    hasUnlinkConfirmation(attachment) {
+        return true;
+    }
+
     /**
      * @param {import("models").Attachment} attachment
      */
@@ -94,16 +98,20 @@ export class AttachmentList extends Component {
         if (this.env.inComposer) {
             return this.props.unlinkAttachment(attachment);
         }
-        this.dialog.add(ConfirmationDialog, {
-            title: _t("Delete Attachment"),
-            body: _t(
-                'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
-                attachment.name
-            ),
-            confirmLabel: _t("Delete Attachment"),
-            cancel: () => {},
-            confirm: () => this.onConfirmUnlink(attachment),
-        });
+        if (this.hasUnlinkConfirmation(attachment)) {
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Delete Attachment"),
+                body: _t(
+                    'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
+                    attachment.name
+                ),
+                confirmLabel: _t("Delete Attachment"),
+                cancel: () => {},
+                confirm: () => this.onConfirmUnlink(attachment),
+            });
+        } else {
+            this.onConfirmUnlink(attachment);
+        }
     }
 
     onClickAttachment(attachment) {
@@ -113,8 +121,8 @@ export class AttachmentList extends Component {
     /**
      * @param {import("models").Attachment} attachment
      */
-    onConfirmUnlink(attachment) {
-        this.props.unlinkAttachment(attachment);
+    async onConfirmUnlink(attachment) {
+        await this.props.unlinkAttachment(attachment);
     }
 
     onImageLoaded() {
