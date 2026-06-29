@@ -19,11 +19,11 @@ class ProjectCustomerPortal(CustomerPortal):
         session_info = super()._prepare_project_sharing_session_info(project)
         company = request.env['res.company'].sudo().browse(session_info['user_companies']['current_company'])
         timesheet_encode_uom = company.timesheet_encode_uom_id
-        project_time_mode_uom = company.project_time_mode_id
+        uom_hour = request.env.ref('uom.product_uom_hour')
 
         session_info['user_companies']['allowed_companies'][company.id].update(
             timesheet_uom_id=timesheet_encode_uom.id,
-            timesheet_uom_factor=project_time_mode_uom._compute_quantity(
+            timesheet_uom_factor=uom_hour._compute_quantity(
                 1.0,
                 timesheet_encode_uom,
                 round=False
@@ -35,7 +35,7 @@ class ProjectCustomerPortal(CustomerPortal):
                     'id': uom.id,
                     'name': uom.name,
                     'timesheet_widget': uom.timesheet_widget,
-                } for uom in [timesheet_encode_uom, project_time_mode_uom]
+                } for uom in [timesheet_encode_uom, uom_hour]
         }
         session_info['user_context']['allow_timesheets'] = project.allow_timesheets
         return session_info
