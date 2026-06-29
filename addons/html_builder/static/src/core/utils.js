@@ -690,7 +690,7 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     return userInputValue;
 }
 
-export function useBuilderNumberInputUnits() {
+export function useBuilderNumberInputUnits({ getEffectiveBounds } = {}) {
     const comp = useComponent();
     const env = useEnv();
 
@@ -735,11 +735,14 @@ export function useBuilderNumberInputUnits() {
             return value;
         }
         value = parseFloat(value);
-        if (value < comp.props.min) {
-            return `${comp.props.min}`;
+        const { min, max } = getEffectiveBounds
+            ? getEffectiveBounds()
+            : { min: comp.props.min, max: comp.props.max };
+        if (value < min) {
+            return `${min}`;
         }
-        if (value > comp.props.max) {
-            return `${comp.props.max}`;
+        if (value > max) {
+            return `${max}`;
         }
         return +value.toFixed(3);
     };
