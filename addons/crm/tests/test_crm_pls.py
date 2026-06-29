@@ -562,17 +562,26 @@ class TestCRMPLS(TransactionCase):
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
 
     def test_pls_no_share_stage(self):
-        """ We test here the situation where all stages are team specific, as there is
-            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
-            the first stage (used to know how many lost and won there is) that requires
-            to have no team assigned to it."""
+        """ We test that we correctly use first team stage instead of not computing the
+            probability when all stages are team-specific. The stage is used to get the number
+            of won/lost leads of the team/overall, necessary to compute the probability. If
+            no entry exists in the frequency table, we still cannot update the probability.
+        """
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
         self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
         lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
         Lead._cron_update_automated_probabilities()
         self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
-        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)  # no frequency in table yet
+
+        # check lead's probability is updated (< 100) after returning a won lead to a non-won stage
+        lead.action_set_won()  # fills the frequency table
+        self.assertEqual(lead.probability, 100)
+        nonwon_stage_id = self.env['crm.stage'].search([('team_id', '=', team_id), ('is_won', '=', False)], limit=1).id
+        self.assertTrue(nonwon_stage_id)
+        lead.stage_id = nonwon_stage_id
+        self.assertLess(lead.probability, 100)
 
     @users('user_sales_manager')
     def test_team_unlink(self):
