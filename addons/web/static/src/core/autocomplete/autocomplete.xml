@@ -15,7 +15,7 @@
                 t-att-aria-expanded="this.displayOptions ? 'true' : 'false'"
                 aria-autocomplete="list"
                 aria-haspopup="listbox"
-                t-custom-model="this.state.value"
+                t-model.proxy="this.state.value"
                 t-on-blur="this.onInputBlur"
                 t-on-click="this.onInputClick"
                 t-on-change="this.onInputChange"

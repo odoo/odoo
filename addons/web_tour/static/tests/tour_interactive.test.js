@@ -52,7 +52,7 @@ class Counter extends Component {
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
-                <input type="number" t-custom-model.number="this.state.interval" />
+                <input type="number" t-model.proxy.number="this.state.interval" />
             </div>
             <div class="counter">
                 <span class="value" t-out="this.state.value" />
