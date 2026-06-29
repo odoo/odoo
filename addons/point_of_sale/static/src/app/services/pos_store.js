@@ -1193,6 +1193,14 @@ export class PosStore extends WithLazyGetterTrap {
                     candidate = result["product.product"][0];
                 }
 
+                if (!candidate && attributeValues.length > 0) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Variant does not exist"),
+                        body: _t("This combination does not exist or has been deleted."),
+                    });
+                    return false;
+                }
+
                 Object.assign(values, {
                     attribute_value_ids: payload.attribute_value_ids.map((id) => [
                         "link",

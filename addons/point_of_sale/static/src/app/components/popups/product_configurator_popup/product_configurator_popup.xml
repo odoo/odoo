@@ -195,7 +195,7 @@
         <Dialog title="title">
             <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
             <div t-ref="input-area">
-                <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
+                <div t-if="isArchivedCombination() or isDeletedCombination()" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>
                 </div>
                 <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
@@ -230,7 +230,7 @@
                 <div class="d-flex flex-row gap-2 w-100">
                     <button
                             class="btn btn-primary btn-lg lh-lg w-50"
-                            t-att-class="{'disabled': isArchivedCombination() or !this.isValidCombination()}"
+                            t-att-class="{'disabled': isArchivedCombination() or isDeletedCombination() or !this.isValidCombination()}"
                             t-on-click="confirm">
                             Add
                         </button>
