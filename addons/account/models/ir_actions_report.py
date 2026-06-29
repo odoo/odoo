@@ -68,7 +68,7 @@ class IrActionsReport(models.Model):
             invoices = self.env['account.move'].browse(res_ids)
             if self.env['ir.config_parameter'].sudo().get_param('account.display_name_in_footer'):
                 data = data and dict(data) or {}
-                data.update({'display_name_in_footer': True})
+                data.update({'display_name_in_footer': ['FR']})
             if any(x.move_type == 'entry' for x in invoices):
                 raise UserError(_("Only invoices could be printed."))
 
