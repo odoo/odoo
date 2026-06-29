@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, computed, proxy } from "@odoo/owl";
 import { highlightText } from "@web/core/utils/html";
 
 export class HighlightText extends Component {
@@ -9,13 +8,8 @@ export class HighlightText extends Component {
     };
     setup() {
         this.searchState = proxy(this.env.searchState);
-
-        onWillRender(() => {
-            this.text = highlightText(
-                this.searchState.value,
-                this.props.originalText,
-                "highlighter"
-            );
-        });
+        this.text = computed(() =>
+            highlightText(this.searchState.value, this.props.originalText, "highlighter")
+        );
     }
 }
