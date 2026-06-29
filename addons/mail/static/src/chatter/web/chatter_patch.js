@@ -50,6 +50,9 @@ Object.assign(Chatter.components, {
 const chatterPatch = {
     setup() {
         super.setup(...arguments);
+        // bind once so the references stay stable across renders
+        this.onActivityChanged = this.onActivityChanged.bind(this);
+        this.reloadParentView = this.reloadParentView.bind(this);
         this.webChatterProps = props({
             close: t.function([]).optional(),
             has_activities: t.boolean().optional(true),
@@ -77,7 +80,7 @@ const chatterPatch = {
             },
             (record) => this.updateRecipients(record)
         );
-        this.attachmentPopout = usePopoutAttachment();
+        this.attachmentPopout = usePopoutAttachment({ thread: this.thread });
         Object.assign(this.state, {
             composerType: false,
             isAttachmentBoxOpened: this.webChatterProps.isAttachmentBoxVisibleInitially,
@@ -88,12 +91,7 @@ const chatterPatch = {
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
-        this.attachmentUploader = useAttachmentUploader(
-            this.store["mail.thread"].insert({
-                model: this.props.threadModel,
-                id: this.props.threadId,
-            })
-        );
+        this.attachmentUploader = useAttachmentUploader(this.thread);
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
@@ -190,8 +188,8 @@ const chatterPatch = {
         }
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
             rpc("/mail/thread/recipients/get_suggested_recipients", {
-                thread_model: this.props.threadModel,
-                thread_id: this.props.threadId,
+                thread_model: this.thread().model,
+                thread_id: this.thread().id,
                 partner_ids: partnerIds,
                 main_email: email,
             })
@@ -288,7 +286,6 @@ const chatterPatch = {
 
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
-        this.attachmentUploader.thread = this.state.thread;
         if (threadId === false) {
             this.state.composerType = false;
         } else {

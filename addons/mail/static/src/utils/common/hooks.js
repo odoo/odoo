@@ -1,11 +1,12 @@
 import {
     Component,
+    computed,
     onMounted,
     onPatched,
     onWillUnmount,
     props,
     proxy,
-    types,
+    t,
     untrack,
     useEffect,
     xml,
@@ -252,11 +253,9 @@ export class UseHoverOverlay extends Component {
     setup() {
         super.setup();
         this.props = props({
-            hover: types.object({
-                _contains: types.array(
-                    types.function([types.instanceOf(EventTarget)], types.boolean())
-                ),
-                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
+            hover: t.object({
+                _contains: t.array(t.function([t.instanceOf(EventTarget)], t.boolean())),
+                addTarget: t.function([t.object({ ref: t.any() })], t.function([])),
             }),
         });
         this.root = useRef("root");
@@ -1013,4 +1012,35 @@ export function useOnChange(dependencies, callback, { initialRun } = { initialRu
         }
         firstRun = false;
     });
+}
+
+/**
+ * Single read-only signal derived from one plain-value prop. The result is a signal tracking prop
+ * changes, but it is less efficient than `propSignal` as a prop change always triggers an
+ * unnecessary render of the parent. To be used only when the parent does not pass a signal and it
+ * is not possible to update all parents to pass signals.
+ *
+ * @template S
+ * @param {string} name
+ * @param {S} shape shape of the final value (e.g. `t.number()`)
+ * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} the resulting
+ *   (read-only) signal, which always exists (never `undefined`), even when the prop is optional.
+ */
+export function propComputed(name, shape) {
+    const rawProps = props({ [name]: shape });
+    return computed(() => rawProps[name]);
+}
+
+/**
+ * Single signal for one prop that is itself a signal: a thin wrapper over `props.static` that adds
+ * the `t.signal(...)` typing. The parent must pass a stable signal reference (but its inner value
+ * may change).
+ *
+ * @template S
+ * @param {string} name
+ * @param {S} shape shape of the final value (e.g. `t.number()`)
+ * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
+ */
+export function propSignal(name, shape) {
+    return props.static(name, t.signal(shape));
 }

@@ -31,9 +31,9 @@ patch(Chatter.prototype, {
 
     async toggleIsFollower() {
         this.state.isFollower = await this.orm.call(
-            this.props.threadModel,
+            this.thread().model,
             "project_sharing_toggle_is_follower",
-            [this.props.threadId]
+            [this.thread().id]
         );
     },
     onPostCallback() {

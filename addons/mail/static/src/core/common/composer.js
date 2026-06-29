@@ -6,7 +6,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
-import { useSelection } from "@mail/utils/common/hooks";
+import { propComputed, useSelection } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -19,6 +19,7 @@ import { useDebounced } from "@web/core/utils/timing";
 
 import {
     Component,
+    computed,
     markup,
     onMounted,
     onWillUnmount,
@@ -122,6 +123,7 @@ export class Composer extends Component {
             allowUpload: t.boolean().optional(true),
             autofocus: t.or([t.number(), t.boolean()]).optional(0),
             className: t.string().optional(""),
+            /** @deprecated use the `this.composer` signal instead */
             composer: t.instanceOf(this.store["Composer"].Class),
             disabled: t.boolean().optional(),
             dropzoneRef: t.signal(t.instanceOf(HTMLElement)).optional(),
@@ -134,6 +136,7 @@ export class Composer extends Component {
             showFullComposer: t.boolean().optional(true),
             type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
         });
+        this.composer = propComputed("composer", t.instanceOf(this.store["Composer"].Class));
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
@@ -143,8 +146,8 @@ export class Composer extends Component {
             ),
         });
         this.attachmentUploader = useAttachmentUploader(
-            this.thread ?? this.props.composer.message.thread,
-            { composer: this.props.composer }
+            computed(() => this.thread ?? this.composer().message.thread),
+            { composer: this.composer }
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");

@@ -4,15 +4,15 @@
         <xpath expr="//span[hasclass('o-mail-ActivityListPopoverItem-name')]" position="replace">
             <div class="d-flex flex-column text-truncate flex-grow-1 flex-basis-0">
                 <span class="o-mail-ActivityListPopoverItem-name d-flex flex-nowrap align-items-center">
-                    <i t-attf-class="fa {{this.props.activity.icon}} fa-fw lh-base me-1"/>
-                    <b t-if="this.props.activity.summary" class="fw-normal text-900 text-truncate" t-out="this.props.activity.summary"/>
-                    <b t-elif="this.props.activity.activity_type_id?.name" class="fw-normal text-900 text-truncate" t-out="this.props.activity.activity_type_id.name"/>
+                    <i t-attf-class="fa {{this.activity().icon}} fa-fw lh-base me-1"/>
+                    <b t-if="this.activity().summary" class="fw-normal text-900 text-truncate" t-out="this.activity().summary"/>
+                    <b t-elif="this.activity().activity_type_id?.name" class="fw-normal text-900 text-truncate" t-out="this.activity().activity_type_id.name"/>
                 </span>
                 <span
-                    t-if="this.props.activity.res_name"
+                    t-if="this.activity().res_name"
                     class="text-action cursor-pointer text-truncate w-100 align-self-start small"
                     t-custom-click.stop="(ev, isMiddleClick) => this.onClickOpenRelatedRecord(ev, isMiddleClick)"
-                    t-out="this.props.activity.res_name"/>
+                    t-out="this.activity().res_name"/>
             </div>
             <Dropdown>
                 <button class="o-mail-ActivityListPopoverItem-reschedulebtn btn btn-sm btn-info btn-link" type="button" title="Reschedule" aria-label="Reschedule">
@@ -48,13 +48,13 @@
         </xpath>
         <xpath expr="//div[hasclass('o-mail-ActivityListPopoverItem-user')]" position="replace"/>
         <xpath expr="//ActivityMarkAsDone" position="attributes">
-            <attribute name="onClickDone.bind">this.onClickDone</attribute>
+            <attribute name="onClickDone">this.onClickDone</attribute>
         </xpath>
         <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-editbtn')]" position="after">
             <button t-if="this.hasViewMeetingButton"
                 title="View Meeting" aria-label="View Meeting"
                 class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
-                t-on-click="() => this.calendarProps.onViewMeeting(this.props.activity.calendar_event_id)">
+                t-on-click="() => this.calendarProps.onViewMeeting(this.activity().calendar_event_id)">
                 <i class="fa fa-eye"/>
             </button>
         </xpath>

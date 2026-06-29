@@ -1,5 +1,7 @@
+import { propSignal } from "@mail/utils/common/hooks";
+
 import { imageUrl } from "@web/core/utils/urls";
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -13,19 +15,15 @@ export class ActivityAssignPopover extends Component {
         this.store = useService("mail.store");
         this.orm = useService("orm");
         this.responsibleLabel = _t("Responsible");
-        this.props = props(
-            {
-                activity: types.instanceOf(this.store["mail.activity"].Class),
-                close: types.function().optional(),
-                hasHeader: types.boolean().optional(),
-                onActivityChanged: types.function([
-                    types.instanceOf(this.store["mail.thread"].Class),
-                ]),
-            },
-            { hasHeader: false }
+        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.close = props.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
+        this.hasHeader = props.static("hasHeader", t.boolean().optional(false));
+        this.onActivityChanged = props.static(
+            "onActivityChanged",
+            t.function([t.instanceOf(this.store["mail.thread"].Class)])
         );
-        this.userId = signal(this.props.activity.user_id?.id || false);
-        this.userName = signal(this.props.activity.user_id?.name || "");
+        this.userId = signal(this.activity().user_id?.id || false);
+        this.userName = signal(this.activity().user_id?.name || "");
         this.disableAssignButton = signal(false);
     }
 
@@ -58,20 +56,20 @@ export class ActivityAssignPopover extends Component {
         if (this.disableAssignButton()) {
             return;
         }
-        const { res_id, res_model } = this.props.activity;
+        const { res_id, res_model } = this.activity();
         const thread = this.store["mail.thread"].insert({ model: res_model, id: res_id });
         this.disableAssignButton.set(true);
         try {
-            await this.orm.write("mail.activity", [this.props.activity.id], {
+            await this.orm.write("mail.activity", [this.activity().id], {
                 user_id: this.userId() || false,
             });
-            this.props.onActivityChanged(thread);
+            this.onActivityChanged(thread);
             await thread.fetchNewMessages();
         } finally {
             this.disableAssignButton.set(false);
         }
-        if (this.props.close) {
-            this.props.close();
+        if (this.close) {
+            this.close();
         }
     }
 }

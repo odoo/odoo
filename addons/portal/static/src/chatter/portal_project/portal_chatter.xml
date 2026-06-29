@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="portal.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter o-portal-Chatter w-100 h-100 flex-grow-1 d-flex" t-att-class="{ 'row':this.props.twoColumns, 'flex-column':!this.props.twoColumns }" t-on-scroll="this.onScrollDebounced" t-custom-ref="root">
-        <div class="o-mail-Chatter-top top-0" t-att-class="{ 'col-lg-5':this.props.twoColumns, 'position-sticky':this.props.composer }" t-att-style="(!this.props.twoColumns and this.env.inFrontendPortalChatter and !this.env.projectSharingId) and 'top: -1px !important; margin-top:-15px; padding-top: 20px'" t-custom-ref="top">
-            <Composer t-if="this.props.composer" composer="this.state.thread.composer" mode="'extended'" onPostCallback.bind="this.onPostCallback" dropzoneRef="this.rootRef" t-key="this.props.threadId" type="'message'"/>
+    <div t-if="this.state.thread" class="o-mail-Chatter o-portal-Chatter w-100 h-100 flex-grow-1 d-flex" t-att-class="{ 'row':this.twoColumns(), 'flex-column':!this.twoColumns() }" t-on-scroll="this.onScrollDebounced" t-custom-ref="root">
+        <div class="o-mail-Chatter-top top-0" t-att-class="{ 'col-lg-5':this.twoColumns(), 'position-sticky':this.composer() }" t-att-style="(!this.twoColumns() and this.env.inFrontendPortalChatter and !this.env.projectSharingId) and 'top: -1px !important; margin-top:-15px; padding-top: 20px'" t-custom-ref="top">
+            <Composer t-if="this.composer()" composer="this.state.thread.composer" mode="'extended'" onPostCallback.bind="this.onPostCallback" dropzoneRef="this.rootRef" t-key="this.thread().id" type="'message'"/>
         </div>
-        <div class="o-mail-Chatter-content" t-att-class="{ 'col-lg-6 offset-lg-1':this.props.twoColumns }">
+        <div class="o-mail-Chatter-content" t-att-class="{ 'col-lg-6 offset-lg-1':this.twoColumns() }">
             <Thread thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
         </div>
     </div>

@@ -1,3 +1,5 @@
+import { propComputed } from "@mail/utils/common/hooks";
+
 import { Component, props, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -9,25 +11,26 @@ export class MessageInReply extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            class: t.string().optional(""),
-            message: t.instanceOf(this.store["mail.message"].Class),
-            onClick: t.function([]).optional(),
-        });
+        this.class = propComputed("class", t.string().optional(""));
+        this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
+        this.onClick = props.static(
+            "onClick",
+            t.function([t.instanceOf(this.store["mail.message"].Class)]).optional()
+        );
     }
 
     get authorAvatarUrl() {
         if (
-            this.props.message.message_type &&
-            this.props.message.message_type.includes("email") &&
-            !this.props.message.author_id &&
-            !this.props.message.author_guest_id
+            this.message().message_type &&
+            this.message().message_type.includes("email") &&
+            !this.message().author_id &&
+            !this.message().author_guest_id
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
 
-        if (this.props.message.parent_id.author) {
-            return this.props.message.parent_id.author.avatarUrl;
+        if (this.message().parent_id.author) {
+            return this.message().parent_id.author.avatarUrl;
         }
 
         return this.store.DEFAULT_AVATAR;

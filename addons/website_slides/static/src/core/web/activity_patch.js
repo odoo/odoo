@@ -5,24 +5,26 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("@mail/core/web/activity").Activity } */
 const ActivityPatch = {
     async onGrantAccess() {
+        const activity = this.activity();
         await this.env.services.orm.call(
             "slide.channel",
             "action_grant_access",
-            [[this.props.activity.res_id]],
-            { partner_id: this.props.activity.request_partner_id.id }
+            [[activity.res_id]],
+            { partner_id: activity.request_partner_id.id }
         );
-        this.props.activity.remove();
-        this.props.reloadParentView();
+        activity.remove();
+        this.reloadParentView();
     },
     async onRefuseAccess() {
+        const activity = this.activity();
         await this.env.services.orm.call(
             "slide.channel",
             "action_refuse_access",
-            [[this.props.activity.res_id]],
-            { partner_id: this.props.activity.request_partner_id.id }
+            [[activity.res_id]],
+            { partner_id: activity.request_partner_id.id }
         );
-        this.props.activity.remove();
-        this.props.reloadParentView();
+        activity.remove();
+        this.reloadParentView();
     },
 };
 

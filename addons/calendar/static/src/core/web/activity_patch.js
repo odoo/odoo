@@ -21,7 +21,7 @@ patch(Activity.prototype, {
         return luxon.DateTime.DATE_FULL;
     },
     get meeting() {
-        return this.props.activity.calendar_event_id;
+        return this.activity().calendar_event_id;
     },
     get timeFormat() {
         return luxon.DateTime.TIME_SIMPLE;
@@ -29,12 +29,12 @@ patch(Activity.prototype, {
     get truncatedAttendeeNames() {
         return this.meeting.partner_ids.length > 3
             ? formatList([
-                ...this.meeting.partner_ids.slice(0, 2).map((p) => p.name),
-                _t("%s others", this.meeting.partner_ids.length - 2),
-            ])
+                  ...this.meeting.partner_ids.slice(0, 2).map((p) => p.name),
+                  _t("%s others", this.meeting.partner_ids.length - 2),
+              ])
             : this.attendeeNames;
     },
-    async onClickReschedule() {
-        await this.props.activity.rescheduleMeeting();
+    onClickReschedule() {
+        this.activity().rescheduleMeeting();
     },
 });
