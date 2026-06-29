@@ -2,19 +2,12 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
-import {
-    CellLayout,
-    EmptyCellLayout,
-    EmptyRowLayout,
-    RowLayout,
-    TableLayout,
-} from "./table_models";
+import { CellLayout, EmptyCellLayout, TableRowLayout } from "./table_models";
 import { EmailNode } from "../core/render_models";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
-import { computeRect } from "../core/utils";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 
@@ -38,7 +31,16 @@ export class TableStrategyPlugin extends Plugin {
         "rules",
         "spacing",
     ];
-    static shared = ["extractRowsFromBands", "fillTableContainer", "getClusterEmailNodes"];
+    static shared = [
+        "addTableOuterSpacingFacts",
+        "applyCellNewWidth",
+        "applyDescendantBackground",
+        "applyDescendantBorder",
+        "extractRowsFromBands",
+        "fillTableContainer",
+        "getCellMarginStyleInfo",
+        "getClusterEmailNodes",
+    ];
     resources = {
         element_layout_analysis_processors: [
             this.analyzeElementLayout.bind(this),
@@ -62,37 +64,69 @@ export class TableStrategyPlugin extends Plugin {
     setup() {
         this.builders = {
             row: this.buildRow.bind(this),
-            table: this.buildTable.bind(this),
             cell: this.buildCell.bind(this),
             emptyCell: this.buildEmptyCell.bind(this),
             cellWithOffset: this.buildCellWithOffset.bind(this),
         };
         this.borderStyleRules = new Rules();
         this.backgroundStyleRules = new Rules();
+        this.cellMarginStyleRules = new Rules();
         this.provideStyleRules();
     }
 
     provideStyleRules() {
         const borderRules = this.borderStyleRules.forPlugin(TableStrategyPlugin.id);
         const backgroundRules = this.backgroundStyleRules.forPlugin(TableStrategyPlugin.id);
+        const cellMarginRules = this.cellMarginStyleRules.forPlugin(TableStrategyPlugin.id);
         borderRules.allow(/^border.*/);
         backgroundRules.allow(/^background.*/);
+        cellMarginRules.allow(/^margin-(top|bottom)$/);
     }
 
+    getCellMarginStyleInfo(styleInfo, emailNode) {
+        return this.filterStyleInfo(
+            styleInfo,
+            emailNode.layout.ancestorTag,
+            this.cellMarginStyleRules
+        );
+    }
+
+    /**
+     * TODO EGGMAIL NOW: WORKING HERE NOW:
+     * background color for card body should be applied on cell, but the
+     * logic does not support it => need custo:
+     * secondary report which will fight for priority over the first one
+     * -> need to check in which order constraints are packed, and/or
+     * use !important, because this use case does not make much sense
+     * technically, but functionally it's what we want => need custom main
+     * plugin
+     */
     applyDescendantBackground(layout, { emailNode }) {
         const facts = emailNode.analysis.facts;
-        const { useTableStrategy, acceptDescendantBackground } = facts;
-        if (!useTableStrategy || !acceptDescendantBackground) {
+        const { acceptDescendantBackground, tableStrategyReport } = facts;
+        const acceptTableStrategyReport = this.delegateTo(
+            "accept_table_strategy_report_overrides",
+            emailNode
+        );
+        if (!acceptTableStrategyReport || !acceptDescendantBackground || !tableStrategyReport) {
             return;
         }
+        const { styleInfo } = facts.tableStrategyReport.descendantBackground;
+        layout.setAttributes({ style: styleInfo });
     }
 
     applyDescendantBorder(layout, { emailNode }) {
         const facts = emailNode.analysis.facts;
-        const { useTableStrategy, acceptDescendantBorder } = facts;
-        if (!useTableStrategy || !acceptDescendantBorder) {
+        const { acceptDescendantBorder, tableStrategyReport } = facts;
+        const acceptTableStrategyReport = this.delegateTo(
+            "accept_table_strategy_report_overrides",
+            emailNode
+        );
+        if (!acceptTableStrategyReport || !acceptDescendantBorder || !tableStrategyReport) {
             return;
         }
+        const { styleInfo } = facts.tableStrategyReport.descendantBorder;
+        layout.setAttributes({ style: styleInfo });
     }
 
     applyTableSpacing(layout, { emailNode }) {
@@ -108,20 +142,6 @@ export class TableStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.acceptTableOuterSpacing) {
             this.addTableOuterSpacingFacts(layout, { emailNode });
         }
-        // apply cell margin bottom
-        // - identify that the node is a tableLayout cell or a hybridTableLayout cell
-        // - add the hardcoded mass_mailing_mail.css class for the closest equivalent margin
-        // DONE
-        if (emailNode.analysis.facts.acceptCellMobileMarginBottom) {
-            this.applyCellMobileMarginBottom(layout, { emailNode });
-        }
-        // apply vertical padding between rows
-        // - identify that the node is a tablelayout Row
-        // - splice vertical padding rows with 1 cell inside the table
-        // DONE
-        if (emailNode.analysis.facts.acceptRowDesktopMarginBottom) {
-            this.applyRowDesktopMarginBottom(layout, { emailNode });
-        }
         // apply horizontal padding between cells
         // - identify that the node is a tableLayout Cell or a hybridTableLayout Cell
         // - splice horizontal padding cells inside the row
@@ -133,61 +153,63 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     addTableOuterSpacingFacts(layout, { emailNode }) {
-        // Rely on the spacing_plugin to build a margin wrapper
-        // around the table
-        // TODO EGGMAIL: replace test value
+        // rely on the spacing_plugin to apply a margin node
+        // TODO EGGMAIL: propagate dimensions from descendant to get a margin
+        // closer to what is expected instead of a single hardcoded value
         emailNode.analysis.facts.desktopMarginStyleInfo = this.getMarginStyleInfo(
             StyleInfo.from({
-                margin: "16px",
+                "margin-top": "16px",
+                "margin-bottom": "16px",
             }),
             emailNode.layout.ancestorTag
         );
     }
 
-    applyCellMobileMarginBottom(layout, { emailNode }) {
-        // TODO EGGMAIL: replace test value
-        layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
-    }
-
-    applyRowDesktopMarginBottom(layout, { emailNode }) {
-        const parent = emailNode.parent;
-        if (!parent) {
-            return;
-        }
-        // TODO EGGMAIL: replace test value
-        parent.spliceChildren(
-            parent.children.indexOf(emailNode) + 1,
-            0,
-            new EmailNode({
-                layout: new EmptyRowLayout({
-                    refs: {
-                        cell: {
-                            style: { height: "16px" },
-                            attributes: { height: "16" },
-                        },
-                    },
-                }),
-            })
-        );
-    }
-
     applyCellNewWidth(layout, { emailNode }) {
-        // todo set values => new width attribute and style
         const parent = emailNode.parent;
         if (!parent) {
             return;
         }
-        // TODO EGGMAIL: replace test value
+        const rowWidth = emailNode.analysis.facts.rowWidth;
+        const { referenceRect, marginRect } = emailNode.analysis.facts.tableStrategyReport.spacing;
+        const paddingRect = this.containerPadding(marginRect, referenceRect);
+        // this is correct
+        const widthRatio = this.ratioPercentage(referenceRect.width, {
+            inputUnit: rowWidth,
+        });
+        const rightRatio = this.ratioPercentage(paddingRect.right, {
+            inputUnit: rowWidth,
+        });
+        const leftRatio = this.ratioPercentage(paddingRect.left, {
+            inputUnit: rowWidth,
+        });
+        // Padding cells
+        const index = parent.children.indexOf(emailNode);
         parent.spliceChildren(
-            parent.children.indexOf(emailNode) + 1,
+            index + 1,
             0,
             new EmailNode({
                 layout: new EmptyCellLayout({
-                    style: { width: `3%` },
-                    attributes: { width: `3%` },
+                    style: { width: `${rightRatio}%` },
+                    attributes: { width: `${rightRatio}%` },
                 }),
             })
         );
+        parent.spliceChildren(
+            index,
+            0,
+            new EmailNode({
+                layout: new EmptyCellLayout({
+                    style: { width: `${leftRatio}%` },
+                    attributes: { width: `${leftRatio}%` },
+                }),
+            })
+        );
+        // New width
+        layout.setAttributes({
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+        });
     }
 
     /**
@@ -266,7 +288,7 @@ export class TableStrategyPlugin extends Plugin {
             const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
             const bottom = parseCssValue(computedStyle.getPropertyValue("margin-bottom"));
             const left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
-            marginRect = computeRect(referenceRect, {
+            marginRect = this.computeRect(referenceRect, {
                 top: -top.number,
                 right: right.number,
                 bottom: bottom.number,
@@ -357,7 +379,7 @@ export class TableStrategyPlugin extends Plugin {
                 const right = parseCssValue(computedStyle.getPropertyValue("padding-right"));
                 const bottom = parseCssValue(computedStyle.getPropertyValue("padding-bottom"));
                 const left = parseCssValue(computedStyle.getPropertyValue("padding-left"));
-                const subPaddingRect = computeRect(referenceRect, {
+                const subPaddingRect = this.computeRect(referenceRect, {
                     top: top.number,
                     right: -right.number,
                     bottom: -bottom.number,
@@ -375,14 +397,20 @@ export class TableStrategyPlugin extends Plugin {
             if (marginStyleInfo.size > 0) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
-                const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
+                let right;
                 const bottom = parseCssValue(computedStyle.getPropertyValue("margin-bottom"));
-                const left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
-                marginRect = computeRect(referenceRect, {
+                let left;
+                if (emailNode.parent && !emailNode.parent.analysis.facts.acceptCellNewWidth) {
+                    // Only consider horizontal margin if the parent is not the cell node,
+                    // as margin in that case would already have been handled
+                    right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
+                    left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
+                }
+                marginRect = this.computeRect(referenceRect, {
                     top: -top.number,
-                    right: right.number,
+                    right: right?.number ?? 0,
                     bottom: bottom.number,
-                    left: -left.number,
+                    left: -(left?.number ?? 0),
                 });
             }
             return { shouldPropagate: true };
@@ -486,6 +514,7 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     // TODO EGGMAIL NOW (remark from hybrid_fluid_strategy_plugin)
+    // MAYBE OBSOLETE COMMENT:
     // we have a container which is supposed to be a hybrid fluid table
     // with potentially multiple rows, each with potentially multiple
     // cells.
@@ -510,14 +539,15 @@ export class TableStrategyPlugin extends Plugin {
     // Objective here is to make sure that every child of the row is classified as a CELL,
     // be it a child itself becomes a CELL, or 1+ children are wrapped in a CELL
     // BTW the row node itself can become multiple row in some circumstances
-    fillTableContainer(
-        emailNode,
-        rowMeasures,
-        { withTable = true, builders = this.builders } = {}
-    ) {
+    fillTableContainer(emailNode, rowMeasures, { builders = this.builders } = {}) {
         const rows = [];
         for (const rowMeasure of rowMeasures) {
             const width = rowMeasure.width;
+            const assignRowInfo = (emailNode) => {
+                Object.assign(emailNode.analysis.facts, {
+                    rowWidth: width,
+                });
+            };
             let ratio = 100;
             const rowEmailNode = builders["row"](rowMeasure);
             rows.push(rowEmailNode);
@@ -535,31 +565,42 @@ export class TableStrategyPlugin extends Plugin {
                     });
                     ratio -= cellMeasure.offsetWidthRatio;
                     for (const cell of builders["cellWithOffset"](cellMeasure)) {
-                        cell.analysis.facts.rowWidth = width;
+                        assignRowInfo(cell);
                         rowEmailNode.appendChild(cell);
                     }
                 } else if (cellMeasure.type === "emptyCell") {
                     const cell = builders["emptyCell"](cellMeasure);
-                    cell.analysis.facts.rowWidth = width;
+                    assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 } else if (cellMeasure.type === "cell") {
                     const cell = builders["cell"](cellMeasure);
-                    cell.analysis.facts.rowWidth = width;
+                    assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 }
             }
         }
-        let children = rows;
-        if (withTable) {
-            const tableNode = builders["table"](rows);
-            children = [tableNode];
-        }
-        emailNode.spliceChildren(0, emailNode.children.length, ...children);
+        emailNode.spliceChildren(0, emailNode.children.length, ...rows);
     }
 
     extractRowsFromBands(emailNode) {
         const referenceNode = emailNode.lastReferenceNode;
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
+        // TODO EGGMAIL WORKING HERE: the block width does not take into
+        // account the real padding of the block, and the block padding
+        // combines all centering strategies. To get the correct ratio,
+        // we need to subtract the real padding of the block element here.
+        // TODO EGGMAIL: export this computation somewhere, it is used multiple times
+        const computedStyle = this.getComputedStyle(desktopBlock.element);
+        const top = parseCssValue(computedStyle.getPropertyValue("padding-top"));
+        const right = parseCssValue(computedStyle.getPropertyValue("padding-right"));
+        const bottom = parseCssValue(computedStyle.getPropertyValue("padding-bottom"));
+        const left = parseCssValue(computedStyle.getPropertyValue("padding-left"));
+        const subPaddingRect = this.computeRect(desktopBlock.rect, {
+            top: top.number,
+            right: -right.number,
+            bottom: -bottom.number,
+            left: left.number,
+        });
         // TODO EGGMAIL: some values for text-align are not supported
         // getStylePropertyValue should probably filter values and only
         // return what is allowed
@@ -577,11 +618,19 @@ export class TableStrategyPlugin extends Plugin {
         // STEP 1: construct measure bundles
         const rowMeasures = [];
         for (const band of desktopBlock.bands) {
-            const row = { verticalAlign, children: [] };
+            const row = { verticalAlign, children: [], width: subPaddingRect.width };
             rowMeasures.push(row);
-            let width = 0;
             let prevCluster;
-            const hasLastOffset = !this.isZero(desktopBlock.padding.right);
+            // TODO EGGMAIL RTL
+            let rightOffset = 0;
+            let leftOffset = 0;
+            const lastCluster = band.clusters.at(-1);
+            const firstCluster = band.clusters.at(0);
+            if (lastCluster) {
+                ({ right: rightOffset } = this.containerPadding(subPaddingRect, lastCluster.rect));
+                ({ left: leftOffset } = this.containerPadding(subPaddingRect, firstCluster.rect));
+            }
+            const hasLastOffset = !this.isZero(rightOffset);
             if (band.clusters.length > 0) {
                 prevCluster = band.clusters[0];
                 const measures = {
@@ -592,10 +641,8 @@ export class TableStrategyPlugin extends Plugin {
                     width: prevCluster.rect.width,
                     verticalAlign,
                 };
-                width += measures.width;
-                if (!this.isZero(desktopBlock.padding.left)) {
-                    const offsetWidth = desktopBlock.padding.left;
-                    width += offsetWidth;
+                if (!this.isZero(leftOffset)) {
+                    const offsetWidth = leftOffset;
                     row.children.push(
                         Object.assign({ type: "cellWithOffset", offsetWidth }, measures)
                     );
@@ -614,9 +661,7 @@ export class TableStrategyPlugin extends Plugin {
                     width: cluster.rect.width,
                     verticalAlign,
                 };
-                width += measures.width;
                 if (gap > 0) {
-                    width += gap;
                     row.children.push(
                         Object.assign({ type: "cellWithOffset", offsetWidth: gap }, measures)
                     );
@@ -626,15 +671,15 @@ export class TableStrategyPlugin extends Plugin {
                 prevCluster = cluster;
             }
             if (hasLastOffset) {
-                width += desktopBlock.padding.right;
                 row.children.push({
                     type: "emptyCell",
-                    width: desktopBlock.padding.right,
+                    width: rightOffset,
                     isLast: true,
                     verticalAlign,
                 });
             }
-            row.width = width;
+            // TODO EGGMAIL: REMOVE;
+            // row.cellsWidth = width;
         }
         const lastRowMeasure = rowMeasures.at(-1);
         if (lastRowMeasure) {
@@ -662,23 +707,12 @@ export class TableStrategyPlugin extends Plugin {
         return clusterEmailNodes;
     }
 
-    buildTable(rows) {
-        const layout = new TableLayout();
-        const tableNode = new EmailNode({ layout });
-        tableNode.analysis.facts.acceptTableOuterSpacing = true;
-        tableNode.analysis.facts.useTableStrategy = true;
-        tableNode.spliceChildren(0, 0, ...rows);
-        return tableNode;
-    }
-
     buildRow({ isLast }) {
-        const layout = new RowLayout();
+        const layout = new TableRowLayout();
         const emailNode = new EmailNode({ layout });
-        if (!isLast) {
-            emailNode.analysis.facts.acceptRowDesktopMarginBottom = true;
-        }
+        emailNode.analysis.facts.acceptTableOuterSpacing = true;
         emailNode.analysis.facts.useTableStrategy = true;
-        return new EmailNode({ layout });
+        return emailNode;
     }
 
     buildCell({ styleContext, cluster, emailNode, widthRatio, verticalAlign, isLast }) {
@@ -698,12 +732,16 @@ export class TableStrategyPlugin extends Plugin {
         const layout = new CellLayout(refs.root);
         const cellEmailNode = new EmailNode({ layout });
         for (const child of clusterEmailNodes) {
+            child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
+                child.analysis.facts.desktopMarginStyleInfo,
+                child
+            );
             cellEmailNode.appendChild(child);
         }
         if (!isLast) {
             cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
         }
-        emailNode.analysis.facts.useTableStrategy = true;
+        cellEmailNode.analysis.facts.useTableStrategy = true;
         cellEmailNode.analysis.facts.acceptCellNewWidth = true;
         cellEmailNode.analysis.facts.acceptDescendantBackground = true;
         cellEmailNode.analysis.facts.acceptDescendantBorder = true;

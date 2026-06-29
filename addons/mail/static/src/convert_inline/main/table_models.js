@@ -1,46 +1,36 @@
-import { ElementLayout, LayoutModel } from "../core/render_models";
+import { assignDefaultElementOptions, ElementLayout, LayoutModel } from "../core/render_models";
 
-export class TableLayout extends ElementLayout {
-    constructor(root = {}) {
-        root.tag = "TABLE";
-        super(root);
-        this.setAttributes({
-            classNames: "o-ci-table-layout",
-            attributes: {
-                role: "presentation",
-                cellspacing: "0",
-                cellpadding: "0",
-                border: "0",
-            },
-        });
-    }
-}
-
-export class RowLayout extends ElementLayout {
-    constructor(root = {}) {
-        root.tag = "TR";
-        super(root);
-        this.setAttributes({
-            classNames: "o-ci-row-layout",
-        });
-    }
-}
-
-export class EmptyRowLayout extends LayoutModel {
-    static template = "mail.EmptyRowLayout";
+export class TableRowLayout extends LayoutModel {
+    static template = "mail.TableRow";
     constructor(options = {}) {
         const refs = options.refs ?? {};
         options.refs = refs;
+        refs.root = assignDefaultElementOptions(refs.root, {
+            style: {
+                width: "100%",
+            },
+        });
         super(options);
-        this.setAttributes({ classNames: "o-ci-empty-row-cell" }, "cell");
+        this.setAttributes({
+            classNames: "o-ci-table-layout",
+            style: {
+                "border-collapse": "separate",
+            },
+        });
+        this.setAttributes(
+            {
+                classNames: "o-ci-row-layout",
+            },
+            "row"
+        );
     }
 
     get ancestorTag() {
-        return "TR";
+        return "TABLE";
     }
 
     get descendantTag() {
-        return "TD";
+        return "TR";
     }
 }
 
@@ -50,6 +40,13 @@ export class CellLayout extends ElementLayout {
         super(root);
         this.setAttributes({
             classNames: "o-ci-cell-layout",
+            // TODO EGGMAIL: reevaluate valign and vertical-align
+            attributes: {
+                valign: "top",
+            },
+            style: {
+                "vertical-align": "top",
+            },
         });
     }
 }

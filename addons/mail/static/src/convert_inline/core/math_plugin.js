@@ -5,6 +5,7 @@ export class MathPlugin extends Plugin {
     static id = "math";
     static shared = [
         "areRectEqual",
+        "computeRect",
         "pixelTolerance",
         "isNegativeZero",
         "isPositiveZero",
@@ -86,6 +87,29 @@ export class MathPlugin extends Plugin {
             gapX: this.gapX(siblingRect1, siblingRect2),
             gapY: this.gapY(siblingRect1, siblingRect2),
         };
+    }
+
+    computeRect(rect, operations = {}) {
+        const output = { ...rect };
+        for (const [key, value] of Object.entries(operations)) {
+            // TODO EGGMAIL: consider RTL
+            if (key === "left" || key === "x") {
+                output.left += value;
+                output.x += value;
+                output.width -= value;
+            } else if (key === "right") {
+                output.right += value;
+                output.width += value;
+            } else if (key === "top" || key === "y") {
+                output.top += value;
+                output.x += value;
+                output.height -= value;
+            } else if (key === "bottom") {
+                output.bottom += value;
+                output.height += value;
+            }
+        }
+        return output;
     }
 
     containerPadding(outerRect, innerRect) {

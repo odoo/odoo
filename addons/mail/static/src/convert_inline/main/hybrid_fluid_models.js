@@ -90,7 +90,7 @@ export class HybridFluidEmptyCell extends HybridFluidCell {
 }
 
 export class HybridFluidTableRow extends LayoutModel {
-    static template = "mail.HybridFluidTableRow";
+    static template = "mail.TableRow";
     constructor(options = {}) {
         const refs = options.refs ?? {};
         options.refs = refs;
