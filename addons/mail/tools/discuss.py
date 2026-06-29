@@ -7,7 +7,8 @@ from collections import UserList, defaultdict
 from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
-from itertools import product
+from itertools import count, product
+from logging import getLogger
 from typing import Generic, TypeVar
 
 from markupsafe import Markup
@@ -21,6 +22,7 @@ from odoo.tools import OrderedSet
 from odoo.addons.bus.websocket import wsrequest
 
 T = TypeVar("T")
+_logger = getLogger(__name__)
 
 
 def add_guest_to_context(func):
@@ -202,42 +204,69 @@ class Store:
     The store instance is then transformed to a dictionnary to be sent either by the HTTP
     or the bus stack. This dictionnary also includes information about the data version,
     which will be used by the client to distinguish stale from new data.
-
-    If `bus_channel` is passed, the store will automatically be sent through the bus.
     """
+    __uuid_it = count(0)
 
-    def __init__(
-        self,
-        bus_channel=None,
-        bus_subchannel=None,
-        *,
-        notification_type=None,
-        notification_payload=None,
-    ):
+    def __init__(self, *, target=None):
+        """
+        :param target: determines the recipient(s). Accepted forms:
+            - ``None``: defaults to the current user.
+            - a recordset: the channel, with no subchannel.
+            - a ``(channel, subchannel)`` tuple.
+        """
         self.add_depth = 0
         self.already_done = set()
         self.data = defaultdict(lambda: defaultdict(dict))
         self.data_id = None
         self.is_executing_operation_queue = False
         self.operation_queue = []
-        self.target = Store.Target(bus_channel, bus_subchannel)
+        if target is None:
+            self.target = Store.Target()
+        elif isinstance(target, tuple):
+            self.target = Store.Target(*target)
+        else:
+            self.target = Store.Target(target)
         self._internal_store = None
         self.__version = None
         self._auto_send = True
-        self.__try_update_version_from_records(bus_channel)
-        assert bus_channel is not None or not (notification_payload or notification_type), (
-            "Notification parameters only make sense when a bus channel is passed."
+        if self.target.channel:
+            self.__try_update_version_from_records(self.target.channel)
+
+    @classmethod
+    def to(
+        cls,
+        bus_channel,
+        bus_subchannel=None,
+        /,
+        *,
+        notification_type="mail.record/insert",
+        payload=None,
+    ):
+        """Return a versioned :class:`Store` instance for a specific recipient. Data is
+        automatically sent to that channel via the bus at the end of the transaction.
+        """
+        assert not payload or isinstance(payload, dict), "Notification payload should be a dict"
+        stores = cls.__ensure_stores(bus_channel.env.cr.cache)
+        # Batching is not supported for other notifications than `mail.record/insert`. Add
+        # a unique id to force new store creation.
+        key = cls._deep_freeze(
+            (
+                bus_channel,
+                bus_subchannel,
+                notification_type,
+                next(cls.__uuid_it) if notification_type != "mail.record/insert" else None,
+            ),
         )
-        if bus_channel:
-            type_ = notification_type or "mail.record/insert"
-            payload = (
-                self
-                if notification_payload is None
-                else {**notification_payload, "store_data": self}
-            )
-            bus_channel._bus_send(type_, payload, subchannel=bus_subchannel)
-            if bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
-                self._internal_store = Store(bus_channel, bus_subchannel="internal_users")
+        for main_channel in bus_channel._bus_channels():
+            if key not in stores:
+                store = Store(target=(main_channel, bus_subchannel))
+                stores[key] = store
+                to_send = store if payload is None else {**payload, "store_data": store}
+                main_channel._bus_send(notification_type, to_send, subchannel=bus_subchannel)
+                if main_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
+                    store._internal_store = cls.to(main_channel, "internal_users")
+            return stores[key]
+        return None
 
     def __try_update_version_from_records(self, records):
         is_recordset = isinstance(records, models.Model)
@@ -518,6 +547,12 @@ class Store:
             return frozenset(Store._deep_freeze(i) for i in obj)
         return obj.__code__ if hasattr(obj, "__code__") else obj
 
+    @staticmethod
+    def __ensure_stores(cache) -> dict:
+        if "store_factory__stores" not in cache:
+            cache["store_factory__stores"] = {}
+        return cache["store_factory__stores"]
+
     class LazyValue(Generic[T]):  # noqa: OLS01001
         def __init__(self, fn):
             """Helper to lazily compute a recordset, shared across multiple consumers
@@ -530,26 +565,6 @@ class Store:
             if self._value is None:
                 self._value = self._fn()
             return self._value.with_env(env)
-
-    class Stores(dict[object | tuple, "Store"]):
-        """Lazy mapping to manage a list of Store indexed by bus target.
-        Store methods are forwarded to all contained Store instances."""
-
-        def __missing__(self, target):
-            bus_channel, bus_subchannel = target if isinstance(target, tuple) else (target, None)
-            return self.setdefault(target, Store(bus_channel, bus_subchannel))
-
-        def __getattr__(self, name):
-            if name not in {"add", "delete"}:
-                raise AttributeError(f"'Stores' object has no attribute '{name}'")
-
-            def stores_forward(*args, **kwargs):
-                for store in self.values():
-                    assert isinstance(store, Store)
-                    # getattr: only allowed methods of Store are forwarded
-                    getattr(store, name)(*args, **kwargs)
-
-            return stores_forward
 
     class Target:
         """Target of the current store. Useful when information have to be added contextually
@@ -966,7 +981,7 @@ class Store:
         to a specific (bus_channel, sub_channel), and there can be multiple bus_channel for one
         record depending on the result of _bus_channels()."""
 
-        def __init__(self, stores, records, bus_target):
+        def __init__(self, records, bus_target):
             """Initialize field lists by record for the given bus target.
 
             ``bus_target`` is expected in the following format:
@@ -984,7 +999,7 @@ class Store:
             for record in records:
                 target = record[field_name] if field_name else record
                 self._field_lists_by_record[record] = [
-                    Store.FieldList(stores[bus_channel, bus_subchannel], record)
+                    Store.FieldList(Store.to(bus_channel, bus_subchannel), record)
                     for bus_channel in target._bus_channels()
                 ]
 

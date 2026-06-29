@@ -39,7 +39,6 @@ class DiscussChannelRtcSession(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        stores = Store.Stores()
         rtc_sessions = super().create(vals_list)
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
             now = fields.Datetime.now()
@@ -55,22 +54,22 @@ class DiscussChannelRtcSession(models.Model):
                     "start_call_message_id": message.id,
                 },
             )
-            stores[channel].add(message, ["call_history_ids"])
+            Store.to(channel).add(message, ["call_history_ids"])
         for rtc_session in rtc_sessions:
-            stores[rtc_session.channel_id].add(
+            Store.to(rtc_session.channel_id).add(
                 rtc_session.channel_id,
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_session},
             )
         return rtc_sessions
 
-    def unlink(self):
-        stores = Store.Stores()
+    @api.ondelete(at_uninstall=False)
+    def _unlink_and_end_call(self):
+        # If there is no member left in the RTC call, all invitations are cancelled.
+        # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
+        # done before the delete to be able to know who was invited.
         call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
         for channel in call_ended_channels:
-            # If there is no member left in the RTC call, all invitations are cancelled.
-            # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
-            # done before the delete to be able to know who was invited.
             channel._rtc_cancel_invitations()
             # If there is no member left in the RTC call, we remove the SFU channel uuid as the SFU
             # server will timeout the channel. It is better to obtain a new channel from the SFU server
@@ -82,7 +81,7 @@ class DiscussChannelRtcSession(models.Model):
                 "discuss.channel.rtc.session/ended",
                 {"sessionId": rtc_session.id},
             )
-            stores[rtc_session.channel_id].add(
+            Store.to(rtc_session.channel_id).add(
                 rtc_session.channel_id,
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
@@ -92,8 +91,7 @@ class DiscussChannelRtcSession(models.Model):
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
-            stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
-        return super().unlink()
+            Store.to(history.channel_id).add(history, ["duration_hour", "end_dt"])
 
     def _bus_channels(self):
         return self.channel_member_id._bus_channels()
@@ -104,10 +102,10 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        Store(
+        Store.to(
             self.channel_id,
             notification_type="discuss.channel.rtc.session/update_and_broadcast",
-            notification_payload={"channelId": self.channel_id.id},
+            payload={"channelId": self.channel_id.id},
         ).add(self, "_store_extra_fields")
 
     @api.autovacuum

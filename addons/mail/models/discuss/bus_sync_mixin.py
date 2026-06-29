@@ -24,9 +24,8 @@ class BusSyncMixin(models.AbstractModel):
         """
 
     def write(self, vals):
-        stores = Store.Stores()
         manager_by_bus_target = lazymapping(
-            lambda bus_target: Store.FieldListManager(stores, self, bus_target),
+            lambda bus_target: Store.FieldListManager(self, bus_target),
         )
         self._sync_field_names(manager_by_bus_target)
         get_vals = Store.FieldListManager.get_val_by_field_by_store_by_record

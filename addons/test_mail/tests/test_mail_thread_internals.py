@@ -1255,6 +1255,7 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
                     {
                         "message_ids": [msg1.id],
                         "needaction_inbox_counter": 0,
+                        "store_data": {},
                     },
                 ),
             ):

@@ -354,11 +354,9 @@ class TestDiscussTools(MailCase):
             BusResult(public_channel, "mail.record/insert", non_internal_payload),
             BusResult((public_channel, "internal_users"), "mail.record/insert", internal_payload),
         ]):
-            store = Store(bus_channel=public_channel)
-            store.add(public_channel, _get_fields)
+            Store.to(public_channel).add(public_channel, _get_fields)
         with self.assertBus([BusResult(portal_user, "mail.record/insert", non_internal_payload)]):
-            store = Store(bus_channel=portal_user)
-            store.add(public_channel, _get_fields)
+            Store.to(portal_user).add(public_channel, _get_fields)
 
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process

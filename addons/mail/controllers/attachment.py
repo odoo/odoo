@@ -88,7 +88,11 @@ class AttachmentController(ThreadController):
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment or not attachment._has_attachments_ownership([access_token]):
-            request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
+            Store.to(
+                request.env.user,
+                notification_type="ir.attachment/delete",
+                payload={"id": attachment_id},
+            )
             raise NotFound()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
@@ -151,7 +155,7 @@ class AttachmentController(ThreadController):
             with file_open("web/static/img/mimetypes/unknown.svg", "rb") as f:
                 thumbnail = BinaryBytes(f.read())
         attachment_sudo.thumbnail = thumbnail
-        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"])
+        Store.to(attachment_sudo).add(attachment_sudo, ["has_thumbnail"])
 
     def _get_pdf_first_page_response(self, attachment):
         try:
