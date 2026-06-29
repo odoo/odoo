@@ -12,12 +12,13 @@ class MercadoPagoPosRequest:
     def __init__(self, mp_bearer_token):
         self.mercado_pago_bearer_token = mp_bearer_token
 
-    def call_mercado_pago(self, method, endpoint, payload):
+    def call_mercado_pago(self, method, endpoint, payload, idempotency_key=None):
         """ Make a request to Mercado Pago POS API.
 
         :param method: "GET", "POST", ...
         :param endpoint: The endpoint to be reached by the request.
         :param payload: The payload of the request.
+        :param idempotency_key: Optional idempotency key for request deduplication.
         :return The JSON-formatted content of the response.
 
         Note: The platform id below is not secret, and is just used to
@@ -28,6 +29,11 @@ class MercadoPagoPosRequest:
             'Authorization': f"Bearer {self.mercado_pago_bearer_token}",
             'X-platform-id': "dev_cdf1cfac242111ef9fdebe8d845d0987"
         }
+        
+        # Add idempotency key header if provided
+        if idempotency_key:
+            header['X-Idempotency-Key'] = idempotency_key
+        
         try:
             response = requests.request(method, endpoint, headers=header, json=payload, timeout=REQUEST_TIMEOUT)
             return response.json()
