@@ -49,6 +49,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: ".o-mail-Composer button[title='More Actions']",
             run: "click",
         },
+        { trigger: ".o-discuss-dropdownMenu" },
         {
             trigger: ".dropdown-item:contains('Attach Files')",
             async run({ inputFiles }) {
@@ -116,6 +117,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 }
             },
         },
+        // The upload steps target the "Attach Files" item but feed the hidden input directly,
+        // so the "More Actions" menu is left open. Close it before sending to avoid clicking
+        // Send while the menu is still dismissing.
+        { trigger: ".o-mail-Composer-input", run: "click" },
+        { trigger: "body:not(:has(.o-discuss-dropdownMenu))" },
         { trigger: ".o-mail-Composer button[title='Send']:enabled", run: "click" },
         {
             trigger: `${messageSelector}[data-persistent]`,

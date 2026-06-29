@@ -68,7 +68,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         )
         self.start_tour(url, self.tour, login=login)
         # Update the body to a unique value to ensure the second run does not confuse the 2 messages.
-        self.channel._get_last_messages().body = "a-very-unique-body-in-group"
+        self.group._get_last_messages().body = "a-very-unique-body-in-group"
         # Second run of the tour as the first call has side effects, like creating user settings or adding members to
         # the channel, so we need to run it again to test different parts of the code.
         self.start_tour(url, self.tour, login=login)
