@@ -362,16 +362,11 @@ class AccountWithholdingLine(models.AbstractModel):
         company = self.company_id
         AccountTax = self.env['account.tax']
 
-        # Check names first to not consume sequences if any is missing
-        for line in self:
-            if not line.name and not line.withholding_sequence_id:
-                raise UserError(self.env._('Please enter the sequence number for the tax %(tax_name)s', tax_name=line.tax_id.name))
-
         # Convert them to base lines to compute the taxes.
         base_lines = []
         for line in self:
-            if not line.name:
-                line.name = line.tax_id.withholding_sequence_id.next_by_id()
+            if not line.name and line.withholding_sequence_id:
+                line.name = line.withholding_sequence_id.next_by_id()
 
             base_line = line._prepare_base_line_for_taxes_computation()
             AccountTax._add_tax_details_in_base_line(base_line, company)
@@ -385,7 +380,7 @@ class AccountWithholdingLine(models.AbstractModel):
         for tax_line_vals in tax_results['tax_lines_to_add']:
             aml_create_values_list.append({
                 **tax_line_vals,
-                'name': self.env._("WH Tax: %(name)s", name=tax_line_vals['name']),
+                'name': self.env._("WH Tax: %(name)s", name=tax_line_vals['name']) if tax_line_vals.get('name') else self.env._("WH Tax"),
                 'amount_currency': -tax_line_vals['amount_currency'],
                 'balance': -tax_line_vals['balance'],
                 'partner_id': self._get_comodel_partner().id,
@@ -409,9 +404,10 @@ class AccountWithholdingLine(models.AbstractModel):
 
         # Add the base lines.
         for grouping_key, amounts in aggregated_base_lines.items():
+            joined_names = ', '.join(filter(None, amounts['names']))
             aml_create_values_list.append({
                 **grouping_key,
-                'name': self.env._('WH Base: %(names)s', names=', '.join(amounts['names'])),
+                'name': self.env._('WH Base: %(names)s', names=joined_names) if joined_names else self.env._('WH Base'),
                 'tax_ids': [],
                 'tax_tag_ids': [],
                 'amount_currency': amounts['amount_currency'],
@@ -420,7 +416,7 @@ class AccountWithholdingLine(models.AbstractModel):
             })
             aml_create_values_list.append({
                 **grouping_key,
-                'name': self.env._('WH Base Counterpart: %(names)s', names=', '.join(amounts['names'])),
+                'name': self.env._('WH Base Counterpart: %(names)s', names=joined_names) if joined_names else self.env._('WH Base Counterpart'),
                 'analytic_distribution': None,
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],

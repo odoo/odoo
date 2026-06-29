@@ -6,7 +6,7 @@
                     <thead>
                         <tr>
                             <th><span>Tax</span></th>
-                            <th><span>Withholding number</span></th>
+                            <th t-if="not o.withholding_hide_name"><span>Withholding number</span></th>
                             <th class="text-end"><span>Base</span></th>
                             <th class="text-end"><span>Amount</span></th>
                         </tr>
@@ -17,7 +17,7 @@
                                 <td>
                                     <span t-field='line.tax_id.name'/>
                                 </td>
-                                <td>
+                                <td t-if="not o.withholding_hide_name">
                                     <span t-out="line.name"/>
                                 </td>
                                 <td class="text-end">

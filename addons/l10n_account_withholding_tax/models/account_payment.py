@@ -39,6 +39,7 @@ class AccountPayment(models.Model):
         currency_field='currency_id',
         help="The amount that will actually be paid after deducting withholding taxes.",
     )
+    withholding_hide_name = fields.Boolean(compute='_compute_withholding_hide_name')
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -86,6 +87,11 @@ class AccountPayment(models.Model):
     def _compute_withholding_net_amount(self):
         for payment in self:
             payment.withholding_net_amount = payment.amount - payment.withholding_amount
+
+    @api.depends("withholding_line_ids.withholding_sequence_id")
+    def _compute_withholding_hide_name(self):
+        for payment in self:
+            payment.withholding_hide_name = not any(line.withholding_sequence_id for line in payment.withholding_line_ids)
 
     # ----------------------------
     # Onchange, Constraint methods
