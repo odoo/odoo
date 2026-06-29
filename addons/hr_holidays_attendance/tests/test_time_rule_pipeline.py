@@ -2074,6 +2074,78 @@ class TestTimeRulePipeline(TransactionCase):
             msg="att2 Tue portion (00:00-06:00, 6h) < 8h threshold -> 2h deficit",
         )
 
+    def test_multiple_overlapping_overtimes_rounding(self):
+        """Midnight-crossing attendance in Brussels (UTC+1) with two rules: weekday excess and weekend.
+
+        Rule 1 (Mon-Fri, schedule-based): fires when >8h worked on working days.
+        Rule 2 (Sat-Sun, schedule-based): fires on non-working days; expected=0 so all hours are excess.
+
+        check_in:  2026-01-23 12:29:32 UTC = 13:29:32 Brussels (Friday Jan 23)
+        check_out: 2026-01-24 00:29:44 UTC = 01:29:44 Brussels (Saturday Jan 24)
+
+        Friday Brussels portion: 10h 30m 28s worked - 8h schedule = 2h 30m 28s weekday OT.
+        Saturday Brussels portion: 1h 29m 44s, all weekend OT.
+        """
+        self.time_rule.active = False
+
+        weekday_ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'Weekday Overtime', 'code': 'WDOTR', 'requires_allocation': False,
+        })
+        weekend_ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'Weekend Overtime', 'code': 'WEOTR', 'requires_allocation': False,
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Weekday Rule',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'apply_saturday': False,
+            'apply_sunday': False,
+            'work_entry_type_id': weekday_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Weekend Rule',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'apply_monday': False,
+            'apply_tuesday': False,
+            'apply_wednesday': False,
+            'apply_thursday': False,
+            'apply_friday': False,
+            'work_entry_type_id': weekend_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+
+        emp = self.env['hr.employee'].create({
+            'name': 'Brussels Employee',
+            'tz': 'Europe/Brussels',
+            'attendance_based': False,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2026-01-01',
+            'contract_date_start': '2026-01-01',
+            'wage': 3500,
+        })
+        att = self.env['hr.attendance'].create({
+            'employee_id': emp.id,
+            'check_in': datetime(2026, 1, 23, 12, 29, 32),
+            'check_out': datetime(2026, 1, 24, 0, 29, 44),
+        })
+
+        weekday_ot = att.overtime_attendance_ids.filtered(
+            lambda a: a.work_entry_type_id == weekday_ot_type
+        )
+        weekend_ot = att.overtime_attendance_ids.filtered(
+            lambda a: a.work_entry_type_id == weekend_ot_type
+        )
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in weekday_ot), 9028 / 3600, places=4,
+            msg="2h 30m 28s weekday OT on Friday (Brussels)",
+        )
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in weekend_ot), 5384 / 3600, places=4,
+            msg="1h 29m 44s weekend OT on Saturday (Brussels)",
+        )
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
