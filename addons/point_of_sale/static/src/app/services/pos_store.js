@@ -1926,9 +1926,6 @@ export class PosStore extends WithLazyGetterTrap {
     getOrderChanges(order = this.getOrder()) {
         return getOrderChanges(order, this.config.preparationCategories);
     }
-    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
-        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
-    }
     async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
         if (!order.isSynced) {
             return this.sendOrderInPreparation(order, opts);

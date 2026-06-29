@@ -1,3 +1,4 @@
+import { changesToOrder } from "@point_of_sale/app/models/utils/order_change";
 import { test, expect, describe } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -245,7 +246,7 @@ describe("pos_store.js", () => {
     test("changesToOrderNoPrepCateg", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
-        const orderChange = store.changesToOrder(order, new Set([]), false);
+        const orderChange = changesToOrder(order, new Set([]), false);
         expect(orderChange.new.length).toBe(0);
         expect(orderChange.cancelled.length).toBe(0);
     });
@@ -280,7 +281,7 @@ describe("pos_store.js", () => {
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
 
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
-        const orderChange = store.changesToOrder(order, new Set([...pos_categories]), false);
+        const orderChange = changesToOrder(order, new Set([...pos_categories]), false);
 
         const { orderData, changes } = store.generateOrderChange(
             order,
