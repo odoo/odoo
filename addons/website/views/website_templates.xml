@@ -641,6 +641,9 @@
             <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
         </t>
     </xpath>
+    <xpath expr="//header" position="attributes">
+         <attribute name="t-attf-class" remove="o_hoverable_dropdown" separator=" "/>
+     </xpath>
 </template>
 
 <template id="template_header_hamburger_align_right" inherit_id="website.template_header_hamburger" active="False">
