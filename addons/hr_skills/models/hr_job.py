@@ -56,11 +56,11 @@ class HrJob(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
-            vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
+            vals["job_skill_ids"] = vals_job_skill
         return super().create(vals_list)
 
     def write(self, vals):
         if "current_job_skill_ids" in vals or "job_skill_ids" in vals:
             vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
-            vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
+            vals["job_skill_ids"] = vals_job_skill
         return super().write(vals)
