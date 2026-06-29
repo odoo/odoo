@@ -16,6 +16,6 @@ class IrModuleModule(models.Model):
         domain = self._load_pos_data_domain()
         fields = self._load_pos_data_fields()
         return {
-            'data': self.search_read(domain, fields, load=False),
+            'data': self.sudo().search_read(domain, fields, load=False),
             'fields': self._load_pos_data_fields(),
         }
