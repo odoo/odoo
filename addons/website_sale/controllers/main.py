@@ -616,16 +616,40 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttributeValue = self.env["product.attribute.value"]
         pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
         if products:
+            products_domain = [[("pav_attribute_line_ids.product_tmpl_id", "in", filtered_query)]]
+            if attribute_value_dict:
+                shop_domain_without_attributes = self._get_shop_domain(
+                    search_term,
+                    category,
+                    attribute_value_dict={},
+                    tags=tags if filter_by_tags_enabled else None,
+                )
+                shop_query_without_attributes = request.env["product.template"]._search(
+                    shop_domain_without_attributes
+                )
+                # Allow selecting pavs that are not exclusive if its from the same attribute
+                products_domain.append(
+                    Domain.AND([
+                        [
+                            (
+                                "pav_attribute_line_ids.product_tmpl_id",
+                                "in",
+                                shop_query_without_attributes,
+                            )
+                        ],
+                        [("attribute_id", "in", attribute_ids)],
+                    ])
+                )
+
+            filters_domain = Domain.AND([
+                [("attribute_id.visibility", "=", "visible")],
+                Domain.OR(products_domain),
+            ])
+
             grouped_pavs = ProductAttributeValue._read_group(
-                domain=[
-                    ("pav_attribute_line_ids.product_tmpl_id", "in", filtered_query),
-                    ("attribute_id.visibility", "=", "visible"),
-                ],
-                groupby=["attribute_id"],
-                order="attribute_id",
-                aggregates=["id:recordset"],
+                domain=filters_domain, groupby=["attribute_id"], aggregates=["id:recordset"]
             )
-            pavs_per_attribute.update(grouped_pavs)
+            pavs_per_attribute.update({att: pavs.sorted() for att, pavs in grouped_pavs})
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
@@ -689,7 +713,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             values["main_object"] = category
         values["structured_data"] = products.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld()
         values.update(self._get_additional_shop_values(values, **post))
 
@@ -980,7 +1004,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
         structured_data = product.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld(is_detail_page=True)
         keep = QueryURL(SHOP_PATH, **request.session.get("attribute_value_params", {}))
 
