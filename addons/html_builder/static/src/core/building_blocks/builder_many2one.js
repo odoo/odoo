@@ -103,6 +103,7 @@ export class BuilderMany2One extends Component {
                     isPreviewing,
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
+                    loadResult: applySpec.loadResult,
                     dependencyManager: this.env.dependencyManager,
                 });
             } else {

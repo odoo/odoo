@@ -299,14 +299,9 @@ export class FormOptionPlugin extends Plugin {
         const formKey = activeForm?.website_form_key;
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
-            const formatInfo = getDefaultFormat(el);
             await Promise.all(
-                formInfo.formFields.map((field) => {
-                    field.formatInfo = formatInfo;
-                    return this.fetchFieldRecords(field, formEl);
-                })
+                formInfo.formFields.map((field) => this.fetchFieldRecords(field, formEl))
             );
-            await this.fetchFormInfoFields(formInfo);
         }
         return formInfo;
     }
@@ -406,15 +401,6 @@ export class FormOptionPlugin extends Plugin {
                     this.addHiddenField(el, field.defaultValue, field.name);
                 }
             });
-        }
-    }
-    /**
-     * Ensures formInfo fields are fetched.
-     */
-    async fetchFormInfoFields(formInfo) {
-        if (formInfo.fields) {
-            const proms = formInfo.fields.map((field) => this.fetchFieldRecords(field));
-            await Promise.all(proms);
         }
     }
     async fetchAuthorizedFields(formEl) {
@@ -974,6 +960,7 @@ export class SelectAction extends BuilderAction {
 export class AddActionFieldAction extends BuilderAction {
     static id = "addActionField";
     static dependencies = ["websiteFormOption"];
+    loadOnClean = true;
     async load({ editingElement: el }) {
         return this.dependencies.websiteFormOption.fetchAuthorizedFields(el);
     }
@@ -987,8 +974,8 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect) {
-            value = parseInt(value);
+        if (value && params.isSelect) {
+            value = JSON.parse(value).id;
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
     }
@@ -1011,11 +998,10 @@ export class AddActionFieldAction extends BuilderAction {
             const dataForValues = getParsedDataFor(formId, el.ownerDocument);
             return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
         }
-        if (value) {
-            return value;
-        } else {
-            return params.isSelect ? "0" : "";
+        if (!value) {
+            return "";
         }
+        return params.isSelect ? JSON.stringify({ id: parseInt(value) }) : value;
     }
     isApplied({ editingElement, params, value }) {
         const currentValue = this.getValue({
@@ -1023,6 +1009,9 @@ export class AddActionFieldAction extends BuilderAction {
             params,
         });
         return currentValue === value;
+    }
+    clean(context) {
+        this.apply(context);
     }
 }
 export class PromptSaveRedirectAction extends BuilderAction {
