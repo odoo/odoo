@@ -1014,7 +1014,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code, demo)
-            if template_code == 'other_test' and not demo:
+            if template_code == 'test' and not demo:
+                data['account.tax']['test_tax_4_template'] = _tax_vals('Unused stale tax', 5)
+            elif template_code == 'other_test' and not demo:
                 del data['account.tax']['test_tax_1_template']
                 data['account.tax']['test_tax_3_template'] = _tax_vals('Tax 3', 30)
                 data['res.company'][self.env.company.id]['account_sale_tax_id'] = 'test_tax_3_template'
@@ -1024,9 +1026,41 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ('company_id', '=', self.company.id),
             ('name', '=', 'Tax 1'),
         ])
+        unused_old_tax = old_tax.copy({'name': 'Unused stale tax'})
+        self.env['ir.model.data']._update_xmlids([{
+            'xml_id': self.env['account.chart.template'].company_xmlid('test_tax_4_template', self.company),
+            'record': unused_old_tax,
+            'noupdate': True,
+        }])
         self.env['account.reconcile.model'].search([
             ('company_id', '=', self.company.id),
-        ], limit=1).line_ids.tax_ids = old_tax
+        ], limit=1).line_ids.tax_ids = unused_old_tax
+        old_coa_moves = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'company_id': self.company.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'old_coa_tax_line_1',
+                        'quantity': 1.0,
+                        'price_unit': 100.0,
+                        'tax_ids': [Command.set(old_tax.ids)],
+                    }),
+                ],
+            },
+            {
+                'move_type': 'in_invoice',
+                'company_id': self.company.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'old_coa_tax_line_2',
+                        'quantity': 1.0,
+                        'price_unit': 200.0,
+                        'tax_ids': [Command.set(old_tax.ids)],
+                    }),
+                ],
+            },
+        ])
         old_tax.invalidate_recordset(['is_used'])
         self.assertTrue(old_tax.is_used)
 
@@ -1039,10 +1073,26 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         self.assertTrue(old_tax.exists())
         self.assertFalse(old_tax.active)
+        self.assertEqual(old_coa_moves.invoice_line_ids.tax_ids, old_tax)
+        self.assertFalse(unused_old_tax.exists())
         self.assertTrue(self.env['account.tax'].search([
             ('company_id', '=', self.company.id),
             ('name', '=', 'Tax 3'),
             ('active', '=', True),
+        ]))
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(type(self.env['res.company']), '_existing_accounting', return_value=True),
+        ):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertTrue(old_tax.active)
+        self.assertEqual(old_coa_moves.invoice_line_ids.tax_ids, old_tax)
+        self.assertFalse(self.env['account.tax'].with_context(active_test=False).search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', 'Tax 3'),
         ]))
 
     def test_change_coa(self):

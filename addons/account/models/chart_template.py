@@ -252,6 +252,7 @@ class AccountChartTemplate(models.AbstractModel):
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
         if previous_template_code and not reload_template and existing_accounting and not reset_accounting:
+            self._reactivate_new_chart_template_records(company, previous_template_code, new_template_xmlids)
             self._cleanup_removed_chart_template_records(company, previous_template_code, new_template_xmlids)
         self._post_load_data(template_code, company, template_data)
         self._load_translations(companies=company)
@@ -282,6 +283,24 @@ class AccountChartTemplate(models.AbstractModel):
             self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)
             self_ctx._post_load_demo_data(company.chart_template)
 
+    def _reactivate_new_chart_template_records(self, company, previous_template_code, new_template_xmlids):
+        """Reactivate records that are specific to the newly selected CoA."""
+        previous_data = self._get_chart_template_data(previous_template_code)
+        for model_name in self._get_template_models():
+            if 'active' not in self.env[model_name]._fields:
+                continue
+
+            new_xmlids = new_template_xmlids.get(model_name, set()) - set(previous_data.get(model_name, {}))
+            if not new_xmlids:
+                continue
+
+            records = self.env[model_name]
+            for xmlid in new_xmlids:
+                record = self.env.ref(self.company_xmlid(xmlid, company), raise_if_not_found=False)
+                if record:
+                    records |= record
+            records.filtered(lambda record: not record.active).write({'active': True})
+
     def _cleanup_removed_chart_template_records(self, company, previous_template_code, new_template_xmlids):
         """Delete or archive records that belonged to the previous CoA only."""
         previous_data = self._get_chart_template_data(previous_template_code)
@@ -300,18 +319,69 @@ class AccountChartTemplate(models.AbstractModel):
             if not records:
                 continue
 
+            if model_name == 'account.tax':
+                self._cleanup_removed_tax_references(company, records)
+
             try:
                 with self.env.cr.savepoint():
                     records.with_context(force_delete=True).unlink()
                     continue
             except Exception:
                 _logger.info(
-                    "Could not delete records removed from chart template %s for company %s in model %s; archiving them instead.",
+                    "Could not delete all records removed from chart template %s for company %s in model %s; retrying one by one.",
                     previous_template_code, company.id, model_name,
                 )
 
-            if 'active' in self.env[model_name]._fields:
-                records.exists().write({'active': False})
+            for record in records.exists():
+                try:
+                    with self.env.cr.savepoint():
+                        record.with_context(force_delete=True).unlink()
+                        continue
+                except Exception:
+                    _logger.info(
+                        "Could not delete record removed from chart template %s for company %s in model %s; archiving it instead.",
+                        previous_template_code, company.id, model_name,
+                    )
+
+                if 'active' in self.env[model_name]._fields:
+                    record.exists().write({'active': False})
+
+    def _cleanup_removed_tax_references(self, company, taxes):
+        """Detach removed CoA taxes from configurable defaults before trying to delete them."""
+        if company.account_sale_tax_id in taxes:
+            company.account_sale_tax_id = False
+        if company.account_purchase_tax_id in taxes:
+            company.account_purchase_tax_id = False
+
+        unlink_commands = [Command.unlink(tax.id) for tax in taxes]
+        for field_name in ('taxes_id', 'supplier_taxes_id'):
+            self.env['product.template'].sudo().with_context(active_test=False).search([
+                (field_name, 'in', taxes.ids),
+            ]).write({field_name: unlink_commands})
+
+        self.env['account.account'].sudo().with_context(active_test=False).search([
+            *self.env['account.account']._check_company_domain(company),
+            ('tax_ids', 'in', taxes.ids),
+        ]).write({'tax_ids': unlink_commands})
+
+        self.env['account.reconcile.model.line'].sudo().with_context(active_test=False).search([
+            ('tax_ids', 'in', taxes.ids),
+        ]).write({'tax_ids': unlink_commands})
+
+        self.env['account.tax'].sudo().with_context(active_test=False).search([
+            ('id', 'not in', taxes.ids),
+            '|',
+            ('children_tax_ids', 'in', taxes.ids),
+            ('original_tax_ids', 'in', taxes.ids),
+        ]).write({
+            'children_tax_ids': unlink_commands,
+            'original_tax_ids': unlink_commands,
+        })
+        taxes.write({
+            'children_tax_ids': [Command.clear()],
+            'original_tax_ids': [Command.clear()],
+            'fiscal_position_ids': [Command.clear()],
+        })
 
     def _pre_reload_data(self, company, template_data, data, force_create=True, force_update=False):
         """Pre-process the data in case of reloading the chart of accounts.
