@@ -8,6 +8,7 @@ from collections import defaultdict, deque
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import OrderedSet
+from odoo.tools.float_utils import float_compare
 
 
 class MrpBatchProduct(models.TransientModel):
@@ -107,6 +108,10 @@ class MrpBatchProduct(models.TransientModel):
         lots = lots + self.env['stock.lot'].create(raw_lots)
 
         productions_to_set = OrderedSet()
+        # If components lots are defined in the wizard, remove any reservation
+        #  to assign the lots properly when processing components
+        if any(comps for comps in components_list):
+            productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking != "none").unlink()
         for production, finished_lot in zip(productions, lots):
             production.lot_producing_id = finished_lot
             self._process_components(production, components_list.pop(0))
@@ -149,26 +154,31 @@ class MrpBatchProduct(models.TransientModel):
         lots = {(l.name, l.product_id): l for  l in self.env['stock.lot'].search([('name', 'in', lot_names)])}
         mls_vals = []
         for move, mls in moves_vals.items():
-            if mls:
-                mls_to_unlink |= set(move.move_line_ids.ids)
             for qty, lot_name in mls:
                 ml_vals = self._prepapre_move_line_vals(move, qty, lot_name, lots)
                 mls_vals.append(ml_vals)
-        self.env['stock.move.line'].browse(mls_to_unlink).unlink()
         self.env['stock.move.line'].create(mls_vals)
 
     def _prepapre_move_line_vals(self, move, qty, lot_name, lots):
-        ml_vals = move._prepare_move_line_vals(qty)
         lot = lots.get((lot_name, move.product_id))
-        if not lot:
-            if not move.picking_type_id.use_create_components_lots:
-                raise UserError(_('Lot %s does not exist.', lot_name))
-            lot = self.env['stock.lot'].create({
-                'name': lot_name,
-                'product_id': move.product_id.id
-            })
-            lots[(lot_name, move.product_id)] = lot
-        ml_vals['lot_id'] = lots[(lot_name, move.product_id)].id
+        ml_vals = {}
+        if lot:
+            quants = self.env["stock.quant"].sudo()._gather(move.product_id, move.location_id, lot_id=lot, strict=False)
+            available_quantity = quants._get_available_quantity(
+                move.product_id, move.location_id, lot, self.env["stock.quant.package"], self.env['res.partner'], strict=False
+            )
+            if float_compare(available_quantity, qty, precision_rounding=move.product_uom.rounding) >= 0:
+                ml_vals = move._update_reserved_quantity_vals(qty, move.location_id, lot_id=lot, strict=False)[0][0]
+        if not ml_vals:
+            ml_vals = move._prepare_move_line_vals(qty)
+            if not lot:
+                if not move.picking_type_id.use_create_components_lots:
+                    raise UserError(_('Lot %s does not exist.', lot_name))
+                lot = self.env['stock.lot'].create({
+                    'name': lot_name,
+                    'product_id': move.product_id.id
+                })
+            ml_vals['lot_id'] = lot.id
         return ml_vals
 
     def _get_lot_and_qty(self, move, text):
