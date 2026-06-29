@@ -178,12 +178,11 @@ QUnit.module("spreadsheet server data", {}, () => {
         );
         await nextTick();
         assert.verifySteps([
-            // one call for the batch
-            "partner/get_something_in_batch",
-            // retries one by one
-            "partner/get_something_in_batch",
-            "partner/get_something_in_batch",
-            "partner/get_something_in_batch",
+            "partner/get_something_in_batch", // call for batch [4,5,6] fail
+            "partner/get_something_in_batch", // call for batch [4]     success
+            "partner/get_something_in_batch", // call for batch [5,6]   fail
+            "partner/get_something_in_batch", // call for batch [5]     fail
+            "partner/get_something_in_batch", // call for batch [6]     success
             "data-fetched-notification",
         ]);
         assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 4), 4);
@@ -301,5 +300,54 @@ QUnit.module("spreadsheet server data", {}, () => {
         assert.verifySteps([]);
         await nextTick();
         assert.verifySteps(["success-callback", "failure-callback"]);
+    });
+
+    QUnit.test("batch split with one failing request is efficient", async (assert) => {
+        let calls = 0;
+        const N = 10;
+        const orm = {
+            call: async (_, __, args) => {
+                calls++;
+                if (args[0].includes(7)) {
+                    throw new Error("fail");
+                }
+                return args[0];
+            },
+        };
+        const serverData = new ServerData(orm, { whenDataIsFetched: () => {} });
+        for (let i = 0; i < N; i++) {
+            assert.throws(() => serverData.batch.get("m", "m", i), LoadingDataError);
+        }
+
+        await nextTick();
+        for (let i = 0; i < N; i++) {
+            if (i === 7) {
+                assert.throws(() => serverData.batch.get("m", "m", i));
+            } else {
+                assert.strictEqual(serverData.batch.get("m", "m", i), i);
+            }
+        }
+        assert.ok(calls < 10, `calls should be efficient, got ${calls}`);
+    });
+
+    QUnit.test("batch split worst case calls are 2n-1 when all fail", async (assert) => {
+        let calls = 0;
+        const N = 10;
+        const orm = {
+            call: async () => {
+                calls++;
+                throw new Error("fail");
+            },
+        };
+        const serverData = new ServerData(orm, { whenDataIsFetched: () => {} });
+        for (let i = 0; i < N; i++) {
+            assert.throws(() => serverData.batch.get("m", "m", i), LoadingDataError);
+        }
+
+        await nextTick();
+        for (let i = 0; i < N; i++) {
+            assert.throws(() => serverData.batch.get("m", "m", i));
+        }
+        assert.strictEqual(calls, 2 * N - 1, `expected ${2 * N - 1}, got ${calls}`);
     });
 });
