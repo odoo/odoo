@@ -252,10 +252,12 @@
                                        readonly="state != 'draft'"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        options="{'no_quick_create': True}"
+                                       required="partner_type == 'customer'"
                                        invisible="partner_type != 'customer'"
                                        readonly="state != 'draft'"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                        options="{'no_quick_create': True}"
+                                       required="partner_type == 'supplier'"
                                        invisible="partner_type != 'supplier'"
                                        readonly="state != 'draft'"/>
                                 <label for="amount"/>
