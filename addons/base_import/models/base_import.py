@@ -1381,6 +1381,7 @@ class Import(models.TransientModel):
         import_limit = options.pop('limit', None)
         model = self.env[self.res_model].with_context(
             import_file=True,
+            import_dryrun=dryrun,
             name_create_enabled_fields=name_create_enabled_fields,
             import_set_empty_fields=options.get('import_set_empty_fields', []),
             import_skip_records=options.get('import_skip_records', []),

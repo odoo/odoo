@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 def model(suffix_name):
@@ -81,6 +81,14 @@ class PreviewModel(models.Model):
     name = fields.Char('Name')
     somevalue = fields.Integer(string='Some Value', required=True)
     othervalue = fields.Integer(string='Other Variable')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'name' not in vals:
+                vals['name'] = self.env['ir.sequence'].next_by_code(self._name)
+        return super().create(vals_list)
+
 
 class FloatModel(models.Model):
     _name = model('float')
