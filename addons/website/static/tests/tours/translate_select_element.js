@@ -52,8 +52,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "Open the field type dropdown",
+            trigger: "[data-label=Type] button.dropdown-toggle",
+            run: "click",
+        },
+        {
             content: "Select field type as Selection",
-            trigger: "[data-container-title=Field] [data-action-value=many2one]:not(:visible)",
+            trigger: "[data-action-value=many2one]",
             run: "click",
         },
         ...clickOnSave(),
