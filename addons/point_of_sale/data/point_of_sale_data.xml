@@ -21,6 +21,8 @@
         <record id="product_category_pos" model="product.category">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">PoS</field>
+            <field name="property_stock_valuation_account_id" eval="False"/>
+            <field name="property_valuation">manual_periodic</field>
         </record>
 
         <record id="product_product_tip" model="product.product">
