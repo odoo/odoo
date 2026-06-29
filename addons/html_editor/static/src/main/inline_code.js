@@ -1,10 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
-import { isElement, isTextNode, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
-import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
 
 /** @typedef {((codeElement: HTMLElement) => HTMLElement)[]} to_inline_code_processors */
@@ -23,20 +22,6 @@ export class InlineCodePlugin extends Plugin {
             selectElements(root, ".o_inline_code").flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            const hasInlineCode = targetedNodes.some((node) =>
-                closestElement(node, "code.o_inline_code")
-            );
-            if (
-                targetedNodes.length &&
-                hasInlineCode &&
-                targetedNodes.every(
-                    (node) => closestElement(node, "code.o_inline_code") || !isVisible(node)
-                )
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
 
         /** Overrides */
         are_similar_elements_overrides: ({ node, node2 }) => {
@@ -60,6 +45,7 @@ export class InlineCodePlugin extends Plugin {
             within: "code.o_inline_code",
             formattable: false,
             powerbox: false,
+            toolbar: DISABLED_NAMESPACE,
         },
 
         is_link_allowed_on_selection_predicates: () => {

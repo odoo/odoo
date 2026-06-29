@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Map<HTMLElement, ElementTranslationInfo} ElToTranslationInfoMap
@@ -108,11 +107,10 @@ export class TranslationPlugin extends Plugin {
             }
             return container;
         }),
-        toolbar_namespace_providers: [
-            (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.anchorNode, ".o_translation_select") &&
-                DISABLED_NAMESPACE,
-        ],
+        region_properties: {
+            within: ".o_translation_select",
+            toolbar: DISABLED_NAMESPACE,
+        },
     };
 
     setup() {

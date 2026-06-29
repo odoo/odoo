@@ -119,13 +119,6 @@ export class TablePlugin extends Plugin {
         toolbar_groups: withSequence(25, { id: "table" }),
 
         /** Providers */
-        toolbar_namespace_providers: [
-            withSequence(
-                90,
-                (targetedNodes, editableSelection) =>
-                    closestElement(editableSelection.anchorNode, ".o_selected_td") && "compact"
-            ),
-        ],
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
         selected_background_color_providers: withSequence(
@@ -212,10 +205,10 @@ export class TablePlugin extends Plugin {
         },
 
         /** Regions */
-        region_properties: {
-            within: "TD, TH",
-            powerButtons: false,
-        },
+        region_properties: [
+            { within: "TD, TH", powerButtons: false },
+            withSequence(90, { within: ".o_selected_td", toolbar: "compact" }),
+        ],
 
         /** Selectors */
         move_node_whitelist_selectors: "table",

@@ -10,7 +10,6 @@ import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -52,14 +51,12 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 params.block = this.convertToParagraph(block);
             }
         },
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, ".o_syntax_highlighting"))
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
+
+        /** Regions */
+        region_properties: {
+            within: ".o_syntax_highlighting",
+            toolbar: DISABLED_NAMESPACE,
+        },
 
         /** Processors */
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),
