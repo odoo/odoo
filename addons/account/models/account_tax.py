@@ -1745,6 +1745,222 @@ class AccountTax(models.Model):
                         tax_data[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
 
     @api.model
+    def _should_distribute_base_delta_for_excluded_mode(self, company):
+        """ Hook to allow localizations to opt out of the base rounding delta
+        redistribution on product line balances for price-excluded taxes when
+        the global rounding mode is 'excluded'.
+
+        Default is True to keep the existing behavior (base delta is distributed
+        on product line balances so that sum(balances) == round(sum_raw_bases),
+        which is required by some EDI certifications like Mexican CFDI and
+        Portuguese certification).
+
+        Override to False in localizations where the contractual truth is the
+        HT per line (typical for B2B invoices, e.g. France), so the base
+        rounding delta is absorbed by the payment_term line (TTC) instead,
+        keeping price_subtotal == balance on every product line.
+
+        When this hook returns False, the orchestration also aligns each
+        tax_data['tax_amount'] with `round(sum_HT x rate)` per
+        (tax, currency, is_refund, is_reverse_charge, price_include) group
+        so the journal entry tax total stays consistent with what an
+        accountant or auditor recomputes from the HT base. The same hook
+        also drives `account.move.line._compute_totals` so the printed
+        `price_subtotal` / `price_total` stay in lockstep with the
+        balances.
+
+        :param company: The company owning the base lines.
+        :return: True to distribute the base delta on product line balances,
+            False to skip the redistribution and align tax amounts to the
+            actual sum of rounded bases (delta absorbed by payment_term).
+        """
+        return True
+
+    @api.model
+    def _align_tax_amounts_to_actual_bases(self, base_lines, company):
+        """ Align tax_data['tax_amount(_currency)'] with `round(sum_HT x rate)`
+        per (tax, currency, is_refund, is_reverse_charge, price_include)
+        group. For price-included taxes the symmetric alignment is applied:
+        `tax_amount = sum_TTC - round(sum_TTC / (1 + rate))`.
+
+        Called by `_round_tax_details_base_lines` when
+        `_should_distribute_base_delta_for_excluded_mode` returns False:
+        the base rounding delta has been absorbed by the payment_term line
+        rather than redistributed on product line balances, so the tax
+        amount must be recomputed from the actual rounded HT sum (otherwise
+        `amount_tax` would differ from `round(amount_untaxed x rate)` by
+        a few cents on multi-line invoices).
+
+        Reverse-charge legs (positive and negative repartition lines) are
+        kept in distinct groups via `is_reverse_charge`, preserving the
+        mirror +X / -X behavior of intra-EU autoliquidation entries.
+
+        Mixed lines (one price-included + one price-excluded tax on the
+        same line) are left to the standard rounding logic.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:  A list of base lines (with `tax_details` populated).
+        :param company:     The company owning the base lines.
+        """
+        if not base_lines:
+            return
+        company_currency = company.currency_id
+
+        def _line_kind(base_line):
+            tax_details = base_line.get('tax_details') or {}
+            taxes_data = tax_details.get('taxes_data') or []
+            if not taxes_data:
+                return 'no_tax'
+            excluded = any(not td.get('price_include', False) for td in taxes_data)
+            included = any(td.get('price_include', False) for td in taxes_data)
+            if excluded and included:
+                return 'mixed'
+            return 'all_included' if included else 'all_excluded'
+
+        def grouping_function(base_line, tax_data):
+            if not tax_data:
+                return
+            if tax_data['tax'].amount_type != 'percent':
+                return
+            return {
+                'tax': tax_data['tax'],
+                'currency': base_line['currency_id'],
+                'is_refund': base_line['is_refund'],
+                'is_reverse_charge': tax_data['is_reverse_charge'],
+                'price_include': tax_data['price_include'],
+            }
+
+        agg = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(agg)
+
+        entries_per_key = {}
+        line_kind_per_key = {}
+        for base_line in base_lines:
+            kind = _line_kind(base_line)
+            tax_details = base_line.get('tax_details') or {}
+            for tax_data in tax_details.get('taxes_data', []):
+                key = grouping_function(base_line, tax_data)
+                if key is None:
+                    continue
+                fkey = frozendict(key)
+                entries_per_key.setdefault(fkey, []).append(tax_data)
+                line_kind_per_key.setdefault(fkey, set()).add(kind)
+
+        for grouping_key, values in values_per_grouping_key.items():
+            if not grouping_key:
+                continue
+            # Mixed lines are safer with the standard logic.
+            if 'mixed' in line_kind_per_key.get(grouping_key, set()):
+                continue
+
+            tax = grouping_key['tax']
+            currency = grouping_key['currency']
+            price_include = grouping_key['price_include']
+            sign = -1.0 if grouping_key['is_reverse_charge'] else 1.0
+            rate = tax.amount / 100.0
+            entries = entries_per_key.get(grouping_key, [])
+            if not entries:
+                continue
+
+            for suffix, curr in (
+                ('_currency', currency),
+                ('', company_currency),
+            ):
+                if price_include:
+                    # Price-included: TTC per line is fixed (= price_total).
+                    # HT global = round(sum_TTC / (1 + rate)); tax = sum_TTC - HT.
+                    sum_ttc = (
+                        values[f'total_excluded{suffix}']
+                        + values[f'tax_amount{suffix}']
+                    )
+                    ttc_rounded = curr.round(sum_ttc)
+                    if rate:
+                        ht_global = curr.round(ttc_rounded / (1.0 + rate))
+                    else:
+                        ht_global = ttc_rounded
+                    expected_tax = sign * (ttc_rounded - ht_global)
+                else:
+                    # Price-excluded: HT per line is fixed; tax = round(sum_HT x rate).
+                    sum_base = values[f'total_excluded{suffix}']
+                    expected_tax = curr.round(sign * sum_base * rate)
+
+                actual_tax = curr.round(values[f'tax_amount{suffix}'])
+                delta = expected_tax - actual_tax
+                if curr.is_zero(delta):
+                    continue
+
+                field = f'tax_amount{suffix}'
+                target_factors = [
+                    {'factor': abs(entry[field]) or 1.0, 'entry': entry}
+                    for entry in entries
+                ]
+                amounts = self._distribute_delta_amount_smoothly(
+                    precision_digits=curr.decimal_places,
+                    delta_amount=delta,
+                    target_factors=target_factors,
+                )
+                for tf, amount in zip(target_factors, amounts):
+                    tf['entry'][field] += amount
+
+        # Recompute total_included for every affected base_line so the
+        # downstream consumers see consistent values.
+        for base_line in base_lines:
+            tax_details = base_line.get('tax_details')
+            if not tax_details:
+                continue
+            for suffix in ('_currency', ''):
+                total_incl = (
+                    tax_details[f'total_excluded{suffix}']
+                    + tax_details.get(f'delta_total_excluded{suffix}', 0.0)
+                )
+                for td in tax_details.get('taxes_data', []):
+                    total_incl += td[f'tax_amount{suffix}']
+                tax_details[f'total_included{suffix}'] = total_incl
+
+    @api.model
+    def _realign_tax_data_base_amounts_for_excluded_mode(self, base_lines, company):
+        """Realign tax_data base amounts with line HT for tax totals display.
+
+        `_round_tax_details_tax_amounts` may redistribute a global base rounding
+        delta into `tax_data['base_amount(_currency)']`. When the localization
+        skips the product-line base delta, those shifted tax bases make
+        `_get_tax_totals_summary` report a different base per tax group than
+        the invoice untaxed total (`same_tax_base` becomes False and the PDF
+        shows "TVA X% on Y€" even on uniform-rate invoices).
+
+        Reset `tax_data['base_amount(_currency)']` to `total_excluded(_currency)`
+        on fully price-excluded lines so the tax totals footer stays coherent
+        with the journal entry HT.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:  A list of base lines (with `tax_details` populated).
+        :param company:     The company owning the base lines.
+        """
+        def _line_kind(base_line):
+            tax_details = base_line.get('tax_details') or {}
+            taxes_data = tax_details.get('taxes_data') or []
+            if not taxes_data:
+                return 'no_tax'
+            excluded = any(not td.get('price_include', False) for td in taxes_data)
+            included = any(td.get('price_include', False) for td in taxes_data)
+            if excluded and included:
+                return 'mixed'
+            return 'all_included' if included else 'all_excluded'
+
+        for base_line in base_lines:
+            if _line_kind(base_line) != 'all_excluded':
+                continue
+            tax_details = base_line['tax_details']
+            for suffix in ('_currency', ''):
+                total_excl = tax_details[f'total_excluded{suffix}']
+                for tax_data in tax_details.get('taxes_data', []):
+                    tax_data[f'base_amount{suffix}'] = total_excl
+
+    @api.model
     def _round_tax_details_base_lines(self, base_lines, company, mode='mixed'):
         """ Additional global rounding depending on if the taxes are included or excluded in price.
 
@@ -1767,6 +1983,11 @@ class AccountTax(models.Model):
         The expected base amount of the whole document is round(12.12 * 12.12 * 2) = 293.79
         The delta in term of base amount is 293.79 - 146.89 - 146.89 = 0.01
 
+        For 'excluded' mode (price-excluded taxes), localizations can opt out
+        of the base delta redistribution via `_should_distribute_base_delta_for_excluded_mode`.
+        When opted out, price_subtotal == balance is preserved on every product
+        line, and the rounding delta is absorbed by the payment_term line.
+
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
@@ -1782,6 +2003,8 @@ class AccountTax(models.Model):
                 'currency': base_line['currency_id'],
                 'is_refund': base_line['is_refund'],
             }
+
+        distribute_excluded_delta = self._should_distribute_base_delta_for_excluded_mode(company)
 
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
         values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
@@ -1800,6 +2023,9 @@ class AccountTax(models.Model):
                     ):
                         current_mode = 'excluded'
                         break
+
+            if current_mode == 'excluded' and not distribute_excluded_delta:
+                continue
 
             currency = grouping_key['currency']
             for delta_currency_indicator, delta_currency in (
@@ -1853,6 +2079,20 @@ class AccountTax(models.Model):
                 for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                     base_line = target_factor['base_line']
                     base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
+
+        # When the localization absorbs the base delta on the payment_term
+        # line (cf. `_should_distribute_base_delta_for_excluded_mode`), the
+        # tax amounts must be realigned with the rounded HT sum so that
+        # `amount_tax == round(amount_untaxed x rate)` per group. This is
+        # only relevant under `round_globally`; in `round_per_line`, the
+        # per-line tax amounts are the contractual truth and no global
+        # realignment is performed.
+        if (
+            not distribute_excluded_delta
+            and company.tax_calculation_rounding_method == 'round_globally'
+        ):
+            self._realign_tax_data_base_amounts_for_excluded_mode(base_lines, company)
+            self._align_tax_amounts_to_actual_bases(base_lines, company)
 
     def _turn_base_line_is_refund_flag_off(self, base_line):
         """ Reverse the sign of the quantity plus all data in tax details.
