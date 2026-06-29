@@ -239,10 +239,9 @@ export class FontTypePlugin extends Plugin {
                 return false;
             }
         },
-        is_powerbox_available_predicates: (node) => {
-            if (closestElement(node, "pre")) {
-                return false;
-            }
+        properties: {
+            predicate: (node) => closestElement(node, "pre"),
+            powerbox: false,
         },
         can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "BLOCKQUOTE") {
