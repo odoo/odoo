@@ -31,6 +31,9 @@ patch(PaymentPage.prototype, {
     },
     async checkAndOpenPaymentPage(order) {
         if (order.state === "draft") {
+            // Flush pending order data to IndexedDB before navigating away
+            await this.selfOrder.data.synchronizeLocalDataInIndexedDB(order);
+
             const onlinePaymentUrl = this.selfOrder.getOnlinePaymentUrl(order, true);
             window.open(onlinePaymentUrl, "_self");
         } else {
