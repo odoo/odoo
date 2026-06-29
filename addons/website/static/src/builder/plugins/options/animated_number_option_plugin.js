@@ -22,8 +22,8 @@ class AnimatedNumberOptionPlugin extends Plugin {
         properties: {
             predicate: (node) => closestElement(node, VALUE_SELECTOR),
             formattable: true,
+            editable: true,
         },
-        is_node_editable_predicates: (node) => (this.getValueElement(node) ? true : undefined),
         can_have_scroll_effect_predicates: (el) => !el.matches(ANIMATED_NUMBER_SELECTOR),
     };
 
