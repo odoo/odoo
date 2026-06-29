@@ -27,6 +27,7 @@
         'views/res_partner_views.xml',
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
+        'wizard/l10n_fr_pdp_partner_lookup.xml',
     ],
     'assets': {
         'web.assets_backend': [
