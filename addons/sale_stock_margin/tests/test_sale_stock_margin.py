@@ -11,6 +11,8 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('post_install', '-at_install')
 class TestSaleStockMargin(TestStockValuationCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

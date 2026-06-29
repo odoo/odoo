@@ -7,6 +7,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class RedsysCommon(PaymentCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

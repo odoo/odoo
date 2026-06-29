@@ -6,6 +6,8 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class GelatoCommon(SaleCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

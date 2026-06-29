@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.test_order_receipt import TestPosOrderRecei
 
 @tagged('post_install', '-at_install')
 class TestOrderReceiptPosLoyalty(TestPosOrderReceipt):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()

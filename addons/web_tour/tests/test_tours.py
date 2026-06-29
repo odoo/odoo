@@ -7,6 +7,8 @@ from markupsafe import Markup
 @tagged('post_install', '-at_install')
 class TestTour(BaseCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

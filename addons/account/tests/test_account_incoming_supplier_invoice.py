@@ -308,6 +308,8 @@ class TestAccountInvoiceImportMixin:
 @tagged('post_install', '-at_install', 'mail_gateway')
 class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccountInvoiceImportMixin, MailCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

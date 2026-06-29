@@ -7,6 +7,7 @@ from odoo.tests import Form
 
 
 class TestWorkorder(TestMrpCommon):
+    _test_user_groups = None  # FIXME list needed groups
 
     def test_workorder_move_start_preserves_duration(self):
         """Moving only the start date of a planned work order (e.g. through the

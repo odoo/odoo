@@ -4,6 +4,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 class WebsiteSaleStockCommon(WebsiteSaleCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -4,6 +4,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class FlutterwaveCommon(PaymentCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

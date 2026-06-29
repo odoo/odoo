@@ -51,6 +51,8 @@ class TestTourManualConsumption(HttpCase):
 
 
 class TestManualConsumption(TestMrpCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

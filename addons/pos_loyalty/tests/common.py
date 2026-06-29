@@ -3,6 +3,8 @@ from odoo.fields import Command
 
 
 class CommonPosLoyaltyTest(CommonPosTest):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()

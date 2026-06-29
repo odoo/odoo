@@ -9,6 +9,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 @odoo.tests.tagged('post_install', '-at_install')
 class TestReportSession(TestPoSCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestReportSession, self).setUp()
         self.config = self.basic_config

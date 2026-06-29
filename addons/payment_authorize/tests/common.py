@@ -6,6 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class AuthorizeCommon(PaymentCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

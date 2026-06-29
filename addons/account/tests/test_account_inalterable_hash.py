@@ -10,6 +10,8 @@ from unittest.mock import patch
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

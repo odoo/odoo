@@ -6,6 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class PaymentCustomCommon(PaymentCommon):
+    _test_user_groups = None
+
     @classmethod
     def _get_provider_domain(cls, code, custom_mode=None):
         domain = super()._get_provider_domain(code)

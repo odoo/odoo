@@ -16,6 +16,8 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentCommon(BaseCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

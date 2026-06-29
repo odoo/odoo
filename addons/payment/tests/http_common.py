@@ -16,7 +16,6 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
     Only use if you effectively want to test controllers.
     If you only want to test 'models' code, the PaymentCommon should be sufficient.
     """
-
     # Helpers #
     ###########
 

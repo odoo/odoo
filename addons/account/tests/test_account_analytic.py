@@ -8,6 +8,8 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

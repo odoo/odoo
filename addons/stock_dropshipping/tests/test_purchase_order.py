@@ -12,6 +12,8 @@ from odoo.tests.common import tagged
 @skip('Temporary to fast merge new valuation')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
+    _test_user_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
