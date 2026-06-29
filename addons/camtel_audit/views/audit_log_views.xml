@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_camtel_audit_log_tree" model="ir.ui.view">
+        <field name="name">camtel.audit.log.tree</field>
+        <field name="model">camtel.audit.log</field>
+        <field name="arch" type="xml">
+            <list string="Audit Logs" create="false" edit="false" delete="false"
+                  class="o_audit_log_view"
+                  decoration-danger="severity == 'critical'"
+                  decoration-warning="severity == 'warning'"
+                  decoration-muted="not success">
+                <field name="create_date" string="Date/Time"/>
+                <field name="event_category" optional="show"/>
+                <field name="event_type"/>
+                <field name="user_id"/>
+                <field name="user_login" optional="hide"/>
+                <field name="description"/>
+                <field name="model_name" optional="hide"/>
+                <field name="resource_name" optional="show"/>
+                <field name="user_ip" optional="hide"/>
+                <field name="severity" optional="show"/>
+                <field name="success" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_camtel_audit_log_form" model="ir.ui.view">
+        <field name="name">camtel.audit.log.form</field>
+        <field name="model">camtel.audit.log</field>
+        <field name="arch" type="xml">
+            <form string="Audit Log" create="false" edit="false" delete="false">
+                <header>
+                    <field name="severity" widget="badge"
+                           decoration-info="severity == 'info'"
+                           decoration-warning="severity == 'warning'"
+                           decoration-danger="severity == 'critical'"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check-circle" invisible="1">
+                            <field name="success" widget="boolean"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="event_type" readonly="1"/>
+                        </h1>
+                        <h3>
+                            <field name="description" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Event Information">
+                            <field name="event_category" readonly="1"/>
+                            <field name="create_date" string="Event Date/Time" readonly="1"/>
+                            <field name="success" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                        <group string="User Information">
+                            <field name="user_id" readonly="1"/>
+                            <field name="user_login" readonly="1"/>
+                            <field name="user_ip" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Resource Information" invisible="not model_name">
+                        <group>
+                            <field name="model_name" readonly="1"/>
+                            <field name="model_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="res_id" readonly="1"/>
+                            <field name="resource_name" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <group>
+                                <field name="old_values" readonly="1" invisible="not old_values"/>
+                                <field name="new_values" readonly="1" invisible="not new_values"/>
+                                <field name="additional_data" readonly="1" invisible="not additional_data"/>
+                            </group>
+                        </page>
+                        <page string="Error Information" invisible="not error_message">
+                            <field name="error_message" readonly="1" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_camtel_audit_log_search" model="ir.ui.view">
+        <field name="name">camtel.audit.log.search</field>
+        <field name="model">camtel.audit.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Audit Logs">
+                <field name="event_type"/>
+                <field name="user_id"/>
+                <field name="user_login"/>
+                <field name="description"/>
+                <field name="model_name"/>
+                <field name="resource_name"/>
+                <field name="user_ip"/>
+
+                <filter string="Today" name="today" date="create_date"/>
+                <filter string="Last 7 Days" name="week"
+                        domain="[('create_date', '&gt;=', 'today -7d')]"/>
+                <filter string="Last 30 Days" name="month"
+                        domain="[('create_date', '&gt;=', 'today -30d')]"/>
+
+                <separator/>
+                <filter string="Failed Events" name="failed"
+                        domain="[('success', '=', False)]"/>
+                <filter string="Critical" name="critical"
+                        domain="[('severity', '=', 'critical')]"/>
+                <filter string="Warning" name="warning"
+                        domain="[('severity', '=', 'warning')]"/>
+
+                <separator/>
+                <filter string="Authentication" name="authentication"
+                        domain="[('event_category', '=', 'authentication')]"/>
+                <filter string="Inventory" name="inventory"
+                        domain="[('event_category', '=', 'inventory')]"/>
+                <filter string="Purchase" name="purchase"
+                        domain="[('event_category', '=', 'purchase')]"/>
+                <filter string="Security &amp; Permissions" name="security"
+                        domain="[('event_category', '=', 'security')]"/>
+
+                <separator/>
+                <filter string="Login Events" name="login"
+                        domain="[('event_type', 'in', ['login', 'logout', 'login_failed'])]"/>
+                <filter string="Stock Operations" name="stock"
+                        domain="[('event_type', 'in', ['stock_picking_create', 'stock_picking_validate', 'stock_picking_cancel', 'stock_move_create', 'stock_move_done'])]"/>
+                <filter string="Purchase Orders" name="purchase_orders"
+                        domain="[('event_type', 'in', ['purchase_order_create', 'purchase_order_confirm', 'purchase_order_approve', 'purchase_order_cancel', 'purchase_order_done'])]"/>
+
+                <group>
+                    <filter string="Event Type" name="group_event_type" domain="[]" context="{'group_by': 'event_type'}"/>
+                    <filter string="Category" name="group_category" domain="[]" context="{'group_by': 'event_category'}"/>
+                    <filter string="User" name="group_user" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Severity" name="group_severity" domain="[]" context="{'group_by': 'severity'}"/>
+                    <filter string="Model" name="group_model" domain="[]" context="{'group_by': 'model_name'}"/>
+                    <filter string="Date" name="group_date" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                    <filter string="Company" name="group_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pivot View for Analytics -->
+    <record id="view_camtel_audit_log_pivot" model="ir.ui.view">
+        <field name="name">camtel.audit.log.pivot</field>
+        <field name="model">camtel.audit.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Audit Log Analysis">
+                <field name="event_category" type="row"/>
+                <field name="event_type" type="row"/>
+                <field name="create_date" interval="day" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View for Analytics -->
+    <record id="view_camtel_audit_log_graph" model="ir.ui.view">
+        <field name="name">camtel.audit.log.graph</field>
+        <field name="model">camtel.audit.log</field>
+        <field name="arch" type="xml">
+            <graph string="Audit Log Statistics" type="bar">
+                <field name="event_category"/>
+                <field name="event_type"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_camtel_audit_log" model="ir.actions.act_window">
+        <field name="name">Audit Logs</field>
+        <field name="res_model">camtel.audit.log</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="context">{'search_default_week': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No audit logs yet
+            </p>
+            <p>
+                Audit logs will automatically appear here as users perform operations
+                in the system. This includes login events, inventory operations,
+                purchase orders, and permission changes.
+            </p>
+        </field>
+    </record>
+
+</odoo>
