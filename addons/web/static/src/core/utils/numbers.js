@@ -224,15 +224,17 @@ export function formatFloat(value, options = {}) {
     if (options.digits && options.digits[1] !== undefined) {
         precision = options.digits[1];
     } else if (options.minDigits) {
-        const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
-        // Within 15 digits, we have a float with no parasite digits.
-        // 14 is chosen here, as roundPrecision will add a digit when performing its computations.
-        const maxDecDigits = Math.max(14 - intDigitsCount, 0);
-        // We display maximum 6 digits or the number of significant digits (if it's lower)
-        precision = Math.min(6, maxDecDigits);
+        precision = 6;
     } else {
         precision = 2;
     }
+    const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
+    // Within 15 digits, we have a float with no parasite digits.
+    // 14 is chosen here, as roundPrecision will add a digit when performing its computations.
+    const maxDecDigits = Math.max(14 - intDigitsCount, 0);
+    // We display maximum 6 digits or the number of significant digits (if it's lower)
+    precision = Math.min(precision, maxDecDigits);
+
     const minPrecision = options.minDigits || precision;
     if (floatIsZero(value, precision)) {
         value = 0.0;
