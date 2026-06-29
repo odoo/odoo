@@ -38,6 +38,26 @@
                 <form string="Bill of Material">
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="context.get('parent_production_id')">
+                            <button name="action_open_exploded_bom_lines"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-sitemap"
+                                invisible="exploded_component_count == 0">
+                                <div class="o_stat_info">
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span class="o_stat_value order-1">
+                                            <field name="exploded_component_count"/>
+                                        </span>
+                                        <span class="o_stat_text order-2">Components</span>
+                                    </div>
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span class="o_stat_value order-1">
+                                            <field name="subassembly_count"/>
+                                        </span>
+                                        <span class="o_stat_text order-2">Sub Assemblies</span>
+                                    </div>
+                                </div>
+                            </button>
                             <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o" groups="mrp.group_mrp_routings">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Operations<br/>Performance</span>
