@@ -2528,6 +2528,119 @@ class TestStoredTranslations(TransactionCase):
             'fr_FR': '<form><b>English</b></form>',
         })
 
+    # --- translated() tests: overwrite parameter ---
+
+    def test_translated_overwrite_false(self):
+        """overwrite=False preserves stored terms where source_term != lang_term.
+        It does NOT simply mean "preserve untranslated terms".
+
+        A term that visually looks "untranslated" (e.g. it happens to equal the old source
+        value) may still be treated as to be updated or not depending on whether it
+        differs from the CURRENT source term at the time overwrite=False is evaluated.
+        """
+        html_field = self._get_html_field()
+        env_fr = self.env(context=dict(self.env.context, lang='fr_FR'))
+
+        # --- Scenario A: Write FR, update EN translations, then update NL translations ---
+
+        # Step 1: record written in French; en_US == fr_FR == fr1_fr2
+        st = StoredTranslations({
+            'en_US': '<p>bonjour</p><p>monde</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+        })
+
+        # Step 2: update EN with FR-keyed terms; nl still falls back to new en_US = en1_en2
+        st = st.translated(
+            env_fr,
+            html_field,
+            {'en_US': {'bonjour': 'hello', 'monde': 'world'}},
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>hello</p><p>world</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            # nl_NL not stored; falls back to en_US = <p>hello</p><p>world</p>
+        })
+
+        # Step 3: update NL → only term2 'monde'→'wereld'; term1 not provided
+        # nl is not stored but its fallback (en_US = en1_en2) ≠ FR source (fr1_fr2),
+        # so old_src2term = {'bonjour': 'hello', 'monde': 'world'} is built from the fallback.
+        # Incoming {'monde': 'wereld'} overrides term2; term1 inherits 'bonjour'→'hello'
+        # from old_src2term. Result: nl = en1_nl2.
+        st = st.translated(
+            env_fr,
+            html_field,
+            {'nl_NL': {'monde': 'wereld'}},
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>hello</p><p>world</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            'nl_NL': '<p>hello</p><p>wereld</p>',  # term1 = 'hello' (inherited from en_US fallback via old_src2term)
+        })
+
+        # Step 4: overwrite=False NL update → try term1 'bonjour'→'hallo'
+        # old_src2term = {'bonjour': 'hello', 'monde': 'wereld'}: 'hello' ≠ FR source 'bonjour'
+        # → term1 'hello' is treated as a real translation and NOT overwritten by 'hallo'
+        st = st.translated(
+            env_fr,
+            html_field,
+            {'nl_NL': {'bonjour': 'hallo'}},
+            overwrite=False,
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>hello</p><p>world</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            'nl_NL': '<p>hello</p><p>wereld</p>',  # term1 unchanged: 'hello' ≠ FR source 'bonjour' → protected
+        })
+
+        # --- Scenario B: Write FR, update NL translations, then update EN translations ---
+
+        # Step 1: record written in French; en_US == fr_FR == fr1_fr2
+        st = StoredTranslations({
+            'en_US': '<p>bonjour</p><p>monde</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+        })
+
+        # Step 2: update NL first → only term2 'monde'→'wereld'; term1 not provided
+        # nl is not stored; its fallback (en_US = fr1_fr2) == FR source → old_src2term = {}
+        # term1 falls back to FR source 'bonjour', which is STORED explicitly in nl_NL
+        st = st.translated(
+            env_fr,
+            html_field,
+            {'nl_NL': {'monde': 'wereld'}},
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>bonjour</p><p>monde</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            'nl_NL': '<p>bonjour</p><p>wereld</p>',  # term1 = 'bonjour' (FR source) stored explicitly
+        })
+
+        # Step 3: update EN with FR-keyed terms; nl_NL is not in term_updates → unchanged
+        st = st.translated(
+            self.env,
+            html_field,
+            {'en_US': {'bonjour': 'hello', 'monde': 'world'}},
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>hello</p><p>world</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            'nl_NL': '<p>bonjour</p><p>wereld</p>',  # term1 = 'bonjour' ≠ new en1 'hello', but not updated
+        })
+
+        # Step 4: overwrite=False NL update → try term1 'bonjour'→'hallo'
+        # old_src2term = {'monde': 'wereld'} only: 'bonjour'→'bonjour' has term == FR source → EXCLUDED
+        # → term1 'bonjour' is treated as untranslated and IS overwritten by 'hallo'
+        st = st.translated(
+            env_fr,
+            html_field,
+            {'nl_NL': {'bonjour': 'hallo'}},
+            overwrite=False,
+        )
+        self.assertEqual(dict(st), {
+            'en_US': '<p>hello</p><p>world</p>',
+            'fr_FR': '<p>bonjour</p><p>monde</p>',
+            'nl_NL': '<p>hallo</p><p>wereld</p>',  # term1 updated: 'bonjour' == FR source 'bonjour' → not protected
+        })
+
 
 @tagged('post_install', '-at_install')
 class TestLanguageInstallPerformance(TransactionCase):

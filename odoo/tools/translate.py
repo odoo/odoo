@@ -743,6 +743,7 @@ class StoredTranslations(dict):
                           When ``True`` (default), incoming updates take priority; when
                           ``False``, prior mappings take priority. Prior mappings are those
                           where the stored term differs from the source term (``term != src``).
+                          see ``TestStoredTranslations.test_translated_overwrite_false`` for more details.
         :return: A new validated ``StoredTranslations`` result, or ``None`` when no
                  valid translation can be kept.
         """
