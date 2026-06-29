@@ -144,3 +144,10 @@ class HrEmployee(models.Model):
             return 0
         calendars = self._get_calendars(date_from)
         return calendars[self.id].hours_per_day if calendars[self.id] else 24
+
+    def _is_time_off_manager(self):
+        """
+        Returns True if the current user is a leave manager of the employee of the leave.
+        Used as a hook for other apps.
+        """
+        return self.leave_manager_id == self.env.user
