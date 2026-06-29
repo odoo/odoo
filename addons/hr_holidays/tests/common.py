@@ -74,15 +74,16 @@ class TestHrHolidaysCommon(common.TransactionCase):
             self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
                 value, f"Virtual leaves for date '{date}' are incorrect.")
 
-    def _take_leave_and_validate(self, employee, leave_type, date_from, date_to):
-        leave = self.env['hr.leave'].create({
+    def _take_leave(self, employee, leave_type, date_from, date_to, validate=True):
+        leave = self.env['hr.leave'].with_context(tracking_disable=True).create({
             'name': 'Leave',
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
             'request_date_from': date_from,
             'request_date_to': date_to,
         })
-        leave.action_validate()
+        if validate:
+            leave.action_validate()
         return leave
 
     def _create_test_allocation(self, leave_type, date_from, employee, accrual_plan=None, number_of_days=None, date_to=None):

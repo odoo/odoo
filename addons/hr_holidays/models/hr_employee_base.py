@@ -11,6 +11,9 @@ from odoo.tools.float_utils import float_round
 
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
@@ -178,7 +181,9 @@ class HrEmployeeBase(models.AbstractModel):
                     precomputed = True
             future_leaves = 0
             if allocation.allocation_type == 'accrual' and not precomputed:
+                # _logger.info(f'{allocation.id} - Getting future leaves for {target_date}')
                 future_leaves = allocation._get_future_leaves_on(target_date)
+                # _logger.info(f'{allocation.id} - Finished getting leaves for {target_date} - fl:{future_leaves}')
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
                 else allocation.number_of_days_display
@@ -330,7 +335,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_allocation_remaining_display(self):
         current_date = date.today()
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
-        leaves_taken = self._get_consumed_leaves(allocations.holiday_status_id)[0]
+        leaves_taken = self._get_consumed_leaves(allocations.holiday_status_id, ignore_future=True)[0]
         for employee in self:
             employee_remaining_leaves = 0
             employee_max_leaves = 0
