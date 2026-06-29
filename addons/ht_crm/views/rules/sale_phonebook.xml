@@ -1,0 +1,50 @@
+<odoo>
+    <record id="rule_phonebook_ga" model="ir.rule">
+        <field name="name">GA (phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
+    <record id="rule_phonebook_admin" model="ir.rule">
+        <field name="name">Hệ Thống (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_phonebook_bod" model="ir.rule">
+        <field name="name">Ban Lãnh Đạo (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_board_of_directors'))]"/>
+    </record>
+
+    <record id="rule_phonebook_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <!-- Data thuộc về từng Sales -->
+    <record id="rule_phonebook_user" model="ir.rule">
+        <field name="name">User (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[('salesperson_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_sales_user'))]"/>
+    </record>
+
+    <!-- Trưởng phòng nắm Data của Team -->
+    <record id="rule_phonebook_manager" model="ir.rule">
+        <field name="name">Manager (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[
+            '|',
+            ('salesperson_id.user_id', '=', user.id),
+            ('salesperson_id.manager_id.user_id', '=', user.id)
+        ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_sales_leader'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_revenue_graph" model="ir.ui.view">
+        <field name="name">revenue.report.graph</field>
+        <field name="model">revenue.report</field>
+        <field name="arch" type="xml">
+
+            <graph string="Doanh thu theo quý" type="line">
+
+                <field name="quarter"/>
+
+                <field name="total_revenue" type="measure"/>
+
+            </graph>
+
+        </field>
+    </record>
+</odoo>

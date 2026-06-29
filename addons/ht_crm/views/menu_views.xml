@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_phonebook" model="ir.actions.act_window">
+        <field name="name">Data</field>
+        <field name="res_model">sale.phonebook</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form'}</field>
+    </record>
+
+    <!-- Sales -->
+    <record id="action_phonebook_hot" model="ir.actions.act_window">
+        <field name="name">Data Lead</field>
+        <field name="res_model">sale.phonebook</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_hot', '=', True)]</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form_sales'}</field>
+    </record>
+
+    <record id="action_phonebook_cold" model="ir.actions.act_window">
+        <field name="name">Data Salesphone</field>
+        <field name="res_model">sale.phonebook</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_hot', '=', False)]</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form_sales'}</field>
+    </record>
+
+    <record id="action_phonebook_batch" model="ir.actions.act_window">
+        <field name="name">Tập dữ liệu</field>
+        <field name="res_model">sale.phonebook.batch</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_employee_project_rel" model="ir.actions.act_window">
+        <field name="name">Phân bổ</field>
+        <field name="res_model">employee.project.rel</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_customer" model="ir.actions.act_window">
+        <field name="name">Khách hàng</field>
+        <field name="res_model">sale.customer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Dự án -->
+    <record id="action_estate_project" model="ir.actions.act_window">
+        <field name="name">Dự án</field>
+        <field name="res_model">estate.project</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_project_promotion" model="ir.actions.act_window">
+        <field name="name">Ưu đãi dự án</field>
+        <field name="res_model">estate.project.promotion</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_payment_plan" model="ir.actions.act_window">
+        <field name="name">Phương thức thanh toán</field>
+        <field name="res_model">estate.payment.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_payment_plan_line" model="ir.actions.act_window">
+        <field name="name">Chi tiết thanh toán</field>
+        <field name="res_model">estate.payment.plan.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_property_unit" model="ir.actions.act_window">
+        <field name="name">Sản phẩm</field>
+        <field name="res_model">estate.property.unit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_property_unit_type" model="ir.actions.act_window">
+        <field name="name">Loại sản phẩm</field>
+        <field name="res_model">estate.property.unit.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Nhân sự -->
+    <record id="action_employee_profile" model="ir.actions.act_window">
+        <field name="name">Nhân Sự</field>
+        <field name="res_model">employee.profile</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_employee_profile_sales" model="ir.actions.act_window">
+        <field name="name">Nhân viên Sales</field>
+        <field name="res_model">employee.profile.sales</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_employee_kpi" model="ir.actions.act_window">
+        <field name="name">Sales KPI</field>
+        <field name="res_model">employee.profile.sales.kpi</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_transaction" model="ir.actions.act_window">
+        <field name="name">Giao Dịch</field>
+        <field name="res_model">sale.transaction</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p>Theo dõi giao dịch bán hàng.</p>
+        </field>
+    </record>
+
+    <record id="action_employee_role" model="ir.actions.act_window">
+        <field name="name">Chức Danh</field>
+        <field name="res_model">employee.profile.role</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <record id="action_customer_graph" model="ir.actions.act_window">
+        <field name="name">Biểu đồ KH</field>
+        <field name="res_model">sale.customer.report</field>
+        <field name="view_mode">graph,list</field>
+        <field name="context">{'graph_mode': 'pie'}</field>
+    </record>
+
+    <record id="action_transaction_graph" model="ir.actions.act_window">
+        <field name="name">Biểu đồ GD</field>
+        <field name="res_model">revenue.report</field>
+        <field name="view_mode">graph,list</field>
+    </record>
+
+    <record id="action_estate_project_unit_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo sản phẩm dự án</field>
+        <field name="res_model">estate.project.unit.report</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+
+    <record id="action_estate_project_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo dự án</field>
+        <field name="res_model">estate.project.report</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+
+    <record id="action_employee_sales_log" model="ir.actions.act_window">
+        <field name="name">Log Sales</field>
+        <field name="res_model">employee.sales.log</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+    
+    <record id="action_server_my_profile" model="ir.actions.server">
+        <field name="name">Điều hướng thông tin cá nhân</field> 
+        <field name="model_id" ref="model_employee_profile_sales"/>        
+        <field name="state">code</field>       
+        <field name="code">
+            action = model.action_open_my_profile()
+        </field>
+    </record>
+
+    <menuitem id="menu_ht_root" name="HTLand CRM" sequence="10">
+        <menuitem id="menu_crm_root" name="CRM">
+            <!-- =========================
+                KHÁCH HÀNG / LEAD
+            ========================== -->
+            <menuitem id="menu_crm_lead_root" name="Khách hàng &amp; Lead">
+                <menuitem id="menu_customer" name="Khách hàng" action="action_customer" />
+                <menuitem id="menu_phonebook_lead_user" name="Data Lead" action="action_phonebook_hot" groups="ht_crm.group_ht_sales_user,ht_crm.group_ht_sales_leader"/>
+                <menuitem id="menu_phonebook_salesphone_user" name="Data Salesphone" action="action_phonebook_cold" groups="ht_crm.group_ht_sales_user,ht_crm.group_ht_sales_leader"/>
+                <menuitem id="menu_phonebook_data" name="Data" action="action_phonebook" groups="ht_crm.group_ht_executive,ht_crm.group_ht_board_of_directors"/>
+                <menuitem id="menu_phonebook_batch" name="Gom nhóm Data" action="action_phonebook_batch"/>
+
+            </menuitem>
+
+
+            <!-- =========================
+                PHÂN BỔ / ĐIỀU PHỐI
+            ========================== -->
+            <menuitem id="menu_crm_assignment_root" name="Phân bổ &amp; Điều phối">
+                <menuitem id="menu_assignment" name="Phân bổ Data" action="action_employee_project_rel"/>
+
+            </menuitem>
+
+
+            <!-- =========================
+                HOẠT ĐỘNG / NHẬT KÝ
+            ========================== -->
+            <menuitem id="menu_crm_log_root" name="Hoạt động">
+                <menuitem id="menu_sales_log" name="Sales Log" action="action_employee_sales_log"/>
+
+            </menuitem>
+        </menuitem>
+
+
+        <menuitem id="menu_project_root" name="Dự Án" sequence="20">
+
+            <!-- =========================
+                QUẢN LÝ DỰ ÁN
+            ========================= -->
+
+            <menuitem id="menu_project_management" name="Quản Lý">
+                <menuitem id="menu_project" name="Dự Án" action="action_estate_project"/>
+                <menuitem id="menu_project_promotion" name="Chương Trình" action="action_estate_project_promotion"/>
+
+            </menuitem>
+
+            <!-- =========================
+                SẢN PHẨM
+            ========================= -->
+
+            <menuitem id="menu_property_root" name="Sản Phẩm">
+                <menuitem id="menu_property_unit" name="Sản Phẩm" action="action_estate_property_unit"/>
+                <menuitem id="menu_property_unit_type" name="Loại Sản Phẩm" action="action_estate_property_unit_type"/>
+
+            </menuitem>
+        </menuitem>
+
+        <!-- SALES -->
+        <menuitem id="menu_sales_root" name="Chính sách" sequence="30">
+            <menuitem id="menu_transaction" action="action_transaction"/>
+            <menuitem id="menu_kpi" action="action_employee_kpi"/>
+            <menuitem id="menu_payment_plan" action="action_estate_payment_plan"/>
+            <menuitem id="menu_payment_plan_line" action="action_estate_payment_plan_line"/>   
+        </menuitem>
+
+        <!-- ORGANIZATION -->
+        <menuitem id="menu_org_root" name="Tổ Chức" sequence="40" groups="group_ht_sales_leader,group_ht_executive">
+            <menuitem id="menu_employee" action="action_employee_profile"/>
+            <menuitem id="menu_employee_sales" action="action_employee_profile_sales"/>
+            <menuitem id="menu_role" action="action_employee_role"/>
+        </menuitem>
+
+        <menuitem id="menu_statistics_root" name="Thống Kê" sequence="50">
+            <menuitem id="menu_stats_customer" name="Khách hàng" action="action_customer_graph"/>
+            <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
+            <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_report"/>
+            <menuitem id="menu_stats_project_unit" name="Sản phẩm dự án" action="action_estate_project_unit_report"/>
+        </menuitem>
+     
+    </menuitem>
+    <menuitem id="menu_my_profile" 
+          name="Xem thông tin cá nhân" 
+          action="action_server_my_profile" 
+          parent="ht_crm.menu_ht_root"
+          sequence="99"/>
+</odoo>

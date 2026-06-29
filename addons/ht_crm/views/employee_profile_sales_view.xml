@@ -1,0 +1,281 @@
+<odoo>
+    <record id="view_employee_profile_sales_form" model="ir.ui.view">
+        <field name="name">employee.profile.sales.form</field>
+        <field name="model">employee.profile.sales</field>
+        <field name="arch" type="xml">
+            <form string="Thông Tin Sales">
+
+                <header>
+                    <button
+                        name="action_reset_counter"
+                        type="object"
+                        string="Reset Counter"
+                        class="btn-danger"
+                        confirm="Bạn có chắc muốn reset toàn bộ thống kê?"
+                    />
+                </header>
+
+                <sheet>
+
+                    <!-- Avatar / Main -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+
+                        <div class="text-muted">
+                            <field name="employee_id"/>
+                        </div>
+                    </div>
+
+                    <!-- Top KPI -->
+                    <group col="4">
+
+                        <group string="Thông Tin">
+                            <field name="manager_id"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="max_received"/>
+                        </group>
+
+                        <group string="Hiệu Suất">
+                            <field name="performance"/>
+                        </group>
+
+                    </group>
+
+                    <!-- Stats -->
+                    <div class="oe_button_box" name="button_box">
+
+                        <button class="oe_stat_button" type="object" icon="fa-download">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_received"/></span>
+                                <span class="o_stat_text">Tổng nhận</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-folder-open">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="current_received"/></span>
+                                <span class="o_stat_text">Đang giữ</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-phone">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_handled"/></span>
+                                <span class="o_stat_text">Đã xử lý</span>
+                            </div>
+                        </button>
+
+                    </div>
+
+                    <notebook>
+
+                        <!-- Teams -->
+                        <page string="Nhân Viên Cấp Dưới">
+
+                            <field name="child_ids">
+
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="employee_id"/>
+                                    <field name="current_received"/>
+                                    <field name="total_handled"/>
+                                    <field name="performance"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                        <!-- Projects -->
+                        <page string="Dự Án / Batch">
+
+                            <field name="group_ids">
+
+                                <list>
+                                    <field name="project_id"/>
+                                    <field name="batch_id"/>
+                                    <field name="phone_received"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_profile_sales_form_sales" model="ir.ui.view">
+        <field name="name">employee.profile.sales.form.sales</field>
+        <field name="model">employee.profile.sales</field>
+        <field name="arch" type="xml">
+            <form edit="false" create="false" delete="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                        <button class="oe_stat_button" type="object" icon="fa-download">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_received"/></span>
+                                <span class="o_stat_text">Tổng nhận</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-folder-open">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="current_received"/></span>
+                                <span class="o_stat_text">Đang giữ</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-phone">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_handled"/></span>
+                                <span class="o_stat_text">Đã xử lý</span>
+                            </div>
+                        </button>
+
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Nhân viên Sales"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Thông tin nhân sự">
+                            <field name="manager_id" options="{'no_open': True}"/>
+                        </group>
+                        <group string="Hiệu suất làm việc trong tháng">
+                            <field name="performance" widget="percentage" class="fw-bold text-success"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    <!-- =========================
+        Graph View
+    ========================= -->
+
+    <record id="view_employee_sales_log_graph" model="ir.ui.view">
+        <field name="name">employee.sales.log.graph</field>
+        <field name="model">employee.sales.log</field>
+        <field name="arch" type="xml">
+            <graph string="Hiệu suất Sales" type="bar">
+
+                <field name="date" interval="day"/>
+
+                <field name="received" type="measure"/>
+                <field name="handled" type="measure"/>
+                <field name="performance" type="measure"/>
+
+                <field name="sales_id"/>
+
+            </graph>
+        </field>
+    </record>
+
+
+    <!-- =========================
+        Pivot View
+    ========================= -->
+
+    <record id="view_employee_sales_log_pivot" model="ir.ui.view">
+        <field name="name">employee.sales.log.pivot</field>
+        <field name="model">employee.sales.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Thống kê Sales">
+
+                <field name="sales_id" type="row"/>
+                <field name="date" type="col" interval="month"/>
+
+                <field name="received" type="measure"/>
+                <field name="handled" type="measure"/>
+                <field name="performance" type="measure"/>
+
+            </pivot>
+        </field>
+    </record>
+
+
+    <!-- =========================
+        Tree View
+    ========================= -->
+
+    <record id="view_employee_sales_log_list" model="ir.ui.view">
+        <field name="name">employee.sales.log.list</field>
+        <field name="model">employee.sales.log</field>
+        <field name="arch" type="xml">
+            <list default_order="date desc">
+
+                <field name="date"/>
+                <field name="sales_id"/>
+
+                <field name="received"/>
+                <field name="handled"/>
+
+                <field name="performance" widget="progressbar"/>
+
+            </list>
+        </field>
+    </record>
+
+
+    <!-- =========================
+        Form View
+    ========================= -->
+
+    <record id="view_employee_sales_log_form" model="ir.ui.view">
+        <field name="name">employee.sales.log.form</field>
+        <field name="model">employee.sales.log</field>
+        <field name="arch" type="xml">
+            <form string="Sales Performance">
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sales_id"/>
+                        </h1>
+                        <h3>
+                            <field name="date"/>
+                        </h3>
+                    </div>
+
+                    <group col="3">
+
+                        <group string="Data">
+                            <field name="received"/>
+                            <field name="handled"/>
+                        </group>
+
+                        <group string="Performance">
+                            <field
+                                name="performance"
+                                widget="gauge"
+                                options="{'max_field': 'received'}"
+                            />
+                        </group>
+
+                    </group>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

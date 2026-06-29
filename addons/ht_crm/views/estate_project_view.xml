@@ -1,0 +1,147 @@
+
+<odoo>
+    <!-- List view -->
+    <record id="view_estate_project_list" model="ir.ui.view">
+        <field name="name">estate.project.list</field>
+        <field name="model">estate.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="investor"/>
+                <field name="location"/>
+                <field name="area"/>
+                <field name="price_per_m2"/>
+                <field name="legal_status"/>
+                <field name="progress"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_estate_project_form" model="ir.ui.view">
+        <field name="name">estate.project.form</field>
+        <field name="model">estate.project</field>
+        <field name="arch" type="xml">
+            <form string="Dự án Bất động sản">
+                <sheet>
+
+                    <!-- HEADER -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên dự án..."/>
+                        </h1>
+                    </div>
+
+                    <!-- BASIC INFO -->
+                    <group>
+                        <group string="Thông tin chung">
+                            <field name="investor"/>
+                            <field name="location"/>
+                            <field name="area"/>
+                            <field name="price_per_m2"/>
+                        </group>
+
+                        <group string="Trạng thái">
+                            <field name="legal_status"/>
+                            <field name="progress"/>
+                        </group>
+                    </group>
+
+                    <!-- NOTE -->
+                    <group>
+                        <field name="note" placeholder="Ghi chú..." nolabel="1"/>
+                    </group>
+
+                    <!-- RELATIONS -->
+                    <notebook>
+
+                        <page string="Data" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive">
+                            <group>
+                                <field name="phonebook_ids" string="">
+                                    <list editable="bottom" limit="20">
+                                        <field name="name"/>
+                                        <field name="phone"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        
+                        <page string="Khách Hàng">
+                            <group>
+                                <field name="interested_customer_ids">
+                                    <list editable="bottom" limit="10">
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                    </list>
+                                </field>
+                                <field name="purchased_customer_ids">
+                                    <list editable="bottom" limit="10">
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+
+                        <page string="Sales phụ trách" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive">
+                            <group>
+                                <field name="unique_sales_ids" string=""/>
+                            </group>
+                        </page>
+
+                        <page string="Rổ Hàng">
+                            <group>
+                                <field name="unit_ids" string="">
+                                    <list limit="5" editable="bottom">
+
+                                        <field name="name"/>
+                                        <field name="block"/>
+                                        <field name="floor"/>
+
+                                        <field name="unit_number"/>
+                                        <field name="unit_type_id"/>
+
+                                        <field name="net_area"/>
+                                        <field name="gross_area"/>
+
+                                        <field name="priority"/>
+
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Ưu đãi">
+                            <group>
+                                <field name="promotion_ids" string="">
+                                    <list limit="5" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="promotion_type"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>    
+
+
+    <record id="view_employee_project_rel_list" model="ir.ui.view">
+        <field name="name">employee.project.rel.list</field>
+        <field name="model">employee.project.rel</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sales_id"/>
+                <field name="project_id" readonly="1"/>
+                <field name="batch_id"/>
+                <field name="phone_received"/>
+            </list>
+        </field>
+    </record>
+
+    
+</odoo>
