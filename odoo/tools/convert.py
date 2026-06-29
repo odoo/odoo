@@ -337,6 +337,7 @@ form: module.record_id""" % (xml_id,)
         rec_model = rec.get("model")
         env = self.get_env(rec)
         rec_id = rec.get("id", '')
+        skip_field = rec.get('skip_unique_constraint')
 
         model = env[rec_model]
 
@@ -446,7 +447,20 @@ form: module.record_id""" % (xml_id,)
                     elif field_type == 'html':
                         if field.get('type') == 'xml':
                             _logger.warning('HTML field %r is declared as `type="xml"`', f_name)
-            res[f_name] = f_val
+
+            if skip_field and skip_field == f_name and isinstance(f_val, str) and f_val.strip():
+                match = re.match(r'^(.*?)(?: \((\d+)\))?$', f_val.strip())
+                base_value = match.group(1).strip()
+                suffix = int(match.group(2)) if match.group(2) else 0
+                new_value = base_value
+                existing = set(model.search([]).mapped(f_name))
+                while new_value in existing:
+                    suffix += 1
+                    new_value = f"{base_value} ({suffix})"
+                res[f_name] = new_value
+            else:
+                res[f_name] = f_val
+
         if extra_vals:
             res.update(extra_vals)
         if 'sequence' not in res and 'sequence' in model._fields:
