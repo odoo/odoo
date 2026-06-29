@@ -442,7 +442,7 @@ class ResPartner(models.Model):
             # so that you can reactivate it instead of creating a new one, which would lose its history.
             Partner = self.with_context(active_test=False).sudo()
             vats = [partner.vat]
-            should_check_vat = not self._is_vat_void(partner.vat)
+            should_check_vat = not partner._is_vat_void()
 
             if should_check_vat and partner.country_id and 'EU_PREFIX' in partner.country_id.country_group_codes:
                 if partner.vat[:2].isalpha():
@@ -819,7 +819,7 @@ class ResPartner(models.Model):
         definition of what is a company (e.g. more strict VAT, specific field usage,
         ...) """
         for partner in self:
-            partner.is_company = partner.commercial_partner_id == partner and not partner._is_vat_void(partner.vat)
+            partner.is_company = partner.commercial_partner_id == partner and not partner._is_vat_void()
 
     def _compute_is_public(self):
         for partner in self.with_context(active_test=False):
@@ -917,7 +917,12 @@ class ResPartner(models.Model):
             partner._fields_sync(vals)
         return partners
 
-    def _is_vat_void(self, vat):
+    def _is_vat_void(self, vat=None):
+        if not self and vat is None:
+            raise TypeError("The 'vat' argument must be provided.")
+        if self and vat is None:
+            self.ensure_one()
+            vat = self.vat
         if not vat:
             return True
         return vat in ['/', 'na', 'NA']

@@ -34,7 +34,7 @@ class ResPartner(models.Model):
             lambda p: (
                 p.country_code == 'SA'
                 and p.commercial_partner_id == p
-                and p._is_vat_void(p.vat)
+                and p._is_vat_void()
                 and p.l10n_sa_edi_additional_identification_number
                 and p.l10n_sa_edi_additional_identification_scheme in COMPANY_SCHEMES
             )
