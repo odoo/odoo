@@ -7,9 +7,10 @@
         <field name="arch" type="xml">
             <list string="Eventos Maestro">
                 <field name="event_date"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
                 <field name="event_type"/>
                 <field name="risk_level" decoration-danger="risk_level in ('high', 'critical')" decoration-warning="risk_level == 'medium'"/>
-                <field name="department_id"/>
                 <field name="summary"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
@@ -23,17 +24,42 @@
             <form string="Evento Maestro">
                 <sheet>
                     <group>
-                        <field name="event_type"/>
-                        <field name="event_date"/>
-                        <field name="risk_level"/>
-                        <field name="department_id"/>
-                        <field name="summary"/>
-                        <field name="maestro_company_id"/>
-                        <field name="external_event_id"/>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="event_type"/>
+                            <field name="event_date"/>
+                        </group>
+                        <group>
+                            <field name="risk_level"/>
+                            <field name="risk_score"/>
+                            <field name="maestro_company_id"/>
+                            <field name="external_event_id"/>
+                        </group>
                     </group>
+                    <field name="summary"/>
                     <field name="data" widget="text"/>
                 </sheet>
+                <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="view_hr_maestro_event_search" model="ir.ui.view">
+        <field name="name">hr.maestro.event.search</field>
+        <field name="model">hr.maestro.event</field>
+        <field name="arch" type="xml">
+            <search string="Eventos Maestro">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="event_type"/>
+                <filter string="Risco alto/crítico" name="high_risk" domain="[('risk_level', 'in', ('high', 'critical'))]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Funcionário" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Departamento" name="group_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Tipo de evento" name="group_event_type" context="{'group_by': 'event_type'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

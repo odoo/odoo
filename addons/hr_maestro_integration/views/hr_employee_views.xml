@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_employee_view_form_inherit_maestro" model="ir.ui.view">
+        <field name="name">hr.employee.form.maestro</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <button name="action_open_versions" position="before">
+                <button name="action_view_maestro_events"
+                        class="oe_stat_button"
+                        icon="fa-heartbeat"
+                        type="object"
+                        groups="hr.group_hr_user"
+                        invisible="not maestro_event_count">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="maestro_event_count"/>
+                        </span>
+                        <span class="o_stat_text">Eventos Maestro</span>
+                    </div>
+                </button>
+            </button>
+            <xpath expr="//field[@name='version_id']" position="before">
+                <field name="maestro_current_risk_level"
+                       widget="badge"
+                       decoration-danger="maestro_current_risk_level in ('high', 'critical')"
+                       decoration-warning="maestro_current_risk_level == 'medium'"
+                       decoration-success="maestro_current_risk_level == 'low'"
+                       invisible="not maestro_current_risk_level"/>
+            </xpath>
+            <xpath expr="//group[@name='settings_group']" position="inside">
+                <group string="Maestro Intelligence" name="maestro_settings">
+                    <field name="maestro_external_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

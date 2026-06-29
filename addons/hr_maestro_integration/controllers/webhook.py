@@ -49,6 +49,25 @@ class MaestroWebhookController(http.Controller):
         expected_sig = hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
         return consteq(expected_sig, sig)
 
+    def _find_employee(self, data):
+        """Vincula o evento a um hr.employee a partir do ID externo do
+        Maestro (campo `maestro_external_id`) ou, na ausência deste, pelo
+        e-mail de trabalho informado no payload."""
+        Employee = request.env['hr.employee'].sudo()
+        external_id = data.get('employee_external_id') or data.get('employee_id')
+        if external_id:
+            employee = Employee.search([('maestro_external_id', '=', external_id)], limit=1)
+            if employee:
+                return employee
+
+        email = data.get('employee_email')
+        if email:
+            employee = Employee.search([('work_email', '=', email)], limit=1)
+            if employee:
+                return employee
+
+        return Employee.browse()
+
     @http.route('/maestro/webhook', type='http', auth='public', methods=['POST'], csrf=False)
     def maestro_webhook(self, **kwargs):
         raw_body = request.httprequest.get_data()
@@ -77,17 +96,26 @@ class MaestroWebhookController(http.Controller):
             # Idempotência: evento já processado, responde 200 sem duplicar.
             return request.make_json_response({'status': 'duplicate'}, status=200)
 
+        employee = self._find_employee(data)
+        if not employee:
+            _logger.warning(
+                'Maestro webhook: não foi possível vincular o evento %s a um funcionário '
+                '(employee_external_id/employee_email ausente ou sem correspondência).', event_id)
+            return request.make_json_response({'error': 'employee_not_found'}, status=422)
+
         try:
             event_date = datetime.fromisoformat(payload['timestamp']).astimezone(timezone.utc).replace(tzinfo=None)
         except (KeyError, ValueError):
             event_date = datetime.now(timezone.utc).replace(tzinfo=None)
 
         Event.create({
+            'employee_id': employee.id,
             'maestro_company_id': maestro_company_id,
             'event_type': event_type,
             'event_date': event_date,
             'external_event_id': event_id,
             'risk_level': data.get('risk_level'),
+            'risk_score': data.get('risk_score') or 0.0,
             'summary': data.get('summary') or data.get('description'),
             'data': json.dumps(data, ensure_ascii=False),
         })
