@@ -56,7 +56,11 @@ export class Base extends WithLazyGetterTrap {
      *  Restore state serialized from indexedDB
      */
     restoreState(uiState) {
-        this.uiState = uiState;
+        this.initState();
+        this.uiState = {
+            ...this.uiState,
+            ...uiState,
+        };
     }
 
     isDirty() {
