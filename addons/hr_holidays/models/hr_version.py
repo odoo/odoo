@@ -17,7 +17,7 @@ class HrVersion(models.Model):
     """
     # TODO BIOUTIFY ME (the whole file :)
     _inherit = 'hr.version'
-    _description = 'Employee Contract'
+    _description = 'Employee Record'
 
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):

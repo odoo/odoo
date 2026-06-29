@@ -8,7 +8,7 @@ from odoo.fields import Domain
 
 class HrVersion(models.Model):
     _inherit = 'hr.version'
-    _description = 'Employee Contract'
+    _description = 'Employee Record'
 
     # override to add work_entry_type from leave
     def _get_leave_work_entry_type(self, leave):
