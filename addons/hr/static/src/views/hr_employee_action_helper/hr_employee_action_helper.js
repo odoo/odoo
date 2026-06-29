@@ -28,10 +28,12 @@ export class HrEmployeeActionHelper extends ActionHelper {
         this.action = useService("action");
         this.uiService = useService("ui");
         this.state = proxy({ isOnboarding: null });
-        onWillStart(async () => {
-            this.state.isOnboarding = await this.orm.call("hr.employee", "is_onboarding", [
-                user.activeCompanies.map((company) => company.id),
-            ]);
+        onWillStart(() => {
+            this.orm
+                .call("hr.employee", "is_onboarding", [
+                    user.activeCompanies.map((company) => company.id),
+                ])
+                .then((res) => (this.state.isOnboarding = res));
         });
     }
 
