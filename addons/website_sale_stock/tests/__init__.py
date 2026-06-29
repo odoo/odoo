@@ -8,3 +8,4 @@ from . import test_website_sale_stock_delivery
 from . import test_website_sale_stock_stock_notification
 from . import test_website_sale_stock_reorder_from_portal
 from . import test_website_sale_stock_stock_message
+from . import test_website_sale_stock_concurrent_orders
