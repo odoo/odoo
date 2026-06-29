@@ -9,7 +9,7 @@ import threading
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every, SQL
+from odoo.tools import split_every, SQL, mute_logger
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -251,8 +251,8 @@ class WebsiteVisitor(models.Model):
                 url=force_track_values['url'],
                 page_id=force_track_values.get('page_id'),
             )
-
-        [result] = self.env.execute_query(query)
+        with mute_logger('odoo.sql_db'):
+            [result] = self.env.execute_query(query)
         return result
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
@@ -375,7 +375,8 @@ class WebsiteVisitor(models.Model):
                 FOR NO KEY UPDATE SKIP LOCKED
             )
         """
-        self.env.cr.execute(query, (timezone, self.id))
+        with mute_logger('odoo.sql_db'):
+            self.env.cr.execute(query, (timezone, self.id))
 
     def _update_visitor_last_visit(self):
         date_now = datetime.now()
@@ -389,7 +390,8 @@ class WebsiteVisitor(models.Model):
                 FOR NO KEY UPDATE SKIP LOCKED
             )
         """
-        self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
+        with mute_logger('odoo.sql_db'):
+            self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
 
     def _get_visitor_timezone(self):
         tz = request.cookies.get('tz') if request else None
