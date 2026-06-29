@@ -968,6 +968,33 @@ class TestExpenses(TestExpenseCommon):
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense.with_context(validate_analytic=True).action_approve()
 
+    def test_expense_mandatory_analytic_plan_autovalidated_submission(self):
+        """
+        Check that when an analytic plan has a mandatory applicability,
+        it gets correctly triggered when the expense is submitted
+        and approved automatically.
+        """
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
+        })
+
+        expense = self.create_expenses({
+            'product_id': self.product_a.id,
+            'quantity': 350.00,
+            'payment_mode': 'company_account',
+        })
+
+        # Set the employee's manager to none to auto-approve the expense on submission
+        expense.employee_id.sudo().expense_manager_id = None
+
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense.action_submit()
+        expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense.action_submit()
+
     def test_expense_no_stealing_from_employees(self):
         """
         Test to check that the company doesn't steal their employee when the commercial_partner_id of the employee partner
