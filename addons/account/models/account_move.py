@@ -3985,6 +3985,11 @@ class AccountMove(models.Model):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
+        if vals.get('state') == 'draft':
+            self.filtered(lambda m: m.state == 'posted')._update_product_qty_available(to_draft=True)
+        elif vals.get('state') == 'posted':
+            self._update_product_qty_available()
+
         if {'sequence_prefix', 'sequence_number', 'journal_id', 'name'} & vals.keys():
             self._update_sequence_made_gap(invalidate_current=True)
 
@@ -5603,6 +5608,33 @@ class AccountMove(models.Model):
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
         to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
         return to_reverse._reverse_moves(cancel=True)
+
+    def _update_product_qty_available(self, to_draft=False):
+        installed_modules = self.env['ir.module.module']._installed()
+        is_sale_installed = 'sale_management' in installed_modules
+        is_purchase_installed = 'purchase' in installed_modules
+        if 'stock' in installed_modules or (is_sale_installed and is_purchase_installed):
+            return
+        reverse = -1 if to_draft else 1
+        for move in self:
+            move_type = move.move_type
+            journal_type = move._get_invoice_filter_type_domain(move_type)
+            is_sale_journal = not is_sale_installed and journal_type == 'sale'
+            is_purchase_journal = not is_purchase_installed and journal_type == 'purchase'
+            if not (is_sale_journal or is_purchase_journal):
+                continue
+            for line in move.invoice_line_ids:
+                if not (product := line.product_id).is_storable:
+                    continue
+                qty = line.quantity
+                if is_sale_journal:
+                    qty *= -1 if move_type in ('out_invoice', 'out_receipt') else 1
+                else:
+                    qty = line.product_uom_id._compute_quantity(qty, product.uom_id)
+                    qty *= 1 if move_type in ('in_invoice', 'in_receipt') else -1
+                product.sudo().with_company(move.company_id).with_context(
+                    skip_qty_available_update=True
+                ).qty_available += qty * reverse
 
     def _post(self, soft=True):
         """Post/Validate the documents.
