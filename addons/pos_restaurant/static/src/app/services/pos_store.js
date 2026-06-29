@@ -697,16 +697,26 @@ patch(PosStore.prototype, {
         document.addEventListener("click", onClickWhileTransfer);
     },
     prepareOrderTransfer(order, destinationTable) {
-        const originalTable = order.table_id;
         this.alert.dismiss();
 
+        const activeStandardOrders = this.getActiveOrdersOnTable(destinationTable.rootTable).filter(
+            (o) => o.table_id?.id === destinationTable.rootTable.id
+        );
+
+        const originalTable = order.table_id;
+
         if (destinationTable.rootTable.id === originalTable?.id) {
-            this.setOrder(order);
-            this.setTable(destinationTable);
-            return false;
+            const hasOtherStandardOrders = activeStandardOrders.some((o) => o.uuid !== order.uuid);
+            if (!hasOtherStandardOrders) {
+                this.setOrder(order);
+                this.setTable(destinationTable);
+                return false;
+            }
         }
 
-        if (!this.tableHasOrders(destinationTable)) {
+        const destinationHasStandardOrders = activeStandardOrders.length > 0;
+
+        if (!destinationHasStandardOrders) {
             order.table_id = destinationTable;
             this.setOrder(order);
             return false;
@@ -726,9 +736,14 @@ patch(PosStore.prototype, {
                 await this.syncAllOrders({ orders: [sourceOrder] });
                 return;
             }
-            destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
+            destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable).find(
+                (o) =>
+                    o.uuid !== sourceOrder.uuid && o.table_id?.id === destinationTable.rootTable.id
+            );
         }
-        await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
+        if (destinationOrder) {
+            await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
+        }
         if (destinationTable) {
             await this.setTable(destinationTable);
         }
@@ -741,8 +756,12 @@ patch(PosStore.prototype, {
             return;
         }
 
-        const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
-        await this.mergeOrders(sourceOrder, destinationOrder);
+        const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable).find(
+            (o) => o.uuid !== sourceOrder.uuid && o.table_id?.id === destinationTable.rootTable.id
+        );
+        if (destinationOrder) {
+            await this.mergeOrders(sourceOrder, destinationOrder);
+        }
         await this.setTable(destinationTable);
     },
     getCustomerCount(tableId) {
