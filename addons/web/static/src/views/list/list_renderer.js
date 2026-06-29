@@ -752,7 +752,9 @@ export class ListRenderer extends Component {
                                             : values[i][currencyField][0];
                                 }
                                 if (currency !== currencyId) {
-                                    fieldValues[i] *= this.state.currencyRates[currency];
+                                    fieldValues[i] *= currency
+                                        ? this.state.currencyRates[currency]
+                                        : 1;
                                 }
                             }
                         }

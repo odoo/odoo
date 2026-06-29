@@ -5039,7 +5039,7 @@ test(`aggregates monetary (currency field not set)`, async () => {
         "300.00",
         "0.00",
     ]);
-    expect(`tfoot`).toHaveText("$ 0.00?");
+    expect(`tfoot`).toHaveText("$ 2,000.00?");
 });
 
 test(`aggregates monetary (currency field not set on first record)`, async () => {
@@ -5063,7 +5063,7 @@ test(`aggregates monetary (currency field not set on first record)`, async () =>
         "300.00",
         "0.00",
     ]);
-    expect(`tfoot`).toHaveText("$ 0.00?");
+    expect(`tfoot`).toHaveText("$ 2,000.00?");
 });
 
 test(`aggregates monetary with custom digits (same currency)`, async () => {
