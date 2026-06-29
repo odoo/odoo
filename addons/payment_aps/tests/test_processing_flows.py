@@ -11,6 +11,8 @@ from odoo.addons.payment_aps.tests.common import APSCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(APSCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_aps.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         """Test that receiving a redirect notification triggers the processing of the notification

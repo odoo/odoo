@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericSA(TestGenericLocalization):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
@@ -37,6 +39,8 @@ class TestGenericSA(TestGenericLocalization):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sa')
@@ -72,6 +76,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSaPosInvoice(TestPoSCommon, TestPointOfSaleHttpCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_consolidate_invoices_for_same_customer(self):
         """

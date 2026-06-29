@@ -5,6 +5,8 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericFR(TestGenericLocalization):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('fr')
     def setUpClass(cls):

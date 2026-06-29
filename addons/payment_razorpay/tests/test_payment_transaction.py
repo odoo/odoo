@@ -16,6 +16,8 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(RazorpayCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_item_missing_from_order_request_payload(self):
         """Test that the request values are conform to the transaction fields."""
         inr_currency = (

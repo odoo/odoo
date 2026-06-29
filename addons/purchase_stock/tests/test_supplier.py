@@ -4,6 +4,8 @@ from odoo.tests import tagged
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSupplier(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_display_name(self):
         supplier = self.env['product.supplierinfo'].create({
             'partner_id': self.partner_1.id,  # Julia Agrolait

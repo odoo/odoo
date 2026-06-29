@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestL10nInHSNSummary(TestTaxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestTaxCommon.setup_country('in')
     def setUpClass(cls):

@@ -10,6 +10,8 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 @skip('Temporary to fast merge new valuation')
 class TestStockLandedCostsLots(TestLotValuation):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

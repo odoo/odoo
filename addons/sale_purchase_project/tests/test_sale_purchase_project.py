@@ -7,6 +7,8 @@ from odoo.addons.sale_purchase.tests.test_sale_purchase import TestSalePurchase
 @tagged('-at_install', 'post_install')
 class TestSalePurchaseProject(TestSalePurchase):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pol_analytic_distribution(self):
         """Confirming SO, analytic accounts from the project's SO should be set as Analytic Distribution in POL."""
         self.env.user.group_ids += self.quick_ref('project.group_project_manager')

@@ -11,6 +11,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install', '-at_install')
 class TestAutoPostBills(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def import_facturx(self, filename='facturx_out_invoice.xml', ref=None, date=None):
         self.env.cr._now = datetime.now()  # reset transaction's NOW, otherwise all move will have the same create_date
         with (file_open(f"account_edi_ubl_cii/tests/test_files/{filename}", 'rb', filter_ext=('.xml',)) as file):

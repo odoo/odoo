@@ -11,6 +11,8 @@ from odoo.exceptions import UserError, ValidationError
 @tagged('post_install', '-at_install', 'mail_track')
 class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

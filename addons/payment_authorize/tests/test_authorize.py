@@ -11,6 +11,8 @@ from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 @tagged("post_install", "-at_install")
 class AuthorizeTest(AuthorizeCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_available_providers(self):
         # Note: in the test common, 'USD' is specified as the currency linked to the user account.
         unsupported_currency = self._enable_currency("CHF")

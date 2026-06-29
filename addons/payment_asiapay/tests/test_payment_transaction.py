@@ -15,6 +15,8 @@ from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2011-11-02 12:00:21")  # Freeze time for consistent singularization behavior.
     def test_reference_is_singularized(self):
         """Test the singularization of reference prefixes."""

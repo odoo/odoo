@@ -5,6 +5,7 @@ from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 
 class TestPosStockResConfigSettings(TestPosStockCommon):
     """Settings-related tests that need stock models (see pos_stock dependency)."""
+    _test_groups = None  # FIXME list needed groups
 
     def test_warehouse_synced_with_picking_type(self):
         """Changing the operation type should update the warehouse on the POS config."""

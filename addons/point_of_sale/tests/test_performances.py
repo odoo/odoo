@@ -21,6 +21,7 @@ class TestPosPerformance(TestPointOfSaleHttpCommon):
     Example:
         --test-tags pos_performance.test_pos_session_open_product_performance
     """
+    _test_groups = None  # FIXME list needed groups
 
     def __populate_model(self, model_name, total_count):
         before_count = self.env[model_name].search_count([])

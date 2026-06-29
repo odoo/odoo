@@ -18,6 +18,8 @@ def archive_products(env):
 
 
 class CommonPosTest(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()
@@ -368,6 +370,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
     and implement different special scenarios by inheriting
     this class.
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

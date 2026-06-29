@@ -4,6 +4,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

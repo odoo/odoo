@@ -8,6 +8,8 @@ import zipfile
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         with freeze_time('2024-02-01'):

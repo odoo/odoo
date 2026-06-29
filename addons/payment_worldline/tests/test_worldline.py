@@ -12,6 +12,8 @@ from odoo.addons.payment_worldline.tests.common import WorldlineCommon
 
 @tagged("post_install", "-at_install")
 class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def _webhook_notification_flow(self, payload):
         """Send a notification to the webhook, ignore the signature, and check the response."""

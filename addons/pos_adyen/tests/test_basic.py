@@ -11,6 +11,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 @tagged('post_install', '-at_install')
 class TestAdyenPoS(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.main_pos_config.write({

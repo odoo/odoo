@@ -7,6 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install', '-at_install')
 class TestPartnerRoutingFields(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_routing_scheme_endpoint(self):
         def reset_routing_identifier(partner):
             partner.write({

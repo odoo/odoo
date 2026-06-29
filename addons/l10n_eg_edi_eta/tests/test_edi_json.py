@@ -79,6 +79,8 @@ def mocked_l10n_eg_edi_post_invoice_web_service(self, invoice):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestEdiJson(TestEGEdiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_1_simple_test_local_parter_no_tax(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',

@@ -8,6 +8,8 @@ import json
 @tagged('-at_install', 'post_install')
 class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_catalog_price(self):
         """
         Products having a SupplierInfo record in a foreign currency should have their price

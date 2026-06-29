@@ -7,6 +7,8 @@ from odoo import Command
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _get_main_company(cls):
         cls.company_data["company"].country_id = cls.env.ref("base.ch").id

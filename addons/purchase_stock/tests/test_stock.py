@@ -2,6 +2,8 @@ from .common import PurchaseTestCommon
 
 
 class TestPurchaseOrderStock(PurchaseTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_inventory_user_access_right(self):
         """ Test to check if Inventory/User is able to validate a
         transfer when the product has been invoiced already """

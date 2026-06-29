@@ -4,6 +4,8 @@ from odoo.tests.common import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestFECExport(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_fec_export(self):
         self.init_invoice("out_invoice", self.partner_a, "2019-01-01", amounts=[1000, 2000], post=True)
         inv = self.init_invoice("out_invoice", self.partner_a, "2020-01-01", amounts=[1000, 2000])

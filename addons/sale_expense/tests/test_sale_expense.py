@@ -8,6 +8,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
 

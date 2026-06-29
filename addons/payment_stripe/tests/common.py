@@ -6,6 +6,8 @@ from odoo.addons.payment_stripe import const
 
 
 class StripeCommon(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -6,6 +6,7 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class TestL10nHuEdiCreditDebitNotes(L10nHuEdiTestCommon):
     """Tests for Credit and Debit Notes in the Hungarian EDI localization."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

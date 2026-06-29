@@ -8,6 +8,8 @@ from odoo.addons.payment_redsys.tests.common import RedsysCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(RedsysCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_reference_uses_only_alphanumeric_chars(self):
         """The computed reference must be made of alphanumeric characters."""
         reference = self.env["payment.transaction"]._compute_reference(provider_code="redsys")

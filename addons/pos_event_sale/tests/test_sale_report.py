@@ -6,6 +6,8 @@ from odoo import fields, Command
 
 @tagged('post_install', '-at_install')
 class TestPoSEventSaleReport(TestUi):
+    _test_groups = None  # FIXME list needed groups
+
     def test_sale_event_report(self):
         self.pos_user.write({
             'group_ids': [

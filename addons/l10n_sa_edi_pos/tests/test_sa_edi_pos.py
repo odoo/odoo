@@ -16,6 +16,8 @@ from odoo.addons.point_of_sale.tests.test_generic_localization import TestGeneri
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericSAEdi(TestGenericLocalization):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
@@ -48,6 +50,8 @@ class TestGenericSAEdi(TestGenericLocalization):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSaEdiPos(TestSaEdiCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):
@@ -102,6 +106,8 @@ class TestSaEdiPos(TestSaEdiCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(TestGenericSAEdi):
+
+    _test_groups = None  # FIXME list needed groups
 
     def make_payment(self, order, payment_method, amount):
         """ Make payment for the order using the given payment method.
@@ -210,6 +216,7 @@ class TestUi(TestGenericSAEdi):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSAZATCAPosInvoice(TestPoSCommon):
     """Test that sync_from_ui with generate_pdf=False runs ZATCA synchronously but defers PDF."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sa')

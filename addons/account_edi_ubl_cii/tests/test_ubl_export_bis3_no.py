@@ -12,6 +12,8 @@ UBL_NS = {
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _export_invoice_xml(self, vat):
         self.env.company.partner_id.vat = vat
         tax_25 = self.percent_tax(25.0)

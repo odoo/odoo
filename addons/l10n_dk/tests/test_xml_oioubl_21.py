@@ -13,6 +13,8 @@ from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommo
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestUBLCommon.setup_country('dk')
     def setUpClass(cls):

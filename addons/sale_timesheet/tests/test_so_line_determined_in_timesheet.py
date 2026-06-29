@@ -9,6 +9,8 @@ from .common import TestCommonSaleTimesheet
 @tagged('-at_install', 'post_install')
 class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_sol_determined_when_project_is_task_rate(self):
         """ Test the sol give to the timesheet when the pricing type in the project is task rate
 

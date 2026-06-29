@@ -7,6 +7,8 @@ from odoo.addons.uom.tests.common import UomCommon
 
 
 class TestProductConfiguratorCommon(UomCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

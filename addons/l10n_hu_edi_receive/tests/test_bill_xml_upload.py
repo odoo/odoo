@@ -9,6 +9,8 @@ from odoo.tools.misc import file_open
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestBillXmlUpload(L10nHuEdiTestCommonReceive):
 
+    _test_groups = None  # FIXME list needed groups
+
     def upload_xml(self, filename):
         file_path = f'l10n_hu_edi_receive/tests/invoice_xmls/{filename}'
         with file_open(file_path, 'rb') as file:

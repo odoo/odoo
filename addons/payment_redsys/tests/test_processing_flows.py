@@ -12,6 +12,8 @@ from odoo.addons.payment_redsys.tests.common import RedsysCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_redsys.controllers.main")
     def test_returning_from_payment_triggers_processing(self):
         """Test that receiving a valid redirect notification triggers the processing of the

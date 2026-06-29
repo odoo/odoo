@@ -8,6 +8,8 @@ from odoo import Command
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestPointOfSaleHttpCommon.setup_country('be')
     def setUpClass(cls):
@@ -102,6 +104,8 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_settle_order_can_invoice(self):
         """This test makes sure that you can invoice a settled order when l10n_be is installed"""
         self.product_a = self.env['product.product'].create({

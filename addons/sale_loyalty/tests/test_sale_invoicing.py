@@ -8,6 +8,8 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleInvoicing(TestSaleCouponCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.discount_coupon_program = self.env["loyalty.program"].create({

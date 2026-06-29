@@ -6,6 +6,8 @@ from odoo.addons.l10n_ar.tests.common import TestArCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPosAR(AccountTestInvoicingHttpCommon, TestArCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

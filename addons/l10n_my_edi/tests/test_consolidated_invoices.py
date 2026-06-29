@@ -17,6 +17,8 @@ from odoo.addons.l10n_my_edi.tests.test_file_generation_common import (
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class L10nMyEDITestConsolidatedFileGeneration(L10nMyEDITestFileGenerationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @L10nMyEDITestFileGenerationCommon.setup_country('my')
     def setUpClass(cls):

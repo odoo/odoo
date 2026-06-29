@@ -10,6 +10,8 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 @tagged('-at_install', 'post_install')
 class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_expense_access_rights(self):
         """ The expense employee can't be able to create an expense for someone else. """
 

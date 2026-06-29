@@ -9,6 +9,8 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 @tagged('at_install', '-post_install')
 class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

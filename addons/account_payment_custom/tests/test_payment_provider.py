@@ -7,6 +7,8 @@ from odoo.addons.account_payment_custom.tests.common import AccountPaymentCustom
 
 @tagged("-at_install", "post_install")
 class TestPaymentProvider(AccountPaymentCustomCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -33,6 +33,8 @@ Try to keep one call to `get_pricelist_available` by test method.
 
 @tagged("post_install", "-at_install")
 class TestWebsitePriceList(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -489,6 +491,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
 @tagged("post_install", "-at_install")
 class TestWebsitePriceListAvailable(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -590,6 +594,8 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
 
 @tagged("post_install", "-at_install")
 class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         # clean `property_product_pricelist` for partner for this test (clean setup)

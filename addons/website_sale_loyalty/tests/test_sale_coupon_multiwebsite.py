@@ -10,6 +10,8 @@ from odoo.addons.website_sale.tests.common import MockRequest
 
 @tagged("-at_install", "post_install")
 class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

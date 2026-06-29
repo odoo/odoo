@@ -11,6 +11,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

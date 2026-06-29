@@ -8,6 +8,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSaleMarginReport(TestPoSCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestPoSSaleMarginReport, self).setUp()
         self.config = self.basic_config

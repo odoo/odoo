@@ -50,6 +50,8 @@ def MockRequest(  # noqa: N802
 
 
 class WebsiteSaleCommon(DeliveryCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -7,6 +7,8 @@ from odoo.tests import tagged
 
 @tagged('post_install', 'post_install_l10n')
 class TestGenericCO(TestGenericLocalization):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('co')
     def setUpClass(cls):

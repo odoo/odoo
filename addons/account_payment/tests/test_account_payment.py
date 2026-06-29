@@ -13,6 +13,8 @@ from odoo.addons.base.models.ir_qweb import QWebError
 @tagged('-at_install', 'post_install')
 class TestAccountPayment(AccountPaymentCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_amount_available_for_refund_when_no_tx(self):
         payment = self.env['account.payment'].create({'amount': 10})
         self.assertEqual(

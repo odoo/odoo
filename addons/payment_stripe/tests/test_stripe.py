@@ -16,6 +16,8 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 @tagged("post_install", "-at_install")
 class StripeTest(StripeCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_processing_values(self):
         dummy_client_secret = "pi_123456789_secret_dummy_123456789"
         tx = self._create_transaction(flow="direct")  # We don't really care what the flow is here.

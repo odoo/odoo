@@ -14,6 +14,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 class TestWebsiteSaleStockAbandonedCartEmail(
     TestWebsiteSaleCartAbandonedCommon, WebsiteSaleStockCommon
 ):
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_sale_stock_abandoned_cart_email(self):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""
         website = self.env.ref('base.default_website')

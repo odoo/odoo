@@ -11,6 +11,8 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_payment_provider_visibility_with_portal(self):
         """Check providers availability on the sales portal.
 

@@ -11,6 +11,8 @@ from odoo.tests import tagged, Form
 
 
 class TestStockMoveLine(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

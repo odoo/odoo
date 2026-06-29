@@ -12,6 +12,8 @@ from odoo.addons.payment_worldline.tests.common import WorldlineCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(WorldlineCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         tx = self._create_transaction("redirect")

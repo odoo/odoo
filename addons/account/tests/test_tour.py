@@ -9,6 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(AccountTestInvoicingHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

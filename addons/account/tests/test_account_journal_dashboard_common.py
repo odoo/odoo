@@ -8,6 +8,8 @@ from odoo.tools.misc import format_amount
 @tagged('post_install', '-at_install')
 class TestAccountJournalDashboardCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

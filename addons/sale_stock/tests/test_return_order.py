@@ -10,6 +10,8 @@ from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 @tagged("-at_install", "post_install")
 class TestReturnOrderController(TestSaleStockCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

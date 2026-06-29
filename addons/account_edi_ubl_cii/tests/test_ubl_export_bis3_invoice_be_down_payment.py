@@ -6,6 +6,8 @@ from odoo.addons.account_edi_ubl_cii.tests.test_ubl_export_bis3_be import TestUb
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblExportBis3BE.extra_tags)
 class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

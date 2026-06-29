@@ -24,6 +24,8 @@ from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignature
 @tagged("post_install", "-at_install")
 class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -14,6 +14,8 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 class TestStockValuation(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
         price change updates the stock value based on current stock level.

@@ -8,6 +8,8 @@ from .common import PurchaseTestCommon
 
 @tagged('post_install', '-at_install')
 class TestUninstallPurchaseStock(PurchaseTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_qty_received_method(self):
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         purchase_order = self.env['purchase.order'].create({

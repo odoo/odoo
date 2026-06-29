@@ -12,6 +12,8 @@ from odoo.tools.safe_eval import expr_eval
 @tagged('post_install', '-at_install')
 class TestProject(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.project_global.write({

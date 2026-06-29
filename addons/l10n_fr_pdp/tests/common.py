@@ -23,6 +23,8 @@ FILE_PATH = 'l10n_fr_pdp/tests/test_files/assets'
 
 class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     # Use a date after Feb decade/month end to place transaction/payment flows in grace/closed by default.
+    _test_groups = None  # FIXME list needed groups
+
     TEST_TODAY = fields.Date.from_string('2025-03-05')
     TEST_INVOICE_DATE = fields.Date.from_string('2025-02-05')
     TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')

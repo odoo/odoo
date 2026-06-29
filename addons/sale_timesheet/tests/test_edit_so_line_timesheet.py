@@ -8,6 +8,8 @@ from .common import TestCommonSaleTimesheet
 
 @tagged('-at_install', 'post_install')
 class TestEditSoLineTimesheet(TestCommonSaleTimesheet):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.task_rate_task = self.env['project.task'].create({

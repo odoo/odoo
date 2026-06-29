@@ -13,6 +13,8 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
     # GENERIC TAXES TEST SUITE
     # -------------------------------------------------------------------------
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_taxes_l10n_in_sale_orders(self):
         for (
             test_mode,

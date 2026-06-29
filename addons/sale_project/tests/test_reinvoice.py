@@ -9,6 +9,8 @@ from odoo.fields import Command
 @tagged('post_install', '-at_install')
 class TestReInvoice(TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

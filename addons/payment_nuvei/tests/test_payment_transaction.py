@@ -13,6 +13,8 @@ from odoo.addons.payment_nuvei.tests.common import NuveiCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(NuveiCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_item_missing_from_rendering_values(self):
         """Test that the rendering values match what we expect."""
 

@@ -15,6 +15,8 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 @tagged("post_install", "-at_install")
 class TestUi(TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

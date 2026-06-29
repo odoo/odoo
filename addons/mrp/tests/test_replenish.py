@@ -11,6 +11,8 @@ from odoo import fields, Command
 
 class TestMrpReplenish(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _create_wizard(self, product, warehouse):
         return self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
                 'product_id': product.id,

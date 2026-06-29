@@ -3,6 +3,8 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 
 
 class TestL10nRoEdiStockCommon(ValuationReconciliationTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('ro')
     def setUpClass(cls):

@@ -12,6 +12,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
     in anglosaxon accounting. It sets up everything we need in the tests, and is
     extended in both sale_stock and purchase modules to run the 'true' tests.
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

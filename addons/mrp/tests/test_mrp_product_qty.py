@@ -9,6 +9,7 @@ class TestMrpProductQty(TestMrpCommon):
     """Tests for ProductProduct._compute_mrp_product_qty which computes the
     total quantity of a product manufactured in the last 365 days based on
     done stock.move records linked to completed manufacturing orders."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(self):

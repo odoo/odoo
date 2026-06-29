@@ -2,6 +2,8 @@ from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 
 
 class TestFrontend(TestFrontendCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_devices_synchronization(self):
         self.main_pos_config.open_ui()
         self.env['pos.order'].create({

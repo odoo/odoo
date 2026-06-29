@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
-from odoo import Command
+from odoo import Command, models
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools.mail import email_split_and_format
 
@@ -16,6 +16,10 @@ DISABLED_MAIL_CREATE_CONTEXT = {
 
 class BaseCommon(TransactionCase):
 
+    _test_groups = ('base.group_user',)
+
+    _test_user_name = 'Test User'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,6 +29,35 @@ class BaseCommon(TransactionCase):
         # Hack to use with_context and avoid manual context dict modification
         cls.env = cls.env['base'].with_context(**cls.default_env_context()).env
 
+        company = cls.setup_independent_company() or cls.env.company
+        if company is not cls.env.company:
+            # avoid using the context to assign companies
+            cls.env.user.company_id = company
+            cls.env.user.company_ids = [Command.set(company.ids)]
+        else:
+            cls.setup_main_company()
+
+        cls._test_user = None
+        if cls._test_groups:
+            cls._test_user = new_test_user(
+                cls.env,
+                name=cls._test_user_name,
+                login='test_user',
+                password='test_user',
+                email='test_user@test.com',
+                # Resolve groups tolerantly: a class may list a group belonging to
+                # a module that is not installed in the current run (cross-module
+                # regressions, see the # FIXME notes on some _test_groups). Such a
+                # group is simply ignored when its module is absent.
+                group_ids=[
+                    group.id
+                    for xmlid in cls._test_groups
+                    if (group := cls.env.ref(xmlid, raise_if_not_found=False))
+                ],
+                company_id=company.id,
+                company_ids=[Command.set(company.ids)],
+            )
+
         independent_user = cls.setup_independent_user()
         if independent_user:
             cls.env = cls.env(user=independent_user)
@@ -32,18 +65,10 @@ class BaseCommon(TransactionCase):
         else:
             cls.env.user.group_ids += cls.get_default_groups()
 
-        independent_company = cls.setup_independent_company()
-        if independent_company:
-            # avoid using the context to assign companies
-            cls.env.user.company_id = independent_company
-            cls.env.user.company_ids = [Command.set(independent_company.ids)]
-        else:
-            cls.setup_main_company()
-
         # Make sure all class variables have the same env.
         # Do not specify any class variables before the env changes.
-        cls.company = cls.env.company
-        cls.currency = cls.env.company.currency_id
+        cls.company = company
+        cls.currency = company.currency_id
 
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test Partner',
@@ -53,6 +78,23 @@ class BaseCommon(TransactionCase):
         cls.group_portal = cls.quick_ref('base.group_portal')
         cls.group_user = cls.quick_ref('base.group_user')
         cls.group_system = cls.quick_ref('base.group_system')
+
+    def _callSetUp(self):
+        super()._callSetUp()
+
+        if not self._test_groups:
+            return
+
+        self.env = self.env(user=self._test_user.id)
+
+        for key in dir(self):
+            if key.startswith('__'):
+                continue
+            value = getattr(self, key)
+            if isinstance(value, models.BaseModel):
+                setattr(self, key, value.with_env(self.env))
+
+        self.patch(self.env.transaction, "default_env", self.env)
 
     @classmethod
     def default_env_context(cls):

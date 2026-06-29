@@ -10,6 +10,8 @@ from odoo import fields, Command
 
 @tagged("post_install", "-at_install")
 class TestAccountMove(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_standard_perpetual_01_mc_01(self):
         product = self.product_standard_auto
         self._use_multi_currencies([('2017-01-01', 2.0)])

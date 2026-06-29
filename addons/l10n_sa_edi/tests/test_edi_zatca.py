@@ -17,6 +17,8 @@ from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
 class TestEdiZatca(TestSaEdiCommon):
     # """Test ZATCA EDI compliance for Saudi Arabia."""
 
+    _test_groups = None  # FIXME list needed groups
+
     def _test_document_generation(self, test_file_path, expected_xpath, freeze_time_at, additional_xpath='', document_type=False, move=False, move_data=False):
         """
         Common helper to test document generation against expected XML.

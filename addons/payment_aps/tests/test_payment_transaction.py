@@ -10,6 +10,8 @@ from odoo.addons.payment_aps.tests.common import APSCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(APSCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_reference_contains_only_valid_characters(self):
         """Test that transaction references are made of only alphanumerics and/or '-' and '_'."""
         for prefix in (None, "", "S0001", "INV/20222/001", "dummy ref"):

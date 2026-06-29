@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_simple_bill_partial_deductibility(self):
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',

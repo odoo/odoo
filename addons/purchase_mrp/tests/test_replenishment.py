@@ -4,6 +4,8 @@ from odoo.tests import tagged
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishment(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_effective_route(self):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': self.productA.id,

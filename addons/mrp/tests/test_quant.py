@@ -6,6 +6,8 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMrpQuant(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_kit_product_reservation_flow(self):
         """Test that kit products are not cleaned"""
 

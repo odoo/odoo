@@ -5,6 +5,8 @@ from odoo.addons.l10n_jo_edi_pos.tests.jo_edi_pos_common import JoEdiPosCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestJoEdiPosTypes(JoEdiPosCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_jo_pos_income_invoice(self):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'

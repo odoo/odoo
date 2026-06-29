@@ -15,6 +15,8 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("-at_install", "post_install")
 class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

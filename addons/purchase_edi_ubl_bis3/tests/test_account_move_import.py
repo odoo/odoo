@@ -9,6 +9,8 @@ from odoo.tools import file_open
 @tagged('post_install', '-at_install')
 class TestAccountMoveImport(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

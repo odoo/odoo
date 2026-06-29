@@ -12,6 +12,8 @@ from odoo import Command
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -247,6 +249,8 @@ class TestStockValuationStandard(TestStockValuationCommon):
 
 
 class TestStockValuationAVCO(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -517,6 +521,8 @@ class TestStockValuationAVCO(TestStockValuationCommon):
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -752,6 +758,8 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.
         """
@@ -853,6 +861,8 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
 
 @tagged('post_install', '-at_install', 'change_valuation')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationChangeValuation, cls).setUpClass()
@@ -943,6 +953,8 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
 
 class TestAngloSaxonAccounting(TestStockValuationCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_avco_and_credit_note(self):
         """
         When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value

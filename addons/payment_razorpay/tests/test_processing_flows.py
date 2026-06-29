@@ -13,6 +13,8 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_razorpay.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         self._create_transaction("direct")

@@ -11,6 +11,8 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestInStoreDeliveryController(PaymentHttpCommon, ClickAndCollectCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.InStoreController = InStoreDelivery()

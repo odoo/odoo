@@ -7,6 +7,8 @@ from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
 
 class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

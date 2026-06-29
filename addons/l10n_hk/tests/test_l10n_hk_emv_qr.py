@@ -9,6 +9,7 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     """ Test the generation of the EMV QR Code on invoices """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):

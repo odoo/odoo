@@ -4,6 +4,8 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 
 class TestUblCiiCommonChorusPro(TestUblCiiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

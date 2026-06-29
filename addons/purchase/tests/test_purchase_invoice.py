@@ -12,6 +12,8 @@ from odoo import Command, fields
 
 class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super(TestPurchaseToInvoiceCommon, cls).setUpClass()
@@ -125,6 +127,8 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be
@@ -854,6 +858,8 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_total_match_via_partner(self):
         po = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])

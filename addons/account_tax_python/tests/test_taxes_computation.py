@@ -8,6 +8,8 @@ from odoo.addons.account_tax_python.tools.formula_utils import check_formula, no
 @tagged('post_install', '-at_install')
 class TestTaxesComputation(TestTaxCommonAccountTaxPython):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_formula(self):
         self.assert_python_taxes_computation(
             "max(quantity * price_unit * 0.21, quantity * 4.17)",

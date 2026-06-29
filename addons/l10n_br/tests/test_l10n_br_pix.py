@@ -7,6 +7,8 @@ from odoo.tests import tagged
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestL10nBrPix(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('br')
     def setUpClass(cls):

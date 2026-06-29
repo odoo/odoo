@@ -7,6 +7,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class RedsysCommon(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

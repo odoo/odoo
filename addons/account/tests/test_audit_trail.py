@@ -13,6 +13,8 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install', 'mail_track')
 class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -342,6 +344,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
 
 @tagged('post_install', '-at_install')
 class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

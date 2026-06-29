@@ -9,6 +9,8 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 @tagged('-at_install', 'post_install')
 class TestExpenseMargin(TestExpenseCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_expense_reinvoice_purchase_price(self):
         # re-invoiceable products
         product_with_cost = self.product_a

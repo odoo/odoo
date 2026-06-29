@@ -20,6 +20,8 @@ def error_checker_bancontact_failed_rpc_request(message):
 @tagged("post_install", "-at_install")
 class TestFrontend(TestBancontactPay):
 
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.http")
     def test_bancontact_failed_to_create_payment(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()

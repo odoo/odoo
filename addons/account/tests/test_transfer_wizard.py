@@ -10,6 +10,8 @@ import time
 @tagged('post_install', '-at_install')
 class TestTransferWizard(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

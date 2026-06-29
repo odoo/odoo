@@ -18,6 +18,8 @@ _logger = logging.getLogger(__name__)
 
 @tagged('post_install', '-at_install')
 class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()

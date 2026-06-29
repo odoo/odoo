@@ -7,6 +7,8 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

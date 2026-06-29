@@ -5,6 +5,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 
 class TestPosQrCommon(AccountTestInvoicingHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

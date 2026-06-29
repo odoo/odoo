@@ -12,6 +12,8 @@ from odoo.addons.product.tests.test_product_attribute_value_config import (
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleMrpAvailability(HttpCase, AccountTestInvoicingCommon, TestProductAttributeValueCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

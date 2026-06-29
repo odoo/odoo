@@ -5,6 +5,8 @@ from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon, TestFrontendCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_post_login_default_screen_tables(self):
         self.main_pos_config.default_screen = "tables"
         self.main_pos_config.with_user(self.pos_admin).open_ui()

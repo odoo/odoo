@@ -9,6 +9,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleOrder(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_delivery_methods_match_order_company(self):
         company_1 = self.env["res.company"].create({"name": "Test Company 1"})
         company_2 = self.env["res.company"].create({"name": "Test Company 2"})

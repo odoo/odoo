@@ -5,6 +5,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestOrmPartnerCommon(BaseCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _load_partners_set(cls):
         cls.partner_category = cls.env['test_orm.partner.category'].create({'name': 'Sellers'})

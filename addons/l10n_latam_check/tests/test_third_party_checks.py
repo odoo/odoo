@@ -13,6 +13,8 @@ from odoo import fields, Command
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestThirdChecks(L10nLatamCheckTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def create_third_party_check(self, journal=False, check_numbers=['00000001', '00000002']):
         if not journal:
             journal = self.third_party_check_journal

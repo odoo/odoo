@@ -13,6 +13,8 @@ class TestPoSSetup(TestPoSCommon):
 
     If a test fails here, then it means there are inconsistencies in what we expect in the setup.
     """
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestPoSSetup, self).setUp()
 

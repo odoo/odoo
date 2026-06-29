@@ -4,6 +4,8 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         Template = self.env['mail.template']

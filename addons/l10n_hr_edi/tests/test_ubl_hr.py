@@ -8,6 +8,8 @@ from odoo.tools import misc
 @tagged('post_install_l10n', 'post_install', '-at_install', 'l10n_hr_edi_xml')
 class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -10,6 +10,8 @@ from odoo.addons.sale_gelato.tests.common import GelatoCommon
 
 @tagged("post_install", "-at_install")
 class TestDeliveryCarrier(GelatoCommon, DeliveryCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -8,6 +8,8 @@ from odoo.exceptions import UserError
 @tagged('post_install', '-at_install')
 class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

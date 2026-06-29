@@ -10,6 +10,8 @@ from lxml import etree
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderEDIGen(TestSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_sale_order_download_edi(self):
         self.env.company.country_id = self.env.ref('base.be').id
         self.env.company.vat = 'BE0477472701'

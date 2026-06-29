@@ -6,6 +6,8 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 class TestEGEdiCommon(AccountEdiTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountEdiTestCommon.setup_edi_format('l10n_eg_edi_eta.edi_eg_eta')
     @AccountEdiTestCommon.setup_country('eg')

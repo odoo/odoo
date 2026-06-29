@@ -17,6 +17,8 @@ def _make_request_patched(self, endpoint, params=None):
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('pl')
     def setUpClass(cls):

@@ -11,6 +11,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('hu')
     def setUpClass(cls):

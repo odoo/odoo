@@ -9,6 +9,8 @@ from collections import defaultdict
 @tagged('post_install', '-at_install')
 class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

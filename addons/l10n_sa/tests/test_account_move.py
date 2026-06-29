@@ -9,6 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSaAccountMove(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2026-06-15 14:00:00')
     def test_normalized_confirmation_datetime_future_date_rejected(self):
         """

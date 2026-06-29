@@ -7,6 +7,8 @@ from odoo.addons.analytic.tests.common import AnalyticCommon
 
 @tagged('post_install', '-at_install')
 class TestAnalyticDynamicUpdate(AnalyticCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_configurations(self):
         @contextmanager
         def capture_create():

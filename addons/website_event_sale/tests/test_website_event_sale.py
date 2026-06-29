@@ -6,6 +6,8 @@ from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleComm
 
 class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_event_sale_free_tickets(self):
         """ Test saleorder is not created for tickets free tickets """
         self.authenticate(None, None)

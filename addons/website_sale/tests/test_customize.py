@@ -15,6 +15,8 @@ class TestCustomize(
     TestProductConfiguratorCommon,
     HttpCaseWithWebsiteUser,
 ):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

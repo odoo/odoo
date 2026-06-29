@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTaxesComputation(TestTaxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_taxes_ordering(self):
         tax_division = self.division_tax(10.0, sequence=1)
         tax_fixed = self.fixed_tax(10.0, sequence=2)

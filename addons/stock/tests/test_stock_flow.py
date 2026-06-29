@@ -10,6 +10,8 @@ from odoo import Command, fields
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockFlow(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2694,6 +2696,8 @@ class TestStockFlow(TestStockCommon):
 
 class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @users('pauline')  # pauline is the login of the basic stock_user
     def test_basic_stock_flow_with_minimal_access_rights(self):
         """
@@ -2733,6 +2737,8 @@ class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_last_delivery_partner_field_on_lot(self):
         partner = self.env['res.partner'].create({'name': 'Super Partner'})

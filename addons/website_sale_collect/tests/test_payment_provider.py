@@ -7,6 +7,8 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestOnSitePaymentProvider(HttpCase, ClickAndCollectCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_on_site_provider_available_when_in_store_delivery_is_chosen(self):
         order = self._create_in_store_delivery_order()
         PaymentProvider = self.env["payment.provider"].sudo()

@@ -15,6 +15,8 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMrpOrder(TestMrpCommon, MailCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -5441,6 +5443,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
 
 class TestMrpOrderPostInstall(TestMrpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -7,6 +7,8 @@ from odoo.tests import tagged
 
 @tagged('-at_install', 'post_install')
 class TestProductProduct(TestCommonSaleTimesheet):
+    _test_groups = None  # FIXME list needed groups
+
     def test_delete_master_timesheet_product(self):
         """
             Test that the master timesheet product cannot be deleted, archived nor linked

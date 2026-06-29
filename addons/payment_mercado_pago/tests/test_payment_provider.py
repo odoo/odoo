@@ -8,6 +8,8 @@ from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(MercadoPagoCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_allow_setting_live_if_credentials_are_set(self):
         """Test that setting live a Mercado Pago provider with credentials succeeds."""
         self._assert_does_not_raise(ValidationError, self.provider.write({"is_live": True}))

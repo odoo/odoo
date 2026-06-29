@@ -9,6 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install', '-at_install')
 class TestAccountFleet(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2021-09-15')
     def test_transfer_wizard_vehicle_info_propagation(self):
         self.env.user.group_ids |= self.env.ref("fleet.fleet_group_manager")

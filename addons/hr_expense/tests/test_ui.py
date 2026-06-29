@@ -5,6 +5,8 @@ from odoo.tools import mute_logger
 
 @tagged('-at_install', 'post_install')
 class TestUi(TestExpenseCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     browser_size = "1920,1080"
 
     def test_expense_manager_can_always_set_employee(self):

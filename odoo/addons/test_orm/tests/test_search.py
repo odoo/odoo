@@ -8,6 +8,8 @@ from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpress
 
 @tagged('at_install', '-post_install')
 class TestSearch(TestOrmPartnerCommon, TransactionCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -7,6 +7,8 @@ from odoo.addons.l10n_mx.tests.common import TestMxCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountAccount(TestMxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_create_account_without_code(self):
         """
         Test that creating an account without a code assigns the correct tag

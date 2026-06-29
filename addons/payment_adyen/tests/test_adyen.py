@@ -15,6 +15,8 @@ from odoo.addons.payment_adyen.tests.common import AdyenCommon
 
 @tagged("post_install", "-at_install")
 class AdyenTest(AdyenCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_processing_values(self):
         tx = self._create_transaction(flow="direct")
         with (

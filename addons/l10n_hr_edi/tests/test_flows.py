@@ -16,6 +16,8 @@ from odoo.addons.l10n_hr_edi.tests.test_hr_edi_common import TestL10nHrEdiCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, PatchRequestsMixin):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

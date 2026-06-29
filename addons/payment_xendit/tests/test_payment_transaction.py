@@ -15,6 +15,8 @@ from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_item_missing_from_rendering_values(self):
         """Test that when the redirect flow is triggered, rendering_values contains the API_URL
         corresponding to the response of API request."""

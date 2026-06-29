@@ -9,6 +9,8 @@ PRICE = 718.75 + 2 * 321.25 - 100  # component price + operations - glass cost
 
 class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_fifo_byproduct(self):
         """ Check that a MO byproduct with a cost share calculates correct svl """
         self.glass.categ_id = self.category_fifo

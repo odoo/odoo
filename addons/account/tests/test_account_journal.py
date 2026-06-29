@@ -14,6 +14,8 @@ from odoo import fields, Command
 @tagged('post_install', '-at_install')
 class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -253,6 +255,8 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

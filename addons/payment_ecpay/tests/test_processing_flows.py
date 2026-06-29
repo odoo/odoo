@@ -12,6 +12,8 @@ from odoo.addons.payment_ecpay.tests.common import EcpayCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(EcpayCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_compute_signature_returns_correct_signature(self):
         signature = self.provider._ecpay_calculate_signature(self.payment_result_data)
         self.assertEqual(signature, self.webhook_payment_data_signature)

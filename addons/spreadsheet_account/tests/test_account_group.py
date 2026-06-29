@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class SpreadsheetAccountGroupTest(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_fetch_account_no_group(self):
         self.assertEqual(self.env["account.account"].get_account_group([]), [])
 

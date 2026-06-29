@@ -107,6 +107,8 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
 
 @tagged("post_install", "-at_install", "mail_thread")
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_salesman_assignation(self):
         self.website.salesperson_id = self.user_admin
         MailThread = odoo.addons.mail.models.mail_thread.MailThread

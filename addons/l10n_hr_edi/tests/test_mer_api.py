@@ -22,6 +22,8 @@ from odoo.addons.l10n_hr_edi.tools.api import (
 @tagged('external', 'external_l10n', 'post_install', '-post_install_l10n', '-at_install', '-standard')
 class TestL10nHrEdiMerApi(TestL10nHrEdiCommon, TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

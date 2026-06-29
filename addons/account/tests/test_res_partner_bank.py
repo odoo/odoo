@@ -9,6 +9,8 @@ from odoo.tests.common import tagged
 @tagged('res_partner_bank')
 class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -10,6 +10,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountDigest(CommonPosTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @mute_logger('odoo.models.unlink')
     def setUpClass(cls):

@@ -10,6 +10,8 @@ from odoo.addons.sale.tests.common import SaleCommon
 @tagged('post_install', '-at_install')
 class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()

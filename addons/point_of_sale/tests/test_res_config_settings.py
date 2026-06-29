@@ -14,6 +14,7 @@ class TestConfigureShops(TestPoSCommon):
         should reflect to the pos.config record pointed by the
         pos_config_id field.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def _remove_on_payment_taxes(self):
         """ Call this when testing the res.config.settings with Form.

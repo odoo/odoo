@@ -8,6 +8,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class TestProjectPurchase(TestPurchaseToInvoiceCommon, AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

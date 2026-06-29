@@ -8,6 +8,8 @@ from odoo.tests import common, Form
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpAccount(TestMultistepManufacturing):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

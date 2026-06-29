@@ -133,6 +133,8 @@ def patch_nilvera_request(function):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestTRNilveraMockedRequests(TestUBLTRCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @patch_nilvera_request
     def setUpClass(cls):

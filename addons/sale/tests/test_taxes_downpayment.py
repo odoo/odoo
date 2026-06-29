@@ -12,6 +12,8 @@ from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 @tagged("post_install", "-at_install")
 class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

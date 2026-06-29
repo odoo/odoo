@@ -7,6 +7,8 @@ from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(CommonPosStockTest):
+    _test_groups = None  # FIXME list needed groups
+
     def test_ship_later_lots(self):
         self.env.user.group_ids += self.env.ref('account.group_account_manager')
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id

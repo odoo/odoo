@@ -9,6 +9,8 @@ from odoo.tests import common, Form
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_kit_cost_calculation(self):
         """ Check that the average cost price is computed correctly after SO confirmation:
             BOM 1:

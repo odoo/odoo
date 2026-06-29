@@ -8,6 +8,8 @@ from odoo.tests import tagged
 
 @tagged('-at_install', 'post_install')
 class TestExpensesStates(TestExpenseCommon, MailCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

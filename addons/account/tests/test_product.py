@@ -9,6 +9,8 @@ from odoo.tests.common import new_test_user
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestProduct(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

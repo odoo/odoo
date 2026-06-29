@@ -16,6 +16,8 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 @tagged('post_install', '-at_install')
 class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_sale_order_expected_date(self):
         """ Test expected date and effective date of Sales Orders """
         Product = self.env['product.product']

@@ -4,6 +4,8 @@ from odoo.addons.project.tests.test_access_rights import TestAccessRights
 
 
 class TestAccessRightsTodo(TestAccessRights):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

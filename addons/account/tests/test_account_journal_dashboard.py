@@ -9,6 +9,8 @@ from odoo.tools.misc import format_amount
 @tagged('post_install', '-at_install')
 class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2019-01-22")
     def test_customer_invoice_dashboard(self):
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed

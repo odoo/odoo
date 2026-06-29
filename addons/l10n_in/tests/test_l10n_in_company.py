@@ -7,6 +7,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestL10nInCompany(L10nInTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_l10n_in_journal_priority(self):
         """
         Ensure that when a branch company has its own journals,

@@ -5,6 +5,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItDocumentType(TestItEdi):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_l10n_it_edi_debit_note_document_type(self):
         original_move = self.init_invoice('out_invoice', amounts=[1000], post=True)
 

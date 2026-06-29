@@ -10,6 +10,8 @@ import uuid
 
 
 class TestPoSSale(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1599,6 +1601,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
 @tagged('post_install', '-at_install')
 class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_pos_settle_so_with_downpayment(self):
         """Ensure that the POS correctly handles Sale Orders where a down payment was processed

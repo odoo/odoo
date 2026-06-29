@@ -19,6 +19,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     * address update (/shop/address)
     * address choice (/shop/checkout).
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

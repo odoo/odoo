@@ -6,6 +6,8 @@ from odoo.addons.l10n_jo_edi_pos.tests.jo_edi_pos_common import JoEdiPosCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestJoEdiPosPrecision(JoEdiPosCommon, TestJoEdiPrecision):
+    _test_groups = None  # FIXME list needed groups
+
     def _validate_order_vals_jo_edi_pos_numbers(self, order_vals):
         with self.subTest(sub_test_name=order_vals['name']):
             order = self._l10n_jo_create_order(order_vals)

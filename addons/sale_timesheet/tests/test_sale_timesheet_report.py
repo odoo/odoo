@@ -6,6 +6,8 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 class TestSaleTimesheetReport(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_timesheet_report_uom_difference(self):
         '''Test the timesheet revenue are correctly computed in case of a
            fixed price service

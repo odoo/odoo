@@ -11,6 +11,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_is_live_when_created_by_live_provider(self):
         self.provider.is_live = True
         tx = self._create_transaction("redirect")

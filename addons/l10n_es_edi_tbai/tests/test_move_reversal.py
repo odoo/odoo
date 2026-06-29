@@ -10,6 +10,8 @@ from datetime import date
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_post_and_cancel_tbai_credit_note(self):
         invoice = self._create_posted_invoice()
         invoice_send_wizard = self._get_invoice_send_wizard(invoice)

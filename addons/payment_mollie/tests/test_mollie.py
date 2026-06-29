@@ -12,6 +12,8 @@ from odoo.addons.payment_mollie.tests.common import MollieCommon
 
 @tagged("post_install", "-at_install")
 class MollieTest(MollieCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_payment_request_payload_values(self):
         tx = self._create_transaction(flow="redirect")
 

@@ -8,6 +8,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentMethod(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_prevent_unlinking_payment_method_unknown(self):
         pm_unknown = self.env["payment.method"].create({
             "name": "Unknown",

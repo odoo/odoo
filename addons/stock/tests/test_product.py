@@ -13,6 +13,8 @@ from odoo.tests import Form, tagged
 
 
 class TestVirtualAvailable(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -461,6 +463,8 @@ class TestVirtualAvailable(TestStockCommon):
 
 @tagged('post_install', '-at_install')
 class TestProductPostInstall(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_change_product_inventory_tracking_inventory_adjustment(self):
         """
         This test checks that inventory adjustments are performed to counter balance done stock

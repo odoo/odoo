@@ -8,6 +8,8 @@ from odoo.tests import tagged, Form, freeze_time
 @tagged('post_install', '-at_install')
 class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

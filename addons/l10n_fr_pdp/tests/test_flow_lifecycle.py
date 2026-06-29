@@ -12,6 +12,8 @@ from odoo.addons.l10n_fr_pdp.tests.common import TestL10nFrPdpCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'test_flow_lifecycle')
 class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

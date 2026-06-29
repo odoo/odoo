@@ -5,6 +5,8 @@ from odoo.addons.pos_bancontact_pay.tests.test_webhook import TestWebhook
 
 @tagged("post_install", "-at_install")
 class TestSelfOrderWebhook(TestWebhook):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.kiosk = self.env["pos.config"].create(

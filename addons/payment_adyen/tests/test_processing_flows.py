@@ -12,6 +12,8 @@ from odoo.addons.payment_adyen.tests.common import AdyenCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(AdyenCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_adyen.controllers.main")
     def test_webhook_notification_triggers_processing(self):
         self._create_transaction("direct")

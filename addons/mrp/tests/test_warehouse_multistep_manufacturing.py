@@ -6,6 +6,8 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

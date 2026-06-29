@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_get_child_lines_with_one_taxes(self):
         move = self.init_invoice('out_invoice')
         move.invoice_line_ids = [

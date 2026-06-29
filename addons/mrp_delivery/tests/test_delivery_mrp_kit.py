@@ -9,6 +9,8 @@ from odoo.addons.base.tests.common import BaseCommon
 @tagged('post_install', '-at_install')
 class TestDeliveryMrpKitBom(BaseCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_sale_mrp_kit_sale_price_with_different_uoms(self):
         """Check the total sale price of a KIT:
             # BoM of Kit A:

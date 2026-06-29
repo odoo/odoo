@@ -9,6 +9,8 @@ from odoo.exceptions import UserError
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(CommonPosTest):
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_hr_session_name_gap(self):
         self.pos_config_usd.open_ui()
         session = self.pos_config_usd.current_session_id

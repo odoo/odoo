@@ -19,6 +19,8 @@ import odoo.tests
 @odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _get_url(self):
         return f"/pos/ui/{self.pos_config.id}"
 

@@ -10,6 +10,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 @tagged('post_install', '-at_install')
 class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_integration_dynamic_variant_price(self):
         """Tests the price of products with dynamic variant when added to cart"""
         self.env['product.attribute.value'].create({

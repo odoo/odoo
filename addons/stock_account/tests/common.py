@@ -12,6 +12,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 class TestStockValuationCommon(BaseCommon):
     # Override
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)

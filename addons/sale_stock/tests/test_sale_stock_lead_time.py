@@ -11,6 +11,8 @@ from datetime import timedelta
 @tagged('post_install', '-at_install')
 class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

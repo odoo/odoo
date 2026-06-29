@@ -9,6 +9,8 @@ from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosStockProductsWithTax(TestPosStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.config = self.basic_config

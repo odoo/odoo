@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_cogs_should_use_price_from_the_right_company(self):
         """
         Reproduce the flow of creating an invoice from a sale order with company A

@@ -14,6 +14,8 @@ from odoo.addons.payment_iyzico.tests.common import IyzicoCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(IyzicoCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_iyzico.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         """Test that receiving a valid redirect notification triggers the processing of the

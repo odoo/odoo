@@ -8,6 +8,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

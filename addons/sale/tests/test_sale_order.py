@@ -815,6 +815,8 @@ class TestSaleOrder(SaleCommon):
 
 @tagged("post_install", "-at_install")
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_state_when_ordered_quantity_is_negative(self):
         """When you invoice a SO line with a product that is invoiced on ordered quantities and has
         a negative ordered quantity, this test ensures that the invoicing status of the SO line is

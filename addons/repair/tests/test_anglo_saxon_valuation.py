@@ -13,6 +13,8 @@ from odoo.exceptions import UserError
 @skip('Temporary to fast merge new valuation')
 class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -88,6 +90,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
 @tagged('post_install', '-at_install')
 class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_ro_invoice_double_valuation(self):
         """This test make sure that the valuation entry for a repair is created only once.

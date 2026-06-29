@@ -11,6 +11,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 @freeze_time("2022-01-01")
 @tagged("post_install", "-at_install")
 class TestAccruedSaleOrders(TestSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

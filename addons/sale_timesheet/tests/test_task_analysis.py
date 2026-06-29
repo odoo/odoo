@@ -5,6 +5,8 @@ from .common import TestCommonSaleTimesheet
 
 @tagged('post_install', '-at_install')
 class TestSaleTimesheetTaskAnalysis(TestCommonSaleTimesheet):
+    _test_groups = None  # FIXME list needed groups
+
     def test_remaining_hours_so(self):
         sales_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,

@@ -8,6 +8,7 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nSGCustomerAccounting(AccountTestInvoicingCommon):
     """Test Customer Accounting IRAS message on invoices with SRCA-S tax."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sg')

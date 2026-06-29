@@ -8,6 +8,8 @@ from freezegun import freeze_time
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveDE(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template('de_skr03')
     def setUpClass(cls):

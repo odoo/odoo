@@ -8,6 +8,8 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

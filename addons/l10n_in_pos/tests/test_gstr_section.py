@@ -8,6 +8,8 @@ TEST_DATE = date(2023, 5, 20)
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPOSGstrSection(TestInPosBase):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_b2cs_gstr_section_with_pos_order(self):
         with self.with_pos_session() as session:
             self._create_order({

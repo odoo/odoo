@@ -7,6 +7,8 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBERetrieveAccount(TestUblImportBis3InvoiceBE):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2020-01-01')
     def test_partial_import_account_invoice_predictive(self):
         self.ensure_installed('account_accountant')

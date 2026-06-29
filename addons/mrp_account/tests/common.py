@@ -7,6 +7,8 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('-at_install', 'post_install')
 class TestBomPriceCommon(TestStockValuationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _create_product(cls, name, price, quantity=100, category=None):
         vals = {
@@ -140,6 +142,8 @@ class TestBomPriceCommon(TestStockValuationCommon):
 
 class TestBomPriceOperationCommon(TestBomPriceCommon):
     """ Common bom setup with workorder operations"""
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

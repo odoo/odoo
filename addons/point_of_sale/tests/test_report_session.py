@@ -10,6 +10,8 @@ from odoo.exceptions import UserError
 @odoo.tests.tagged('post_install', '-at_install')
 class TestReportSession(TestPoSCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestReportSession, self).setUp()
         self.config = self.basic_config

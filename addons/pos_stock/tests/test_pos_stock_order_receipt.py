@@ -5,6 +5,8 @@ from odoo.addons.point_of_sale.tests.test_order_receipt import TestPosOrderRecei
 
 
 class TestPosStockOrderReceipt(TestPosStockHttpCommon, TestPosOrderReceipt):
+    _test_groups = None  # FIXME list needed groups
+
     def test_receipt_with_ship_later(self):
         self.main_pos_config.write({
             'receipt_header': 'This is a test header for receipt',

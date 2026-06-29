@@ -12,6 +12,8 @@ from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_item_missing_from_preference_request_payload(self):
         """Test that the request values are conform to the transaction fields."""
         tx = self._create_transaction(flow="redirect")

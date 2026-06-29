@@ -7,6 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 class TestAngloSaxonCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -64,6 +66,8 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @skip('Temporary to fast merge new valuation')
     def test_create_account_move_line(self):

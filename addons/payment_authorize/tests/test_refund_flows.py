@@ -10,6 +10,8 @@ from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 @tagged("post_install", "-at_install")
 class TestRefundFlows(AuthorizeCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_refunding_voided_tx_cancels_it(self):
         """Test that refunding a transaction that has been voided from Authorize.net side cancels
         it on Odoo."""

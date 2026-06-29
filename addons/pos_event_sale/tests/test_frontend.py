@@ -6,6 +6,8 @@ from odoo import fields, Command
 
 @tagged('post_install', '-at_install')
 class TestPoSEventSale(TestUi):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

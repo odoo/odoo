@@ -11,6 +11,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
 
     keywords/phrases: fiscal position
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

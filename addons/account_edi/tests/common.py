@@ -30,6 +30,8 @@ def _mocked_cancel_success(edi_format, invoices):
 
 class AccountEdiTestCommon(AccountTestInvoicingCommon):
     # To override by the helper method setup_edi_format to set up an edi format
+    _test_groups = None  # FIXME list needed groups
+
     edi_format_ref = False
 
     @classmethod

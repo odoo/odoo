@@ -20,6 +20,7 @@ with contextlib.suppress(ImportError):
 @skipIf(not TEST_CRED, 'no NAV credentials')
 class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
     """ Test the Hungarian EDI flows with the NAV test servers. """
+    _test_groups = None  # FIXME list needed groups
 
     # === Overrides === #
 

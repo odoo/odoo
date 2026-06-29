@@ -7,6 +7,8 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 @tagged('-at_install', 'post_install')
 class TestAnalytics(TestExpenseCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

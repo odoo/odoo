@@ -7,6 +7,8 @@ from odoo import fields
 @tagged('post_install', '-at_install')
 class TestAccountDebitNote(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_00_debit_note_out_invoice(self):
         """ Debit Note of a regular Customer Invoice"""
         invoice = self.init_invoice('out_invoice', products=self.product_a+self.product_b)

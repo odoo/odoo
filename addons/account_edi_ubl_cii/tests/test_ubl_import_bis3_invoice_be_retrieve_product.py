@@ -7,6 +7,8 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_partial_import_product_description(self):
         self._create_product(name='XYZ')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_description')

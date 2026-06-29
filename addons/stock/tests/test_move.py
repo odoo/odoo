@@ -12,6 +12,8 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockMove(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -7,6 +7,8 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
 @tagged('post_install', '-at_install')
 class TestExpensesTour(TestExpenseCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

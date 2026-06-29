@@ -9,6 +9,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_sale_shop_redirects(self):
         test_category = self.env["product.public.category"].create({"name": "Test category"})
         test_product = self.env["product.template"].create({

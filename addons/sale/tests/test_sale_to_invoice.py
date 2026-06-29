@@ -13,6 +13,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 @tagged("-at_install", "post_install")
 class TestSaleToInvoice(TestSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

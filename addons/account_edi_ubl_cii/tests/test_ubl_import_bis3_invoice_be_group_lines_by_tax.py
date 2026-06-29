@@ -5,6 +5,8 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBEGroupLinesByTax(TestUblImportBis3InvoiceBE):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_import_invoice_group_lines_by_tax(self):
         tax_6 = self.percent_tax(6.0, type_tax_use='purchase')
         tax_21 = self.percent_tax(21.0, type_tax_use='purchase')

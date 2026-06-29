@@ -18,6 +18,8 @@ CALL_API_METHOD = 'odoo.addons.l10n_tw_edi_ecpay.models.account_move.call_ecpay_
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestAccountMoveSendCommon.setup_country('tw')
     def setUpClass(cls):

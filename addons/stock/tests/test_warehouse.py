@@ -9,6 +9,8 @@ from odoo.tests.common import new_test_user
 @tagged('-post_install', 'at_install')  # test_resupply_route breaks post install
 class TestWarehouse(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_inventory_product(self):
         self.product_1.is_storable = True
 
@@ -944,6 +946,8 @@ class TestWarehouse(TestStockCommon):
 
 @tagged('-at_install', 'post_install')
 class TestWarehousePostInstall(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_manual_resupply_from_wh_partner_propagation(self):
         """
         Check that the warehouse destination is set as delivery address

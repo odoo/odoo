@@ -5,6 +5,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 class TestMxCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('mx')
     def setUpClass(cls):

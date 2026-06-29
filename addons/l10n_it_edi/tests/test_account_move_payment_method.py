@@ -5,6 +5,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItAccountMovePaymentMethod(TestItEdi):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_account_move_payment_method(self):
         move = self.init_invoice("out_invoice", amounts=[1000], post=True)
         # When the move is created we put the default value MP05

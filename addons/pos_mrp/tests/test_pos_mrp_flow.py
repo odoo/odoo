@@ -8,6 +8,8 @@ from odoo import Command, fields
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosMrp(CommonPosMrpTest):
+    _test_groups = None  # FIXME list needed groups
+
     def test_bom_kit_order_total_cost(self):
         order, _ = self.create_backend_pos_order({
             'line_data': [

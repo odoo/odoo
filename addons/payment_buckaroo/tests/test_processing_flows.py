@@ -12,6 +12,8 @@ from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(BuckarooCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_buckaroo.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         self._create_transaction("redirect")

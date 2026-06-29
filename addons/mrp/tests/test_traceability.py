@@ -13,6 +13,8 @@ _logger = logging.getLogger(__name__)
 
 
 class TestTraceability(TestMrpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     TRACKING_TYPES = ['none', 'serial', 'lot']
 
     @classmethod

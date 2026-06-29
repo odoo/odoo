@@ -7,6 +7,8 @@ from odoo import fields
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestHash(CommonPosTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('fr')
     def setUpClass(cls):

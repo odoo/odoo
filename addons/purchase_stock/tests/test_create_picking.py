@@ -11,6 +11,8 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCreatePicking(ProductVariantsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

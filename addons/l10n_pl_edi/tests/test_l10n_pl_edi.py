@@ -19,6 +19,8 @@ def attachment_to_dict(attachment):
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('pl')
     @freeze_time('2026-01-23')

@@ -9,6 +9,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 @odoo.tests.tagged('post_install', '-at_install')
 class TestBackend(TestPoSCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_onchange_payment_provider(self):
         pm = self.env['pos.payment.method'].create({'name': 'Test PM'})
         with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \

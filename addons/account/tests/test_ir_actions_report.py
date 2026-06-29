@@ -13,6 +13,8 @@ from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 @tagged('post_install', '-at_install')
 class TestIrActionsReport(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.file = BinaryBytes(PDF_RAW)

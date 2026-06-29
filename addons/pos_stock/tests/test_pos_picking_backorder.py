@@ -8,6 +8,8 @@ from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosPickingBackorder(CommonPosStockTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_backorder_picking_shares_pos_order_origin(self):
         """Mixed order: untracked line with stock + serial line without stock nor SN."""
         qty_product = self.env['product.product'].create({

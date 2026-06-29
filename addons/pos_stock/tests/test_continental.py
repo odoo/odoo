@@ -6,6 +6,8 @@ from odoo.addons.pos_stock.tests.test_anglo_saxon import TestAngloSaxonCommon
 
 class TestContinentalCommon(TestAngloSaxonCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -14,6 +16,8 @@ class TestContinentalCommon(TestAngloSaxonCommon):
 
 @tagged('post_install', '-at_install')
 class TestContinentalPerpetualFlow(TestContinentalCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

@@ -143,6 +143,8 @@ def _tax_vals(name, amount, external_id_prefix, cash_basis=False, account_on_rep
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
 class TestMultiVAT(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _use_chart_template(cls, company, chart_template_ref=None):
         test_get_data = data_method_provider("local", "be")

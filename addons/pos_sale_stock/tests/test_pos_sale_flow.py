@@ -11,6 +11,8 @@ from odoo.addons.pos_sale.tests.test_pos_sale_flow import TestPoSSale
 
 class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")

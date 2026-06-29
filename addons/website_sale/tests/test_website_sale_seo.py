@@ -7,6 +7,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_sale_user_designer_can_edit_seo(self):
         public_categ = self.env["product.public.category"].create({"name": "Website Category"})
         self.product.write({"public_categ_ids": [Command.link(public_categ.id)]})

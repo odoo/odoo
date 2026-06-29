@@ -7,5 +7,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWSaleCommon(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_common(self):
         self.assertEqual(self.env.company, self.website.company_id)

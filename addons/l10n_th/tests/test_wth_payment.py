@@ -9,6 +9,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nTHWTHPayment(AccountTestInvoicingCommon):
     """ Test the payment flows """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('th')

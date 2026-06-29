@@ -13,6 +13,8 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class TestPrinterTour(TestStockCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

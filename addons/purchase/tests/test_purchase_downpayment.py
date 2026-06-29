@@ -8,6 +8,8 @@ from odoo.tests import tagged
 @tagged('-at_install', 'post_install')
 class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_downpayment_basic(self):
         custom_expense_account = self.company_data['default_account_expense'].copy()
         self.product_order.property_account_expense_id = custom_expense_account

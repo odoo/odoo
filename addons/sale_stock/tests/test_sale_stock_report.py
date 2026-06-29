@@ -222,6 +222,8 @@ class TestSaleStockReports(TestReportsCommon):
 @tagged('post_install', '-at_install')
 class TestSaleStockInvoices(TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestSaleStockInvoices, self).setUp()
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]})

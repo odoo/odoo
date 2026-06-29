@@ -8,6 +8,7 @@ from odoo.addons.account.tests.common import TestTaxCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     """ This test file focuses solely on testing taxes amounts in various use cases (vat, wth, base affected,...). """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

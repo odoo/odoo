@@ -8,6 +8,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 @tagged('post_install', '-at_install')
 class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_loyalty_product_loading(self):
         """ Test that loyalty products are loaded correctly in the PoS session. """
         new_product = self.env['product.product'].create({

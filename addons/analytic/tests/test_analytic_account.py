@@ -10,6 +10,8 @@ from odoo.addons.analytic.tests.common import AnalyticCommon
 @tagged('post_install', '-at_install')
 class TestAnalyticAccount(AnalyticCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

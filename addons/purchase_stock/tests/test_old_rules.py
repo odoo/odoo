@@ -10,6 +10,8 @@ from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseOldRules(PurchaseTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def create_picking_out(self, warehouse):
         picking_out = self.env['stock.picking'].create({
             'location_id': warehouse.out_type_id.default_location_src_id.id,

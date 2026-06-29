@@ -13,6 +13,8 @@ from odoo.tests import tagged, Form
 @skip('Temporary to fast merge new valuation')
 class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_stock_landed_costs_rounding(self):
         # In order to test the rounding in landed costs feature of stock, I create 2 landed cost
 

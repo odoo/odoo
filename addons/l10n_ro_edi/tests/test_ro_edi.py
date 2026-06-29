@@ -7,6 +7,8 @@ from odoo.tests import tagged
 
 @tagged("post_install_l10n", "-at_install", "post_install")
 class TestRoEdi(TestROEdiCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_documents_only_deleted_on_validation(self):
         """Test that historical refused documents are preserved on resend and only cleaned up on validation.
 

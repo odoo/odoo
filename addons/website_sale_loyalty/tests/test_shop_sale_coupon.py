@@ -15,6 +15,8 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 @tagged("post_install", "-at_install")
 class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -267,6 +269,8 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

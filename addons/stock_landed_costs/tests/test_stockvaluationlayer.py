@@ -12,6 +12,8 @@ from freezegun import freeze_time
 @skip('Temporary to fast merge new valuation')
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -141,6 +143,8 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -272,6 +276,8 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -359,6 +365,8 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLCFIFOVB, cls).setUpClass()
@@ -667,6 +675,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
 @tagged('-at_install', 'post_install')
 class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         self.usd = self.env.ref('base.USD')
         self.eur = self.env.ref('base.EUR')

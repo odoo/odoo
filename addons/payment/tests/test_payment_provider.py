@@ -16,6 +16,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentProvider(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_toggling_live_mode_archives_tokens(self):
         """Test that toggling live mode of a provider archives all its active tokens."""
         for is_live in (True, False):

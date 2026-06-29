@@ -10,6 +10,8 @@ from odoo.addons.sale.tests.product_configurator_common import TestProductConfig
 @tagged('post_install', '-at_install')
 class TestProductConfiguratorUi(TestProductConfiguratorCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -13,6 +13,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
     as Bizkaia and Gipuzokoa only differs by the requests,
     only the request logic is tested here.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def test_post_and_cancel_invoice_tbai_success(self):
         self.company_data['company'].l10n_es_tbai_tax_agency = 'bizkaia'
