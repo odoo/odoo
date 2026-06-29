@@ -68,7 +68,7 @@ class FleetVehicle(models.Model):
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver Address of the vehicle', copy=False, check_company=True)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
-        tracking=True, required=True, index=True)
+        tracking=True, index=True)
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
@@ -202,11 +202,13 @@ class FleetVehicle(models.Model):
 
     @api.depends('model_id')
     def _compute_co2_standard(self):
-        self._load_fields_from_model(['co2_standard'])
+        for record in self.filtered(lambda r: not r.co2_standard):
+            record._load_fields_from_model(['co2_standard'])
 
     @api.depends('model_id')
     def _compute_co2(self):
-        self._load_fields_from_model(['co2'])
+        for record in self.filtered(lambda r: not r.co2):
+            record._load_fields_from_model(['co2'])
 
     @api.depends('model_id')
     def _compute_power(self):
@@ -222,7 +224,8 @@ class FleetVehicle(models.Model):
 
     @api.depends('model_id')
     def _compute_fuel_type(self):
-        self._load_fields_from_model(['fuel_type'])
+        for record in self.filtered(lambda r: not r.fuel_type):
+            record._load_fields_from_model(['fuel_type'])
 
     @api.depends('model_id')
     def _compute_transmission(self):
@@ -243,7 +246,13 @@ class FleetVehicle(models.Model):
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
-            record.name = (record.license_plate or self.env._('No Plate')) + ': ' + (record.model_id.brand_id.name or '') + '/' + (record.model_id.name or '')
+            name_parts = []
+            if record.license_plate:
+                name_parts.append(record.license_plate)
+            if model := record.model_id:
+                name_parts.append(f"{model.brand_id.name or ''}/{model.name or ''}".strip('/'))
+
+            record.name = (name_parts and ": ".join(name_parts)) or self.env._("Unnamed Vehicle")
 
     @api.depends('range_unit')
     def _compute_co2_emission_unit(self):
