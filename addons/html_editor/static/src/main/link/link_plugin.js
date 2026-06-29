@@ -286,6 +286,7 @@ export class LinkPlugin extends Plugin {
         ],
 
         advanced_popover_options: [],
+        auto_link_attribute_predicates: [],
 
         immutable_link_selectors: [
             '[data-bs-toggle="tab"]',
@@ -435,12 +436,15 @@ export class LinkPlugin extends Plugin {
      *
      * @return {HTMLElement} link
      */
-    createLink(url, label = "") {
+    createLink(url, label = "", attributes = {}) {
         const link = this.document.createElement("a");
         if (url !== undefined) {
             link.setAttribute("href", url);
         }
         for (const [param, value] of Object.entries(this.config.defaultLinkAttributes || {})) {
+            link.setAttribute(param, `${value}`);
+        }
+        for (const [param, value] of Object.entries(attributes)) {
             link.setAttribute(param, `${value}`);
         }
         link.textContent = label;
@@ -451,15 +455,19 @@ export class LinkPlugin extends Plugin {
     /**
      * @param {string} url
      * @param {string} label
+     * @param {Object} [attributes] extra attributes to set on the link
      */
-    insertLink(url, label) {
+    insertLink(url, label, attributes = {}) {
         const selection = this.dependencies.selection.getEditableSelection();
         let link = closestElement(selection.anchorNode, "a");
         if (link) {
             link.setAttribute("href", url);
             link.textContent = label;
+            for (const [param, value] of Object.entries(attributes)) {
+                link.setAttribute(param, `${value}`);
+            }
         } else {
-            link = this.createLink(url, label);
+            link = this.createLink(url, label, attributes);
             this.dependencies.dom.insert(link);
         }
         this.dependencies.history.commit();
@@ -683,6 +691,7 @@ export class LinkPlugin extends Plugin {
             allowTargetBlank: this.config.allowTargetBlank,
             allowStripDomain: this.config.allowStripDomain,
             advancedAttributeOptions: this.getResource("advanced_popover_options"),
+            autoLinkAttributePredicates: this.getResource("auto_link_attribute_predicates"),
         };
 
         const popover = this.getActivePopover(linkElement);
