@@ -255,6 +255,7 @@ def generate_signed_url_v4(
     if generation is not None:
         query_parameters["generation"] = generation
 
+    query_parameters = dict(sorted(query_parameters.items()))
     canonical_query_string = urllib.parse.urlencode(query_parameters, quote_via=urllib.parse.quote)
 
     lowercased_headers = dict(ordered_headers)

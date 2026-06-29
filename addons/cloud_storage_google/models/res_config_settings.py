@@ -80,7 +80,7 @@ class ResConfigSettings(models.TransientModel):
         cors = [{
             'origin': ['*'],
             'method': ['GET', 'PUT'],
-            'responseHeader': ['Content-Type'],
+            'responseHeader': ['Content-Type', 'Content-Disposition'],
             'maxAgeSeconds': IrAttachment._cloud_storage_download_url_time_to_expiry,
         }]
         credential = get_cloud_storage_google_credential(self.env).with_scopes(['https://www.googleapis.com/auth/devstorage.full_control'])
