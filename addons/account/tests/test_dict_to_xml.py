@@ -17,6 +17,14 @@ class TestDictToXml(TransactionCase):
         element = dict_to_xml(node={}, tag='Node', render_empty_nodes=True)
         self.assertXmlEqual(element, etree.fromstring('<Node/>'))
 
+    def test_12_render_single_empty_node(self):
+        element = dict_to_xml(node={'_empty': True}, tag='Node')
+        self.assertXmlEqual(element, etree.fromstring('<Node/>'))
+
+    def test_13_force_not_render_empty_node(self):
+        element = dict_to_xml(node={'_empty': False}, tag='Node', render_empty_nodes=True)
+        self.assertIsNone(element)
+
     def test_21_simple_node(self):
         node = {
             '_tag': 'Node',
