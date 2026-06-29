@@ -27,12 +27,13 @@ Também serve o app Maestro PWA (`/maestro/app`) com login por matrícula
 determinado exclusivamente pelo cargo (hr.job > Perfil no app Maestro)
 do funcionário autenticado — não há seleção manual de cargo no app.
 """,
-    'depends': ['hr'],
+    'depends': ['hr', 'mail', 'hr_skills'],
     'data': [
         'security/ir.model.access.csv',
         'views/hr_maestro_event_views.xml',
         'views/hr_job_views.xml',
         'views/hr_employee_views.xml',
+        'views/hr_maestro_checklist_views.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0f14">
+<link rel="manifest" href="/maestro/app/manifest.json">
+<link rel="apple-touch-icon" href="/hr_maestro_integration/static/src/maestro_app/icons/icon-192.png">
 <title>Maestro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -962,86 +964,12 @@ html, body {
   <div class="scroll">
     <div class="check-header">
       <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mid)">PROGRESSO</span>
-      <div class="check-progress"><div class="check-bar" id="check-bar" style="width:62%"></div></div>
-      <div class="check-pct" id="check-pct">62%</div>
+      <div class="check-progress"><div class="check-bar" id="check-bar" style="width:0%"></div></div>
+      <div class="check-pct" id="check-pct">0%</div>
     </div>
 
-    <div class="check-group">
-      <div class="check-group-title">🌅 Abertura do Turno</div>
-      <div class="check-item done" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box">✓</div>
-        <div class="check-label">Conferir fundo de caixa</div>
-        <div class="check-time">06:12</div>
-      </div>
-      <div class="check-item done" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box">✓</div>
-        <div class="check-label">Sistema ligado (Termoplus/Cloud Park)</div>
-        <div class="check-time">06:15</div>
-      </div>
-      <div class="check-item done" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box">✓</div>
-        <div class="check-label">Cancelas operando normalmente</div>
-        <div class="check-time">06:18</div>
-      </div>
-      <div class="check-item done" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box">✓</div>
-        <div class="check-label">Verificar no-break ligado</div>
-        <div class="check-time">06:20</div>
-      </div>
-      <div class="check-item done" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box">✓</div>
-        <div class="check-label">Verificar cooler e câmeras</div>
-        <div class="check-time">06:22</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box"></div>
-        <div class="check-label">Conferir pátio: veículos sistema = físico</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box"></div>
-        <div class="check-label">Registrar faturamento do dia anterior</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="abertura">
-        <div class="check-box"></div>
-        <div class="check-label">Verificar mensalistas com boleto vencido</div>
-        <div class="check-time">—</div>
-      </div>
-    </div>
-
-    <div class="check-group">
-      <div class="check-group-title">🌙 Fechamento do Turno</div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Fechamento de caixa realizado</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Foto da fita de fechamento enviada</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Foto do fechamento Stone enviada</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Depósito rotativo realizado</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Documentos do malote separados</div>
-        <div class="check-time">—</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)" data-group="fechamento">
-        <div class="check-box"></div>
-        <div class="check-label">Próximo operador comunicado</div>
-        <div class="check-time">—</div>
-      </div>
+    <div class="check-group" id="checklist-items-container">
+      <div class="check-group-title" id="checklist-loading">Carregando checklist…</div>
     </div>
 
 <div onclick="abrirIA('colaborador','🌙 Fechamento')" style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onmouseenter="this.style.opacity='.8'" onmouseleave="this.style.opacity='1'"><div style="width:36px;height:36px;border-radius:10px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🌙</div><div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:2px">Dúvidas sobre fechamento de caixa</div><div style="font-size:11px;color:var(--mid)">Perguntas do PR-POP 002 · toque para consultar</div></div><div style="color:var(--muted);font-size:18px">›</div></div>    <button class="btn-primary" onclick="finalizarChecklist()">Finalizar e Enviar ao Encarregado</button>
@@ -3116,6 +3044,38 @@ function enterApp(role, employeeName, jobTitle) {
   document.getElementById('maestro-logout-btn').style.display = 'block'
   document.querySelectorAll('[data-employee-name]').forEach(el => { el.textContent = employeeName })
   document.querySelectorAll('[data-job-title]').forEach(el => { el.textContent = jobTitle })
+  loadChecklist()
+  maestroSetupPush()
+}
+
+// ── PWA: service worker + push notifications ───────────────────
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)))
+}
+
+async function maestroSetupPush() {
+  if (!maestroToken || !('serviceWorker' in navigator) || !('PushManager' in window)) return
+  try {
+    const registration = await navigator.serviceWorker.register('/maestro/app/sw.js', {scope: '/maestro/app/'})
+    let subscription = await registration.pushManager.getSubscription()
+    if (!subscription) {
+      const keyResult = await maestroRpc('/maestro/app/push/vapid_public_key', {token: maestroToken})
+      if (!keyResult.vapid_public_key) return
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(keyResult.vapid_public_key),
+      })
+    }
+    const sub = subscription.toJSON()
+    await maestroRpc('/maestro/app/push/subscribe', {
+      token: maestroToken,
+      endpoint: sub.endpoint,
+      keys: sub.keys,
+    })
+  } catch (e) { /* push indisponível neste navegador/contexto */ }
 }
 
 function loginAs(role) {
@@ -3159,30 +3119,54 @@ function loginAs(role) {
   updateCheckProgress()
 }
 
-// ── CHECKLIST ─────────────────────────────────────────────────
-function toggleCheck(el) {
-  const isDone = el.classList.contains('done')
-  const box    = el.querySelector('.check-box')
-  const time   = el.querySelector('.check-time')
-
-  if (isDone) {
-    el.classList.remove('done')
-    box.textContent = ''
-    time.textContent = '—'
-  } else {
-    el.classList.add('done')
-    box.textContent = '✓'
-    const now = new Date()
-    time.textContent = now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})
-    vibrate()
-  }
-  updateCheckProgress()
+// ── CHECKLIST (dados reais do Odoo, via hr.maestro.checklist) ──
+function renderChecklist(checklist) {
+  const container = document.getElementById('checklist-items-container')
+  if (!container) return
+  container.innerHTML = ''
+  const title = document.createElement('div')
+  title.className = 'check-group-title'
+  title.textContent = '✅ Checklist de hoje'
+  container.appendChild(title)
+  checklist.items.forEach((item) => {
+    const div = document.createElement('div')
+    div.className = 'check-item' + (item.done ? ' done' : '')
+    div.dataset.itemId = item.id
+    div.onclick = () => toggleCheck(item.id)
+    div.innerHTML = `
+      <div class="check-box">${item.done ? '✓' : ''}</div>
+      <div class="check-label">${item.label}</div>
+      <div class="check-time">${item.done ? '✓' : '—'}</div>
+    `
+    container.appendChild(div)
+  })
+  updateCheckProgress(checklist)
 }
 
-function updateCheckProgress() {
-  const all  = document.querySelectorAll('.check-item')
-  const done = document.querySelectorAll('.check-item.done')
-  const pct  = all.length ? Math.round(done.length / all.length * 100) : 0
+async function loadChecklist() {
+  if (!maestroToken) return
+  const container = document.getElementById('checklist-items-container')
+  try {
+    const result = await maestroRpc('/maestro/app/checklist/today', {token: maestroToken})
+    if (result.error) { maestroShowLoginError(result.error); return }
+    renderChecklist(result)
+  } catch (e) {
+    if (container) container.innerHTML = '<div class="check-group-title">Não foi possível carregar o checklist.</div>'
+  }
+}
+
+async function toggleCheck(itemId) {
+  if (!maestroToken) return
+  try {
+    const result = await maestroRpc('/maestro/app/checklist/toggle', {token: maestroToken, item_id: itemId})
+    if (result.error) return
+    renderChecklist(result)
+    vibrate()
+  } catch (e) { /* offline */ }
+}
+
+function updateCheckProgress(checklist) {
+  const pct  = checklist ? Math.round((checklist.completion_rate || 0) * 100) : 0
   const bar  = document.getElementById('check-bar')
   const pctEl = document.getElementById('check-pct')
   if (bar)   bar.style.width   = pct + '%'
