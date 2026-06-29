@@ -21,7 +21,7 @@
                     t-custom-ref="inputRef"
                     class="o_time_picker_input form-control px-0"
                     t-att-class="this.inputCssClass"
-                    t-custom-model="this.state.inputValue"
+                    t-model.proxy="this.state.inputValue"
                     t-on-input="this.onInput"
                     t-on-focus="this.ensureOpen"
                     t-on-click="this.ensureOpen"
@@ -47,7 +47,7 @@
                 t-custom-ref="inputRef"
                 class="o_time_picker_input form-control px-0"
                 t-att-class="this.inputCssClass"
-                t-custom-model="this.state.inputValue"
+                t-model.proxy="this.state.inputValue"
                 t-on-change="this.onChange"
             />
         </div>

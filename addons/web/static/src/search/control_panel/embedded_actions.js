@@ -1,4 +1,4 @@
-import { Component, useRef, useLayoutEffect, useEnv, proxy } from "@odoo/owl";
+import { Component, proxy, props, t, useRef, useLayoutEffect, useEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -392,7 +392,7 @@ export class EmbeddedActionsPanel extends Component {
         AccordionItem,
         CheckBox,
     };
-    static props = { state: { type: Object } };
+    props = props({ state: t.object() });
 
     setup() {
         this.root = useRef("root");

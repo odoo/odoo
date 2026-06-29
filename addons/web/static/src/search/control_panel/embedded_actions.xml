@@ -49,7 +49,7 @@
                         <input type="text"
                             t-custom-ref="newActionNameRef"
                             class="o_input mb-2"
-                            t-custom-model.trim="this.props.state.embeddedInfos.newActionName"
+                            t-model.proxy.trim="this.props.state.embeddedInfos.newActionName"
                         />
                         <CheckBox value="this.props.state.embeddedInfos.newActionIsShared" onChange="() => this.props.state.onShareCheckboxChange()">
                             <span data-tooltip="Make this embedded action available to other users">Shared</span>
