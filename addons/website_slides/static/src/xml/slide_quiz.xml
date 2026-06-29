@@ -10,30 +10,30 @@
                     <div class="h4">
                         <small class="text-muted"><span t-out="question_index+1"/>. </small> <span t-out="question.question"/>
                     </div>
-                    <div class="list-group">
+                    <div class="row g-2">
                         <t t-foreach="question.answer_ids" t-as="answer" t-key="answer_index">
-                            <a t-att-data-answer-id="answer.id" href="#"
+                            <div t-att-data-answer-id="answer.id"
                                 t-att-data-text="answer.text_value"
-                                t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
-
-                                <label class="my-0 d-flex align-items-center justify-content-center me-2">
+                                class="o_wslides_quiz_answer">
+                                <label t-attf-class="w-100 h-100 my-0 py-2 px-3 border-0 rounded cursor-pointer d-flex align-items-center gap-2 #{slide.completed &amp;&amp; answer.is_correct ? 'bg-success-subtle' : ''}">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
-                                        class="d-none"/>
-                                    <i t-att-class="'fa fa-circle text-400' + (!(slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
-                                    <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i t-att-class="'fa fa-check-circle text-success' + (slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
+                                        t-attf-class="form-check-input m-0 #{slide.completed &amp;&amp; answer.is_correct ? 'bg-success border-success' : ''}"/>
+                                    <span t-out="answer.text_value"/>
+                                    <i t-att-class="'fa fa-times text-danger d-none ms-auto'"></i>
+                                    <i t-att-class="'fa fa-check text-success ms-auto ' + (slide.completed &amp;&amp; answer.is_correct ? '' : 'd-none')"></i>
                                 </label>
-                                <span t-out="answer.text_value"/>
-                            </a>
+                            </div>
                             <t t-if="slide.completed and answer.is_correct" t-set="correct_answer_comment" t-value="answer.comment"/>
                         </t>
-                        <div t-attf-class="o_wslides_quiz_answer_info list-group-item list-group-item-info #{correct_answer_comment ? '' : 'd-none'}">
-                            <i class="fa fa-info-circle"/>
-                            <span class="o_wslides_quiz_answer_comment ms-2">
-                                <t t-if="correct_answer_comment" t-out="correct_answer_comment"/>
-                            </span>
+                        <div>
+                            <div t-attf-class="o_wslides_quiz_answer_info alert alert-info mb-0 #{correct_answer_comment ? '' : 'd-none'}">
+                                <i class="fa fa-info-circle"/>
+                                <span class="o_wslides_quiz_answer_comment ms-1">
+                                    <t t-if="correct_answer_comment" t-out="correct_answer_comment"/>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,26 +99,17 @@
                 </span>
             </div>
             <div t-else="" class="d-md-flex align-items-center justify-content-between">
-                <div t-att-class="'d-flex align-items-center' + (slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
+                <div class="d-flex align-items-center">
                     <button t-if="!slide.completed" title="Check answers"
-                        class="btn btn-primary text-uppercase fw-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
-                    <b t-else="" class="my-0 h5">Done!</b>
-                    <span class="my-0 h5" style="line-height: 1">
-                        <span role="button" title="Succeed and gain karma" class="badge bg-warning fw-bold ms-3">
-                            + <t t-if="!slide.completed" t-out="quiz.karmaGain"/><t t-else="" t-out="quiz.karmaWon"/> XP
-                        </span>
-                    </span>
+                        class="btn btn-primary o_wslides_js_lesson_quiz_submit">Submit <span class="badge text-bg-primary">+ <t t-if="!slide.completed" t-out="quiz.karmaGain"/><t t-else="" t-out="quiz.karmaWon"/> XP</span></button>
                     <div class="ms-3 d-none text-danger o_wslides_js_quiz_submit_error">
                         <i class="fa fa-close me-1"/>
                         <span class="o_wslides_js_quiz_submit_error_text"></span>
                     </div>
                 </div>
                 <div class="ms-auto mt-3 mt-md-0">
-                    <button t-if="quiz.attemptsCount > 0 &amp;&amp; channel.canUpload" class="btn btn-light border o_wslides_js_lesson_quiz_reset me-1">
-                        Reset
-                    </button>
-                    <button t-if="slide.completed &amp;&amp; slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
-                        Continue <i class="oi oi-chevron-right ms-1"/>
+                    <button t-if="quiz.attemptsCount > 0 &amp;&amp; channel.canUpload" class="btn btn-light o_wslides_js_lesson_quiz_reset me-1">
+                        Retry
                     </button>
                 </div>
             </div>

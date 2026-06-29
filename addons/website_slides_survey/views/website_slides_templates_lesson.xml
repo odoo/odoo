@@ -26,21 +26,6 @@
                     </a>
                 </div>
             </xpath>
-            <xpath expr="//a[hasclass('o_wslides_done_button')][1]" position="after">
-                <a t-elif="not slide_completed and slide.slide_category == 'certification'"
-                    role="button"
-                    t-attf-class="o_wslides_done_button btn btn-primary border text-white me-2"
-                    href="#start_certification">
-                    Take Quiz
-                </a>
-            </xpath>
-            <xpath expr="//a[hasclass('o_wslides_undone_button')][1]" position="after">
-                <a t-elif="slide_completed and slide.slide_category == 'certification'"
-                    class="o_wslides_undone_button btn btn-primary border text-white me-2 disabled"
-                    aria-disabled="true" title="Certifications you have passed cannot be marked as not done">
-                    Mark To Do
-                </a>
-            </xpath>
         </template>
     </data>
 </odoo>

@@ -33,7 +33,6 @@ const websiteSlidesService = {
                 embedUrl: undefined,
                 embedCode: undefined,
                 isQuiz: false,
-                autoSetDone: undefined,
                 videoSourceType: undefined,
                 canAccess: undefined,
                 slug: undefined,

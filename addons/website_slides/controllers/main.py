@@ -700,6 +700,16 @@ class WebsiteSlides(WebsiteProfile):
             offset=pager['offset'])
         render_values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
+        # Get completion date for the current user if they are a member
+        if channel.is_member:
+            channel_partner = request.env['slide.channel.partner'].sudo().search([
+                ('channel_id', '=', channel.id),
+                ('partner_id', '=', request.env.user.partner_id.id)
+            ], limit=1)
+            render_values['completion_date'] = channel_partner.completion_date if channel_partner else False
+        else:
+            render_values['completion_date'] = False
+
         # for sys admins: prepare data to install directly modules from eLearning when
         # uploading slides. Currently supporting only survey, because why not.
         if request.env.user.has_group('base.group_system'):
@@ -991,13 +1001,8 @@ class WebsiteSlides(WebsiteProfile):
         if slide.is_category:
             return request.redirect(slide.channel_id.website_absolute_url)
 
-        if slide.can_self_mark_completed and not slide.user_has_completed \
-           and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
-            self._slide_mark_completed(slide)
-            next_category_to_open = slide._get_next_category()
-        else:
-            self._set_viewed_slide(slide)
-            next_category_to_open = False
+        self._set_viewed_slide(slide)
+        next_category_to_open = False
 
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information
