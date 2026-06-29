@@ -37,11 +37,14 @@ export class CallInvitation extends Component {
     }
 
     async joinCall() {
-        this.props.channel.open({ focus: true });
-        await this.rtc.toggleCall(this.props.channel, {
+        const hasJoinedCall = await this.rtc.toggleCall(this.props.channel, {
             audio: this.state.hasMicrophone,
             camera: this.state.hasCamera,
         });
+        if (!hasJoinedCall) {
+            return;
+        }
+        this.props.channel.open({ focus: true });
         if (this.props.channel.default_display_mode === "video_full_screen") {
             await this.rtc.enterFullscreen();
         }

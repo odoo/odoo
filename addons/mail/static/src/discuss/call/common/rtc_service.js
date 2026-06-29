@@ -11,6 +11,7 @@ import { assignDefined, closeStream } from "@mail/utils/common/misc";
 import { proxy, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -886,6 +887,20 @@ export class Rtc extends Record {
         await this.fullscreen.exit(CALL_FULLSCREEN_ID);
     }
 
+    async askCallSwitchConfirmation() {
+        return new Promise((resolve) => {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("You are already in another call. Are you sure you want to switch?"),
+                cancel: () => resolve(false),
+                cancelLabel: _t("Discard"),
+                confirm: () => resolve(true),
+                confirmLabel: _t("Confirm"),
+                dismiss: () => resolve(false),
+                title: _t("Confirmation"),
+            });
+        });
+    }
+
     /**
      * @returns {Promise<void>}
      */
@@ -902,8 +917,15 @@ export class Rtc extends Record {
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
      * @param {boolean} [initialState.camera]
+     * @param {boolean} [initialState.confirmCallSwitch]
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
+    async toggleCall(channel, { audio = true, camera, confirmCallSwitch = true } = {}) {
+        if (this.channel && channel.notEq(this.channel) && confirmCallSwitch) {
+            const shouldSwitchCall = await this.askCallSwitchConfirmation();
+            if (!shouldSwitchCall) {
+                return false;
+            }
+        }
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
@@ -928,6 +950,7 @@ export class Rtc extends Record {
             }
             await this.joinCall(channel, joinCallOpts);
         }
+        return true;
     }
 
     async toggleCameraFacingMode() {

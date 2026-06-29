@@ -36,7 +36,11 @@ patch(DiscussClientAction.prototype, {
     async joinCallWithDefaultSettings() {
         const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
         const camera = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
-        await this.rtc.toggleCall(this.store.discuss.thread.channel, { audio: !mute, camera });
+        await this.rtc.toggleCall(this.store.discuss.thread.channel, {
+            audio: !mute,
+            camera,
+            confirmCallSwitch: false,
+        });
         await this.rtc.enterFullscreen();
     },
 });

@@ -1122,6 +1122,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await rtc.exitFullscreen();
     await click(".o-mail-DiscussSidebarChannel:text('General')");
     await click("[title='Join Call']");
+    await click(".modal-footer button:text('Confirm')");
     await contains("button[title='Turn camera on']");
     await contains("button[title='Turn camera on'].o-tag-DANGER", { count: 0 });
     await contains("button[title='Turn camera on'].o-tag-WARNING_BADGE", { count: 0 });
@@ -1679,4 +1680,22 @@ test("Adjust view: sidebar layout always shows the sidebar, even alone", async (
     await contains(".o-mail-Meeting");
     // Sidebar mode always shows the sidebar column, even with a single participant.
     await contains(".o-discuss-Call-sidebar");
+});
+
+test("confirm before switching calls", async () => {
+    const pyEnv = await startServer();
+    const channelIds = pyEnv["discuss.channel"].create([{ name: "channel" }, { name: "channel2" }]);
+    await start();
+    await openDiscuss(channelIds[0]);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-CallMenu-channelInfo:text('channel')");
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('channel2')");
+    await contains(".o-mail-AutoresizeInput[title='channel2']");
+    await click("[title='Start Call']");
+    await click(".modal-footer button:text('Discard')");
+    await contains(".modal-footer", { count: 0 });
+    await contains(".o-discuss-CallMenu-channelInfo:text('channel')");
+    await click("[title='Start Call']");
+    await click(".modal-footer button:text('Confirm')");
+    await contains(".o-discuss-CallMenu-channelInfo:text('channel2')");
 });
