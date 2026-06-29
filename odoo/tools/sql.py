@@ -9,11 +9,11 @@ import re
 import warnings
 from binascii import crc32
 from collections import defaultdict
+from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from odoo.fields import Field
-    from collections.abc import Iterable
 
 import psycopg2
 
@@ -86,14 +86,20 @@ class SQL:
     __to_flush: tuple[Field, ...]
 
     # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
-        if isinstance(code, SQL):
-            if args or kwargs or to_flush:
+    def __new__(cls, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
+        if isinstance(code, SQL) or (code == "%s" and len(args) == 1 and isinstance(args[0], SQL)):
+            if code == "%s":
+                code, args = args[0], ()
+            if args or kwargs:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
-            self.__code = code.__code
-            self.__params = code.__params
-            self.__to_flush = code.__to_flush
-            return
+            if to_flush is None:
+                return code
+
+            sql = super().__new__(cls)
+            sql.__code = code.__code
+            sql.__params = code.__params
+            sql.__to_flush = tuple(to_flush) if isinstance(to_flush, Iterable) else (to_flush,)
+            return sql
 
         # validate the format of code and parameters
         if args and kwargs:
@@ -103,15 +109,16 @@ class SQL:
             code, args = named_to_positional_printf(code, kwargs)
         elif not args:
             code % ()  # check that code does not contain %s
-            self.__code = code
-            self.__params = ()
+            sql = super().__new__(cls)
+            sql.__code = code
+            sql.__params = ()
             if to_flush is None:
-                self.__to_flush = ()
-            elif hasattr(to_flush, '__iter__'):
-                self.__to_flush = tuple(to_flush)
+                sql.__to_flush = ()
+            elif isinstance(to_flush, Iterable):
+                sql.__to_flush = tuple(to_flush)
             else:
-                self.__to_flush = (to_flush,)
-            return
+                sql.__to_flush = (to_flush,)
+            return sql
 
         code_list = []
         params_list = []
@@ -125,14 +132,16 @@ class SQL:
                 code_list.append("%s")
                 params_list.append(arg)
         if to_flush is not None:
-            if hasattr(to_flush, '__iter__'):
+            if isinstance(to_flush, Iterable):
                 to_flush_list.extend(to_flush)
             else:
                 to_flush_list.append(to_flush)
 
-        self.__code = code.replace('%%', '%%%%') % tuple(code_list)
-        self.__params = tuple(params_list)
-        self.__to_flush = tuple(to_flush_list)
+        sql = super().__new__(cls)
+        sql.__code = code.replace('%%', '%%%%') % tuple(code_list)
+        sql.__params = tuple(params_list)
+        sql.__to_flush = tuple(to_flush_list)
+        return sql
 
     @property
     def code(self) -> str:

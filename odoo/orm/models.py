@@ -3910,7 +3910,7 @@ class BaseModel(metaclass=MetaModel):
                     # otherwise, re-create the SQL without flushing
                     if not field.translate:
                         to_flush = (f for f in sql.to_flush if f != field)
-                        sql = SQL(sql.code, *sql.params, to_flush=to_flush)
+                        sql = SQL("%s", sql, to_flush=to_flush)
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query
