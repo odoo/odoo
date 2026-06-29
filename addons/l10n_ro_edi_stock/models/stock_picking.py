@@ -375,7 +375,7 @@ class Picking(models.Model):
         for picking in self:
             picking.l10n_ro_edi_stock_enable_send = (
                     picking.l10n_ro_edi_stock_enable
-                    and picking.state == 'done'
+                    and picking.state in ('assigned', 'done')
                     and picking.l10n_ro_edi_stock_state in (False, 'stock_sending_failed')
                     and not picking._l10n_ro_edi_stock_get_last_document('stock_validated')
             )
