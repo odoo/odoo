@@ -10,6 +10,7 @@ import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { customDirectives, globalValues, makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
+import { patchWithCleanup } from "./patch_test_helpers";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -66,7 +67,7 @@ afterEach(function restoreMainRegistry() {
     restoreRegistry(registry);
 });
 
-patch(App.apps, {
+patchWithCleanup(App.apps, {
     add(app) {
         if (!currentApp) {
             currentApp = app;
@@ -169,7 +170,8 @@ export function getTestApp(options) {
  * }} [options]
  */
 export async function makeMockEnv(partialEnv, options) {
-    if (currentEnvs.length && !options?.makeNew) {
+    const isFirstEnv = !currentEnvs.length;
+    if (!isFirstEnv && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
         );
@@ -185,13 +187,20 @@ export async function makeMockEnv(partialEnv, options) {
 
     assignEnvToApp(env, app);
 
-    if (!currentEnvs.length) {
+    if (isFirstEnv) {
         startRouter();
-        after(cleanupMockEnvs);
     }
     currentEnvs.push(env);
 
     await startServices(env, app);
+
+    if (isFirstEnv) {
+        // Cleanup needs to be added *after* the services have been started: this
+        // is because it will trigger a "CLEANUP" event that needs to be applied
+        // *before* removing the event listeners that have been setup and will be
+        // torn down in plugins/services.
+        after(cleanupMockEnvs);
+    }
 
     return env;
 }
