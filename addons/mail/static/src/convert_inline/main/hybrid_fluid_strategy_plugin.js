@@ -63,7 +63,8 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     applyTableSpacing(layout, { emailNode }) {
-        if (!emailNode.analysis.facts.useHybridFluidTableStrategy) {
+        const { tableStrategyReport } = emailNode.analysis.facts;
+        if (!emailNode.analysis.facts.useHybridFluidTableStrategy || !tableStrategyReport) {
             return;
         }
         // TODO EGGMAIL NOW: WORKING HERE NOW:

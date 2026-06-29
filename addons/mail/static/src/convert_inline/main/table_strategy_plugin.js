@@ -130,7 +130,8 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     applyTableSpacing(layout, { emailNode }) {
-        if (!emailNode.analysis.facts.useTableStrategy) {
+        const { tableStrategyReport } = emailNode.analysis.facts;
+        if (!emailNode.analysis.facts.useTableStrategy || !tableStrategyReport) {
             return;
         }
         // apply outer spacing
