@@ -1,0 +1,21 @@
+// Container Half Fluid
+
+.x_container_half_fluid {
+    @include media-breakpoint-down(md) {
+        @include make-container();
+    }
+    @include media-breakpoint-up(lg) {
+        max-width: calc(100% - ((100% - #{map-get($container-max-widths, lg)}) / 2));
+        margin-left: auto;
+        padding-left: map-get($spacers, 3);
+        > .row {
+            margin-right: 0;
+            > *[class*="col-lg-"]:last-child {
+                padding-right: 0;
+            }
+        }
+    }
+    @include media-breakpoint-up(xl) {
+        max-width: calc(100% - ((100% - #{map-get($container-max-widths, xl)}) / 2));
+    }
+}
