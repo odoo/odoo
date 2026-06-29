@@ -4539,35 +4539,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         Make sure when creating a multi employee accrual allocation the correct
         number of days will be assigned to each child allocation
         """
-        self.env['hr.employee'].create([
-            {
-                'name': 'Test Department Employee',
-                'company_id': self.company.id,
-                'department_id': self.department.id,
-            },
-            {
-                'name': 'Department Employee 1',
-                'company_id': self.company.id,
-                'department_id': self.department.id,
-            },
-        ])
-        with Form(self.env['hr.leave.allocation.generate.multi.wizard']) as f:
-            f.allocation_type = "accrual"
-            f.accrual_plan_id = self.accrual_plan_yearly_max_postponed_days_start
-            f.date_from = '2026-01-01'
-            f.allocation_mode = 'department'
-            f.department_id = self.department
-            f.holiday_status_id = self.leave_type
-            f.name = "Department Allocation"
+        with freeze_time('2026-03-01'):
+            self.env['hr.employee'].create([
+                {
+                    'name': 'Test Department Employee',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+                {
+                    'name': 'Department Employee 1',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+            ])
+            with Form(self.env['hr.leave.allocation.generate.multi.wizard']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = self.accrual_plan_yearly_max_postponed_days_start
+                f.date_from = '2026-01-01'
+                f.allocation_mode = 'department'
+                f.department_id = self.department
+                f.holiday_status_id = self.leave_type
+                f.name = "Department Allocation"
 
-        department_allocation = f.record
-        department_allocation.action_generate_allocations()
+            department_allocation = f.record
+            department_allocation.action_generate_allocations()
 
-        children_allocations = self.env['hr.leave.allocation'].search(
-            [('employee_id', 'in', self.department.member_ids.ids)])
-        self.assertEqual(len(children_allocations), 2)
-        self.assertEqual(children_allocations[0].number_of_days, 21.0)
-        self.assertEqual(children_allocations[1].number_of_days, 21.0)
+            children_allocations = self.env['hr.leave.allocation'].search(
+                [('employee_id', 'in', self.department.member_ids.ids)])
+            self.assertEqual(len(children_allocations), 2)
+            self.assertEqual(children_allocations[0].number_of_days, 21.0)
+            self.assertEqual(children_allocations[1].number_of_days, 21.0)
 
     def test_multi_allocation_wizard_initializes_accrual(self):
         accrual_plan_daily_end = self.env['hr.leave.accrual.plan'].create({
