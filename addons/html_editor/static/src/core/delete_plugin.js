@@ -72,14 +72,26 @@ export class DeletePlugin extends Plugin {
             { id: "deleteBackwardLine", run: () => this.delete("backward", "line") },
             { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
         ],
-        shortcuts: [
-            { hotkey: "backspace", commandId: "deleteBackward" },
-            { hotkey: "delete", commandId: "deleteForward" },
-            { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
-            { hotkey: "control+delete", commandId: "deleteForwardWord" },
-            { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
-            { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
-        ],
+        get shortcuts() {
+            if (isMacOS()) {
+                return [
+                    { hotkey: "backspace", commandId: "deleteBackward" },
+                    { hotkey: "delete", commandId: "deleteForward" },
+                    { hotkey: "alt+backspace", commandId: "deleteBackwardWord" },
+                    { hotkey: "alt+delete", commandId: "deleteForwardWord" },
+                    { hotkey: "control+backspace", commandId: "deleteBackwardLine" },
+                    { hotkey: "control+delete", commandId: "deleteForwardLine" },
+                ];
+            }
+            return [
+                { hotkey: "backspace", commandId: "deleteBackward" },
+                { hotkey: "delete", commandId: "deleteForward" },
+                { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
+                { hotkey: "control+delete", commandId: "deleteForwardWord" },
+                { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
+                { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
+            ];
+        },
         /** Handlers */
         beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
