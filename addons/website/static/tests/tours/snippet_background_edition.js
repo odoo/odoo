@@ -123,7 +123,6 @@ function updateAndCheckCustomGradient({ updateStep, checkGradient }) {
 registerWebsitePreviewTour(
     "snippet_background_edition",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [

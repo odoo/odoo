@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, props, proxy, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -79,7 +79,9 @@ export class ColorPicker extends Component {
         this.DEFAULT_THEME_COLOR_VARS = this.props.useDefaultThemeColors
             ? DEFAULT_THEME_COLOR_VARS
             : [];
-        this.defaultColorSet = this.getDefaultColorSet();
+        onWillRender(() => {
+            this.defaultColorSet = this.getDefaultColorSet();
+        });
         this.defaultColor = this.props.state.selectedColor;
         this.focusedBtn = null;
         this.onApplyCallback = () => {};
@@ -172,7 +174,6 @@ export class ColorPicker extends Component {
     applyColor(color) {
         this.state.currentCustomColor = color;
         this.props.applyColor(color);
-        this.defaultColorSet = this.getDefaultColorSet();
         this.onApplyCallback();
     }
 
@@ -250,7 +251,10 @@ export class ColorPicker extends Component {
     }
 
     getDefaultColorSet() {
-        if (!this.props.state.selectedColor) {
+        const colorToMatch = this.state.currentColorPreview
+            ? this.state.currentCustomColor
+            : this.props.state.selectedColor;
+        if (!colorToMatch) {
             return;
         }
         let defaultColors = this.props.enabledTabs.includes("solid")
@@ -262,12 +266,12 @@ export class ColorPicker extends Component {
 
         const targetedElement =
             this.props.state.getTargetedElements?.()[0] || document.documentElement;
-        const selectedColor = this.props.state.selectedColor.toUpperCase();
+        const selectedColor = colorToMatch.toUpperCase();
         const htmlStyle =
             targetedElement.ownerDocument.defaultView.getComputedStyle(targetedElement);
 
         for (const color of defaultColors) {
-            const cssVar = normalizeCSSColor(htmlStyle.getPropertyValue(`--${color}`));
+            const cssVar = normalizeCSSColor(htmlStyle.getPropertyValue(`--${color}`).trim());
             if (cssVar?.toUpperCase() === selectedColor) {
                 return color;
             }
