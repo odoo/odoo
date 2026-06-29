@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
 import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
@@ -19,16 +19,6 @@ export class CustomizeTab extends Component {
         );
         useVisibilityObserver("content", (hasContent) => {
             this.state.hasContent = hasContent;
-        });
-        onWillUpdateProps((nextProps) => {
-            if (
-                !this.state.hasContent &&
-                nextProps.currentOptionsContainers.length > 0 &&
-                nextProps.currentOptionsContainers !== this.props.currentOptionsContainers
-            ) {
-                // Force a reconsideration of `content`
-                this.state.hasContent = true;
-            }
         });
         this.overlayPreviewedEl = null;
     }
