@@ -1182,3 +1182,27 @@ test("Activity View: Hide 'New' button in SelectCreateDialog based on action con
         message: "'New' button should be hidden",
     });
 });
+
+test("activity view: apply limit on fetching records", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step("web_search_read");
+        expect(kwargs.limit).toBe(1);
+    });
+    registerArchs(archs);
+
+    MailTestActivity._views.list = `
+            <list string="MailTestActivity">
+                <field name="name"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`;
+
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+        limit: 1,
+    });
+
+    expect.verifySteps(["web_search_read"]);
+});

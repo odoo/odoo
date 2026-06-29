@@ -23,6 +23,7 @@ export class ActivityController extends Component {
     static template = "mail.ActivityController";
 
     setup() {
+        this.archInfo = this.props.archInfo;
         this.model = proxy(useModel(this.props.Model, this.modelParams));
 
         this.dialog = useService("dialog");
@@ -61,6 +62,7 @@ export class ActivityController extends Component {
                 resModel,
                 fields,
             },
+            limit: this.archInfo.limit || this.props.limit,
         };
     }
 
