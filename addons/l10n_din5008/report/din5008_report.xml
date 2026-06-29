@@ -270,7 +270,10 @@
                         </t>
                         <t t-if="o.move_type == 'out_refund'">Credit Note</t>
                         <t t-if="o.move_type == 'in_refund'">Vendor Credit Note</t>
-                        <t t-if="o.move_type == 'in_invoice'">Vendor Bill</t>
+                        <t t-if="o.move_type == 'in_invoice'">
+                            <t t-if="o.journal_id.is_self_billing if 'is_self_billing' in o.journal_id._fields else False">Credit Note / Self-billing Invoice</t>
+                            <t t-else="">Vendor Bill</t>
+                        </t>
                     </span>
                 </t>
             </xpath>
