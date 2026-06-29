@@ -1,28 +1,27 @@
-import { Component } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
-import { useState } from "@web/owl2/utils";
 
 export const CLICK_DELAY = 200;
 
 export class CartLine extends Component {
     static template = "website_sale.CartLine";
-    static props = {
-        isQuantityViewActive: Boolean,
-        isWishlistViewActive: Boolean,
-        isUomFeatureEnabled: Boolean,
-        templateData: Object,
-        line: Object,
-    };
+    props = props({
+        isQuantityViewActive: t.boolean(),
+        isWishlistViewActive: t.boolean(),
+        isUomFeatureEnabled: t.boolean(),
+        templateData: t.object(),
+        line: t.object(),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             quantity: this.props.line.displayed_quantity,
         });
         this.updateQuantityDebounced = useDebounced(() => {
             this.env.updateLine(
                 parseInt(this.props.line.id),
                 this.props.line.product_id,
-                this.state.quantity,
+                this.state.quantity
             );
         }, CLICK_DELAY);
     }
