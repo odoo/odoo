@@ -225,8 +225,20 @@ class ResPartner(models.Model):
         return partners
 
     def write(self, values):
+        additional_info = values.get("additional_info")
+        if additional_info:
+            template_values = json.loads(additional_info)
+            template_values["flavor_text"] = _(
+                "Partner enriched by Odoo Partner Autocomplete Service"
+            )
+            values["additional_info"] = False
         res = super(ResPartner, self).write(values)
         if len(self) == 1:
             self._update_autocomplete_data(values.get('vat', False))
-
+        if additional_info:
+            self.message_post_with_view(
+                "iap_mail.enrich_company",
+                values=template_values,
+                subtype_id=self.env.ref("mail.mt_note").id,
+            )
         return res
