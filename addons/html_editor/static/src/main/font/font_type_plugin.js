@@ -204,14 +204,15 @@ export class FontTypePlugin extends Plugin {
                 commandId: "setTagQuote",
             },
         ],
-        hints: [
-            { selector: "H1", text: _t("Heading 1") },
-            { selector: "H2", text: _t("Heading 2") },
-            { selector: "H3", text: _t("Heading 3") },
-            { selector: "H4", text: _t("Heading 4") },
-            { selector: "H5", text: _t("Heading 5") },
-            { selector: "H6", text: _t("Heading 6") },
-            { selector: "BLOCKQUOTE", text: _t("Quote") },
+        properties: [
+            { predicate: "H1", hint: _t("Heading 1") },
+            { predicate: "H2", hint: _t("Heading 2") },
+            { predicate: "H3", hint: _t("Heading 3") },
+            { predicate: "H4", hint: _t("Heading 4") },
+            { predicate: "H5", hint: _t("Heading 5") },
+            { predicate: "H6", hint: _t("Heading 6") },
+            { predicate: "BLOCKQUOTE", hint: _t("Quote") },
+            { predicate: (node) => closestElement(node, "pre"), powerbox: false },
         ],
 
         /** Handlers */
@@ -238,10 +239,6 @@ export class FontTypePlugin extends Plugin {
             if (closestElement(node, "pre")) {
                 return false;
             }
-        },
-        properties: {
-            predicate: (node) => closestElement(node, "pre"),
-            powerbox: false,
         },
         can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "BLOCKQUOTE") {
