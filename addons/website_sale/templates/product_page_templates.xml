@@ -998,9 +998,9 @@
             t-value="product._get_product_page_documents(variant=product_variant)"
         />
         <div
+            t-if="product_documents"
             id="product_documents"
             class="o_wsale_product_details_content_section o_wsale_product_details_content_section_documents mb-4"
-            t-if="product_documents"
         >
             <div class="attribute_name mb-2 h6">
                 <span>Documents</span>

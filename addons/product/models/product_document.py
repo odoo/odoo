@@ -30,12 +30,11 @@ class ProductDocument(models.Model):
     @api.depends('res_model', 'res_id')
     def _compute_variant_attribute_value_ids(self):
         Product = self.env['product.product']
+        self.variant_attribute_value_ids = False
         for document in self:
             if document.res_model == 'product.product' and document.res_id:
                 product = Product.browse(document.res_id)
                 document.variant_attribute_value_ids = product.product_template_attribute_value_ids
-            else:
-                document.variant_attribute_value_ids = False
 
     @api.onchange('url')
     def _onchange_url(self):

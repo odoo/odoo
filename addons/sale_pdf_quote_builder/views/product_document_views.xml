@@ -7,10 +7,9 @@
         <field name="inherit_id" ref="product.product_document_form"/>
         <field name="arch" type="xml">
             <field name="attached_on_sale" position="after">
-                <label for="form_field_ids"/>
-                <div class="d-flex align-items-center gap-2 flex-wrap">
+                <label for="form_field_ids" invisible="not form_field_ids"/>
+                <div class="d-flex align-items-center gap-2 flex-wrap" invisible="not form_field_ids">
                     <field name="form_field_ids" widget="many2many_tags" class="oe_inline"/>
-                    <span class="text-muted" invisible="form_field_ids">None</span>
                     <button
                         name="action_open_pdf_form_fields"
                         type="object"
@@ -18,7 +17,6 @@
                         help="Configure the path to fill the form fields."
                         class="btn btn-secondary btn-sm flex-shrink-0 ms-5"
                         groups="base.group_system"
-                        invisible="not form_field_ids"
                     />
                 </div>
             </field>
