@@ -1,35 +1,30 @@
 import { LocationSchedule } from "../location_schedule/location_schedule";
 import { Map } from "../map/map";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { AssetsLoadingError, loadCSS, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
     static template = "website.locationSelector.mapContainer";
-    static props = {
-        locations: Array,
-        pressControlToZoom: { type: Boolean, optional: true },
-        selectedLocationId: [String, { value: false }],
-        setSelectedLocation: Function,
-        setVisibleLocations: { type: Function, optional: true },
-        validateSelection: { Function, optional: true },
-        showDetailsTooltip: { type: Boolean, optional: true },
-        showDetailsTextArea: { type: Boolean, optional: true },
-        mapZoom: { type: String, optional: true },
-        showIndexes: Boolean,
-        showEmail: { type: Boolean, optional: true },
-        showImage: { type: Boolean, optional: true },
-        showPhone: { type: Boolean, optional: true },
-        showWebsite: { type: Boolean, optional: true },
-        showLocationNameOnMarkerHover: { type: Boolean, optional: true },
-        containerEl: { type: HTMLElement, optional: true },
-    };
-    static defaultProps = {
-        showDetailsTooltip: false,
-        showDetailsTextArea: true,
-        mapZoom: "13",
-    };
+    props = props({
+        locations: t.array(),
+        pressControlToZoom: t.boolean().optional(false),
+        selectedLocationId: t.string(),
+        setSelectedLocation: t.function(),
+        setVisibleLocations: t.function().optional(),
+        validateSelection: t.function().optional(),
+        showDetailsTooltip: t.boolean().optional(false),
+        showDetailsTextArea: t.boolean().optional(true),
+        mapZoom: t.string().optional("13"),
+        showIndexes: t.boolean(),
+        showEmail: t.boolean().optional(false),
+        showImage: t.boolean().optional(false),
+        showPhone: t.boolean().optional(false),
+        showWebsite: t.boolean().optional(false),
+        showLocationNameOnMarkerHover: t.boolean().optional(false),
+        containerEl: t.instanceOf(HTMLElement).optional(),
+    });
 
     setup() {
         this.state = proxy({

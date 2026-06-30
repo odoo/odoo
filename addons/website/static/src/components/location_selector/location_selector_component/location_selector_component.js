@@ -1,35 +1,32 @@
 import { LocationList } from "@website/components/location_selector/location_list/location_list";
 import { MapContainer } from "@website/components/location_selector/map_container/map_container";
-import { Component, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect, props, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class LocationSelectorComponent extends Component {
     static components = { LocationList, MapContainer };
     static template = "website.locationSelector.component";
-    static props = {
-        mapZoom: String,
-        showSidebar: { type: Boolean, optional: true },
-        showSearchbar: { type: Boolean, optional: true },
-        mapSearchbarPlaceholder: { type: String, optional: true },
-        sidebarLocation: String,
-        showDetailsTooltip: Boolean,
-        showDetailsTextArea: Boolean,
-        hideOffscreenLocations: { type: Boolean, optional: true },
-        locationsList: String,
-        showEmail: { type: Boolean, optional: true },
-        showImage: { type: Boolean, optional: true },
-        showPhone: { type: Boolean, optional: true },
-        showWebsite: { type: Boolean, optional: true },
-        zipCode: { type: String, optional: true },
-        containerEl: { type: HTMLElement, otional: true },
-    };
-    static defaultProps = {
-        mapSearchbarPlaceholder: _t("Your postal code"),
-    };
+    props = props({
+        mapZoom: t.string(),
+        showSidebar: t.boolean().optional(false),
+        showSearchbar: t.boolean().optional(false),
+        mapSearchbarPlaceholder: t.string().optional(_t("Your postal code")),
+        sidebarLocation: t.string(),
+        showDetailsTooltip: t.boolean(),
+        showDetailsTextArea: t.boolean(),
+        hideOffscreenLocations: t.boolean().optional(false),
+        locationsList: t.string(),
+        showEmail: t.boolean().optional(false),
+        showImage: t.boolean().optional(false),
+        showPhone: t.boolean().optional(false),
+        showWebsite: t.boolean().optional(false),
+        zipCode: t.string().optional(),
+        containerEl: t.instanceOf(HTMLElement).optional(),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             locations: [],
             viewMode: "list",
             zipCode: this.props.zipCode,

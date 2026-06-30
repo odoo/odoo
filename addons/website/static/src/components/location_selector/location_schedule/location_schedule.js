@@ -1,23 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class LocationSchedule extends Component {
     static template = "website.locationSelector.schedule";
-    static props = {
-        openingHours: {
-            type: Object,
-            values: {
-                type: Array,
-                element: String,
-                optional: true,
-            },
-            optional: true,
-        },
-        wrapClass: { type: String, optional: true },
-    };
-    static defaultProps = {
-        openingHours: {},
-    };
+
+    props = props({
+        openingHours: t.object({ values: t.array(t.string()) }).optional({}),
+        wrapClass: t.string().optional(),
+    });
 
     /**
      * Return the localized day's name given his index in the week.

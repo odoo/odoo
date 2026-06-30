@@ -1,31 +1,20 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Location } from "../location/location";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t } from "@odoo/owl";
 
 export class LocationList extends Component {
     static components = { Location };
     static template = "website.locationSelector.locationList";
-    static props = {
-        hideOffscreenLocations: { type: Boolean, optional: true },
-        locations: Array,
-        selectedLocationId: [String, { value: false }],
-        setSelectedLocation: Function,
-        showIndexes: { type: Boolean, optional: true },
-        showPinIndicator: { type: Boolean, optional: true },
-        validateSelection: { type: Function, optional: true },
-        visibleLocations: {
-            type: Set,
-            element: String,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        hideOffscreenLocations: false,
-        showIndexes: true,
-        showPinIndicator: true,
-        visibleLocations: new Set(),
-    };
-
+    props = props({
+        hideOffscreenLocations: t.boolean().optional(false),
+        locations: t.array(),
+        selectedLocationId: t.string(),
+        setSelectedLocation: t.function(),
+        showIndexes: t.boolean().optional(true),
+        showPinIndicator: t.boolean().optional(true),
+        validateSelection: t.function().optional(),
+        visibleLocations: t.instanceOf(Set).optional(new Set()),
+    });
     setup() {
         onMounted(() => {
             document.getElementById(`location-${this.props.selectedLocationId}`)?.focus();

@@ -15,10 +15,10 @@ class StoreLocatorOptionPlugin extends Plugin {
             HideLocationsOffscreenAction,
             RefreshStoreLocatorAction,
         },
-        clean_for_save_processors: this.cleanForSave.bind(this),
+        on_will_save_handlers: this.onWillSave.bind(this),
     };
 
-    cleanForSave(rootEl) {
+    onWillSave(rootEl = this.editable) {
         // Remove store_locator snippets without entries
         const storeLocatorSnippets = rootEl.querySelectorAll(".s_store_locator");
         storeLocatorSnippets.forEach((snippet) => {
