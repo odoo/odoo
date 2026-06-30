@@ -29,8 +29,8 @@ class ExpiryPickingConfirmation(models.TransientModel):
             self.description = _(
                 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock."
                 "\nDo you confirm you want to proceed?",
-                product_name=self.lot_ids.product_id.display_name,
-                lot_name=self.lot_ids.name
+                product_name=self.lot_ids.product_id.display_name or self.env.context.get('expired_product_name'),
+                lot_name=self.lot_ids.name or self.env.context.get('expired_lot_name'),
             )
 
     def process(self):
