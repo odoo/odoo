@@ -185,8 +185,6 @@ export class RenderPlugin extends Plugin {
         }
     }
 
-    // TODO EGGMAIL: search and replace all usages of:
-    // apply_layout_strategy_overrides
     getEmailNodeArguments(referenceNode, parentEmailNode) {
         const { layout, analysis } = this.processThrough(
             "element_layout_analysis_processors",

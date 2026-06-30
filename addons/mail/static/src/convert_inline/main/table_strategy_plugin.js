@@ -92,7 +92,7 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     /**
-     * TODO EGGMAIL NOW: WORKING HERE NOW:
+     * TODO EGGMAIL:
      * background color for card body should be applied on cell, but the
      * logic does not support it => need custo:
      * secondary report which will fight for priority over the first one
@@ -471,6 +471,8 @@ export class TableStrategyPlugin extends Plugin {
     // -> can support it with a specific table layout
     // -> not critical, as we don't use it currently, but would be great for
     // design flexibility
+    // TODO EGGMAIL: currently a table is not well represented in the final
+    // email (some style is lost and the table is not "stretched" horizontally)
     // TODO EGGMAIL: currently a table with 2 rows of 1 column won't be
     // considered a "table"
     // should we look for "invalid" nodes such as tbody? Or make a whitelist of
@@ -479,19 +481,6 @@ export class TableStrategyPlugin extends Plugin {
     // and few exceptions (table) should verify that they don't have a table
     // as their direct ancestor
     detectTableLayout(referenceNode) {
-        // => about tables
-        // normally, a table will ask that its direct container is not a table nor a row nor a tbody => if it is, we create a row + td to wrap
-        // it => becomes legal again
-        // -> how to handle it => actual constraint should come from the parent (table) if the child is also a table => it should be
-        // wrapped in a tr + td?
-
-        // TODO EGGMAIL NOW: render fragment
-        // The above heuristic will match a `tbody` and transform it into a
-        // table
-        // => avoid putting a table inside another table
-        // => re-evaluate strategy of parent in such a case
-        // => match a table tagName directly and handle it from that node,
-        // aggregate unsupported sub-parts
         let isTableCandidate = false;
         const mobileBlock = this.getLayoutBlock(referenceNode, MOBILE);
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
@@ -514,32 +503,6 @@ export class TableStrategyPlugin extends Plugin {
         return isTableCandidate;
     }
 
-    // TODO EGGMAIL NOW (remark from hybrid_fluid_strategy_plugin)
-    // MAYBE OBSOLETE COMMENT:
-    // we have a container which is supposed to be a hybrid fluid table
-    // with potentially multiple rows, each with potentially multiple
-    // cells.
-    // however right now, we only have one container and its children
-    // we have to create a EmailNode for each row, and a EmailNode
-    // for each cell.
-    // some of the existing children can be used as is as a cell
-    // the current emailNode should be replaced with the list of rows
-    // need feature to insert multiple nodes as children of another
-    // emailNode
-    // features needed here:
-    // - replace an item in emailNode.children
-    // // currently setParent appends -> this is not enough
-    // // -> honestly, need to replace the set by a special set+list structure
-    // // done
-    // Logic:
-    // exact copy paste of buildFragment logic except we create a datastructure of
-    // template arguments instead of the templates directly?
-    // Real idea here is that I should create a synthetic emailNode
-    // I already have my basic emailNode from the first pass which identifies the row
-    // and potentially some other emailNode as children of that row that may have any purpose.
-    // Objective here is to make sure that every child of the row is classified as a CELL,
-    // be it a child itself becomes a CELL, or 1+ children are wrapped in a CELL
-    // BTW the row node itself can become multiple row in some circumstances
     fillTableContainer(emailNode, rowMeasures, { builders = this.builders } = {}) {
         const rows = [];
         for (const rowMeasure of rowMeasures) {
@@ -586,10 +549,6 @@ export class TableStrategyPlugin extends Plugin {
     extractRowsFromBands(emailNode) {
         const referenceNode = emailNode.lastReferenceNode;
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
-        // TODO EGGMAIL WORKING HERE: the block width does not take into
-        // account the real padding of the block, and the block padding
-        // combines all centering strategies. To get the correct ratio,
-        // we need to subtract the real padding of the block element here.
         // TODO EGGMAIL: export this computation somewhere, it is used multiple times
         const computedStyle = this.getComputedStyle(desktopBlock.element);
         const top = parseCssValue(computedStyle.getPropertyValue("padding-top"));
@@ -679,8 +638,6 @@ export class TableStrategyPlugin extends Plugin {
                     verticalAlign,
                 });
             }
-            // TODO EGGMAIL: REMOVE;
-            // row.cellsWidth = width;
         }
         const lastRowMeasure = rowMeasures.at(-1);
         if (lastRowMeasure) {

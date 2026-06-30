@@ -184,11 +184,6 @@ export class ElementLayout extends LayoutModel {
         return this.tag;
     }
 
-    // TODO EGGMAIL: is this used? Else remove
-    getStyleInfo() {
-        return this.refToStyleInfo.get("root");
-    }
-
     isNeutral() {
         return (
             this.tag === "DIV" &&

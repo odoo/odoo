@@ -67,7 +67,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!emailNode.analysis.facts.useHybridFluidTableStrategy || !tableStrategyReport) {
             return;
         }
-        // TODO EGGMAIL NOW: WORKING HERE NOW:
+        // TODO EGGMAIL:
         // issue: currently multiple cells merge into the row and
         // multiple rows merge into the table => need filtering to decide
         // the best spacing strategy
@@ -119,9 +119,9 @@ export class HybridFluidStrategyPlugin extends Plugin {
             canMerge: false,
             needSyntheticEmailNode: true,
         });
-        // TODO EGGMAIL: add a generic "isContainer" fact. a "container" should
-        // be a flexible node that can become e.g. a table for MSO, and can
-        // be merged with its parent if they also are a container and there
+        // TODO EGGMAIL: maybe add a generic "isContainer" fact. a "container"
+        // should be a flexible node that can become e.g. a table for MSO, and
+        // can be merged with its parent if they also are a container and there
         // is no positioning consideration between the 2
         analysis.facts.isHybridFluidContainer = true;
         layout.pluginIds.add(HybridFluidStrategyPlugin.id);
@@ -226,8 +226,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const layout = new HybridFluidCell({ refs });
         const cellEmailNode = new EmailNode({
             layout,
-            // TODO EGGMAIL: evaluate what positioning facts should be shared
-            // and how
         });
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
@@ -252,8 +250,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const layout = new HybridFluidTableCell(refs.root);
         const cellEmailNode = new EmailNode({
             layout,
-            // TODO EGGMAIL: evaluate what positioning facts should be shared
-            // and how
         });
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
