@@ -43,6 +43,7 @@ SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
 MAX_COMODELS_FOR_DOMAIN = 5
 MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
 CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
+WRITE_FILE_SUFFIX = '.__new'
 GC_FILE_SUFFIX = '.__gc'
 GC_GRACE_PERIOD = 1800  # 30 minutes
 GC_GRACE_PERIOD_MAX = 604800  # 1 week
@@ -173,13 +174,15 @@ class IrAttachment(models.Model):
             # add fname to checklist, in case the transaction aborts
             self._mark_for_gc(fname)
             # write and set permissions
-            with open(full_path, 'wb') as fp:
+            full_path_tmp = full_path + WRITE_FILE_SUFFIX
+            with open(full_path_tmp, 'wb') as fp:
                 shutil.copyfileobj(bin_value, fp)
             # Prevent changing the content of the file, as it would
             # break the checksum and store_fname fields. This doesn't
             # prevent removing it thought. Sysadmins can use umask(1) to
             # restrict the permissions further.
-            os.chmod(full_path, 0o444)  # r--r--r--
+            os.chmod(full_path_tmp, 0o444)  # r--r--r--
+            os.replace(full_path_tmp, full_path)
         except OSError as e:
             e.add_note(f"_file_write writing {full_path}")
             raise
@@ -254,6 +257,11 @@ class IrAttachment(models.Model):
                         except OSError:
                             os.unlink(check_file)
                     elif os.path.getmtime(check_file) < limit_time:
+                        # check for write file
+                        write_tmp = self._full_path(fname) + WRITE_FILE_SUFFIX
+                        if os.path.exists(write_tmp):
+                            _logger.info("filestore gc removing partially written file %s", write_tmp)
+                            os.unlink(write_tmp)
                         # we can collect the file
                         yield (fname, check_file)
 
@@ -298,6 +306,8 @@ class IrAttachment(models.Model):
                 # 3. Move the file
                 try:
                     os.replace(full_path, del_full_path)
+                except FileNotFoundError:
+                    pass  # check file created but the whole file does not exist
                 except OSError:
                     _logger.info("_file_gc could not move %s", full_path, exc_info=True)
                     continue
@@ -313,6 +323,8 @@ class IrAttachment(models.Model):
                 # 5. Remove moved files
                 try:
                     os.unlink(del_full_path)
+                except FileNotFoundError:
+                    pass
                 except OSError:
                     _logger.info("_file_gc could not unlink %s", full_path, exc_info=True)
                 else:
