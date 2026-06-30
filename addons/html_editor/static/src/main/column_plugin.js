@@ -81,13 +81,6 @@ export class ColumnPlugin extends Plugin {
                 commandParams: 0,
             },
         ],
-        hints: [
-            {
-                selector: `.odoo-editor-editable .o_text_columns div[class*='col-'],
-                            .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
-                text: _t("Empty column"),
-            },
-        ],
         /** Resizing Parameters */
         resizing_parameters: [
             {
@@ -103,10 +96,14 @@ export class ColumnPlugin extends Plugin {
                 return false;
             }
         },
-        region_properties: {
-            within: ".o_text_columns",
-            powerButtons: false,
-        },
+        region_properties: [
+            { within: ".o_text_columns", powerButtons: false },
+            {
+                is: `.odoo-editor-editable .o_text_columns div[class*='col-'],
+                            .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
+                hintText: _t("Empty column"),
+            },
+        ],
         move_node_whitelist_selectors: ".o_text_columns",
         move_node_blacklist_selectors: ".o_text_columns *",
         hint_targets_providers: (selectionData) => {

@@ -9,10 +9,10 @@ export class PlaceholderPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         ...(this.config.placeholder && {
-            hints: [
+            region_properties: [
                 withSequence(1, {
-                    selector: `.odoo-editor-editable:not(:focus) > ${baseContainerGlobalSelector}:only-child`,
-                    text: this.config.placeholder,
+                    is: `.odoo-editor-editable:not(:focus) > ${baseContainerGlobalSelector}:only-child`,
+                    hintText: this.config.placeholder,
                 }),
             ],
             hint_targets_providers: (selectionData, editable) => {

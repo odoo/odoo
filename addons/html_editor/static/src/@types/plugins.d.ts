@@ -32,7 +32,7 @@ declare module "plugins" {
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
     import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
-    import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
+    import { hint_targets_providers } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
     import { on_link_created_handlers, immutable_link_selectors, is_link_editable_predicates, is_empty_link_legit_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
@@ -272,7 +272,6 @@ declare module "plugins" {
         contenteditable_to_remove_selector: contenteditable_to_remove_selector;
         font_type_items: font_type_items,
         format_specs: format_specs;
-        hints: hints;
         history_commit_data_properties: history_commit_data_properties;
         immutable_link_selectors: immutable_link_selectors;
         link_popovers: link_popovers;

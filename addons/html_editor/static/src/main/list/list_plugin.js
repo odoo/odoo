@@ -168,13 +168,11 @@ export class ListPlugin extends Plugin {
             { commandId: "toggleListCL" },
         ].map((item) => withSequence(15, item)),
 
-        hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
-
         /** Regions */
-        region_properties: {
-            within: "LI",
-            powerButtons: false,
-        },
+        region_properties: [
+            { is: `LI, LI > ${baseContainerGlobalSelector}`, hintText: _t("List") },
+            { within: "LI", powerButtons: false },
+        ],
 
         /** Handlers */
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
