@@ -56,33 +56,62 @@
     <!-- Display of /payment/status -->
     <template id="pos_payment_status" name="POS Payment Status">
         <t t-call="web.frontend_layout" no_header="True" no_footer="True" pageName="'h-100'">
-            <div class="pos_payment_status h-100 w-100 d-flex justify-content-center align-items-center bg-100">
-                <div class="container text-center">
-                    <!-- Payment not found -->
-                    <div t-if="payment_not_found">
-                        <i class="oi oi-5x mb-4 text-primary" data-icon="send"/>
-                        <h3 class="display-3">Your payment is on its way!</h3>
-                        <p class="fs-5">
-                            You should receive an email confirming your payment within a few minutes.<br />
-                            Don't hesitate to contact us if you don't receive it.
-                        </p>
+            <div class="pos_payment_status h-100 w-100 d-flex flex-column align-items-center p-3 bg-100"
+                 t-att-style="pos_primary_color and ('--primary: %s;' % pos_primary_color)">
+                <!-- Payment not found -->
+                <div t-if="payment_not_found" class="o_pos_status_stage flex-grow-1 d-flex flex-column align-items-center justify-content-center px-3 text-center">
+                    <i class="oi oi-5x mb-4 text-primary" data-icon="send"/>
+                    <h1 class="o_pos_status_title m-0 fw-bolder">Your payment is on its way!</h1>
+                    <p class="o_pos_status_subtitle mt-1 mb-0 text-muted">
+                        You should receive an email confirming your payment within a few minutes.<br/>
+                        Don't hesitate to contact us if you don't receive it.
+                    </p>
+                </div>
+                <!-- Polling -->
+                <t t-else="">
+                    <!-- Brand -->
+                    <div class="o_pos_status_brand flex-shrink-0 pb-4">
+                        <img t-if="pos_logo" t-att-src="pos_logo" class="o_pos_status_logo object-fit-contain" t-att-alt="pos_company_name"/>
                     </div>
 
-                    <!-- Polling -->
-                    <div t-else=""
-                         name="o_payment_status"
+                    <!-- Stage (payment-status poller hook) -->
+                    <div name="o_payment_status"
+                         class="o_pos_status_stage flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center px-3 w-100"
+                         data-min-dwell="900"
                          t-att-data-landing-route="tx.landing_route"
                          t-att-data-notification-channel="notification_channel">
-                        <div class="spinner-border text-600" style="width: 4rem; height: 4rem; --spinner-animation-speed: .5s" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                        <h1 class="o_pos_status_title m-0 fw-bolder">Almost there!</h1>
+                        <p class="o_pos_status_subtitle mt-1 mb-0 text-muted">We're confirming your payment.</p>
+
+                        <!-- Progress (decorative; the page redirects when the payment is confirmed) -->
+                        <div class="o_pos_progress w-100 mw-50 mt-4 rounded-pill overflow-hidden bg-200" aria-hidden="true">
+                            <div class="o_pos_progress_bar w-50 h-100 rounded-pill"/>
                         </div>
-                        <h3 class="display-3">Almost there!</h3>
-                        <p class="fs-5">We're confirming your payment.</p>
-                        <a t-att-href="tx.landing_route" role="button" class="btn btn-link link-primary skip-link">
+
+                        <!-- Order / total summary -->
+                        <div class="o_pos_status_badge d-inline-flex align-items-center gap-2 mt-4 px-4 py-3 rounded-pill border border-light bg-white fs-4">
+                            <span t-if="pos_tracking_number">
+                                <span class="text-500">Order</span>
+                                <span class="o_pos_badge_v fw-bold ms-1" t-out="pos_tracking_number"/>
+                            </span>
+                            <span t-if="pos_tracking_number" class="text-400">·</span>
+                            <span>
+                                <span class="text-500">Total</span>
+                                <span class="o_pos_badge_v o_pos_status_accent fw-bold ms-1" t-out="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="o_pos_status_base d-flex flex-column align-items-center w-100">
+                        <!-- Skip (revealed after a short delay if the redirect hasn't happened yet) -->
+                        <a t-att-href="tx.landing_route" role="button" class="o_pos_status_skip btn btn-link skip-link">
                             Skip <i class="oi ms-1" data-icon="east"/>
                         </a>
+                        <div class="o_pos_status_secured mt-2 fs-6 text-400">
+                            <i class="oi me-2" data-icon="lock"/>Payment secured · Don't close this window
+                        </div>
                     </div>
-                </div>
+                </t>
             </div>
         </t>
     </template>

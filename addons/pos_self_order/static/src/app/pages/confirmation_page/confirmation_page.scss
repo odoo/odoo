@@ -1,15 +1,93 @@
-.tracking-number {
-    font-size: 1.5rem;
+$o-pos-confirmation-width: 420px;
+$o-pos-confirmation-width-lg: 720px;
+
+.self_order_success_loader {
+    z-index: 10;
+}
+
+.confirmation-page {
+    .o_pos_order_box,
+    .o_pos_status_base .btn {
+        max-width: $o-pos-confirmation-width;
+    }
+
+    .o_pos_status_logo {
+        max-height: 60px;
+        max-width: 70vw;
+    }
+
+    .o_pos_status_check svg {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .o_pos_status_check_circle {
+        fill: var(--primary);
+        transform-origin: center;
+        animation: o_pos_check_pop .4s cubic-bezier(.2, .8, .3, 1.4) both;
+    }
+    
+    .o_pos_status_check_path {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 40;
+        stroke-dashoffset: 40;
+        animation: o_pos_check_draw .4s ease-out .28s forwards;
+    }
+
+    .tracking-number {
+        font-size: 3.25rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_pos_order_due_label {
+        font-size: .8rem;
+        letter-spacing: .08em;
+    }
+
+    .o_pos_order_due_amount {
+        font-variant-numeric: tabular-nums;
+    }
+
+}
+
+@keyframes o_pos_check_pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes o_pos_check_draw {
+    to { stroke-dashoffset: 0; }
 }
 
 @include media-breakpoint-up(lg) {
     @media (orientation: portrait) {
-        .tracking-number {
-            font-size: 6.5rem;
+        .confirmation-page {
+            .o_pos_status_logo {
+                max-height: 90px;
+            }
+            .tracking-number {
+                font-size: 6.5rem;
+            }
+            .o_pos_order_box,
+            .o_pos_status_base .btn {
+                max-width: $o-pos-confirmation-width-lg;
+            }
         }
     }
 }
 
-.self_order_success_loader {
-    z-index: 10;
+@media (prefers-reduced-motion: reduce) {
+    .confirmation-page {
+        .o_pos_status_check_circle {
+            animation: none;
+        }
+        .o_pos_status_check_path {
+            animation: none;
+            stroke-dashoffset: 0;
+        }
+    }
 }
