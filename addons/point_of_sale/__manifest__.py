@@ -55,7 +55,6 @@
         'views/account_move_views.xml',
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
-        'views/stock_reference_views.xml',
     ],
     'demo': [
         'data/demo_data.xml',
