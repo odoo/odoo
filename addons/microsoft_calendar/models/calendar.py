@@ -53,11 +53,6 @@ class CalendarEvent(models.Model):
             )
             event.microsoft_sync_active = sync_active
 
-    @api.depends('microsoft_sync_active', 'recurrency')
-    def _compute_user_can_edit(self):
-        super()._compute_user_can_edit()
-        self.filtered(lambda e: e.microsoft_sync_active and e.recurrency).user_can_edit = False
-
     def _get_organizer(self):
         return self.user_id
 
@@ -93,11 +88,6 @@ class CalendarEvent(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
-
-        # Forbid recurrence creation in Odoo, suggest its creation in Outlook due to the spam limitation.
-        recurrency_in_batch = any(vals.get('recurrency') for vals in vals_list)
-        if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
-            self._forbid_recurrence_creation()
 
         vals_check_organizer = self._check_organizer_validation_conditions(vals_list)
         for vals in [vals for vals, check_organizer in zip(vals_list, vals_check_organizer) if check_organizer]:
@@ -165,43 +155,10 @@ class CalendarEvent(models.Model):
 
         return (event_start, event_stop) == (start, stop)
 
-    def _forbid_recurrence_update(self):
-        """
-        Suggest user to update recurrences in Outlook due to the Outlook Calendar spam limitation.
-        """
-        error_msg = _("Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.")
-        if any(not record.ms_universal_event_id for record in self):
-            # If any event is not synced, suggest deleting it in Odoo and recreating it in Outlook.
-            error_msg = _(
-                "Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-                "If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar.")
-
-        raise UserError(error_msg)
-
-    def _forbid_recurrence_creation(self):
-        """
-        Suggest user to update recurrences in Outlook due to the Outlook Calendar spam limitation.
-        """
-        raise UserError(_("Due to an Outlook Calendar limitation, recurrent events must be created directly in Outlook Calendar."))
-
     def write(self, vals):
         values = vals
         recurrence_update_setting = values.get('recurrence_update')
         notify_context = self.env.context.get('dont_notify', False)
-
-        # Forbid recurrence updates through Odoo and suggest user to update it in Outlook.
-        if not notify_context:
-            recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
-            recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
-            # Check if this is an Outlook recurring event with active sync
-            if recurrence_update_attempt and 'active' not in values:
-                recurring_events = self.filtered('microsoft_recurrence_master_id')
-                if recurring_events and any(
-                    event.with_user(organizer)._check_microsoft_sync_status()
-                    for event in recurring_events
-                    if (organizer := event._get_organizer())
-                ):
-                    self._forbid_recurrence_update()
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
         # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
@@ -230,6 +187,31 @@ class CalendarEvent(models.Model):
                     event.microsoft_id = False
                     event.ms_universal_event_id = False
 
+        # Capture recurrence state before super() so we can issue the correct Microsoft API calls
+        # afterwards. The recurrence record may be deleted and recreated by _rewrite_recurrence,
+        # so scalar IDs must be saved now — accessing old_rec.field after super() risks MissingError.
+        old_rec = self.recurrence_id if len(self) == 1 else self.env['calendar.recurrence']
+        old_microsoft_id = old_rec.microsoft_id
+        old_ms_universal_event_id = old_rec.ms_universal_event_id
+        ms_base_event = (
+            (old_rec.base_event_id or old_rec._get_first_event(include_outliers=False))
+            if old_rec else self.env['calendar.event']
+        )
+
+        # Block 'future_events' for Microsoft-synced recurring events: the split requires 2 API
+        # calls (truncate + insert), which is not supported in the current sync implementation.
+        if not notify_context and recurrence_update_setting == 'future_events' \
+                and old_microsoft_id and self.microsoft_sync_active:
+            raise UserError(_(
+                "Editing 'This and following events' is not supported when Outlook Calendar sync "
+                "is active. Please use 'This event' or 'All events' instead.",
+            ))
+
+        # For all_events: pass need_sync_m=False so individual events are not
+        # PATCHed during the internal rewrite. The series master PATCH is issued below.
+        if recurrence_update_setting == 'all_events' and len(self) == 1:
+            values = dict(values, need_sync_m=False)
+
         deactivated_events = self.browse(deactivated_events_ids)
         # Update attendee status before 'values' variable is overridden in super.
         attendee_ids = values.get('attendee_ids')
@@ -242,19 +224,72 @@ class CalendarEvent(models.Model):
         if deactivated_events:
             res |= super(CalendarEvent, deactivated_events.with_context(dont_notify=notify_context)).write({**values, 'active': False})
 
-        if recurrence_update_setting in ('all_events',) and len(self) == 1 \
-           and values.keys() & self._get_microsoft_synced_fields():
-            self.recurrence_id.need_sync_m = True
+        # Trigger the correct Microsoft Graph API call(s) for series-level changes.
+        if old_microsoft_id and not notify_context and self._check_microsoft_sync_status():
+            if recurrence_update_setting == 'all_events':
+                # 1 PATCH to the series master propagates changes to all occurrences.
+                new_rec = ms_base_event.recurrence_id or self.recurrence_id
+                if new_rec:
+                    if not new_rec.microsoft_id:
+                        # _rewrite_recurrence destroyed and recreated the recurrence (time/rrule
+                        # change). Restore the Microsoft series master ID so the PATCH goes to
+                        # the correct Outlook series.
+                        new_rec.with_context(dont_notify=True).write({
+                            'microsoft_id': old_microsoft_id,
+                            'ms_universal_event_id': old_ms_universal_event_id,
+                            'need_sync_m': False,
+                        })
+                    ms_values = new_rec._microsoft_values(new_rec._get_microsoft_synced_fields())
+                    if ms_values:
+                        new_rec._microsoft_patch(
+                            new_rec._get_organizer(), old_microsoft_id, ms_values)
         return res
 
+    @api.model
+    def _get_archive_values(self):
+        """Prevent individual occurrence DELETEs during a series rewrite.
+        The series master is updated via a single PATCH by the outer write() instead."""
+        return {**super()._get_archive_values(), 'need_sync_m': False}
+
+    def _rewrite_recurrence(self, values, time_values, recurrence_values):
+        """Override to preserve Microsoft series master ID through Odoo's destroy+recreate cycle.
+
+        The base implementation may delete and recreate the calendar.recurrence record when
+        time fields or rrule parameters change. We save the Microsoft IDs beforehand and
+        restore them on the new recurrence so that the outer write() can issue a single PATCH
+        to the existing Outlook series instead of deleting and recreating it.
+        """
+        if not self._check_microsoft_sync_status():
+            return super()._rewrite_recurrence(values, time_values, recurrence_values)
+
+        old_rec = self.recurrence_id
+        old_microsoft_id = old_rec.microsoft_id
+        old_ms_universal_event_id = old_rec.ms_universal_event_id
+        ms_base_event = old_rec.base_event_id or old_rec._get_first_event(include_outliers=False)
+
+        # Use no_calendar_sync=True so that @after_commit Microsoft API calls scheduled
+        # inside the base _rewrite_recurrence (archive events, unlink recurrence, recreate)
+        # are silently dropped — the outer write() issues the single correct PATCH instead.
+        super(CalendarEvent, self.with_context(no_calendar_sync=True))._rewrite_recurrence(
+            values, time_values, recurrence_values)
+
+        if not old_microsoft_id:
+            return None
+
+        # If the recurrence was recreated (IF branch: time/rrule changes), ms_base_event
+        # now points to the new recurrence. Restore the Microsoft IDs so the PATCH lands
+        # on the correct Outlook series.
+        new_rec = ms_base_event.recurrence_id or self.recurrence_id
+        if new_rec and not new_rec.microsoft_id:
+            new_rec.with_context(dont_notify=True).write({
+                'microsoft_id': old_microsoft_id,
+                'ms_universal_event_id': old_ms_universal_event_id,
+                'need_sync_m': False,
+            })
+
+        return None
+
     def unlink(self):
-        # Forbid recurrent events unlinking from calendar list view with sync active.
-        if self and self._check_microsoft_sync_status():
-            synced_events = self._get_synced_events()
-            change_from_microsoft = self.env.context.get('dont_notify', False)
-            recurrence_deletion = any(ev.recurrency and ev.recurrence_id and ev.follow_recurrence for ev in synced_events)
-            if not change_from_microsoft and recurrence_deletion:
-                self._forbid_recurrence_update()
         return super().unlink()
 
     def _recreate_event_different_organizer(self, values, sender_user):
@@ -297,10 +332,7 @@ class CalendarEvent(models.Model):
                 attendee.state = state_update
 
     def action_mass_archive(self, recurrence_update_setting):
-        # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
         self.ensure_one()
-        if self._check_microsoft_sync_status() and self.microsoft_id:
-            self._forbid_recurrence_update()
         super().action_mass_archive(recurrence_update_setting)
 
     def _get_microsoft_sync_domain(self):

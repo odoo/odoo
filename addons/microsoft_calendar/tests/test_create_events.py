@@ -11,7 +11,7 @@ from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCal
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 
 
@@ -297,22 +297,32 @@ class TestCreateEvents(TestCommon):
             self.assert_odoo_event(e, self.expected_odoo_recurrency_events_from_outlook[i])
 
     @patch.object(MicrosoftCalendarService, 'insert')
-    def test_forbid_recurrences_creation_synced_outlook_calendar(self, mock_insert):
+    def test_create_recurrence_synced_outlook_calendar(self, mock_insert):
         """
-        Forbids new recurrences creation in Odoo due to Outlook spam limitation of updating recurrent events.
+        Creating a recurrence in Odoo while synced with Outlook is now allowed.
+        The series must be pushed to Outlook as a seriesMaster event.
         """
-        # Set custom calendar token validity to simulate real scenario.
-        self.env.user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=5)
+        # Set token and validity to simulate an active Outlook connection.
+        self.env.user.sudo().write({
+            'microsoft_calendar_token': 'test_token',
+            'microsoft_calendar_token_validity': datetime.now() + timedelta(minutes=5),
+        })
 
         # Assert that synchronization with Outlook is active.
         self.assertFalse(self.env.user.microsoft_synchronization_stopped)
 
-        with self.assertRaises(UserError):
-            self.env["calendar.event"].create(
-                self.recurrent_event_values
-            )
-        # Assert that no insert call was made.
-        mock_insert.assert_not_called()
+        mock_insert.return_value = ('ms_event_id_123', 'ms_uid_456')
+
+        event = self.env["calendar.event"].create(self.recurrent_event_values)
+        self.call_post_commit_hooks()
+
+        # Assert that the event was created successfully.
+        self.assertTrue(event.exists())
+
+        # Assert that the series was inserted into Outlook as a seriesMaster.
+        mock_insert.assert_called_once()
+        ms_values = mock_insert.call_args[0][0]
+        self.assertEqual(ms_values.get('type'), 'seriesMaster', "Recurring event must be sent to Outlook as a seriesMaster")
 
     @patch.object(MicrosoftCalendarService, 'insert')
     def test_create_event_with_sync_config_paused(self, mock_insert):
