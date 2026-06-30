@@ -313,6 +313,7 @@ $blockquote-margin-y: 0 !default;
 $o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
 $o-btn-outline-border-width-defaults: () !default;
+$o-btn-gradient-defaults: () !default;
 @each $color in ('primary', 'secondary') {
     @if o-website-value('btn-#{$color}-flat') {
         $o-btn-flat-defaults: append($o-btn-flat-defaults, $color);
@@ -321,6 +322,8 @@ $o-btn-outline-border-width-defaults: () !default;
         $o-btn-outline-border-width-defaults: map-merge($o-btn-outline-border-width-defaults, (
             $color: o-website-value('btn-#{$color}-outline-border-width'),
         ));
+    } @else if o-website-value('btn-#{$color}-gradient') {
+        $o-btn-gradient-defaults: append($o-btn-gradient-defaults, $color);
     }
 }
 

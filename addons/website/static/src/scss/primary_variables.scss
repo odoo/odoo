@@ -2124,6 +2124,8 @@ $o-base-website-values-palette: (
     'btn-secondary-outline': false,
     'btn-primary-flat': false,
     'btn-secondary-flat': false,
+    'btn-primary-gradient': false,
+    'btn-secondary-gradient': false,
     'btn-primary-outline-border-width': 1px,
     'btn-secondary-outline-border-width': 1px,
     'link-underline': 'hover', // 'never' / 'hover' / 'always'
@@ -2380,11 +2382,24 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
 };
 
 @mixin o-add-gradient($key) {
-    $-gradient: o-website-value($key);
+    $-gradient: o-website-value($key) or map-get($o-color-palette, $key);
     @if $-gradient {
         background-color: rgba(0, 0, 0, 0);
         background-image: $-gradient;
     }
+};
+
+// Resolves palette color name references (e.g. 'o-color-1') embedded as
+// quoted strings inside a gradient value, replacing them with their actual
+// hex colors from the given palette map.
+@function o-resolve-palette-gradient($gradient, $palette) {
+    $str: inspect($gradient);
+    @each $name, $color in $palette {
+        @if type-of($color) == 'color' {
+            $str: str-replace($str, '"#{$name}"', inspect($color));
+        }
+    }
+    @return unquote($str);
 };
 
 // Replaces 'NULL' string values in a map by the sass null value (this is useful
