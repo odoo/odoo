@@ -11,16 +11,23 @@ import {
     inputFiles,
     mockGetMedia,
     onRpcBefore,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { serverState, withUser } from "@web/../tests/web_test_helpers";
+import { 
+    Command, 
+    patchWithCleanup,
+    serverState, 
+    withUser 
+} from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
+import { session } from "@web/session";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -215,3 +222,54 @@ test("Should not show IM status of agents", async () => {
     await contains(".o-mail-ChatBubble");
     await assertChatBubbleAndWindowImStatus("MitchellOp", 0);
 });
+
+test("Displays the name of agent in welcome message", async () => {
+    const pyEnv = await startServer();
+    const agentId = pyEnv["res.partner"].create({
+        name: "Jane",
+        user_ids: [Command.create({ name: "jane" })],
+    });
+    const botId = pyEnv["res.partner"].create({
+        name: "Bot",
+        user_ids: [Command.create({ name: "bot" })],
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 2" });
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    patchWithCleanup(session, {
+        livechatData: {
+            ...session.livechatData,
+            options: {
+                ...session.livechatData?.options,
+                default_message: "Hello, how may I help you?",
+            },
+        },
+    });
+    const [chatAsAgent, chatAsBot] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: agentId, livechat_member_type: "agent" }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+            ],
+            livechat_channel_id: livechatChannelId,
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: botId, livechat_member_type: "bot" }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+            ],
+            livechat_channel_id: livechatChannelId,
+            channel_type: "livechat",
+        },
+    ]);
+    setupChatHub({ opened: [chatAsAgent, chatAsBot] });
+    await start({ authenticateAs: false });
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(
+        ".o-mail-ChatWindow:eq(0) .o-mail-Message:has(:text('Hello, how may I help you?')) .o-mail-Message-author:text('Jane')"
+    );
+    await contains(
+        ".o-mail-ChatWindow:eq(1) .o-mail-Message:has(:text('Hello, how may I help you?')) .o-mail-Message-author:text('Bot')"
+    );
+});
+
