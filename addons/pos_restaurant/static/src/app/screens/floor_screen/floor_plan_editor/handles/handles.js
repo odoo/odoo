@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillPatch, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillPatch, proxy, props, t } from "@odoo/owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { computeRotationHandlePosition } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/utils";
 const HANDLE_OFFSET = 5;
@@ -7,16 +7,16 @@ const HANDLE_OFFSET = 5;
 export class Handles extends Component {
     static template = "pos_restaurant.floor_editor.handle_overlay";
 
-    static props = {
-        onStartResize: { type: Function, optional: true },
-        onStartMove: { type: Function, optional: true },
-        onStartRotate: { type: Function, optional: true },
-        onEdit: { type: Function, optional: true },
-        floorElement: { optional: true },
-        canvasRef: { type: Object },
-        actions: { type: Function, optional: true },
-        actionMenuPosition: { type: String, optional: true },
-    };
+    props = props({
+        onStartResize: t.function().optional(),
+        onStartMove: t.function().optional(),
+        onStartRotate: t.function().optional(),
+        onEdit: t.function().optional(),
+        floorElement: t.any().optional(),
+        canvasRef: t.object(),
+        actions: t.function().optional(),
+        actionMenuPosition: t.string().optional(),
+    });
 
     get el() {
         return this.root.el;

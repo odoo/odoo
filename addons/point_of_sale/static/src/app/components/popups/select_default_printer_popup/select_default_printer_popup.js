@@ -1,15 +1,15 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectDefaultPrinterPopup extends Component {
     static template = "point_of_sale.SelectDefaultPrinterPopup";
     static components = { Dialog };
-    static props = {
-        receipt_printers: Array,
-        close: Function,
-        getPayload: Function,
-        selectedId: { type: Number, optional: true },
-    };
+    props = props({
+        receipt_printers: t.array(),
+        close: t.function(),
+        getPayload: t.function(),
+        selectedId: t.number().optional(),
+    });
 
     setup() {
         this.state = proxy({

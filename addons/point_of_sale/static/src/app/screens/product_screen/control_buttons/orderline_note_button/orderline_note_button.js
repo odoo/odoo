@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { useService } from "@web/core/utils/hooks";
@@ -7,11 +7,11 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export class NoteButton extends Component {
     static template = "point_of_sale.NoteButton";
-    static props = {
-        icon: { type: String, optional: true },
-        label: { type: String, optional: false },
-        class: { type: String, optional: true },
-    };
+    props = props({
+        icon: t.string().optional(),
+        label: t.string(),
+        class: t.string().optional(),
+    });
 
     setup() {
         this.pos = usePos();

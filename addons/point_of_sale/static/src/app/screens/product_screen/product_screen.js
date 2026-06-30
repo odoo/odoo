@@ -7,7 +7,7 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { user } from "@web/core/user";
-import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, computed, proxy, props, t } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -47,9 +47,9 @@ export class ProductScreen extends Component {
         ProductCard,
         BarcodeVideoScanner,
     };
-    static props = {
-        orderUuid: { type: String },
-    };
+    props = props({
+        orderUuid: t.string(),
+    });
 
     setup() {
         super.setup();

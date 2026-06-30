@@ -16,7 +16,6 @@ let savedScrollTop = 0;
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
     static components = { OrderWidget, ProductNameWidget };
-    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

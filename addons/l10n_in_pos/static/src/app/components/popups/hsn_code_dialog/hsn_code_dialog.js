@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 export class hsnCodeDialog extends Component {
     static components = { Dialog };
     static template = "l10n_in_pos.hsnCodeDialog";
-    static props = {
-        close: Function,
-    };
+    props = props({
+        close: t.function(),
+    });
 
     setup() {
         this.pos = usePos();

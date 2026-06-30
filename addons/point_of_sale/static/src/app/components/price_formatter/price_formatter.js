@@ -1,11 +1,11 @@
 import { localization } from "@web/core/l10n/localization";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class PriceFormatter extends Component {
     static template = "point_of_sale.PriceFormatter";
-    static props = {
-        price: { type: String },
-    };
+    props = props({
+        price: t.string(),
+    });
 
     get priceParts() {
         const trimmedPrice = this.props.price.trim();

@@ -1,8 +1,8 @@
-import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, props } from "@odoo/owl";
 
 export class TimeoutPopup extends Component {
     static template = "pos_self_order.TimeoutPopup";
-    static props = ["close", "onTimeout"];
+    props = props(["close", "onTimeout"]);
     setup() {
         this.state = proxy({ time: 10 });
 

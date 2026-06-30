@@ -1,12 +1,16 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, t } from "@odoo/owl";
 import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
 
 export class Stepper extends Component {
     static template = "pos_self_order.stepper";
-    static props = ["steps", "selectedStep?", "onStepClicked"];
+    props = props({
+        steps: t.any(),
+        selectedStep: t.any().optional(),
+        onStepClicked: t.any(),
+    });
 
     setup() {
         this.containerRef = useRef("stepperContainer");

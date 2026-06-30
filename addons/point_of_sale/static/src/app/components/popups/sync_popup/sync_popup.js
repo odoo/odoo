@@ -1,6 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component } from "@odoo/owl";
+import { Component, props } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
@@ -9,7 +9,7 @@ const DANGEROUS_PRODUCT_THRESHOLD = 20000;
 export class SyncPopup extends Component {
     static components = { Dialog };
     static template = "point_of_sale.SyncPopup";
-    static props = ["close", "confirm", "title"];
+    props = props(["close", "confirm", "title"]);
 
     setup() {
         this.orm = useService("orm");

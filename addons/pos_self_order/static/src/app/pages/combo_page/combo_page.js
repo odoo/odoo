@@ -1,5 +1,5 @@
 import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
@@ -12,7 +12,7 @@ import { formatProductName, shouldShowMissingDetails } from "../../utils";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
-    static props = ["productTemplate"];
+    props = props(["productTemplate"]);
     static components = {
         AttributeSelection,
         Stepper,

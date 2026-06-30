@@ -9,8 +9,6 @@ import {
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { patch } from "@web/core/utils/patch";
-import { onMounted } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
@@ -88,15 +86,11 @@ export async function waitUntilOrdersSynced(store, options) {
 }
 
 export const mountPosDialog = async (component, props) => {
-    patchDialogComponent(component);
     const dialog = getService("dialog");
     const root = await mountWithCleanup(MainComponentsContainer);
-    const deferred = Promise.withResolvers();
-
     const getComponentInstance = (root) => {
         const flattenedChildren = (comp, acc = {}) => {
-            const array = Object.values(comp.children);
-            for (const child of array) {
+            for (const child of Object.values(comp.children)) {
                 acc[child.componentName] = child;
                 flattenedChildren(child, acc);
             }
@@ -105,35 +99,10 @@ export const mountPosDialog = async (component, props) => {
         const components = flattenedChildren(root);
         return components[component.name];
     };
+    dialog.add(component, props);
 
-    dialog.add(component, {
-        ...props,
-        onMounted() {
-            const dialogComponent = getComponentInstance(root.__owl__);
-            deferred.resolve(dialogComponent.component);
-        },
-    });
-    return await deferred.promise;
-};
-
-export const patchDialogComponent = (component) => {
-    if (Array.isArray(component.props)) {
-        component.props = [...component.props, "onMounted?"];
-    } else {
-        component.props = {
-            ...component.props,
-            onMounted: { optional: true },
-        };
-    }
-    patch(component.prototype, {
-        setup() {
-            super.setup();
-
-            onMounted(() => {
-                this.props.onMounted && this.props.onMounted();
-            });
-        },
-    });
+    const dialogNode = await waitUntil(() => getComponentInstance(root.__owl__));
+    return dialogNode.component;
 };
 
 export const expectFormattedPrice = (value, expected) => {

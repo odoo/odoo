@@ -30,7 +30,6 @@ export class Navbar extends Component {
         SyncPopup,
         OrderTabs,
     };
-    static props = {};
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");

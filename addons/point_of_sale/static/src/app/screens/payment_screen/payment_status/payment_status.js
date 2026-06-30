@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 
 export class PaymentScreenStatus extends Component {
     static template = "point_of_sale.PaymentScreenStatus";
-    static props = {
-        order: Object,
-    };
+    props = props({
+        order: t.object(),
+    });
     static components = { PriceFormatter };
 
     setup() {

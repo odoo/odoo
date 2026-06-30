@@ -1,18 +1,18 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
 export class BaseProductAttribute extends Component {
     static template = "";
-    static props = [
+    props = props([
         "attribute",
         "selected",
         "setSelected",
         "customValue",
         "setCustomValue",
         "allSelectedValues",
-    ];
+    ]);
 
     setup() {
         super.setup(...arguments);
@@ -53,13 +53,16 @@ export class ImageProductAttribute extends BaseProductAttribute {
 
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
-    static props = [...BaseProductAttribute.props, "selected?", "customValue?"];
+    multiProductAttributeProps = props({
+        selected: t.any().optional(),
+        customValue: t.any().optional(),
+    });
 
     setup() {
         super.setup(...arguments);
         this.state = proxy({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
-                acc[value.id] = this.props.selected?.includes(value) || false;
+                acc[value.id] = this.multiProductAttributeProps.selected?.includes(value) || false;
                 return acc;
             }, {}),
         });
@@ -85,14 +88,14 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = {
-        productTemplate: Object,
-        getPayload: Function,
-        close: Function,
-        hideAlwaysVariants: { type: Boolean, optional: true },
-        forceVariantValue: { type: Object, optional: true },
-        line: { type: Object, optional: true },
-    };
+    props = props({
+        productTemplate: t.object(),
+        getPayload: t.function(),
+        close: t.function(),
+        hideAlwaysVariants: t.boolean().optional(),
+        forceVariantValue: t.array().optional(),
+        line: t.object().optional(),
+    });
 
     setup() {
         this.pos = usePos();

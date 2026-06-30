@@ -2,7 +2,7 @@ import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -17,7 +17,11 @@ const { DateTime } = luxon;
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
     static components = { Dialog, CashInput };
-    static props = ["confirmKey?", "close", "getPayload?"];
+    props = props({
+        confirmKey: t.any().optional(),
+        close: t.any(),
+        getPayLoad: t.any().optional(),
+    });
     setup() {
         super.setup();
         this.notification = useService("notification");

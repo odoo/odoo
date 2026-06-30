@@ -12,7 +12,6 @@ import { FloorPlanEditor } from "@pos_restaurant/app/screens/floor_screen/floor_
 export class FloorScreen extends Component {
     static template = "pos_restaurant.FloorScreen";
     static components = { NumpadDropdown, FloorEditorToolBar, FloorPlan, FloorPlanEditor };
-    static props = {};
     static storeOnOrder = false;
 
     setup() {

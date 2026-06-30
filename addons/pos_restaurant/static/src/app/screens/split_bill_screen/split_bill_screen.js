@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, props, t } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
@@ -12,10 +12,10 @@ import { localeCompare } from "@web/core/l10n/utils";
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderDisplay, PriceFormatter };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-        orderUuid: { type: String },
-    };
+    props = props({
+        disallow: t.boolean().optional(),
+        orderUuid: t.string(),
+    });
 
     setup() {
         this.pos = usePos();

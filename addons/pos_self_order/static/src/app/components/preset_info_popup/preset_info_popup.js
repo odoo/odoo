@@ -1,4 +1,4 @@
-import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
+import { Component, EventBus, onWillStart, proxy, props, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -89,10 +89,10 @@ const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
     static template = "pos_self_order.PresetInfoPopup";
     static components = { Dialog, AddressAutoComplete: SelfOrderAddressAutoComplete };
-    static props = {
-        close: Function,
-        getPayload: Function,
-    };
+    props = props({
+        close: t.function(),
+        getPayload: t.function(),
+    });
 
     setup() {
         this.selfOrder = useService("self_order");

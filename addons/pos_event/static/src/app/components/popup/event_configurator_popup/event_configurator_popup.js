@@ -1,6 +1,6 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
@@ -12,7 +12,7 @@ const { DateTime } = luxon;
 
 export class EventConfiguratorPopup extends Component {
     static template = "pos_event.EventConfiguratorPopup";
-    static props = ["tickets", "getPayload", "close", "slotResult", "availabilityPerTicket"];
+    props = props(["tickets", "getPayload", "close", "slotResult", "availabilityPerTicket"]);
     static components = {
         Dialog,
         ProductCard,
