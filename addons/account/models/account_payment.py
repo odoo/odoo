@@ -753,8 +753,9 @@ class AccountPayment(models.Model):
         query_res = self._cr.dictfetchall()
 
         for pay in self:
-            pay.reconciled_invoice_ids = pay.invoice_ids.filtered(lambda m: m.is_sale_document(True))
-            pay.reconciled_bill_ids = pay.invoice_ids.filtered(lambda m: m.is_purchase_document(True))
+            if not pay._is_fully_matched():
+                pay.reconciled_invoice_ids = pay.invoice_ids.filtered(lambda m: m.is_sale_document(True))
+                pay.reconciled_bill_ids = pay.invoice_ids.filtered(lambda m: m.is_purchase_document(True))
 
         for res in query_res:
             pay = self.browse(res['id'])
@@ -1150,6 +1151,14 @@ class AccountPayment(models.Model):
             'display_invoices': True,
             'display_payment_method': True,
         }
+
+    def _is_fully_matched(self):
+        self.ensure_one()
+        matched = sum(
+            self.move_id.line_ids.matched_credit_ids.mapped('debit_amount_currency')
+            + self.move_id.line_ids.matched_debit_ids.mapped('credit_amount_currency')
+        )
+        return self.currency_id.compare_amounts(matched, self.amount) == 0
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
