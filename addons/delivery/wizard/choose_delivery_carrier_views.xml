@@ -5,14 +5,24 @@
         <field name="model">choose.delivery.carrier</field>
         <field name="arch" type="xml">
             <form>
-                <group>
-                    <group>
-                        <field name="carrier_id"/>
+                <widget name="delivery_carrier_rates_loader"/>
+                <field name="available_carrier_ids" invisible="1"/>
+                <group col="8">
+                    <group colspan="2">
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
                         <div name="carried_weight" class="o_row" groups="uom.group_uom">
-                            <field name="total_weight"/>
+                            <field name="total_weight" string="Total Weight"/>
                             <field name="weight_uom_name"/>
                         </div>
+                        <field
+                            name="carrier_id"
+                            context="{
+                                'carrier_prices_dumped': carrier_prices_dumped,
+                                'wizard_currency_id': currency_id,
+                                'list_view_ref': 'delivery.view_delivery_carrier_so_list'
+                            }"
+                        />
+                        <field name="carrier_prices" invisible="1"/>
                         <field name="delivery_type" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="order_id" invisible="1"/>
@@ -20,9 +30,6 @@
                         <label for="display_price"/>
                         <div class="o_row" name="price_container">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
-                            <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule')">
-                                <i class="oi oi-arrow-right me-1"/>Get rate
-                            </button>
                         </div>
                     </group>
                 </group>

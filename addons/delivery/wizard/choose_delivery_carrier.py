@@ -21,6 +21,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
         domain="[('id', 'in', available_carrier_ids)]",
         required=True,
     )
+    carrier_prices = fields.Json()
+    carrier_prices_dumped = fields.Char()
     delivery_type = fields.Selection(related="carrier_id.delivery_type")
     delivery_price = fields.Float()
     display_price = fields.Float(string="Cost", readonly=True)
@@ -38,14 +40,25 @@ class ChooseDeliveryCarrier(models.TransientModel):
     )
     weight_uom_name = fields.Char(default=_get_default_weight_uom, readonly=True)
 
-    @api.onchange("carrier_id", "total_weight")
+    @api.onchange("carrier_id", "carrier_prices")
     def _onchange_carrier_id(self):
-        self.delivery_message = False
-        if self.delivery_type in ("fixed", "base_on_rule"):
-            vals = self._get_delivery_rate()
-            if vals.get("error_message"):
-                return {"error": vals["error_message"]}
+        if not self.carrier_prices:
+            if self.carrier_id and self.delivery_type in ("fixed", "base_on_rule"):
+                vals = self._get_delivery_rate()
+                if vals.get("error_message"):
+                    return {"error": vals["error_message"]}
+            return
+
+        delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
+        if delivery_vals.get("error_message"):
+            raise UserError(delivery_vals.get("error_message"))
+
+        if "display_price" in delivery_vals:
+            self.delivery_message = delivery_vals["delivery_message"]
+            self.delivery_price = delivery_vals["delivery_price"]
+            self.display_price = delivery_vals["display_price"]
         else:
+            self.delivery_message = False
             self.display_price = 0
             self.delivery_price = 0
 
@@ -85,14 +98,28 @@ class ChooseDeliveryCarrier(models.TransientModel):
             )
 
     def _get_delivery_rate(self):
-        vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(
+        self.ensure_one()
+        delivery_vals = self._get_carrier_delivery_rate(self.carrier_id)
+        if "display_price" in delivery_vals:
+            self.delivery_message = delivery_vals["delivery_message"]
+            self.delivery_price = delivery_vals["delivery_price"]
+            self.display_price = delivery_vals["display_price"]
+            return {"no_rate": delivery_vals["no_rate"]}
+        return {"error_message": delivery_vals["error_message"]}
+
+    def _get_carrier_delivery_rate(self, carrier):
+        self.ensure_one()
+        vals = carrier.with_context(order_weight=self.total_weight).rate_shipment(
             self.order_id
         )
+
         if vals.get("success"):
-            self.delivery_message = vals.get("warning_message", False)
-            self.delivery_price = vals["price"]
-            self.display_price = vals["carrier_price"]
-            return {"no_rate": vals.get("no_rate", False)}
+            return {
+                "delivery_message": vals.get("warning_message", False),
+                "delivery_price": vals["price"],
+                "display_price": vals["carrier_price"],
+                "no_rate": vals.get("no_rate", False),
+            }
         return {"error_message": vals["error_message"]}
 
     def update_price(self):
@@ -115,3 +142,14 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "recompute_delivery_price": False,
             "delivery_message": self.delivery_message,
         })
+
+    @api.model
+    def get_wizard_carrier_rate(self, wizard_id, carrier_id):
+        """Compute delivery prices for a single carier"""
+        wizard = self.browse(wizard_id)
+        carrier = self.env['delivery.carrier'].browse(carrier_id)
+        try:
+            delivery_vals = wizard._get_carrier_delivery_rate(carrier)
+            return delivery_vals
+        except Exception as e:  # noqa: BLE001
+            return {"error_message": e.args[0]}
