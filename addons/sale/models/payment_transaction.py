@@ -244,7 +244,7 @@ class PaymentTransaction(models.Model):
         command_list = values.get("sale_order_ids")
         if command_list:
             # Extract sales order id(s) from the X2M commands
-            order_ids = self._fields["sale_order_ids"].convert_to_cache(command_list, self)
+            order_ids = self._fields["sale_order_ids"].convert_to_cache(command_list, self.browse())
             orders = self.env["sale.order"].browse(order_ids).exists()
             if len(orders) == len(order_ids):  # All ids are valid
                 return separator.join(orders.mapped("name"))

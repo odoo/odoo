@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
         command_list = values.get('invoice_ids')
         if command_list:
             # Extract invoice id(s) from the X2M commands
-            invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self)
+            invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self.browse())
             invoices = self.env['account.move'].browse(invoice_ids).exists()
             if len(invoices) == len(invoice_ids):  # All ids are valid
                 prefix = separator.join(invoices.filtered(lambda inv: inv.name).mapped('name'))

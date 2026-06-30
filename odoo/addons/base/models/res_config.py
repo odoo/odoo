@@ -520,6 +520,7 @@ class ResConfigSettings(models.TransientModel):
         # values will trigger the write of all related values. This in turn may
         # trigger chain of further recomputation. To avoid it, delete values
         # that were not changed.
+        model = self.browse()
         for vals in vals_list:
             for field in self._fields.values():
                 if not (field.name in vals and field.related and not field.readonly):
@@ -533,13 +534,13 @@ class ResConfigSettings(models.TransientModel):
                 # determine the current value
                 field0 = self._fields[fname0]
                 old_value = field0.convert_to_record(
-                    field0.convert_to_cache(vals[fname0], self), self)
+                    field0.convert_to_cache(vals[fname0], model), model)
                 for fname in fnames:
                     old_value = old_value[:1][fname]
 
                 # determine the new value
                 new_value = field.convert_to_record(
-                    field.convert_to_cache(vals[field.name], self), self)
+                    field.convert_to_cache(vals[field.name], model), model)
 
                 # drop if the value is the same
                 if old_value == new_value:
