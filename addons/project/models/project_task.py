@@ -245,7 +245,13 @@ class ProjectTask(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
+<<<<<<< 1977c40cf3d8a64a265c892c189680574d3646ba
     parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=20)
+||||||| 03d5ff9665fd1d77e93fbcce4de425018ef7c512
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
+=======
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id), ('project_id', '!=', False)]", tracking=True)
+>>>>>>> ede2b3e0f49f47705d10b8c9d6d996023a472c04
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]", export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
