@@ -11,8 +11,8 @@
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
                         <Numpad t-if="!currentOrder?.is_empty() and pos.get_order()?.uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
-                        <ActionpadWidget 
-                            partner="currentOrder?.get_partner()" 
+                        <ActionpadWidget
+                            partner="currentOrder?.get_partner()"
                             onClickMore.bind="displayAllControlPopup"
                             actionName.translate="Payment"
                             actionToTrigger="() => pos.pay()"
@@ -23,11 +23,12 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
+                    <t t-set="displayedProducts" t-value="productsToDisplay"/>
                     <CategorySelector t-if="!ui.isSmall || !pos.scanning" class="'p-2'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
+                    <div t-elif="displayedProducts.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
-                            t-foreach="productsToDisplay" t-as="product" t-key="product.id"
+                            t-foreach="displayedProducts" t-as="product" t-key="product.id"
                             productId="product.id"
                             product="product"
                             class="pos.productViewMode"
