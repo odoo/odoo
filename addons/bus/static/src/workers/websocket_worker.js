@@ -118,7 +118,10 @@ export class WebsocketWorker {
     broadcast(type, data) {
         this._logDebug("broadcast", type, data);
         for (const client of this.channelsByClient.keys()) {
-            client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
+            client.postMessage({
+                type,
+                data: data === undefined ? data : JSON.parse(JSON.stringify(data)),
+            });
         }
     }
 
@@ -145,7 +148,10 @@ export class WebsocketWorker {
         if (type !== "BUS:PROVIDE_LOGS") {
             this._logDebug("sendToClient", type, data);
         }
-        client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
+        client.postMessage({
+            type,
+            data: data === undefined ? data : JSON.parse(JSON.stringify(data)),
+        });
     }
 
     //--------------------------------------------------------------------------

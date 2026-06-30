@@ -110,6 +110,21 @@ test("last_id_reset updates worker state", async () => {
     expect(worker.seenNotificationIds.has(50)).toBe(false);
 });
 
+test("last_id_reset with zero payload broadcasts 0, not undefined", async () => {
+    const worker = await startWebSocketWorker();
+    const received = [];
+    const mockPort = { postMessage: (msg) => received.push(msg) };
+    worker.channelsByClient.set(mockPort, []);
+    const internalMsg = [{ type: "bus/last_id_reset", internal: true, payload: 0 }];
+    for (const serverWs of MockServer.current._websockets) {
+        serverWs.send(JSON.stringify(internalMsg));
+    }
+    await runAllTimers();
+    expect(worker.lastNotificationId).toBe(0);
+    const resetMsg = received.find((m) => m.type === "BUS:LAST_ID_RESET");
+    expect(resetMsg.data).toBe(0);
+});
+
 test("disconnect event is sent when stopping the worker", async () => {
     const worker = await startWebSocketWorker((type) => {
         if (type !== "BUS:WORKER_STATE_UPDATED") {
