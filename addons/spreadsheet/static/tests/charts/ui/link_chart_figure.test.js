@@ -24,7 +24,7 @@ let serverData = /** @type {ServerData} */ ({});
  * able to interact with it.
  */
 async function showChartMenu(fixture) {
-    const chartMenu = fixture.querySelector(".o-figure-menu");
+    const chartMenu = fixture.querySelector(".o-chart-menu-item");
     chartMenu.style.display = "flex";
     await animationFrame();
 }
@@ -32,7 +32,7 @@ async function showChartMenu(fixture) {
 /** Click on external link of the first chart found in the page*/
 async function clickChartExternalLink(fixture) {
     await showChartMenu(fixture);
-    const chartMenuItem = fixture.querySelector(".o-figure-menu-item.o-chart-external-link");
+    const chartMenuItem = fixture.querySelector(".o-chart-menu-item[data-id='chartOdooLink']");
     await click(chartMenuItem);
     await animationFrame();
 }
@@ -117,7 +117,7 @@ test("icon external link isn't on the chart when its not linked to an odoo menu"
     const odooMenu = model.getters.getChartOdooLink(chartId);
     expect(odooMenu).toBe(undefined, { message: "No menu linked with the chart" });
 
-    const externalRefIcon = fixture.querySelector(".o-chart-external-link");
+    const externalRefIcon = fixture.querySelector(".o-chart-menu-item[data-id='chartOdooLink']");
     expect(externalRefIcon).toBe(null);
 });
 
@@ -138,7 +138,7 @@ test("icon external link is on the chart when its linked to an odoo menu", async
         { message: "Odoo Menu is linked to chart" }
     );
     await animationFrame();
-    expect(".o-chart-external-link").toHaveCount(1);
+    expect(".o-chart-menu-item[data-id='chartOdooLink']").toHaveCount(1);
 });
 
 test("icon external link is not on the chart when its linked to a wrong menu", async function () {
@@ -154,7 +154,7 @@ test("icon external link is not on the chart when its linked to a wrong menu", a
     const chartMenu = model.getters.getChartOdooLink(chartId);
     expect(chartMenu).toBe(undefined, { message: "cannot get a wrong menu" });
     await animationFrame();
-    expect(".o-chart-external-link").toHaveCount(0);
+    expect(".o-chart-menu-item[data-id='chartOdooLink']").toHaveCount(0);
 });
 
 test("icon external link is on the chart when its linked to an odoo datasource", async function () {
@@ -175,7 +175,7 @@ test("icon external link is on the chart when its linked to an odoo datasource",
         { message: "Odoo datasource is linked to chart" }
     );
     await animationFrame();
-    expect(".o-chart-external-link").toHaveCount(1);
+    expect(".o-chart-menu-item[data-id='chartOdooLink']").toHaveCount(1);
 });
 
 test("icon external link is not on the chart when its linked to an invalid datasource", async function () {
@@ -195,7 +195,7 @@ test("icon external link is not on the chart when its linked to an invalid datas
     const chartLink = model.getters.getChartOdooLink(chartId);
     expect(chartLink).toBe(undefined, { message: "cannot get an inexisting datasource" });
     await animationFrame();
-    expect(".o-chart-external-link").toHaveCount(0);
+    expect(".o-chart-menu-item[data-id='chartOdooLink']").toHaveCount(0);
 });
 
 test("icon external link isn't on the chart in dashboard mode", async function () {
@@ -216,7 +216,9 @@ test("icon external link isn't on the chart in dashboard mode", async function (
     );
     model.updateMode("dashboard");
     await animationFrame();
-    expect(".o-chart-external-link").toHaveCount(0, { message: "No link icon in dashboard" });
+    expect(".o-chart-menu-item[data-id='chartOdooLink']").toHaveCount(0, {
+        message: "No link icon in dashboard",
+    });
 });
 
 test("click on icon external link on chart redirect to the odoo menu", async function () {
