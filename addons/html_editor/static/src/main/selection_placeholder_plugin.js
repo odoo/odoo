@@ -21,7 +21,7 @@ const PLACEHOLDER_SELECTOR = `[${PLACEHOLDER_ATTRIBUTE}]`;
 
 export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
-    static dependencies = ["baseContainer", "history", "selection", "domObserver"];
+    static dependencies = ["baseContainer", "history", "selection", "domObserver", "region"];
     resources = {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
@@ -47,17 +47,6 @@ export class SelectionPlaceholderPlugin extends Plugin {
             ) {
                 return false;
             } else if (isNotEditableNode(blocker)) {
-                return true;
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (
-                !isContentEditable(container) ||
-                isPhrasingContent(container) ||
-                !allowsParagraphRelatedElements(container)
-            ) {
-                return false;
-            } else if (container.getAttribute("contenteditable") === "true") {
                 return true;
             }
         },
@@ -89,10 +78,15 @@ export class SelectionPlaceholderPlugin extends Plugin {
     updatePlaceholders(root = this.editable) {
         const isSelectionBlocker = (node) =>
             this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        // A non-editable, phrasing or non-paragraph container can never host a
+        // placeholder, whatever its `placeholderHost` region property says.
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
-                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
-                false
+                isContentEditable(container) &&
+                !isPhrasingContent(container) &&
+                allowsParagraphRelatedElements(container) &&
+                (this.dependencies.region.getProperty(container, "placeholderHost") ??
+                    container.getAttribute("contenteditable") === "true")
         );
 
         const marginUpdates = [];

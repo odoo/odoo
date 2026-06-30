@@ -179,6 +179,7 @@ export class ListPlugin extends Plugin {
         region_properties: [
             { is: `LI, LI > ${baseContainerGlobalSelector}`, hintText: _t("List") },
             { within: "LI", powerButtons: false },
+            { is: isListItemElement, placeholderHost: true },
         ],
 
         /** Handlers */
@@ -217,11 +218,6 @@ export class ListPlugin extends Plugin {
                         return true;
                     }
                 }
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (isListItemElement(container)) {
-                return true;
             }
         },
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
