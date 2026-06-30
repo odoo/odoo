@@ -68,7 +68,8 @@ class StockQuant(models.Model):
         ondelete='restrict', check_company=True,
         domain=lambda self: self._domain_lot_id())
     lot_properties = fields.Properties(related='lot_id.lot_properties', definition='product_id.lot_properties_definition', readonly=True)
-    sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
+    sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated',
+        search='_search_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.package', 'Package',
         domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
@@ -254,6 +255,21 @@ class StockQuant(models.Model):
         duplicated_sn_ids = [lot.id for [lot] in results]
         quants_with_duplicated_sn = self.env['stock.quant'].search([('lot_id', 'in', duplicated_sn_ids)])
         quants_with_duplicated_sn.sn_duplicated = True
+
+    def _search_sn_duplicated(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        duplicated_serial_numbers = self._read_group(
+            [
+                ('tracking', '=', 'serial'),
+                ('quantity', '=', 1),
+                ('location_id.usage', 'in', ['internal', 'transit']),
+            ],
+            ['lot_id'],
+            having=[('__count', '>', 1)],
+        )
+        duplicated_sn_ids = [duplicated_sn.id for [duplicated_sn] in duplicated_serial_numbers]
+        return [('lot_id', 'in', duplicated_sn_ids)]
 
     def _set_inventory_quantity(self):
         """ Inverse method to create stock move when `inventory_quantity` is set
