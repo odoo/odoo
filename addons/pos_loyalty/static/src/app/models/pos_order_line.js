@@ -38,6 +38,33 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
+        is_reward_line: {
+            model: "pos.order.line",
+            name: "is_reward_line",
+            type: "boolean",
+        },
+        reward_id: {
+            model: "pos.order.line",
+            name: "reward_id",
+            relation: "loyalty.reward",
+            type: "many2one",
+        },
+        coupon_id: {
+            model: "pos.order.line",
+            name: "coupon_id",
+            relation: "loyalty.card",
+            type: "many2one",
+        },
+        reward_identifier_code: {
+            model: "pos.order.line",
+            name: "reward_identifier_code",
+            type: "char",
+        },
+        points_cost: {
+            model: "pos.order.line",
+            name: "points_cost",
+            type: "float",
+        },
     },
 });
 
@@ -105,5 +132,11 @@ patch(PosOrderline.prototype, {
             return Math.abs(res);
         }
         return res;
+    },
+    get rewardId() {
+        return this.reward_id?.id ?? this.raw.reward_id;
+    },
+    get couponId() {
+        return this.coupon_id?.id ?? this.raw.coupon_id;
     },
 });

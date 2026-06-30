@@ -75,11 +75,11 @@ patch(OrderSummary.prototype, {
             return;
         }
         if (selectedLine.is_reward_line && val === "remove") {
-            this.currentOrder.uiState.disabledRewards.add(selectedLine.reward_id.id);
+            this.currentOrder.uiState.disabledRewards.add(selectedLine.rewardId);
             const coupon = selectedLine.coupon_id;
+            const couponId = selectedLine.couponId;
             if (
-                coupon &&
-                coupon.id > 0 &&
+                couponId > 0 &&
                 this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
             ) {
                 coupon.delete();
