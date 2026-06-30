@@ -16,7 +16,8 @@ const discussChannelPatch = {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this.thread,
-                        author_id: this.livechat_agent_history_ids.sort((a, b) => a.id - b.id)[0]
+                        author_id: [...this.livechat_agent_history_ids, ...this.livechat_bot_history_ids]
+                            .sort((a, b) => a.id - b.id)[0]
                             ?.partner_id,
                     };
                 }
