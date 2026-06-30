@@ -14,6 +14,9 @@
                 <button t-if="this.hasAssignButton" class="o-mail-ActivityListPopoverItem-assignbtn btn btn-sm btn-success btn-link" title="Assign" aria-label="Assign" t-on-click="this.onClickAssignButton">
                     <i class="fa fa-user" role="img" aria-label="Assign"/>
                 </button>
+                <button t-if="this.hasMailButton" class="o-mail-ActivityListPopoverItem-mailbtn btn btn-sm btn-success btn-link" title="Compose Email" aria-label="Compose Email" t-on-click="this.onClickMailButton">
+                    <i class="fa fa-envelope"/>
+                </button>
                 <t t-if="this.activity().can_write">
                     <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">

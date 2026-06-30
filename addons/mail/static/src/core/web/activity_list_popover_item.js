@@ -19,6 +19,7 @@ export class ActivityListPopoverItem extends Component {
 
     setup() {
         super.setup();
+        this.action = useService("action");
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
         this.onActivityChanged = props.static("onActivityChanged", t.function([]).optional());
@@ -57,8 +58,16 @@ export class ActivityListPopoverItem extends Component {
             return _t("%s days overdue", Math.round(Math.abs(diff)));
         } else if (diff === 1) {
             return _t("Tomorrow");
-        } else {
+        } else if (diff < 7) {
             return _t("Due in %s days", Math.round(Math.abs(diff)));
+        } else if (diff == 7) {
+            return _t("Due in 1 week");
+        } else {
+            return _t("Due %s", this.props.activity.date_deadline.toLocaleString({
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+            }));
         }
     }
 
@@ -75,6 +84,11 @@ export class ActivityListPopoverItem extends Component {
     get hasFileUploader() {
         const activity = this.activity();
         return activity.state !== "done" && activity.activity_category === "upload_file";
+    }
+
+    get hasMailButton() {
+        const activity = this.props.activity;
+        return activity.state !== "done" && activity.activity_category === "default" && activity.mail_template_ids.length == 0;
     }
 
     get hasMarkDoneButton() {
@@ -98,6 +112,42 @@ export class ActivityListPopoverItem extends Component {
             hasHeader: true,
             onActivityChanged: (thread) => this.onActivityChanged?.(thread),
         });
+    }
+
+    /**
+     * For activity of type email, open email composer and send message on activity linked record chatter
+     * (visible by followers + all recipients specified in the form) then mark activity as done.
+     */
+    onClickMailButton() {
+        const activity = this.props.activity;
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: _t("Compose Email"),
+                view_mode: "form",
+                res_model: "mail.compose.message",
+                views: [[false, "form"]],
+                target: "new",
+                view_id: false,
+                context: {
+                    default_composition_mode: "comment",
+                    default_model: activity.res_model,
+                    default_res_ids: [activity.res_id],
+                    force_email: true,
+                },
+            },
+            {
+                onClose: async (args) => {
+                    if (args?.dismiss || args?.special) {
+                        // Close or Discard
+                        return;
+                    }
+                    // Mark done
+                    await this.props.activity.markAsDone();
+                    this.props.onActivityChanged?.();
+                },
+            }
+        );
     }
 
     async onFileUploaded(data) {
