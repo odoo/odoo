@@ -794,8 +794,8 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: unformat(`
             <table class="table table-bordered o_table"><tbody>
-                <tr><td><p>[\u200b</p></td></tr>
-                <tr><td><p>]\u200b</p></td></tr>
+                <tr><td><p>[<br></p></td></tr>
+                <tr><td><p>]<br></p></td></tr>
             </tbody></table>
         `),
         styleContent,
@@ -1009,7 +1009,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
         );
     });
 
@@ -1019,7 +1019,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[<br></p></td><td style="" class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
