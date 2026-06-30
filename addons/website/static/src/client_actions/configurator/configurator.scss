@@ -120,7 +120,7 @@
         // TODO review in master, this seems useless and had to be overridden
         // in stable templates. All the templates can be improved.
         .o_configurator_screen_content {
-            overflow-y: auto;
+            overflow-y: visible;
         }
 
         .o_configurator_logo_wrapper {
@@ -344,6 +344,14 @@
 
                 // Handles dimension-less svgs
                 min-height: 60px;
+            }
+
+            .o_palette_selection_logo_container {
+                min-width: 80px;
+
+                small {
+                    white-space: nowrap;
+                }
             }
 
             .o_palette_card_swatches {
