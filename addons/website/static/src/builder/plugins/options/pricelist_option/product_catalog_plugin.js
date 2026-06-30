@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { isElement } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 
 export class ProductCatalogOptionPlugin extends Plugin {
@@ -11,17 +10,11 @@ export class ProductCatalogOptionPlugin extends Plugin {
             dropNear: ".s_product_catalog_dish",
         },
         is_movable_selectors: { selector: ".s_product_catalog_dish", direction: "vertical" },
-        // Protect pricelist item, price, and description blocks from being
-        // split/merged by the delete plugin.
-        is_node_splittable_predicates: (node) => {
-            if (
-                isElement(node) &&
-                node.matches(
-                    ".s_product_catalog_dish, .s_product_catalog_dish_price, .s_product_catalog_dish_description"
-                )
-            ) {
-                return false;
-            }
+        region_properties: {
+            // Protect pricelist item, price, and description blocks from being
+            // split/merged by the delete plugin.
+            is: ".s_product_catalog_dish, .s_product_catalog_dish_price, .s_product_catalog_dish_description",
+            splittable: false,
         },
     };
 }

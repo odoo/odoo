@@ -96,17 +96,12 @@ export class MediaPlugin extends Plugin {
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 
-        /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            // avoid merge
-            if (isIconElement(node)) {
-                return false;
-            }
-        },
         /** Regions */
         region_properties: [
             { is: this.isEditableMediaElement.bind(this), editable: true },
             { is: isMediaElement, functionalEmpty: true },
+            // avoid merge
+            { is: isIconElement, splittable: false },
         ],
 
         selectors_for_feff_providers: () =>

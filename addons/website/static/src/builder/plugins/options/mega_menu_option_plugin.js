@@ -20,16 +20,11 @@ export class MegaMenuOptionPlugin extends Plugin {
         },
         on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
-        region_properties: { is: ".o_mega_menu > section", removable: false },
-        is_node_splittable_predicates: (node) => {
-            //avoid merge
-            if (
-                node?.nodeType === Node.ELEMENT_NODE &&
-                node.matches(".o_mega_menu .nav > .nav-link")
-            ) {
-                return false;
-            }
-        },
+        region_properties: [
+            { is: ".o_mega_menu > section", removable: false },
+            // avoid merge
+            { is: ".o_mega_menu .nav > .nav-link", splittable: false },
+        ],
     };
 
     getTemplatePrefix() {

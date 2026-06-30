@@ -25,12 +25,16 @@ export class NavTabsStyleOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        region_properties: { is: ".nav-item", removable: false },
-        is_node_splittable_predicates: (node) => {
-            if (this.isUnsplittable(node)) {
-                return false;
-            }
-        },
+        region_properties: [
+            { is: ".nav-item", removable: false },
+            // TODO: I could use `within` region property
+            // but it uses closest so not sure on
+            // `within: ":is(.s_tabs, .s_tabs_images) .nav-item"` or
+            // `within: ".nav-item :is(.s_tabs, .s_tabs_images)"
+            // Also `isUnsplittable` uses clsoest and not closestElement.
+            // (i.e., not within editor?)
+            { is: (node) => this.isUnsplittable(node), splittable: false },
+        ],
         dropzone_selectors: {
             selector: ".s_tabs, .s_tabs_images",
             excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",

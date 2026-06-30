@@ -56,14 +56,12 @@ test("should delete text forward", async () => {
     expect(p).toHaveInnerHTML("abcef");
 });
 
-test("unsplittable node predicates should not crash when called with text node argument", async () => {
+test("isUnsplittable should not crash when called with text node argument", async () => {
     const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
     const editor = getEditor();
     const textNode = editor.editable.querySelector("p").firstChild;
     expect(isTextNode(textNode)).toBe(true);
-    expect(() =>
-        editor.resources.is_node_splittable_predicates.forEach((p) => p(textNode))
-    ).not.toThrow();
+    expect(() => editor.shared.split.isUnsplittable(textNode)).not.toThrow();
 });
 
 test("should set contenteditable to false on .o_not_editable elements", async () => {

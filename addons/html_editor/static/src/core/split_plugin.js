@@ -5,8 +5,6 @@ import { isBlock, closestBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
-    isContentEditable,
-    isContentEditableAncestor,
     isPhrasingContent,
     isElement,
     isTextNode,
@@ -56,12 +54,18 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
  * @typedef {(() => void)[]} on_will_split_block_handlers
  *
  * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides
- *
- * @typedef {((node: Node) => boolean | undefined)[]} is_node_splittable_predicates
  */
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "input",
+        "delete",
+        "lineBreak",
+        "region",
+    ];
     static id = "split";
     static shared = [
         "splitBlock",
@@ -77,48 +81,14 @@ export class SplitPlugin extends Plugin {
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
 
-        is_node_splittable_predicates: [
-            // An unremovable element is also unmergeable (as merging two
-            // elements results in removing one of them).
-            // An unmergeable element is unsplittable and vice-versa (as
-            // split and merge are reverse operations from one another).
-            // Therefore, unremovable nodes are also unsplittable.
-            (node) => {
-                if (this.dependencies.delete.isUnremovable(node)) {
-                    return false;
-                }
-            },
-            // "Unbreakable" is a legacy term that means unsplittable and
-            // unmergeable.
-            (node) => {
-                if (node.classList?.contains("oe_unbreakable")) {
-                    return false;
-                }
-            },
-            (node) => {
-                const isExplicitlyNotContentEditable = (node) =>
-                    // In the `contenteditable` attribute consideration,
-                    // disconnected nodes can be unsplittable only if they are
-                    // explicitly set under a contenteditable="false" element.
-                    !isContentEditable(node) &&
-                    (node.isConnected || closestElement(node, "[contenteditable]"));
-                if (
-                    isExplicitlyNotContentEditable(node) ||
-                    // If node sets contenteditable='true' and is inside a non-editable
-                    // context, it has to be unsplittable since splitting it would modify
-                    // the non-editable parent content.
-                    (node.parentElement &&
-                        isContentEditableAncestor(node) &&
-                        isExplicitlyNotContentEditable(node.parentElement))
-                ) {
-                    return false;
-                }
-            },
-            (node) => {
-                if (node.nodeName === "SECTION") {
-                    return false;
-                }
-            },
+        // "Unbreakable" is a legacy term that means unsplittable and
+        // unmergeable. SECTION is likewise never split/merged.
+        region_properties: [
+            { is: ".oe_unbreakable, SECTION", splittable: false },
+            // An unremovable element is also unmergeable (merging removes one of
+            // them); split and merge being reverse operations, it is unsplittable
+            // too.
+            { is: (node) => this.dependencies.delete.isUnremovable(node), splittable: false },
         ],
         is_selection_blocker_predicates: (blocker) => {
             if (this.isUnsplittable(blocker)) {
@@ -225,7 +195,7 @@ export class SplitPlugin extends Plugin {
      * @returns {boolean}
      */
     isUnsplittable(node) {
-        return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+        return this.dependencies.region.getProperty(node, "splittable") === false;
     }
 
     /**

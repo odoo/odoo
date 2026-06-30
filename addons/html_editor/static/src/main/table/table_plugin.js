@@ -33,8 +33,6 @@ import { rgbaToHex } from "@web/core/utils/colors";
 
 export const BORDER_SENSITIVITY = 5;
 
-const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
-
 /**
  * @typedef { Object } TableShared
  * @property { TablePlugin['addColumn'] } addColumn
@@ -166,11 +164,6 @@ export class TablePlugin extends Plugin {
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
-                return false;
-            }
-        },
         is_node_fully_selected_predicates: (node) => {
             if (closestElement(node, ".o_selected_td")) {
                 return true;
@@ -200,7 +193,9 @@ export class TablePlugin extends Plugin {
                 is: "THEAD, TBODY, TFOOT, TR, TH, TD",
                 removable: false,
                 removableWithin: "table",
+                splittable: false,
             },
+            { is: "TABLE", splittable: false },
         ],
 
         /** Selectors */

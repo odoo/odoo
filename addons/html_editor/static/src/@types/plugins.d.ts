@@ -21,7 +21,7 @@ declare module "plugins" {
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
     import { double_click_overrides, fix_selection_on_editable_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
     import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
-    import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared, is_node_splittable_predicates } from "@html_editor/core/split_plugin";
+    import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared } from "@html_editor/core/split_plugin";
     import { StyleShared } from "@html_editor/core/style_plugin";
     import { user_commands, UserCommandShared } from "@html_editor/core/user_command_plugin";
 
@@ -225,7 +225,6 @@ declare module "plugins" {
         is_link_eligible_for_zwnbsp_predicates: is_link_eligible_for_zwnbsp_predicates;
         is_mutation_savable_predicates: is_mutation_savable_predicates;
         is_node_fully_selected_predicates: is_node_fully_selected_predicates;
-        is_node_splittable_predicates: is_node_splittable_predicates;
         is_valid_contenteditable_predicates: is_valid_contenteditable_predicates;
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;

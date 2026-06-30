@@ -869,7 +869,7 @@ export class FormatPlugin extends Plugin {
     shouldBeMergedWithPreviousSibling(node) {
         const isMergeable = (node) =>
             FORMATTABLE_TAGS.includes(node.nodeName) &&
-            (this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+            !this.dependencies.split.isUnsplittable(node);
         const previousSibling = node.previousSibling;
         return (
             !isSelfClosingElement(node) &&
