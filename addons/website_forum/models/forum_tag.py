@@ -26,6 +26,7 @@ class ForumTag(models.Model):
         'unique (name, forum_id)',
         'Tag name already exists!',
     )
+    _forum_id_posts_count_idx = models.Index('(forum_id, posts_count desc)')
 
     @api.depends("post_ids", "post_ids.tag_ids", "post_ids.state", "post_ids.active")
     def _compute_posts_count(self):
