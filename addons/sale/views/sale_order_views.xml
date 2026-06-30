@@ -159,6 +159,7 @@
                        decoration-bf="1"
                        decoration-info="invoice_status == 'to invoice'"
                        optional="show"/>
+                <field name="amount_to_invoice" widget="monetary" optional="hide"/>
                 <field name="tag_ids"
                       widget="many2many_tags"
                       options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
@@ -200,6 +201,18 @@
                     decoration-info="delivery_status in ['pending', 'started']"
                     widget="badge"
                     optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_order_tree_to_invoice" model="ir.ui.view">
+        <field name="name">sale.order.list.to.invoice</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="amount_to_invoice" position="attributes">
+                <attribute name="optional">show</attribute>
             </field>
         </field>
     </record>
@@ -1243,7 +1256,16 @@
     <record id="action_orders_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders to Invoice</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">list,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="view_ids" eval="[
+            Command.clear(),
+            Command.create({'view_mode': 'list', 'view_id': ref('view_order_tree_to_invoice')}),
+            Command.create({'view_mode': 'form'}),
+            Command.create({'view_mode': 'calendar'}),
+            Command.create({'view_mode': 'graph'}),
+            Command.create({'view_mode': 'pivot'}),
+            Command.create({'view_mode': 'kanban'}),
+            Command.create({'view_mode': 'activity'}),
+        ]"/>
         <field name="context">{'create': False}</field>
         <field name="domain">[('invoice_status','=','to invoice')]</field>
         <field name="search_view_id" ref="view_sales_order_filter"/>
