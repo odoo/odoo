@@ -237,13 +237,6 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "TABLE" || isTableWrapper(container)) {
-                return false;
-            } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
-                return true;
-            }
-        },
         is_no_inline_root_predicates: (node) => {
             if (isTableWrapper(node)) {
                 return true;
@@ -267,7 +260,9 @@ export class TablePlugin extends Plugin {
                 removable: "cascade",
                 splittable: false,
             },
-            { predicate: "TABLE", splittable: false },
+            { predicate: "TABLE", splittable: false, selectionPlaceholders: false },
+            { predicate: TABLE_WRAPPER_SELECTOR, selectionPlaceholders: false },
+            { predicate: ".o_table td, .o_table th", selectionPlaceholders: true },
         ],
 
         /** Selectors */

@@ -211,7 +211,7 @@ export class FontTypePlugin extends Plugin {
             { predicate: "H4", hint: _t("Heading 4") },
             { predicate: "H5", hint: _t("Heading 5") },
             { predicate: "H6", hint: _t("Heading 6") },
-            { predicate: "BLOCKQUOTE", hint: _t("Quote") },
+            { predicate: "BLOCKQUOTE", hint: _t("Quote"), selectionPlaceholders: true },
             { predicate: (node) => closestElement(node, "pre"), powerbox: false },
         ],
 
@@ -238,11 +238,6 @@ export class FontTypePlugin extends Plugin {
         are_shorthands_available_predicates: (node) => {
             if (closestElement(node, "pre")) {
                 return false;
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "BLOCKQUOTE") {
-                return true;
             }
         },
 
