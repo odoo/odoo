@@ -564,7 +564,7 @@ class LoyaltyProgram(models.Model):
         # before creating the new rewards. However, we can check that the result of reward_ids would
         # actually be empty or not, and if not, skip the constraint.
         if "reward_ids" in vals and self._fields["reward_ids"].convert_to_cache(
-            vals["reward_ids"], self
+            vals["reward_ids"], self.browse()
         ):
             self = self.with_context(loyalty_skip_reward_check=True)
             # We need add the program type to the context to avoid getting the default value

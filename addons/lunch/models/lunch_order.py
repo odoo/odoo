@@ -116,12 +116,14 @@ class LunchOrder(models.Model):
                 order.order_deadline_passed = False
 
     def _get_topping_ids(self, field, values):
+        assert len(self) <= 1
         return list(self._fields[field].convert_to_cache(values, self))
 
     def _extract_toppings(self, values):
         """
             If called in api.multi then it will pop topping_ids_1,2,3 from values
         """
+        assert len(self) <= 1
         topping_ids = []
 
         for i in range(1, 4):
@@ -158,6 +160,7 @@ class LunchOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self = self.browse()  # noqa: PLW0642
         orders = self.env['lunch.order']
         for vals in vals_list:
             lines = self._find_matching_lines({
@@ -188,7 +191,7 @@ class LunchOrder(models.Model):
                 # _extract_toppings will pop topping_ids_1, topping_ids_2 and topping_ids_3 from values
                 # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
                 # could have changed through topping_ids_1 without the cache knowing about it
-                toppings = self._extract_toppings(values)
+                toppings = line._extract_toppings(values)
                 if change_topping:
                     self.invalidate_model(['topping_ids_2', 'topping_ids_3'])
                     values['topping_ids_1'] = [(6, 0, toppings)]
