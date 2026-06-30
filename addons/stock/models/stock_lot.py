@@ -4,8 +4,8 @@ import operator as py_operator
 from collections.abc import Iterable
 from re import findall as regex_findall, split as regex_split
 from collections import defaultdict
-
-from odoo import _, api, fields, models
+from datetime import datetime
+from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -157,13 +157,67 @@ class StockLot(models.Model):
             lot.delivery_ids = delivery_ids_by_lot.get(lot.id, [])
             lot.delivery_count = len(lot.delivery_ids)
 
+    def _get_partner_from_move_line(self, line):
+        return line.picking_id.partner_id or line.move_id.partner_id
+
     def _compute_partner_ids(self):
-        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        all_lot_ids = set(self.ids)
+        parent_map = defaultdict(set)
+        balances = defaultdict(lambda: defaultdict(float))
+        latest_delivery_dates = defaultdict(lambda: defaultdict(lambda: datetime.min))
+
+        queue = list(self.ids)
+        while queue:
+            base_domain = Domain([('lot_id', 'in', queue), ('state', '=', 'done')])
+            final_domain = base_domain & Domain.OR([
+                Domain(self._get_outgoing_domain()),
+                Domain([('location_id.usage', '=', 'customer')]),
+            ])
+            move_lines = self.env['stock.move.line'].search(final_domain)
+
+            queue = []
+            for line in move_lines:
+                lot = line.lot_id
+                partner = self._get_partner_from_move_line(line)
+
+                if partner:
+                    qty = line.quantity_product_uom if line.location_dest_id.usage == 'customer' else -line.quantity_product_uom
+                    balances[lot.id][partner] += qty
+                    date = line.date or fields.Datetime.min
+                    if date > latest_delivery_dates[lot.id][partner]:
+                        latest_delivery_dates[lot.id][partner] = date
+
+                produce_line_lot_ids = line.produce_line_ids.lot_id.ids
+                if produce_line_lot_ids:
+                    for child_lot_id in produce_line_lot_ids:
+                        parent_map[child_lot_id].add(lot.id)
+                    next_lots = set(produce_line_lot_ids) - all_lot_ids
+                    all_lot_ids.update(next_lots)
+                    queue.extend(next_lots)
+
+        lots_to_propagate = set(parent_map.keys())
+        while lots_to_propagate:
+            child_id = lots_to_propagate.pop()
+            for parent_id in parent_map[child_id]:
+                for partner, qty in balances[child_id].items():
+                    balances[parent_id][partner] += qty
+                    child_date = latest_delivery_dates[child_id][partner]
+                    if child_date > latest_delivery_dates[parent_id][partner]:
+                        latest_delivery_dates[parent_id][partner] = child_date
+
+                if parent_id in parent_map:
+                    lots_to_propagate.add(parent_id)
+
         for lot in self:
-            if delivery_ids_by_lot.get(lot.id, []):
-                lot.partner_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True).partner_id
+            if lot.id in balances:
+                active_partners = [
+                    partner for partner, qty in balances[lot.id].items()
+                    if lot.product_id.uom_id.compare(qty, 0) > 0
+                ]
+                active_partners.sort(key=lambda p: latest_delivery_dates[lot.id][p], reverse=True)
+                lot.partner_ids = [Command.set([p.id for p in active_partners])]
             else:
-                lot.partner_ids = False
+                lot.partner_ids = [Command.set([])]
 
     @api.depends('quant_ids', 'quant_ids.quantity')
     def _compute_single_location(self):
