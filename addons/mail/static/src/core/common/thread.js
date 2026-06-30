@@ -192,10 +192,7 @@ export class Thread extends Component {
             () => [this.state.mountedAndLoaded]
         );
         onMounted(() => {
-            if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
-                if (this.env.chatter) {
-                    this.env.chatter.shouldFetchMessages = false;
-                }
+            if (!this.env.inChatter) {
                 this.fetchInitialMessages();
             }
         });
@@ -242,10 +239,7 @@ export class Thread extends Component {
             () => [this.props.thread],
             (thread) => {
                 this.lastJumpPresent = this.props.jumpPresent;
-                if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
-                    if (this.env.chatter) {
-                        this.env.chatter.shouldFetchMessages = false;
-                    }
+                if (!this.env.inChatter) {
                     thread.fetchNewMessages();
                 }
             },
