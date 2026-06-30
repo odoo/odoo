@@ -1,5 +1,5 @@
 import { useActionInfo, useSelectableLtrRtlComponent } from "@html_builder/core/utils";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, useEffect, proxy } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 
 export class BuilderSelectableWrapperComponent extends Component {
@@ -29,12 +29,11 @@ export class BuilderSelectableWrapperComponent extends Component {
             dataAttributeActionValue: info.dataAttributeActionValue,
         });
 
-        onWillUpdateProps((nextProps) => {
-            for (const prop of ["className", "label", "title", "slots"]) {
-                if (prop in nextProps) {
-                    this.itemPropsState[prop] = nextProps[prop];
-                }
-            }
+        useEffect(() => {
+            this.itemPropsState.className = this.props.className;
+            this.itemPropsState.label = this.props.label;
+            this.itemPropsState.title = this.props.title;
+            this.itemPropsState.slots = this.props.slots;
         });
 
         if (this.props.ltrRtlMapping && !this.env.ignoreBuilderItem) {
