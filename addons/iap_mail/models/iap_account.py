@@ -31,9 +31,8 @@ class IapAccount(models.Model):
         self.env.user._bus_send("iap_notification", params)
 
     @api.model
-    def _send_no_credit_notification(self, service_name, title):
+    def _send_no_credit_notification(self, service_name):
         params = {
-            'title': title,
             'type': 'no_credit',
             'get_credits_url': self.env['iap.account'].get_credits_url(service_name),
         }
