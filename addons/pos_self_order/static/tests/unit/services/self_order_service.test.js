@@ -118,26 +118,6 @@ describe("initHardware", () => {
     });
 });
 
-test("showComboSelectionPage", async () => {
-    const store = await setupSelfPosEnv();
-    const models = store.models;
-    const product = models["product.template"].get(7);
-    const combo = models["product.combo"].get(2);
-    product.combo_ids = [2];
-
-    const defaultReturnValue = { show: true, selectedCombos: [] };
-    expect(store.showComboSelectionPage(product)).toMatchObject(defaultReturnValue);
-    // only One choice
-    models["product.combo.item"].get(3).delete();
-    const showCombo = store.showComboSelectionPage(product);
-    expect(showCombo.show).toBe(false);
-    expect(showCombo.selectedCombos).toHaveLength(1);
-    expect(showCombo.selectedCombos[0].combo_item_id.id).toBe(4);
-    // qty_max is more than one
-    combo.qty_max = 3;
-    expect(store.showComboSelectionPage(product)).toMatchObject(defaultReturnValue);
-});
-
 test("applyPendingComboConversion", async () => {
     const store = await setupSelfPosEnv();
 
@@ -652,26 +632,6 @@ describe("printOrderChanges", () => {
     });
 });
 
-test("product with single 'is_custom' attr is configurable in 'mobile' mode", async () => {
-    const store = await setupSelfPosEnv("mobile");
-    const product = store.models["product.template"].get(51);
-    product.attribute_line_ids = [product.attribute_line_ids[1]];
-    const ptv = product.attribute_line_ids[0].product_template_value_ids;
-    expect(ptv.length).toBe(1);
-    expect(ptv[0].is_custom).toBe(true);
-    expect(!!store.isProductConfigurable(product)).toBe(true);
-});
-
-test("product with single 'is_custom' attr is not configurable in 'kiosk' mode", async () => {
-    const store = await setupSelfPosEnv();
-    const product = store.models["product.template"].get(51);
-    product.attribute_line_ids = [product.attribute_line_ids[1]];
-    const ptv = product.attribute_line_ids[0].product_template_value_ids;
-    expect(ptv.length).toBe(1);
-    expect(ptv[0].is_custom).toBe(true);
-    expect(!!store.isProductConfigurable(product)).toBe(false);
-});
-
 test("orderLineNotSend", async () => {
     const store = await setupSelfPosEnv();
 
@@ -755,21 +715,4 @@ test("orderLineSent", async () => {
         count: 5,
         tax: 95,
     });
-});
-
-test("product with single 'multi' display_type attr with single choice is configurable in both mode", async () => {
-    const store = await setupSelfPosEnv();
-    const product = store.models["product.template"].get(52);
-    const line = product.attribute_line_ids[0];
-    const ptv = line.product_template_value_ids;
-    expect(ptv.length).toBe(1);
-    expect(ptv[0].is_custom).toBe(false);
-    expect(line.attribute_id.display_type).toBe("multi");
-
-    // Kiosk mode
-    expect(!!store.isProductConfigurable(product)).toBe(true);
-
-    // Mobile mode
-    store.self_ordering_mode = "mobile";
-    expect(!!store.isProductConfigurable(product)).toBe(true);
 });

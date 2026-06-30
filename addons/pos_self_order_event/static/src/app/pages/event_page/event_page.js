@@ -37,8 +37,7 @@ export class EventPage extends Component {
         });
 
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        useStickyTitleObserver(
-            this.eventNameRef,
+        this.eventNameRef = useStickyTitleObserver(
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
     }

@@ -177,6 +177,18 @@ export const setupSelfPosEnv = async (
             config_id: 1,
         },
     });
+    patchWithCleanup(SelfOrderRouter.prototype, {
+        navigate(routeName, routeParams = {}, historyState = {}) {
+            const { route } = this.registeredRoutes[routeName];
+            const pathName = route.replace(
+                /\{\w+:(\w+)\}/g,
+                (match, paramName) => routeParams[paramName]
+            );
+            this.path = pathName;
+            this.historyPage = pathName;
+            window.history.replaceState(historyState, "");
+        },
+    });
 
     // Removing `pos` and its dependent services to avoid conflicts during `self_order` data loading.
     // Both `pos` and `self_order` rely on `pos_data`, but some models required by `self_order` (e.g., `res.users`)
