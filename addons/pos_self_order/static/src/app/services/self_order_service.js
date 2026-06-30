@@ -270,7 +270,10 @@ export class SelfOrder extends Reactive {
         if (!this.kioskMode) {
             return product.isConfigurable();
         }
-        return product.attribute_line_ids.some((a) => a.product_template_value_ids.length > 1);
+        return product.attribute_line_ids.some(
+            (a) =>
+                a.product_template_value_ids.length > 1 || a.attribute_id.display_type === "multi"
+        );
     }
 
     async addToCart(
