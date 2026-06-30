@@ -68,10 +68,13 @@ class Users(models.Model):
 
     def _get_totp_mail_code(self):
         self.ensure_one()
-        assert (
-            self.env.su
-            or (request and not request.session.uid and request.session.get('pre_uid') == self.id)  # nosemgrep: requests-in-models
-        )
+
+        expiration = timedelta(seconds=3600)
+        lang = babel_locale_parse(self.env.context.get('lang') or self.lang)
+        expiration = babel.dates.format_timedelta(expiration, locale=lang)
+
+        if not (self.env.su or (request and not request.session.uid and request.session.get('pre_uid') == self.id)):  # nosemgrep: requests-in-models
+            return '000000', expiration
 
         key = self._get_totp_mail_key()
 
@@ -79,9 +82,6 @@ class Users(models.Model):
         counter = int(datetime.timestamp(now) / 3600)
 
         code = hotp(key, counter)
-        expiration = timedelta(seconds=3600)
-        lang = babel_locale_parse(self.env.context.get('lang') or self.lang)
-        expiration = babel.dates.format_timedelta(expiration, locale=lang)
 
         return str(code).zfill(6), expiration
 
