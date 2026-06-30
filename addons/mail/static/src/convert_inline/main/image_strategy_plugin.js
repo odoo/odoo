@@ -167,6 +167,7 @@ export class ImageStrategyPlugin extends Plugin {
         const style = Object.assign(this.getDefaultImageStyle(shouldBeBlock), {
             width: `${width.number}px`,
             height: `${height.number}px`,
+            "vertical-align": "middle",
         });
         return {
             attributes: Object.assign(this.getAttributes(fontIcon), {

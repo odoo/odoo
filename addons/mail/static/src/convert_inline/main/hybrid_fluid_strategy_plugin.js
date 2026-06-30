@@ -151,7 +151,12 @@ export class HybridFluidStrategyPlugin extends Plugin {
      */
     detectResponsiveElement(referenceNode) {
         const block = this.getLayoutBlock(referenceNode);
-        if (!block || block.bands.length !== 1 || block.bands[0].clusters.length !== 1) {
+        if (
+            !block ||
+            block.bands.length !== 1 ||
+            block.bands[0].clusters.length !== 1 ||
+            !block.bands[0].clusters[0].isBlock
+        ) {
             return;
         }
         const cluster = block.bands[0].clusters[0];

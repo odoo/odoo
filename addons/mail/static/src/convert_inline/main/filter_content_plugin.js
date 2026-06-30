@@ -204,6 +204,7 @@ export class FilterContentPlugin extends Plugin {
         }
         // TODO EGGMAIL: investigate if some more node should bypass this rule
         if (
+            referenceNode.nodeName !== "BR" &&
             rect &&
             rect.height === 0 &&
             (referenceNode.nodeType !== Node.ELEMENT_NODE || !this.hasVisibleBorder(referenceNode))
