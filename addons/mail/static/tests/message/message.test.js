@@ -2476,7 +2476,11 @@ test("display the notification message's posting date and time", async () => {
             user_ids: [userId],
         })
     );
-    await contains(".o-mail-NotificationMessage:text('Tom Riddle joined the channel1:00 PM')");
+    const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channelId]]);
+    const time = deserializeDateTime(date).toLocaleString(DateTime.TIME_SIMPLE, {
+        locale: user.lang,
+    });
+    await contains(`.o-mail-NotificationMessage:text('Tom Riddle joined the channel${time}')`);
 });
 
 test("Pause GIF when thread is not focused", async () => {

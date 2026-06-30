@@ -2,13 +2,17 @@ import { Store } from "@mail/../tests/mock_server/store";
 
 import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
+
+const { DateTime } = luxon;
 
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
+    date = fields.Datetime({ default: () => serializeDateTime(DateTime.now()) });
     pinned_at = fields.Generic({ default: false });
 
     /** @type {typeof models.Model["prototype"]["create"]} */

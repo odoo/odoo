@@ -12,7 +12,9 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { mockDate, animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -37,8 +39,13 @@ test("navigate to sub channel", async () => {
     // Should access sub-thread when clicking on the notification.
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
+    const messages = pyEnv["mail.message"].search_read([["message_type", "=", "notification"]]);
+    const time = deserializeDateTime(messages.at(-1).date).toLocaleString(
+        luxon.DateTime.TIME_SIMPLE,
+        { locale: user.lang }
+    );
     await contains(
-        `.o-mail-NotificationMessage:text('${serverState.partnerName} started a thread: New Thread.1:00 PM')`
+        `.o-mail-NotificationMessage:text('${serverState.partnerName} started a thread: New Thread.${time}')`
     );
     await click(".o-mail-NotificationMessage a:text('New Thread')");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
