@@ -42,7 +42,7 @@ test("can make DM chat in mobile", async () => {
     );
     await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Gandalf')");
-    await contains(".o-mail-ChatWindow:text('Gandalf')");
+    await contains(".o-mail-ChatWindow-displayName:text('Gandalf')");
 });
 
 test("can search channel in mobile", async () => {
@@ -74,7 +74,7 @@ test("can make new channel in mobile", async () => {
     await insertText(".o_command_palette input", "slytherins");
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
     await click("button:text(Create Channel)");
-    await contains(".o-mail-ChatWindow:text('slytherins')");
+    await contains(".o-mail-ChatWindow-displayName:text('slytherins')");
 });
 
 test("new message opens the @ command palette", async () => {
