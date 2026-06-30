@@ -32,13 +32,8 @@ jobs:
     - name: Ejecutar Pruebas Unitarias de Odoo
       run: |
         cd docker-config
-        # -T desactiva la pseudo-TTY para que no dé errores en consola en la nube.
-        # web es el nombre del contenedor de Odoo según tu archivo compose.
-        # -i instala/actualiza tu módulo personalizado.
-        # --test-enable activa los tests lógicos de Saúl.
-        # --stop-after-init cierra el servidor apenas terminen las pruebas.
-        # > odoo_tests.log 2>&1 guarda todo el texto (éxito o errores) en un archivo físico.
-        docker compose exec -T web odoo -i validacion_descuento_maximo --test-enable --stop-after-init > odoo_tests.log 2>&1
+        # Ejecutamos las pruebas conectándonos directamente al contenedor de PostgreSQL
+        docker compose exec -T web odoo -d postgres --db_host=db --db_port=5432 --db_user=odoo --db_password=odoo -i validacion_descuento_maximo --test-enable --stop-after-init > odoo_tests.log 2>&1
 
     # PASO 4 [TASK 2]: Guardar el reporte para el profesor y Saúl
     - name: Publicar Reporte de Pruebas como Artifact
