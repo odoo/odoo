@@ -9,3 +9,6 @@ def pre_init_hook(env):
     view = env.ref("account_edi_ubl_cii.account_move_send_form")
     if "ubl_partner_warning" not in view.arch:
         view.reset_arch(mode='hard')
+
+    if env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+        env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'demo')
