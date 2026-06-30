@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.tools.float_utils import float_is_zero
 
 from odoo.tests import tagged
 from dateutil.relativedelta import relativedelta
@@ -63,6 +64,49 @@ class TestSubcontractingBasic(TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingFlows(TestMrpSubcontractingCommon):
+    def test_partial_subcontract_receipt_with_stock_backorder(self):
+        """A barcode-style partial subcontract receipt must still create the stock backorder."""
+        normal_product = self.env['product.product'].create({
+            'name': 'Normal receipt product',
+            'type': 'product',
+        })
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = normal_product
+            move.product_uom_qty = 5.0
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        subcontract_move = picking_receipt.move_ids.filtered(lambda move: move.product_id == self.finished).ensure_one()
+        normal_move = picking_receipt.move_ids.filtered(lambda move: move.product_id == normal_product).ensure_one()
+        subcontract_move.quantity = 5.0
+        subcontract_move.picked = True
+        normal_move.quantity = 5.0
+        normal_move.picked = False
+
+        picking_receipt.with_context(
+            skip_backorder=True,
+            display_detailed_backorder=True,
+            barcode_trigger=True,
+        ).button_validate()
+
+        self.assertEqual(picking_receipt.state, 'done')
+        self.assertEqual(subcontract_move.state, 'done')
+        self.assertEqual(len(picking_receipt.backorder_ids), 1)
+        self.assertEqual(normal_move.picking_id, picking_receipt.backorder_ids)
+        self.assertNotIn(normal_move.state, ('done', 'cancel'))
+        productions = subcontract_move._get_subcontract_production()
+        self.assertEqual(sum(productions.filtered(lambda mo: mo.state == 'done').mapped('product_qty')), 5.0)
+        self.assertFalse(productions.filtered(lambda mo: (
+            mo.state not in ('done', 'cancel')
+            and float_is_zero(mo.product_qty, precision_rounding=mo.product_uom_id.rounding)
+        )))
+
     def test_flow_1(self):
         """ Don't tick any route on the components and trigger the creation of the subcontracting
         manufacturing order through a receipt picking. Create a reordering rule in the
