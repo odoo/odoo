@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='route_id']" position="after">
                 <field name="partner_id"
-                    required="show_vendor"
                     invisible="not show_vendor"
                     context="{'product_id': product_id, 'highlight_supplier': 1}"
                     options="{'no_open': 1, 'no_create': 0, 'no_quick_create':1}"

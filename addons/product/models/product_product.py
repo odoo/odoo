@@ -2,6 +2,7 @@
 
 import re
 from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -1176,6 +1177,10 @@ class ProductProduct(models.Model):
                 continue
             if seller.date_end and seller.date_end < date:
                 continue
+            if params and params.get('consider_lead') and date:
+                order_deadline = fields.Date.to_date(date) - relativedelta(days=seller.delay)
+                if order_deadline < fields.Date.context_today(self):
+                    continue
             if params and params.get('force_uom') and seller.uom_id != uom_id and seller.uom_id != self.uom_id:
                 continue
             if partner_id and seller.partner_id not in [partner_id, partner_id.parent_id]:

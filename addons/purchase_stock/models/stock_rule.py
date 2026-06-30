@@ -183,9 +183,17 @@ class StockRule(models.Model):
         delays, delay_description = super()._get_lead_days(product, **values)
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
             return delays, delay_description
+        if 'supplierinfo' in values:
+            seller = values['supplierinfo']
+        else:
+            ordered_by = values.get('supplier_order_by') or 'price_discounted'
+            seller = product.with_company(buy_rule.company_id)._select_seller(
+                partner_id=values.get('supplier_partner'),
+                quantity=None,
+                ordered_by=ordered_by,
+            )
         if not seller:
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
@@ -386,7 +394,10 @@ class StockRule(models.Model):
                 qty=procurement.product_qty,
                 uom=procurement.uom_id,
                 date=max(procurement_date_planned.date(), fields.Date.today()),
-                params={"force_uom": procurement.values.get('force_uom')},
+                params={
+                    "force_uom": procurement.values.get('force_uom'),
+                    "consider_lead": procurement.values.get('consider_lead'),
+                },
             )
 
         return supplier
