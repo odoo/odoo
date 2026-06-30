@@ -226,14 +226,22 @@ test("Composer type is kept when switching from aside to bottom", async () => {
     await contains("button:not(.btn-primary):text('Send message')");
 });
 
-test("chatter: drop attachments", async () => {
+test("chatter: dropping attachments should close pinned messages and search panels", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     const text2 = new File(["hello, worldub"], "text2.txt", { type: "text/plain" });
     const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
+    await click("button[title='Pinned Messages']");
+    await contains(".o-mail-pinnedMessages");
     await contains("button[aria-label='Attach files']:enabled");
     const files = [text, text2];
     await dragenterFiles(".o-mail-Chatter", files);
@@ -241,10 +249,14 @@ test("chatter: drop attachments", async () => {
     await contains(".o-mail-AttachmentContainer", { count: 0 });
     await dropFiles(".o-Dropzone", files);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading)", { count: 2 });
+    await contains(".o-mail-pinnedMessages", { count: 0 });
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageInput");
     const extraFiles = [text3];
     await dragenterFiles(".o-mail-Chatter", extraFiles);
     await dropFiles(".o-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-SearchMessageInput", { count: 0 });
 });
 
 test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {

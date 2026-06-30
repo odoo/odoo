@@ -29,10 +29,10 @@
                     </button>
                 </div>
                 <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="this.onClickSearch">
+                <button class="btn btn-link px-1" aria-label="Search Messages" t-att-class="{ 'text-muted': !this.state.isSearchOpen }" title="Search Messages" t-on-click="this.onClickSearch">
                     <i class="oi oi-search fa-fw" role="img"/>
                 </button>
-                <button t-if="this.hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages" t-att-disabled="this.state.isSearchOpen">
+                <button t-if="this.hasPinnedMessages" class="btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': !this.state.showPinnedMessages }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages" t-att-disabled="this.state.isSearchOpen">
                     <i class="fa fa-fw fa-thumb-tack" role="img"/>
                 </button>
                 <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
@@ -68,7 +68,7 @@
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>
-                <div t-if="this.state.isAttachmentBoxOpened and !this.state.isSearchOpen" class="o-mail-AttachmentBox position-relative">
+                <div t-if="this.state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
@@ -91,7 +91,7 @@
                         </FileUploader>
                     </div>
                 </div>
-                <div t-if="this.state.showPinnedMessages and this.hasPinnedMessages and !this.state.isSearchOpen" class="o-mail-pinnedMessages bg-inherit">
+                <div t-if="this.state.showPinnedMessages and this.hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">Pinned Messages</span>
@@ -153,7 +153,7 @@
 </t>
 
 <t t-name="mail.Chatter.attachFiles">
-    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="this.onClickAddAttachments"
+    <button class="o-mail-Chatter-attachFiles btn btn-link px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'text-muted': !this.state.isAttachmentBoxOpened }" title="Attach files" t-on-click="this.onClickAddAttachments"
             t-att-disabled="this.state.isSearchOpen || (!this.state.thread.canPostMessage and this.attachments.length === 0)">
         <i class="fa fa-paperclip fa-lg fa-fw"/>
         <sup t-if="this.attachments.length > 0" t-out="this.attachments.length"/>
