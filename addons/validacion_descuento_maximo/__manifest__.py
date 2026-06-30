@@ -9,6 +9,7 @@
     'license': 'LGPL-3',
     'data': [
         'security/discount_security.xml',
+        'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
     ],
 }

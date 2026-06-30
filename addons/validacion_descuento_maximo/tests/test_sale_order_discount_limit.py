@@ -8,9 +8,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 @tagged('post_install', '-at_install')
 class TestSaleOrderDiscountLimit(SaleCommon):
 
+    def setUp(self):
+        super().setUp()
+        self.env.company.discount_limit_percentage = 15.0
+
     def _create_order_with_discount(self, discount, **values):
         return self.env['sale.order'].create({
             'partner_id': self.partner.id,
+            'company_id': self.env.company.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product.id,
@@ -48,27 +53,26 @@ class TestSaleOrderDiscountLimit(SaleCommon):
 
         self.assertEqual(order.state, 'sale')
 
-    def test_confirm_order_with_discount_above_limit_is_blocked(self):
+    def test_confirm_order_with_discount_above_limit_goes_to_review(self):
         order = self._create_order_with_discount(10)
         order.order_line.with_context(skip_discount_limit_validation=True).discount = 16
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.action_confirm()
+        order.action_confirm()
 
         self.assertEqual(order.state, 'requires_review')
 
-    def test_confirm_order_with_decimal_discount_above_limit_is_blocked(self):
+    def test_confirm_order_with_decimal_discount_above_limit_goes_to_review(self):
         order = self._create_order_with_discount(10)
         order.order_line.with_context(skip_discount_limit_validation=True).discount = 15.1
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.action_confirm()
+        order.action_confirm()
 
         self.assertEqual(order.state, 'requires_review')
 
-    def test_confirm_order_with_multiple_lines_blocks_when_one_line_exceeds_limit(self):
+    def test_confirm_order_with_multiple_lines_goes_to_review_when_one_line_exceeds_limit(self):
         order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
+            'company_id': self.env.company.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product.id,
@@ -86,13 +90,13 @@ class TestSaleOrderDiscountLimit(SaleCommon):
         })
         order.order_line[1].with_context(skip_discount_limit_validation=True).discount = 16
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.action_confirm()
+        order.action_confirm()
 
         self.assertEqual(order.state, 'requires_review')
 
     def test_approve_discount_requires_supervisor_group(self):
-        order = self._create_order_with_discount(16)
+        order = self._create_order_with_discount(10)
+        order.order_line.with_context(skip_discount_limit_validation=True).discount = 16
         order.write({'state': 'requires_review'})
 
         user_without_group = self.env['res.users'].create({
@@ -100,43 +104,43 @@ class TestSaleOrderDiscountLimit(SaleCommon):
             'login': 'usuario_sin_grupo_discount',
             'email': 'usuario_sin_grupo_discount@example.com',
             'password': '123456',
-            'groups_id': [(6, 0, [])],
         })
 
         with self.assertRaisesRegex(UserError, 'permiso'):
             order.with_user(user_without_group).action_approve_discount()
 
     def test_custom_discount_limit_allows_higher_discount(self):
-        order = self._create_order_with_discount(16, descuento_maximo_permitido=20)
+        self.env.company.discount_limit_percentage = 20.0
+        order = self._create_order_with_discount(16)
 
         order.action_confirm()
 
         self.assertEqual(order.state, 'sale')
 
     def test_custom_lower_discount_limit_blocks_regular_discount(self):
-        order = self._create_order_with_discount(0, descuento_maximo_permitido=5)
+        self.env.company.discount_limit_percentage = 5.0
+        order = self._create_order_with_discount(0)
         order.order_line.with_context(skip_discount_limit_validation=True).discount = 10
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.action_confirm()
+        order.action_confirm()
 
         self.assertEqual(order.state, 'requires_review')
 
-    def test_create_order_with_discount_above_limit_is_blocked(self):
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            self._create_order_with_discount(16)
+    def test_create_order_with_discount_above_limit_goes_to_review(self):
+        order = self._create_order_with_discount(16)
 
-    def test_create_new_line_with_discount_above_limit_is_blocked(self):
+        self.assertEqual(order.state, 'requires_review')
+
+    def test_create_new_line_with_discount_above_limit_goes_to_review(self):
         order = self._create_order_with_discount(10)
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            self.env['sale.order.line'].create({
-                'order_id': order.id,
-                'product_id': self.service_product.id,
-                'product_uom_qty': 1,
-                'price_unit': 50,
-                'discount': 16,
-            })
+        self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': self.service_product.id,
+            'product_uom_qty': 1,
+            'price_unit': 50,
+            'discount': 16,
+        })
 
         self.assertEqual(order.state, 'requires_review')
 
@@ -153,23 +157,21 @@ class TestSaleOrderDiscountLimit(SaleCommon):
 
         self.assertEqual(order.state, 'sale')
 
-    def test_saving_order_line_with_discount_above_limit_is_blocked(self):
+    def test_saving_order_line_with_discount_above_limit_goes_to_review(self):
         order = self._create_order_with_discount(10)
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.write({
-                'order_line': [
-                    Command.update(order.order_line.id, {'discount': 16}),
-                ],
-            })
+        order.write({
+            'order_line': [
+                Command.update(order.order_line.id, {'discount': 16}),
+            ],
+        })
 
         self.assertEqual(order.state, 'requires_review')
 
-    def test_direct_line_write_with_discount_above_limit_is_blocked(self):
+    def test_direct_line_write_with_discount_above_limit_goes_to_review(self):
         order = self._create_order_with_discount(10)
 
-        with self.assertRaisesRegex(UserError, 'supera el 15% de descuento permitido'):
-            order.order_line.discount = 16
+        order.order_line.discount = 16
 
         self.assertEqual(order.state, 'requires_review')
 
