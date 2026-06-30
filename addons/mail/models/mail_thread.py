@@ -1653,9 +1653,6 @@ class MailThread(models.AbstractModel):
                     # the parent email that might be added at the end
                     # (e.g. for outlook / yahoo bounce email)
                     break
-                if (bad_content_type := part.get_content_type()) in BAD_CONTENT_TYPES:
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", bad_content_type)
-                    part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
@@ -1664,15 +1661,20 @@ class MailThread(models.AbstractModel):
                     continue  # skip container
 
                 filename = part.get_filename()  # I may not properly handle all charsets
+
+                mimetype, _, content_type_params = part.get('Content-Type').partition(';')
+                if mimetype in BAD_CONTENT_TYPES:
+                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", mimetype)
+                    part.replace_header('Content-Type', f'application/octet-stream;{content_type_params}')
+                elif mimetype.startswith('pdf'):
+                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/pdf'", mimetype)
+                    part.replace_header('Content-Type', f'application/pdf;{content_type_params}')
+
                 if part.get_content_type().startswith('text/') and not part.get_param('charset'):
                     # for text/* with omitted charset, the charset is assumed to be ASCII by the `email` module
                     # although the payload might be in UTF8
                     part.set_charset('utf-8')
                 encoding = part.get_content_charset()  # None if attachment
-
-                # Correcting MIME type for PDF files
-                if part.get('Content-Type', '').startswith('pdf;'):
-                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
 
                 content = part.get_content()
                 info = {'encoding': encoding}
