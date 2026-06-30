@@ -285,8 +285,16 @@
                                             <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
                                             <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
 
+<<<<<<< e73370085a4670405f513cf4b56531842ae3bcf5
                                             <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
                                             <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+||||||| b99370d2b58eaa15c979893c6b86b34979947dbc
+                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}"/>
+                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+=======
+                                            <span t-out="arabic_name + '\n'" t-if="line.name and arabic_name not in line.name" t-options="{'widget': 'text'}"/>
+                                            <span t-out="english_name + '\n'" t-if="line.name and (english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+>>>>>>> 50d45fea24997dd7e9b6e152523a4db6b1dccbbc
                                         </t>
                                         <span t-out="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
                                     </td>
