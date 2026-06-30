@@ -91,12 +91,8 @@ export class SplitPlugin extends Plugin {
                 predicate: (node) => this.dependencies.delete.isUnremovable(node),
                 splittable: false,
             },
+            { predicate: (node) => this.isUnsplittable(node), selectionBlocker: true },
         ],
-        is_selection_blocker_predicates: (blocker) => {
-            if (this.isUnsplittable(blocker)) {
-                return true;
-            }
-        },
     };
 
     setup() {

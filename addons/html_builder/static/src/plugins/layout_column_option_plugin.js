@@ -12,12 +12,10 @@ export class LayoutColumnOptionPlugin extends Plugin {
         builder_actions: {
             ChangeColumnCountAction,
         },
-        properties: { predicate: ".row > div", selectionPlaceholders: true },
-        is_selection_blocker_predicates: (blocker) => {
-            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.classList.contains("row")) {
-                return false;
-            }
-        },
+        properties: [
+            { predicate: ".row > div", selectionPlaceholders: true },
+            { predicate: ".row", selectionBlocker: false },
+        ],
     };
     onCloned({ cloneEl }) {
         const cloneElClassList = cloneEl.classList;
