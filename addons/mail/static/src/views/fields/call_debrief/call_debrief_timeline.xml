@@ -3,14 +3,16 @@
     <t t-name="mail.CallDebriefTimeline">
         <div class="o-CallDebriefTimeline-container z-1">
             <div class="o-CallDebriefTimeline position-relative d-flex align-items-center flex-grow-1" t-ref="this.timeline" t-on-pointerdown="this.onDragStart" t-on-pointermove="this.onHoverMove" t-on-pointerleave="this.onLeaveMove">
-                <div class="o-CallDebriefTimeline-track position-relative d-flex gap-1 align-items-center w-100 rounded z-0" t-att-class="{'rounded-pill pb-2 bg-300': this.props.mediaSegments.length === 0}">
-                    <t t-if="this.props.mediaSegments">
-                        <t t-foreach="this.props.mediaSegments" t-as="segment" t-key="segment.id">
-                            <div class="o-CallDebriefTimeline-media-segment position-absolute rounded-1 bg-200 overflow-hidden"
-                                 t-att-style="this._stylePositionMediaSegment(segment)">
-                                <div class="o-CallDebriefTimeline-media-progress position-absolute left-0 top-0 h-100 bg-primary" t-att-style="this._stylePositionMediaProgress(segment)"/>
-                            </div>
-                        </t>
+                <div class="o-CallDebriefTimeline-track position-relative d-flex align-items-center w-100 rounded z-0" t-att-class="{'rounded-pill pb-2 bg-300': this.timelineSegments.length === 0}">
+                    <t t-foreach="this.timelineSegments" t-as="segment" t-key="segment_index">
+                        <div class="o-CallDebriefTimeline-segment position-relative h-100 overflow-hidden"
+                             t-att-class="this.segmentCustomClasses(segment, segment_first, segment_last)"
+                             t-att-style="this._styleSegment(segment)">
+                            <t t-if="!segment.isSilence">
+                                <div class="o-CallDebriefTimeline-media-progress position-absolute left-0 top-0 h-100 bg-primary"
+                                     t-att-style="this._stylePositionMediaProgress(segment)"/>
+                            </t>
+                        </div>
                     </t>
                 </div>
 
