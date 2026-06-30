@@ -4,8 +4,8 @@ import requests
 
 from urllib import parse
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import Command, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
@@ -204,3 +204,35 @@ class ResPartner(models.Model):
         if routing_scheme == '0225':
             proxy_type = 'pdp'
         return proxy_type, identifier
+
+    def action_pdp_annuaire_lookup(self):
+        self.ensure_one()
+        if not self.routing_endpoint:
+            raise UserError(self.env._("Set up your peppol endpoint to enable the lookup"))
+
+        if not re.match(r"^\d{9}", self.routing_endpoint):
+            raise UserError(self.env._("endpoint must be at least 9 characters long and they must be numbers to enable the lookup (ie: siren)"))
+
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup'
+
+        response = requests.get(
+            url=endpoint,
+            params={
+                'pdp_endpoint': self.routing_endpoint[:9],  # We only want to take the first 9 char (for the siren)
+            },
+        )
+        response.raise_for_status()
+        data = response.json()
+        if not data.get('annuaire_lines'):
+            raise UserError(self.env._("No annuaire lines found for that identifier"))
+
+        wizard = self.env['l10n_fr_pdp.partner.lookup'].create({
+            'available_annuaire_line_ids': [
+                Command.create(line)
+                for line in data['annuaire_lines']
+            ],
+            'partner_id': self.id,
+        })
+        return wizard._get_records_action(target='new')

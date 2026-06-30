@@ -16,6 +16,12 @@
                 <xpath expr="//div[@invisible='peppol_response_support']/field[@name='peppol_verification_state' and @readonly='1']" position="attributes">
                     <attribute name="name">pdp_verification_display_state</attribute>
                 </xpath>
+                <field name="routing_endpoint" position="replace">
+                    <div class="d-flex justify-content-between">
+                        <field name="routing_endpoint" class="w-100" nolabel="1"/>
+                        <button class="btn border-0 p-0 o_searchview_icon oi oi-search cursor-pointer" name="action_pdp_annuaire_lookup" type="object"/>
+                    </div>
+                </field>
             </data>
         </field>
     </record>
