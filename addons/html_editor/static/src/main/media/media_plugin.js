@@ -112,13 +112,6 @@ export class MediaPlugin extends Plugin {
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 
-        /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            // avoid merge
-            if (isIconElement(node)) {
-                return false;
-            }
-        },
         is_selectable_on_click_predicates: (el) => {
             // Clicking an icon puts the cursor inside of it, where there is
             // nothing to edit: select the icon itself instead.
@@ -130,6 +123,8 @@ export class MediaPlugin extends Plugin {
         properties: [
             { predicate: this.isEditableMediaElement.bind(this), editable: true },
             { predicate: isMediaElement, functionalEmpty: true },
+            // avoid merge
+            { predicate: isIconElement, splittable: false },
         ],
 
         selectors_for_feff_providers: () =>

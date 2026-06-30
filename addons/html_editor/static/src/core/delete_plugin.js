@@ -786,7 +786,7 @@ export class DeletePlugin extends Plugin {
      * merge are reverse operations from one another).
      */
     isUnmergeable(node) {
-        return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+        return !this.dependencies.properties.get(node, "splittable", true);
     }
 
     joinBlocks(left, right, commonAncestor) {

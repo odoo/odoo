@@ -342,11 +342,7 @@ export class LinkPlugin extends Plugin {
                 return true;
             }
         },
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeName === "A") {
-                return false;
-            }
-        },
+        properties: { predicate: "A", splittable: false },
         // When the selection fully covers a link, we consider that the link is selected.
         is_node_fully_selected_predicates: (node, selection) => {
             if (
