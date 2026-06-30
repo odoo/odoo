@@ -17,24 +17,6 @@ const discussChannelPatch = {
         });
         this.shadowedBySelf = 0;
     },
-    _computeIsDisplayInSidebar() {
-        return (
-            (!this.self_member_id && this.livechat_status === "need_help") ||
-            super._computeIsDisplayInSidebar()
-        );
-    },
-    _computeDiscussAppCategory() {
-        if (this.channel_type !== "livechat") {
-            return super._computeDiscussAppCategory();
-        }
-        if (
-            this.livechat_status === "need_help" &&
-            this.store.discuss.livechatLookingForHelpCategory
-        ) {
-            return this.store.discuss.livechatLookingForHelpCategory;
-        }
-        return this.store.discuss.defaultLivechatCategory;
-    },
     get autoOpenChatWindowOnNewMessage() {
         return (
             (this.channel_type === "livechat" &&

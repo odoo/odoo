@@ -72,11 +72,12 @@ export class ResPartner extends Record {
     /**
      * ⚠️ This is intentionally a getter and not a field!
      *
-     * `store.menuThreads` uses this field to filter threads based on search
-     * terms. For each computation, the `menuThread` field is marked as needing a
-     * recompute, which can lead to excessive recursion—sometimes even exceeding the
-     * call stack size. This computation is simple enough that it doesn’t need a
-     * compute and has been replaced by a getter.
+     * If this becomes a compute field, any other compute field that reads `displayName`
+     * while iterating several records (e.g. `visibleCards` on `discuss.channel`, which
+     * sorts call members by `member.persona?.displayName`) would be marked for recompute
+     * every time `displayName` is read, which in turn re triggers `displayName`'s compute
+     * for the next record. Recompute chain can exceed the call stack size. This
+     * computation is simple enough that it doesn't need a compute anyway.
      */
     get displayName() {
         return this.name || this.display_name;

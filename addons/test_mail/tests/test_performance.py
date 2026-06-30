@@ -1639,7 +1639,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             return [
                 BusResult(
                     self.user_emp_inbox,
-                    "mail.message/inbox",
+                    "mail.message/notification",
                     {
                         "message_id": message.id,
                         "store_data": {
@@ -1757,7 +1757,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                 ),
                 BusResult(
                     self.user_follower_emp_inbox,
-                    "mail.message/inbox",
+                    "mail.message/notification",
                     {
                         "message_id": message.id,
                         "store_data": {

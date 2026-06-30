@@ -1,4 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
+import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { fields } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -20,6 +21,17 @@ const StorePatch = {
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
         this.activities_to_assign_count = undefined;
+        this.messagingMenuSystrayState = fields.One("MessagingMenuUIState", {
+            compute: () => ({ id: "mail.systray", activeTab: MENU_TABS.CHATS }),
+        });
+        this.showPushPermissionRequest = fields.Attr(false, {
+            compute() {
+                return (
+                    this.env.services["mail.notification.permission"]?.permission === "prompt" &&
+                    !this.isNotificationPermissionDismissed
+                );
+            },
+        });
         /** @type {Object[]} */
         this.activityGroups = fields.Attr([], {
             onUpdate() {
@@ -35,18 +47,6 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
-        this.globalCounter = fields.Attr(0, {
-            compute() {
-                return this.computeGlobalCounter();
-            },
-            onUpdate() {
-                this.updateAppBadge();
-            },
-            eager: true,
-        });
-    },
-    computeGlobalCounter() {
-        return this.inbox?.counter ?? 0;
     },
     initialize() {
         super.initialize(...arguments);
@@ -57,21 +57,6 @@ const StorePatch = {
     },
     onStarted() {
         super.onStarted(...arguments);
-        this.inbox = {
-            display_name: _t("Inbox"),
-            id: "inbox",
-            model: "mail.box",
-        };
-        this.bookmarkBox = {
-            display_name: _t("Bookmarks"),
-            id: "bookmark",
-            model: "mail.box",
-        };
-        this.history = {
-            display_name: _t("History"),
-            id: "history",
-            model: "mail.box",
-        };
         try {
             // useful for synchronizing activity data between multiple tabs
             this.activityBroadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
@@ -155,10 +140,38 @@ const StorePatch = {
         }
     },
     async removeAllBookmarks() {
-        // apply the change immediately for faster feedback
-        this.store.bookmarkBox.counter = 0;
-        this.store.bookmarkBox.messages = [];
+        for (const message of this.store.messagingMenu.bookmarkTab.messages) {
+            message.is_bookmarked = false;
+        }
         await this.store.fetchStoreData("remove_all_bookmarks");
+    },
+    async markNeedactionMessagesAsRead() {
+        const { orm, notification } = this.env.services;
+        const readMessageIds = await orm.silent.call("mail.message", "mark_all_as_read");
+        // Everything was read: the "Unread" filter view is now empty and fully loaded.
+        const notificationTab = this.store.messagingMenu.notificationTab;
+        notificationTab.loadStatusByFilterId = {
+            ...notificationTab.loadStatusByFilterId,
+            notification_unread: "loaded",
+        };
+        const close = notification.add(
+            readMessageIds.length === 1
+                ? _t("1 item marked as read")
+                : _t("%(amount)s items marked as read", { amount: readMessageIds.length }),
+            {
+                type: "success",
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        icon: "fa-undo",
+                        onClick: () => {
+                            orm.silent.call("mail.message", "mark_as_unread", [readMessageIds]);
+                            close();
+                        },
+                    },
+                ],
+            }
+        );
     },
     handleClickOnLink(ev, thread) {
         const model = ev.target.dataset.oeModel;

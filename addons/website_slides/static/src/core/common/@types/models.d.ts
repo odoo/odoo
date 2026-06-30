@@ -3,6 +3,6 @@ declare module "models" {
         request_partner_id: ResPartner;
     }
     export interface Thread {
-        comments_count: number | undefined;
+        comments_count: number|undefined;
     }
 }

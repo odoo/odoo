@@ -558,7 +558,7 @@ test("receive new needaction messages", async () => {
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId_1,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId_1), "_store_message_fields", {
@@ -583,7 +583,7 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId_2,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId_2), "_store_message_fields", {
@@ -618,7 +618,7 @@ test("receive a message that is not linked to thread", async () => {
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId_1,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId_1), "_store_message_fields", {

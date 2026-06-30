@@ -4,17 +4,15 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Message} */
 const messagePatch = {
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    canReplyAll(thread) {
-        return this.canForward(thread) && !this.isNote && !this.isEmpty;
+    get canReplyAll() {
+        return this.canForward && !this.isNote && !this.isEmpty;
     },
-    /** @param {import("models").Thread} thread */
-    canForward(thread) {
-        if (!thread || this.isEmpty) {
+    get canForward() {
+        if (!this.thread || this.isEmpty) {
             return false;
         }
         return (
-            !["discuss.channel", "mail.box"].includes(thread.model) &&
+            !this.thread.channel &&
             ["comment", "email", "email_outgoing"].includes(this.message_type)
         );
     },

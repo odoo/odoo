@@ -549,7 +549,7 @@ export class MailMessage extends models.ServerModel {
             "limit"
         ));
         const res = {};
-        if (thread) {
+        if (thread.length) {
             domain = domain.concat([
                 ["res_id", "=", parseInt(thread[0].id)],
                 ["model", "=", thread._name],
@@ -576,7 +576,7 @@ export class MailMessage extends models.ServerModel {
                 [["subject", "ilike", search_term]],
                 [["subtype_ids", "in", subtypeIds]],
             ]);
-            if (thread && is_notification !== false) {
+            if (thread.length && is_notification !== false) {
                 const messageIds = this.search([
                     ["res_id", "=", parseInt(thread[0].id)],
                     ["model", "=", thread._name],

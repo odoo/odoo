@@ -494,7 +494,7 @@ export class MailThread extends models.ServerModel {
                     if (user.notification_type === "inbox") {
                         notifications.push([
                             partner,
-                            "mail.message/inbox",
+                            "mail.message/notification",
                             {
                                 message_id: message.id,
                                 store_data: new Store()

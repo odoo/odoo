@@ -15,7 +15,6 @@ import {
     formatMonetary,
     formatText,
 } from "@web/views/fields/formatters";
-import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
@@ -23,7 +22,6 @@ import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
-        this.action = useService("action");
         this.avatarCard = usePopover(AvatarCard);
     },
     get attClass() {
@@ -68,11 +66,6 @@ patch(Message.prototype, {
                 });
             }
         }
-    },
-
-    openRecord() {
-        this.message.thread.open({ focus: true });
-        this.message.thread.highlightMessage = this.message;
     },
 
     /**

@@ -1,4 +1,4 @@
-import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
@@ -10,35 +10,47 @@ patch(MessagingMenu.prototype, {
         this.orm = useService("orm");
     },
 
-    onClickThread(isMarkAsRead, thread, message) {
-        if (!isMarkAsRead && thread.model === "gamification.badge.user") {
-            this.openEmployeeView(thread);
+    /** @type {Parameters<MessagingMenu.prototype.onClickMessage>} */
+    onClickMessage(message, { isMiddleClick } = {}) {
+        if (message.thread?.model === "gamification.badge.user") {
+            this.openEmployeeView(message.thread, { newWindow: isMiddleClick });
         } else {
-            super.onClickThread(...arguments);
+            super.onClickMessage(...arguments);
         }
     },
 
-    async openEmployeeView(thread) {
-        const employeeId = await this.orm.searchRead("hr.employee.public",
-                [["user_id", "=", user.userId],
-                ["company_id", "in", user.activeCompany.id]],
-                ["id"]
-            )
+    /**
+     * @param {import("models").Thread} thread
+     * @param {Object} [options]
+     * @param {boolean} [options.newWindow]
+     */
+    async openEmployeeView(thread, { newWindow = false } = {}) {
+        const employeeId = await this.orm.searchRead(
+            "hr.employee.public",
+            [
+                ["user_id", "=", user.userId],
+                ["company_id", "in", user.activeCompany.id],
+            ],
+            ["id"]
+        );
 
         if (employeeId.length > 0) {
-            await this.action.doAction({
-                type: "ir.actions.act_window",
-                res_model: 'hr.employee.public',
-                res_id: employeeId[0].id,
-                views: [[false, "form"]],
-                target: "current",
-                context: {
-                    open_badges_tab: true,
-                    user_badge_id: thread.id
+            await this.action.doAction(
+                {
+                    type: "ir.actions.act_window",
+                    res_model: "hr.employee.public",
+                    res_id: employeeId[0].id,
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {
+                        open_badges_tab: true,
+                        user_badge_id: thread.id,
+                    },
                 },
-            });
-            this.markAsRead(thread);
-            this.dropdown.close();
+                { newWindow }
+            );
+            thread.markAllMessagesAsRead();
+            this.close?.();
         }
-    }
+    },
 });

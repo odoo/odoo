@@ -4,7 +4,4 @@ declare module "models" {
         is_welcome_page_displayed: boolean|undefined;
         isChannelTokenSecret: boolean|undefined;
     }
-    export interface Thread {
-        setActiveURL: () => void;
-    }
 }

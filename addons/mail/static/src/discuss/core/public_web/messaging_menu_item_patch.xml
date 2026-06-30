@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
+    <xpath expr="//t[@name='itemNameBefore']" position="inside">
+        <i t-if="this.prependNameWithStar" class="fa fa-star o-mail-favorite me-1" t-att-title="this.starTitle" role="img"/>
+    </xpath>
+    <xpath expr="//t[@name='itemName']" position="replace">
+        <div t-if="this.channel?.parent_channel_id" class="d-flex align-items-center">
+            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-out="this.channel.parent_channel_id.displayName"/>
+            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+            <span class="text-truncate" t-out="this.channel.thread.displayName"/>
+        </div>
+        <t t-else="">$0</t>
+    </xpath>
+    <xpath expr="//t[@t-set-slot='icon']" position="inside">
+        <CountryFlag t-if="this.channel?.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
+    </xpath>
+</t>
+</templates>

@@ -12,7 +12,7 @@
         <t t-foreach="this.message().reactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.message" openReactionMenu="this.openReactionMenu" reaction="reaction"/>
         </t>
-        <QuickReactionMenu t-if="this.message().canAddReaction()" action="this.messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="this.message()"/>
+        <QuickReactionMenu t-if="this.message().canAddReaction" action="this.messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="this.message()"/>
     </div>
 </t>
 </templates>

@@ -17,9 +17,9 @@ export class AvatarStack extends Component {
                             t.instanceOf(this.store["mail.guest"].Class),
                         ]),
                     ],
-                    t.string()
+                    t.record(t.boolean())
                 )
-                .optional(() => () => ""),
+                .optional(() => () => ({})),
             containerClass: t.string().optional(),
             direction: t.selection(["h", "v"]).optional("h"),
             max: t.number().optional(4),

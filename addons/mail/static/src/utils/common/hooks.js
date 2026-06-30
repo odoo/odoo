@@ -1038,8 +1038,11 @@ export function propComputed(name, shape) {
  * @template S
  * @param {string} name
  * @param {S} shape shape of the final value (e.g. `t.number()`)
+ * @param {object} [options]
+ * @param {boolean} [options.optional]
  * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
  */
-export function propSignal(name, shape) {
-    return props.static(name, t.signal(shape));
+export function propSignal(name, shape, { optional = false } = {}) {
+    const type = t.signal(shape);
+    return props.static(name, optional ? type.optional() : type);
 }

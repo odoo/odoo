@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.NotificationItem" t-inherit-mode="extension">
-        <xpath expr="//*[@name='notificationBody']" position="replace">
+        <xpath expr="//t[@t-call-slot='body']" position="replace">
             <t t-if="this.ratingProps.rating">
                 <span>Rating:</span>
                 <img class="o-rating-preview-image ms-2" t-att-src="this.ratingProps.rating.rating_image_url" t-att-alt="this.ratingProps.rating.rating_text"/>

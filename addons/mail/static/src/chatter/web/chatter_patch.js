@@ -67,6 +67,10 @@ const chatterPatch = {
             record: t.instanceOf(Record).optional(),
             saveRecord: t.function([]).optional(),
         });
+        // When there's no highlight in the URL (e.g. the record was opened in a new
+        // window from the messaging menu), fall back to the one carried by the action
+        // context.
+        this.highlightMessage ??= this.webChatterProps.record?.context?.highlight_message_id;
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
         useOnChange(

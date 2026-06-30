@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
+    <xpath expr="//t[@t-set-slot='icon']" position="inside">
+        <span t-if="this.channel?.hasRtcSessionActive" class="o-mail-MessagingMenuItem-callIndicator position-absolute rounded-circle p-0 o-xsmaller lh-1 bg-inherit" title="In a call">
+            <span class="o-discuss-inCallIcon o-fw-600 rounded-circle d-flex justify-content-center align-items-center position-absolute z-3 bg-white" style="aspect-ratio: 1; font-size: 0.65rem; padding: 1px;">
+                <i class="fa fa-fw fa-volume-up bg-inherit rounded-circle"/>
+            </span>
+        </span>
+    </xpath>
+    <xpath expr="//NotificationItem" position="after">
+        <MessagingMenuCallParticipants t-if="this.channel?.hasRtcSessionActive" channel="this.channel"/>
+    </xpath>
+</t>
+
+</templates>

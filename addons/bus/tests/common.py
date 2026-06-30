@@ -143,7 +143,7 @@ class BusCase(BaseCase):
 
             BusResult(self.user_employee, "mail.record/insert", {...})
             BusResult(self.user_employee)
-            BusResult(self.user_employee, "mail.message/inbox")
+            BusResult(self.user_employee, "mail.message/notification")
             BusResult(self.user_employee, payload={"key": val})
             BusResult(self.user_employee, "mail.record/insert", {"key": val})
 

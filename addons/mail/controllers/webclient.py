@@ -62,12 +62,20 @@ class WebclientController(ThreadController):
 
     @store_handler("init_messaging", audience="everyone")
     def store_init_messaging(self, store: Store):
+        member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
+        channels = request.env["discuss.channel"].search_fetch(
+            [("channel_member_ids", "any", member_domain)],
+        )
         if request.env.user._is_internal():
-            # sudo: bus.bus: reading non-sensitive last id
-            bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-            store.add_global_values(
-                lambda res: self._store_init_messaging_global_fields(res, bus_last_id),
-            )
+            # sudo: res.partner - reading the odoobot partner id is acceptable
+            odoobot = request.env.ref("base.partner_root").sudo()
+            odoobot_chat = request.env["discuss.channel"].search_fetch([
+                ("channel_type", "=", "chat"),
+                ("is_member", "=", True),
+                ("channel_member_ids.partner_id", "=", odoobot.id),
+            ])
+            channels |= odoobot_chat
+        request.update_context(channels=request.env.context["channels"] | channels)
 
     @store_handler("res.partner", audience="everyone")
     def store_get_res_partner(self, store: Store, id):
@@ -190,20 +198,6 @@ class WebclientController(ThreadController):
         }
         record = request.env[model].with_context(**context).search([("id", "=", id)])
         store.add(record, "_store_avatar_card_fields")
-
-    @classmethod
-    def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
-        user = request.env.user.sudo(False)
-        res.attr(
-            "inbox",
-            {
-                "counter": user.partner_id._get_needaction_count(),
-                "counter_bus_id": bus_last_id,
-                "id": "inbox",
-                "model": "mail.box",
-            },
-        )
-        user._store_bookmark_box_global_fields(res, bus_last_id)
 
     @classmethod
     def _get_supported_avatar_card_models(self):

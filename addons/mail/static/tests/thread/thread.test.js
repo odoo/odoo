@@ -680,7 +680,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
     });
     // simulate receiving a new needaction message
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
@@ -738,7 +738,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {

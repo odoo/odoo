@@ -116,6 +116,12 @@ export class DiscussChannel extends Record {
             this.allowedToRenameChannelTypes.includes(this.channel_type) && this.thread.is_editable
         );
     }
+
+    get isMeetingOrMeetingChild() {
+        return [this.default_display_mode, this.parent_channel_id?.default_display_mode].includes(
+            "video_full_screen"
+        );
+    }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
@@ -776,6 +782,7 @@ export class DiscussChannel extends Record {
             this.store.env.services.notification.add(_t("The conversation was deleted."));
             return;
         }
+        this.isLocallyPinned = false;
         if (!notify) {
             return;
         }

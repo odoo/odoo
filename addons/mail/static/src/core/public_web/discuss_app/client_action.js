@@ -56,13 +56,6 @@ export class DiscussClientAction extends Component {
             return undefined;
         }
         const [model, id] = rawActiveId.split("_");
-        if (model === "mail.box") {
-            if (id === "starred") {
-                // legacy value to be kept forever to avoid breaking links
-                return ["mail.box", "bookmark"];
-            }
-            return ["mail.box", id];
-        }
         return [model, parseInt(id)];
     }
 
@@ -76,6 +69,7 @@ export class DiscussClientAction extends Component {
         const rawActiveId = this.getActiveId(action);
         const parsedActiveId = this.parseActiveId(rawActiveId);
         if (!parsedActiveId) {
+            await this.store.isReadyPromise;
             this.store.discuss.thread = undefined;
             this.store.discuss.hasRestoredThread = true;
             const odoobotChat = this.store.odoobot?.searchChat();
@@ -86,6 +80,16 @@ export class DiscussClientAction extends Component {
             return;
         }
         const [model, id] = parsedActiveId;
+        if (model === "discuss.tab") {
+            await this.store.isReadyPromise;
+            this.store.discuss.thread = undefined;
+            const tab = this.store.messagingMenu.allTabs.find((t) => t.id === id);
+            if (tab) {
+                this.store.discuss.sidebarState.activeTab = tab;
+            }
+            this.store.discuss.hasRestoredThread = true;
+            return;
+        }
         const activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
         if (activeThread && !activeThread.discussAppAsThread) {
             const highlight_message_id =

@@ -4,6 +4,7 @@ from . import attachment
 from . import channel
 from . import chatbot
 from . import main
+from . import messaging_menu
 from . import rtc
 from . import thread
 from . import webclient

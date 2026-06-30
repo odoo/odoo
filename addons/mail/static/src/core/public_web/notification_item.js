@@ -1,8 +1,8 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
-import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 
 import { Component, props, t } from "@odoo/owl";
 
@@ -12,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 const { DateTime } = luxon;
 
 const isMarkAsRead = t.boolean();
+const isMiddleClick = t.boolean();
 
 export class NotificationItem extends Component {
     static components = { ActionSwiper, DiscussAvatar, MessageSeenIndicator };
@@ -32,8 +33,7 @@ export class NotificationItem extends Component {
             important: t.or([t.boolean(), t.number()]).optional(),
             isActive: t.boolean().optional(),
             muted: t.number().optional(0),
-            nameMaxLine: t.number().optional(),
-            onClick: t.function([isMarkAsRead]),
+            onClick: t.function([isMarkAsRead, isMiddleClick.optional()]),
             onSwipeLeft: onSwipeType.optional(),
             onSwipeRight: onSwipeType.optional(),
             persona: t
@@ -43,7 +43,7 @@ export class NotificationItem extends Component {
                 ])
                 .optional(),
             slots: t.object().optional(),
-            textMaxLine: t.number().optional(),
+            textClassName: t.string().optional(""),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
         this.markAsReadRef = useRef("markAsRead");
@@ -61,11 +61,24 @@ export class NotificationItem extends Component {
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
-    onClick(ev) {
-        this.props.onClick(this.markAsReadRef.el?.contains(ev.target));
-    }
-
     get message() {
         return this.props.thread?.newestPersistentOfAllMessage;
+    }
+
+    get attClass() {
+        return {
+            "o-important": this.props.important,
+            "o-interest border-secondary": this.props.muted === 0,
+            "border-secondary": this.props.muted === 1,
+            "opacity-50 border-secondary": this.props.muted === 2,
+            "px-3 py-2 gap-1 o-small": this.ui.isSmall,
+            "border-top-0": this.props.first,
+            "o-px-2_5 o-py-1_5 gap-2": !this.ui.isSmall,
+            "o-active": this.props.isActive,
+        };
+    }
+
+    onClick(ev, isMiddleClick) {
+        this.props.onClick(this.markAsReadRef.el?.contains(ev.target), isMiddleClick);
     }
 }

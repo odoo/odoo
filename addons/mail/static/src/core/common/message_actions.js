@@ -37,10 +37,10 @@ registerMessageAction("reaction", {
     componentProps: ({ action, message, owner }) => ({
         action,
         message,
-        messageActive: owner.isActive(),
+        messageActive: owner.isActive?.(),
     }),
     componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
-    condition: ({ message, thread }) => message.canAddReaction(thread),
+    condition: ({ message }) => message.canAddReaction,
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
     onSelected({ owner, reactionAnchorRef, rootRef }) {
@@ -64,14 +64,14 @@ registerMessageAction("reaction", {
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: ({ message, thread }) => {
-        if (message.canReplyTo(thread)) {
-            return true;
-        }
-        if (["discuss.channel", "mail.box"].includes(thread?.model)) {
+    condition: ({ channel, message, owner }) => {
+        if (owner.env.inMessagingMenu) {
             return false;
         }
-        return !message.isEmpty && message.isNote && !message.isSelfAuthored;
+        if (message.canReplyTo) {
+            return true;
+        }
+        return !channel && !message.isEmpty && message.isNote && !message.isSelfAuthored;
     },
     icon: "fa fa-reply",
     name: _t("Reply"),
@@ -81,10 +81,8 @@ registerMessageAction("reply-to", {
             composer.replyToMessage = undefined;
             return;
         }
-        if (["discuss.channel", "mail.box"].includes(thread.model)) {
-            composer.replyToMessage = message;
-        }
         if (thread.channel) {
+            composer.replyToMessage = message;
             return;
         }
         if (!message.isSelfAuthored && message.model !== "discuss.channel" && message.author) {
@@ -110,21 +108,21 @@ registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "fa fa-bookmark",
     name: _t("Remove from Bookmarks"),
-    onSelected: ({ message, thread }) => message.removeBookmark(thread),
+    onSelected: ({ message, owner }) => message.removeBookmark(owner.env),
     sequence: 80,
 });
 registerMessageAction("mark-as-read", {
-    condition: ({ store, thread }) => thread?.eq(store.inbox),
+    condition: ({ message }) => message.needaction,
     icon: "fa fa-check",
     name: _t("Mark as Read"),
     onSelected: ({ message }) => message.setDone(),
     sequence: 35,
 });
 registerMessageAction("mark-as-unread", {
-    condition: ({ message, thread }) => message.canMarkAsUnread(thread),
+    condition: ({ message }) => message.canMarkAsUnread,
     icon: "fa fa-eye-slash",
     name: _t("Mark as Unread"),
-    onSelected: ({ message, thread }) => message.markAsUnread(thread),
+    onSelected: ({ message }) => message.markAsUnread(),
     sequence: 50,
 });
 registerMessageAction("reactions", {
@@ -137,18 +135,18 @@ registerMessageAction("reactions", {
     sequence: 60,
 });
 registerMessageAction("unfollow", {
-    condition: ({ message, thread }) => message.canUnfollow(thread),
+    condition: ({ message, owner }) => owner.env.inMessagingMenu && message.thread?.selfFollower,
     icon: "fa fa-user-times",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
     sequence: 110,
 });
 registerMessageAction("edit", {
-    condition: ({ message }) => message.editable,
+    condition: ({ owner, message }) => !owner.env.inMessagingMenu && message.editable,
     icon: "fa fa-pencil",
     name: _t("Edit"),
-    onSelected: ({ message, owner, thread }) => {
-        message.enterEditMode(thread);
+    onSelected: ({ message, owner }) => {
+        message.enterEditMode();
         owner.optionsDropdown?.close();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),

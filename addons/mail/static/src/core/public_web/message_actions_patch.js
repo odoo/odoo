@@ -2,11 +2,11 @@ import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("pin", {
-    condition: ({ message, store, thread }) =>
+    condition: ({ message, owner, store }) =>
+        !owner.env.inMessagingMenu &&
         !message.pinned_at &&
         store.self_user &&
         message.thread &&
-        thread?.model !== "mail.box" &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
     icon: "fa fa-thumb-tack",
     name: _t("Pin"),
@@ -16,11 +16,11 @@ registerMessageAction("pin", {
 });
 
 registerMessageAction("unpin", {
-    condition: ({ message, store, thread }) =>
+    condition: ({ message, owner, store }) =>
+        !owner.env.inMessagingMenu &&
         message.pinned_at &&
         store.self_user &&
         message.thread &&
-        thread?.model !== "mail.box" &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
     icon: "fa fa-thumb-tack",
     name: _t("Unpin"),

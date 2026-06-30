@@ -58,6 +58,13 @@ class PublicPageController(http.Controller):
             raise NotFound()
         return self._response_discuss_public_template(Store(), channel)
 
+    @mail_route("/discuss", methods=["GET"], type="http", auth="public")
+    def discuss_public(self, *, debug=None, active_id=None):
+        _, guest = self.env["res.users"]._get_current_persona()
+        if self.env.user._is_public() and not guest:
+            raise NotFound()
+        return self._response_discuss_public_template(Store())
+
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
         if not request.env["ir.config_parameter"].sudo().get_bool("mail.chat_from_token"):
@@ -108,20 +115,21 @@ class PublicPageController(http.Controller):
             return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}")
         return self._response_discuss_public_template(store, channel)
 
-    def _response_discuss_public_template(self, store: Store, channel):
+    def _response_discuss_public_template(self, store: Store, channel=None):
         store.add_global_values(
             companyName=request.env.company.name,
             inPublicPage=True,
         )
-        store.add(channel, "_store_channel_fields")
-        store.add_model_values(
-            "DiscussApp",
-            lambda res: res.one("thread", [], as_thread=True, value=channel),
-        )
+        if channel:
+            store.add(channel, "_store_channel_fields")
+            store.add_model_values(
+                "DiscussApp",
+                lambda res: res.one("thread", [], as_thread=True, value=channel),
+            )
         return request.render(
             "mail.discuss_public_channel_template",
             {
-                "session_info": channel.env["ir.http"].session_info(),
+                "session_info": request.env["ir.http"].session_info(),
                 "store_data": store.as_dict(),
             },
         )

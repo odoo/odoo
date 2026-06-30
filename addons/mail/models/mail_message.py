@@ -1320,7 +1320,17 @@ class MailMessage(models.Model):
                     ),
                 )
 
+            def needaction_done(message):
+                # sudo: mail.message - checking whether there is a notification for the current user is acceptable
+                return not message.env.user._is_public() and bool(
+                    message.sudo().notification_ids.filtered(
+                        lambda n: n.is_read
+                        and n.res_partner_id == message.env.user.partner_id,
+                    ),
+                )
+
             res.attr("needaction", needaction)
+            res.attr("needaction_done", needaction_done)
 
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is

@@ -24,11 +24,6 @@
                 </t>
             </t>
         </t>
-        <t t-elif="this.props.thread.model === 'mail.box'">
-            <div t-if="this.props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att="attr"/>
-            <div t-elif="this.props.thread.id === 'bookmark'" class="fa fa-fw fa-bookmark-o" t-att="attr"/>
-            <div t-elif="this.props.thread.id === 'history'" class="fa fa-fw fa-history" t-att="attr"/>
-        </t>
     </t>
 
 </templates>

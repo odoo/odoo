@@ -7,6 +7,7 @@ from . import im_status
 from . import link_preview
 from . import mail
 from . import mailbox
+from . import messaging_menu
 from . import message_reaction
 from . import poll
 from . import store

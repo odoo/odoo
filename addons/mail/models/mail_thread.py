@@ -3482,7 +3482,7 @@ class MailThread(models.AbstractModel):
             for user in users:
                 store = Store(
                     user,
-                    notification_type="mail.message/inbox",
+                    notification_type="mail.message/notification",
                     notification_payload={"message_id": message.id},
                 )
                 store.add(

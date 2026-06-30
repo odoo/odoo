@@ -10,28 +10,4 @@
             <attribute name="t-on-click">this.onClickStartMessageAvatar</attribute>
         </xpath>
     </t>
-    <t t-inherit="mail.Thread" t-inherit-mode="extension">
-        <xpath expr="//*[@name='empty-message']" position="replace">
-            <t t-if="this.props.thread.isEmpty and this.props.thread.model === 'mail.box'">
-                <t t-if="this.props.thread.id === 'inbox' and this.state.mountedAndLoaded">
-                    <div class="align-items-center text-center">
-                        <h4 class="mb-3 o-fw-600">You're all caught up!</h4>
-                        New messages will appear here.
-                    </div>
-                </t>
-                <t t-if="this.props.thread.id === 'bookmark'">
-                    <div class="d-flex flex-column align-items-center text-center">
-                        <h4 class="mb-3 o-fw-600">Bookmark important messages</h4>
-                        Save messages here to easily keep track of them.
-                    </div>
-                </t>
-                <t t-if="this.props.thread.id === 'history'">
-                    <img src="/web/static/img/neutral_face.svg" alt="History"/>
-                    <h4 class="mb-3 o-fw-600">No history messages</h4>
-                    Messages marked as read will appear in the history.
-                </t>
-            </t>
-            <t t-else="">$0</t>
-        </xpath>
-    </t>
 </templates>

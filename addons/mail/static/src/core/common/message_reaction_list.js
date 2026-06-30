@@ -96,7 +96,7 @@ export class MessageReactionList extends Component {
      * @param {import("models").MessageReactions} param1.reactionAtRender
      */
     onClickReaction(ev, { messageAtRender, reactionAtRender }) {
-        if (!messageAtRender.canAddReaction()) {
+        if (!messageAtRender.canAddReaction) {
             return;
         }
         if (this.hasSelfReacted(messageAtRender, reactionAtRender)) {

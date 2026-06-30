@@ -20,9 +20,9 @@ declare module "models" {
     export interface ResUsers {
         all_employee_ids: HrEmployee[];
         employee_id: HrEmployee;
-        employee_ids: HrEmployee[];
     }
     export interface Store {
+        getRelevantEmployee: (employees: HrEmployee[]) => unknown;
         "hr.department": StaticMailRecord<HrDepartment, typeof HrDepartmentClass>;
         "hr.employee": StaticMailRecord<HrEmployee, typeof HrEmployeeClass>;
         "hr.employee.public": StaticMailRecord<HrEmployeePublic, typeof HrEmployeePublicClass>;

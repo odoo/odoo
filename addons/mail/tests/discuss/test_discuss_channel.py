@@ -833,7 +833,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
 
         all_users = all_test_user + mentions_test_user + nothing_test_user
-        notifications = [BusResult(user, "mail.message/inbox") for user in all_users]
+        notifications = [BusResult(user, "mail.message/notification") for user in all_users]
         notifications.append(BusResult(channel, "discuss.channel/new_message"))
         with self.assertBus(notifications):
             # sending mention message

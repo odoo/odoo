@@ -10,21 +10,22 @@ declare module "models" {
         remove: (param0: { broadcast: boolean }) => void;
     }
     export interface Message {
-        canForward: (thread: Thread) => boolean;
-        canReplyAll: (thread: Thread) => boolean;
+        canForward: Readonly<boolean>;
+        canReplyAll: Readonly<boolean>;
     }
     export interface Store {
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
-        activities_to_assign_count: number;
+        activities_to_assign_count: undefined;
         activity_counter_bus_id: number;
         activityCounter: number;
         activityGroups: Object[];
-        computeGlobalCounter: () => number;
-        globalCounter: number;
+        markNeedactionMessagesAsRead: () => Promise<void>;
+        messagingMenuSystrayState: MessagingMenuUIState;
         onLinkFollowed: (fromThread: Thread) => void;
         onUpdateActivityGroups: () => void;
         removeAllBookmarks: () => Promise<void>;
         scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
+        showPushPermissionRequest: boolean;
         updateAppBadge: () => void;
     }
     export interface Thread {

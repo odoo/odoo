@@ -72,6 +72,12 @@ export class DiscussContent extends Component {
         return this.props.thread || this.store.discuss.thread;
     }
 
+    get isNotificationTabActive() {
+        return Boolean(
+            this.store.messagingMenu.notificationTab?.eq(this.store.discuss.sidebarState.activeTab)
+        );
+    }
+
     get showsChatLocalDateTime() {
         return (
             this.thread.channel?.channel_type === "chat" &&

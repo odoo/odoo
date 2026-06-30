@@ -1194,7 +1194,7 @@ test("messaging menu should show new needaction messages from chatter", async ()
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/notification", {
         message_id: messageId,
         store_data: new Store()
             .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {

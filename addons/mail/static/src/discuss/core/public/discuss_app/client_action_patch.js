@@ -14,10 +14,16 @@ patch(DiscussClientAction.prototype, {
     },
     /** @override */
     getActiveId() {
-        const { pathname } = new URL(browser.location);
+        const url = new URL(browser.location);
+        // On the public page, `active_id` is only set for tabs and is mutually exclusive
+        // with `channel`. So if `active_id` is set, there is no `channel`.
+        const activeId = url.searchParams.get("active_id");
+        if (activeId) {
+            return activeId;
+        }
         const channelId =
-            pathname.match(/^\/discuss\/channel\/(\d+)$/)?.[1] ??
-            pathname.match(/^\/chat\/(\d+)\/[^/]+$/)?.[1];
+            url.pathname.match(/^\/discuss\/channel\/(\d+)$/)?.[1] ??
+            url.pathname.match(/^\/chat\/(\d+)\/[^/]+$/)?.[1];
         return channelId ? `discuss.channel_${channelId}` : null;
     },
     async restoreDiscussThread() {
@@ -28,6 +34,9 @@ patch(DiscussClientAction.prototype, {
         if (!channel) {
             return;
         }
+        // The initial thread comes from the server store rather than a
+        // `setAsDiscussThread()` call, so the sidebar tab should be setup explicitlty.
+        this.store.discuss.sidebarState.activeTab = channel.primaryMessagingMenuTab;
         if (this.store.is_welcome_page_displayed && channel.invitationLink) {
             browser.history.replaceState(
                 browser.history.state,

@@ -6,4 +6,7 @@ declare module "models" {
         shadowedBySelf: number;
         updateLivechatStatus: (status: "in_progress"|"need_help") => void;
     }
+    export interface MessagingMenu {
+        livechatTab: MessagingMenuTab;
+    }
 }
