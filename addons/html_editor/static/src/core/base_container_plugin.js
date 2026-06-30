@@ -38,7 +38,7 @@ export class BaseContainerPlugin extends Plugin {
     static defaultConfig = {
         baseContainers: ["P", "DIV"],
     };
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "region"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -136,7 +136,7 @@ export class BaseContainerPlugin extends Plugin {
         if (
             anchorNode === closestEditable(node) ||
             !this.config.baseContainers.includes(anchorNode.nodeName) ||
-            !(this.checkPredicates("is_node_removable_predicates", anchorNode) ?? true)
+            (this.dependencies.region.getProperty(anchorNode, "removable") ?? true) !== true
         ) {
             return;
         }
