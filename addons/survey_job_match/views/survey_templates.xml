@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="survey_fill_form_done_job_match" inherit_id="survey.survey_fill_form_done" name="Survey: job match result">
+        <!-- Compute the ranked results once, only for job-matching surveys. -->
+        <xpath expr="//h1[hasclass('o_survey_main_title')]" position="before">
+            <t t-if="survey.is_job_match" t-set="job_match_results" t-value="answer._get_job_match_results()"/>
+        </xpath>
+
+        <!-- Show the best match card with a "match meter" and a link to the posting. -->
+        <xpath expr="//h1[hasclass('o_survey_main_title')]" position="after">
+            <t t-if="survey.is_job_match and job_match_results">
+                <t t-set="best" t-value="job_match_results[0]"/>
+                <div class="o_survey_job_match my-4">
+                    <p class="text-muted mb-2">Your best match is</p>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img t-if="best['profile'].image_512"
+                            t-attf-src="/web/image/job.match.profile/#{best['profile'].id}/image_512"
+                            class="rounded" style="width: 72px; height: 72px; object-fit: cover;"
+                            alt="Profile image"/>
+                        <div>
+                            <h2 class="h4 mb-0" t-out="best['profile'].name"/>
+                            <span class="text-primary fw-bold"><t t-out="best['percentage']"/>% match</span>
+                        </div>
+                    </div>
+                    <div class="progress mb-3" style="height: 12px;">
+                        <div class="progress-bar bg-primary" role="progressbar"
+                            t-attf-style="width: #{best['percentage']}%;"
+                            t-att-aria-valuenow="best['percentage']"
+                            aria-valuemin="0" aria-valuemax="100"/>
+                    </div>
+                    <div t-if="best['profile'].description" t-field="best['profile'].description" class="mb-3"/>
+                    <a t-if="best['profile'].posting_url"
+                        role="button" class="btn btn-primary"
+                        t-att-href="best['profile'].posting_url" target="_blank">
+                        See the job <i class="fa fa-arrow-right ms-1" aria-hidden="true"/>
+                    </a>
+
+                    <!-- Runners-up -->
+                    <t t-set="runners" t-value="job_match_results[1:3]"/>
+                    <div t-if="runners" class="mt-4">
+                        <p class="text-muted mb-2">Other roles you'd fit</p>
+                        <t t-foreach="runners" t-as="runner" t-key="runner['profile'].id">
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span t-out="runner['profile'].name"/>
+                                    <span class="text-muted"><t t-out="runner['percentage']"/>%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
+                                        t-attf-style="width: #{runner['percentage']}%;"
+                                        t-att-aria-valuenow="runner['percentage']"
+                                        aria-valuemin="0" aria-valuemax="100"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
