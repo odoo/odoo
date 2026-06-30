@@ -55,9 +55,9 @@ class AccountMove(models.Model):
     )
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
-    l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
-    l10n_in_shipping_bill_date = fields.Date('Shipping bill date')
-    l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
+    l10n_in_shipping_bill_number = fields.Char('Shipping bill number', tracking=True)
+    l10n_in_shipping_bill_date = fields.Date('Shipping bill date', tracking=True)
+    l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', tracking=True)
     l10n_in_reseller_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Reseller",
