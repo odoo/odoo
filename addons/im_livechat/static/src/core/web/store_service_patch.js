@@ -88,6 +88,9 @@ const storePatch = {
         if (tab === "livechat") {
             threadTypes.push("livechat");
         }
+        if (tab === "conversations") {
+            threadTypes.push("livechat");
+        }
         return threadTypes;
     },
 };
