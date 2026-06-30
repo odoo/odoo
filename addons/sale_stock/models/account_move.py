@@ -53,7 +53,7 @@ class AccountMove(models.Model):
             is_stock_return = (
                     self.move_type == 'out_invoice' and (sml.location_id.usage, sml.location_dest_id.usage) == ('customer', 'internal')
                     or
-                    self.move_type == 'out_refund' and (sml.location_id.usage, sml.location_dest_id.usage) == ('internal', 'customer')
+                    self.move_type == 'out_refund' and sml.location_dest_id.usage == 'customer' and sml.location_id.usage in ('internal', 'supplier')
             )
             if is_stock_return:
                 returned_qty = min(qties_per_lot[sml.lot_id], quantity)
