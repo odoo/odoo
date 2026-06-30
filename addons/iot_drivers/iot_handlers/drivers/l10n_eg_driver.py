@@ -28,9 +28,20 @@ class EtaUsbController(http.Controller):
     def _is_access_token_valid(self, access_token):
         stored_hash = config.get('proxy_access_token')
         if not stored_hash:
-            # empty password/hash => authentication forbidden
+            _logger.warning("No proxy_access_token is set in the config")
             return False
-        return crypt_context.verify(access_token, stored_hash)
+        # 19.0+ stores the token directly
+        if access_token == stored_hash:
+            return True
+        # Versions prior to 19.0 stored a hash of the token
+        try:
+            hash_matches = crypt_context.verify(access_token, stored_hash)
+            if not hash_matches:
+                _logger.warning("Stored token hash does not match hash of provided token")
+            return hash_matches
+        except ValueError:
+            _logger.warning("Stored token hash is not valid")
+            return False
 
     @route.iot_route('/hw_l10n_eg_eta/certificate', type='http', cors='*', csrf=False, methods=['POST'])
     def eta_certificate(self, pin, access_token):
