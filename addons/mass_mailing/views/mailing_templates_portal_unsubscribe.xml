@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="page_mailing_confirm_unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <div class="container o_unsubscribe_form">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-4">
+                        <div id="info_state"  class="alert alert-success">
+                            <div class="text-center">
+                                <form action="/mailing/confirm_unsubscribe" method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                                    <input type="hidden" name="document_id" t-att-value="document_id"/>
+                                    <input type="hidden" name="email" t-att-value="email"/>
+                                    <input type="hidden" name="hash_token" t-att-value="hash_token"/>
+                                    <p t-if="unsubscribed_lists">
+                                       Are you sure you want to unsubscribe from the mailing list "<span t-out="unsubscribed_lists"/>"? 
+                                    </p>
+                                    <p t-else="">
+                                        Are you sure you want to unsubscribe from our mailing list?
+                                    </p>
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_mailing_has_unsubscribed">
+        <t t-call="mass_mailing.layout">
+            <div class="container o_unsubscribe_form">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-4">
+                        <div id="info_state"  class="alert alert-success">
+                            <div class="text-center">
+                                <p>Successfully unsubscribed!</p>
+                                <a t-att-href="settings_url" class="btn btn-primary">Manage Subscriptions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_mailing_unsubscribe" name="Unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe_form"/>
+        </t>
+    </template>
+
+    <template id="unsubscribe_form">
+        <div id="o_mailing_portal_subscription"
+             class="container o_mailing_portal_body"
+             t-att-data-blocklist-enabled="blocklist_enabled"
+             t-att-data-blocklist-possible="blocklist_possible"
+             t-att-data-document-id="document_id"
+             t-att-data-feedback-enabled="feedback_enabled"
+             t-att-data-feedback-readonly="feedback_readonly"
+             t-att-data-hash-token="hash_token"
+             t-att-data-last-action="last_action"
+             t-att-data-email="email"
+             t-att-data-email-valid="email_valid"
+             t-att-data-is-blocklisted="is_blocklisted"
+             t-att-data-mailing-id="mailing_id">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 mt-4">
+                    <div id="o_mailing_subscription_form">
+                        <form action="/mailing/list/update" method="POST">
+                            <h1 class="o_page_header">Mailing Subscriptions</h1>
+
+                            <div id="o_mailing_subscription_form_blocklisted"
+                                 t-att-class="'' if is_blocklisted else 'd-none'">
+                                <p>
+                                    Your email is currently <strong>in our block list</strong>.
+                                    <t t-if="lists_optin">
+                                        You will not receive any news from those mailing lists you are a member of:
+                                    </t>
+                                    <t t-else="">
+                                        You will not hear from us anymore.
+                                    </t>
+                                </p>
+                                <ul class="list-group mb-4"
+                                    t-if="lists_optin">
+                                    <t t-foreach="lists_optin" t-as="mailing_list">
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <strong>
+                                                <t t-if="mailing_list.is_public" t-esc="mailing_list.name"/>
+                                                <t t-else="">Mailing List #<t t-esc="mailing_list.id"/></t>
+                                            </strong>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+
+                            <div id="o_mailing_subscription_form_manage"
+                                 t-att-class="'d-none' if is_blocklisted else ''">
+                                <p t-if="lists_optin + lists_optout">
+                                    Choose your mailing subscriptions
+                                </p>
+                                <ul id="o_mailing_subscription_form_lists"
+                                    t-if="lists_optin + lists_optout"
+                                    class="list-group">
+                                    <li t-foreach="(lists_optin + lists_optout)"
+                                        t-as="mailing_list"
+                                        class="list-group-item d-flex align-items-center"
+                                        t-if="mailing_list not in lists_optout or mailing_list.is_public">
+                                        <t t-set="title" t-value="mailing_list.name"/>
+                                        <input type="checkbox"
+                                               name="mailing_list_ids"
+                                               t-att-data-member="1"
+                                               t-att-disabled="'disabled' if is_blocklisted else None"
+                                               t-att-value="mailing_list.id"
+                                               t-att-checked="None if mailing_list in lists_optout else 'checked'"
+                                               t-att-title="title"/>
+                                        <span class="ms-1" t-out="title"/>
+                                        <span class="o_mailing_list_unsubscribed ms-auto">
+                                            <t t-if="mailing_list in lists_optout">
+                                                Not subscribed
+                                            </t>
+                                            <t t-else="">
+                                                Subscribed
+                                            </t>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <p t-if="lists_public">
+                                    You may also be interested in
+                                </p>
+                                <ul id="o_mailing_subscription_form_lists_additional"
+                                    t-if="lists_public"
+                                    class="list-group">
+                                    <li t-foreach="lists_public"
+                                        t-as="mailing_list"
+                                        class="list-group-item">
+                                        <input type="checkbox"
+                                               name="mailing_list_ids"
+                                               t-att-disabled="'disabled' if is_blocklisted else None"
+                                               t-att-value="mailing_list.id"
+                                               t-att-title="mailing_list.name"/>
+                                        <span class="ms-1" t-out="mailing_list.name"/>
+                                    </li>
+                                </ul>
+                                <p t-if="not lists_optin and not lists_optout and not lists_public">
+                                    You are not subscribed to any of our mailing list.
+                                </p>
+                            </div>
+                            <div id="o_mailing_subscription_blocklist"
+                                 class="d-flex align-items-center mb-4 pt-3">
+                                <button type="submit" id="button_form_send"
+                                        t-att-disabled="'disabled' if is_blocklisted else None"
+                                        t-att-class="'btn btn-primary ' + ('' if lists_optin or lists_optout or lists_public else 'd-none')">
+                                    Apply changes
+                                </button>
+                                <div class="btn btn-link me-2 text-uppercase d-none"
+                                     t-if="blocklist_enabled and blocklist_possible"
+                                     id="button_blocklist_add">Exclude Me</div>
+                                <div class="btn btn-link text-uppercase d-none"
+                                     id="button_blocklist_remove">Come Back</div>
+                                <div id="o_mailing_subscription_update_info" class="d-none"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="o_mailing_subscription_info"
+                         class="mb-4"
+                         role="status">
+                        <t t-if="unsubscribed_name">
+                            <h1 class="o_page_header">Successfully Unsubscribed</h1>
+                            <span t-out="unsubscribed_name"/>
+                        </t>
+                        <div id="o_mailing_subscription_feedback"
+                             t-att-class="'' if feedback_enabled else 'd-none'">
+                            <form action="/mail/mailing/feedback" method="POST"
+                                  class="mt-3">
+                                <p>
+                                    Please let us know why you updated your subscription.
+                                </p>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <fieldset>
+                                    <div class="form-check"
+                                         t-foreach="opt_out_reasons"
+                                         t-as="opt_out_reason">
+                                        <input class="form-check-input o_mailing_subscription_opt_out_reason"
+                                               type="radio"
+                                               name="opt_out_reason_id"
+                                               t-att-id="'opt_out_reason_id' + str(opt_out_reason.id)"
+                                               t-att-data-is-feedback="opt_out_reason.is_feedback"
+                                               t-att-value="opt_out_reason.id"/>
+                                        <label class="form-check-label"
+                                               t-att-for="'opt_out_reason_id' + str(opt_out_reason.id)"
+                                               t-out="opt_out_reason.name"/>
+                                    </div>
+                                </fieldset>
+                                <textarea class="form-control d-none" name="feedback" cols="60" rows="3"></textarea>
+                                <div class="d-flex align-items-center mt-2">
+                                    <button type="submit" id="button_feedback"
+                                            class="btn btn-primary text-start me-2">Send</button>
+                                    <div id="o_mailing_subscription_feedback_info" class="d-none"/>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="o_mailing_portal_subscription_editor" class="oe_structure oe_empty"/>
+        </div>
+    </template>
+</odoo>

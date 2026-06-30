@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.OptionalProductPopup">
+        <Dialog title.translate="Optional Products">
+            <div
+                t-foreach="state.product_lines"
+                t-as="optional_product"
+                t-key="optional_product.product_tmpl_id.id"
+                t-attf-class="py-2 {{ optional_product == state.product_lines.at(-1) ? '' : 'border-bottom' }}">
+
+                <!-- Optional Product Line -->
+                <div class="optional-product-line d-flex justify-content-between align-items-center">
+                    <!-- Product Details -->
+                    <div class="d-flex flex-column align-items-left overflow-hidden">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <img t-if="pos.config.show_product_images" t-att-src="optional_product.product_tmpl_id.getImageUrl()" alt="Product Image"
+                                class="product-img rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
+                            <div class="overflow-hidden">
+                                <h5 class="product-name mb-1 text-truncate">
+                                    <t t-out="optional_product.product_tmpl_id.display_name"/>
+                                </h5>
+                                <p class="text-muted small mb-1 text-truncate">
+                                    <t t-out="optional_product.product_tmpl_id.productDescriptionMarkup"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Buttons -->
+                    <div class="cart-buttons btn-group d-flex align-items-center ms-2 flex-shrink-0" role="group">
+                        <t t-if="!optional_product.qty">
+                            <button
+                                type="button"
+                                class="btn btn-primary py-2"
+                                t-on-click="() => this.changeQuantity(optional_product, true)">
+                                + Add
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                style="width: 40px; height: 40px;"
+                                t-on-click="() => this.changeQuantity(optional_product, false)">
+                                －
+                            </button>
+                            <input
+                                type="number"
+                                class="form-control text-center"
+                                style="width: 60px; height: 40px;"
+                                t-att-value="optional_product.qty"
+                                t-on-blur="(event) => this.onInputChangeQuantity(optional_product, event.target.value)" />
+                            <button
+                                type="button"
+                                class="btn btn-secondary m-0"
+                                style="width: 40px; height: 40px;"
+                                t-on-click="() => this.changeQuantity(optional_product, true)">
+                                ＋
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button class="btn btn-primary btn-lg lh-lg w-50" t-on-click="confirm" t-att-disabled="buttonDisabled">Add</button>
+                    <button class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="cancel">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CreatePageMessage">
+    <!-- The wrapping <div> is necessary to avoid a traceback due to the dismiss -->
+    <div>
+        <div class="alert alert-warning alert-dismissible m-0 rounded-0 border-0">
+            <div class="container d-flex align-items-center">
+                <i class="fa fa-lg fa-info-circle me-2"></i>
+                <span class="me-auto">This page does not exist yet. Would you like to create it?</span>
+                <a role="button" class="btn btn-primary" t-on-click="this.props.createPage">Create Page</a>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</t>
+</templates>

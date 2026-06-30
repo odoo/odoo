@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+
+    <t t-name="hr_org_chart.HrEmployeeHierarchyRenderer" t-inherit="web_hierarchy.HierarchyRenderer">
+        <xpath expr="//div[hasclass('o_hierarchy_parent_node_container')]/span" position="replace">
+            <Avatar
+                resModel="row.parentNode.model.resModel"
+                resId="row.parentNode.resId"
+                displayName="row.parentNode.data.display_name || row.parentNode.data.name"
+            />
+        </xpath>
+    </t>
+
+</templates>

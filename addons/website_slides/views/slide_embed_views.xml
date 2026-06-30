@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_embed_view_tree" model="ir.ui.view">
+            <field name="name">slide.embed.view.list</field>
+            <field name="model">slide.embed</field>
+            <field name="arch" type="xml">
+                <list string="Embed Views" create="0" edit="0">
+                    <field name="website_name" string="External Website"/>
+                    <field name="count_views"/>
+                    <field name="slide_id" string="Content" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="slide_embed_view_search" model="ir.ui.view">
+            <field name="name">slide.embed.view.search</field>
+            <field name="model">slide.embed</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="slide_id" string="Content"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="slide_embed_action" model="ir.actions.act_window">
+            <field name="name">Embed Views</field>
+            <field name="res_model">slide.embed</field>
+            <field name="view_mode">list,search</field>
+        </record>
+    </data>
+</odoo>

@@ -1,658 +1,1075 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
-# Thomas Neu <t.neu@runbox.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Andi <flimflam@salasar.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Martin Trigaux, 2022
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Adrian Böttcher <boettcher@top-arbeitsschutz.de>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Niki Waibel <niki.waibel@gmail.com>, 2017\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-04-24 12:05+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"base_import/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:535
-#, python-format
-msgid "(%d more)"
-msgstr "(%d mehr)"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr "%(number)s Datei(en) ausgewählt"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:309
-#, python-format
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "%s at multiple rows"
+msgstr "%s in mehreren Zeilen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "%s records successfully imported"
+msgstr "%s Datensätze erfolgreich importiert"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "A single column was found in the file, this often means the file separator "
-"is incorrect"
+"is incorrect."
 msgstr ""
-"Es wurde nur eine einzige Spalte in dieser Datei gefunden, was ein Hinweis "
-"auf ein nicht korrektes Feldtrennzeichen ist."
+"Es wurde nur eine einzige Spalte in dieser Datei gefunden. Dies bedeutet "
+"oft, dass das Dateitrennzeichen nicht korrekt ist."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:89
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Additional Fields"
+msgstr "Weitere Felder"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Advanced"
+msgstr "Erweitert"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+"Nach einem Stapelimport wird diese Verzögerung angewendet, um nicht "
+"gedrosselte Anrufe zu vermeiden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Allow matching with subfields"
+msgstr "Übereinstimmung mit Unterfeldern zulassen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Beim Import ist ein unbekanntes Problem aufgetreten (möglicherweise "
+"Verbindungsverlust, Datenlimit überschritten oder Speicherlimit "
+"überschritten). Bitte versuchen Sie es erneut, falls das Problem nur "
+"vorübergehend besteht. Wenn das Problem weiterhin besteht, versuchen Sie, "
+"die Datei zu teilen, anstatt sie sofort zu importieren."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "Basis"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "Basisimport"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "Basisimportzuordnung"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Batch"
+msgstr "Stapel"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch Import"
+msgstr "Stapelimport"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch limit"
+msgstr "Stapellimit"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr "Aber Sie können auch .csv-Dateien verwenden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:596
-#, python-format
-msgid "Column %s contains incorrect values (value: %s)"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
+"Klicken Sie auf „Fortsetzen“, um mit dem Import fortzufahren, und fahren Sie "
+"in der Zeile %s fort."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:618
-#, python-format
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr "Spalte %(column)s enthält fehlerhafte Werte (Wert: %(value)s)"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:176
-#: code:addons/base_import/static/src/js/import_action.js:187
-#: code:addons/base_import/static/src/js/import_action.js:194
-#: code:addons/base_import/static/src/js/import_action.js:206
-#, python-format
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
+msgstr ""
+"Spalte %(column)s enthält fehlerhafte Werte. Fehler in der Zeile %(line)d: %"
+"(error)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "Spaltenname"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "Komma"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_uid
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Comments"
+msgstr "Kommentare"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr ""
+"URL konnte nicht aufgerufen werden: %(url)s [%(field_name)s: L%"
+"(line_number)d]: %(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Create new values"
+msgstr "Neue Werte erstellen"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:145
-#: code:addons/base_import/models/base_import.py:150
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr "Zu importierende Daten"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
-msgstr "Datenbank ID"
+msgstr "Datenbank-ID"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:55
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Date Format:"
-msgstr "Datumsformat"
+msgstr "Datumsformat:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:56
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format:"
-msgstr "Tageszeit Format:"
+msgstr "Datums/Zeit-Format:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:58
-#, python-format
-msgid "Decimal Separator:"
-msgstr "Dezimal Trennzeichen:"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Decimals Separator:"
+msgstr "Dezimaltrennzeichen:"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_display_name
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr ""
+"Bestimmt, wie viele Megabytes in jedem Stapelimport importiert werden können"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr "Verzögerung nach jedem Stapel"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:353
-#, python-format
-msgid "Don't import"
-msgstr "Nicht importieren"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:195
-#: code:addons/base_import/static/src/js/import_action.js:213
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
 msgstr "Punkt"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:50
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Download"
+msgstr "Herunterladen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr "Eine zu importierende Datei ablegen oder hochladen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
-msgstr "Zeichensatz:"
+msgstr "Codierung:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:620
-#, python-format
-msgid "Error Parsing Date [%s:L%d]: %s"
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr "Fehler bei der Analyse des Datums [%(field)s:L%(line)d]: %(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr "Fehler in Zeile %(row)s: „%(error)s“"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Fehler beim Importieren von Datensätzen: Das Texttrennzeichen sollte ein "
+"einzelnes Zeichen sein."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:227
-#, python-format
-msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "Fehlerhafte Zelle beim Lesen der XLS/XLSX-Datei gefunden: %s"
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
+msgstr ""
+"Fehler beim Importieren von Datensätzen: Alle Zeilen sollten dieselbe Größe "
+"haben, aber die Titelzeile enthält %(title_row_entries)d Einträge, während "
+"die erste Zeile %(first_row_entries)d hat. Möglicherweise müssen Sie das "
+"Trennzeichen ändern."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:512
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Estimated time left:"
+msgstr "Geschätzte verbleibende Zeit:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Everything seems valid."
-msgstr "Alles scheint o.k. zu sein."
+msgstr "Alles scheint gültig zu sein."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:110
-#: code:addons/base_import/models/base_import.py:144
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Excel files are recommended as formatting is automatic."
+msgstr ""
+"Excel-Dateien werden empfohlen, da die Formatierung automatisch erfolgt."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "Externe ID"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Field '%(field)s' does not accept date/time values."
+msgstr "Das Feld „%(field)s“ akzeptiert keine Wert vom Typ Datum/Uhrzeit."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "Feldname"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
 msgstr "Datei"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_name
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "File Column"
+msgstr "Dateispalte"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
 msgstr "Dateiname"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_type
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr "Dateiformat"
+msgstr "Dateityp"
 
 #. module: base_import
-#: model:ir.model.fields,help:base_import.field_base_import_import_file
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Dateigröße überschreitet konfiguriertes Maximum (%s bytes)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Zu prüfende Datei und/oder Import, raw binary (not base64))"
+msgstr "Zu prüfende Datei und/oder Import, roh binär (nicht base64))"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:115
-#, python-format
-msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr "Bei CSV-Dateien könnte die Ursache in fehlerhafter Kodierung liegen."
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr "Zu importierende Dateien"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:559
-#, python-format
-msgid "Get all possible values"
-msgstr "Alle möglichen Werte holen"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Finalizing current batch before interrupting..."
+msgstr "Abschluss des aktuellen Stapels vor Unterbrechung..."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "For CSV files, you may need to select the correct separator."
+msgstr ""
+"Für CSV-Dateien müssen Sie möglicherweise das richtige Trennzeichen "
+"auswählen."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Formatting"
+msgstr "Formatierung"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
+msgstr ""
+"Wenn ungültige Bilddaten gefunden werden, sollten die Bilder entweder als "
+"URLs oder als base64-codierte Daten importiert werden."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Go to Import FAQ"
+msgstr "FAQ importieren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr "Hilfe"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:546
-#, python-format
-msgid "Here are the possible values:"
-msgstr "Hier sind die möglichen Werte:"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:116
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Here is the start of the file we could not import:"
-msgstr "Hier ist der Beginn der Datei, die nicht importiert werden konnte."
+msgstr "Hier ist der Beginn der Datei, die nicht importiert werden konnte:"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:73
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid ""
 "If the file contains\n"
-"                the column names, Odoo can try auto-detecting the\n"
-"                field corresponding to the column. This makes imports\n"
-"                simpler especially when the file has many columns."
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
 msgstr ""
-"Wenn eine Datei seine Spaltennamen beinhaltet, kann Odoo eine automatische Erkennung vornehmen.\n"
-"Dies macht es einfacher den Import von Dateien mit vielen Spalten vorzunehmen."
+"Wenn die Datei die\n"
+"die Spaltennamen enthält, kann Odoo versuchen, automatisch das\n"
+"Feld zu finden, das der Spalte entspricht. Dies macht Importe\n"
+"einfacher, insbesondere wenn die Datei viele Spalten enthält."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:60
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Wenn in diesem Datenmodell OpenChatter verwendet wird, abonniert das "
-"Historienmanagement automatische Importbenachrichtigungen zu Lasten einer "
-"geringeren Importgeschwindigkeit."
+"Wenn das Modell openchatter verwendet, richtet die Historienverfolgung "
+"während des Imports Abonnements ein und sendet Benachrichtigungen, führt "
+"aber zu einem langsameren Import."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:88
-#: code:addons/base_import/static/src/xml/base_import.xml:147
-#, python-format
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Bildgröße zu groß, importierte Bilder müssen kleiner als 42 Millionen Pixel "
+"sein"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
-msgstr "Import"
+msgstr "Importieren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:111
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Import FAQ"
+msgstr "FAQ zum Import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Import a File"
-msgstr "Import einer Datei"
+msgstr "Eine Datei importieren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:114
-#, python-format
-msgid "Import preview failed due to:"
-msgstr "Importiere Voransicht mit Fehler"
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Import file has no content or is corrupt"
+msgstr "Importdatei hat keinen Inhalt oder ist korrupt"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview___last_update
-msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Import preview failed due to: \""
+msgstr "Import der Vorschau fehlgeschlagen wegen: „"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_uid
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+msgid "Import records"
+msgstr "Datensätze importieren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Imported records"
+msgstr "Importierte Datensätze"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Importing"
+msgstr "Importieren"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
+"Ungültiges Zellformat in Zeile %(row)s, Spalte %(col)s: %(cell_value)s, mit "
+"Format: %(cell_format)s, da (%(format_type)s)-Formate nicht unterstützt "
+"werden."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr ""
+"Ungültiger Zellenwert in der Zeile %(row)s, Spalte %(col)s: %(cell_value)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:19
-#, python-format
-msgid "Load File"
-msgstr "Datei Laden"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Load Data File"
+msgstr "Datei laden"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:56
-#, python-format
-msgid "Map your columns to import"
-msgstr ""
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Loading file..."
+msgstr "Datei wird geladen..."
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+msgid "Loading..."
+msgstr "Lädt …"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr "Maximale Größe pro Stapel"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr "Mb"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
 msgstr "Modell"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_name
-msgid "Name"
-msgstr "Name"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "Multiple errors occurred"
+msgstr "Mehrere Fehler sind aufgetreten"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:15
-#, python-format
-msgid "No file chosen..."
-msgstr "Keine Datei ausgewählt..."
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Need Help?"
+msgstr "Brauchen Sie Hilfe?"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:418
-#, python-format
-msgid "Normal Fields"
-msgstr "Normale Felder"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No Separator"
+msgstr "Kein Trennzeichen"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:30
-#, python-format
-msgid "Options…"
-msgstr "Optionen"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr "Keine Datei ausgewählt"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
-msgid "Other Variable"
-msgstr "Andere Variable"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "No matching records found for the following name"
+msgstr "Keine passenden Datensätze gefunden für den folgenden Namen"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
-msgid "Parent"
-msgstr "Übergeordnet"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Odoo Field"
+msgstr "Odoo-Feld"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:419
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr "Bitte laden Sie eine einzelne Datei hoch."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr ""
+"Bitte laden Sie eine Excel-Datei (.xls oder .xlsx) oder .csv-Datei für den "
+"Import hoch."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Prevent import"
+msgstr "Import verhindern"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Preview"
+msgstr "Vorschau"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "Fortschrittsbalken"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Reimport"
+msgstr "Erneut importieren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Relation Fields"
 msgstr "Beziehungsfelder"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:24
-#, python-format
-msgid "Reload File"
-msgstr "Datei erneut laden"
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Verantw. Modell"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
-#, python-format
-msgid "Select a CSV or Excel file to import."
-msgstr "Wählen Sie eine CSV- oder Excel-Datei zum Importieren aus."
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Resume"
+msgstr "Fortsetzen"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:177
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Search a field..."
+msgstr "Ein Feld suchen ..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "See possible values"
+msgstr "Mögliche Werte ansehen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Selected Sheet:"
+msgstr "Ausgewähltes Blatt:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Semicolon"
 msgstr "Semikolon"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:51
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Separator:"
 msgstr "Trennzeichen:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:72
-#, python-format
-msgid "Show fields of relation fields (advanced)"
-msgstr ""
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: %s"
+msgstr "Einstellung: %s"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
-msgid "Some Value"
-msgstr "Irgendein Wert"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: False"
+msgstr "Einstellung: Falsch"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:179
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: True"
+msgstr "Einstellung: Wahr"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set value as empty"
+msgstr "Wert als leer einstellen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Sheet:"
+msgstr "Blatt:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Skip record"
+msgstr "Datensatz überspringen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Space"
 msgstr "Leerzeichen"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:178
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Standard Fields"
+msgstr "Standardfelder"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Start at line"
+msgstr "Start bei Zeile"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Stop Import"
+msgstr "Import stoppen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Suggested Fields"
+msgstr "Vorgeschlagene Felder"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Tab"
 msgstr "Tabulator"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
-#, python-format
-msgid "Test Import"
-msgstr ""
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Test"
+msgstr "Test"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:52
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Testing"
+msgstr "Testen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Text Delimiter:"
-msgstr "Text Trennzeichen:"
+msgstr "Textbegrenzer:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:68
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "The file contains blocking errors (see below)"
+msgstr "Die Datei enthällt blockierende Fehler (Siehe unten)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "The file will be imported by batches"
+msgstr "Die Datei wird stapelweise importiert"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid ""
-"The first row\n"
-"                 contains the label of the column"
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
 msgstr ""
-"Die erste Zeile\n"
-" enthält das Label der Spalte"
+"Beim Entziffern der Datei ist ein Problem mit der Codierung „%s“ "
+"aufgetreten.\n"
+"Diese Codierung wurde automatisch erkannt."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:57
-#, python-format
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+"Beim Entziffern der Datei ist ein Problem mit der Codierung „%s“ "
+"aufgetreten.\n"
+"Diese Codierung wurde manuell ausgewählt."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "This column will be concatenated in field"
+msgstr "Diese Spalte wird mit dem folgenden Feld verknüpft"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 msgid "Thousands Separator:"
-msgstr "Tausender Trennzeichen:"
+msgstr "Tausendertrennzeichen:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:62
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "To import multiple values, separate them by a comma."
+msgstr "Um mehrere Werte zu importieren, trennen Sie sie durch ein Komma."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "To import, select a field..."
+msgstr "Feld auswählen, um zu importieren ..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track history during import"
-msgstr "Verfolge die Historie während des Imports"
+msgstr "Historie während des Imports verfolgen"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:192
-#, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Kann Datei \"{extension}\" nicht laden: Python-Modul \"{modname}\" ist "
+"Kann Datei „{extension}“ nicht laden: Python-Modul „{modname}“ ist "
 "erforderlich"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:193
-#, python-format
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Nicht unterstütztes Dateiformat \"{}\", Import unterstützt nur CSV, ODS, XLS"
-" und XLSX"
+"Nicht unterstütztes Dateiformat „{}“, Import unterstützt nur CSV, ODS, XLS "
+"und XLSX"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
-msgid "Value"
-msgstr "Wert"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Untitled"
+msgstr "Ohne Titel"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:534
-#, python-format
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Upload Data File"
+msgstr "Datei hochladen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr "Ihre Dateien hochladen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Verwenden Sie HH für Stunden in einem 24-Stunden-System, verwenden Sie II in "
+"Verbindung mit „p“ für ein 12-Stunden-System. Sie können zusätzlich zu den "
+"Vorschlägen ein eigenes Format verwenden. Leer lassen, damit Odoo das Format "
+"erraten kann (empfohlen)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
+msgstr ""
+"Verwenden Sie YYYY für das Jahr, MM für den Monat und DD für den Tag. Fügen "
+"Sie Trennzeichen wie einen Punkt, Schrägstrich oder Bindestrich ein. Sie "
+"können zusätzlich zu den Vorschlägen ein eigenes Format verwenden. Leer "
+"lassen, damit Odoo das Format erraten kann (empfohlen)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Use first row as header"
+msgstr "1. Zeile als Kopfzeile verwenden"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "User"
+msgstr "Benutzer"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Achtung: ignoriert die Beschriftungszeile, leere Zeilen und Zeilen, die nur "
+"aus leeren Zellen bestehen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+msgid "When a value cannot be matched:"
+msgstr "Wenn ein Wert nicht zugeordnet werden kann:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"You can not import file via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Sie können keine Datei über eine URL importieren. Wenden Sie sich an Ihren "
+"Administrator oder den Support, um den Grund dafür zu erfahren."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
+"Sie können Ihre Datei testen oder neu laden, bevor Sie den Import wieder "
+"aufnehmen."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid "You must configure at least one field to import"
-msgstr "Sie müssen mindestens ein Feld für einen Import konfigurieren."
+msgstr "Sie müssen mindestens ein Feld für einen Import konfigurieren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:529
-#, python-format
-msgid "at row %d"
-msgstr "in Zeile %d"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at multiple rows"
+msgstr "in mehreren Zeilen"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_import
-msgid "base_import.import"
-msgstr "base_import.import"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at row"
+msgstr "in Zeile"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char
-msgid "base_import.tests.models.char"
-msgstr "base_import.tests.models.char"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "in field"
+msgstr "in Feld"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
-msgid "base_import.tests.models.char.noreadonly"
-msgstr "base_import.tests.models.char.noreadonly"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "minutes"
+msgstr "Minuten"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
-msgstr "base_import.tests.models.char.readonly"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "more"
+msgstr "mehr"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
-msgid "base_import.tests.models.char.required"
-msgstr "base_import.tests.models.char.required"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "out of"
+msgstr "von"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
-msgid "base_import.tests.models.char.states"
-msgstr "base_import.tests.models.char.states"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "seconds"
+msgstr "Sekunden"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
-msgid "base_import.tests.models.char.stillreadonly"
-msgstr "base_import.tests.models.char.stillreadonly"
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "unknown error code %s"
+msgstr "unbekannter Fehlercode %s"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
-msgid "base_import.tests.models.m2o"
-msgstr "base_import.tests.models.m2o"
+#~ msgid "Column %s contains incorrect values (value: %s)"
+#~ msgstr "Spalte %s enthält fehlerhafte Werte (Wert: %s)"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
-msgid "base_import.tests.models.m2o.related"
-msgstr "base_import.tests.models.m2o.related"
+#~ msgid "Column %s contains incorrect values. Error in line %d: %s"
+#~ msgstr "Spalte %s enthält fehlerhafte Werte. Fehler in der Zeile %d: %s"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
-msgid "base_import.tests.models.m2o.required"
-msgstr "base_import.tests.models.m2o.required"
+#~ msgid "Error Parsing Date [%s:L%d]: %s"
+#~ msgstr "Fehler bei der Analyse des Datums [%s:L%d]: %s"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
-msgid "base_import.tests.models.m2o.required.related"
-msgstr "base_import.tests.models.m2o.required.related"
+#~ msgid ""
+#~ "Import timed out. Please retry. If you still encounter this issue, the "
+#~ "file may be too big for the system's configuration, try to split it "
+#~ "(import less records per file)."
+#~ msgstr ""
+#~ "Zeitüberschreitung beim Import. Bitte erneut versuchen. Wenn dieses "
+#~ "Problem weiterhin auftritt, ist die Datei möglicherweise zu groß für die "
+#~ "Systemkonfiguration. Versuchen Sie, sie zu teilen (importieren Sie "
+#~ "weniger Datensätze pro Datei)."
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
-msgid "base_import.tests.models.o2m"
-msgstr "base_import.tests.models.o2m"
+#~ msgid "Imported file"
+#~ msgstr "Importierte Datei"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
-msgid "base_import.tests.models.o2m.child"
-msgstr "base_import.tests.models.o2m.child"
+#~ msgid "Load File"
+#~ msgstr "Datei Laden"
 
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_preview
-msgid "base_import.tests.models.preview"
-msgstr "base_import.tests.models.preview"
+#~ msgid "Upload File"
+#~ msgstr "Datei hochladen"
 
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:531
-#, python-format
-msgid "between rows %d and %d"
-msgstr "zwischen Zeilen %d und %d"
+#~ msgid "Upload an Excel or CSV file to import"
+#~ msgstr "Excel oder CSV Datei zum Import hochladen"
+
+#~ msgid ""
+#~ "You can not import images via URL, check with your administrator or "
+#~ "support for the reason."
+#~ msgstr ""
+#~ "Sie können keine Bilder über eine URL importieren. Fragen Sie Ihren "
+#~ "Administrator oder den Support nach dem Grund."

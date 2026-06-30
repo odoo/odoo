@@ -2,23 +2,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from odoo import api, models, _
+from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
 #
 # Use period and Journal for selection or resources
 #
 
 
-class ReportAssertAccount(models.AbstractModel):
+class ReportAccount_TestReport_Accounttest(models.AbstractModel):
     _name = 'report.account_test.report_accounttest'
+    _description = 'Account Test Report'
 
     @api.model
-    def execute_code(self, code_exec):
+    def _execute_code(self, code_exec):
         def reconciled_inv():
             """
             returns the list of invoices that are set as reconciled = True
             """
-            return self.env['account.invoice'].search([('reconciled', '=', True)]).ids
+            return self.env['account.move'].search([('reconciled', '=', True)]).ids
 
         def order_columns(item, cols=None):
             """
@@ -34,22 +35,22 @@ class ReportAssertAccount(models.AbstractModel):
                 cols = list(item)
             return [(col, item.get(col)) for col in cols if col in item]
 
-        localdict = {
+        context = {
             'cr': self.env.cr,
             'uid': self.env.uid,
             'reconciled_inv': reconciled_inv,  # specific function used in different tests
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
-            '_': _,
+            '_': lambda *a, **kw: self.env._(*a, **kw),  # pylint: disable=E8502,
         }
-        safe_eval(code_exec, localdict, mode="exec", nocopy=True)
-        result = localdict['result']
-        column_order = localdict.get('column_order', None)
+        safe_eval(code_exec, context, mode="exec")
+        result = context['result']
+        column_order = context.get('column_order')
 
         if not isinstance(result, (tuple, list, set)):
             result = [result]
         if not result:
-            result = [_('The test was passed successfully')]
+            result = [self.env._('The test was passed successfully')]
         else:
             def _format(item):
                 if isinstance(item, dict):
@@ -61,7 +62,7 @@ class ReportAssertAccount(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report']._get_report_from_name('account_test.report_accounttest')
         records = self.env['accounting.assert.test'].browse(self.ids)
         return {
@@ -69,6 +70,6 @@ class ReportAssertAccount(models.AbstractModel):
             'doc_model': report.model,
             'docs': records,
             'data': data,
-            'execute_code': self.execute_code,
+            'execute_code': self._execute_code,
             'datetime': datetime
         }

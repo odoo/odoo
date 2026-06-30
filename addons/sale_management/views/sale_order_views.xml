@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="sale_order_form_quote" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale_management</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_shipping_id" position="after">
+                <field
+                    name="sale_order_template_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['cancel', 'sale']"
+                    groups="sale_management.group_sale_order_template"/>
+            </field>
+
+            <xpath expr="//form//div[@name='invoice_lines']" position="before">
+                <group>
+                    <field
+                        name="is_optional"
+                        invisible="display_type not in ['line_section', 'line_subsection']"
+                        readonly="1"
+                    />
+                </group>
+            </xpath>
+            <xpath expr="//list/field[@name='linked_virtual_id']" position="after">
+                <field name="is_optional" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

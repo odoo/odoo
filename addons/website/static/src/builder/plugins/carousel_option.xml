@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselOption">
+    <BuilderRow label.translate="Slide">
+        <BuilderButton type="'success'" title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Style">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Invert colors" level="1">
+        <BuilderCheckbox classAction="'carousel-dark'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Arrows" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_carousel_default'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_boxed'">Boxed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_rounded'">Rounded</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_arrows_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Transition">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Autoplay" level="1">
+        <BuilderSelect dataAttributeAction="'bsRide'">
+            <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
+            <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
+        <BuilderRow label.translate="Speed" level="1">
+            <BuilderNumberInput dataAttributeAction="'bsInterval'"
+                default="10"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="1"
+                preview="false"
+                applyWithUnit="false"/>
+        </BuilderRow>
+    </t>
+
+</t>
+
+<t t-name="website.CarouselItemHeaderMiddleButtons">
+    <button class="btn btn-primary ms-0 py-0 px-1 me-1"
+            title="Move Backward"
+            aria-label="Move Backward"
+            t-att-class="{ disabled: !state.hasMultiItems }"
+            t-on-click="() => this.slide('prev')">
+        <span class="fa fa-fw fa-angle-left"/>
+    </button>
+    <button class="btn btn-primary py-0 px-1 me-2"
+            title="Move Forward"
+            aria-label="Move Forward"
+            t-att-class="{ disabled: !state.hasMultiItems }"
+            t-on-click="() => this.slide('next')">
+        <span class="fa fa-fw fa-angle-right"/>
+    </button>
+    <button class="btn btn-success ms-0 py-0 px-1 me-1"
+            title="Add Slide"
+            aria-label="Add Slide"
+            t-on-click="addSlide">
+        <span class="oi fa-fw oi-plus"/>
+    </button>
+    <button class="btn btn-danger py-0 px-1"
+            t-att-class="{ disabled: !state.hasMultiItems }"
+            title="Remove Slide"
+            aria-label="Remove Slide"
+            t-on-click="removeSlide">
+        <span class="oi fa-fw oi-minus"/>
+    </button>
+</t>
+
+</templates>

@@ -1,101 +1,39 @@
-odoo.define('website.WebsiteRoot.instance', function (require) {
-'use strict';
+import publicRootData from "@web/legacy/js/public/public_root";
+import "@website/libs/zoomodoo/zoomodoo";
+import { pick } from "@web/core/utils/objects";
 
-require('web.dom_ready');
-var websiteRootData = require('website.WebsiteRoot');
-
-var websiteRoot = new websiteRootData.WebsiteRoot(null);
-return websiteRoot.attachTo(document.body).then(function () {
-    return websiteRoot;
-});
-});
-
-//==============================================================================
-
-odoo.define('website.WebsiteRoot', function (require) {
-'use strict';
-
-var ajax = require('web.ajax');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var utils = require('web.utils');
-var BodyManager = require('web_editor.BodyManager');
-var weContext = require('web_editor.context');
-var rootWidget = require('web_editor.root_widget');
-var sAnimation = require('website.content.snippets.animation');
-require("website.content.zoomodoo");
-
-var _t = core._t;
-
-var websiteRootRegistry = new rootWidget.RootWidgetRegistry();
-
-// Load localizations outside the WebsiteRoot to not wait for DOM ready (but
-// wait for them in WebsiteRoot)
-var lang = utils.get_cookie('frontend_lang') || weContext.get().lang; // FIXME the cookie value should maybe be in the ctx?
-var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
-
-var WebsiteRoot = BodyManager.extend({
-    events: _.extend({}, BodyManager.prototype.events || {}, {
-        'click .js_change_lang': '_onLangChangeClick',
-        'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
-        'submit .js_website_submit_form': '_onWebsiteFormSubmit',
+export const WebsiteRoot = publicRootData.PublicRoot.extend({
+    events: Object.assign({}, publicRootData.PublicRoot.prototype.events || {}, {
+        "click .js_change_lang": "_onLangChangeClick",
+        "click .js_publish_management .js_publish_btn": "_onPublishBtnClick",
+        "shown.bs.modal": "_onModalShown",
     }),
-    custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
-        animation_start_demand: '_onAnimationStartDemand',
+    custom_events: Object.assign({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
+        gmap_api_request: "_onGMapAPIRequest",
+        gmap_api_key_request: "_onGMapAPIKeyRequest",
+        ready_to_clean_for_save: "_onWidgetsStopRequest",
+        seo_object_request: "_onSeoObjectRequest",
+        will_remove_snippet: "_onWidgetsStopRequest",
     }),
 
     /**
      * @override
      */
-    willStart: function () {
-        // TODO would be even greater to wait for localeDef only when necessary
-        return $.when(this._super.apply(this, arguments), localeDef);
+    init() {
+        this.isFullscreen = false;
+        this.notification = this.bindService("notification");
+        this.orm = this.bindService("orm");
+        this.website_map = this.bindService("website_map");
+        return this._super(...arguments);
     },
     /**
      * @override
      */
     start: function () {
-        var defs = [this._super.apply(this, arguments)];
-
-        // Animations
-        defs.push(this._startAnimations());
-
-        // Compatibility lang change ?
-        if (!this.$('.js_change_lang').length) {
-            var $links = this.$('ul.js_language_selector li a:not([data-oe-id])');
-            var m = $(_.min($links, function (l) {
-                return $(l).attr('href').length;
-            })).attr('href');
-            $links.each(function () {
-                var $link = $(this);
-                var t = $link.attr('href');
-                var l = (t === m) ? "default" : t.split('/')[1];
-                $link.data('lang', l).addClass('js_change_lang');
-            });
-        }
-
-        // Display image thumbnail
-        this.$(".o_image[data-mimetype^='image']").each(function () {
-            var $img = $(this);
-            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
-                $img.css('background-image', "url('" + $img.data('src') + "')");
-            }
-        });
-
         // Enable magnify on zommable img
-        this.$('.zoomable img[data-zoom]').zoomOdoo();
+        this.$(".zoomable img[data-zoom]").zoomOdoo();
 
-        // Auto scroll
-        if (window.location.hash.indexOf("scrollTop=") > -1) {
-            this.el.scrollTop = +window.location.hash.match(/scrollTop=([0-9]+)/)[1];
-        }
-
-        // Fix for IE:
-        if ($.fn.placeholder) {
-            $('input, textarea').placeholder();
-        }
-
-        return $.when.apply($, defs);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -103,46 +41,44 @@ var WebsiteRoot = BodyManager.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * As the WebsiteRoot instance is designed to be unique, the associated
-     * registry has been instantiated outside of the class and is simply
-     * returned here.
-     *
      * @override
      */
-    _getRegistry: function () {
-        return websiteRootRegistry;
+    _getContext: function (context) {
+        var html = document.documentElement;
+        return Object.assign(
+            {
+                website_id: html.getAttribute("data-website-id") | 0,
+            },
+            this._super.apply(this, arguments)
+        );
     },
     /**
-     * Creates an Animation instance for each DOM element which matches the
-     * `selector` key of one of the registered animations
-     * (@see Animation.selector).
-     *
-     * @param {boolean} [editableMode=false] - true if the page is in edition mode
-     * @param {jQuery} [$initTarget]
-     *        only initialize the animations whose `selector` matches the element
-     * @returns {Deferred}
+     * @override
      */
-    _startAnimations: function (editableMode, $initTarget) {
-        var self = this;
-        editableMode = editableMode || false;
-        var $wrapwrap = this.$('#wrapwrap');
-        var defs = _.map(sAnimation.registry, function (Animation) {
-            var selector = Animation.prototype.selector || '';
-            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector);
-
-            var defs = _.map($target, function (el) {
-                var $snippet = $(el);
-                var animation = $snippet.data('snippet-view');
-                if (animation) {
-                    animation.destroy();
-                }
-                animation = new Animation(self, editableMode);
-                $snippet.data('snippet-view', animation);
-                return animation.attachTo($snippet);
+    _getExtraContext: function (context) {
+        var html = document.documentElement;
+        return Object.assign(
+            {
+                editable: !!(html.dataset.editable || $("[data-oe-model]").length), // temporary hack, this should be done in python
+                translatable: !!html.dataset.translatable,
+                edit_translations: !!html.dataset.edit_translations,
+            },
+            this._super.apply(this, arguments)
+        );
+    },
+    /**
+     * @override
+     */
+    _getPublicWidgetsRegistry: function (options) {
+        var registry = this._super.apply(this, arguments);
+        if (options.editableMode) {
+            const toPick = Object.keys(registry).filter((key) => {
+                const PublicWidget = registry[key];
+                return !PublicWidget.prototype.disabledInEditableMode;
             });
-            return $.when.apply($, defs);
-        });
-        return $.when.apply($, defs);
+            return pick(registry, ...toPick);
+        }
+        return registry;
     },
 
     //--------------------------------------------------------------------------
@@ -150,16 +86,12 @@ var WebsiteRoot = BodyManager.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the root is notified that the animations have to be
-     * (re)started.
-     *
-     * @private
-     * @param {OdooEvent} ev
+     * @override
      */
-    _onAnimationStartDemand: function (ev) {
-        this._startAnimations(ev.data.editableMode, ev.data.$target)
-            .done(ev.data.onSuccess)
-            .fail(ev.data.onFailure);
+    _onWidgetsStartRequest: function (ev) {
+        ev.data.options = Object.assign({}, ev.data.options || {});
+        ev.data.options.editableMode = ev.data.editableMode;
+        this._super.apply(this, arguments);
     },
     /**
      * @todo review
@@ -167,15 +99,69 @@ var WebsiteRoot = BodyManager.extend({
      */
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
-
-        var $target = $(ev.target);
+        // In edit mode, the client action redirects the iframe to the correct
+        // location with the chosen language.
+        if (document.body.classList.contains("editor_enable")) {
+            return;
+        }
+        var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {
-            lang: $target.data('lang'),
-            url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
-            hash: encodeURIComponent(window.location.hash)
+            lang: encodeURIComponent($target.data("url_code")),
+            url: encodeURIComponent(
+                $target.attr("href").replace(/[&?]edit_translations[^&?]+/, "")
+            ),
+            hash: encodeURIComponent(window.location.hash),
         };
-        window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+        window.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    async _onGMapAPIRequest(ev) {
+        ev.stopPropagation();
+        const apiKey = await this.website_map.loadGMapAPI(ev.data.editableMode, ev.data.refetch);
+        ev.data.onSuccess(apiKey);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    async _onGMapAPIKeyRequest(ev) {
+        ev.stopPropagation();
+        const apiKey = await this.website_map.getGMapAPIKey(ev.data.refetch);
+        ev.data.onSuccess(apiKey);
+    },
+    /**
+    /**
+     * Checks information about the page SEO object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSeoObjectRequest: function (ev) {
+        var res = this._unslugHtmlDataObject("seo-object");
+        ev.data.callback(res);
+    },
+    /**
+     * Returns a model/id object constructed from html data attribute.
+     *
+     * @private
+     * @param {string} dataAttr
+     * @returns {Object} an object with 2 keys: model and id, or null
+     * if not found
+     */
+    _unslugHtmlDataObject: function (dataAttr) {
+        var repr = $("html").data(dataAttr);
+        var match = repr && repr.match(/(.+)\((-?\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
     },
     /**
      * @todo review
@@ -183,51 +169,33 @@ var WebsiteRoot = BodyManager.extend({
      */
     _onPublishBtnClick: function (ev) {
         ev.preventDefault();
+        if (document.body.classList.contains("editor_enable")) {
+            return;
+        }
 
-        var self = this;
-        var $data = $(ev.currentTarget).parents(".js_publish_management:first");
-        this._rpc({
-            route: $data.data('controller') || '/website/publish',
-            params: {
-                id: +$data.data('id'),
-                object: $data.data('object'),
-            },
-        })
-        .done(function (result) {
-            $data.toggleClass("css_unpublished css_published");
-            $data.find('input').prop("checked", result);
-            $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-        })
-        .fail(function (err, data) {
-            return new Dialog(self, {
-                title: data.data ? data.data.arguments[0] : "",
-                $content: $('<div/>', {
-                    html: (data.data ? data.data.arguments[1] : data.statusText)
-                        + '<br/>'
-                        + _.str.sprintf(
-                            _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#return_label=Website&model=' + $data.data('object') + '&id=' + $data.data('id')
-                        ),
-                }),
-            }).open();
-        });
+        const publishEl = ev.currentTarget.closest(".js_publish_management");
+        this.orm
+            .call(publishEl.dataset.object, "website_publish_button", [
+                [parseInt(publishEl.dataset.id, 10)],
+            ])
+            .then(function (result) {
+                publishEl.classList.toggle("css_published", result);
+                publishEl.classList.toggle("css_unpublished", !result);
+                const itemEl = publishEl.closest("[data-publish]");
+                if (itemEl) {
+                    itemEl.dataset.publish = result ? "on" : "off";
+                }
+            });
     },
     /**
-     * @todo review
      * @private
+     * @param {Event} ev
      */
-    _onWebsiteFormSubmit: function (ev) {
-        var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
-        _.each($buttons, function (btn) {
-            var $btn = $(btn);
-            $btn.attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text());
-            $btn.button('loading');
-        });
+    _onModalShown: function (ev) {
+        $(ev.target).addClass("modal_shown");
     },
 });
 
-return {
+export default {
     WebsiteRoot: WebsiteRoot,
-    websiteRootRegistry: websiteRootRegistry,
 };
-});

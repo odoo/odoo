@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.RatingOption">
+    <BuilderRow label.translate="Icon">
+        <BuilderSelect>
+            <BuilderSelectItem action="'setIcons'" actionParam="'fa-star'">Stars</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'fa-thumbs-up'">Thumbs</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'fa-circle'">Circles</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'fa-square'">Squares</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'fa-heart'">Hearts</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'custom'">Custom</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="&#8985; Active">
+        <BuilderColorPicker applyTo="'.s_rating_active_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+        <BuilderButton action="'customIcon'" actionParam="'customActiveIcon'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="&#8985; Inactive">
+        <BuilderColorPicker applyTo="'.s_rating_inactive_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+        <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Score">
+        <BuilderNumberInput action="'activeIconsNumber'" min="0"/>
+        <span class="mx-2">/</span>
+        <BuilderNumberInput action="'totalIconsNumber'" min="1"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Size">
+        <BuilderButtonGroup applyTo="'.s_rating_icons'">
+            <BuilderButton classAction="''" title.translate="Small"><Img src="'/html_builder/static/img/options/size_small.svg'" /></BuilderButton>
+            <BuilderButton classAction="'fa-2x'" title.translate="Medium"><Img src="'/html_builder/static/img/options/size_medium.svg'" /></BuilderButton>
+            <BuilderButton classAction="'fa-3x'" title.translate="Large"><Img src="'/html_builder/static/img/options/size_large.svg'" /></BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Title Position">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_rating_inline'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_rating_no_title'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="im_livechat.FeedbackPanel">
+<div class="d-flex flex-column bg-view flex-grow-1 p-3">
+    <div class="p-2">
+        <div class="mb-5">
+            <t t-if="state.step === STEP.RATING">
+                <p class="text-center fs-6 mb-4">Did we correctly answer your question?</p>
+                <div class="d-flex justify-content-center">
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.GOOD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.GOOD}.png`)" t-att-alt="RATING.GOOD" t-on-click="() => this.select(RATING.GOOD)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.OK }" t-att-src="url(`/rating/static/src/img/rating_${RATING.OK}.png`)" t-att-alt="RATING.OK"  t-on-click="() => this.select(RATING.OK)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.BAD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.BAD}.png`)" t-att-alt="RATING.BAD" t-on-click="() => this.select(RATING.BAD)"/>
+                </div>
+            </t>
+            <t t-else="">
+                <p class="text-center fs-5 fw-bold mb-4">Thank you for your feedback</p>
+            </t>
+        </div>
+        <div t-if="state.rating and state.step === STEP.RATING" class="d-flex flex-column mb-5">
+            <textarea t-model="state.feedback" class="form-control my-2" placeholder="Explain your note"/>
+            <button class="btn btn-primary align-self-end" t-on-click="onClickSendFeedback">Send</button>
+        </div>
+        <label class="mb-5 w-100" t-if="store.self_partner?.main_user_id?.share === false">
+            Receive a copy of this conversation
+            <TranscriptSender thread="props.thread" disableOnSend="true"/>
+        </label>
+        <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-outline-secondary" t-on-click="props.onClickClose">Close</button>
+            <button t-if="allowNewSession" class="btn btn-outline-secondary" t-on-click="props.onClickNewSession">New Session</button>
+            <a t-if="store.can_download_transcript" class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="fa fa-download"/></a>
+        </div>
+    </div>
+</div>
+</t>
+</templates>

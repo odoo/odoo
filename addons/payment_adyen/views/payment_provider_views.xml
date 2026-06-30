@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Adyen Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'adyen'">
+                    <field name="adyen_merchant_account" required="code == 'adyen' and state != 'disabled'"/>
+                    <field name="adyen_api_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
+                    <field name="adyen_client_key" required="code == 'adyen' and state != 'disabled'"/>
+                    <field name="adyen_hmac_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
+                    <field name="adyen_api_url_prefix" required="code == 'adyen' and state != 'disabled'"/>
+                </group>
+            </group>
+            <group name="provider_config" position='before'>
+                <div invisible="code != 'adyen' or not capture_manually"
+                     class="alert alert-warning"
+                     role="alert">
+                    <strong>Warning:</strong> To capture the amount manually, you also need to set
+                    the Capture Delay to manual on your Adyen account settings.                    
+                    <widget name="documentation_link" path="/applications/finance/payment_providers/adyen.html#place-a-hold-on-a-card" label="Learn More"/>
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>

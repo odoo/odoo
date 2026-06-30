@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundImageOption">
+    <BuilderRow t-if="isActiveItem('toggle_bg_image_id')" label.translate="Image" level="1">
+        <BuilderButton preview="false" title.translate="Edit image" type="'success'" action="'replaceBgImage'"> Replace </BuilderButton>
+        <BuilderButton preview="false" title.translate="Remove image" icon="'oi-close'" action="'removeBgImage'"/>
+        <ImageSize />
+    </BuilderRow>
+    <BuilderRow t-if="showMainColorPicker()" label.translate="Main Color" level="2">
+        <t t-foreach="getColorPickerColorNames()" t-as="colorName" t-key="colorName_index">
+            <BuilderColorPicker action="'dynamicColor'" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
+        </t>
+    </BuilderRow>
+</t>
+
+</templates>

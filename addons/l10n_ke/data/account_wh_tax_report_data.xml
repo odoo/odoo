@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="wh_tax_report_ke" model="account.report">
+        <field name="name">WH Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="wh_tax_report_base_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="wh_tax_report_ke_to_be_paid_selected_month" model="account.report.line">
+                <field name="name">To be paid before the 20th of the selected month</field>
+                <field name="aggregation_formula">-ke_total_wh_vat_selected_month.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="wh_tax_report_ke_total_purchases_selected_month" model="account.report.line">
+                        <field name="name">Total purchases subject to WH VAT</field>
+                        <field name="code">ke_total_purchases_selected_month</field>
+                        <field name="expression_ids">
+                            <record id="wh_tax_report_ke_to_be_paid_selected_month_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WH base</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="wh_tax_report_ke_total_wh_vat_selected_month" model="account.report.line">
+                        <field name="name">Total WH VAT</field>
+                        <field name="code">ke_total_wh_vat_selected_month</field>
+                        <field name="expression_ids">
+                            <record id="wh_tax_report_total_wh_vat_selected_month_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WH 2%</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="wh_tax_report_ke_to_be_paid_next_month" model="account.report.line">
+                <field name="name">To be paid before the 20th of the next month</field>
+                <field name="aggregation_formula">-ke_total_wh_vat_next_month.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="wh_tax_report_ke_total_purchases_next_month" model="account.report.line">
+                        <field name="name">Total purchases subject to WH VAT</field>
+                        <field name="code">ke_total_purchases_next_month</field>
+                        <field name="expression_ids">
+                            <record id="wh_tax_report_ke_to_be_paid_next_month_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WH base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="wh_tax_report_ke_total_wh_vat_next_month" model="account.report.line">
+                        <field name="name">Total WH VAT</field>
+                        <field name="code">ke_total_wh_vat_next_month</field>
+                        <field name="expression_ids">
+                            <record id="wh_tax_report_total_wh_vat_next_month_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WH 2%</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

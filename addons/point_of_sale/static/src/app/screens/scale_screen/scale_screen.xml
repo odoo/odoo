@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ScaleScreen">
+        <Dialog size="'md'">
+            <t t-set-slot="header">
+                <t t-if="env.isSmall">
+                    <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="props.close"/>
+                </t>
+                <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': env.isSmall }">
+                    <t t-esc="scale.product.name"/>
+                </h4>
+                <t t-if="!env.isSmall">
+                    <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
+                </t>
+            </t>
+            <div class="d-flex flex-column">
+                <div class="d-flex gap-2 align-items-center mb-2">
+                    <div class="w-60 fs-3 me-2">Gross Weight:</div>
+                    <div class="gross-weight fs-3 px-5 text-end form-control-plaintext" t-esc="scale.grossWeightString"/>
+                </div>
+                <div class="d-flex gap-5 align-items-center mb-2">
+                <div class="w-50">
+                    <button class="btn btn-primary w-50 fs-3" t-att-disabled="scale.tareRequested" t-on-click="() => scale.requestTare()">
+                        <i t-if="scale.tareRequested" class="fa fa-circle-o-notch fa-spin"/>
+                        <t t-else="">Tare</t>
+                    </button>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end w-50 align-items-center px-5">
+                        <input type="number" class="form-control me-2" t-att-readonly="scale.tareRequested" t-model.number="this.scale.tare"/>
+                        <span class="text-end fs-3" t-esc="scale.product.unitOfMeasure"/>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center mb-2">
+                    <div class="w-60 fs-3 me-2">Net Weight:</div>
+                    <div class="text-end fs-3 px-5 form-control-plaintext" t-esc="scale.netWeightString"/>
+                </div>
+                <div class="d-flex px-5 flex-row gap-2 m-2 align-items-center">
+                    <div class="product-price w-50 fs-2 text-center" t-esc="scale.unitPriceString"/>
+                    <div class="computed-price fd-flex flex-grow-1 p-3 rounded text-center text-bg-info bg-opacity-25 text-info fs-2 fw-bold" t-esc="scale.totalPriceString"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary mx-2 w-100" t-if="scale.isManualMeasurement" t-att-disabled="scale.loading" t-on-click="() => scale.readWeight()">
+                    <i t-if="scale.loading and !scale.tareRequested" class="fa fa-spinner fa-spin"/>
+                    <t t-else="">Get Weight</t>
+                </button>
+                <button class="buy-product btn btn-lg btn-primary d-flex align-items-center justify-content-center mx-2 mb-2 cursor-pointer w-100" t-on-click="confirm" t-att-disabled="!scale.isWeightValid">
+                    Order
+                    <i class="fa fa-angle-double-right ms-2"/>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

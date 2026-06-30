@@ -1,0 +1,37 @@
+.odoo-editor-editable a.o_link_in_selection:not(.btn) {
+    background-color: #a6e3e2;
+    color: black !important;
+    border: 1px dashed #008f8c;
+    margin: -1px;
+}
+
+.odoo-editor-editable {
+    &[contenteditable=true], [contenteditable=true] {
+        &.btn, .btn {
+            user-select: auto;
+            cursor: text;
+        }
+    }
+
+    [contenteditable=false] .btn {
+        cursor: pointer;
+    }
+
+    // Unset the font size and family applied by `.btn` 
+    // if inside `FONT_SIZE_CLASSES`.
+    span[class$="-fs"],
+    span.small,
+    span[style*="font-size"] {
+        .btn:not(:has(span[class$="-fs"], span.small, span[style*="font-size"])) {
+            font-family: unset;
+            font-size: unset;
+        }
+        a:not(.btn) {
+            font-size: inherit !important;
+        }
+    }
+    font[class^="text-o-"] a,
+    font[style*="color"] a {
+        color: inherit !important;
+    }
+}

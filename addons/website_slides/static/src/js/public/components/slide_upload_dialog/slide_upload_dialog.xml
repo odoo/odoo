@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.SlideUploadDialog" owl="1">
+        <Dialog size="state.size" title="state.title" contentClass="'o_w_slide_upload_dialog_content'">
+            <t t-set-slot="footer">
+                <button t-if="state.page ==='select'" type="button" class="btn" t-on-click="() => this.props.close()">
+                    <span>Cancel</span>
+                </button>
+                <t t-elif="!['select', 'upload'].includes(state.page)">
+                    <div id="o_w_slide_upload_btns"/>
+                    <button class="btn" t-on-click="onClickGoBack">
+                        <span>Back</span>
+                    </button>
+                </t>
+            </t>
+            <div class="o_w_slide_upload_modal_container">
+                <SlideUploadCategory
+                    t-if="Object.keys(slideCategoryData).includes(state.page)"
+                    alertMsg="state.alertMsg"
+                    categoryId="props.categoryId"
+                    channelId="props.channelId"
+                    slideCategory="state.page"
+                    canPublish="props.canPublish"
+                    canUpload="props.canUpload"
+                    upload.bind="uploadSlide"
+                >
+                    <t t-set-slot="tutorial">
+                        <t t-call="{{pagesTemplates[state.page]}}"/>
+                    </t>
+                </SlideUploadCategory>
+                <t t-else="">
+                    <t t-call="{{pagesTemplates[state.page]}}"/>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+    <!-- Slide Category templates -->
+    <t t-name="website_slides.SlideCategoryTutorial.Document">
+        <div class="h5">How to Add New Content:</div>
+        <p>Upload a PDF file from your computer or share a Google Drive link.</p>
+        <div class="h5 mt-4 mb-3">Supported Files:</div>
+        <ul>
+            <li>PDFs (local uploads).</li>
+            <li>Most formats via Google Drive (Docs, Sheets, PowerPoints, etc).</li>
+        </ul>
+        <div class="h5 mt-4 mb-3">Using Google Drive:</div>
+        <ul>
+            <li>Upload the file to Google Drive.</li>
+            <li>Set file permissions to <b>Anyone with the link.</b></li>
+            <li>
+                Copy the shareable link
+                <span class="text-muted text-break">
+                    (e.g., https://drive.google.com/file/d/ABC/view?usp=sharing).
+                </span>
+            </li>
+        </ul>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Infographic">
+        <div class="h5">How do I add new content?</div>
+        <div>
+            <span>You can either upload a file from your computer or insert a Google Drive link.</span><br/>
+            <span>The Google Drive link can be obtained by using the 'share' button in the Google interface.</span><br/>
+            <span>It should look similar to
+            <span class="fst-italic">https://drive.google.com/file/d/ABC/view?usp=sharing</span></span>
+        </div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Article">
+        <div class="h5">How to create a Lesson as an Article?</div>
+        <div>First, create your lesson, then edit it with the website builder. You'll be able to drop building blocks on your page and edit them.</div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Video">
+        <div class="p-3">
+            <div class="h5 mb-3">How to upload Videos:</div>
+            <div class="h6">YouTube:</div>
+            <ul>
+                <li>Upload as <b>Unlisted</b> <span class="text-muted text-break">(which means only accessible via link, not searchable).</span></li>
+                <li>Use the <b>Share</b> button to get a link <span class="text-muted text-break">(e.g., https://youtube/ABC).</span></li>
+            </ul>
+            <br/>
+            <div class="h6">Vimeo:</div>
+            <ul>
+                <li>Upload as <b>Private</b> <span class="text-muted text-break">(which means only accessible via link, not searchable).</span></li>
+                <li>Use the <b>Share</b> button to get a link <span class="text-muted text-break">(e.g., https://vimeo.com/ABC).</span></li>
+            </ul>
+            <br/>
+            <div class="h6">Google Drive:</div>
+            <ul>
+                <li>Upload the file to Drive.</li>
+                <li>Set permissions to <b>Anyone with the link.</b></li>
+                <li>Copy the shareable link <span class="text-muted text-break">(e.g., https://drive.google.com/file/d/ABC/view).</span></li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Quiz">
+        <div class="h5">Test your students with small Quizzes</div>
+        <div>With Quizzes you can keep your students focused and motivated by answering some questions and gaining some karma points</div>
+        <img src="/website_slides/static/src/img/onboarding-quiz.png" title="Quiz Demo Data" class="img-fluid"/>
+    </t>
+
+    <!-- Misc -->
+    
+    <t t-name="website_slides.UploadInProgressDialog">
+        <div class="text-center" role="status">
+            <div class="fa-3x">
+                <i class="fa fa-circle-o-notch fa-spin"></i>
+            </div>
+            <h4>Uploading document ...</h4>
+        </div>
+    </t>
+
+    <t t-name="website_slides.UploadDialogInstallModule">
+        <SlideInstallModule moduleData="this.state.installModuleData"/>
+    </t>
+
+</templates>

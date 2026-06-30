@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_livechat" model="spreadsheet.dashboard">
+        <field name="name">Live Chat</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_im_livechat/data/files/livechat_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('im_livechat.model_im_livechat_report_channel'))]"/>
+        <field name="sample_dashboard_file_path">spreadsheet_dashboard_im_livechat/data/files/livechat_sample_dashboard.json</field>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_website"/>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="sequence">100</field>
+        <field name="is_published">True</field>
+    </record>
+
+    <record id="spreadsheet_dashboard_livechat_ongoing" model="spreadsheet.dashboard">
+        <field name="name">Live Chat - Ongoing Sessions</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_im_livechat/data/files/livechat_ongoing_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('im_livechat.model_im_livechat_report_channel'))]"/>
+        <field name="sample_dashboard_file_path">spreadsheet_dashboard_im_livechat/data/files/livechat_sample_ongoing_dashboard.json</field>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_website"/>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="sequence">125</field>
+        <field name="is_published">True</field>
+    </record>
+</odoo>

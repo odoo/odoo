@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" name="Image Gallery">
+    <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-vcss="002" data-columns="3">
+        <div class="o_container_small overflow-hidden">
+            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="0">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=""/>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=""/>
+                    </div>
+                </div>
+                <div class="o_carousel_controllers">
+                    <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
+                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
+                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                    </div>
+                    <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"/>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_images_wall" name="Images Wall">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="002" data-columns="3" style="overflow: hidden;">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_03" data-index="0" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_10" data-index="3" data-name="Image" alt=""/>
+                </div>
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_13" data-index="1" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_05" data-index="4" data-name="Image" alt=""/>
+                </div>
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_14" data-index="2" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_16" data-index="5" data-name="Image" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_image_gallery_000_scss" name="Image gallery 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_image_gallery/000.scss</path>
+</asset>
+
+<asset id="website.s_image_gallery_001_scss" name="Image gallery 001 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_image_gallery/001.scss</path>
+</asset>
+
+<asset id="website.s_image_gallery_002_scss" name="Image gallery 002 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_image_gallery/002.scss</path>
+</asset>
+
+<asset id="website.s_image_gallery_000_xml" name="Image gallery 000 XML" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_image_gallery/000.xml</path>
+</asset>
+
+<asset id="website.s_image_gallery_001_xml" name="Image gallery 001 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_image_gallery/001.xml</path>
+</asset>
+
+</odoo>

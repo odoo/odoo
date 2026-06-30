@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.crm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="module_partnership" position="after">
+                <div invisible="not module_partnership">
+                    Name given to affiliates: <field name="partnership_label" class="oe_inline"/>.
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

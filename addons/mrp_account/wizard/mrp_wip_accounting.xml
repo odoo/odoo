@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_wip_accounting_form" model="ir.ui.view">
+            <field name="name">Post WIP Accounting Entry</field>
+            <field name="model">mrp.account.wip.accounting</field>
+            <field name="arch" type="xml">
+                <form string="Post Manufacturing WIP">
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="reversal_date"/>
+                        </group>
+                    </group>
+                    <field name="mo_ids" invisible="1"/>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="account_id"/>
+                            <field name="label"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
+                    <footer>
+                        <button name="confirm" string="Post WIP" data-hotkey="q" colspan="1" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wip_accounting" model="ir.actions.act_window">
+            <field name="name">Post WIP Accounting Entry</field>
+            <field name="res_model">mrp.account.wip.accounting</field>
+            <field name="view_mode">form</field>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

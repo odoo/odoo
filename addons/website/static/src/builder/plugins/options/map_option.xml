@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.mapOption">
+    <BuilderRow label.translate="Address" action="'mapUpdateSrc'" preview="false">
+        <BuilderTextInput
+            dataAttributeAction="'mapAddress'"
+            placeholder.translate="e.g. Grand Place, Brussels"
+            inputClasses="'o_we_large'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Type">
+        <BuilderSelect dataAttributeAction="'mapType'" action="'mapUpdateSrc'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'m'" title.translate="Road">Road</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'k'" title.translate="Satellite">Satellite</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Zoom">
+        <BuilderSelect dataAttributeAction="'mapZoom'" action="'mapUpdateSrc'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'21'">2.5 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'20'">5 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'19'">10 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'18'">20 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'17'">50 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'16'">100 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'15'">200 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'14'">400 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'13'">1 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'12'">2 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'11'">4 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'10'">8 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'9'">15 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'8'">30 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'7'">50 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'6'">100 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'5'">200 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'4'">400 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'3'">1000 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'2'">2000 km</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Color Filter">
+        <BuilderColorPicker styleAction="'background-color'" applyTo="'.s_map_color_filter'" defaultOpacity="50"
+                enabledTabs="['custom', 'gradient']"
+                grayscales="{
+                    'transparent': [
+                        'black-75',
+                        'black-50',
+                        'black-25',
+                        'black-15',
+                        'white-25',
+                        'white-50',
+                        'white-75',
+                        'white-85'
+                    ],
+                    'solid': [],
+                }"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description">
+        <BuilderCheckbox action="'mapDescription'"/>
+    </BuilderRow>
+</t>
+</templates>

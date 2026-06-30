@@ -1,0 +1,289 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_razorpay
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-17 07:45+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-19/pos_razorpay/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"A partial refund is not allowed because the transaction has not yet been "
+"settled."
+msgstr ""
+"No está permitido realizar un reembolso parcial porque la transacción aún no "
+"ha sido liquidada."
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"Adding a new Razorpay payment line is not allowed under the current "
+"conditions."
+msgstr ""
+"No es posible agregar una nueva línea de pago con las condiciones actuales."
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
+msgid "All"
+msgstr "Todos"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
+msgid "BHARATQR"
+msgstr "BHARATQR"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
+msgid "Cannot decode Razorpay POS response"
+msgstr "No se puede decodificar la respuesta del PdV de Razorpay"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "No es posible procesar transacciones con un importe negativo."
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__card
+msgid "Card"
+msgstr "Tarjeta"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid ""
+"Choose allow payment mode: \n"
+" All/Card/UPI or QR"
+msgstr ""
+"Elija permitir el modo de pago: \n"
+" Todos/Tarjeta/UPI o QR"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"No fue posible conectarnos al servidor de Odoo. Revisa tu conexión a "
+"internet y vuelve a intentarlo."
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid ""
+"Device Serial No \n"
+" ex: 7000012300"
+msgstr ""
+"Número de serie del dispositivo \n"
+" Por ejemplo: 7000012300"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Payment has been queued. You may choose to wait for the payment to initiate "
+"on terminal or proceed to cancel this transaction"
+msgstr ""
+"El pago se encuentra en la cola. Puede esperar a que se inicie el pago en la "
+"terminal o proceder a cancelar esta transacción."
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Métodos de pago del punto de venta"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Pagos en punto de venta"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid "Razorpay API Key"
+msgstr "Clave API de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid "Razorpay Allowed Payment Modes"
+msgstr "Modos de pago permitidos de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid "Razorpay Device Serial No"
+msgstr "Número de serie de dispositivo de Razorpay"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid "Razorpay Error"
+msgstr "Error de Razorpay"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment cancel request expected errorCode not found in the "
+"response"
+msgstr ""
+"Se esperaba errorCode en la respuesta de la solicitud de cancelación de pago "
+"del PdV de Razorpay pero no se encontró."
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment request expected errorCode not found in the response"
+msgstr ""
+"Se esperaba errorCode en la respuesta de la solicitud de pago del PdV de "
+"Razorpay pero no se encontró."
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment status request expected errorCode not found in the "
+"response"
+msgstr ""
+"Se esperaba errorCode en la respuesta de la solicitud de estado de pago del "
+"PdV de Razorpay pero no se encontró."
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "Razorpay POS transaction canceled successfully"
+msgstr "La transacción del PdV de Razorpay se canceló con éxito."
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "Razorpay POS transaction failed"
+msgstr "Error en la transacción del PdV de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
+msgid "Razorpay Reverse Reference No."
+msgstr "Número de referencia para reversión de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Razorpay Test Mode"
+msgstr "Modo de prueba de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid "Razorpay Username"
+msgstr "Nombre de usuario de Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
+msgid "Razorpay p2pRequestId"
+msgstr "p2pRequestId de Razorpay"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid "Reference number mismatched"
+msgstr "El número de referencia no coincide"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Related transaction has already been Refunded. Please try using another "
+"payment method."
+msgstr ""
+"La transacción relacionada ya fue reembolsada. Intente usar otro método de "
+"pago."
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Related transaction has already been voided. Please try using another "
+"payment method."
+msgstr ""
+"La transacción relacionada ya fue anulada. Intente usar otro método de pago."
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
+msgid "Required to fetch payment status during the refund order process"
+msgstr ""
+"Se necesita para obtener el estado de pago durante el proceso de reembolso "
+"de la orden"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"The Razorpay POS refund request has encountered an unexpected error code."
+msgstr ""
+"Ocurrió un código de error inesperado con la solicitud de reembolso del PdV "
+"de Razorpay."
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Esta terminal de pago solo es válida con la moneda INR"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid "Transaction failed due to inactivity"
+msgstr "Ocurrió un error con la transacción debido a inactividad"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Turn it on when in Test Mode"
+msgstr "Habilitar si se encuentra en modo de prueba"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
+msgid "UPI"
+msgstr "UPI"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid ""
+"Used when connecting to Razorpay: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
+msgstr ""
+"Se utiliza al conectarse a Razorpay: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid ""
+"Username(Device Login) \n"
+" ex: 1234500121"
+msgstr ""
+"Nombre de usuario (inicio de sesión en el dispositivo) \n"
+" Por ejemplo: 1234500121"

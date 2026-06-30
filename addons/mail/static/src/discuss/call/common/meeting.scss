@@ -1,0 +1,11 @@
+$meeting-view-bg: #111827;
+.o-mail-Meeting {
+    background-color: $meeting-view-bg;
+}
+
+.o-overlay-item:has(.o-mail-Meeting) {
+    // When both the meeting view and another overlay are open (e.g. message delete dialog,
+    // call permission, etc.), only the last one opened is visible because they share the same
+    // stacking context and z-index. This fix ensure dialogs and other overlays are on top.
+    z-index: $zindex-modal - 1;
+}

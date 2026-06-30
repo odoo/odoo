@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+<record model="ir.ui.view" id="custom_link_tree">
+    <field name="name">custom.link.list</field>
+    <field name="model">pos_self_order.custom_link</field>
+    <field name="arch" type="xml">
+        <list string="Custom Links" editable="bottom">
+            <field name="sequence" widget="handle" />
+            <field name="name" placeholder="odoo"/>
+            <field name="url" placeholder="https://odoo.com"/>
+            <field name="pos_config_ids" widget="many2many_tags" placeholder="empty = all points of sale" options="{'no_create': True}"/>
+            <field name="style"/>
+            <field name="link_html"/>
+        </list>
+    </field>
+</record>
+</odoo>

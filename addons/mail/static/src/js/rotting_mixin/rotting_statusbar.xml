@@ -1,0 +1,19 @@
+<templates>
+    <t t-name="mail.RottingStatusBarDurationField" t-inherit="mail.StatusBarDurationField" t-inherit-mode="primary">
+        <xpath expr="//*[hasclass('btn btn-secondary o_arrow_button')]" position="attributes">
+            <attribute name="class" add="d-flex align-items-baseline" separator=" "/>
+        </xpath>
+        <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="attributes">
+            <attribute name="t-if" add="(!props.record.data.is_rotting || !item.isSelected)" separator=" and "/>
+        </xpath>
+                
+        <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="after">
+            <t t-if="props.record.data.is_rotting and item.isSelected">
+                <span class="badge rounded-pill small o_mail_resource_rotting_bg ms-2"
+                    t-att-title="title" style="pointer-events: all;">
+                    <t t-out="props.record.data.rotting_days"/>d
+                </span>
+            </t>
+        </xpath> 
+    </t>
+</templates>

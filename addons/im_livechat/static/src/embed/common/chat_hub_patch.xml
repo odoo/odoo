@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatHub" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ChatHub')]" position="attributes">
+            <attribute name="part">ChatHub</attribute>
+        </xpath>
+        <xpath expr="//*[hasclass('o-mail-ChatHub-extraActions')]" position="inside">
+            <LivechatButton/>
+        </xpath>
+    </t>
+</templates>

@@ -5,7 +5,7 @@
     'name': 'Indian - Stock Report(GST)',
     'version': '1.0',
     'description': """GST Stock Report""",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'l10n_in',
         'stock',
@@ -13,7 +13,11 @@
     'data': [
         'views/report_stockpicking_operations.xml',
     ],
+    'demo': [
+        'data/product_demo.xml',
+    ],
     'installable': True,
-    'application': False,
     'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.NewContentSystrayItem">
+    <div class="o_menu_systray_item o_new_content_container d-none d-md-flex">
+        <Dropdown manual="true" state="dropdown" menuClass="'o_new_content_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
+            <button t-on-click="toggleDropdown" accesskey="c" class="o-dropdown-caret o-website-btn-custo-secondary btn rounded-0 border-0 px-3 o-dropdown-toggle-custo">New</button>
+            <t t-set-slot="content">
+                <t t-set="showNewPageButton" t-value="isDesigner"/>
+                <t t-set="appItems" t-value="sortedNewContentElements"/>
+                <t t-set="nbItems" t-value="(showNewPageButton ? 1 : 0) + appItems.length"/>
+                <t t-if="nbItems">
+                    <t t-set="colClass" t-value="'g-col-' + (nbItems > 5 ? 6 : 12)"/>
+                    <DropdownItem t-if="showNewPageButton"
+                            tag="'button'"
+                            class="`o_new_content_element d-flex gap-2 ${colClass} p-2 rounded`"
+                            attrs="newPageAttrs"
+                            onSelected="() => props.onNewPage(false)">
+                        <div class="o_new_content_element_tile d-flex align-items-center justify-content-center border rounded">
+                            <img src="/website/static/description/icon.png" alt=""/>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">Page</span>
+                            <small class="text-muted">Create a new page</small>
+                        </div>
+                    </DropdownItem>
+                    <t t-foreach="appItems" t-as="element" t-key="element.moduleXmlId">
+                        <DropdownItem tag="'button'"
+                                class="`o_new_content_element rounded ${colClass} p-0`"
+                                attrs="Object.assign({}, newPageAttrs, {
+                                    'aria-label': element.title,
+                                    'data-module-xml-id': element.moduleXmlId,
+                                })"
+                                onSelected="() => this.onClickNewContent(element)">
+                            <div class="w-100 h-100 d-flex gap-2 p-2"
+                                    t-on-mouseenter="() => this.swapDescription(element)"
+                                    t-on-mouseleave="() => this.swapDescription(element)">
+                                <div class="o_new_content_element_tile d-flex align-items-center justify-content-center border rounded">
+                                    <img t-att-src="element.icon"
+                                        t-att-class="element.status === 'NOT_INSTALLED' ? 'o_uninstalled_module' : ''"
+                                        alt=""/>
+                                </div>
+                                <div class="d-flex flex-column overflow-hidden">
+                                    <span t-out="element.title" class="fw-bold text-truncate"/>
+                                    <small class="text-muted text-truncate" t-out="element.description"/>
+                                </div>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </t>
+                <t t-else="">
+                    <span class="dropdown-item-text g-col-12">
+                        You do not have the necessary permissions to create new content pages.
+                    </span>
+                </t>
+            </t>
+        </Dropdown>
+    </div>
+</t>
+
+</templates>

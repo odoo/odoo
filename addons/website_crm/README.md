@@ -4,7 +4,7 @@ Your Contact Form
 ### Integrate contact forms with your leads
 
 This simple application integrates a contact form in your "Contact us" page.
-Forms submissions create leads automatically in <a href="https://www.odoo.com/page/crm">Odoo CRM</a>.
+Forms submissions create leads automatically in <a href="https://www.odoo.com/app/crm">Odoo CRM</a>.
 
 Easy Contact Page
 -----------------

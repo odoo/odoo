@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="company_id" invisible="1"/>
+                            <field name="external_report_layout_id" invisible="1" />
+                            <field name="logo_primary_color" invisible="1" />
+                            <field name="logo_secondary_color" invisible="1" />
+
+                            <field name="report_layout_id" string="Layout" widget="selection_badge" required="1" options="{'horizontal': true, 'size': 'sm'}"/>
+                            <field name="layout_background" string="Background" widget="selection" required="1"/>
+                            <field name="layout_background_image" options="{'accepted_file_extensions': 'image/*'}" invisible="layout_background != 'Custom'" required="layout_background == 'Custom'">Upload your file</field>
+                            <field name="font" string="Text" widget="selection" required="1"/>
+                            <field name="logo" string="Logo" widget="image" options="{'size': [0, 50]}"/>
+
+                            <label for="primary_color" string="Colors"/>
+                            <div class="o_document_layout_colors d-flex align-items-end mb-4">
+                                <field name="primary_color" widget="color" class="w-auto m-0 me-1"/>
+                                <field name="secondary_color" widget="color" class="w-auto m-0"/>
+                                <a class="o_custom_colors btn btn-secondary btn-sm position-relative ms-2" role="button" title="Reset to logo colors" invisible="not custom_colors">
+                                    <i class="fa fa-repeat"/> Reset
+                                    <field name="custom_colors" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" nolabel="1"/>
+                                </a>
+                            </div>
+
+                            <field name="company_details" string="Address" options="{'resizable': false}"/>
+                            <field name="report_header" string="Tagline" placeholder="e.g. Global Business Solutions" options="{'resizable': false}"/>
+                            <field name="report_footer" placeholder="Write your phone, email, bank account, tax ID, ..." string="Footer" options="{'resizable': false}"/>
+                            <field name="paperformat_id" widget="selection" required="1"/>
+                        </group>
+                        <div class="o_preview">
+                            <field name="preview" widget="iframe_wrapper" class="preview_document_layout d-flex justify-content-center mb-0"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Continue" class="btn-primary" type="object" name="document_layout_save" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Discard" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_base_document_layout_configurator" model="ir.actions.act_window">
+            <field name="name">Configure your document layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">base.document.layout</field>
+            <field name="view_id" ref="web.view_base_document_layout"/>
+            <field name="context">{"dialog_size": "extra-large"}</field>
+        </record>
+
+    </data>
+</odoo>

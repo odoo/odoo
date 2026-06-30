@@ -1,0 +1,118 @@
+<odoo noupdate="1">
+    <record id="card_template_light" model="card.template">
+        <field name="name">Light</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_5"/>
+        </field>
+    </record>
+    <record id="card_template_dark" model="card.template">
+        <field name="name">Dark</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_5"/>
+        </field>
+        <field name="primary_color">#161315</field>
+        <field name="secondary_color">#dedede</field>
+        <field name="primary_text_color">#ffffff</field>
+        <field name="secondary_text_color">#161315</field>
+    </record>
+    <record id="card_template_user_image" model="card.template">
+        <field name="name">Center</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_1"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Image.jpg"/>
+        <field name="primary_color">#161315</field>
+        <field name="secondary_color">#dedede</field>
+        <field name="primary_text_color">#ffffff</field>
+        <field name="secondary_text_color">#161315</field>
+    </record>
+    <record id="card_template_world_map" model="card.template">
+        <field name="name">World Map</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_2"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/WorldMap.png"/>
+        <field name="primary_color">#161315</field>
+        <field name="secondary_color">#dedede</field>
+        <field name="primary_text_color">#ffffff</field>
+        <field name="secondary_text_color">#161315</field>
+    </record>
+    <record id="card_template_lila" model="card.template">
+        <field name="name">Lila</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_3"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Lila.png"/>
+    </record>
+    <record id="card_template_safari" model="card.template">
+        <field name="name">Safari</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_4"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Desert.png"/>
+        <field name="primary_color">#161315</field>
+        <field name="secondary_color">#dedede</field>
+        <field name="primary_text_color">#ffffff</field>
+        <field name="secondary_text_color">#161315</field>
+    </record>
+    <record id="card_template_waves" model="card.template">
+        <field name="name">Waves</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_5"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Waves.png"/>
+    </record>
+    <record id="card_template_lines" model="card.template">
+        <field name="name">Lines</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_2"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Lines.png"/>
+        <field name="primary_color">#161315</field>
+        <field name="secondary_color">#dedede</field>
+        <field name="primary_text_color">#ffffff</field>
+        <field name="secondary_text_color">#161315</field>
+    </record>
+    <record id="card_template_organic" model="card.template">
+        <field name="name">Organic</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_4"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Organic.png"/>
+    </record>
+    <record id="card_template_blur" model="card.template">
+        <field name="name">Blur</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_1"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Blur.png"/>
+    </record>
+    <record id="card_template_geometric" model="card.template">
+        <field name="name">Geometric</field>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_4"/>
+        </field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Geometric.png"/>
+    </record>
+    <record id="card_template_circles" model="card.template">
+        <field name="name">Circles</field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Circles.png"/>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_5"/>
+        </field>
+    </record>
+    <record id="card_template_avatar_highlight" model="card.template">
+        <field name="name">Avatar Highlight</field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Highlight.png"/>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_3"/>
+        </field>
+    </record>
+    <record id="card_template_drawings" model="card.template">
+        <field name="name">Drawings</field>
+        <field name="default_background" type="base64" file="marketing_card/static/card_backgrounds/Drawings.png"/>
+        <field name="body" type="html">
+            <t t-call="marketing_card.template_5"/>
+        </field>
+    </record>
+</odoo>

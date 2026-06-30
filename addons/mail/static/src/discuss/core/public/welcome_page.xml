@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.WelcomePage">
+    <t t-set="showCallPreview" t-value="store.discuss.thread.default_display_mode === 'video_full_screen'"/>
+    <div class="o-mail-WelcomePage w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3" style="min-height: 100dvh;">
+        <h1 class="fw-light text-center">
+            <span t-if="this.store.discuss.thread.default_display_mode === 'video_full_screen'">You've been invited to a meeting!</span>
+            <span t-else="">You've been invited to a chat!</span>
+        </h1>
+        <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
+        <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
+            <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
+                <CallPreview onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
+            </div>
+            <div class="d-flex flex-column text-center justify-content-center">
+                <div class="d-flex flex-column gap-2" t-if="store.self_guest and !store.self_partner">
+                    <label class="fs-4" >What's your name?</label>
+                    <input class="form-control mb-3 bg-white rounded" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                </div>
+                <div class="fs-3" t-if="store.self_partner">
+                    <p>Ready to join?</p>
+                    <p t-if="showCallPreview and noActiveParticipants">No one else is here.</p>
+                </div>
+                <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-on-click="joinChannel">
+                    <t t-if="showCallPreview" t-set="joinText">Join call</t>
+                    <t t-else="" t-set="joinText">Join</t>
+                    <span class="mb-0 text-success" t-esc="joinText"/>
+                    <span class="rounded-circle bg-success d-flex align-items-center justify-content-center p-2">
+                        <i class="oi oi-arrow-right text-white"/>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

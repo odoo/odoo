@@ -1026,7 +1026,9 @@ Cluster.prototype.updateIcon = function() {
  * @ignore
  */
 function ClusterIcon(cluster, styles, opt_padding) {
-  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
+  /* Modification in odoo */
+  Object.setPrototypeOf(ClusterIcon.prototype, google.maps.OverlayView.prototype);
+  /* End of modification in odoo */
 
   this.styles_ = styles;
   this.padding_ = opt_padding || 0;
@@ -1190,7 +1192,7 @@ ClusterIcon.prototype.setSums = function(sums) {
 
 
 /**
- * Sets the icon to the the styles.
+ * Sets the icon to the styles.
  */
 ClusterIcon.prototype.useStyle = function() {
   var index = Math.max(0, this.sums_.index - 1);

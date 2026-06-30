@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SearchbarOption">
+    <BuilderRow label.translate="Search within">
+        <BuilderSelect action="'setSearchType'" dataAttributeAction="'searchType'" id="'scope_opt'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'all'" actionValue="'/website/search'" id="'search_all_opt'">
+                Everything
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'pages'" actionValue="'/pages'" id="'search_pages_opt'">
+                Pages
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Order by">
+        <BuilderSelect id="'order_opt'" dataAttributeAction="'orderBy'" action="'setOrderBy'">
+            <t t-foreach="this.orderByItems" t-as="item" t-key="item_index">
+                <BuilderSelectItem t-if="!item.dependency or this.isActiveItem(item.dependency)"
+                    actionValue="item.orderBy"
+                    dataAttributeActionValue="item.orderBy"
+                    id="item.id"
+                    t-out="item.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Suggestions">
+        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" min="0"/>
+        <span class="flex-grow-1 w-100">results</span>
+    </BuilderRow>
+
+    <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="this.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttribute}_${item.dependency}`">
+        <BuilderRow label="item.label" t-if="this.isActiveItem(item.dependency)">
+            <BuilderCheckbox action="'setNonEmptyDataAttribute'" actionParam="item.dataAttribute" actionValue="'true'"/>
+        </BuilderRow>
+    </t>
+    <BuilderRow label.translate="Style">
+        <BuilderSelect action="'setSearchbarStyle'">
+            <BuilderSelectItem actionParam="'default'">Default Input Style</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'light'">Light</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,16 @@
+.o_mail_resource_rotting_bg {
+    background-color: #e64980;
+}
+
+.o_kanban_renderer {
+    .o_kanban_group {
+        @include o-kanban-css-filter(rotting, #e64980);
+    }
+
+    .o_kanban_record.oe_kanban_card_rotting {
+        background-color: rgba(255, 201, 201, 0.3);
+        &.o_record_selected {
+            background-color: var(--KanbanColumn__highlight-selected);
+        }
+    }
+}

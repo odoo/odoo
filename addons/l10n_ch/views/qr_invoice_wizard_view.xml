@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="l10n_ch_qr_invoice_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_ch.qr_invoice.wizard.form</field>
+        <field name="model">l10n_ch.qr_invoice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="QR printing encountered a problem">
+                <p>
+                    <field name="qr_inv_text"/>
+                    <field name="classic_inv_text"/>
+                </p>
+                <p>
+                    To be able to print all invoices in the QR format, you might need to : <br/>
+                    - check the account is a valid QR-IBAN<br/>
+                    - or check your company and the partners are located in Switzerland.<br/>
+                    Press Check Invalid Invoices to see a list of the invoices that were printed without a QR.
+                </p>
+                <footer>
+                    <button name="print_all_invoices" string="Print All" type="object" class="btn-primary"/>
+                    <button name="action_view_faulty_invoices" string="Check invalid invoices" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_qr_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Qr Batch error Wizard</field>
+        <field name="res_model">l10n_ch.qr_invoice.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_ch_qr_invoice_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

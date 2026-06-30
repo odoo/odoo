@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CustomerDisplay">
+        <t t-set="bgImgSrc" t-value="session.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
+        <div class="o_customer_display d-flex h-100">
+            <div class="o_customer_display_sidebar d-flex flex-column align-items-center justify-content-center gap-2 p-4 bg-view" t-att-style="session.has_bg_img ? `background-image: url(/web/image/pos.config/${session.config_id}/customer_display_bg_img); min-width: 30%; min-height: 15%;` : ``">
+                <div t-if="!session.has_bg_img" class="o_customer_display_logo d-flex mw-50 mw-md-100 p-2 rounded-3 bg-white">
+                    <img class="img-fluid" t-attf-src="/logo?company={{session.company_id}}"/>
+                </div>
+                <div class="position-absolute bottom-0 mb-4 d-none d-lg-flex align-items-center ps-3 pe-2 py-1 rounded-3 text-bg-dark small">Powered by <OdooLogo style="'width: 3rem;'" monochrome="true"/></div>
+            </div>
+            <div class="o_customer_display_main d-flex flex-column flex-grow-1 overflow-auto">
+                <div t-if="Object.keys(order).length and order.lines.length > 0 and !order.finalized" class="d-flex flex-column flex-grow-1 rounded-3 bg-white overflow-hidden">
+                    <div t-ref="scrollable" style="scroll-snap-type: y mandatory;" class="gap-0 p-0 mx-2 pb-3 bg-view order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+                         <li t-foreach="order.lines" t-as="line" t-key="line_index"  class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer o_customer_display_orderline bg-white fs-3 rounded-0" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-4 fst-italic' : '' }} {{ line.isSelected ? 'selected' : '' }}">
+                            <div class="o_line_container d-flex align-items-center justify-content-center">
+                                <img t-attf-style="border-radius: 1rem;" t-att-src="`/web/image/product.product/${line.productId}/image_128`"/>
+                            </div>
+                            <div class="d-flex flex-column w-100 gap-1">
+                                <div class="d-flex justify-content-between">
+                                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                                        <span class="text-wrap" t-esc="line.productName"/>
+                                    </div>
+                                    <div class="product-price price fw-bolder" t-esc="line.price" />
+                                </div>
+                                <ul class="info-list d-flex flex-column p-0">
+                                    <li class="price-per-unit">
+                                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
+                                        x
+                                        <t t-if="line.price !== 0">
+                                            <t t-esc="line.unitPrice" />
+                                        </t>
+                                        /
+                                        <t t-if="line.unit" t-esc="line.unit" />
+                                    </li>
+                                    <li t-if="line.price !== 0 and line.discount and line.discount !== '0' and !props.basic_receipt">
+                                        <t t-esc="line.price_without_discount"/> With a <em><t t-esc="line.discount" />% </em> discount
+                                    </li>
+                                    <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">
+                                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                                        <t t-esc="line.customerNote" />
+                                    </li>
+                                    <div class="internal-note-container d-flex gap-2 p-2">
+                                        <TagsList tags="getInternalNotes()"/>
+                                    </div>
+                                    <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
+                                    <t t-slot="default" />
+                                </ul>
+                            </div>
+                        </li>
+                        <div t-if="props.generalCustomerNote"
+                            t-attf-class="{{ props.screenName == 'ReceiptScreen' ? 'mt-1 bg-opacity-75 p-0' : 'customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
+                            <div class="row flex-wrap w-100 m-0"> <!-- Add w-100 and remove margins -->
+                                <div class="col-auto px-1">
+                                    <i class="fa fa-sticky-note me-1 fa-lg" role="img"
+                                        aria-label="Customer Note" title="Customer Note"/>
+                                </div>
+                                <div class="col ps-0">
+                                    <t t-foreach="props.generalCustomerNote.split('\n')" t-as="subNote"
+                                        t-key="subNote_index">
+                                        <div class="d-inline text-break">
+                                            <t t-esc="subNote"/><br/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div t-elif="order.finalized" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Thank you.</h1>
+                </div>
+                <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Welcome.</h1>
+                </div>
+                <div t-if="order.scaleData">
+                    <t t-set-slot="header">
+                        <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': env.isSmall }">
+                            <span class="me-2">Weighing Product:</span>
+                            <t t-esc="order.scaleData.product.name"/>
+                        </h4>
+                    </t>
+                    <div class="d-flex flex-column px-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Gross Weight:</div>
+                            <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.scaleData.grossWeight"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Tare Weight:</div>
+                            <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.scaleData.tare"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Net Weight:</div>
+                            <div class="text-end fs-5 form-control-plaintext" t-esc="order.scaleData.netWeight"></div>
+                        </div>
+                        <div class="d-flex px-5 flex-row gap-2 m-2 align-items-center">
+                            <div class="product-price w-50 fs-5 text-center" t-esc="order.scaleData.unitPrice"/>
+                            <div class="computed-price fd-flex flex-grow-1 p-2 rounded text-center text-bg-info bg-opacity-25 text-info fs-5 fw-bold" t-esc="order.scaleData.totalPrice" />
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="order.amount and !order.finalized" class="py-3 px-4 bg-view border-top">
+                    <div class="d-flex flex-column justify-content-center gap-1 w-100 w-sm-50 ms-auto">
+                        <div class="d-flex flex-column gap-1 fw-bolder lh-sm">
+                            <div t-if="order.subtotal" class="row fs-5 text-muted">
+                                <div class="col text-end">Subtotal</div>
+                                <div class="col text-end" t-esc="order.subtotal"/>
+                            </div>
+                            <div t-if="order.amountTaxes" class="row fs-5 text-muted">
+                                <div class="col text-end">Taxes</div>
+                                <div class="col text-end" t-esc="order.amountTaxes"/>
+                            </div>
+                            <div class="row fs-2">
+                                <div class="col text-end">Total</div>
+                                <div class="col text-end" t-esc="order.amount"/>
+                            </div>
+                        </div>
+                        <div t-foreach="order.paymentLines or []" t-as="line" t-key="line_index" class="row">
+                            <div class="col text-end" t-esc="line.name" />
+                            <div class="col text-end" t-esc="line.amount"/>
+                        </div>
+                        <div class="row" t-if="order.change">
+                            <div class="col text-end">Change</div>
+                            <div class="col text-end" t-esc="order.change"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center" t-att-class="{ 'bg-view': order.amount and !order.finalized }">
+                    <div class=" bottom-0 mb-4 d-flex align-items-center ps-3 pe-2 py-1 rounded-3 small">Powered by <OdooLogo style="'width: 3rem;'"/></div>
+                </div>
+            </div>
+        </div>
+        <MainComponentsContainer />
+    </t>
+</templates>

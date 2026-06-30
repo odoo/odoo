@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n.in</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="tax_scope" position="after">
+                <field name="l10n_in_tax_type" invisible="amount_type == 'group' or country_code != 'IN'"/>
+            </field>
+            <field name="is_base_affected" position="after">
+                <field name="l10n_in_reverse_charge" invisible="amount_type == 'group' or country_code != 'IN' or l10n_in_tax_type != 'gst'"/>
+                <field name="l10n_in_is_lut" invisible="amount_type == 'group' or country_code != 'IN' or l10n_in_tax_type != 'gst'"/>
+            </field>
+            <xpath expr="//field[@name='tax_group_id']" position="after">
+                <field name="l10n_in_section_id" invisible="country_code != 'IN' or not (l10n_in_tds_feature_enabled and l10n_in_tcs_feature_enabled) or l10n_in_tax_type not in ['tcs', 'tds_sale', 'tds_purchase']"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

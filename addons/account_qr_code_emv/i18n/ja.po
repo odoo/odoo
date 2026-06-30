@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_qr_code_emv
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-28 02:31+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"account_qr_code_emv/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "A bank account is required for EMV QR Code generation."
+msgstr "EMV QRコード生成には銀行口座が必要です。"
+
+#. module: account_qr_code_emv
+#: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "銀行口座"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_proxy_keys
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_proxy_keys
+msgid "Country Proxy Keys"
+msgstr "国別プロキシキー"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
+msgid "Display Qr Setting"
+msgstr "QR設定を表示"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "EMV Merchant-Presented QR-code"
+msgstr "EMV加盟店提示QRコード"
+
+#. module: account_qr_code_emv
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "EMV QR Settings"
+msgstr "EMV QR設定"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include Reference"
+msgstr "参照を含む"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include the reference in the QR code."
+msgstr "QRコードに参照を含む"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Merchant Account Information."
+msgstr "加盟店アカウント情報がありません。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Merchant City."
+msgstr "加盟店の市町村がありません。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Proxy Type."
+msgstr "プロキシタイプがありません。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Proxy Value."
+msgstr "プロキシ値がありません。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid ""
+"No EMV QR Code is available for the country of the account %"
+"(account_number)s."
+msgstr "アカウント%(account_number)sの国でEMV QRコードが利用できません。"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
+msgid "None"
+msgstr "なし"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "プロキシタイプ"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Proxy Value"
+msgstr "プロキシ値"

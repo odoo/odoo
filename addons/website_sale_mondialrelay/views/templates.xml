@@ -1,0 +1,28 @@
+<odoo>
+
+    <template
+        id="website_sale_mondialrelay_billing_address_list"
+        inherit_id="website_sale.billing_address_list"
+    >
+        <label id="use_delivery_as_billing_label" position="attributes">
+            <attribute name="title">Unavailable with Mondial Relay</attribute>
+            <attribute name="data-bs-toggle">tooltip</attribute>
+            <attribute name="data-bs-trigger">hover focus</attribute>
+        </label>
+    </template>
+
+    <template id="website_sale_mondialrelay_address_card" inherit_id="website_sale.address_card">
+        <div name="address_card" position="attributes">
+            <attribute name="t-att-data-is-mondialrelay">contact.is_mondialrelay</attribute>
+        </div>
+    </template>
+
+    <template id="address_on_checkout" inherit_id="website_sale.address_on_checkout">
+        <t t-out="order.partner_shipping_id" position="before">
+            <t t-if="order.partner_shipping_id.is_mondialrelay" >
+                <img src="/delivery_mondialrelay/static/src/img/logo.png" title="Mondial Relay" height="20px"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

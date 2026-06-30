@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SpacingOption">
+    <BuilderRow label.translate="Spacing (Y, X)" level="props.level" applyTo="props.applyTo">
+        <BuilderNumberInput action="'setGridSpacing'" actionParam="'row-gap'" unit="'px'" default="0" />
+        <BuilderNumberInput action="'setGridSpacing'" actionParam="'column-gap'" unit="'px'" default="0" max="60"/>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,77 @@
+.o-mail-NotificationItem {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+
+    &:not(.o-interest) {
+        --border-opacity: .35;
+    }
+    &.o-active {
+        outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
+    }
+    &:hover, &.o-active {
+        backdrop-filter: contrast(.9);
+    }
+}
+
+.o-mail-NotificationItem-avatarContainer {
+    height: 42px;
+    aspect-ratio: 1;
+    margin-top: map-get($spacers, 1) / 2;
+    margin-bottom: map-get($spacers, 1) / 2;
+
+    &.o-small {
+        height: 52px;
+    }
+}
+
+.o-mail-NotificationItem-badge {
+    padding: 3px 6px !important;
+    &.o-discuss-badge:not(.o-important) {
+        --o-discuss-badge-bg: #{$gray-500};
+    }
+}
+
+.o-mail-NotificationItem-counter.o-empty {
+    font-size: 0.5rem !important;
+    aspect-ratio: 1;
+
+    &:before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
+}
+
+.o-mail-NotificationItem-country {
+    width: 16px;
+    bottom: -2px;
+    left: -4px;
+}
+
+.o-mail-NotificationItem-line {
+    line-height: 1.15rem;
+}
+
+.o-mail-NotificationItem-markAsRead {
+    background-color: $o-view-background-color;
+    color: $success !important;
+    outline: 1px solid rgba($success, .75);
+    outline-offset: -1px;
+    padding: map-get($spacers, 1) / 2;
+
+    &:hover {
+        outline-color: rgba(darken($success, 10%), 1);
+        color: darken($success, 10%) !important;
+        background-color: mix($o-view-background-color, $success, 75%);
+        filter: brightness(1.1);
+        box-shadow: $box-shadow-sm
+    }
+}
+
+.o-mail-NotificationItem-text {
+    opacity: .75;
+
+    &:before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
+}

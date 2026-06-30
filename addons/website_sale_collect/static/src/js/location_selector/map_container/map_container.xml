@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-inherit="delivery.locationSelector.mapContainer" t-inherit-mode="extension">
+        <button id="submit_location_large" position="attributes">
+            <attribute
+                name="t-att-disabled"
+                add="!(selectedLocation?.additional_data?.in_store_stock_data?.in_stock ?? true)"
+                separator=" || "
+            />
+        </button>
+        <button id="submit_location_medium" position="attributes">
+            <attribute
+                name="t-att-disabled"
+                add="!(selectedLocation?.additional_data?.in_store_stock_data?.in_stock ?? true)"
+                separator=" || "
+            />
+        </button>
+    </t>
+
+</templates>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Discuss">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': ui.isSmall, 'border-top border-secondary': !ui.isSmall }" t-att-data-active="store.discuss.isActive" t-ref="root">
+        <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
+        <DiscussContent t-if="!ui.isSmall" thread="props.thread"/>
+        <MessagingMenu t-if="ui.isSmall"/>
+    </div>
+</t>
+
+<t t-name="mail.MobileMailbox">
+    <button class="btn btn-secondary flex-grow-1 p-2"
+        t-att-class="{
+            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
+        }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
+    />
+</t>
+
+<t t-name="mail.Discuss.loading">
+    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+        <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_payment.s_supported_payment_methods.no_payment_methods_alert">
+        <t
+            t-if="payment_methods.length"
+            t-call="website_payment.s_supported_payment_methods.icons"
+        />
+        <t t-else="">
+            <div class="alert alert-warning my-0">
+                <div class="container">
+                    <div class="row gx-1 align-items-center">
+                        <span class="col-auto me-auto">No published payment methods</span>
+                        <!-- Open the link in a new tab to keep any pending edits in the editor. -->
+                        <a
+                            class="o_wpay_view_providers_btn col-auto btn btn-primary"
+                            href="/odoo/action-payment.action_payment_provider"
+                            target="_blank"
+                        >
+                            View providers
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

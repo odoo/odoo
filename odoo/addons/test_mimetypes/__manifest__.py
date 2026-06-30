@@ -2,6 +2,8 @@
 {
     'name': 'test mimetypes-guessing',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to generate exceptions.""",
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

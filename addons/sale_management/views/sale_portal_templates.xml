@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_optional_product_quantity" name="Order Quantity">
+        <div t-if="line._can_be_edited_on_portal()" class="d-inline-flex">
+            <div class="input-group js_quantity_container pull-right">
+                <span class="d-print-none input-group-text d-none d-md-inline-block">
+                    <a
+                        title="Remove one"
+                        aria-label="Remove one"
+                        href="#"
+                        t-att-class="'opacity-50' if line.product_uom_qty == 0 else 'js_update_line_json'"
+                        t-att-data-line-id="line.id"
+                        t-att-data-remove="True"
+                    >
+                        <span class="fa fa-minus"/>
+                    </a>
+                </span>
+                <input
+                    type="text"
+                    class="js_quantity form-control"
+                    t-att-data-line-id="line.id"
+                    t-att-value="int(line.product_uom_qty) or '0'"
+                />
+                <span class="d-print-none input-group-text d-none d-md-inline-block">
+                    <a
+                        title="Add one"
+                        aria-label="Add one"
+                        class="js_update_line_json"
+                        href="#"
+                        t-att-data-line-id="line.id"
+                    >
+                        <span class="fa fa-plus"/>
+                    </a>
+                </span>
+            </div>
+            <div class="ms-1 align-self-center">
+                <span t-field="line.product_uom_id"/>
+            </div>
+        </div>
+        <div t-else="">
+            <span t-field="line.product_uom_qty"/>
+            <span t-field="line.product_uom_id"/>
+        </div>
+    </template>
+
+    <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//td[@name='td_product_quantity']/div[@id='quote_qty']" position="replace">
+            <t t-call="sale_management.sale_order_portal_optional_product_quantity"/>
+        </xpath>
+        <xpath expr="//td[@name='td_combo_quantity']/div[@id='quote_qty']" position="replace">
+            <t t-call="sale_management.sale_order_portal_optional_product_quantity"/>
+        </xpath>
+    </template>
+
+</odoo>

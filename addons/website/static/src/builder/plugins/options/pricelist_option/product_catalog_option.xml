@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ProductCatalogDescriptionOption">
+    <BuilderRow label.translate="Descriptions">
+        <BuilderCheckbox
+            action="'togglePriceListDescription'"
+            actionParam="{ itemClass:'s_product_catalog_dish', descriptionClass: 's_product_catalog_dish_description' }"/>
+    </BuilderRow>
+    <BuilderContext applyTo="'.s_product_catalog_dish_dot_leaders'">
+        <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
+    </BuilderContext>
+</t>
+
+</templates>

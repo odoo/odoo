@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app notApp="1" string="Sales" data-string="Sales" name="sale_management" groups="sales_team.group_sale_manager">
+                    <block title="Product Catalog" name="catalog_setting_container">
+                        <setting id="variant_options" help="Sell variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">
+                            <field name="group_product_variant"/>
+                            <div class="content-group" invisible="not group_product_variant">
+                                <div class="mt8">
+                                    <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Variant Grid Entry" help="Add several variants to an order from a grid" id="product_matrix">
+                            <field name="module_sale_product_matrix"/>
+                        </setting>
+                        <setting id="uom_settings" help="Sell and purchase products in different units of measure or packagings">
+                            <field name="group_uom"/>
+                            <div class="content-group" invisible="not group_uom">
+                                <div class="mt8">
+                                    <button name="%(uom.product_uom_form_action)d" icon="oi-arrow-right" type="action" string="Units &amp; Packagings" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="email_template" title="Sending an email is useful if you need to share specific information or content about a product (instructions, rules, links, media, etc.). Create and set the email template from the product detail form (in Accounting tab)." string="Deliver Content by Email" help="Send a product-specific email once the invoice is validated">
+                            <field name="module_product_email_template"/>
+                        </setting>
+                    </block>
+                    <block title="Pricing" id="pricing_setting_container">
+                      <setting id="discount_sale_order_lines" title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration)." help="Grant discounts on sales order lines">
+                            <field name="group_discount_per_so_line"/>
+                       </setting>
+                        <setting id="coupon_settings" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Promotions, Loyalty &amp; Gift Card" help="Manage Promotions, Coupons, Loyalty cards, Gift cards &amp; eWallet">
+                            <field name="module_loyalty"/>
+                        </setting>
+                        <setting id="pricelist_configuration" documentation="/applications/sales/sales/products_prices/prices/pricing.html" help="Set multiple prices per product, automated discounts, etc.">
+                            <field name="group_product_pricelist"/>
+                            <div class="content-group" invisible="not group_product_pricelist">
+                                <div class="mt16">
+                                    <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="auth_signup_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." help="Let your customers log in to see their documents">
+                            <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
+                        </setting>
+                        <setting id="show_margins" help="Show margins on orders" title="The margin is computed as the sum of product sales prices minus the cost set in their detail form.">
+                            <field name="module_sale_margin"/>
+                        </setting>
+                    </block>
+                    <block title="Quotations &amp; Orders" name="quotation_order_setting_container">
+                        <setting id="online_signature" company_dependent="1"
+                                 documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
+                                 help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
+                            <field name="portal_confirmation_sign"/>
+                        </setting>
+                        <setting id="online_payment" company_dependent="1"
+                                 documentation="/applications/sales/sales/send_quotations/get_paid_to_validate.html"
+                                 help="Request a payment to confirm orders, in full (100%) or partial. The default can be changed per order or template.">
+                            <field name="portal_confirmation_pay"/>
+                            <div invisible="not portal_confirmation_pay" class="oe_row fw-bold">
+                                Payment
+                                <field name="prepayment_percent" widget="percentage" class="oe_inline"/>
+                            </div>
+                            <div
+                                class="row mt8"
+                                invisible="not portal_confirmation_pay or active_provider_id"
+                            >
+                                <div invisible="not onboarding_payment_module" class="oe_inline">
+                                    <button
+                                        type="object"
+                                        name="action_sale_start_payment_onboarding"
+                                        class="btn-primary"
+                                    >
+                                        Activate
+                                        <field
+                                            name="onboarding_payment_module"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        />
+                                    </button>
+                                </div>
+                                <div
+                                    title="Stripe Connect is not available in your country, please use another payment provider."
+                                    invisible="onboarding_payment_module"
+                                    class="oe_inline"
+                                >
+                                    <button
+                                        string="Activate Stripe" class="btn btn-primary" disabled=""
+                                    />
+                                </div>
+                                <button
+                                    string="View Alternatives"
+                                    type="action"
+                                    name='%(payment.action_payment_provider)d'
+                                    icon="oi-arrow-right"
+                                    class="btn btn-link oe_inline"
+                                />
+                            </div>
+                            <div
+                                class="mt8"
+                                invisible="not portal_confirmation_pay or not active_provider_id"
+                            >
+                                <button
+                                    type="object"
+                                    name="action_view_active_provider"
+                                    class="btn btn-primary col-auto"
+                                >
+                                    Configure
+                                    <field
+                                        name="active_provider_id"
+                                        class="oe_inline"
+                                        nolabel="1"
+                                        options="{'no_open': True}"
+                                    />
+                                </button>
+                                <button
+                                    string="View Other Providers"
+                                    type="action"
+                                    name="%(payment.action_payment_provider)d"
+                                    icon="oi-arrow-right"
+                                    class="btn btn-link col-auto"
+                                />
+                            </div>
+                        </setting>
+                        <setting id="quotation_validity_days">
+                            <div title="Days between quotation proposal and expiration. 0 days means automatic expiration is disabled">
+                                <label for="quotation_validity_days"/>
+                                <field name="quotation_validity_days" class="text-center" style="width: 3rem;"/>
+                                <div class="d-inline-block">days</div>
+                                <span class="fa fa-lg fa-building-o p-2"
+                                      title="Values set here are company-specific."
+                                      groups="base.group_multi_company"/>
+                            </div>
+                            <div class="text-muted">
+                                Default period during which the quote is valid and can still be accepted by the customer. The default can be changed per order or template.
+                            </div>
+                        </setting>
+                        <setting id="order_warnings" string="Sale Warnings" help="Get warnings in orders for products or customers">
+                            <field name="group_warning_sale"/>
+                        </setting>
+                        <setting id="sale_pdf_quote_builder" string="PDF Quote builder" help="Make your quote attractive by adding header pages, product descriptions and footer pages to your quote.">
+                            <field name="module_sale_pdf_quote_builder"/>
+                            <div class="mt8" name="sale_pdf_module_settings" invisible="not module_sale_pdf_quote_builder"/>
+                        </setting>
+                        <setting id="no_edit_order" help="No longer edit orders once confirmed">
+                            <field name="group_auto_done_setting"/>
+                        </setting>
+                        <setting id="proforma_configuration" help="Allows you to send Pro-Forma Invoice to your customers">
+                            <field name="group_proforma_sales"/>
+                        </setting>
+                    </block>
+                    <block title="Shipping" name="sale_shipping_setting_container">
+                        <setting id="delivery" help="Compute shipping costs on orders">
+                            <field name="module_delivery"/>
+                        </setting>
+                        <setting id="ups">
+                            <div class="o_form_label">UPS Connector</div>
+                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with UPS<br/>
+                                    <strong>(please go to Home>Apps to install)</strong>
+                                </div>
+                        </setting>
+                        <setting id="shipping_costs_dhl">
+                            <div class="o_form_label">DHL Connector</div>
+                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with DHL<br/>
+                                    <strong>(please go to Home>Apps to install)</strong>
+                                </div>
+                        </setting>
+                        <setting id="shipping_costs_fedex">
+                            <div class="o_form_label">FedEx Connector</div>
+                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with FedEx<br/>
+                                    <strong>(please go to Home>Apps to install)</strong>
+                                </div>
+                        </setting>
+                        <setting id="shipping_costs_usps">
+                            <div class="o_form_label">USPS Connector</div>
+                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with USPS<br/>
+                                    <strong>(please go to Home>Apps to install)</strong>
+                                </div>
+                        </setting>
+                        <setting id="shipping_costs_bpost" help="Compute shipping costs and ship with bpost"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting id="shipping_costs_easypost" help="Compute shipping costs and ship with Easypost"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting id="shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting id="shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting id="shipping_costs_starshipit" help="Compute shipping costs and ship with Starshipit"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_starshipit" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting id="shipping_costs_envia" help="Compute shipping costs and ship with Envia.com"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_envia" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+                    <block title="Invoicing" name="invoicing_setting_container">
+                        <setting id="sales_settings_invoicing_policy" title="This default value is applied to any new product created. This can be changed in the product detail form." documentation="/applications/sales/sales/invoicing/invoicing_policy.html" help="Quantities to invoice from sales orders">
+                            <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
+                        </setting>
+                        <setting id="automatic_invoicing" help="Generate the invoice automatically when the online payment is confirmed" invisible="default_invoice_policy != 'order' or not portal_confirmation_pay">
+                            <field name="automatic_invoice"/>
+                            <div  invisible="not automatic_invoice" groups="base.group_no_one">
+                                <label for="invoice_mail_template_id" class="o_light_label me-2"/>
+                                <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
+                            </div>
+                        </setting>
+                        <setting id="setting_commission" help="Manage Sales &amp; teams targets and commissions">
+                            <field name="module_sale_commission" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+                    <block title="Connectors" id="connectors_setting_container">
+                        <setting id="amazon_connector" documentation="/applications/sales/sales/amazon_connector/setup.html" help="Import Amazon orders and sync deliveries">
+                            <field name="module_sale_amazon" widget="upgrade_boolean"/>
+                            <div class="content-group" name="amazon_connector" invisible="not module_sale_amazon"/>
+                        </setting>
+                        <setting
+                            id="gelato"
+                            documentation="/applications/sales/sales/gelato.html"
+                            help="Place orders through Gelato's print-on-demand service"
+                        >
+                            <field name="module_sale_gelato"/>
+                            <div
+                                class="content-group"
+                                name="gelato_credentials"
+                                invisible="not module_sale_gelato"
+                            />
+                        </setting>
+                        <setting id="shopee_connector" help="Import Shopee orders and sync deliveries">
+                            <field name="module_sale_shopee" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_sale_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='product_accounts']" position="inside">
+                <div class="row mt8">
+                    <label for="downpayment_account_id" class="col-lg-5 o_light_label"/>
+                    <field name="downpayment_account_id"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="context">{'module' : 'sale_management', 'bin_size': False}</field>
+    </record>
+
+</odoo>

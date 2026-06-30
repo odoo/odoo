@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_training_onsite_action" model="ir.actions.act_window">
+        <field name="name">Onsite Courses</field>
+        <field name="res_model">event.event</field>
+        <field name="view_mode">kanban,calendar,list,form,pivot,graph,activity</field>
+        <field name="domain">[('is_multi_slots', '=', True), ('registration_ids', 'any', [('partner_id.employee', '=', True)])]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create an Event
+          </p><p>
+            Schedule and organize your events: handle registrations, send automated confirmation emails, sell tickets, etc.
+          </p>
+        </field>
+    </record>
+</odoo>

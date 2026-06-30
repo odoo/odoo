@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_message_reaction_view_form" model="ir.ui.view">
+        <field name="name">mail.message.reaction.form</field>
+        <field name="model">mail.message.reaction</field>
+        <field name="arch" type="xml">
+            <form string="Reactions" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="message_id"/>
+                            <field name="content"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="guest_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_message_reaction_view_tree" model="ir.ui.view">
+        <field name="name">mail.message.reaction.list</field>
+        <field name="model">mail.message.reaction</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Reactions" create="0" edit="0">
+                <field name="id"/>
+                <field name="message_id"/>
+                <field name="content"/>
+                <field name="partner_id"/>
+                <field name="guest_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_message_reaction_action" model="ir.actions.act_window">
+        <field name="name">Message Reactions</field>
+        <field name="res_model">mail.message.reaction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

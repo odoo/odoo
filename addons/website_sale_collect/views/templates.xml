@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template
+        id="payment_confirmation_status"
+        inherit_id="website_sale.payment_confirmation_status"
+    >
+        <div id="order_reference" position="replace">
+            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
+                <div class="mt-2">
+                    <div class="o_header_carrier_message">
+                        <b t-out="order.carrier_id.name"/>
+                        <span class="text-muted"> (In-store pickup)</span>
+                    </div>
+                    <div class="o_body_carrier_message">
+                        <t t-out="order.carrier_id.website_description"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t>$0</t> <!-- Replaced by old content. -->
+            </t>
+        </div>
+    </template>
+
+    <template id="product_page_click_and_collect" inherit_id="website_sale.cta_wrapper">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+            <owl-component
+                t-if="combination_info.get('show_click_and_collect_availability')"
+                name="website_sale_collect.ClickAndCollectAvailability"
+                t-att-props="json.dumps({
+                    'productId': product_variant.id,
+                    'zipCode': zip_code,
+                    'showSelectStoreButton': show_select_store_button,
+                    'selectedLocationData': selected_location_data or {},
+                    'inStoreStockData': combination_info.get('in_store_stock_data', {}),
+                    'deliveryStockData': combination_info.get('delivery_stock_data', {}),
+                })"
+                t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
+            />
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,118 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage_azure
+#
+# Kristina Pešehodko <kristina@avalah.ee>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-05 13:35+0000\n"
+"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/"
+"cloud_storage_azure/et/>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/ir_attachment.py:0
+msgid "%s is not a valid Azure Blob Storage URL."
+msgstr "%s ei ole kehtiv Azure Blob Storage URL."
+
+#. module: cloud_storage_azure
+#: model:ir.model,name:cloud_storage_azure.model_ir_attachment
+msgid "Attachment"
+msgstr "Manus"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_account_name
+msgid "Azure Account Name"
+msgstr "Azure konto nimi"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_id
+msgid "Azure Client ID"
+msgstr "Azure kliendi ID"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_secret
+msgid "Azure Client Secret"
+msgstr "Azure kliendi salajane võti"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields.selection,name:cloud_storage_azure.selection__res_config_settings__cloud_storage_provider__azure
+msgid "Azure Cloud Storage"
+msgstr "Azure pilvesalvestus"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_container_name
+msgid "Azure Container Name"
+msgstr "Azure konteineri nimi"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_tenant_id
+msgid "Azure Tenant ID"
+msgstr "Azure üürniku ID"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr "Uute manuste pilvesalvestuse pakkuja"
+
+#. module: cloud_storage_azure
+#: model:ir.model,name:cloud_storage_azure.model_res_config_settings
+msgid "Config Settings"
+msgstr "Seadistused"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Kuva nimi"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
+msgid "Invalidate Cached Azure User Delegation Key"
+msgstr "Kehtetuks tehtud vahemällu salvestatud Azure’i kasutaja volituse võti"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"Some Azure attachments are in use, please migrate their cloud storages "
+"before disable this module"
+msgstr ""
+"Mõned Azuri manused on kasutuses, palun kolige enda pilvesalvestused enne "
+"kui lülitate mooduli välja"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"The connection string is not allowed to download blobs from the container.\n"
+"%s"
+msgstr ""
+"Ühendusstringil ei ole lubatud konteinerist blob’e alla laadida.\n"
+"%s"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"The connection string is not allowed to upload blobs to the container.\n"
+"%s"
+msgstr ""
+"Ühendusstringil ei ole lubatud konteinerisse blob’e üles laadida.\n"
+"%s"

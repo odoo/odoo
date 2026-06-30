@@ -12,3 +12,4 @@ List of contributors:
 
 Jay Vora jay.vora@serpentcs.com https://github.com/JayVora-SerpentCS
 Husen Daudi husen.daudi@serpentcs.com https://github.com/hda
+Parvez Qureshi parvez.qureshi@serpentcs.com https://github.com/parvezqureshi

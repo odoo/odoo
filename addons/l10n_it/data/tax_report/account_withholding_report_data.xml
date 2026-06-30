@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="withh_tax_report_it" model="account.report">
+        <field name="name">Withholding Report</field>
+        <field name="name@it">Riepilogo Ritenute</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="column_ids">
+            <record id="withh_tax_report_balance" model="account.report.column">
+                <field name="name">Total</field>
+                <field name="name@it">Totale</field>
+                <field name="expression_label">total</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="withh_sale_tax_report_it_line" model="account.report.line">
+                <field name="name">Withholding Amount (Sales)</field>
+                <field name="name@it">Ritenute Subite (Vendite)</field>
+                <field name="code">ritv</field>
+                <field name="expression_ids">
+                    <record id="withh_sale_tax_report_it_line_tag" model="account.report.expression">
+                        <field name="label">total</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">RITV</field>
+                    </record>
+                </field>
+            </record>
+            <record id="enasarco_sale_tax_report_it_line" model="account.report.line">
+                <field name="name">ENASARCO Amount (Sales)</field>
+                <field name="name@it">Ritenute ENASARCO Subite (Vendite)</field>
+                <field name="code">enasarcov</field>
+                <field name="expression_ids">
+                    <record id="enasarco_sale_tax_report_it_line_tag" model="account.report.expression">
+                        <field name="label">total</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">ENASARCOV</field>
+                    </record>
+                </field>
+            </record>
+            <record id="withh_purchase_tax_report_it_line" model="account.report.line">
+                <field name="name">Withholding Amount (Purchase)</field>
+                <field name="name@it">Ritenute Operate (Acquisti)</field>
+                <field name="code">rita</field>
+                <field name="expression_ids">
+                    <record id="withh_purchase_tax_report_it_line_tag" model="account.report.expression">
+                        <field name="label">total</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">RITA</field>
+                    </record>
+                </field>
+            </record>
+            <record id="enasarco_purchase_tax_report_it_line" model="account.report.line">
+                <field name="name">ENASARCO Amount (Purchase)</field>
+                <field name="name@it">Ritenute ENASARCO Operate (Acquisti)</field>
+                <field name="code">enasarcoa</field>
+                <field name="expression_ids">
+                    <record id="enasarco_purchase_tax_report_it_line_tag" model="account.report.expression">
+                        <field name="label">total</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">ENASARCOA</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

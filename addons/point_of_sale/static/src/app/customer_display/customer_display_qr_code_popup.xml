@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.QrCodeCustomerDisplay">
+        <Dialog header="this.ui.isSmall" title.translate="Scan QR" footer="false" size="'md'">
+            <div class="container">
+                <div class="align-items-center d-flex justify-content-center w-100">
+                    <t t-if="this.ui.isSmall">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="text-center position-relative w-100 d-flex flex-column">
+                                <img id="CustomerDisplayqrCode" t-att-src="getQrCode()" alt="Customer QR Code"
+                                    class="img-fluid mb-3 square w-75 mx-auto d-block"/>
+
+                                <div class="small mb-3">
+                                    <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
+                                    <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
+                                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
+                                </div>
+                            </div>
+                            <button t-on-click="props.close" class="button btn btn-secondary mb-3 rounded-3">
+                                Close
+                            </button>
+                        </div>
+                    </t>
+                    <t t-if="!this.ui.isSmall">
+                        <div class="w-100 d-flex flex-column gap-3">
+                            <div>
+                                <h2>Open Customer Display</h2>
+                            </div>
+                            <p class="popup-text w-100">You can either use it on this device or scan the QR code to display it on another device</p>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex gap-3 flex-grow-1">
+                                    <button t-on-click="openOnThisDevice" class="button btn btn-primary h1 mb-3 rounded-3">
+                                        This device 
+                                    </button>
+                                    <button t-on-click="showQr" class="button btn btn-secondary h1 mb-3 rounded-3">
+                                        Display QR
+                                    </button>
+                                </div>
+                                <button t-on-click="() => this.props.close()" class="button btn btn-secondary h1 mb-3 rounded-3">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_rule_form" model="ir.ui.view">
+            <field name="name">stock.rule.form.inherit.mrp</field>
+            <field name="model">stock.rule</field>
+            <field name="inherit_id" ref="stock.view_stock_rule_form"/>
+            <field name="arch" type="xml">
+                <field name="location_dest_from_rule" position="attributes">
+                    <attribute name="invisible">action not in ['pull', 'pull_push', 'manufacture']</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

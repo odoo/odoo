@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.view.list</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <list create="false" editable="bottom">
+                <field name="sequence" widget="handle" groups="base.group_system"/>
+                <field name="name"/>
+                <field name="group_ids" widget="many2many_tags" required="1"/>
+                <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
+                <field name="spreadsheet_binary_data" groups="base.group_no_one" widget="binary_spreadsheet" filename="spreadsheet_file_name" string="Data" />
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="dashboard_group_id" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_container_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.group.view.list</field>
+        <field name="model">spreadsheet.dashboard.group</field>
+        <field name="arch" type="xml">
+            <list string="Dashboards">
+                <field name="sequence" widget="handle" groups="base.group_system"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_container_view_form" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.group.view.form</field>
+        <field name="model">spreadsheet.dashboard.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Spreadsheets" name="spreadsheets">
+                            <field name="dashboard_ids" context="{'list_view_ref': 'spreadsheet_dashboard.spreadsheet_dashboard_view_list'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_view_form" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.view.form</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="dashboard_group_id"/>
+                    <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
+                    <field name="group_ids" widget="many2many_tags"/>
+                    <field name="spreadsheet_binary_data"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_view_kanban" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.kanban</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card" class="d-flex flex-row align-items-center justify-content-between border">
+                        <field name="name"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

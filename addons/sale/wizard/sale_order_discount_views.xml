@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_order_line_wizard_form" model="ir.ui.view">
+        <field name="name">sale.order.discount.form</field>
+        <field name="model">sale.order.discount</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="sale_order_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="row">
+                        <div class="col-sm-5 col-md-4 col-lg-4 col-4">
+                            <group>
+                                <label for="discount_amount" string="Discount" invisible="discount_type != 'amount'"/>
+                                <field name="discount_amount" invisible="discount_type != 'amount'" nolabel="1"/>
+                                <label for="discount_percentage"
+                                       string="Discount"
+                                       invisible="discount_type not in ('so_discount', 'sol_discount')"/>
+                                <field name="discount_percentage"
+                                       invisible="discount_type not in ('so_discount', 'sol_discount')"
+                                       widget="percentage" nolabel="1"/>
+                            </group>
+                        </div>
+                        <div class="col-sm-7 col-md-8 col-lg-8 col-8">
+                            <field name="discount_type" widget="radio"/>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button type="object" string="Apply" name="action_apply_discount" class="btn btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Discard" class="btn btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,72 @@
+
+.s_card {
+    // BS overrides
+    --card-inner-border-radius: inherit;
+    --card-bg: inherit;
+
+    // s_card options (defaults)
+    --card-img-size-h: 33.33333333%;
+    --card-img-ratio-align: 44%;
+    --card-img-aspect-ratio: 20%;
+
+    min-width: MIN(18rem, 100%);
+    margin: $grid-gutter-width/2 0;
+
+    .o_card_img {
+        width: 100%;
+        object-fit: cover;
+
+        // Apply `object-fit: contain` only when some aspect ratio is applied.
+        // This ensures the cropped area is displayed correctly inside its container.
+        // If the aspect ratio is (`0/0`), the image should behave normally and
+        // follow default layout (such as `object-fit: cover` when stretched).
+        &[data-shape]:not([data-aspect-ratio="0/0"]) {
+            object-fit: contain;
+        }
+
+        &.rounded-start {
+            border-bottom-left-radius: var(--card-inner-border-radius) !important;
+            border-top-left-radius: var(--card-inner-border-radius) !important;
+        }
+
+        &.rounded-end {
+            border-top-right-radius: var(--card-inner-border-radius) !important;
+            border-bottom-right-radius: var(--card-inner-border-radius) !important;
+        }
+    }
+
+    .o_card_img_wrapper.ratio {
+        > a > .o_card_img {
+            height: 100%;
+        }
+
+        .media_iframe_video {
+            position: absolute;
+        }
+    }
+
+    // Options
+    &.o_card_img_top, &.o_card_img_bottom {
+        > .o_card_img_ratio_custom {
+            --aspect-ratio: var(--card-img-aspect-ratio);
+        }
+    }
+
+    &.o_card_img_horizontal {
+        >.o_card_img_wrapper {
+            flex-shrink: 0;
+
+            @include media-breakpoint-up(lg) {
+                width: var(--card-img-size-h);
+            }
+        }
+    }
+
+    .o_card_img_adjust_h .o_card_img {
+        object-position: var(--card-img-ratio-align) 50%;
+    }
+
+    .o_card_img_adjust_v .o_card_img {
+        object-position: 50% var(--card-img-ratio-align);
+    }
+}

@@ -3,318 +3,711 @@
 # * sale_stock
 #
 # Translators:
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-09 10:41+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Lao (http://www.transifex.com/odoo/odoo-9/language/lo/)\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2026-06-06 11:14+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/sale_stock/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
-msgid "<strong>Incoterms:</strong>"
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid ""
+".\n"
+"                Manual actions may be needed."
 msgstr ""
+".\n"
+"                ອາດຈະຕ້ອງໄດ້ດຳເນີນການດ້ວຍຕົນເອງ."
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>ກຳລັງກະກຽມ</b>"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>ຍົກເລີກແລ້ວ</b>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>ສົ່ງອອກແລ້ວ</b>"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "Choose specific routes on sales order lines (advanced)"
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    ການສົ່ງສິນຄ້າບາງລາຍການສຳເລັດແລ້ວ. ທ່ານສາມາດສ້າງການສົ່ງຄືນໄດ້ຈາກໃບສັ່ງສົ່ງ"
+"ສິນຄ້າ.\n"
+"                </span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sales</span>"
+msgstr "<span class=\"o_stat_text\">ການຂາຍ</span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_product_catalog_kanban_view_inherit
+msgid "<span>On Hand: </span>"
+msgstr "<span>ມີໃນສາງ: </span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>ເລກອ້າງອີງລູກຄ້າ:</strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Delivery Orders</strong>"
+msgstr "<strong>ໃບສັ່ງສົ່ງສິນຄ້າ</strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Incoterm: </strong>"
+msgstr "<strong>ເງື່ອນໄຂການຄ້າ (Incoterm): </strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>ເງື່ອນໄຂການຄ້າ (Incoterm):</strong>"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"ອີງຕາມການຕັ້ງຄ່າສິນຄ້າ, ຈຳນວນທີ່ສົ່ງມອບສາມາດຄິດໄລ່ໂດຍອັດຕະໂນມັດຜ່ານລະບົບ:\n"
+"  - ດ້ວຍຕົນເອງ: ປ້ອນຈຳນວນດ້ວຍຕົນເອງໃນລາຍການ\n"
+"  - ວິເຄາະຈາກຄ່າໃຊ້ຈ່າຍ: ຈຳນວນແມ່ນຜົນລວມຈາກຄ່າໃຊ້ຈ່າຍທີ່ໄດ້ລົງບັນຊີແລ້ວ\n"
+"  - ໃບບັນທຶກເວລາ: ຈຳນວນແມ່ນຜົນລວມຂອງຊົ່ວໂມງທີ່ບັນທຶກໃນໜ້າວຽກທີ່ກ່ຽວຂ້ອງກັບລາຍການຂາຍນີ້\n"
+"  - ການເຄື່ອນຍ້າຍສາງ: ຈຳນວນແມ່ນມາຈາກການເບີກສິນຄ້າທີ່ຢືນຢັນແລ້ວ\n"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "All planned operations included"
+msgstr "ລວມທັງໝົດການດຳເນີນການທີ່ວາງແຜນໄວ້"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific routes"
+msgstr "ນຳໃຊ້ເສັ້ນທາງສະເພາະ"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
+msgid "As soon as possible"
+msgstr "ໄວທີ່ສຸດເທົ່າທີ່ຈະເປັນໄປໄດ້"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Availability"
+msgstr "ຄວາມພ້ອມຂອງສິນຄ້າ"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Available"
+msgstr "ພ້ອມໃຊ້"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Available in stock"
+msgstr "ມີຢູ່ໃນສາງ"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr "ເລືອກເພື່ອນຳໃຊ້ເສັ້ນທາງສະເພາະໃຫ້ກັບລາຍການໃບສັ່ງຂາຍ."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
-msgid "Default Shipping Policy"
-msgstr ""
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
+msgstr "ວັນທີສຳເລັດຂອງໃບສັ່ງສົ່ງສິນຄ້າທຳອິດ."
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr ""
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr "ວັນທີ:"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr "ສາງສິນຄ້າເລີ່ມຕົ້ນ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr ""
+msgstr "ການສົ່ງມອບ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
+msgid "Delivery Alert"
+msgstr "ການແຈ້ງເຕືອນການສົ່ງມອບ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr ""
+msgstr "ໃບສັ່ງສົ່ງສິນຄ້າ"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
+msgid "Delivery Status"
+msgstr "ສະຖານະການສົ່ງມອບ"
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_route_so_lines
-msgid "Enable Route on Sales Order Line"
+#: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
+msgid "Delivery date you can promise to the customer, computed from the minimum lead time of the order lines in case of Service products. In case of shipping, the shipping policy of the order will be taken into account to either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"ວັນທີສົ່ງມອບທີ່ທ່ານສາມາດສັນຍາກັບລູກຄ້າ, ຄິດໄລ່ມາຈາກໄລຍະເວລາລໍຖ້າຕ່ຳສຸດຂອງລາຍການສັ່ງຊື້ໃນກໍລະນີເປັນສິນຄ້"
+"າບໍລິການ. ໃນກໍລະນີມີການຂົນສົ່ງ, ນະໂຍບາຍການຂົນສົ່ງຈະຖືກນຳມາພິຈາລະນາເພື່ອໃຊ້ໄລຍະເວລາລໍຖ້າຕ່ຳສຸດ ຫຼື ສູ"
+"ງສຸດ."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
-msgid "Expense Invoice Policy"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
+msgid "Display Qty Widget"
+msgstr "ສະແດງວິດເຈັດຈຳນວນ"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
-msgid ""
-"If you invoice at cost, the expense will be invoiced on the sale order at "
-"the cost of the analytic line;if you invoice at sales price, the price of "
-"the product will be used instead."
-msgstr ""
+#: model:res.groups,name:sale_stock.group_display_incoterm
+msgid "Display incoterms on Sales Order and related invoices"
+msgstr "ສະແດງ Incoterms ໃນໃບສັ່ງຂາຍ ແລະ ໃບແຈ້ງໜີ້ທີ່ກ່ຽວຂ້ອງ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Display incoterms on orders & invoices"
+msgstr "ສະແດງ Incoterms ໃນໃບສັ່ງຊື້ ແລະ ໃບແຈ້ງໜີ້"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "Do not forget to change the partner on the following delivery orders: %s"
+msgstr "ຢ່າລືມປ່ຽນຜູ້ຕິດຕໍ່ໃນໃບສັ່ງສົ່ງສິນຄ້າດັ່ງຕໍ່ໄປນີ້: %s"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
+msgstr "ວັນທີມີຜົນສັກສິດ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "Exception(s) occurred on the picking:"
+msgstr "ມີຂໍ້ຍົກເວັ້ນເກີດຂຶ້ນໃນການເບີກສິນຄ້າ:"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr "ມີຂໍ້ຍົກເວັ້ນເກີດຂຶ້ນໃນໃບສັ່ງຂາຍ:"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s):"
+msgstr "ຂໍ້ຍົກເວັ້ນ:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
+msgid "Expected Date"
+msgstr "ວັນທີຄາດໝາຍ"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Expected Delivery"
+msgstr "ການສົ່ງມອບທີ່ຄາດໝາຍ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr "ຄາດໝາຍ:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr "ວັນທີຄາດການໄວ້"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Forecasted Stock"
+msgstr "ສິນຄ້າຄາດການ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
+msgid "Free Qty Today"
+msgstr "ຈຳນວນທີ່ວ່າງໃນມື້ນີ້"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
+msgid "Fully Delivered"
+msgstr "ສົ່ງມອບຄົບຖ້ວນແລ້ວ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
+msgstr "ມີການເບີກສິນຄ້າຊ້າ"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+msgid "If you deliver all products at once, the delivery order will be scheduled based on the greatest product lead time. Otherwise, it will be based on the shortest."
+msgstr ""
+"ຖ້າທ່ານສົ່ງສິນຄ້າທັງໝົດໃນຄັ້ງດຽວ, ໃບສັ່ງສົ່ງຈະຖືກກຳນົດຕາມໄລຍະເວລາລໍຖ້າທີ່ດົນທີ່ສຸດ. ຖ້າບໍ່ດັ່ງນັ້ນ, ຈະອີງຕາມໄ"
+"ລຍະເວລາທີ່ສັ້ນທີ່ສຸດ."
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Impacted Transfer(s):"
+msgstr "ການໂອນທີ່ມີຜົນກະທົບ:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
+msgid "Incoterm"
+msgstr "ເງື່ອນໄຂການຄ້າ (Incoterm)"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
+msgid "Incoterm Location"
+msgstr "ສະຖານທີ່ Incoterm"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr ""
+msgstr "ເງື່ອນໄຂການຄ້າສາກົນ"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
-msgid ""
-"Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-the-"
-"art transportation practices."
+#: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
 msgstr ""
+"Incoterms ແມ່ນຊຸດເງື່ອນໄຂທາງການຄ້າທີ່ກຳນົດໄວ້ລ່ວງໜ້າເພື່ອໃຊ້ໃນທຸລະກຳລະຫວ່າງປະເທດ."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
-msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
+msgid "Inventory"
+msgstr "ສາງສິນຄ້າ"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_location_route
+#: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
+msgstr "ເສັ້ນທາງສາງສິນຄ້າ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
+msgid "Is Mto"
+msgstr "ແມ່ນຜະລິດ/ສັ່ງຕາມຄຳສັ່ງຊື້ (MTO)"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr "ຂໍ້ມູນ JSON ສຳລັບວິດເຈັດ Popover"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move
+msgid "Journal Entry"
+msgstr "ການລົງບັນຊີປະຈຳວັນ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "ລາຍການລົງບັນຊີ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "ໄລຍະເວລາລໍຖ້າ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "ລັອດ/ຊີຣຽວ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Manual actions may be needed."
+msgstr "ອາດຈະຕ້ອງໄດ້ດຳເນີນການດ້ວຍຕົນເອງ."
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
+msgid "Margin of error for dates promised to customers. Products will be scheduled for delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"ໄລຍະເວລາປ້ອງກັນຄວາມຜິດພາດສຳລັບວັນທີທີ່ສັນຍາກັບລູກຄ້າ. ສິນຄ້າຈະຖືກກຳນົດສົ່ງກ່ອນວັນທີສັນຍາຕົວຈິງເພື່ອຮັບມືກັ"
+"ບຄວາມຊັກຊ້າທີ່ບໍ່ຄາດຄິດ."
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice
-msgid "Invoice"
-msgstr "​ໃບ​ເກັບ​ເງີນ"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice_line
-msgid "Invoice Line"
+#: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"ໄລຍະເວລາປ້ອງກັນຄວາມຜິດພາດສຳລັບວັນທີທີ່ສັນຍາກັບລູກຄ້າ. ສິນຄ້າຈະຖືກວາງແຜນຈັດຊື້ ແລະ ສົ່ງມອບກ່ອນວັນທີສັນ"
+"ຍາຕົວຈິງ."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-msgid ""
-"Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
-msgstr ""
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr "ວິທີການອັບເດດຈຳນວນທີ່ສົ່ງມອບ"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr "ເລື່ອນວັນທີສົ່ງມອບທີ່ຄາດໝາຍອອກໄປ"
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "No shipping costs on sales orders"
-msgstr ""
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "No future availability"
+msgstr "ບໍ່ມີສິນຄ້າພ້ອມສົ່ງໃນອະນາຄົດ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:156
-#, python-format
-msgid "Not enough inventory!"
-msgstr ""
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
+msgid "Not Delivered"
+msgstr "ຍັງບໍ່ໄດ້ສົ່ງມອບ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:42
-#, python-format
-msgid "Only administrators can change the settings"
-msgstr ""
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Not enough future availability"
+msgstr "ສິນຄ້າໃນອະນາຄົດມີບໍ່ພຽງພໍ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
-msgid "Order Routing"
-msgstr ""
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
+msgid "Number of days between the order confirmation and the shipping of the products to the customer"
+msgstr "ຈຳນວນມື້ລະຫວ່າງການຢືນຢັນຄຳສັ່ງຊື້ ແລະ ການສົ່ງສິນຄ້າໃຫ້ລູກຄ້າ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:167
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr ""
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "On"
+msgstr "ໃນວັນທີ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
-msgid "Packaging"
-msgstr "ການຫຸ້ມຫໍ່"
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
+msgid "Partially Delivered"
+msgstr "ສົ່ງມອບແລ້ວບາງສ່ວນ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
-msgid "Picking associated to this sale"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
+msgid "Picking Policy"
+msgstr "ນະໂຍບາຍການເບີກສິນຄ້າ"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_order
-msgid "Procurement"
-msgstr ""
+#: model:ir.model,name:sale_stock.model_procurement_group
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
+msgid "Procurement Group"
+msgstr "ກຸ່ມການຈັດຊື້ຈັດຈ້າງ"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_product_product
-#, fuzzy
+#: model:ir.model,name:sale_stock.model_product_template
 msgid "Product"
-msgstr "ແບບ​ຟອມ​ສິນ​ຄ້າ"
+msgstr "ສິນຄ້າ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
-msgid "Product Template"
-msgstr "ແບບ​ຟອມ​ສິນ​ຄ້າ"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr "ຈຳນວນທີ່ມີໃນມື້ນີ້"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Properties on SO Lines"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr "ຈຳນວນທີ່ຈະສົ່ງມອບ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "Quotations"
+msgstr "ໃບສະເໜີລາຄາ"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Remaining demand available at"
+msgstr "ຄວາມຕ້ອງການທີ່ຍັງເຫຼືອມີຢູ່ທີ່"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+msgid "Replenish on Order (MTO)"
+msgstr "ຕື່ມສິນຄ້າຕາມຄຳສັ່ງຊື້ (MTO)"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Reserved"
+msgstr "ຈອງໄວ້"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr ""
+msgstr "ເສັ້ນທາງ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
+msgid "Sale Line"
+msgstr "ລາຍການຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
-msgid "Sale Order Lines"
-msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr "ໃບສັ່ງຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
+msgid "Sale order count"
+msgstr "ຈຳນວນໃບສັ່ງຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "ລາຍງານການວິເຄາະການຂາຍ"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "ໃບສັ່ງຊື້"
+msgstr "ໃບສັ່ງຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "ຍົກເລີກໃບສັ່ງຂາຍ"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
+msgstr "ລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+msgid "Sales Order Lines"
+msgstr "ລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
+msgid "Sales Orders"
+msgstr "ໃບສັ່ງຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "ມື້ປອດໄພຂອງການຂາຍ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr "ວາງແຜນການສົ່ງມອບໃຫ້ໄວຂຶ້ນເພື່ອຫຼີກລ່ຽງຄວາມຊັກຊ້າ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
+msgid "Scheduled Date"
+msgstr "ວັນທີກຳນົດໄວ້"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
+msgid "Security Lead Time"
+msgstr "ໄລຍະເວລາປ້ອງກັນຄວາມປອດໄພ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
+msgid "Security Lead Time for Sales"
+msgstr "ໄລຍະເວລາປ້ອງກັນຄວາມປອດໄພສຳລັບການຂາຍ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "ສາມາດເລືອກໄດ້ໃນລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship all products at once, without back orders"
-msgstr ""
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
+msgid "Ship all products at once"
+msgstr "ສົ່ງສິນຄ້າທັງໝົດໃນຄັ້ງດຽວ"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship products when some are available, and allow back orders"
-msgstr ""
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
+msgid "Ship products as soon as available, with back orders"
+msgstr "ສົ່ງສິນຄ້າທັນທີທີ່ມີ, ພ້ອມສ້າງໃບສັ່ງຄ້າງສົ່ງ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
-#: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
-msgid "Shipping"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Shipping Information"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "ນະໂຍບາຍການຂົນສົ່ງ"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສາງ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:213
-#, python-format
-msgid "This product is packaged by %s %s. You should sell %s %s."
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
+msgid "Stock Moves"
+msgstr "ການເຄື່ອນຍ້າຍສາງ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "ລາຍງານການຕື່ມສິນຄ້າໃນສາງ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "ກົດລະບຽບສາງສິນຄ້າ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr "ລາຍງານກົດລະບຽບສາງສິນຄ້າ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "ລາຍງານກົດລະບຽບສາງສິນຄ້າ"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid "The delivery"
+msgstr "ການສົ່ງມອບ"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid ""
+"The delivery address has been changed on the Sales Order<br/>\n"
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
 msgstr ""
+"ທີ່ຢູ່ສົ່ງມອບໄດ້ຖືກປ່ຽນແປງໃນໃບສັ່ງຂາຍ<br/>\n"
+"                        ຈາກ <strong>\"%s\"</strong> ເປັນ <strong>\"%s\"</"
+"strong>,\n"
+"                        ທ່ານຄວນອັບເດດຜູ້ຕິດຕໍ່ໃນເອກະສານນີ້."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+msgid "The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory."
+msgstr ""
+"ຈຳນວນທີ່ສັ່ງຊື້ບໍ່ສາມາດຫຼຸດລົງຕ່ຳກວ່າຈຳນວນທີ່ໄດ້ສົ່ງມອບແລ້ວ. ໃຫ້ສ້າງການສົ່ງຄືນໃນສາງສິນຄ້າຂອງທ່ານແທນ."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "This product is replenished on demand."
+msgstr "ສິນຄ້ານີ້ຈະຖືກຕື່ມຕາມຄວາມຕ້ອງການ."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "​ໂອນ"
+msgstr "ໂອນ"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
+msgid "Transfers"
+msgstr "ການໂອນ"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "User"
+msgstr "ຜູ້ໃຊ້"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "View Forecast"
+msgstr "ເບິ່ງການຄາດການ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr "ຈຳນວນສິນຄ້າສະເໝືອນໃນວັນທີ"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "ສາງສິນຄ້າ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:212
-#, python-format
-msgid "Warning"
-msgstr "​ເຕື່ອນ"
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "Warning!"
+msgstr "ຄຳເຕືອນ!"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:168
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
-msgstr ""
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
+msgid "When all products are ready"
+msgstr "ເມື່ອສິນຄ້າທັງໝົດພ້ອມແລ້ວ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:157
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available!\n"
-"The stock on hand is %.2f %s."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to start shipping"
+msgstr "ເມື່ອໃດທີ່ຈະເລີ່ມການສົ່ງ"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "cancelled"
+msgstr "ຍົກເລີກແລ້ວ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "ມື້"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "of"
+msgstr "ຂອງ"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "ordered instead of"
+msgstr "ສັ່ງແທນທີ່"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "processed instead of"
+msgstr "ດຳເນີນການແທນທີ່"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid "will be late."
+msgstr "ຈະຊ້າກວ່າກຳນົດ."

@@ -1,0 +1,21 @@
+.o_drop_area {
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    position: absolute;
+    background-color: mix($o-brand-primary, $o-view-background-color, 15%);
+    border: 3px dashed $o-brand-primary;
+    z-index: 3;
+    left: -1px;
+    top: -1px;
+    i {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    .upload_badge {
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%,-50%);
+    }
+}

@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record id="product_product_dinning_table" model="product.product">
+            <field name="name">Dining Table</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="standard_price">100.0</field>
+            <field name="list_price">110.50</field>
+            <field name="is_storable" eval="True"/>
+            <field name="weight">5.00</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="mrp_production_drawer_1" model="mrp.production">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
+        </record>
+        <record id="mrp_production_dinning_table_2" model="mrp.production">
+            <field name="product_id" ref="project_mrp_account.product_product_dinning_table"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp.mrp_bom_wood_panel"/>
+        </record>
+
+        <!-- Function confirm MO -->
+        <function model="mrp.production" name="action_confirm" eval="[[
+            ref('project_mrp_account.mrp_production_drawer_1'), ref('project_mrp_account.mrp_production_dinning_table_2'),
+        ]]"/>
+        <function model="mrp.production" name="button_mark_done" eval="[[
+            ref('project_mrp_account.mrp_production_dinning_table_2'),
+        ]]"/>
+    </data>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_canary" model="res.partner" forcecreate="1">
+        <field name="is_company" eval="True"/>
+        <field name="name">Téleferico del Teide Solutions S.L.</field>
+        <field name="vat">ESB83355065</field>
+        <field name="street">Calle del Cable 15</field>
+        <field name="city">La Orotava</field>
+        <field name="country_id" ref="base.es"/>
+        <field name="state_id" ref="base.state_es_tf"/>
+        <field name="zip">38300</field>
+        <field name="phone">+34 922 123 456</field>
+        <field name="email">info@telefericosolutions.es</field>
+        <field name="website">www.telefericosolutions.es</field>
+    </record>
+
+    <record id="partner_demo_mainland" model="res.partner" forcecreate="1">
+        <field name="is_company" eval="True"/>
+        <field name="name">Mulhacén Digital S.L.</field>
+        <field name="vat">ESB39118237</field>
+        <field name="street">Avenida de la Alpujarra</field>
+        <field name="city">Capileira</field>
+        <field name="country_id" ref="base.es"/>
+        <field name="state_id" ref="base.state_es_gr"/>
+        <field name="zip">18413</field>
+        <field name="phone">+34 958 654 321</field>
+        <field name="email">info@mulhacendigital.es</field>
+        <field name="website">www.mulhacendigital.es</field>
+    </record>
+</odoo>

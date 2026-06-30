@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="website_slides.CourseTagAddDialog">
+    <Dialog size="'md'" title.translate="Add Tag">
+        <t t-set-slot="footer">
+            <a role="button" class="btn btn-primary me-1" t-on-click.prevent="onClickFormSubmit">
+                <span>Add</span>
+            </a>
+            <button type="button" class="btn btn-secondary" t-on-click="props.close">
+                <span>Back</span>
+            </button>
+        </t>
+        <div class="mb-3">
+            <div t-if="state.alertMsg" t-out="state.alertMsg" class="alert alert-warning"/>
+            <div class="mb-3" t-att-class="{'form-control is-valid': validation.tagIsValid, 'form-control is-invalid': validation.tagIsValid === false}">
+                <label class="col-form-label">Tag</label>
+                <SelectMenu
+                    togglerClass="'form-control'"
+                    choices="choices.tagIds"
+                    onSelect.bind="onTagSelect"
+                    required="true"
+                    value="choices.tagId"
+                >
+                    <t t-out="displayTagValue"/>
+                    <t t-set-slot="bottomArea" t-slot-scope="select">
+                        <DropdownItem
+                            t-if="select.data.searchValue and state.canCreateTag"
+                            class="'btn text-primary'"
+                            onSelected="() => this.createChoice(select.data.searchValue)"
+                        >
+                            Create this tag "<i t-out="select.data.searchValue" />"
+                        </DropdownItem>
+                    </t>
+                </SelectMenu>
+            </div>
+            <div t-if="state.showTagGroup" class="mb-3" t-att-class="{'form-control is-valid': validation.tagGroupIsValid, 'form-control is-invalid': validation.tagGroupIsValid === false}">
+                <label class="col-form-label">Tag Group</label>
+                <SelectMenu
+                    togglerClass="'form-control'"
+                    choices="choices.tagGroupIds"
+                    onSelect.bind="onTagGroupSelect"
+                    required="true"
+                    value="choices.tagGroupId"
+                >
+                    <t t-out="displayTagGroupValue"/>
+                    <t t-set-slot="bottomArea" t-slot-scope="select">
+                        <DropdownItem
+                            t-if="select.data.searchValue and state.canCreateTagGroup"
+                            class="'btn text-primary'"
+                            onSelected="() => this.createChoice(select.data.searchValue, 'tagGroup')"
+                        >
+                            Create this tag group"<i t-out="select.data.searchValue" />"
+                        </DropdownItem>
+                    </t>
+                </SelectMenu>
+            </div>
+        </div>
+    </Dialog>
+  </t>
+
+</templates>

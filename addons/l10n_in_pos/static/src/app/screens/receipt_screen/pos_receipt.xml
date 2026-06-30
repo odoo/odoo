@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_in_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-customer')]" position="inside">
+            <t t-if="order.partner_id and order.company?.country_id?.code == 'IN'">
+                <t t-if="order.partner_id.phone">
+                    <div>
+                        <span>Phone: </span>
+                        <t t-out="order.partner_id.phone" />
+                    </div>
+                </t>
+                <br />
+            </t>
+        </xpath>
+        <xpath expr="//span[hasclass('pos-receipt-vat')]" position="after">
+            <span t-if="order.isInCompany and !order.isToInvoice()" class="pos-receipt-vat">
+                INVOICE <t t-esc="order.invoiceName" />
+            </span>
+        </xpath>
+        <xpath expr="//span[@class='ticket-name-prefix']" position="attributes">
+            <attribute name="t-if">!order.isInCompany</attribute>
+        </xpath>
+        <xpath expr="//span[@class='ticket-name-prefix']" position="after">
+            <span t-if="order.isInCompany" class="ticket-name-prefix">
+                Tax Invoice
+            </span>
+        </xpath>
+    </t>
+
+    <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
+            <t t-if="line.l10n_in_hsn_code and header.company.country_id?.code === 'IN'">
+                <div class="pos-receipt-left-padding">
+                    <span>HSN Code: </span>
+                    <t t-out="line.l10n_in_hsn_code"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@class='before-footer']" position="after">
+            <t t-set="l10n_in_hsn_summary" t-value="order._prepareL10nInHsnSummary()"/>
+            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0"
+                   class="l10n_in_hsn_summary_table pt-3 w-100">
+              <tr>
+                    <th class="text-center fw-bolder" colspan="6">HSN Summary</th>
+                </tr>
+                <tr>
+                    <th class="text-center">HSN Code</th>
+                    <th class="text-center">Rate%</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_gst">CGST</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_gst">SGST</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_igst">IGST</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_cess">CESS</th>
+                </tr>
+                <tr t-foreach="l10n_in_hsn_summary.items" t-as="item" t-key="item_index">
+                    <td class="text-center" t-out="item.l10n_in_hsn_code"/>
+                    <td class="text-center"><t t-out="item.rate"/> %</td>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_gst" t-out="item.tax_amount_cgst"/>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_gst" t-out="item.tax_amount_sgst"/>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_igst" t-out="item.tax_amount_igst"/>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_cess" t-out="item.tax_amount_cess"/>
+                </tr>
+            </table>
+        </xpath>
+    </t>
+</templates>

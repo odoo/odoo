@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//Composer" position="replace">
+            <span t-if="thread?.composerDisabled" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-esc="thread.composerDisabledText"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

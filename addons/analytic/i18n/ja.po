@@ -1,464 +1,1059 @@
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
 #
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * analytic
-#
-# Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
-#, fuzzy
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Martin Trigaux, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-18 22:30+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-04-16 06:52+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"analytic/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-#, fuzzy
-msgid "(Keep empty to open the current situation)"
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid "%s (copy)"
+msgstr "%s (コピー)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr "%s 件の分析明細が生成されました"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
+msgstr "<span class=\"o_stat_text\">分析勘定</span>"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">粗利益</span>"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid ""
+"A 'Project' plan needs to exist and its id needs to be set as "
+"`analytic.project_plan` in the system variables"
 msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"(全期間指定の場合は日付を入れないでください)\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"（現在の状態を開くために空のままとします）"
+"'プロジェクト'計画は存在する必要があり、そのIDはシステム変数において"
+"`analytic.project_plan` として設定される必要があります。"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_chart
-msgid "Account Analytic Chart"
-msgstr "アカウント分析チャート"
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Account field"
+msgstr "分析勘定フィールド"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
-msgid "Account Currency"
-msgstr "会計通貨"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
+msgid "Accounts"
+msgstr "分析勘定"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 msgid "Active"
-msgstr ""
+msgstr "有効"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
+msgstr "有効な分析勘定"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Add a Line"
+msgstr "行を追加"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Add a new analytic account"
+msgstr "分析勘定を追加する"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_administratif
+msgid "Administrative"
+msgstr "総務"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
+msgid "All Analytic Accounts Count"
+msgstr "全分析勘定数"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "金額"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Amount field"
+msgstr "金額フィールド"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Analytic"
+msgstr "分析"
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__auto_account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__auto_account_id
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Analytic Account"
 msgstr "分析勘定"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Analytic Account Charts"
-msgstr "分析会計表"
-
-#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "分析会計"
+msgstr "分析用会計"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "分析勘定"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
+msgid "Analytic Accounts Count"
+msgstr "分析勘定数"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "分析分配"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#: model:ir.model,name:analytic.model_account_analytic_distribution_model
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+msgid "Analytic Distribution Model"
+msgstr "分析分配モデル"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
+msgid "Analytic Distribution Models"
+msgstr "分析分配モデル"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Analytic Item"
+msgstr "分析項目"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
-#, fuzzy
-msgid "Analytic Entries"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析エントリ\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析エントリー"
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Analytic Items"
+msgstr "分析項目"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
-#, fuzzy
-msgid "Analytic Entry"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析エントリ\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析エントリー"
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "分析明細"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
-msgid "Analytic Tag"
-msgstr ""
+#: model:ir.model,name:analytic.model_analytic_mixin
+msgid "Analytic Mixin"
+msgstr "分析Mixin"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_tag
-msgid "Analytic Tags"
-msgstr ""
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
+msgid "Analytic Plan"
+msgstr "分析プラン"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
+#: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
+msgid "Analytic Plan Fields"
+msgstr "分析プランフィールド"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "分析プランの適用範囲"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
+#: model:ir.model,name:analytic.model_account_analytic_plan
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
+msgid "Analytic Plans"
+msgstr "分析プラン"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
+msgid "Analytic Precision"
+msgstr "分析精度"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "Analytical Accounts"
+msgstr "分析勘定"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "Analytical Plans"
+msgstr "分析プラン"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__applicability_ids
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "Applicability"
+msgstr "適用性"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr ""
+msgstr "アーカイブ済"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"関連取引先\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"関連パートナ"
+msgstr "関連取引先"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
+#: model:account.analytic.account,name:analytic.analytic_asustek
+msgid "Asustek"
+msgstr "Asustek"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "At least one analytic account must be set"
+msgstr "少なくとも1つの会計分析勘定が設定されている必要があります"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "残高"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Cancel"
-msgstr "取消"
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr "残高："
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Business domain"
+msgstr "ビジネス分野"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
+msgid "Camp to Camp"
+msgstr "Camp to Camp"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_integration_c2c
+msgid "CampToCamp"
+msgstr "CampToCamp"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+msgid "Category"
+msgstr "カテゴリー"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "分析勘定表"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
-msgid "Click to add an analytic account."
-msgstr ""
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
+msgid "Children Plans Count"
+msgstr "子プラン数"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
+msgid "Childrens"
+msgstr "子"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
+msgid "Click to add a new analytic account plan."
+msgstr "クリックして、新しい分析勘定プランを作成"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Close"
+msgstr "閉じる"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
+msgid "Color"
+msgstr "色"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
+#: model:account.analytic.account,name:analytic.analytic_commercial_marketing
+msgid "Commercial & Marketing"
+msgstr "コマーシャル＆マーケティング"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
 msgid "Company"
 msgstr "会社"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "費用/収益"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__complete_name
+msgid "Complete Name"
+msgstr "完全名"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "費用・収益"
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Conditions to meet"
+msgstr "満たすべき条件"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "構成設定"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"仕入先請求書、経費、タイムシートを登録すると、\n"
+"自動的に原価が作成されます。"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_date
 msgid "Created on"
 msgstr "作成日"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
-#, fuzzy
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"費用\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"貸方"
+msgstr "貸方"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
 msgstr "通貨"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
 msgid "Customer"
 msgstr "顧客"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
 msgstr "日付"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
-#, fuzzy
-msgid "Debit"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"収益\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"借方"
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__active
+msgid "Deactivate the account."
+msgstr "勘定を無効化"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Debit"
+msgstr "借方"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
+msgid "Default Applicability"
+msgstr "デフォルト適用"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_deltapc
+msgid "Delta PC"
+msgstr "差PC"
+
+#. module: analytic
+#: model:account.analytic.plan,name:analytic.analytic_plan_departments
+msgid "Departments"
+msgstr "部門"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__description
 msgid "Description"
 msgstr "説明"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+#: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
+msgid "Desertic - Hispafuentes"
+msgstr "Desertic - Hispafuentes"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Disable save"
+msgstr "保存無効化"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "表示名"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
-#, fuzzy
-msgid "From"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"開始日\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"差出人"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "分配分析勘定"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Group By..."
-msgstr "グループ化…"
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Distribution to apply"
+msgstr "適用する分配"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "ドメイン"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr "更新しないでください"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Dynamic Placeholder"
+msgstr "動的プレースホルダ"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_finance
+msgid "Finance"
+msgstr "財務"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Force applicability"
+msgstr "適用性の強制"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "粗利益"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_hr
+msgid "Human Resources"
+msgstr "人事"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"In Odoo, sale orders and projects are implemented using\n"
+"In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to "
 "analyse\n"
 "                your margins easily."
 msgstr ""
+"Odooでは、販売オーダ、プロジェクトは分析勘定を使用します。\n"
+"                費用と収益を追跡して、簡単にマージンを分析することができま"
+"す。"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
+#: model:account.analytic.plan,name:analytic.analytic_plan_internal
+msgid "Internal"
+msgstr "内部"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-msgid "No activity yet on this account."
-msgstr ""
+#: model:account.analytic.account,name:analytic.analytic_rd_legal
+msgid "Legal"
+msgstr "法務"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
-msgid "No activity yet."
-msgstr ""
+#: model:account.analytic.account,name:analytic.analytic_think_big_systems
+msgid "Lumber Inc"
+msgstr "Lumber Inc"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Open Charts"
-msgstr "チャートを開く"
+#: model:account.analytic.account,name:analytic.analytic_luminous_technologies
+msgid "Luminous Technologies"
+msgstr "Luminous Technologies"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
+msgid "Mandatory"
+msgstr "必須"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_millennium_industries
+msgid "Millennium Industries"
+msgstr "Millennium Industries"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
+msgid "Miscellaneous"
+msgstr "その他"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr "一括編集"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Name"
+msgstr "名称"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_nebula
+msgid "Nebula"
+msgstr "Nebula"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "New Model"
+msgstr "ニューモデル"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet"
+msgstr "まだ活動がありません"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account"
+msgstr "この勘定にはまだ活動がありません"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "No analytic plans found"
+msgstr "分析プランが見つかりません"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクション数"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "対応が必要なメッセージ数"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーが発生されたメッセージ数"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "1つ以上の行で100%の分析分配が必要です。"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_internal
+msgid "Operating Costs"
+msgstr "営業費用"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+msgid "Operation not supported"
+msgstr "操作はサポートされていません"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
+msgid "Optional"
+msgstr "オプション"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "その他"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_our_super_product
+msgid "Our Super Product"
+msgstr "当社のスーパープロダクト"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
+msgid "Parent"
+msgstr "親"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_path
+msgid "Parent Path"
+msgstr "親パス"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
 msgstr "取引先"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
+msgid "Partner Category"
+msgstr "パートナーカテゴリ"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Percentage"
+msgstr "パーセンテージ"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
+msgid "Plan"
+msgstr "計画"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Product field"
+msgstr "プロダクトフィールド"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_production
+msgid "Production"
+msgstr "製造"
+
+#. module: analytic
+#: model:account.analytic.plan,name:analytic.analytic_plan_projects
+msgid "Project"
+msgstr "プロジェクト"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__account_id
+msgid "Project Account"
+msgstr "プロジェクトアカウント"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "数量"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
 msgstr "参照"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model:account.analytic.account,name:analytic.analytic_rd_department
+msgid "Research & Development"
+msgstr "研究開発"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale "
+"                invoices. Customer invoices can be created based on sales "
 "orders\n"
 "                (fixed price invoices), on timesheets (based on the work "
 "done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"収益は顧客請求書の作成時に自動的に作成されます。 \n"
+"顧客請求書は、販売オーダ（固定価格の請求書）や、タイムシート（実施された作業"
+"に基づく）、\n"
+"経費（例：顧客負担の旅費交通費の請求）に基づいて作成することができます。"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
+msgid "Root"
+msgstr "ルート"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
+msgid "Root Plan"
+msgstr "ルートプラン"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Save as new analytic distribution model"
+msgstr "新しい分析分配モデルとして保存"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_seagate_p2
+msgid "Seagate P2"
+msgstr "Seagate P2"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "分析行検索"
+msgstr "分析明細検索"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Select the Period for Analysis"
-msgstr "分析期間の選択"
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid "See them"
+msgstr "それらを表示"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "State"
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
 msgstr ""
+"分析分配の対象となる会社を選択します（例：新規顧客請求書や販売オーダを作成す"
+"る際にこの会社を選択すると、自動的に分析勘定として扱われます）。"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
-msgid "Tags"
-msgstr "タグ"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Month"
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
 msgstr ""
+"分析分配の対象となるパートナーカテゴリを選択します（例：新規顧客請求書や販売"
+"オーダの作成時に、このパートナーを選択すると、自動的に分析勘定として扱われま"
+"す）。"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
-msgid "The related account currency if not equal to the company one."
-msgstr "会社の通貨と等しくない場合は関連するアカウントの通貨"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
-#, fuzzy
-msgid "To"
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
 msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"終了日\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"宛先"
+"分析分配の対象となるパートナーを選択します（例：新規顧客請求書や販売オーダを"
+"作成する際に、このパートナーを選択すると、自動的に分析勘定として扱われま"
+"す）。"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__sequence
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_spark
+msgid "Spark Systems"
+msgstr "Spark Systems"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "Subplans"
+msgstr "サブプラン"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "システムパラメータ"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr "%s の値は、サブプランではない有効な分析プランのIDでなければなりません"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_absences
+msgid "Time Off"
+msgstr "休止"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "合計"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__unavailable
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__unavailable
+msgid "Unavailable"
+msgstr "使用不可"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit"
+msgstr "単位"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr "更新"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "ユーザ"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "アカウント分析チャート"
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Visible to all"
+msgstr "全員に表示"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "e.g. Project XYZ"
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
+"この処理を続行すると、現在のデータがすべて削除されます。よろしいですか？"
 
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"You can't change the company of an analytic account that already has "
+"analytic items! It's a recipe for an analytical disaster!"
+msgstr ""
+"すでに分析項目が存在する分析勘定の会社は変更できません。分析上に大きな問題が"
+"発生する原因となります。"
 
-#~ msgid "Analytic Line"
-#~ msgstr "分析行"
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "ベースプラン '%s' に親を追加することができません。"
 
-#~ msgid "Analytic View"
-#~ msgstr "分析ビュー"
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_distribution_model.py:0
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
+msgstr ""
+"特定の会社に属する分析勘定で分配を定義していますが、分配モデルは会社間または"
+"別の会社と共有されます。"
 
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "e.g. Project XYZ"
+msgstr "例 プロジェクトXYZ"
 
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
+#~ msgid "Deco Addict"
+#~ msgstr "Deco Addict"
 
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
+#~ msgid "Add a line"
+#~ msgstr "明細追加"
 
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
+#~ msgid "Analytic Distribution Template"
+#~ msgstr "分析分配テンプレート"
 
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づい"
+#~ "て行われます。"
 
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
+#~ msgid "Group By..."
+#~ msgstr "グループ化…"
 
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージと通信履歴"
+#~ msgid "Loading..."
+#~ msgstr "読込中..."
 
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "アクションを必要とするメッセージの数"
 
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージ数"
+#~ msgid "OK"
+#~ msgstr "OK"
 
-#~ msgid "Type of Account"
-#~ msgstr "勘定タイプ"
+#~ msgid ""
+#~ "The selected account belongs to another company than the one you're "
+#~ "trying to create an analytic item for"
+#~ msgstr ""
+#~ "選択されたアカウントは、分析項目を作成しようとしている会社とは別の会社に属"
+#~ "しています。"
 
-#~ msgid "Unread Messages"
-#~ msgstr "未読メッセージ"
+#~ msgid "Unit of Measure"
+#~ msgstr "単位"
 
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
+#~ msgid "UoM Category"
+#~ msgstr "単位カテゴリ"
+
+#~ msgid "View"
+#~ msgstr "ビュー"
+
+#~ msgid ""
+#~ "You can't set a different company on your analytic account since there "
+#~ "are some analytic items linked to it."
+#~ msgstr ""
+#~ "分析勘定には分析項目が連動しているため、別の会社を設定することはできませ"
+#~ "ん。"

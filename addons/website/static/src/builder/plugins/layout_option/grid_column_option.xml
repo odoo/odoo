@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.GridColumnsOption">
+    <BuilderRow t-if="this.state.isGridMode" label.translate="Padding (Y, X)">
+        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-y'" unit="'px'"/>
+        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-x'" unit="'px'"/>
+    </BuilderRow>
+</t>
+
+</templates>

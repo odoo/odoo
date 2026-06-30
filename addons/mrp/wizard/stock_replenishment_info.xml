@@ -1,0 +1,32 @@
+<odoo>
+    <record id="mrp_bom_replenishment_tree_view" model="ir.ui.view">
+        <field name="name">mrp.bom.replenishment.list.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <field name="product_uom_id" position="after">
+                <field name="show_set_bom_button" column_invisible="True"/>
+                <button name="action_set_bom_on_orderpoint" type="object" string="Set as Bill of Materials" class="btn btn-link" invisible="not show_set_bom_button"/>
+            </field>
+            <field name="company_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_stock_replenishment_info_stock_mrp_inherit" model="ir.ui.view">
+        <field name="name">stock.replenishment.information.mrp.stock.inherit</field>
+        <field name="model">stock.replenishment.info</field>
+        <field name="inherit_id" ref="stock.view_stock_replenishment_info"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page" position="before">
+                <page string="Bills of Materials" name="page_boms" invisible="not show_bom_tab">
+                    <field name="bom_id" invisible="1"/>
+                    <field name="bom_ids" readonly="1" context="{'list_view_ref': 'mrp.mrp_bom_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

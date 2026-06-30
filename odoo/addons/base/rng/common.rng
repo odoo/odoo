@@ -40,19 +40,6 @@
         </rng:optional>
     </rng:define>
 
-    <rng:define name="modifiable">
-        <rng:optional>
-            <!-- @modifiers contains a JSON map unifying the various
-                 modifier attributes: @readonly, @required, @invisible.
-                 Each attribute is a key, mapped to a JSON list representing
-                 a condition expressed as an OpenERP `domain` filter
-                 Only some of the modifier keys make sense on some
-                 elements, for example <filter> and <group> only support
-                 `invisible`. -->
-            <rng:attribute name="modifiers"/>
-        </rng:optional>
-    </rng:define>
-
     <rng:define name="access_rights">
         <rng:optional>
             <rng:attribute name="groups"/>
@@ -95,7 +82,6 @@
         <rng:element name="label">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
@@ -147,7 +133,6 @@
         <rng:element name="separator">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
@@ -208,11 +193,10 @@
             <rng:attribute name="name" />
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="domain_filter"/></rng:optional>
-            <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="completion"/></rng:optional>
             <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
@@ -224,6 +208,7 @@
             <rng:optional><rng:attribute name="on_change"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
             <rng:optional><rng:attribute name="filter_domain"/></rng:optional>
+            <rng:optional><rng:attribute name="column_invisible"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="password"/></rng:optional>
             <rng:optional><rng:attribute name="comparator"/></rng:optional>
@@ -231,7 +216,13 @@
             <rng:optional><rng:attribute name="bold"/></rng:optional>
             <rng:optional><rng:attribute name="avg"/></rng:optional>
             <rng:optional><rng:attribute name="select"/></rng:optional>
+            <rng:optional><rng:attribute name="hierarchize"/></rng:optional>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
             <rng:optional><rng:attribute name="group"/></rng:optional>
+            <rng:optional><rng:attribute name="color"/></rng:optional>
+            <rng:optional><rng:attribute name="groupby"/></rng:optional>
+            <rng:optional><rng:attribute name="enable_counters"/></rng:optional>
+            <rng:optional><rng:attribute name="limit"/></rng:optional>
             <rng:optional><rng:attribute name="operator"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
@@ -240,12 +231,9 @@
             <rng:optional><rng:attribute name="view_mode"/></rng:optional>
             <rng:optional><rng:attribute name="widget"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
-            <rng:optional><rng:attribute name="states"/></rng:optional>
             <rng:optional><rng:attribute name="digits"/></rng:optional>
             <rng:optional><rng:attribute name="icon"/></rng:optional>
             <rng:optional><rng:attribute name="mode"/></rng:optional>
-            <rng:optional><rng:attribute name="img_width"/></rng:optional>
-            <rng:optional><rng:attribute name="img_height"/></rng:optional>
             <rng:optional><rng:attribute name="size"/></rng:optional>
             <rng:optional><rng:attribute name="filename"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
@@ -261,6 +249,27 @@
             <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
             <rng:optional><rng:attribute name="write_model" /></rng:optional>
             <rng:optional><rng:attribute name="write_field" /></rng:optional>
+            <rng:optional><rng:attribute name="filter_field" /></rng:optional>
+            <rng:optional><rng:attribute name="text" /></rng:optional>
+            <rng:optional><rng:attribute name="optional" /></rng:optional>
+            <rng:optional><rng:attribute name="add-label"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional><rng:attribute name="kanban_view_ref" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="force_save">
+                    <rng:choice>
+                      <rng:value>1</rng:value>
+                      <rng:value>0</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
                  widget-dependent parameters. To be ignored if widget/client does
                  not support them. -->
@@ -287,13 +296,8 @@
         <rng:element name="group">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
-            <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
-            <rng:optional><rng:attribute name="expand"/></rng:optional>
-            <rng:optional><rng:attribute name="states"/></rng:optional>
-            <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
             <rng:optional><rng:attribute name="width"/></rng:optional>
@@ -311,13 +315,12 @@
         <rng:element name="button">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
-            <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="column_invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="disabled"/></rng:optional>
             <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
-            <rng:optional><rng:attribute name="states" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="special" /></rng:optional>
             <rng:optional><rng:attribute name="align" /></rng:optional>
@@ -326,9 +329,18 @@
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="confirm"/></rng:optional>
+            <rng:optional><rng:attribute name="confirm-label"/></rng:optional>
+            <rng:optional><rng:attribute name="cancel-label"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
+            <rng:optional><rng:attribute name="tabindex"/></rng:optional>
+            <rng:optional><rng:attribute name="title"/></rng:optional>
+            <rng:optional><rng:attribute name="aria-label"/></rng:optional>
+            <rng:optional><rng:attribute name="aria-pressed"/></rng:optional>
+            <rng:optional><rng:attribute name="display"/></rng:optional>
+            <rng:optional><rng:attribute name="data-hotkey"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field" />
@@ -349,11 +361,9 @@
         <rng:element name="filter">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:ref name="modifiable"/>
-            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:attribute name="name"/>
             <rng:optional><rng:attribute name="icon"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
-            <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="separator" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
@@ -363,6 +373,12 @@
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
+            <rng:optional><rng:attribute name="date"/></rng:optional>
+            <rng:optional><rng:attribute name="start_month"/></rng:optional>
+            <rng:optional><rng:attribute name="end_month"/></rng:optional>
+            <rng:optional><rng:attribute name="start_year"/></rng:optional>
+            <rng:optional><rng:attribute name="end_year"/></rng:optional>
+            <rng:optional><rng:attribute name="default_period"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field" />
@@ -375,6 +391,35 @@
                 </rng:choice>
             </rng:zeroOrMore>
 
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="create">
+        <rng:element name="create">
+            <rng:ref name="overload"/>
+            <rng:attribute name="string"/>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="control">
+        <rng:element name="control">
+            <rng:ref name="overload"/>
+            <rng:oneOrMore>
+                <rng:choice>
+                    <rng:ref name="create"/>
+                    <rng:ref name="button"/>
+                </rng:choice>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="widget">
+        <rng:element name="widget">
+            <rng:attribute name="name"/>
+            <rng:optional><rng:attribute name="options"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
         </rng:element>
     </rng:define>
 

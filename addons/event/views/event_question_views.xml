@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_question_view_search" model="ir.ui.view">
+        <field name="name">event.question.view.search</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <search string="Search Event Question">
+                <field name="title"/>
+                <field name="question_type"/>
+                <field name="answer_ids"/>
+                <filter string="Mandatory"
+                        name="filter_is_mandatory_answer"
+                        domain="[('is_mandatory_answer', '=', True)]"/>
+                <filter string="Not mandatory"
+                        name="filter_is_not mandatory_answer"
+                        domain="[('is_mandatory_answer', '=', False)]"/>
+                <separator/>
+                <filter string="Once per order"
+                        name="filter_once_per_order"
+                        domain="[('once_per_order', '=', True)]"/>
+                <filter string="For each attendee"
+                        name="filter_for_each_attendee"
+                        domain="[('once_per_order', '=', False)]"/>
+                <separator/>
+                <filter name="filter_is_reusable" string="Reusable" domain="[('is_reusable', '=', True)]"/>
+                <filter name="filter_is_not_reusable" string="Not Reusable" domain="[('is_reusable', '=', False)]"/>
+                <separator/>
+                <filter name="filter_is_default" string="Default Questions" domain="[('is_default', '=', True)]"/>
+                <filter name="filter_archive" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Event" name="group_by_event" context="{'group_by': 'event_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_question_view_form" model="ir.ui.view">
+        <field name="name">event.question.view.form</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <form string="Question">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_question_answers"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-line-chart"
+                                invisible="question_type not in ['simple_choice', 'text_box']">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Attendee answers
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                        invisible="event_count == 0">
+                        This question is used by
+                        <button class="oe_link p-0 align-baseline" type="object" name="action_event_view">
+                            <field name="event_count"/>
+                            events
+                        </button>.
+                    </div>
+                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
+                    <group>
+                        <group>
+                            <field name="is_mandatory_answer"/>
+                            <field name="question_type" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="once_per_order"/>
+                            <field name="is_default"/>
+                            <field name="event_type_ids" invisible="1"/>
+                            <field name="is_reusable" readonly="is_default"/>
+                        </group>
+                    </group>
+                    <notebook invisible="question_type != 'simple_choice'">
+                        <page string="Answers" name="answers">
+                            <field name="answer_ids">
+                                <list editable="bottom">
+                                    <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
+                                    <field name="display_name" column_invisible="True" />
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_question_view_list" model="ir.ui.view">
+        <field name="name">event.question.view.list</field>
+        <field name="model">event.question</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <list>
+                <field name="title"/>
+                <field name="is_mandatory_answer" string="Mandatory"/>
+                <field name="once_per_order" string="Once per Order"/>
+                <field name="question_type" string="Type"/>
+                <field name="answer_ids" widget="many2many_tags"
+                    invisible="question_type != 'simple_choice'"/>
+                <field name="is_default"/>
+                <field name="is_reusable" optional="hide"/>
+                <button name="action_view_question_answers"
+                        type="object"
+                        class="p-0"
+                        icon="fa-bar-chart pe-1"
+                        string="Stats"
+                        title="Answer Breakdown"
+                        invisible="question_type not in ['simple_choice', 'text_box']"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_question_view_list_add" model="ir.ui.view">
+        <field name="name">event.question.view.list.add</field>
+        <field name="model">event.question</field>
+        <field name="inherit_id" ref="event.event_question_view_list"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_reusable']" position="replace"/>
+            <xpath expr="//button[@name='action_view_question_answers']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="event_question_action" model="ir.actions.act_window">
+        <field name="name">Event Question</field>
+        <field name="res_model">event.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="event.event_question_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No questions yet! Please create one.
+            </p>
+        </field>
+    </record>
+
+    <record id="event_question_menu" model="ir.ui.menu">
+        <field name="action" ref="event.event_question_action"/>
+    </record>
+</odoo>

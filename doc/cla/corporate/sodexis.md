@@ -16,5 +16,5 @@ Stephan Keller skeller@sodexis.com https://github.com/stephankeller
 Suganthi Karunanithi ksuganthi@sodexis.com https://github.com/suganthikarunanithi
 Xavier Dass xavier@sodexis.com https://github.com/xavier-dass
 Atchuthan atchuthan@sodexis.com https://github.com/atchuthan
-Dhinesh dhinesh@sodexis.com https://github.com/dvdhinesh
+Karthik Arumugam karthik@sodexis.com https://github.com/amkarthik
 SodexisTeam dev@sodexis.com https://github.com/SodexisTeam

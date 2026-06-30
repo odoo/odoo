@@ -1,0 +1,16 @@
+.o-mail-MessageReaction {
+    line-height: 1.75;
+
+    &:not(.o-selfReacted):hover {
+        border-color: rgba($o-action, var(--mail-MessageReaction-selfReactedBorderOpacity, 1)) !important;
+    }
+
+    &.o-selfReacted {
+        --border-opacity: #{var(--mail-MessageReaction-selfReactedBorderOpacity, 1)};
+        background: $o-view-background-color;
+    }
+}
+
+.o-mail-MessageReactions:not(.o-emojiPickerOpen):not(:hover) .o-mail-MessageReactions-add:not(.o-mobile) {
+    visibility: hidden;
+}

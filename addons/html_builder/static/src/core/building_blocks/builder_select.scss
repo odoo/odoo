@@ -1,0 +1,126 @@
+:not(.dropstart) > .dropdown-item {
+    &.active, &.selected {
+        &:not(.dropdown-item_active_noarrow)::before {
+            display: unset;
+            top: 50%;
+            transform: translate(-1.5em, -50%);
+        }
+    }
+}
+
+.dropdown-toggle .o_select_item_only {
+    display: none;
+}
+
+.o-hb-select-wrapper {
+    flex: 1 0 0;
+    min-width: 7ch; // Approx 4 characters + caret
+    max-width: 100%;
+    display: flex;
+
+    .o-hb-select-toggle.o-hb-btn.btn.o-dropdown.dropdown-toggle {
+        display: block;
+        flex: 1;
+        min-width: 0;
+        padding-right: 0.75rem;
+        transition: none;
+
+        &.show {
+            color: var(--btn-hover-color);
+            background-color: var(--btn-hover-bg);
+            border-color: var(--o-hb-btn-active-color, $o-we-color-accent);
+        }
+
+        > img {
+            max-width: 100%;
+        }
+
+        &:after {
+            @include o-position-absolute(50%, map-get($spacers, 1));
+            transform: translate(-50%, -50%);
+            font-size: .5rem;
+        }
+    }
+
+    &:first-child:last-child {
+        .o-hb-select-toggle {
+            --btn-padding-x: #{map-get($spacers , 2)};
+        }
+    }
+}
+
+// The following code handles the case where a select and a group of buttons are
+// on the same row. In this situation, we want to show as much of the buttons’
+// text as possible. (For Animation: "onScroll" or Layout: "Column")
+.hb-row-content {
+    &:has(.o-hb-button-group) > .o-hb-select-wrapper {
+        flex: 1 0 auto;
+        max-width: 50%;
+    }
+
+    &:has(.o-hb-select-wrapper) > .o-hb-button-group .o-hb-btn {
+        min-width: 6ch;
+    }
+}
+
+// Image format badge.
+.o-hb-select-toggle.dropdown-toggle, .o-hb-select-dropdown-item {
+    > div > .badge {
+        color: $o-we-item-clickable-color;
+        background-color: $o-we-bg-darker;
+    }
+}
+
+// These styles are common between BuilderSelect and Many2X builder components.
+// TODO: review the SelectMenu template to allow both light/dark backgrounds and
+// remove most '!important' needed here to override Bootstrap classes. See
+// implementations of Many2X builder components for examples.
+.o-hb-select-dropdown {
+    --o-hb-select-bg: #{$o-we-item-clickable-bg};
+    --o-hb-select-color: #{$o-we-fg-light};
+    --o-hb-select-bg-hover: #{$o-we-bg-lighter};
+    --o-hb-select-color-hover: #{$o-we-fg-lighter};
+    --o-hb-border-color: #{$o-we-bg-darker};
+
+    --border-color: var(--o-hb-border-color);
+
+    font-family: $o-we-font-family;
+    font-size: $o-we-font-size;
+    border-color: var(--border-color);
+    background-color: var(--o-hb-select-bg) !important;
+    padding: 0;
+
+    .dropdown-item {
+        --dropdown-item-padding-y: 0;
+
+        color: var(--o-hb-select-color, $white);
+        line-height: 2rem;
+        border-bottom: $o-we-border-width solid var(--border-color);
+
+        &.focus {
+            background-color: var(--o-hb-select-bg-hover) !important;
+            color: var(--o-hb-select-color-hover);
+        }
+
+        &::before {
+            color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg) !important;
+        }
+    }
+
+    .text-muted {
+        color: var(--o-hb-select-color, $white) !important;
+    }
+
+    .o-hb-select-dropdown-category {
+        background-color: $o-we-bg-darker;
+        color: var(--o-hb-select-color);
+    }
+}
+
+.o_builder_open {
+    &:has(.o-snippets-tabs [data-name='theme'].active) {
+        .o-hb-select-dropdown {
+            --o-hb-select-item-active-color: #{$o-we-color-global};
+        }
+    }
+}

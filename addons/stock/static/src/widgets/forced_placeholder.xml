@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This field displays a placeholder even if the field is currently not selected.-->
+
+<templates xml:space="preserve">
+
+     <t t-name="stock.ForcedPlaceholderField">
+        <ForcedPlaceholder t-props="m2oProps"/>
+    </t>
+
+    <t t-name="stock.ForcedPlaceholder" t-inherit="web.Many2One">
+        <xpath expr="//t[@t-if='props.value']" position="after">
+            <t t-else="">
+                <span t-esc="props.placeholder"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

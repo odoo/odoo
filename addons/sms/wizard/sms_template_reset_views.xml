@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sms_template_reset_view_form" model="ir.ui.view">
+        <field name="name">sms.template.reset.view.form</field>
+        <field name="model">sms.template.reset</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    Are you sure you want to reset these sms templates to their original configuration? Changes and translations will be lost.
+                </div>
+                <footer>
+                    <button string="Proceed" class="btn btn-primary" type="object" name="reset_template" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+	<record id="sms_template_reset_action" model="ir.actions.act_window">
+        <field name="name">Reset SMS Template</field>
+        <field name="res_model">sms.template.reset</field>
+        <field name="binding_model_id" ref="sms.model_sms_template"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_template_ids': active_ids
+        }</field>
+        <field name="view_id" ref="sms_template_reset_view_form"/>
+    </record>
+</odoo>

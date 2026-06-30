@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <button class="btn btn-primary o-calendar-button-new" t-on-click="onClickAddButton">New</button>
+            </t>
+        </xpath>
+        <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->
+        <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
+            <div id="header_synchronization_settings" class="mx-2 ms-lg-auto">
+                <t t-if="(model.credentialStatus.google_calendar or model.credentialStatus.microsoft_calendar)
+                and (!model.syncStatus.google_calendar or ['sync_stopped', 'missing_credentials'].includes(model.syncStatus.google_calendar))
+                and (!model.syncStatus.microsoft_calendar or ['sync_stopped', 'missing_credentials'].includes(model.syncStatus.microsoft_calendar))">
+                    <h5 id="synchronize_with" class="d-inline-flex" >Synchronize with</h5>
+                </t>
+                <t t-elif="(model.googleCredentialsSet and model.syncStatus.google_calendar == 'sync_active')
+                or (model.microsoftCredentialsSet and model.syncStatus.microsoft_calendar == 'sync_active')">
+                    <div id="google_calendar_sync" class="o_calendar_sync mx-1 d-inline-flex">
+                        <button class="btn text-nowrap"
+                        t-on-click="model.syncStatus.google_calendar == 'sync_active' ? onStopGoogleSynchronization : onStopMicrosoftSynchronization">
+                            <div>
+                                <i id="check_symbol" class='fa fa-check px-1 o_text_green o_calendar_check'/>
+                                <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                                <span id="check_text" class='o_calendar_check'>
+                                    <t t-if="model.syncStatus.google_calendar == 'sync_active'">Google</t>
+                                    <t t-else="">Outlook</t>
+                                </span>
+                                <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                            </div>
+                        </button>
+                    </div>
+                </t>
+                <t t-elif="model.syncStatus.google_calendar == 'sync_paused' or model.syncStatus.microsoft_calendar =='sync_paused'">
+                    <button class="btn text-nowrap" t-on-click="model.syncStatus.google_calendar == 'sync_paused' ? onUnpauseGoogleSynchronization : onUnpauseMicrosoftSynchronization">
+                        <div>
+                            <i id="pause_symbol" class='fa fa-pause px-1 o_text_orange o_calendar_pause'/>
+                            <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                            <span id="pause_text" class='o_text_orange o_calendar_pause'>Synchro is paused</span>
+                            <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                        </div>
+                    </button>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-elif]//span[hasclass('o_current_week')]" position="attributes">
+            <attribute name="t-if" add="!env.isSmall" separator="and"/>
+        </xpath>
+    </t>
+</templates>

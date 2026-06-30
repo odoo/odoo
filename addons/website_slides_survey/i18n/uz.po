@@ -1,0 +1,825 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_slides_survey
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-10-08 18:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
+#, fuzzy
+msgid "# Certified Attendees"
+msgstr "# Sertifikatlangan ishtirokchilar"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, fuzzy
+msgid "- %(certification)s (Courses - %(courses)s)"
+msgstr "- %(certification)s (Kurslar - %(courses)s)"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
+#, fuzzy
+msgid ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Courses</span>"
+msgstr "<br/> <span class=\"text-muted\">Kurslar</span>"
+
+#. module: website_slides_survey
+#: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Don't hesitate to enroll again!\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                Enroll now\n"
+"            </a>\n"
+"        </div>\n"
+"        Thank you for your participation.\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\"> <p "
+"style=\"margin: 0px; padding: 0px; font-size: 13px;\"> Hurmatli <t t-"
+"out=\"object.partner_id.name yoki 'ishtirokchi' yoki ''\">ishtirokchi</t><br/"
+"><br/> Afsuski, siz sertifikatdan o‘ta olmadingiz va endi <t t-"
+"out=\"object.slide_partner_id.channel_id.name yoki ''\">Bog‘dorchilik "
+"asoslari</t> kursining a'zosi emassiz.<br/><br/> Qayta ro‘yxatdan o‘tishdan "
+"tortinmang!         </p><div style=\"margin: 16px 0px 16px 0px;\"> <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\"> Hoziroq ro‘yxatdan o‘ting </a> </div> Ishtirokingiz uchun "
+"tashakkur.      </div>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
+msgstr "<i class=\"fa fa-arrow-right\"/> Sertifikat olish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
+msgstr ""
+"<i class=\"fa fa-download\" aria-label=\"Sertifikatni yuklab olish\" "
+"title=\"Sertifikatni yuklab olish\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Sertifikatni "
+"yuklab olish\" title=\"Sertifikatni yuklab olish\"/> Sertifikatni yuklab "
+"olish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
+"                        Share your certification"
+msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Sertifikatni ulashish\" "
+"title=\"Sertifikatni ulashish\"/> Sertifikatingizni ulashing"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
+msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Ulashish\" title=\"Ulashish\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Add Questions to this Survey"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"/>Ushbu so‘rovnomaga savollar qo‘shish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "<i class=\"oi oi-arrow-right me-1\"/>All Certifications"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Barcha sertifikatlar"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "<i class=\"oi oi-arrow-right\"/> See Certifications"
+msgstr "<i class=\"oi oi-arrow-right\"/> Sertifikatlarni ko‘rish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+#, fuzzy
+msgid "<i class=\"text-muted\"> awarded users</i>"
+msgstr "<i class=\"text-muted\"> sertifikat olgan foydalanuvchilar</i>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_search_bar_inherit_survey
+#, fuzzy
+msgid "<span class=\"ms-1\">Certifications</span>"
+msgstr "<span class=\"ms-1\">Sertifikatlar</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Certified</span>"
+msgstr "<span class=\"o_stat_text\">Sertifikatlangan</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
+#, fuzzy
+msgid "<span class=\"text-muted small fw-bold\">Certifications</span>"
+msgstr "<span class=\"text-muted small fw-bold\">Sertifikatlar</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
+#, fuzzy
+msgid "<span class=\"text-muted\">Certifications</span>"
+msgstr "<span class=\"text-muted\">Sertifikatlar</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+#, fuzzy
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgstr ""
+"<span>Hozir boshlang</span><i class=\"oi oi-chevron-right ms-2 align-"
+"middle\"/>"
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
+#, fuzzy
+msgid "A slide of type 'certification' requires a certification."
+msgstr "\"Sertifikatlash\" turidagi slayd sertifikat talab qiladi."
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
+#, fuzzy
+msgid "A slide of type certification cannot be previewed."
+msgstr "Sertifikatlash turidagi slaydni oldindan ko‘rib bo‘lmaydi."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+#, fuzzy
+msgid "Add Certification"
+msgstr "Sertifikat qo‘shish"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#, fuzzy
+msgid "Add Questions to this Survey"
+msgstr "Ushbu so‘rovnomaga savollar qo‘shish"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
+#, fuzzy
+msgid "Add a new certification"
+msgstr "Yangi sertifikat qo‘shish"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
+#, fuzzy
+msgid "Allow Preview"
+msgstr "Ko‘rib chiqishga ruxsat berish"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
+#, fuzzy
+msgid "Ash"
+msgstr "Kul"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+#, fuzzy
+msgid ""
+"Assess the level of understanding of your attendees\n"
+"                <br>and send them a document if they pass the test."
+msgstr ""
+"Tinglovchilaringizning tushunish darajasini baholang <br>va ular testdan "
+"o‘tsa, ularga hujjat yuboring."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "Attempt n°"
+msgstr "Urinish №"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+#, fuzzy
+msgid "Avg Score (%)"
+msgstr "O‘rtacha ball (%)"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
+#, fuzzy
+msgid "Bed"
+msgstr "Karavot"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
+#, fuzzy
+msgid "Beech"
+msgstr "Qayin"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "Begin Certification"
+msgstr "Sertifikatlashni boshlash"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+#, fuzzy
+msgid "Begin your <b>certification</b> today!"
+msgstr "<b>Sertifikatlashtirish</b>ni bugun boshlang!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_category
+#, fuzzy
+msgid "Category"
+msgstr "Toifa"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_search_results_inherit_survey
+#, fuzzy
+msgid "Certification"
+msgstr "Sertifikatlash"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "Certification Attempts"
+msgstr "Sertifikatlash urinishlari"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+#, fuzzy
+msgid "Certification Badges"
+msgstr "Sertifikat nishonlari"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_ids
+#, fuzzy
+msgid "Certification Courses"
+msgstr "Sertifikatlash kurslari"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_tree
+#, fuzzy
+msgid "Certification Passed"
+msgstr "Sertifikatdan o‘tdi"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
+#, fuzzy
+msgid "Certification Slides"
+msgstr "Sertifikatlash slaydlari"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
+#, fuzzy
+msgid "Certification Succeeded"
+msgstr "Sertifikatlashtirish muvaffaqiyatli o‘tdi"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+#, fuzzy
+msgid "Certification Title"
+msgstr "Sertifikat nomi"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
+#, fuzzy
+msgid "Certification attempts"
+msgstr "Sertifikatlash urinishlari"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
+#, fuzzy
+msgid "Certification icon"
+msgstr "Sertifikat belgisi"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, fuzzy
+msgid "Certification slides are completed when the survey is succeeded."
+msgstr ""
+"So‘rovnoma muvaffaqiyatli yakunlangach, sertifikatlash slaydlari "
+"to‘ldiriladi."
+
+#. module: website_slides_survey
+#: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
+#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
+#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "Certifications"
+msgstr "Sertifikatlar"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "Certifications are exams that you successfully passed. <br/>"
+msgstr "Sertifikatlar - bu siz muvaffaqiyatli topshirgan imtihonlardir. <br/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_sidebar_done_button
+#, fuzzy
+msgid "Certifications you have passed cannot be marked as not done"
+msgstr "Siz olgan sertifikatlarni bajarilmagan deb belgilab bo‘lmaydi"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
+#, fuzzy
+msgid "Certified"
+msgstr "Sertifikatlangan"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
+#, fuzzy
+msgid "Chair"
+msgstr "Stul"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel_partner
+#, fuzzy
+msgid "Channel / Partners (Members)"
+msgstr "Kanal / hamkorlar (a'zolar)"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "Congratulations, you passed the Certification!"
+msgstr "Tabriklaymiz, siz sertifikatdan o‘tdingiz!"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel
+#, fuzzy
+msgid "Course"
+msgstr "Kurs"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
+#, fuzzy
+msgid "Courses"
+msgstr "Kurslar"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
+#, fuzzy
+msgid "Courses Count"
+msgstr "Kurslar soni"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+#, fuzzy
+msgid "Create a Certification"
+msgstr "Sertifikat yaratish"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
+#, fuzzy
+msgid "DIY Furniture Certification"
+msgstr "O‘zingiz yasaydigan mebel sertifikati"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
+#, fuzzy
+msgid "Desk"
+msgstr "Yozuv stoli"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#, fuzzy
+msgid "Download certification"
+msgstr "Sertifikatni yuklab olish"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
+#, fuzzy
+msgid "Fir"
+msgstr "Archa"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
+#, fuzzy
+msgid "Furniture"
+msgstr "Mebel"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
+#: model:survey.survey,title:website_slides_survey.furniture_certification
+#, fuzzy
+msgid "Furniture Creation Certification"
+msgstr "Mebel yaratish sertifikati"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+#, fuzzy
+msgid "Go back to course"
+msgstr "Kursga qaytish"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+#, fuzzy
+msgid "How to upload a certification on your course?"
+msgstr "Kursingizga sertifikatni qanday yuklash mumkin?"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
+#, fuzzy
+msgid "It's time to test your knowledge!"
+msgstr "Bilimingizni sinash vaqti keldi!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
+#, fuzzy
+msgid "Manage Certifications"
+msgstr "Sertifikatlarni boshqarish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "Mark To Do"
+msgstr "Bajarilganligini belgilash"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/slide_channel.py:0
+#, fuzzy
+msgid "No Attendee passed this course certification yet!"
+msgstr "Hali hech bir ishtirokchi bu kurs sertifikatini olmagan!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "No certification found for the given search term."
+msgstr "Berilgan so‘rov bo‘yicha sertifikat topilmadi."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "No certifications yet!"
+msgstr "Hozircha sertifikatlar yo‘q!"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
+#, fuzzy
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
+msgstr "Kursni tugatganingizdan so‘ng, bilimingizni sinash vaqti keldi!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
+#, fuzzy
+msgid "Number of Certifications"
+msgstr "Sertifikatlar soni"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
+#, fuzzy
+msgid "Oak"
+msgstr "Eman"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+#, fuzzy
+msgid "Please select a certification."
+msgstr "Sertifikatni tanlang."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
+#, fuzzy
+msgid "Related course slide"
+msgstr "Tegishli kurs slaydlari"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+#, fuzzy
+msgid "Score:"
+msgstr "Natija:"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "Search"
+msgstr "Qidirish"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "Search Attempts..."
+msgstr "Urinishlar qidirilmoqda..."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+#, fuzzy
+msgid "Select a certification"
+msgstr "Sertifikatni tanlang"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
+#, fuzzy
+msgid "Select all the furniture shown in the video"
+msgstr "Videoda ko‘rsatilgan barcha mebellarni tanlang"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+#, fuzzy
+msgid ""
+"Select an existing certification from the list. Creating or editing a "
+"certification can be done from the backend."
+msgstr ""
+"Ro‘yxatdan mavjud sertifikatni tanlang. Sertifikatni yaratish yoki "
+"tahrirlash boshqaruv panelidan amalga oshiriladi."
+
+#. module: website_slides_survey
+#: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
+#, fuzzy
+msgid "Sent to participant if they failed the certification"
+msgstr "Ishtirokchi sertifikatdan o‘ta olmasa, unga yuboriladi"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
+#, fuzzy
+msgid "Shelf"
+msgstr "Tokcha"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide_partner
+#, fuzzy
+msgid "Slide / Partner decorated m2m"
+msgstr "Slayd / Hamkor bezatilgan m2m"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+#, fuzzy
+msgid "Slide Type"
+msgstr "Slayd turi"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
+#, fuzzy
+msgid "Slide membership information for the logged in user"
+msgstr "Tizimga kirgan foydalanuvchi uchun a'zolik haqidagi slayd ma'lumoti"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide
+#, fuzzy
+msgid "Slides"
+msgstr "Slaydlar"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
+#, fuzzy
+msgid "Subscriber information"
+msgstr "Obunachi ma'lumoti"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+#, fuzzy
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
+msgstr ""
+"Slayd toifasining kichik turi, haqiqiy fayl turi / manba turiga aniqlik "
+"kiritish imkonini beradi."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+#, fuzzy
+msgid "Success Ratio (%)"
+msgstr "Muvaffaqiyat darajasi (%)"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_survey
+#, fuzzy
+msgid "Survey"
+msgstr "So‘rovnoma"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_user_input
+#, fuzzy
+msgid "Survey User Input"
+msgstr "So‘rovnoma foydalanuvchisi kiritgan ma'lumot"
+
+#. module: website_slides_survey
+#: model:mail.template,name:website_slides_survey.mail_template_user_input_certification_failed
+#, fuzzy
+msgid "Survey: Certification Failure"
+msgstr "So‘rovnoma: Sertifikatlash muvaffaqiyatsizligi"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
+#, fuzzy
+msgid "Table"
+msgstr "Stol"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "Take Quiz"
+msgstr "Testni topshirish"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, fuzzy
+msgid "Test Certification"
+msgstr "Sertifikatni sinash"
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+#, fuzzy
+msgid "Test your furniture knowledge!"
+msgstr "Mebel haqidagi bilimingizni sinab ko‘ring!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
+#, fuzzy
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"Kurs hamma uchun ochiq: foydalanuvchilar kurs mazmuniga kirish uchun kanalga "
+"qo‘shilishlari shart emas."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
+#, fuzzy
+msgid "The courses this survey is linked to through the e-learning application"
+msgstr "Bu so‘rovnoma elektron ta'lim ilovasi orqali bog‘langan kurslar"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
+#, fuzzy
+msgid "The related course slide when there is no membership information"
+msgstr "A'zolik ma'lumoti mavjud bo‘lmaganda tegishli kurs slaydi"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
+#, fuzzy
+msgid "The slides this survey is linked to through the e-learning application"
+msgstr "Bu so‘rovnoma elektron ta'lim ilovasi orqali bog‘langan slaydlar"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
+#, fuzzy
+msgid "Title"
+msgstr "Sarlavha"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+msgid ""
+"Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, "
+"students might think diplomas just grow on trees.\n"
+"The courses that need them are:\n"
+"%s"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
+#, fuzzy
+msgid "What do you think about the content of the course? (not rated)"
+msgstr "Kurs mazmuni haqida qanday fikrdasiz? (baholanmagan)"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
+#, fuzzy
+msgid "What type of wood is the best for furniture?"
+msgstr "Mebel uchun qaysi yog‘och turi eng yaxshi?"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, fuzzy
+msgid "You are not allowed to create a survey."
+msgstr "So‘rovnoma yaratishga ruxsatingiz yo‘q."
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, fuzzy
+msgid "You are not allowed to link a certification."
+msgstr "Sertifikatni ulashga ruxsatingiz yo‘q."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+#, fuzzy
+msgid ""
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
+msgstr ""
+"Sertifikatlardan o‘tib, nishonlar olishingiz mumkin. Quyida barcha mavjud "
+"sertifikat nishonlari ro‘yxati keltirilgan. <br/>Yangi cho‘qqilarni zabt "
+"etish va mahoratingizni oshirish uchun havolalarni kuzatib boring!"
+
+#. module: website_slides_survey
+#: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
+#, fuzzy
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr ""
+"Siz kursdan o‘ta olmadingiz: {{ object.slide_partner_id.channel_id.name }}"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+#, fuzzy
+msgid "You have not taken any certification yet."
+msgstr "Siz hali hech qanday sertifikat olmadingiz."

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.Builder">
+    <div class="h-100 o-snippets-menu d-flex flex-column" t-ref="builder_sidebar">
+        <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0 p-2">
+            <div class="d-flex gap-1">
+                <button type="button" t-on-click="() => this.undo()" class="o-hb-btn btn fa fa-undo" t-att-disabled="!state.canUndo"/>
+                <button type="button"  t-on-click="() => this.redo()" class="o-hb-btn btn fa fa-repeat" t-att-disabled="!state.canRedo"/>
+            </div>
+            <div class="d-flex gap-1">
+                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn btn-success-color-active d-flex align-items-center" t-att-class="{ active: props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
+                <t t-if="props.slots?.extraActions" t-slot="extraActions"/>
+            </div>
+        </div>
+        <div t-if="!props.config.isTranslationMode" class="o-snippets-tabs position-relative">
+            <div
+                class="o-snippets-tabs-highlighter position-absolute start-50 h-100 pe-none"
+                t-att-class="{
+                    'o-highlight-blocks': state.activeTab === 'blocks',
+                    'o-highlight-theme': state.activeTab === 'theme',
+                }"
+            />
+            <ul class="nav nav-underline" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button id="blocks-tab" data-name="blocks" data-hotkey="1" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'blocks' ? 'true' : 'false'">
+                        <i class="fa fa-plus me-2" role="none"/>Blocks
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="customize-tab" data-name="customize" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')" role="tab" t-att-aria-selected="state.activeTab === 'customize' ? 'true' : 'false'">
+                        <i class="fa fa-pencil me-2" role="none"/>Style
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="theme-tab" data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'theme' ? 'true' : 'false'">
+                        <i class="fa fa-cog me-2" role="none"/><t t-out="props.themeTabDisplayName"/>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
+            <t t-if="state.activeTab === 'blocks'">
+                <BlockTab snippetsName="props.snippetsName" />
+            </t>
+            <t t-if="state.activeTab === 'customize'">
+                <t t-if="props.config.isTranslationMode" t-component="CustomizeTranslationTab"/>
+                <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
+            </t>
+            <t t-if="state.activeTab === 'theme'">
+                <t t-component="ThemeTab" colorPresetToShow="colorPresetToShow"/>
+            </t>
+        </div>
+        <div class="o_we_lower_panel mt-auto flex-grow-0 flex-shrink-0">
+            <t t-foreach="lowerPanelEntries()" t-as="entry" t-key="entry_index">
+                <t t-component="entry.Component" t-props="entry.props"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

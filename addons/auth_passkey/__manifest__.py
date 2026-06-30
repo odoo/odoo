@@ -1,0 +1,39 @@
+{
+    'name': 'Passkeys',
+    'version': '1.1',
+    'summary': 'Log in with a Passkey',
+    'description': """
+The implementation of Passkeys using the webauthn protocol.
+===========================================================
+
+Passkeys are a secure alternative to a username and a password.
+When a user logs in with a Passkey, MFA will not be required.
+""",
+    'category': 'Hidden/Tools',
+    'depends': ['base_setup', 'web'],
+    'auto_install': True,
+    'data': [
+        'views/auth_passkey_key_views.xml',
+        'views/auth_passkey_login_templates.xml',
+        'views/res_users_identitycheck_views.xml',
+        'views/res_users_views.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'auth_passkey/static/lib/simplewebauthn.js',
+            'auth_passkey/static/src/views/*',
+            'auth_passkey/static/src/scss/res_users.scss',
+        ],
+        'web.assets_frontend': [
+            'auth_passkey/static/lib/simplewebauthn.js',
+            'auth_passkey/static/src/interactions/*',
+        ],
+        'web.assets_tests': [
+            'auth_passkey/static/tests/*.js',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

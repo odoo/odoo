@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.VerticalAlignmentOption">
+    <t t-if="!isActiveItem('grid_mode')">
+        <!-- TODO add title tooltip row Vertical Alignment-->
+        <BuilderRow label.translate="Vert. Alignment" level="this.level">
+            <BuilderButtonGroup action="'setVerticalAlignment'">
+                <BuilderButton actionParam="'align-items-start'" title.translate="Align Top" iconImg="'/html_builder/static/img/snippets_options/align_top.svg'"/>
+                <BuilderButton actionParam="'align-items-center'" title.translate="Align Middle" iconImg="'/html_builder/static/img/snippets_options/align_middle.svg'"/>
+                <BuilderButton actionParam="'align-items-end'" title.translate="Align Bottom" iconImg="'/html_builder/static/img/snippets_options/align_bottom.svg'"/>
+                <BuilderButton t-if="this.justify" actionParam="'align-items-stretch'" title.translate="Stretch to Equal Height" iconImg="'/html_builder/static/img/snippets_options/align_stretch.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

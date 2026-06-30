@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_production_lot_form" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.lot</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Lots/Serial Numbers">
+                <sheet>
+                <field name="company_id" invisible="1"/>
+                <field name="display_complete" invisible="1"/>
+                <div class="oe_button_box" name="button_box"
+                     invisible="not display_complete">
+                        <button class="oe_stat_button" name="action_lot_open_transfers"
+                                type="object" icon="fa-truck" help="Transfers"
+                                invisible="delivery_count == 0">
+                            <field name="delivery_count" widget="statinfo" string="Transfers"/>
+                        </button>
+                        <button name="action_lot_open_quants" groups="stock.group_stock_multi_locations" icon="fa-arrows" class="oe_stat_button" type="object">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Location</span>
+                            </div>
+                        </button>
+                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Traceability</span>
+                            </div>
+                        </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. LOT/0001/20121"/>
+                    </h1>
+                </div>
+                <group name="main_group">
+                    <group string="Information">
+                        <field name="product_id" context="{'default_is_storable': True, 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
+                        <field name="ref" string="Reference"/>
+                        <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                        <field name="partner_ids" string="Customer" invisible="not partner_ids or not location_id" groups="stock.group_stock_manager"
+                               widget="many2many_tags" options="{'edit_tags': True}"/>
+                    </group>
+                    <group string="Inventory" name="inventory_group">
+                        <label for="product_qty" invisible="not display_complete"/>
+                        <div invisible="not display_complete">
+                            <field name="product_qty" class="oe_inline me-1"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"
+                                   options="{'no_open': True}" class="oe_inline"/>
+                        </div>
+                        <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
+                    </group>
+                    <field name="lot_properties" nolabel="1" columns="2" hideAddButton="1"/>
+                </group>
+                <group name="description" string="Description" invisible="not display_complete">
+                    <field name="note" colspan="2" nolabel="1"/>
+                </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_production_lot_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.list</field>
+        <field name="model">stock.lot</field>
+        <field name="arch" type="xml">
+            <list string="Lots/Serial Numbers" multi_edit="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="product_id" readonly="1"/>
+                <field name="ref" optional="hide"/>
+                <field name="create_date" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="partner_ids" optional="hide" widget="many2many_tags" string="Transfer to"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="lot_properties" optional="hide"/>
+                <field name="product_qty" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_production_lot_kanban" model="ir.ui.view">
+        <field name="name">stock.production.lot.kanban</field>
+        <field name="model">stock.lot</field>
+        <field name="arch" type="xml">
+            <kanban group_create="false" group_delete="false">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder fs-5"/>
+                        <field name="product_id" class="small"/>
+                        <field name="lot_properties" widget="properties"/>
+                        <field name="activity_ids" widget="kanban_activity"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="search_product_lot_filter">
+        <field name="name">Production Lots Filter</field>
+        <field name="model">stock.lot</field>
+        <field name="arch" type="xml">
+            <search string="Product Lots Filter">
+                <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
+                <field name="partner_ids" string="Customers"/>
+                <field name="product_id"/>
+                <field name="lot_properties"/>
+                <field name="create_date"/>
+                <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
+                <filter string="On Hand" name="on_hand" domain="[('product_qty', '>', 0)]"/>
+                <filter string="Creation Date" name="creation_date" date="create_date"/>
+                <group>
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter name="group_by_creation_date" string="Creation date" domain="[]" context="{'group_by': 'create_date'}"/>
+                    <filter name="group_by_Company" string="Company" domain="[]" context="{'group_by': 'company_id'}"/>
+                    <filter name="group_by_lot_properties" string="Properties" context="{'group_by': 'lot_properties'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_production_lot_form" model="ir.actions.act_window">
+        <field name="name">Lots / Serial Numbers</field>
+        <field name="res_model">stock.lot</field>
+        <field name="path">lots</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_production_lot_kanban')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
+        <field name="search_view_id" ref="search_product_lot_filter"/>
+        <field name="context">{'search_default_group_by_location': True, 'display_complete': True}</field>
+        <field name="domain">['|', ('location_id', '=', False), ('location_id.company_id', 'in', allowed_company_ids + [False])]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a lot/serial number
+          </p><p>
+            Lots/Serial numbers help you tracking the path followed by your products.
+            From their traceability report you will see the full history of their use, as well as their composition.
+          </p>
+        </field>
+    </record>
+
+    <record id="action_product_production_lot_form" model="ir.actions.act_window">
+        <field name="name">Lots/Serial Numbers</field>
+        <field name="res_model">stock.lot</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_production_lot_kanban')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
+        <field name="search_view_id" ref="search_product_lot_filter"/>
+        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
+        <field name="domain">['|', ('location_id', '=', False), ('location_id.company_id', 'in', allowed_company_ids + [False])]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a lot/serial number
+          </p><p>
+            Lots/Serial numbers help you tracking the path followed by your products.
+            From their traceability report you will see the full history of their use, as well as their composition.
+          </p>
+        </field>
+    </record>
+
+    <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
+        parent="menu_stock_inventory_control" groups="stock.group_production_lot"
+        sequence="101"/>
+</odoo>

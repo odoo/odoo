@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <report 
-            string="Purchase Order" 
-            id="action_report_purchase_order" 
-            model="purchase.order" 
-            report_type="qweb-pdf"
-            name="purchase.report_purchaseorder" 
-            file="purchase.report_purchaseorder"
-            print_report_name="
+        <record id="action_report_purchase_order" model="ir.actions.report">
+            <field name="name">Purchase Order</field>
+            <field name="model">purchase.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">purchase.report_purchaseorder</field>
+            <field name="report_file">purchase.report_purchaseorder</field>
+            <field name="print_report_name">
                 (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or
-                'Purchase Order - %s' % (object.name))"
-        />
+                'Purchase Order - %s' % (object.name))</field>
+            <field name="binding_model_id" ref="model_purchase_order"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report 
-            string="Request for Quotation" 
-            id="report_purchase_quotation" 
-            model="purchase.order" 
-            report_type="qweb-pdf"
-            name="purchase.report_purchasequotation" 
-            file="purchase.report_purchasequotation"
-            print_report_name="'Request for Quotation - %s' % (object.name)"
-        />
+        <record id="report_purchase_quotation" model="ir.actions.report">
+            <field name="name">Request for Quotation</field>
+            <field name="model">purchase.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">purchase.report_purchasequotation</field>
+            <field name="report_file">purchase.report_purchasequotation</field>
+            <field name="print_report_name">'Request for Quotation - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_purchase_order"/>
+            <field name="binding_type">report</field>
+        </record>
     </data>
 </odoo>

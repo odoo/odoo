@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
+        <ProductCard position="attributes">
+            <attribute name="quantity">state.quantity</attribute>
+        </ProductCard>
+        <QuantityButtons position="attributes">
+            <attribute name="isPlusButtonDisabled">
+                !isComboQuantityAllowed(state.quantity + 1)
+            </attribute>
+        </QuantityButtons>
+        <button name="website_sale_combo_configurator_continue_button" position="attributes">
+            <attribute
+                name="t-att-disabled"
+                add="!isComboQuantityAllowed(state.quantity)"
+                separator=" || "
+            />
+        </button>
+        <button name="website_sale_combo_configurator_checkout_button" position="attributes">
+            <attribute
+                name="t-att-disabled"
+                add="!isComboQuantityAllowed(state.quantity)"
+                separator=" || "
+            />
+        </button>
+    </t>
+</templates>

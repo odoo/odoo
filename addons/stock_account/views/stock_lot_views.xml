@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<record id="view_production_lot_form_stock_account" model="ir.ui.view">
+        <field name="name">view.production.lot.form.stock.account</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+        <group name="inventory_group" position="inside">
+            <field name="company_currency_id" invisible="1"/>
+            <field name="total_value" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+            <field name="avg_cost" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+            <field name="standard_price" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+        </group>
+        </field>
+        </record>
+        </data>
+</odoo>

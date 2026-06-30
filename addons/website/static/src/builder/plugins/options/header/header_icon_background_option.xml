@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.HeaderIconBackgroundOption">
+    <t t-set="supported_headers" t-value="[
+        'header_default_opt',
+        'header_hamburger_opt',
+        'header_boxed_opt',
+        'header_vertical_opt',
+        'header_sales_one_opt',
+        'header_sales_two_opt',
+        'header_sales_four_opt',
+        'header_sidebar_opt'
+    ]"/>
+    <BuilderRow
+        label.translate="Background"
+        tooltip.translate="Add a background around navigation icons"
+        action="'websiteConfig'"
+        t-if="supported_headers.some(isActiveItem)"
+    >
+        <BuilderCheckbox 
+            actionParam="{
+                views: ['!website.template_header_navlink_no_background'],
+                resetViewArch: true,
+            }"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

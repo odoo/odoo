@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventSlotSelectionPopup">
+        <Dialog title="dialogTitle">
+            <div class="text-center pt-2 pb-3">
+                <h3 t-if="!this.state.selectedSlotDisplay" class="text-primary">No Slot Selected</h3>
+                <h3 t-else="" class="text-primary" t-out="this.state.selectedSlotDisplay"/>
+            </div>
+            <div class="row">
+                <div t-foreach="slots" t-as="date" t-key="date" class="col col-sm-6 col-lg-4 pb-3">
+                    <span class="mb-1" t-out="date"/>
+                    <div class="d-flex flex-wrap gap-2 mt-1">
+                        <t t-foreach="slots[date]" t-as="slot" t-key="slot_index">
+                            <t t-set="isAvailable" t-value="slot.availability === 'unlimited' || slot.availability > 0"/>
+                            <button type="button"
+                                t-attf-class="o_event_slot_btn lh-1 btn btn-sm btn-secondary {{isAvailable ? '' : 'text-muted'}}"
+                                t-att-data-slot-id="slot.slotId"
+                                t-attf-disabled="{{isAvailable ? false : true}}"
+                                t-on-click="select">
+                                <span t-attf-class="" t-out="slot.startDatetime" class="lh-1"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

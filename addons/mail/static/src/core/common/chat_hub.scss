@@ -1,0 +1,112 @@
+.o-mail-ChatHub-bubbles {
+    width: $o-mail-ChatHub-bubblesWidth;
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    bottom: calc(#{var(--mail-ChatHub-bubbles-bottom, 0px)} + #{var(--mail-ChatHub-bubbles-bottomLift, 0px)});
+
+    &.o-liftUp {
+        --mail-ChatHub-bubbles-bottomLift: 25px;
+    }
+
+    &.o-mobile {
+        margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
+        --mail-ChatHub-bubbles-bottomLift: 35px;
+    }
+}
+
+.o-mail-ChatHub-bubbleBtn {
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 50%;
+    box-shadow: $box-shadow-sm;
+}
+
+.o-mail-ChatHub-hiddenAvatar {
+    width: 28px;
+    height: 28px;
+}
+
+.o-mail-ChatHub-hiddenBtnIcon {
+    color: #FFFFFF!important;
+    background-color: mix($gray-400, $gray-500) !important;
+    width: $o-mail-ChatBubble-sizeBig !important;
+    height: $o-mail-ChatBubble-sizeBig !important;
+}
+
+.o-mail-ChatHub-hiddenBtnCounter {
+    padding: 4px 8px;
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    top: -4px;
+    right: -4px;
+}
+
+.o-mail-ChatHub-hiddenClose {
+    margin-left: auto;
+    background-color: transparent;
+    opacity: 25%;
+    padding: map-get($spacers, 1) / 2;
+    border: $border-width solid transparent;
+
+    &:hover {
+        border-color: mix($o-gray-300, $o-gray-400);
+    }
+}
+
+.o-mail-ChatHub-hiddenCounter {
+    right: 20px;
+}
+
+.o-mail-ChatHub-hiddenItem {
+    display: flex;
+    align-items: center;
+    max-width: 225px;
+
+    &:hover:not(:has(.o-mail-ChatHub-hiddenClose:hover)), &.o-active {
+        background-color: $o-gray-300;
+    }
+
+    &:hover, &.o-active {
+        cursor: pointer;
+
+        .o-mail-ChatHub-hiddenClose {
+            opacity: 100%;
+        }
+    }
+}
+
+.o-mail-ChatHub-hiddenMenu {
+    border-color: mix($o-gray-300, $o-gray-400) !important;
+}
+
+.o-mail-ChatHub-option {
+    &:hover, &.o-active {
+        background-color: $o-gray-300;
+        cursor: pointer;
+    }
+}
+
+.o-mail-ChatHub-optionsBtn {
+    font-size: 15px;
+    width: 24px !important;
+    height: 24px !important;
+    border: $border-width solid transparent !important;
+
+    &.o-bubblesHover {
+        border-color: mix($o-gray-200, $o-gray-300) !important;
+
+        i {
+            opacity: 50%;
+        }
+    }
+
+    &:hover {
+        border-color: $o-gray-300 !important;
+    }
+    &.show {
+        border-color: mix($o-gray-300, $o-gray-400) !important;
+    }
+    &:hover, &.show {
+        i {
+            opacity: 100%;
+        }
+    }
+}

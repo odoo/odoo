@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.dialog.addFont.singlePreview">
+    <div class="row">
+        <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="previewLabel"/>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
+            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model="state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
+            <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
+        </div>
+    </div>
+</t>
+<t t-name="website.dialog.addFont.preview">
+    <div class="mb-3 row text-center">
+        <label class="col-12">
+            <t t-if="previewFontName">Preview of <t t-out="previewFontName"/></t>
+            <t t-else="">Preview</t>
+        </label>
+    </div>
+    <t t-call="website.dialog.addFont.singlePreview">
+        <t t-set="previewLabel">Light</t>
+        <t t-set="previewWeight">300</t>
+    </t>
+    <t t-call="website.dialog.addFont.singlePreview">
+        <t t-set="previewLabel">Regular</t>
+        <t t-set="previewWeight">400</t>
+    </t>
+    <t t-call="website.dialog.addFont.singlePreview">
+        <t t-set="previewLabel">Bold</t>
+        <t t-set="previewWeight">700</t>
+    </t>
+</t>
+<t t-name="website.dialog.addFont">
+    <Dialog title.translate="Add a Google font or upload a custom font" size="'xl'">
+        <div class="row">
+            <div class="col-lg-7">
+                <!-- Google Font -->
+                <div class="mb-3 row">
+                    <div class="col-form-label col-md-4">
+                        <label for="google_font">Choose from list</label>
+                        <div class="text-muted">Explore on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a>.</div>
+                    </div>
+                    <div class="col-form-label col-md-8 o_field_widget">
+                        <div class="o_input_dropdown">
+                            <GoogleFontAutoComplete value="state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="getGoogleFontList"/>
+                            <span class="o_dropdown_button" />
+                        </div>
+                    </div>
+                    <label class="col-form-label col-md-4" for="google_font_serve">
+                        Serve font from Google servers
+                        <sup class="text-info" title="Use Google’s servers for fonts. It may impact GDPR compliance">
+                            <a target="_blank" href="https://www.odoo.com/forum/help-1/how-to-use-google-fonts-and-respecting-german-requirements-214049">?</a>
+                        </sup>
+                    </label>
+                    <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !state.googleFontFamily}" for="google_font_serve">
+                        <input type="checkbox" checked="checked" class="visually-hidden" t-att-disabled="!state.googleFontFamily" id="google_font_serve" t-model="state.googleServe"/>
+                        <span/>
+                    </label>
+                </div>
+                <hr/>
+                <!-- Upload font -->
+                <div class="mb-3 row">
+                    <div class="col-form-label col-md-4">
+                        <label for="upload_font">Custom Font</label>
+                        <div class="text-muted">zip, ttf, woff, woff2, otf</div>
+                    </div>
+                    <div class="col-md-8">
+                        <input t-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
+                            id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
+                            t-on-change="onUploadChange"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
+                <!-- Preview -->
+                <t t-call="website.dialog.addFont.preview">
+                    <t t-if="state.googleFontFamily">
+                        <t t-set="previewFontName" t-value="state.googleFontFamily"/>
+                    </t>
+                    <t t-elif="state.uploadedFonts.length">
+                        <t t-set="previewFontName" t-value="state.uploadedFontName"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-att-disabled="state.loading" t-on-click="onClickSave">
+                <t t-if="state.loading">
+                    <i class="fa fa-icon fa-icon"/>
+                </t>
+                Save and Reload
+            </button>
+            <button class="btn btn-secondary" t-on-click="onClickCancel">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

@@ -16,21 +16,20 @@ class ProductMargin(models.TransientModel):
         ('paid', 'Paid'),
         ('open_paid', 'Open and Paid'),
         ('draft_open_paid', 'Draft, Open and Paid'),
-    ], 'Invoice State', index=True, required=True, default="open_paid")
+    ], 'Invoice State', required=True, default="open_paid")
 
-    @api.multi
     def action_open_window(self):
         self.ensure_one()
-        context = dict(self.env.context or {})
+        context = dict(self.env.context, create=False, edit=False)
 
-        def ref(module, xml_id):
+        def ref(xml_id):
             proxy = self.env['ir.model.data']
-            return proxy.get_object_reference(module, xml_id)
+            return proxy._xmlid_lookup(xml_id)[1]
 
-        model, search_view_id = ref('product', 'product_search_form_view')
-        model, graph_view_id = ref('product_margin', 'view_product_margin_graph')
-        model, form_view_id = ref('product_margin', 'view_product_margin_form')
-        model, tree_view_id = ref('product_margin', 'view_product_margin_tree')
+        search_view_id = ref('product.product_search_form_view')
+        graph_view_id = ref('product_margin.view_product_margin_graph')
+        form_view_id = ref('product_margin.view_product_margin_form')
+        tree_view_id = ref('product_margin.view_product_margin_tree')
 
         context.update(invoice_state=self.invoice_state)
 
@@ -41,18 +40,17 @@ class ProductMargin(models.TransientModel):
             context.update(date_to=self.to_date)
 
         views = [
-            (tree_view_id, 'tree'),
+            (tree_view_id, 'list'),
             (form_view_id, 'form'),
             (graph_view_id, 'graph')
         ]
         return {
             'name': _('Product Margins'),
             'context': context,
-            'view_type': 'form',
-            "view_mode": 'tree,form,graph',
+            "view_mode": 'list,form,graph',
             'res_model': 'product.product',
             'type': 'ir.actions.act_window',
             'views': views,
             'view_id': False,
-            'search_view_id': search_view_id,
+            'search_view_id': [search_view_id],
         }

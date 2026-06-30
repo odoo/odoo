@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_picking_type_kanban_inherit_stock_fleet" model="ir.ui.view">
+            <field name="name">stock.picking.type.kanban.inherit.stock.transport</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//kanban" position="inside">
+                        <field name="dispatch_management" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//div[@name='kanban_menu_section']" position="after">
+                        <t t-if="record.dispatch_management.raw_value">
+                            <div class="col-6">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a>Transport Management</a>
+                                </h5>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'list,form'}">Manage Batches</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'gantt'}">Dock Dispatching</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'kanban'}">Batches by Route</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'calendar'}">Calendar</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'pivot'}">Statistics</a>
+                                </div>
+                            </div>
+                        </t>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit.stock_fleet</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='auto_batch']" position="before">
+                <label for="dispatch_management"/>
+                <div class="o_row gap-3">
+                    <field name="dispatch_management"/>
+                    <div class="d-flex gap-3" invisible="not dispatch_management" groups="stock.group_stock_multi_locations">
+                        <span class="fw-bold" invisible= "code !='outgoing'">From</span>
+                        <span class="fw-bold" invisible= "code =='outgoing'">To</span>
+                        <field name="dock_ids" placeholder="Dock Locations" widget="many2many_tags" context="{'for_dock_location': True}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

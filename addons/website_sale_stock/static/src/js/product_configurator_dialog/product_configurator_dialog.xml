@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
+        <button name="website_sale_product_configurator_continue_button" position="attributes">
+            <attribute name="t-att-disabled" add="!areQuantitiesAllowed()" separator=" || "/>
+        </button>
+        <button name="website_sale_product_configurator_checkout_button" position="attributes">
+            <attribute name="t-att-disabled" add="!areQuantitiesAllowed()" separator=" || "/>
+        </button>
+    </t>
+</templates>

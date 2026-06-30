@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Create campaign and mailings -->
+        <record id="utm_source_0" model="utm.source">
+            <field name="name">Newsletter 1</field>
+        </record>
+        <record id="mass_mail_campaign_1" model="utm.campaign">
+            <field name="name">Newsletter</field>
+            <field name="stage_id" ref="utm.campaign_stage_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="tag_ids" eval="[(6,0,[ref('utm.utm_tag_1')])]"/>
+        </record>
+    </data>
+</odoo>

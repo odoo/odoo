@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@id='informations']" position="before">
+            <t t-set="forced_vat" t-value="o.company_id.vat"/>
+        </xpath>
+
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">VAT Invoice</t>
+        </t>
+        <t name="draft_invoice_title" position="replace">
+            <t name="draft_invoice_title">Draft VAT Invoice</t>
+        </t>
+        <t name="cancelled_invoice_title" position="replace">
+            <t name="cancelled_invoice_title">Cancelled VAT Invoice</t>
+        </t>
+        <t name="proforma_invoice_title" position="replace">
+            <t name="proforma_invoice_title">Proforma VAT Invoice</t>
+        </t>
+        <t name="draft_proforma_invoice_title" position="replace">
+            <t name="draft_proforma_invoice_title">Draft Proforma VAT Invoice</t>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="replace">
+            <t name="cancelled_proforma_invoice_title">Cancelled Proforma VAT Invoice</t>
+        </t>
+
+        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+
+        <xpath expr="//div[@id='total']" position="after">
+            <div t-if="o.currency_id.id != o.company_id.currency_id.id" class="ms-1">
+                <strong>Exchange Rate</strong>: 1 <span t-esc="o.company_id.currency_id.name"/> = <span t-esc="round(o.invoice_currency_rate, 8)"/> <span t-esc="o.currency_id.name"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_mu_account.report_invoice_document'"
+               t-call="l10n_mu_account.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

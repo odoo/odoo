@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- This channel will gain a forum -->
+    <record id="slide_channel_demo_0_gard_0" model="slide.channel">
+        <field name="name">Basics of Gardening</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">public</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">most_voted</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_quiz')),
+                                     (4, ref('website_slides.slide_channel_tag_dog_friendly'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_gardening.jpg"/>
+        <field name="description">Learn the basics of gardening!</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
+    </record>
+
+    <!-- This channel will be set on payment -->
+    <record id="slide_channel_demo_1_gard1" model="slide.channel">
+        <field name="name">Taking care of Trees</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">public</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">latest</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_quiz'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_gardening_2.jpg"/>
+        <field name="description">Learn how to take care of your favorite trees. Learn when to plant, how to manage potted trees, ...</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
+    </record>
+
+    <!-- This channel will gain a forum -->
+    <record id="slide_channel_demo_2_gard2" model="slide.channel">
+        <field name="name">Trees, Wood and Gardens</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="prerequisite_channel_ids" eval="[(5, 0),
+                                                      (4, ref('website_slides.slide_channel_demo_0_gard_0')),
+                                                      (4, ref('website_slides.slide_channel_demo_1_gard1'))]"/>
+        <field name="enroll">public</field>
+        <field name="channel_type">documentation</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">most_viewed</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                     (4, ref('website_slides.slide_channel_tag_quiz')),
+                                     (4, ref('website_slides.slide_channel_tag_dog_friendly'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_gardening_3.jpg"/>
+        <field name="description">A lot of nice documentation: trees, wood, gardens. A gold mine for references.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=6)"/>
+    </record>
+
+    <record id="slide_channel_demo_3_furn0" model="slide.channel">
+        <field name="name">Choose your wood!</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">invite</field>
+        <field name="visibility">members</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">latest</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture')),
+                                     (4, ref('website_slides.slide_channel_tag_dog_friendly'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_tree_1.jpg"/>
+        <field name="description">Knowing which kind of wood to use depending on your application is important. In this course you
+will learn the basics of wood characteristics.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=5)"/>
+    </record>
+
+    <record id="slide_channel_demo_4_furn1" model="slide.channel">
+        <field name="name">Furniture Technical Specifications</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">invite</field>
+        <field name="channel_type">documentation</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">most_voted</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
+        <field name="description">If you are looking for technical specifications, have a look at this documentation.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+    </record>
+
+    <!-- This channel will gain a certification slide -->
+    <record id="slide_channel_demo_5_furn2" model="slide.channel">
+        <field name="name">Basics of Furniture Creation</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">invite</field>
+        <field name="visibility">connected</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">latest</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture')),
+                                     (4, ref('website_slides.slide_channel_tag_quiz'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture_2.jpg"/>
+        <field name="description">All you need to know about furniture creation.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=3)"/>
+    </record>
+
+    <!-- This channel will be set on payment -->
+    <!-- This channel will gain a certification slide -->
+    <record id="slide_channel_demo_6_furn3" model="slide.channel">
+        <field name="name">DIY Furniture</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="enroll">invite</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">most_voted</field>
+        <field name="is_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                 (4, ref('website_slides.slide_channel_tag_level_advanced')),
+                                 (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                 (4, ref('website_slides.slide_channel_tag_role_furniture'))]"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture_3.jpg"/>
+        <field name="description">So much amazing certification.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
+    </record>
+
+    <record id="slide_tag_demo_cheatsheet" model="slide.tag">
+        <field name="name">CheatSheet</field>
+    </record>
+    <record id="slide_tag_demo_theory" model="slide.tag">
+        <field name="name">Theory</field>
+    </record>
+    <record id="slide_tag_demo_exercises" model="slide.tag">
+        <field name="name">Exercises</field>
+    </record>
+    <record id="slide_tag_demo_tools" model="slide.tag">
+        <field name="name">Tools</field>
+    </record>
+    <record id="slide_tag_demo_colorful" model="slide.tag">
+        <field name="name">Colorful</field>
+    </record>
+    <record id="slide_tag_demo_howto" model="slide.tag">
+        <field name="name">HowTo</field>
+    </record>
+
+</data></odoo>

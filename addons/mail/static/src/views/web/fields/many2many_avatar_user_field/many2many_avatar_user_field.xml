@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.Many2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
+        <xpath expr="//Many2XAutocomplete" position="inside">
+            <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
+                <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
+                <t t-out="inviteTeammatesScope.label"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="mail.Many2ManyAvatarUserTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <img position="attributes">
+            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+        </img>
+    </t>
+
+    <t t-name="mail.KanbanMany2ManyAvatarUserTagsList" t-inherit="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit-mode="primary">
+        <img position="attributes">
+            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+        </img>
+    </t>
+
+    <t t-name="mail.ListMany2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
+        <TagsList position="attributes">
+            <attribute name="displayText">displayText</attribute>
+        </TagsList>
+        <xpath expr="//Many2XAutocomplete" position="inside">
+            <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
+                <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
+                <t t-out="inviteTeammatesScope.label"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="mail.KanbanMany2ManyTagsAvatarUserField" t-inherit="web.KanbanMany2ManyTagsAvatarField" t-inherit-mode="primary">
+        <TagsList position="attributes">
+            <attribute name="displayText">displayText</attribute>
+        </TagsList>
+    </t>
+</templates>

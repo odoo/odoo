@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="stock_account.StockValuationReport.InventoryValuationToggleLine"
+       t-inherit="stock_account.StockValuationReport.InventoryValuationLine"
+       t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
+            <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
+            <t t-if="line.lines">
+                <StockValuationReportToggleLine
+                    label="line.display_name"
+                    line="line"
+                    sublines="line.lines"
+                    level="props.level + 2"
+                    onClickMethod="props.onClickMethod || line.method"
+                    value="line.value"/>
+            </t>
+            <t t-else="">
+                <StockValuationReportLine
+                    label="line.display_name"
+                    line="line"
+                    level="props.level + 2"
+                    onClickMethod="props.onClickMethod || line.method"
+                    value="line.value"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Skill Type -->
+        <record id="hr_skill_type_it" model="hr.skill.type" forcecreate="1">
+            <field name="name">IT</field>
+        </record>
+        <record id="hr_skill_type_dev" model="hr.skill.type" forcecreate="1">
+            <field name="name">Programming Languages</field>
+        </record>
+        <record id="hr_skill_type_marketing" model="hr.skill.type" forcecreate="1">
+            <field name="name">Marketing</field>
+        </record>
+        <record id="hr_skill_type_softskill" model="hr.skill.type" forcecreate="1">
+            <field name="name">Soft Skills</field>
+        </record>
+
+        <!-- Skill Level -->
+        <record id="hr_skill_level_a1" model="hr.skill.level" forcecreate="1">
+            <field name="name">A1</field>
+            <field name="level_progress">10</field>
+            <field name="default_level">1</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_a2" model="hr.skill.level" forcecreate="1">
+            <field name="name">A2</field>
+            <field name="level_progress">40</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_b1" model="hr.skill.level" forcecreate="1">
+            <field name="name">B1</field>
+            <field name="level_progress">60</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_b2" model="hr.skill.level" forcecreate="1">
+            <field name="name">B2</field>
+            <field name="level_progress">75</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_c1" model="hr.skill.level" forcecreate="1">
+            <field name="name">C1</field>
+            <field name="level_progress">85</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_c2" model="hr.skill.level" forcecreate="1">
+            <field name="name">C2</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+
+        <!--Programming-->
+        <record id="hr_skill_level_beginner" model="hr.skill.level" forcecreate="1">
+            <field name="name">Beginner</field>
+            <field name="default_level">1</field>
+            <field name="level_progress">15</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_level_elementary" model="hr.skill.level" forcecreate="1">
+            <field name="name">Elementary</field>
+            <field name="level_progress">25</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_level_intermediate" model="hr.skill.level" forcecreate="1">
+            <field name="name">Intermediate</field>
+            <field name="level_progress">50</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_level_advanced" model="hr.skill.level" forcecreate="1">
+            <field name="name">Advanced</field>
+            <field name="level_progress">80</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_level_expert" model="hr.skill.level" forcecreate="1">
+            <field name="name">Expert</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+
+        <!--Marketing-->
+        <record id="hr_skill_level_ml1" model="hr.skill.level" forcecreate="1">
+            <field name="name">L1</field>
+            <field name="default_level">1</field>
+            <field name="level_progress">25</field>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+        <record id="hr_skill_level_ml2" model="hr.skill.level" forcecreate="1">
+            <field name="name">L2</field>
+            <field name="level_progress">50</field>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+        <record id="hr_skill_level_ml3" model="hr.skill.level" forcecreate="1">
+            <field name="name">L3</field>
+            <field name="level_progress">75</field>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+        <record id="hr_skill_level_ml4" model="hr.skill.level" forcecreate="1">
+            <field name="name">L4</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+
+        <!--Soft Skills-->
+        <record id="hr_skill_level_beginner_softskill" model="hr.skill.level" forcecreate="1">
+            <field name="name">Beginner</field>
+            <field name="default_level">1</field>
+            <field name="level_progress">15</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_elementary_softskill" model="hr.skill.level" forcecreate="1">
+            <field name="name">Elementary</field>
+            <field name="level_progress">25</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_intermediate_softskill" model="hr.skill.level" forcecreate="1">
+            <field name="name">Intermediate</field>
+            <field name="level_progress">50</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_advanced_softskill" model="hr.skill.level" forcecreate="1">
+            <field name="name">Advanced</field>
+            <field name="level_progress">80</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_expert_softskill" model="hr.skill.level" forcecreate="1">
+            <field name="name">Expert</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+
+        <!--IT-->
+        <record id="hr_skill_level_beginner_it" model="hr.skill.level" forcecreate="1">
+            <field name="name">Beginner</field>
+            <field name="default_level">1</field>
+            <field name="level_progress">15</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="hr_skill_level_elementary_it" model="hr.skill.level" forcecreate="1">
+            <field name="name">Elementary</field>
+            <field name="level_progress">25</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="hr_skill_level_intermediate_it" model="hr.skill.level" forcecreate="1">
+            <field name="name">Intermediate</field>
+            <field name="level_progress">50</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="hr_skill_level_advanced_it" model="hr.skill.level" forcecreate="1">
+            <field name="name">Advanced</field>
+            <field name="level_progress">80</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="hr_skill_level_expert_it" model="hr.skill.level" forcecreate="1">
+            <field name="name">Expert</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+
+        <!-- Skill -->
+        <record id="hr_skill_agile_scrum" model="hr.skill" forcecreate="1">
+            <field name="name">Agile and Scrum methodologies</field>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="hr_skill_english" model="hr.skill" forcecreate="1">
+            <field name="name">English</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_python" model="hr.skill" forcecreate="1">
+            <field name="name">Python</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_problem_solving" model="hr.skill" forcecreate="1">
+            <field name="name">Problem-Solving</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_js" model="hr.skill" forcecreate="1">
+            <field name="name">Javascript</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_nosql" model="hr.skill" forcecreate="1">
+            <field name="name">NoSQL</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_decision_making" model="hr.skill" forcecreate="1">
+            <field name="name">Decision-Making</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_communication" model="hr.skill" forcecreate="1">
+            <field name="name">Communication</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_french" model="hr.skill" forcecreate="1">
+            <field name="name">French</field>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_analytics" model="hr.skill" forcecreate="1">
+            <field name="name">Analytics</field>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+        <record id="hr_skill_spark" model="hr.skill" forcecreate="1">
+            <field name="name">Spark</field>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="hr_skill_leadership" model="hr.skill" forcecreate="1">
+            <field name="name">Leadership</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+
+        <!-- Employee Skill -->
+        <record id="employee_eg_skill_it_agile" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="skill_id" ref="hr_skill_agile_scrum"/>
+            <field name="skill_level_id" ref="hr_skill_level_advanced_it"/>
+            <field name="skill_type_id" ref="hr_skill_type_it"/>
+        </record>
+        <record id="employee_eg_skill_lang_en" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="skill_id" ref="hr_skill_english"/>
+            <field name="skill_level_id" ref="hr_skill_level_b2"/>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="employee_eg_skill_dev_py" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="skill_id" ref="hr_skill_python"/>
+            <field name="skill_level_id" ref="hr_skill_level_beginner"/>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="employee_eg_skill_softskill_problem" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="skill_id" ref="hr_skill_problem_solving"/>
+            <field name="skill_level_id" ref="hr_skill_level_intermediate_softskill"/>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="employee_sj_skill_lang_en" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="skill_id" ref="hr_skill_english"/>
+            <field name="skill_level_id" ref="hr_skill_level_b1"/>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="employee_sj_skill_dev_js" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="skill_id" ref="hr_skill_js"/>
+            <field name="skill_level_id" ref="hr_skill_level_expert"/>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="employee_sj_skill_dev_nosql" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="skill_id" ref="hr_skill_nosql"/>
+            <field name="skill_level_id" ref="hr_skill_level_expert"/>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="employee_sj_skill_softskill_decision" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="skill_id" ref="hr_skill_decision_making"/>
+            <field name="skill_level_id" ref="hr_skill_level_intermediate_softskill"/>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="employee_sj_skill_softskill_communication" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="skill_id" ref="hr_skill_communication"/>
+            <field name="skill_level_id" ref="hr_skill_level_beginner_softskill"/>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="employee_mw_skill_lang_en" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="skill_id" ref="hr_skill_english"/>
+            <field name="skill_level_id" ref="hr_skill_level_c2"/>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="employee_mw_skill_lang_fr" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="skill_id" ref="hr_skill_french"/>
+            <field name="skill_level_id" ref="hr_skill_level_a1"/>
+            <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+        </record>
+        <record id="employee_mw_skill_marketing_analytics" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="skill_id" ref="hr_skill_analytics"/>
+            <field name="skill_level_id" ref="hr_skill_level_ml3"/>
+            <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+        </record>
+        <record id="employee_mw_skill_dev_spark" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="skill_id" ref="hr_skill_spark"/>
+            <field name="skill_level_id" ref="hr_skill_level_intermediate"/>
+            <field name="skill_type_id" ref="hr_skill_type_dev"/>
+        </record>
+        <record id="employee_mw_skill_softskill_leadership" model="hr.employee.skill" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="skill_id" ref="hr_skill_leadership"/>
+            <field name="skill_level_id" ref="hr_skill_level_advanced_softskill"/>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+
+        <!-- Resume Line -->
+        <record id="employee_resume_line_emp_eg_1" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="name">Azure Interior</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-4)).strftime('%Y-09-1')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-2)).strftime('%Y-08-31')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_experience"/>
+            <field name="description">Agile Coach</field>
+        </record>
+        <record id="employee_resume_line_emp_sj_1" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="name">Beer &amp; Chips</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-6)).strftime('%Y-03-1')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-4)).strftime('%Y-12-31')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_experience"/>
+            <field name="description">Website master</field>
+        </record>
+        <record id="employee_resume_line_emp_sj_2" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="name">Phillips</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-3)).strftime('%Y-03-1')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-3)).strftime('%Y-12-31')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_experience"/>
+            <field name="description">Software developper</field>
+        </record>
+        <record id="employee_resume_line_emp_mw_1" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="name">Park Lake State School</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-15)).strftime('%Y-09-1')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-12)).strftime('%Y-12-1')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_education"/>
+        </record>
+        <record id="employee_resume_line_emp_mw_2" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="name">Blue Mountains Grammar School</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-11)).strftime('%Y-08-15')"/>
+            <field name="date_end"  eval="(datetime.now()+relativedelta(years=-9)).strftime('%Y-02-1')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_education"/>
+        </record>
+        <record id="employee_resume_line_emp_mw_3" model="hr.resume.line" forcecreate="1">
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="name">Harrington Park Public School</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-8)).strftime('%Y-04-15')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-8)).strftime('%Y-12-15')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_education"/>
+        </record>
+        <record id="employee_resume_line_emp_mw_4" model="hr.resume.line" >
+            <field name="employee_id" ref="hr.employee_mw"/>
+            <field name="name">Schultz Inc</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-7)).strftime('%Y-01-01')"/>
+            <field name="date_end" eval="(datetime.now()+relativedelta(years=-4)).strftime('%Y-12-31')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_experience"/>
+            <field name="description">Engineer, electrical</field>
+        </record>
+        <function model="hr.resume.line" name="write">
+            <value model="hr.resume.line" eval="obj().search([
+                ('name', '=', 'My Company'), ('employee_id', '=', ref('hr.employee_mw'))
+                ], order='id desc', limit=1).id"/>
+            <value eval="{'date_start': (datetime.now()+relativedelta(years=-3)).strftime('%Y-01-01')}"/>
+        </function>
+        <function model="hr.resume.line" name="write">
+            <value model="hr.resume.line" eval="obj().search([
+                ('name', '=', 'My Company'), ('employee_id', '=', ref('hr.employee_eg'))
+                ], order='id desc', limit=1).id"/>
+            <value eval="{'date_start': (datetime.now()+relativedelta(years=-1)).strftime('%Y-01-01')}"/>
+        </function>
+        <function model="hr.resume.line" name="write">
+            <value model="hr.resume.line" eval="obj().search([
+                ('name', '=', 'My Company'), ('employee_id', '=', ref('hr.employee_sj'))
+                ], order='id desc', limit=1).id"/>
+            <value eval="{'date_start': (datetime.now()+relativedelta(years=-2)).strftime('%Y-01-01')}"/>
+        </function>
+    </data>
+</odoo>

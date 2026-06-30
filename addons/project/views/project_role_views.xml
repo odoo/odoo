@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_role_view_list" model="ir.ui.view">
+        <field name="name">project.role.list</field>
+        <field name="model">project.role</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" placeholder="e.g. Developer"/>
+                <field name="color" widget="color_picker" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="project_role_view_form" model="ir.ui.view">
+        <field name="name">project.role.form</field>
+        <field name="model">project.role</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_role_view_kanban" model="ir.ui.view">
+        <field name="name">project.role.kanban</field>
+        <field name="model">project.role</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color">
+                <templates>
+                    <t t-name="menu">
+                        <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item">Edit</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-4 ms-1"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_role_view_search" model="ir.ui.view">
+        <field name="name">project.role.search</field>
+        <field name="model">project.role</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_roles_action" model="ir.actions.act_window">
+        <field name="name">Project Roles</field>
+        <field name="res_model">project.role</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="project_role_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No project role found. Let's create one!
+            </p>
+            <p>
+                Assign roles to tasks in your project templates.
+                When creating a new project from the template, choose who will take on each role.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_roles_action_list" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="project_roles_action"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="project.project_role_view_list"/>
+    </record>
+
+    <record id="project_roles_action_kanban" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="project_roles_action"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project.project_role_view_kanban"/>
+    </record>
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
+                <field name="website_id" invisible="1"/>
+                <field name="website_published" invisible="1"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
+                <label for="website_visibility" string="Visibility"/>
+                <div class="d-flex row">
+                    <div class="col-5 pe-0">
+                        <field name="website_visibility"/>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <button name="website_publish_button" type="object" string="Publish"
+                            invisible="website_published or website_visibility == 'public'" class="btn btn-sm btn-link h-100 ms-2"/>
+                        <span invisible="not website_published or website_visibility == 'public'" class="ms-2">
+                            <field name="event_register_url" widget="CopyClipboardButton"/>
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="context">{'default_website_id': website_id}</attribute>
+                <attribute name="groups">website.group_multi_website</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
+                <field name="is_published" widget="website_redirect_button"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <field name="website_url" invisible="1"/>
+            </div>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div name="event_menu_configuration" groups="base.group_no_one">
+                    <label for="website_menu" string="Website Submenu" class="me-1"/>
+                    <field name="website_menu" class="me-3"/>
+                    <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
+                    <field name="introduction_menu" invisible="1"/>
+                    <field name="register_menu" invisible="1"/>
+                    <label for="community_menu" string="Community" invisible="1" class="me-1"/>
+                    <field name="community_menu" invisible="1" class="me-3"/>
+                </div>
+            </xpath>
+            <field name="tag_ids" position="attributes">
+                <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
+                <attribute name="invisible">not website_id</attribute>
+            </field>
+
+            <field name="tag_ids" position="after">
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" invisible="website_id"></field>
+            </field>
+            
+        </field>
+    </record>
+
+    <record id="event_event_view_list" model="ir.ui.view">
+        <field name="name">event.event.view.list.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="company_id" column_invisible="True"/>
+                <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_event_view_search" model="ir.ui.view">
+        <field name="name">event.event.search.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='upcoming']" position="after">
+                <separator/>
+                <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

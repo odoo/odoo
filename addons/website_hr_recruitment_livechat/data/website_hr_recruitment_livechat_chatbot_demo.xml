@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="chatbot_script_website_hr_recruitment" model="chatbot.script">
+            <field name="title">Jobs Bot</field>
+            <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
+        </record>
+
+         <record id="website_hr_recruitmentlivechat_channel_rule_chatbot" model="im_livechat.channel.rule" forcecreate='False'>
+            <field name="regex_url">/jobs$</field>
+            <field name="action">auto_popup</field>
+            <field name="auto_popup_timer">2</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="channel_id" ref="im_livechat.im_livechat_channel_data"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_welcome" model="chatbot.script.step">
+            <field name="message">Hello, can I help you find the perfect job?</field>
+            <field name="sequence">1</field>
+            <field name="step_type">free_input_single</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_department" model="chatbot.script.step">
+            <field name="message">What kind of job are you looking for?</field>
+            <field name="sequence">2</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+        </record>
+
+        <!-- Sales -->
+
+        <record id="chatbot_script_website_hr_recruitment_department_sales" model="chatbot.script.answer">
+            <field name="name">Sales</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_department"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_community_position" model="chatbot.script.step">
+            <field name="message">We have a community manager position in stock, it should fit your needs!</field>
+            <field name="sequence">3</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_department_sales')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_chat_hr" model="chatbot.script.step">
+            <field name="message">Do you want to chat with one of our HR about this job?</field>
+            <field name="sequence">4</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_department_sales')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_chat_hr_yes" model="chatbot.script.answer">
+            <field name="name">Yes please!</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_sales_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_chat_hr_yes_forward" model="chatbot.script.step">
+            <field name="message">You will be forwarded to one of our HR agent.</field>
+            <field name="sequence">5</field>
+            <field name="step_type">forward_operator</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_sales_chat_hr_yes')),
+            ]"/>
+        </record>
+
+         <record id="chatbot_script_website_hr_recruitment_sales_noon_available" model="chatbot.script.step">
+            <field name="message">Hu-ho, it looks like none of our operators are available 🙁</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_sales_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_mail" model="chatbot.script.step">
+            <field name="message">Would you mind leaving your email address so that we can reach you back?</field>
+            <field name="sequence">7</field>
+            <field name="step_type">question_email</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_sales_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_thanks" model="chatbot.script.step">
+            <field name="message">Thank you, you should hear back from us very soon!</field>
+            <field name="sequence">8</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_sales_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_chat_hr_no" model="chatbot.script.answer">
+            <field name="name">No I will discover by myself!</field>
+            <field name="sequence">2</field>
+            <field name="redirect_link">/jobs/marketing-and-community-manager-6</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_sales_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_sales_chat_end" model="chatbot.script.step">
+            <field name="message">There you go, have a look.</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_sales_chat_hr_no')),
+            ]"/>
+        </record>
+
+        <!-- Services -->
+
+         <record id="chatbot_script_website_hr_recruitment_department_services" model="chatbot.script.answer">
+            <field name="name">Services</field>
+            <field name="sequence">2</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_department"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_details_service" model="chatbot.script.step">
+            <field name="message">What are you looking for into the Services Department?</field>
+            <field name="sequence">3</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_department_services')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_answser_social_media" model="chatbot.script.answer">
+            <field name="name">Manage social media</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_details_service"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_community_position" model="chatbot.script.step">
+            <field name="message">We have a community manager position in stock, it should fit your needs!</field>
+            <field name="sequence">4</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_answser_social_media')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_service_community_chat_hr" model="chatbot.script.step">
+            <field name="message">Do you want to chat with one of our HR about this job?</field>
+            <field name="sequence">5</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_answser_social_media')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_community_chat_hr_yes" model="chatbot.script.answer">
+            <field name="name">Yes please!</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_service_community_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_community_chat_hr_yes_forward" model="chatbot.script.step">
+            <field name="message">You will be forwarded to one of our HR agent.</field>
+            <field name="sequence">5</field>
+            <field name="step_type">forward_operator</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_community_chat_hr_yes')),
+            ]"/>
+        </record>
+
+         <record id="chatbot_script_website_hr_recruitment_services_community_noon_available" model="chatbot.script.step">
+            <field name="message">Hu-ho, it looks like none of our operators are available 🙁</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_community_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_community_mail" model="chatbot.script.step">
+            <field name="message">Would you mind leaving your email address so that we can reach you back?</field>
+            <field name="sequence">7</field>
+            <field name="step_type">question_email</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_community_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_community_thanks" model="chatbot.script.step">
+            <field name="message">Thank you, you should hear back from us very soon!</field>
+            <field name="sequence">8</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_community_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_service_community_chat_hr_no" model="chatbot.script.answer">
+            <field name="name">No I will discover by myself!</field>
+            <field name="sequence">2</field>
+            <field name="redirect_link">/jobs/marketing-and-community-manager-6</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_service_community_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_service_community_chat_end" model="chatbot.script.step">
+            <field name="message">There you go, have a look.</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_service_community_chat_hr_no')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_answser_master_product" model="chatbot.script.answer">
+            <field name="name">Master the product</field>
+            <field name="sequence">2</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_details_service"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_position" model="chatbot.script.step">
+            <field name="message">We have a consultant position in stock, it should fit your needs!</field>
+            <field name="sequence">4</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_answser_master_product')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_chat_hr" model="chatbot.script.step">
+            <field name="message">Do you want to chat with one of our HR about this job?</field>
+            <field name="sequence">5</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_answser_master_product')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes" model="chatbot.script.answer">
+            <field name="name">Yes please!</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_services_consultant_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes_forward" model="chatbot.script.step">
+            <field name="message">You will be forwarded to one of our HR agent.</field>
+            <field name="sequence">5</field>
+            <field name="step_type">forward_operator</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes')),
+            ]"/>
+        </record>
+
+         <record id="chatbot_script_website_hr_recruitment_services_consultant_noon_available" model="chatbot.script.step">
+            <field name="message">Hu-ho, it looks like none of our operators are available 🙁</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_mail" model="chatbot.script.step">
+            <field name="message">Would you mind leaving your email address so that we can reach you back?</field>
+            <field name="sequence">7</field>
+            <field name="step_type">question_email</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_thanks" model="chatbot.script.step">
+            <field name="message">Thank you, you should hear back from us very soon!</field>
+            <field name="sequence">8</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_consultant_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_services_consultant_chat_hr_no" model="chatbot.script.answer">
+            <field name="name">No I will discover by myself!</field>
+            <field name="sequence">2</field>
+            <field name="redirect_link">/jobs/consultant-3</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_services_consultant_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_service_consultant_chat_end" model="chatbot.script.step">
+            <field name="message">There you go, have a look.</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_services_consultant_chat_hr_no')),
+            ]"/>
+        </record>
+
+        <!-- R&D -->
+
+         <record id="chatbot_script_website_hr_recruitment_department_rd" model="chatbot.script.answer">
+            <field name="name">R&amp;D</field>
+            <field name="sequence">3</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_department"/>
+        </record>
+
+         <record id="chatbot_script_website_hr_recruitment_rd_dev_position" model="chatbot.script.step">
+            <field name="message">We have an experienced developer position in stock, it should fit your needs!</field>
+            <field name="sequence">3</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_department_rd')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_chat_hr" model="chatbot.script.step">
+            <field name="message">Do you want to chat with one of our HR about this job?</field>
+            <field name="sequence">4</field>
+            <field name="step_type">question_selection</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_department_rd')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_chat_hr_yes" model="chatbot.script.answer">
+            <field name="name">Yes please!</field>
+            <field name="sequence">1</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_rd_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_chat_hr_yes_forward" model="chatbot.script.step">
+            <field name="message">You will be forwarded to one of our HR agent.</field>
+            <field name="sequence">5</field>
+            <field name="step_type">forward_operator</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_rd_chat_hr_yes')),
+            ]"/>
+        </record>
+
+         <record id="chatbot_script_website_hr_recruitment_rd_noon_available" model="chatbot.script.step">
+            <field name="message">Hu-ho, it looks like none of our operators are available 🙁</field>
+            <field name="sequence">6</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_rd_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_mail" model="chatbot.script.step">
+            <field name="message">Would you mind leaving your email address so that we can reach you back?</field>
+            <field name="sequence">7</field>
+            <field name="step_type">question_email</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_rd_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_thanks" model="chatbot.script.step">
+            <field name="message">Thank you, you should hear back from us very soon!</field>
+            <field name="sequence">8</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_rd_chat_hr_yes')),
+            ]"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_chat_hr_no" model="chatbot.script.answer">
+            <field name="name">No I will discover by myself!</field>
+            <field name="sequence">2</field>
+            <field name="redirect_link">/jobs/experienced-developer-4</field>
+            <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_rd_chat_hr"/>
+        </record>
+
+        <record id="chatbot_script_website_hr_recruitment_rd_chat_end" model="chatbot.script.step">
+            <field name="message">There you go, have a look.</field>
+            <field name="sequence">5</field>
+            <field name="step_type">text</field>
+            <field name="chatbot_script_id" ref="chatbot_script_website_hr_recruitment"/>
+            <field name="triggering_answer_ids" eval="[
+                (4, ref('chatbot_script_website_hr_recruitment_rd_chat_hr_no')),
+            ]"/>
+        </record>
+    </data>
+</odoo>

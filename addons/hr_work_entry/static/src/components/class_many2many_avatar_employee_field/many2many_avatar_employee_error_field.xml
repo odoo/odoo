@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="hr_work_entry.Many2ManyAvatarUserTagsListError" t-inherit="mail.Many2ManyAvatarUserTagsList" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="#{tag.inError ? 'text-danger' : ''}"/>
+        </xpath>
+        <div t-if="props.displayText" position="after">
+            <i t-if="tag.inError" class="ms-1 fa fa-lock z-1"/>
+        </div>
+    </t>
+</template>

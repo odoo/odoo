@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallParticipantVideo">
+        <video class="w-100 h-100 cursor-pointer"
+            t-att-class="{ 'o-inset rounded-1': props.inset }"
+            t-att-type="props.type"
+            t-att-data-facing-mode="store.settings.cameraFacingMode"
+            playsinline="true"
+            autoplay="true"
+            muted="true"
+            t-on-loadedmetadata="onVideoLoadedMetaData"
+            t-ref="root"
+        />
+    </t>
+</templates>

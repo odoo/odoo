@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.common.form.inherit.l10n_hr</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="l10n_hr_kpd_category_id" invisible="'HR' not in fiscal_country_codes" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

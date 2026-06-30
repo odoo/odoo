@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_expense" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_expense"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            type="object"
+                            invisible="nb_expenses == 0">
+                        <field string="Expenses" name="nb_expenses" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_list_expense" model="ir.ui.view">
+            <field name="name">account.move.hr.expense.list</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <list js_class="account_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" sample="1">
+                    <field name="made_sequence_gap" column_invisible="True"/>
+                    <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
+                    <field name="partner_id" string="Partner" optional="show" readonly="True"/>
+                    <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
+                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
+                    <field name="invoice_origin" optional="hide" string="Source Document"/>
+                    <field name="payment_reference" optional="hide"/>
+                    <field name="ref" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
+                    <field name="amount_untaxed_in_currency_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                    <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
+                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="hide" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
+                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
+                    <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="checked" optional="hide" widget="boolean_toggle"/>
+                    <field name="status_in_payment"
+                           string="Status"
+                           widget="badge"
+                           decoration-info="status_in_payment == 'draft'"
+                           decoration-danger="status_in_payment == 'cancel'"
+                           decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                           decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"
+                           invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
+                           optional="show"
+                    />
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

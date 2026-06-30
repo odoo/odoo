@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.EmbeddedToggleBlock">
+       <div class="d-flex flex-row align-items-center">
+            <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" t-on-click="onToggle" t-on-pointerdown.prevent="" type="button">
+                <i t-attf-class="fa align-self-center fa-caret-{{this.state.showContent ? 'down' : 'right'}}"/>
+            </button>
+            <div class="flex-fill ms-1" t-ref="title"/>
+        </div>
+        <div class="ps-4 ms-1" t-att-class="{ 'd-none': !state.showContent }" t-ref="content"/>
+    </t>
+</templates>

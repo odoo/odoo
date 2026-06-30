@@ -1,0 +1,8 @@
+<templates>
+    <t t-inherit="html_builder.ImageToolOption" t-inherit-mode="extension">
+        <!-- Hide the image "Size" option when card cover width control is available -->
+        <xpath expr="//BuilderRow[@label.translate='Size']" position="attributes">
+            <attribute name="t-if" add="!this.env.getEditingElement().closest('.o_card_img_wrapper')" separator=" and "/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,77 @@
+@mixin o-mail-AttachmentView {
+    > .o-mail-Attachment {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        .arrow {
+            width: 5%;
+            @include o-position-absolute(50%, 0);
+            @include o-FileViewer-arrow;
+            transition: width 0.3s;
+            padding-top: 30px;
+            height: 75px;
+            &:hover {
+                width: 7%;
+            }
+            &.o_move_previous {
+                left: 2px;
+                right: 0px;
+            }
+        }
+        > iframe {
+            width: 100%;
+            height: 100%;
+        }
+        > .o-mail-Attachment-imgContainer {
+            position: absolute;
+            overflow: auto;
+            width: 100%;
+            height: 100%;
+            > img {
+                margin: var(--o-Mail-Attachment-img-margin, auto);
+                box-shadow: 0px 0px 5px rgba(41, 41, 41, 0.43);
+            }
+        }
+    }
+}
+
+@include media-breakpoint-up(xxl) {
+    .o_attachment_preview {
+        display: block;
+        flex: auto;
+        overflow: hidden;
+        width: $o-mail-Chatter-minWidth;
+
+        @include o-mail-AttachmentView;
+    }
+    .o_attachment_control {
+        position: absolute;
+        top: 8%;
+        background-color: black;
+        opacity: 0.3;
+        margin-top: -15px;
+        transition: all 0.3s;
+        z-index: $zindex-dropdown; // due to the absolute position in o-mail-Attachment-imgContainer
+        &:hover {
+            opacity: 0.7;
+        }
+        &.popout {
+            right: 0px;
+            border-radius: 30px 0 0 30px;
+            padding: 15px 0 15px 15px;
+            &:hover {
+                padding-right: 15px;
+            }
+        }
+    }
+}
+
+// Attachment in external window
+.o-mail-PopoutAttachmentView {
+    width: auto;
+
+    @include o-mail-AttachmentView;
+    .o_attachment_control {
+        display: none;
+    }
+}

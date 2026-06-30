@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_task_project_user_pivot_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_pivot"/>
+            <field name="arch" type="xml">
+                <field name="remaining_hours" position="after">
+                    <field name="remaining_hours_so" widget="timesheet_uom"/>
+                </field>
+             </field>
+        </record>
+
+        <record id="view_task_project_user_fsm_pivot_base_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.fsm.pivot.base.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_fsm_pivot_base"/>
+            <field name="arch" type="xml">
+                <field name="remaining_hours_so" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+             </field>
+        </record>
+
+        <record id="view_task_project_user_fsm_graph_base_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.fsm.graph.base.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_fsm_graph_base"/>
+            <field name="arch" type="xml">
+                <field name="remaining_hours" position="after">
+                    <field name="remaining_hours_so" invisible="1"/>
+                </field>
+             </field>
+        </record>
+    </data>
+</odoo>

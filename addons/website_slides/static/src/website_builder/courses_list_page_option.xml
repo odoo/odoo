@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_slides.CoursesListPageOption">
+    <BuilderRow label.translate="New Content Badge">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.course_card_information_badge']}"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website_slides.CoursesListAsidePageOption">
+    <BuilderRow label.translate="Achievements">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_latest_achievements']}"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Leaderboard">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_leaderboard']}"/>
+    </BuilderRow>
+
+</t>
+
+</templates>

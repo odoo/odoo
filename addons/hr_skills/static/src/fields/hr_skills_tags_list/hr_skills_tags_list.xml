@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_skills.SkillsTagsList" t-inherit="web.TagsList">
+        <xpath expr='//span[hasclass("o_tag")]' position="attributes">
+            <attribute name="t-attf-class" add="{{ getTextStyle(tag) ? 'border border-2' : '' }}" separator=" "/>
+            <attribute name="t-attf-style" add="{{ getTextStyle(tag) ? 'border-color: rgb(140, 140, 140) !important ;' : ''}}" separator=" "/>
+        </xpath>
+        <xpath expr='//div[hasclass("o_tag_badge_text")]' position="attributes">
+            <attribute name="t-attf-class" add="{{ getTextStyle(tag) ? 'fw-bold' : '' }}" separator=" "/>
+        </xpath>
+    </t>
+
+</templates>

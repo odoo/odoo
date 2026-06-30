@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+    <record id="cron_verifactu_batch" model="ir.cron">
+        <field name="name">Veri*Factu: Submit / Cancel Records</field>
+        <field name="model_id" ref="model_l10n_es_edi_verifactu_document"/>
+        <field name="state">code</field>
+        <field name="code">model.trigger_next_batch()</field>
+        <field name="interval_type">days</field>
+        <field name="interval_number">1</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_tr_LineDelivery">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cac:Delivery>
+                <cac:DeliveryAddress>
+                    <t t-set="delivery_address_vals" t-value="vals.get('delivery_address_vals', {})"/>
+                    <cbc:StreetName t-out="delivery_address_vals.get('street')"/>
+                    <cbc:CitySubdivisionName t-out="delivery_address_vals.get('city')"/>
+                    <cbc:CityName t-out="delivery_address_vals.get('state')"/>
+                    <cbc:PostalZone t-out="delivery_address_vals.get('zip')"/>
+                    <cac:Country>
+                        <cbc:Name t-out="delivery_address_vals.get('country')"/>
+                    </cac:Country>
+                </cac:DeliveryAddress>
+                <cac:DeliveryTerms>
+                    <cbc:ID schemeID="INCOTERMS" t-out="vals.get('incoterm_code')"/>
+                </cac:DeliveryTerms>
+                <cac:Shipment>
+                    <cbc:ID t-out="vals.get('id')"/>
+                    <cac:GoodsItem>
+                        <cbc:RequiredCustomsID t-out="vals.get('product_customs_code')"/>
+                    </cac:GoodsItem>
+                    <cac:ShipmentStage>
+                        <cbc:TransportModeCode t-out="vals.get('shipping_method_code')"/>
+                    </cac:ShipmentStage>
+                </cac:Shipment>
+            </cac:Delivery>
+        </t>
+    </template>
+</odoo>

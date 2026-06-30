@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+         <record model="pos.config" id="point_of_sale.pos_config_main">
+            <field name="iface_available_categ_ids" eval="[(4, ref('pos_event.pos_category_event'))]" />
+        </record>
+    </data>
+</odoo>

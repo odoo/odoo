@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.RottingColumnProgress" t-inherit="web.ColumnProgress" t-inherit-mode="primary">
+        <AnimatedNumber position="before">
+            <t t-set="rottingAggregate" t-value="getRottingGroupCount(props.group)"/>
+            <div t-if="rottingAggregate.value > 0" t-on-click="onRottingIconClick"
+                t-attf-class="badge rounded-pill o_mail_resource_rotting_bg ms-3 {{ this.rottingFilterAvailable ? 'cursor-pointer' : 'cursor-default' }}"
+                t-att-title="rottingAggregate.title">
+                <div class="text-900 text-nowrap">
+                    <b t-out="rottingAggregate.value"/>
+                </div>
+            </div>
+        </AnimatedNumber>
+    </t>
+</templates>

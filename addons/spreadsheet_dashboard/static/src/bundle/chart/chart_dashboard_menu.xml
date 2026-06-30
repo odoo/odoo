@@ -1,0 +1,16 @@
+<odoo>
+    <div t-name="spreadsheet_dashboard.ChartDashboardMenu" t-inherit="o-spreadsheet-ChartDashboardMenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-dashboard-chart-select')]/div/button[last()]" position="before">
+            <t t-set="granularity" t-value="env.model.getters.getChartGranularity(props.chartId)?.granularity"/>
+            <t t-if="granularity and granularityOptions.length">
+                <select t-on-change="onGranularitySelected" class="position-relative o-chart-dashboard-item w-auto form-select rounded py-0 px-1 text-muted" name="chart-granularity">
+                    <t t-foreach="granularityOptions" t-as="option" t-key="option.value">
+                        <option t-att-value="option.value" t-att-selected="option.value === granularity">
+                            <span t-esc="option.label"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
+        </xpath>
+    </div>
+</odoo>

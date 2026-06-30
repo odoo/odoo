@@ -1,199 +1,563 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.hr_expense.tests.common import CommonTest
+from odoo import Command
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.tests import tagged
 
 
-class TestReInvoice(CommonTest):
+@tagged('-at_install', 'post_install')
+class TestReInvoice(TestExpenseCommon, TestSaleCommon):
+    """
+    Test that expenses, when linked to a sale order and invoiced are correctly re-invoiced on the sale order.
+    It should cover the following rules:
+        - Lines are never grouped together (even if re-invoiced at sale price and with a re-invoice delivered policy)
+        - When posting the move of an expense, it creates the corresponding SOLs with the correct expense quantity
+        - The amount of analytic account linked do not impact the quantities on the SOLs
+        - The quantities ordered and delivered are reset to 0 when:
+            - the expense move has been reset to draft
+            - the expense move is reversed
+            - the expense move has been reset to draft
+        - As it should be a one-to-one relation between model, we need to ensure that one expense only impacts one SOL
+    The test tries to cover all the possible combinations of expense and invoicing policies, as well as the different actions
+    """
 
     @classmethod
     def setUpClass(cls):
-        super(TestReInvoice, cls).setUpClass()
-
-        cls.partner_customer = cls.env['res.partner'].create({
-            'name': 'Ze Client',
-            'email': 'client@agrolait.com',
-            'property_account_payable_id': cls.account_payable.id,
+        super().setUpClass()
+        new_sale_tax, new_purchase_tax = cls.env['account.tax'].create([{
+            'name': 'Tax 12.499%',
+            'amount': 12.499,
+            'amount_type': 'percent',
+            'type_tax_use': tax_type,
+            'repartition_line_ids': [
+                Command.create({'document_type': 'invoice', 'repartition_type': 'base'}),
+                Command.create({
+                    'document_type': 'invoice',
+                    'repartition_type': 'tax',
+                    'account_id': cls.company_data[f'default_account_tax_{tax_type}'].id
+                }),
+                Command.create({'document_type': 'refund', 'repartition_type': 'base'}),
+                Command.create({
+                    'document_type': 'refund',
+                    'repartition_type': 'tax',
+                    'account_id': cls.company_data[f'default_account_tax_{tax_type}'].id
+                }),
+            ],
+        } for tax_type in ('sale', 'purchase')])
+        cls.company_data.update({
+            'service_order_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
+                'name': 'service_order_sales_price',
+                'categ_id': cls.product_category.id,
+                'standard_price': 0.,
+                'list_price': 280.39,
+                'type': 'service',
+                'weight': 0.01,
+                'uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'default_code': 'FURN_99991',
+                'invoice_policy': 'order',
+                'expense_policy': 'sales_price',
+                'taxes_id': [Command.set([new_sale_tax.id])],
+                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'can_be_expensed': True,
+            }),
+            'service_delivery_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
+                'name': 'service_order_sales_price',
+                'categ_id': cls.product_category.id,
+                'standard_price': 0.,
+                'list_price': 280.39,
+                'type': 'service',
+                'weight': 0.01,
+                'uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'default_code': 'FURN_99992',
+                'invoice_policy': 'delivery',
+                'expense_policy': 'sales_price',
+                'taxes_id': [Command.set([new_sale_tax.id])],
+                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'can_be_expensed': True,
+            }),
+            'service_delivery_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
+                'name': 'service_delivery_cost_price',
+                'categ_id': cls.product_category.id,
+                'standard_price': 235.28,
+                'list_price': 280.39,
+                'type': 'service',
+                'weight': 0.01,
+                'uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'default_code': 'FURN_99993',
+                'invoice_policy': 'delivery',
+                'expense_policy': 'cost',
+                'taxes_id': [Command.set([new_sale_tax.id])],
+                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'can_be_expensed': True,
+            }),
+            'service_order_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
+                'name': 'service_order_cost_price',
+                'categ_id': cls.product_category.id,
+                'standard_price': 235.28,
+                'list_price': 280.39,
+                'type': 'service',
+                'weight': 0.01,
+                'uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'default_code': 'FURN_99994',
+                'invoice_policy': 'order',
+                'expense_policy': 'cost',
+                'taxes_id': [Command.set([new_sale_tax.id])],
+                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'can_be_expensed': True,
+            }),
         })
-
-        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer.id,
-            'partner_invoice_id': cls.partner_customer.id,
-            'partner_shipping_id': cls.partner_customer.id,
-        })
-
-    def test_at_cost(self):
-        """ Test invoicing expenses at cost for product based on delivered and ordered quantities. """
         # create SO line and confirm SO (with only one line)
-        sale_order_line = self.env['sale.order.line'].create({
-            'name': self.product_ordered_cost.name,
-            'product_id': self.product_ordered_cost.id,
-            'product_uom_qty': 2,
-            'product_uom': self.product_ordered_cost.uom_id.id,
-            'price_unit': self.product_ordered_cost.list_price,
-            'order_id': self.sale_order.id,
+        cls.expense_sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'order_line': [Command.create({
+                'name': 'expense_employee: expense_1 invoicing=order, expense=sales_price',
+                # Using the same name as one of the expense
+                'product_id': cls.company_data['product_order_sales_price'].id,
+                'product_uom_qty': 3.0,
+                'price_unit': cls.company_data['product_order_sales_price'].standard_price,
+            })],
         })
-        sale_order_line.product_id_change()
-        self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
-        self.sale_order.action_confirm()
+        cls.expense_sale_order.action_confirm()
 
-        self.assertTrue(self.sale_order.analytic_account_id, "Confirming SO with an expense product should trigger the analytic account creation")
+        # Create 6 expenses, covering all the expense & invoicing policies combinaisons
+        cls.sale_exp_order_sale_1 = cls.create_expenses({
+            'name': 'expense_1 invoicing=order, expense=sales_price',
+            'date': '2016-01-01',
+            'product_id': cls.company_data['service_order_sales_price'].id,
+            'total_amount': 100.34,
+            'analytic_distribution': {cls.analytic_account_1.id: 100},
+            'employee_id': cls.expense_employee.id,
+            'sale_order_id': cls.expense_sale_order.id,
+        })
+        cls.sale_exp_order_sale_2 = cls.create_expenses({
+            'name': 'expense_2 invoicing=order, expense=sales_price',
+            'date': '2016-01-02',
+            'product_id': cls.company_data['service_order_sales_price'].id,
+            'total_amount': 100.21,
+            'sale_order_id': cls.expense_sale_order.id,
+        })
+        cls.sale_exp_deliv_sale_3 = cls.create_expenses({
+            'name': 'expense_3 invoicing=delivery, expense=sales_price',
+            'date': '2016-01-03',
+            'product_id': cls.company_data['service_delivery_sales_price'].id,
+            'total_amount': 10012.49,
+            'analytic_distribution': {cls.analytic_account_1.id: 100},
+            'sale_order_id': cls.expense_sale_order.id,
+        })
+        cls.sale_exp_deliv_sale_4 = cls.create_expenses({
+            'name': 'expense_4 invoicing=delivery, expense=sales_price',
+            'date': '2016-01-03',
+            'product_id': cls.company_data['service_delivery_sales_price'].id,
+            'analytic_distribution': {cls.analytic_account_1.id: 100},
+            'total_amount': 10012.49,
+            'sale_order_id': cls.expense_sale_order.id,
+        })
+        cls.sale_exp_deliv_cost_5 = cls.create_expenses({
+            'name': 'expense_5 invoicing=delivery, expense=cost',
+            'date': '2016-01-03',
+            'product_id': cls.company_data['service_delivery_cost_price'].id,
+            'quantity': 5,
+            'sale_order_id': cls.expense_sale_order.id,
+        })
+        cls.sale_exp_order_cost_6 = cls.create_expenses({
+            'name': 'expense_6 invoicing=order, expense=cost',
+            'date': '2016-01-03',
+            'product_id': cls.company_data['service_order_cost_price'].id,
+            'quantity': 6,
+            'sale_order_id': cls.expense_sale_order.id,
+            },
+        )
+        cls.sale_expense_all = (
+                cls.sale_exp_order_sale_1
+                | cls.sale_exp_order_sale_2
+                | cls.sale_exp_deliv_sale_3
+                | cls.sale_exp_deliv_sale_4
+                | cls.sale_exp_deliv_cost_5
+                | cls.sale_exp_order_cost_6
+        )
+        cls.sale_expense_all.action_submit()
+        cls.sale_expense_all._do_approve()  # Skip duplicate wizard
 
-        # create expense lines
-        expense1 = self.env['hr.expense'].create({
-            'name': 'Expense for ordered product',
-            'employee_id': self.employee.id,
-            'product_id': self.product_ordered_cost.id,
-            'unit_amount': 12,
+    def test_expenses_reinvoice_case_1_create_moves(self):
+        """
+        CASE 1: Creation of the expenses moves. The sale order lines are created.
+        """
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'is_expense': False, 'expense_ids': []},
+            # [1-6] Expenses Lines: created with the correct quantities and linked to the expense
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'is_expense': True,  'expense_ids': [self.sale_exp_order_sale_1.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'is_expense': True,  'expense_ids': [self.sale_exp_order_sale_2.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'is_expense': True,  'expense_ids': [self.sale_exp_deliv_sale_3.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'is_expense': True,  'expense_ids': [self.sale_exp_deliv_sale_4.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'is_expense': True,  'expense_ids': [self.sale_exp_deliv_cost_5.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'is_expense': True,  'expense_ids': [self.sale_exp_order_cost_6.id]},
+        ])
+
+    def test_expenses_reinvoice_case_2_reset_expense_to_draft(self):
+        """
+        CASE 2: Reset to draft of the expenses, the quantities of the corresponding SOL are set to 0
+        """
+        # CASE 1 steps
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        # CASE 2 steps
+        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.unlink()
+        self.sale_expense_all.action_reset()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] Expense Lines: quantities are reset to 0 and expenses are unlinked
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+        ])
+
+    def test_expenses_reinvoice_case_3_recreate_move_after_reset(self):
+        """
+        CASE 3: Re-Approve and Re-Post the expense after a reset, creating new SOLs with the correct quantities
+        """
+        # CASE 1 steps
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        # CASE 2 steps
+        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.unlink()
+        self.sale_expense_all.action_reset()
+
+        # CASE 3 steps
+        self.sale_expense_all.action_submit()
+        self.sale_expense_all._do_approve()  # Skip duplicate wizard
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] CASE 2 Lines: no change
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            # [7-12] CASE 3 Lines: created with the correct quantities and linked to the expense
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_1.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_2.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_3.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_4.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'expense_ids': [self.sale_exp_deliv_cost_5.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'expense_ids': [self.sale_exp_order_cost_6.id]},
+        ])
+
+    def test_expenses_reinvoice_case_4_reset_expense_move_to_draft(self):
+        """
+        CASE 4: Reset to draft of the expenses move, the quantities of the corresponding SOL are set to 0
+        """
+        # CASE 1 steps
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        # CASE 4 steps
+        self.sale_expense_all.account_move_id.button_draft()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] EXPENSES Lines: quantities are reset to 0 and expenses are unlinked
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+        ])
+
+    def test_expenses_reinvoice_case_5_repost_expense_move_after_reset_to_draft(self):
+        """
+        CASE 5: Re-Post the expenses move, creating new SOLs with the correct quantities
+        """
+        # CASE 1 steps
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        # CASE 4 steps
+        self.sale_expense_all.account_move_id.button_draft()
+
+        # CASE 5 steps
+        self.sale_expense_all.account_move_id.action_post()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] EXPENSE CASE 4 Lines: no change
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            # [7-12] EXPENSE CASE 5 Lines: created with the correct quantities and linked to the expense
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_1.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_2.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_3.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_4.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'expense_ids': [self.sale_exp_deliv_cost_5.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'expense_ids': [self.sale_exp_order_cost_6.id]},
+        ])
+
+    def test_expenses_reinvoice_case_6_reverse_expense_move(self):
+        """
+        CASE 6: Reverse the expenses move, the quantities of the corresponding SOL are reset to 0
+        """
+        # CASE 1 steps
+        self.post_expenses_with_wizard(self.sale_expense_all)
+
+        # CASE 6 steps
+        self.sale_expense_all.account_move_id._reverse_moves()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] EXPENSE Lines: quantities are reset to 0 and expenses are unlinked
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+        ])
+
+    def test_expenses_reinvoice_case_7_ensure_one2one_relationship(self):
+        """
+        CASE 7: Test that two exact same sols are not both reset to 0 when the expense of one of them is resetting the quantities to 0
+        """
+        # For every expense, we duplicate it.
+        # - the former will be linked to the same sol
+        # - the latter will go on a different
+        sale_exp_order_sale_1_copy = self.sale_exp_order_sale_1.copy()
+        sale_exp_order_sale_2_copy = self.sale_exp_order_sale_2.copy()
+        sale_exp_deliv_sale_3_copy = self.sale_exp_deliv_sale_3.copy()
+        sale_exp_deliv_sale_4_copy = self.sale_exp_deliv_sale_4.copy()
+        sale_exp_deliv_cost_5_copy = self.sale_exp_deliv_cost_5.copy()
+        sale_exp_order_cost_6_copy = self.sale_exp_order_cost_6.copy()
+
+        sale_expense_copies_all = (
+                sale_exp_order_sale_1_copy
+                | sale_exp_order_sale_2_copy
+                | sale_exp_deliv_sale_3_copy
+                | sale_exp_deliv_sale_4_copy
+                | sale_exp_deliv_cost_5_copy
+                | sale_exp_order_cost_6_copy
+        )
+        sale_expense_original_all = self.sale_expense_all
+        self.sale_expense_all |= sale_expense_copies_all
+
+        sale_expense_copies_all.action_submit()
+        sale_expense_copies_all._do_approve()  # Skip duplicate wizard
+        self.post_expenses_with_wizard(sale_expense_original_all)
+        self.post_expenses_with_wizard(sale_expense_copies_all)  # To ensure there are two different moves
+
+        # Check that all the expenses can be found on the sale order
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] Original Lines: Created with the correct quantities
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_1.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_order_sale_2.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_3.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [self.sale_exp_deliv_sale_4.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'expense_ids': [self.sale_exp_deliv_cost_5.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'expense_ids': [self.sale_exp_order_cost_6.id]},
+            # [7-12] Copy Lines: Created with the correct quantities
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_order_sale_1_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_order_sale_2_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_deliv_sale_3_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_deliv_sale_4_copy.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'expense_ids': [sale_exp_deliv_cost_5_copy.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'expense_ids': [sale_exp_order_cost_6_copy.id]},
+        ])
+
+        # Reset the six expenses to draft and check that only them are unlinked
+        sale_expense_original_all.account_move_id.button_draft()
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # [0] Line not created from a re-invoiced, should never be changed
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},
+            # [1-6] Original Lines: quantities are reset to 0 and expenses are unlinked
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            {'qty_delivered': 0.0, 'product_uom_qty': 0.0, 'expense_ids': []},
+            # [7-12] Copy Lines: Not caught by the reset
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_order_sale_1_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_order_sale_2_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_deliv_sale_3_copy.id]},
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'expense_ids': [sale_exp_deliv_sale_4_copy.id]},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'expense_ids': [sale_exp_deliv_cost_5_copy.id]},
+            {'qty_delivered': 6.0, 'product_uom_qty': 6.0, 'expense_ids': [sale_exp_order_cost_6_copy.id]},
+        ])
+
+    def test_expenses_reinvoice_analytic_distribution(self):
+        """ Test expense line with multiple analytic accounts is re-invoiced correctly """
+
+        (self.company_data['product_order_sales_price'] + self.company_data['product_delivery_sales_price']).write({
+            'can_be_expensed': True,
+        })
+
+        # create SO line and confirm SO (with only one line)
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.company_data['product_order_sales_price'].name,
+                'product_id': self.company_data['product_order_sales_price'].id,
+                'product_uom_qty': 2.0,
+                'price_unit': 1000.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        expense = self.create_expenses({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.company_data['product_order_sales_price'].id,
             'quantity': 2,
-            'sheet_id': self.expense_sheet.id,
-            'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
+            'analytic_distribution': {self.analytic_account_1.id: 50, self.analytic_account_2.id: 50},
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': sale_order.id,
         })
-        expense1._onchange_product_id()
-        expense2 = self.env['hr.expense'].create({
-            'name': 'Expense for delivered product',
-            'employee_id': self.employee.id,
-            'product_id': self.product_deliver_cost.id,
-            'unit_amount': 15,
+
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertRecordValues(sale_order.order_line, [
+            # Original SO line:
+            {'qty_delivered': 0.0, 'product_uom_qty': 2.0, 'is_expense': False},
+            # Expense line:
+            {'qty_delivered': 2.0,'product_uom_qty': 2.0, 'is_expense': True},
+        ])
+
+    def test_expense_reinvoice_tax_multine_line(self):
+        """
+        Tests that when a tax has multine distribution, the creation of an expense can go forward without issues
+        """
+        multi_distribution_tax = self.env['account.tax'].create({
+            'name': 'Tax 10.00%',
+            'amount': 10.00,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 70,
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 30,
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                    'use_in_tax_closing': True,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 70,
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 30,
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                    'use_in_tax_closing': True,
+                }),
+            ],
+        })
+        (self.company_data['product_order_sales_price'] + self.company_data['product_delivery_sales_price']).write({
+            'can_be_expensed': True,
+        })
+
+        # create SO line and confirm SO (with only one line)
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.company_data['product_order_sales_price'].name,
+                'product_id': self.company_data['product_order_sales_price'].id,
+                'product_uom_qty': 1.0,
+                'price_unit': 1000.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        expense = self.create_expenses([{
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.company_data['product_order_sales_price'].id,
             'quantity': 1,
-            'sheet_id': self.expense_sheet.id,
-            'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': sale_order.id,
+            'tax_ids': multi_distribution_tax.ids,
+        }])
+
+        expense.action_submit()
+        expense._do_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertRecordValues(sale_order.order_line, [
+            # Original SO line:
+            {
+                'qty_delivered': 0.0,
+                'product_uom_qty': 1.0,
+                'is_expense': False,
+            },
+            # Expense lines:
+            {
+                'qty_delivered': 1.0,
+                'product_uom_qty': 1.0,
+                'is_expense': True,
+            },
+        ])
+
+    def test_expenses_reinvoice_paid_by_company(self):
+        """ Test expense line paid by company is re-invoiced correctly """
+        expense = self.create_expenses({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.company_data['service_order_cost_price'].id,
+            'quantity': 5,  # 235.28 * 5 = 1176.4
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': self.expense_sale_order.id,
+            'payment_mode': 'company_account',
         })
-        expense2._onchange_product_id()
 
-        # approve and generate entries
-        self.expense_sheet.approve_expense_sheets()
-        self.expense_sheet.action_sheet_move_create()
+        expense.action_submit()
+        expense._do_approve()
+        expense.action_post()
 
-        self.assertEquals(len(self.sale_order.order_line), 3, "There should be 3 lines on the SO")
-        self.assertEquals(sale_order_line.qty_delivered, 0, "Exising SO line should not be impacted by reinvoicing product at cost")
-
-        sol_ordered = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_ordered_cost and sol != sale_order_line)
-        self.assertTrue(sol_ordered, "A new line with ordered expense should have been created on expense report posting")
-        self.assertEquals(sol_ordered.price_unit, expense1.unit_amount, "The unit price of new SO line should be the one from the expense (at cost)")
-        self.assertEquals(sol_ordered.product_uom_qty, 0, "The ordered quantity of new SO line should be zero")
-        self.assertEquals(sol_ordered.qty_delivered, expense1.quantity, "The delivered quantity of new SO line should be the one from the expense")
-
-        sol_deliver = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_deliver_cost and sol != sale_order_line)
-        self.assertTrue(sol_deliver, "A new line with delivered expense should have been created on expense report posting")
-        self.assertEquals(sol_deliver.price_unit, expense2.unit_amount, "The unit price of new SO line should be the one from the expense (at cost)")
-        self.assertEquals(sol_deliver.product_uom_qty, 0, "The ordered quantity of new SO line should be zero")
-        self.assertEquals(sol_deliver.qty_delivered, expense2.quantity, "The delivered quantity of new SO line should be the one from the expense")
-
-    def test_sales_price_ordered(self):
-        """ Test invoicing expenses at sales price for product based on ordered quantities. """
-        # confirm SO (with no line)
-        self.sale_order._compute_tax_id()
-        self.sale_order.action_confirm()
-        self.assertFalse(self.sale_order.analytic_account_id, "Confirming SO with no expense product should not trigger the analytic account creation")
-
-        # create expense lines
-        expense1 = self.env['hr.expense'].create({
-            'name': 'Expense for ordered product at sales price',
-            'employee_id': self.employee.id,
-            'product_id': self.product_order_sales_price.id,
-            'unit_amount': 15,
-            'quantity': 2,
-            'sheet_id': self.expense_sheet.id,
-            'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
-        })
-        expense1._onchange_product_id()
-
-        # approve and generate entries
-        self.expense_sheet.approve_expense_sheets()
-        self.expense_sheet.action_sheet_move_create()
-
-        self.assertTrue(self.sale_order.analytic_account_id, "Posting expense with an expense product should trigger the analytic account creation on SO")
-        self.assertEquals(self.sale_order.analytic_account_id, expense1.analytic_account_id, "SO analytic account should be the same for the expense")
-        self.assertEquals(len(self.sale_order.order_line), 1, "A new So line should have been created on expense report posting")
-
-        sol_ordered = self.sale_order.order_line.filtered(lambda sol: sol.product_id == expense1.product_id)
-        self.assertTrue(sol_ordered, "A new line with ordered expense should have been created on expense report posting")
-        self.assertEquals(sol_ordered.price_unit, 10, "The unit price of new SO line should be the one from the expense (at sales price)")
-        self.assertEquals(sol_ordered.product_uom_qty, 0, "The ordered quantity of new SO line should be zero")
-        self.assertEquals(sol_ordered.qty_delivered, expense1.quantity, "The delivered quantity of new SO line should be the one from the expense")
-
-    def test_sales_price_delivered(self):
-        """ Test invoicing expenses at sales price for product based on delivered quantities. Check the existing SO line is incremented. """
-        # create SO line and confirm SO (with only one line)
-        sale_order_line = self.env['sale.order.line'].create({
-            'name': self.product_deliver_sales_price.name,
-            'product_id': self.product_deliver_sales_price.id,
-            'product_uom_qty': 2,
-            'product_uom': self.product_deliver_sales_price.uom_id.id,
-            'price_unit': self.product_deliver_sales_price.list_price,
-            'order_id': self.sale_order.id,
-        })
-        sale_order_line.product_id_change()
-        self.sale_order._compute_tax_id()
-        self.sale_order.action_confirm()
-
-        self.assertTrue(self.sale_order.analytic_account_id, "Confirming SO with an expense product should trigger the analytic account creation")
-
-        # create expense lines
-        expense1 = self.env['hr.expense'].create({
-            'name': 'Expense for delivered product at sales price',
-            'employee_id': self.employee.id,
-            'product_id': self.product_deliver_sales_price.id,
-            'unit_amount': 15,
-            'quantity': 3,
-            'sheet_id': self.expense_sheet.id,
-            'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
-        })
-        expense1._onchange_product_id()
-
-        # approve and generate entries
-        self.expense_sheet.approve_expense_sheets()
-        self.expense_sheet.action_sheet_move_create()
-
-        self.assertEquals(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) on expense report posting")
-
-        self.assertEquals(sale_order_line.price_unit, 10, "The unit price of SO line should be the same")
-        self.assertEquals(sale_order_line.product_uom_qty, 2, "The ordered quantity of new SO line should be zero")
-        self.assertEquals(sale_order_line.qty_delivered, expense1.quantity, "The delivered quantity of SO line should have been incremented")
-
-    def test_no_expense(self):
-        """ Test invoicing expenses with no policy. Check nothing happen. """
-        # confirm SO
-        sale_order_line = self.env['sale.order.line'].create({
-            'name': self.product_no_expense.name,
-            'product_id': self.product_no_expense.id,
-            'product_uom_qty': 2,
-            'product_uom': self.product_no_expense.uom_id.id,
-            'price_unit': self.product_no_expense.list_price,
-            'order_id': self.sale_order.id,
-        })
-        self.sale_order._compute_tax_id()
-        self.sale_order.action_confirm()
-
-        self.assertFalse(self.sale_order.analytic_account_id, "Confirming SO with an no-expense product should not trigger the analytic account creation")
-
-        # create expense lines
-        expense1 = self.env['hr.expense'].create({
-            'name': 'Expense for no expense product',
-            'employee_id': self.employee.id,
-            'product_id': self.product_no_expense.id,
-            'unit_amount': 15,
-            'quantity': 3,
-            'sheet_id': self.expense_sheet.id,
-            'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
-        })
-        expense1._onchange_product_id()
-
-        # approve and generate entries
-        self.expense_sheet.approve_expense_sheets()
-        self.expense_sheet.action_sheet_move_create()
-
-        self.assertTrue(self.sale_order.analytic_account_id, "Posting expense with an expense product (even with no expense pilocy) should trigger the analytic account creation")
-        self.assertEquals(self.sale_order.analytic_account_id, expense1.analytic_account_id, "SO analytic account should be the same for the expense")
-        self.assertEquals(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) on expense report posting")
-
-        self.assertEquals(sale_order_line.price_unit, self.product_no_expense.list_price, "The unit price of SO line should be the same")
-        self.assertEquals(sale_order_line.product_uom_qty, 2, "The ordered quantity of SO line should be two")
-        self.assertEquals(sale_order_line.qty_delivered, 0, "The delivered quantity of SO line should have been incremented")
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # Original SO line:
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'price_unit': 235.0, 'price_total': 705.0, 'price_subtotal': 705.0, 'is_expense': False},
+            # Expense line:
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
+        ])

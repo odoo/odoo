@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_recruitment.RecruitmentListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <RecruitmentActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </ActionHelper>
+    </t>
+</odoo>

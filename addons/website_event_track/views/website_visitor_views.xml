@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.list.inherit.event.track</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website_event.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_registration_count']" position="after">
+                <field name="event_track_wishlisted_count" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.event.track</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website_event.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='w_visitor_visit_counter']" position="before">
+                <button name="%(website_event_track.event_track_action_from_visitor)d"
+                    type="action"
+                    class="oe_stat_button" icon="fa-ticket"
+                    groups="event.group_event_manager"
+                    invisible="event_track_wishlisted_count == 0">
+                    <field name="event_track_wishlisted_count" widget="statinfo" string="Tracks"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

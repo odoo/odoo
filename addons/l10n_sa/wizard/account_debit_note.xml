@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_debit_note_inherit_l10n_sa" model="ir.ui.view">
+            <field name="name">account.debit.not.form.inherit.l10n_sa</field>
+            <field name="inherit_id" ref="account_debit_note.view_account_debit_note"/>
+            <field name="model">account.debit.note</field>
+            <field name="arch" type="xml">
+                <field name="date" position="before">
+                    <field name="l10n_sa_reason" string="ZATCA Reason" invisible="move_type == 'in_refund' or country_code != 'SA'"/>
+                </field>
+                <field name="reason" position="attributes">
+                    <attribute name="invisible" separator="or" add="move_type != 'in_refund' or country_code == 'SA'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

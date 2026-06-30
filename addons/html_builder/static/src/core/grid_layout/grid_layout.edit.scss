@@ -1,0 +1,67 @@
+// Background grid.
+.o_we_background_grid {
+    padding: 0 !important;
+
+    .o_we_cell {
+        fill: $o-we-fg-lighter;
+        fill-opacity: .1;
+        stroke: $o-we-bg-darkest;
+        stroke-opacity: .2;
+        stroke-width: 1px;
+        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.3));
+    }
+
+    &.o_we_grid_preview {
+        // TODO style error
+        // @include media-breakpoint-down(lg) {
+        //     // Hiding the preview in mobile view (-> no grid in mobile view). We
+        //     // cannot use `display: none` because it would prevent the animation
+        //     // to be played and so its listener would not remove the preview.
+        //     height: 0;
+        // }
+
+        pointer-events: none;
+
+        .o_we_cell {
+            animation: gridPreview 2s 0.5s;
+        }
+    }
+}
+
+// Grid preview.
+@keyframes gridPreview {
+    to {
+        fill-opacity: 0;
+        stroke-opacity: 0;
+    }
+}
+
+.o_we_drag_helper {
+    padding: 0;
+    border: $o-we-handle-border-width * 2 solid $o-we-color-accent;
+    border-radius: $o-we-item-border-radius;
+}
+
+// Highlight of the grid items padding.
+@keyframes highlightPadding {
+    from {
+        border: solid rgba($o-we-handles-accent-color, 0.2);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+
+    to {
+        border: solid rgba($o-we-handles-accent-color, 0);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+}
+
+.o_we_padding_highlight.o_grid_item {
+    position: relative;
+
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        animation: highlightPadding 2s;
+        pointer-events: none;
+    }
+}

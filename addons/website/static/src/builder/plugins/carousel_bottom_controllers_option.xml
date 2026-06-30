@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselBottomControllersOption" t-inherit="website.CarouselOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'s_carousel_arrows_hidden'&quot;]" position="attributes">
+        <attribute name="id">"carousel_arrows_hidden_opt"</attribute>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'s_carousel_indicators_hidden'&quot;]" position="attributes">
+        <attribute name="id">"carousel_indicators_hidden_opt"</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Arrows&quot;]/BuilderSelect" position="attributes">
+        <attribute name="action">"toggleControllers"</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Indicators&quot;]/BuilderSelect" position="attributes">
+        <attribute name="action">"toggleControllers"</attribute>
+    </xpath>
+    <xpath expr="//BuilderSelect" position="replace">
+        <BuilderSelect applyTo="'.o_horizontal_controllers_row'">
+            <BuilderSelectItem classAction="'justify-content-between'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-between flex-row-reverse'" >Reversed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-center'" t-if="isActiveItem('carousel_arrows_hidden_opt') || isActiveItem('carousel_indicators_hidden_opt')">Centered</BuilderSelectItem>
+        </BuilderSelect>
+    </xpath>
+</t>
+
+</templates>

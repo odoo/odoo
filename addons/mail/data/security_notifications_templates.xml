@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <!-- Template for security update notification (password/login/mail changed, ...) -->
+    <template id="account_security_alert" name="Alert Security Update">
+        <div>
+            Dear <t t-out="user.name or ''">Marc Demo</t>,<br/><br/>
+            <t t-out="content"/> <br/><br/>
+
+            Here are some details about the connection:<br/>
+            <ul>
+                <li><span style="font-weight: bold">
+                    Date:</span> <t t-out="format_datetime(event_datetime, dt_format='long')">day, month dd, yyyy - hh:mm:ss (GMT)</t></li>
+                <li t-if="location_address"><span style="font-weight: bold">
+                    Location:</span> <t t-out="location_address">City, Region, Country</t></li>
+                <li t-if="useros"><span style="font-weight: bold">
+                    Platform:</span> <t t-out="useros">OS</t></li>
+                <li t-if="browser"><span style="font-weight: bold">
+                    Browser:</span> <t t-out="browser">Browser</t></li>
+                <li><span style="font-weight: bold">
+                    IP Address:</span> <t t-out="ip_address">111.222.333.444</t></li>
+            </ul>
+
+            <div t-if="suggest_password_reset" class="o_mail_account_security_suggestions">
+                If you don't recognize it, you should change your password immediately via this link:<br/>
+                <div style="margin: 16px 0px 16px 0px">
+                    <a t-attf-href="{{ user.get_base_url() }}/web/reset_password"
+                        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px">
+                        Reset Password
+                    </a>
+                </div>
+                Otherwise, you can safely ignore this email.
+            </div>
+        </div>
+    </template>
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.portal.feedback_update_info">
+        <span>
+            <t t-if="infoKey == 'feedback_sent'">
+                <i class="fa fa-check me-1"/>
+                <span>Sent. Thanks you for your feedback!</span>
+            </t>
+            <t t-else="">
+                <i class="fa fa-exclamation-triangle me-1"/>
+                <span>An error occurred. Please retry later or contact us.</span>
+            </t>
+        </span>
+    </t>
+</templates>

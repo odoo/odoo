@@ -1,0 +1,135 @@
+$o-mail-DiscussSidebarChannel-borderOpacity: .05;
+
+.o-mail-DiscussSidebarChannel-container {
+    --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacity, #{$o-mail-DiscussSidebarChannel-borderOpacity});
+    gap: 1px;
+
+    &.o-bordered {
+        background-color: var(---mail-DiscussSidebarChannel-borderedBgColor, mix($white, $dark, 98%)) !important;
+    }
+}
+
+.o-mail-DiscussSidebar-floatingMenu {
+    max-width: 250px !important;
+}
+
+.o-mail-DiscussSidebar-item {
+    line-height: 2; // so that same height as actions
+    background-color: inherit !important;
+
+    &:hover .o-mail-DiscussSidebarChannel-actions {
+        display: flex !important;
+    }
+}
+
+.o-mail-DiscussSidebarChannel-actions button {
+    --border-opacity: .15;
+
+    &.rounded-circle {
+        --oi-vertical-align: -5%;
+        aspect-ratio: 1;
+    }
+
+    @media (min-resolution: 2dppx) {
+        .oi-ellipsis-h {
+            transform: translateX(0.5px);
+        }
+    }
+
+    &:hover, &:active, &:focus-visible, &.o-showingActions {
+        --border-opacity: 1;
+        --border-color: #{$o-action};
+    }
+}
+
+.o-mail-DiscussSidebarCategory-chevronCompact {
+    left: - map-get($spacers, 1)/2;
+}
+
+.o-mail-DiscussSidebarCategory-toggler {
+    &.o-compact {
+        font-size: .65rem;
+    }
+    &:not(.o-compact) {
+        line-height: 2.35; // so that same height as actions, so folding doesn't resize
+    }
+}
+
+.o-mail-DiscussSidebarCategory {
+    &:hover {
+        outline: 1px solid transparent;
+        outline-offset: -1px;
+
+        .o-mail-DiscussSidebarCategory-title {
+            margin-left: map-get($spacers, 1);
+            transition: margin-left 0.2s;
+        }
+    }
+
+    &:hover {
+        background-color: mix($gray-100, $gray-200);
+        outline-color: mix($gray-100, $gray-200, 20%);
+    }
+
+    &:active {
+        background-color: mix($o-view-background-color, $o-action, 90%);
+        outline-color: mix($o-view-background-color, $o-action, 50%);
+    }
+    
+    &:not(:hover) {
+        .o-mail-DiscussSidebarCategory-actions {
+            visibility: hidden;
+        }
+    }
+
+}
+
+.o-mail-DiscussSidebarCategory-actions button:not(:hover) {
+    .text-success, .text-danger {
+        --color: #{$btn-color};
+    }
+}
+
+.o-mail-DiscussSidebarChannel-badge.o-nonCompact {
+    margin-right: map-get($spacers, 2) + map-get($spacers, 2) / 2;
+}
+
+.o-mail-DiscussSidebarChannel-itemMain {
+    background-color: inherit !important; // Not 'bg-inherit' so it cancels btn hover effect too
+}
+
+.o-mail-DiscussSidebarChannel-indicatorCompact {
+    top: 1px;
+    left: 3px;
+}
+
+.o-mail-DiscussSidebarChannel-subChannel.o-nonCompact {
+    margin-left: map-get($spacers, 4) + map-get($spacers, 2);
+}
+
+.o-mail-DiscussSidebarChannel-subChannelList {
+    gap: 1px;
+}
+
+.o-mail-DiscussSidebar-unreadIndicator {
+    font-size: 0.4rem;
+    left: 0px;
+
+    .o-mail-DiscussSidebarChannel-container.o-bordered & {
+        left: -1px; // compensate for border
+
+        &.o-mail-DiscussSidebarChannel, &.o-compact {
+            filter: drop-shadow(1px 2px 0px $white) drop-shadow(-1px 1px 0px $white) drop-shadow(1px -1px 0px $white) drop-shadow(-1px -2px 0px $white);
+        }
+    }
+
+    .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
+        left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+    }
+}
+
+.o-mail-DiscussSidebarSubchannel svg {
+    color: var(--mail-DiscussSidebarSubchannel-svgColor, mix($gray-300, $gray-400, 75%));
+    left: 22px;
+    transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Thread')]" position="before">
+            <span t-if="!env.inChatter and props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm smaller fw-bolder border border-warning">
+                <t t-set="alertClass" t-value="'alert alert-warning m-0 border-start-0 o-mail-Thread-bannerHover py-1 rounded-0'"/>
+                <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="onClickUnreadMessagesBanner" t-esc="newMessageBannerText"/>
+                <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead()">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
+            </span>
+        </xpath>
+    </t>
+</templates>

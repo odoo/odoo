@@ -1,0 +1,17 @@
+<templates xml:space="preserve">
+    <t t-name="website_builder.AnimateText">
+        <button t-ref="root" class="btn btn-light" t-att-class="{ active: state.isActive }" t-att-title="props.title" t-att="{ disabled: state.isDisabled }" t-on-click="onClick">
+            <span class="fa fa-play fa-fw"></span>
+        </button>
+    </t>
+
+    <t t-name="website_builder.AnimateTextPopover">
+        <div class="o_animate_text_popover p-2" data-prevent-closing-overlay="true" t-ref="content">
+            <AnimateOption dropdownClass="''" requireAnimation="true">
+                <t t-set-slot="animationRowTrailing">
+                    <button class="btn btn-sm btn-light fa fa-trash" title="Reset" t-on-click="props.onReset"/>
+                </t>
+            </AnimateOption>
+        </div>
+    </t>
+</templates>

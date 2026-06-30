@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductNameWidget">
+       <div class="self_order_product_name d-inline-block">
+           <t t-set="product" t-value="props.product"/>
+           <span t-esc="formatProductName(product)" class="align-middle fs-4 fw-bold text-break"/>
+           <div t-if="product.public_description or product.product_tag_ids.length > 0"
+                class="product_info_icon d-inline-flex justify-content-center align-items-center border border-dark rounded-circle text-center"
+                t-on-click.stop="()=>this.displayProductInfo()">
+               <i class="fa fa-info "/>
+           </div>
+       </div>
+    </t>
+</templates>

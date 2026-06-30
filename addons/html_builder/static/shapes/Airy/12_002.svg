@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1400" stroke="#383E45" fill="none">
+	<style type="text/css">
+		@keyframes wave {
+			0%, 100% {transform: scale(1, 1);}
+			50%      {transform: scale(1, 1.15);}
+		}
+		@keyframes scale_h {
+			0%, 100% {transform: scale(1, 1);}
+			50%      {transform: scale(1.15, 1);}
+		}
+		g {
+			transform-origin: center top;
+			animation: wave 15s cubic-bezier(.445, .05, .55, .95) infinite;
+		}
+		path {transform-origin: center;}
+		.path_1 { animation: scale_h 15s .5s cubic-bezier(.445, .05, .55, .95) infinite; }
+		.path_2 { animation: scale_h 15s cubic-bezier(.445, .05, .55, .95) infinite; }
+		.path_3 { animation: scale_h 15s 2s cubic-bezier(.445, .05, .55, .95) infinite; }
+		.path_4 { animation: rotate 15s 1.5s cubic-bezier(.445, .05, .55, .95) infinite; }
+
+        @media only screen and (max-width: 130px) {
+            .line {
+                stroke-width: .75px;
+            }
+        }
+	</style>
+	<path fill="#F6F6F6" stroke="none" d="M350,51.4c152.8,0,350,44.3,350,44.3S897.2,140,1050,140c148.9,0,339.8-42,349.6-44.2V0H0.4v95.6 C10.2,93.4,201.1,51.4,350,51.4z"/>
+	<path class="line path_1" d="M0,95.2c0,0,197.2-44.5,350-44.5s350,44.5,350,44.5s197.2,44.5,350,44.5s350-44.5,350-44.5" vector-effect="non-scaling-stroke"/>
+	<path class="line path_2" d="M0,95.2c0,0,197.2-22.3,350-22.3s350,22.3,350,22.3s197.2,22.3,350,22.3s350-22.3,350-22.3" vector-effect="non-scaling-stroke"/>
+	<path class="line path_3" d="M0,95.2c0,0,197.2-89.1,350-89.1s350,89.1,350,89.1s197.2,89.1,350,89.1s350-89.1,350-89.1" vector-effect="non-scaling-stroke"/>
+	<path class="line path_4" d="M0,95.2c0,0,197.2-66.8,350-66.8s350,66.8,350,66.8S897.2,162,1050,162s350-66.8,350-66.8" vector-effect="non-scaling-stroke"/>
+</svg>

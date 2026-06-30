@@ -1,1 +1,2 @@
-var a = 1;
+// @odoo-module ignore
+var a = 1; // eslint-disable-line

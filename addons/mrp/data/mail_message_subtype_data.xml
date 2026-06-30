@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- new state-related subtypes-->
+    <record id="mrp_mo_in_confirmed" model="mail.message.subtype">
+        <field name="name">MO Confirmed</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="101"/>
+        <field name="description">MO Confirmed</field>
+    </record>
+    <record id="mrp_mo_in_progress" model="mail.message.subtype">
+        <field name="name">MO Progress</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="102"/>
+        <field name="description">MO Progress</field>
+    </record>
+    <record id="mrp_mo_in_to_close" model="mail.message.subtype">
+        <field name="name">MO To Close</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="103"/>
+        <field name="description">MO To Close</field>
+    </record>
+    <record id="mrp_mo_in_done" model="mail.message.subtype">
+        <field name="name">MO Done</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="104"/>
+        <field name="description">MO Done</field>
+    </record>
+    <record id="mrp_mo_in_cancelled" model="mail.message.subtype">
+        <field name="name">MO Cancelled</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="105"/>
+        <field name="description">MO Cancelled</field>
+    </record>
+</odoo>

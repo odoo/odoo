@@ -1,0 +1,62 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website.social_modal">
+        <div role="dialog" class="modal fade" id="oe_social_share_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <header class="modal-header mb0" role="status">
+                        <h4 class="modal-title">Thanks for posting!</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </header>
+                    <main class="modal-body">
+                        <t t-if="target_type == 'question'" t-call="website_forum.social_message_question"/>
+                        <t t-if="target_type == 'answer'" t-call="website_forum.social_message_answer"/>
+                        <t t-if="target_type == 'default'" t-call="website_forum.social_message_default"/>
+                        <div t-if="state != 'pending'" class="share-icons text-center text-primary">
+                            <div class="s_share o_no_link_popover">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
+                                    <i class="fa fa-facebook rounded shadow-sm"/>
+                                </a>
+                                <t t-set="_hashtags" t-value="target_type ? (' %23' + target_type) : ''"></t>
+                                <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
+                                    <i class="fa fa-twitter rounded shadow-sm"/>
+                                </a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
+                                    <i class="fa fa-linkedin rounded shadow-sm"/>
+                                </a>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website_forum.spam_search_name">
+        <t t-foreach="posts" t-as="post" t-key="post_index">
+            <div class="card mb-1 o_spam_character">
+                <div class="card-body py-2">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" t-attf-id="post_#{post.id}" t-att-value='post.id' checked='checked'/>
+                        <label class="form-check-label" t-attf-for="post_#{post.id}">
+                            <b><t t-out="post.name" /></b>
+                            <p class='text-muted'><t t-out="post.content" /></p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+    <t t-name="website_forum.social_message_question">
+        <p>On average, <b>45% of questions shared</b> on social networks get an answer within
+        5 hours. Questions shared on two social networks have <b>65% more chance to get an
+        answer</b>!</p>
+        <p t-if="state == 'pending'">You can share your question once it has been validated</p>
+    </t>
+    <t t-name="website_forum.social_message_answer">
+        <p>By sharing you answer, you will get additional <b>karma points</b> if your
+        answer is selected as the right one. See what you can do with karma
+        <a class="o_translate_inline" href="/forum/help-1/faq" target="_blank">here</a>.</p>
+    </t>
+    <t t-name="website_forum.social_message_default">
+        <p>Share this content to increase your chances to be featured on the front page and attract more visitors.</p>
+    </t>
+</templates>

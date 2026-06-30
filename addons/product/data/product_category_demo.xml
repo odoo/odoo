@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="product_category_furniture" model="product.category">
+        <field name="name">Furniture</field>
+    </record>
+    <record id="product_category_office" model="product.category">
+        <field name="parent_id" ref="product.product_category_furniture"/>
+        <field name="name">Office</field>
+    </record>
+    <record id="product_category_outdoor_furniture" model="product.category">
+        <field name="parent_id" ref="product.product_category_furniture"/>
+        <field name="name">Outdoor</field>
+    </record>
+
+    <record id="product_category_construction" model="product.category">
+        <field name="name">Home Construction</field>
+    </record>
+
+</odoo>

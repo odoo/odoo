@@ -1,0 +1,18 @@
+.o-mobile-figure.o-figure {
+    padding: 4px;
+
+    .o-dashboard-chart-select {
+        visibility: visible !important;
+        /* Compensate for the padding of the figure */
+        top: 4px !important;
+        right: 4px !important;
+    }
+
+    .o-carousel-full-screen-button,
+    .o-carousel-tabs-dropdown,
+    .o-carousel-tab[data-type="carouselDataView"],
+    .o-chart-dashboard-item:not([name="chart-granularity"]) {
+        display: none !important;
+    }
+
+}

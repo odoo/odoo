@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t
+        t-name="website_sale.DynamicSnippetCategoryOptions"
+        name="Category List"
+        t-inherit="website.DynamicSnippetOption"
+    >
+        <BuilderRow id="template_opt_row" position="replace"/>
+        <BuilderRow id="number_of_records_opt_row" position="replace"/>
+        <BuilderRow id="filter_opt_row" position="replace">
+            <BuilderRow label.translate="Columns">
+                <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Spacing">
+                <BuilderRange dataAttributeAction="'gap'" min="0" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Size">
+                <BuilderSelect dataAttributeAction="'size'">
+                    <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'medium'">
+                        Medium
+                    </BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow label.translate="Alignment">
+                <BuilderButtonGroup dataAttributeAction="'alignment'">
+                    <BuilderButton dataAttributeActionValue="'left'">
+                        <i class="fa fa-fw fa-align-left"/>
+                    </BuilderButton>
+                    <BuilderButton dataAttributeActionValue="'center'">
+                        <i class="fa fa-fw fa-align-center"/>
+                    </BuilderButton>
+                    <BuilderButton dataAttributeActionValue="'right'">
+                        <i class="fa fa-fw fa-align-right"/>
+                    </BuilderButton>
+                </BuilderButtonGroup>
+            </BuilderRow>
+            <BuilderRow label.translate="Filters">
+                <BuilderSelect dataAttributeAction="'parentCategoryId'">
+                    <BuilderSelectItem
+                        dataAttributeActionValue=""
+                        title.translate="All Categories"
+                    >
+                        All Categories
+                    </BuilderSelectItem>
+                    <t
+                        t-foreach="this.categories"
+                        t-as="category"
+                        t-key="category.id"
+                    >
+                        <BuilderSelectItem
+                            dataAttributeActionValue="`${category.id}`"
+                            label="category.name"
+                            t-out="category.name"
+                        />
+                    </t>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow
+                t-if="this.dynamicOptionParams.domState.parentCategoryId"
+                label.translate="Parent Category"
+                dataAttributeAction="'showParent'"
+            >
+                <BuilderCheckbox dataAttributeActionValue="'true'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Clickable items">
+                <BuilderCheckbox
+                    id="'clickable_items_opt'"
+                    action="'toggleClickable'"
+                    classAction="'s_dynamic_category_clickable_items'"
+                />
+            </BuilderRow>
+            <BuilderRow
+                t-if="isActiveItem('clickable_items_opt')"
+                label.translate="Arrows"
+                level="1"
+            >
+                <BuilderCheckbox
+                    classAction="'s_dynamic_category_no_arrows'"
+                    inverseAction="true"
+                />
+            </BuilderRow>
+            <BuilderRow
+                t-if="isActiveItem('clickable_items_opt')"
+                label.translate="Darken overlay"
+                level="1"
+            >
+                <BuilderCheckbox
+                    classAction="'s_dynamic_category_no_overlay'"
+                    inverseAction="true"
+                />
+            </BuilderRow>
+            <BuilderRow label.translate="Button" t-if="!isActiveItem('clickable_items_opt')">
+                <BuilderTextInput dataAttributeAction="'button'"/>
+            </BuilderRow>
+            <BuilderContext>
+                <hr class="mx-3"/>
+                <div class="h6 px-3 text-reset">Blocks Design</div>
+                <div class="mb-2 px-3 opacity-75 small">Global options for all inner blocks.</div>
+                <BuilderRow label.translate="Roundness">
+                    <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
+                </BuilderRow>
+            </BuilderContext>
+        </BuilderRow>
+    </t>
+    <t t-name="website_sale.dynamicSnippetCategoryItemOptions" name="Category">
+        <BuilderRow label.translate="Media">
+            <BuilderButton
+                label.translate="Replace"
+                className="'w-100'"
+                type="'success'"
+                action="'setCategoryImage'"
+                preview="false"
+            />
+        </BuilderRow>
+    </t>
+</templates>

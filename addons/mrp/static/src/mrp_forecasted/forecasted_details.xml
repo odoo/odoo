@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template">
+    <t t-name="mrp.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+        <xpath expr="//tr[@name='draft_picking_in']" position="after">
+            <tr t-if="currentProduct.draft_production_qty.in" name="draft_mo_in" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                <td/>
+                <td>Production of Draft MO</td>
+                <td class="text-end text-success">
+                    <t t-out="_formatFloat(currentProduct.draft_production_qty.in)"/> <t t-out="line.uom_id.display_name"/>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="currentProduct.draft_production_qty.out" name="draft_mo_out" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                <td/>
+                <td>Component of Draft MO</td>
+                <td class="text-end">
+                    <span class="text-danger">
+                        <t t-out="_formatFloat(-currentProduct.draft_production_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                    </span>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//button[@name='change_priority_link']" position="after">
+            <button t-if="line.move_out and line.move_out.raw_material_production_id"
+                t-attf-class="o_priority o_priority_star fa fa-star#{line.move_out.raw_material_production_id.priority=='1' ? ' one' : '-o zero'}"
+                t-on-click="() => this._onClickChangePriority('mrp.production', line.move_out.raw_material_production_id)"/>
+        </xpath>
+    </t>
+</templates>

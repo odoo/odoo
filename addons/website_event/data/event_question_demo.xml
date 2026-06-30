@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- EVENT QUESTION : How did you learn about this event? (simple choice 0) -->
+    <record id="event_question_about_0" model="event.question">
+        <field name="title">How did you learn about this event?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_type_ids" eval="[(5, 0, 0), (4, ref('event.event_type_2'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+    <record id="event_question_about_0_answer_0" model="event.question.answer">
+        <field name="name">Social Media</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_about_0"/>
+    </record>
+    <record id="event_question_about_0_answer_1" model="event.question.answer">
+        <field name="name">Blog Post</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_about_0"/>
+    </record>
+    <record id="event_question_about_0_answer_2" model="event.question.answer">
+        <field name="name">Radio Ad</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_about_0"/>
+    </record>
+
+    <!-- EVENT QUESTION : How did you learn about this event? (simple choice 1) -->
+    <record id="event_question_about_1" model="event.question">
+        <field name="title">How did you learn about this event?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="True"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+        <record id="event_question_about_1_answer_0" model="event.question.answer">
+        <field name="name">Our website</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_about_1"/>
+    </record>
+    <record id="event_question_about_1_answer_1" model="event.question.answer">
+        <field name="name">Commercials</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_about_1"/>
+    </record>
+    <record id="event_question_about_1_answer_2" model="event.question.answer">
+        <field name="name">A friend</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_about_1"/>
+    </record>
+
+    <!-- EVENT QUESTION : How did you learn about this event? (simple choice 0 + once_per_order) -->
+    <record id="event_question_about_2" model="event.question">
+        <field name="title">How did you learn about this event?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="True"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_1')), (4, ref('event.event_5'))]"/>
+        <field name="is_reusable">True</field>
+    </record>
+    <record id="event_question_about_2_answer_0" model="event.question.answer">
+        <field name="name">Social Media</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_about_2"/>
+    </record>
+    <record id="event_question_about_2_answer_1" model="event.question.answer">
+        <field name="name">Blog Post</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_about_2"/>
+    </record>
+    <record id="event_question_about_2_answer_2" model="event.question.answer">
+        <field name="name">Radio Ad</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_about_2"/>
+    </record>
+
+    <!-- EVENT QUESTION : How did you hear about us? -->
+    <record id="event_question_about_us" model="event.question">
+        <field name="title">How did you hear about us?</field>
+        <field name="question_type">text_box</field>
+        <field name="once_per_order" eval="True"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_7'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+
+    <!-- EVENT QUESTION : Meal Type -->
+    <record id="event_question_meal_type" model="event.question">
+        <field name="title">Meal Type</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0')), (4, ref('event.event_7'))]"/>
+        <field name="is_reusable">True</field>
+    </record>
+    <record id="event_question_meal_type_answer_0" model="event.question.answer">
+        <field name="name">Mixed</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_meal_type"/>
+    </record>
+    <record id="event_question_meal_type_answer_1" model="event.question.answer">
+        <field name="name">Vegetarian</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_meal_type"/>
+    </record>
+    <record id="event_question_meal_type_answer_2" model="event.question.answer">
+        <field name="name">Pastafarian</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_meal_type"/>
+    </record>
+
+    <!-- EVENT QUESTION : Allergies -->
+    <record id="event_question_allergies" model="event.question">
+        <field name="title">Allergies</field>
+        <field name="question_type">text_box</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+
+    <!-- EVENT QUESTION : Which field are you working in? -->
+    <record id="event_question_working_field" model="event.question">
+        <field name="title">Which field are you working in?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_7'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+        <record id="event_question_working_field_answer_0" model="event.question.answer">
+        <field name="name">Consumers</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_working_field"/>
+    </record>
+    <record id="event_question_working_field_answer_1" model="event.question.answer">
+        <field name="name">Sales</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_working_field"/>
+    </record>
+    <record id="event_question_working_field_answer_2" model="event.question.answer">
+        <field name="name">Research</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_working_field"/>
+    </record>
+
+    <!-- EVENT QUESTION : What's your Hockey level? -->
+    <record id="event_question_hockey_level" model="event.question">
+        <field name="title">What's your Hockey level?</field>
+        <field name="question_type">text_box</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_5'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.LandingPage">
+        <div t-if="languages.length > 1" t-on-click="openLanguages" class="position-absolute d-flex top-0 end-0 w-100 o_self_fade">
+            <div class="container o_self_container mt-4 d-flex justify-content-end">
+                <div class="o_self_language_selector p-3 bg-white cursor-pointer user-select-none ">
+                    <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}" />
+                    <span t-esc="currentLanguage.display_name" class="ms-3"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="selfOrder.config._self_ordering_image_home_ids.length > 0" t-on-click="start" class="d-flex flex-column vh-100 align-items-center overflow-hidden">
+            <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide w-100 h-100" data-bs-ride="true">
+                <div class="carousel-inner h-100 w-100">
+                    <div
+                        t-foreach="selfOrder.config._self_ordering_image_home_ids"
+                        t-as="imageId"
+                        t-key="imageId"
+                        t-attf-class="carousel-item object-fit-cover h-100 w-100 {{activeImage}}"
+                        t-attf-style="background-image: url('/web/image/ir.attachment/{{imageId}}/raw'); background-size: cover; background-position: center;" />
+                </div>
+            </div>
+        </div>
+        <div class="o_pos_landing_footer position-absolute bottom-0 end-0 d-flex w-100 ">
+            <div class="container o_self_container py-3">
+                <div  class="row justify-content-center g-2 g-md-3">
+                    <t t-if="showMyOrderBtn()">
+                        <div class="col-12 col-md-6 col-lg-6 col-kiosk-p-12">
+                            <a type="button"
+                               t-on-click="clickMyOrder"
+                               class="btn btn-lg btn-secondary w-100 "
+                               style="border-color: #714B67">
+                                <t t-if="draftOrder.length > 0">
+                                    My Order
+                                </t>
+                                <t t-else="">
+                                    My Orders
+                                </t>
+                            </a>
+                        </div>
+                    </t>
+
+                    <t t-foreach="selfOrder.models['pos_self_order.custom_link'].getAll()" t-as="link" t-key="link.id">
+                        <div class="col-12 col-md-6 col-lg-6 col-kiosk-p-12"  t-if="!hideBtn(link)">
+                            <a type="button"
+                                t-on-click="(event) => this.clickCustomLink(link)"
+                                t-attf-class="btn btn-lg btn-{{link.style}} w-100">
+                                <t t-esc="link.name"/>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

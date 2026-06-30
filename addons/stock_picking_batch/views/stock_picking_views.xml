@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="object"
+                        name="action_view_batch"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        string="Batch"
+                        invisible="not batch_id"/>
+            </div>
+            <xpath expr="//page[@name='extra']//field[@name='company_id']" position="after">
+                <field name="batch_id"
+                    readonly="1"
+                    options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.list.inherit.stock.picking.batch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="picking_type_id" position="after">
+                <field name="batch_id" optional="show"
+                    domain="[
+                        ('state', 'in', ['draft', 'in_progress']),
+                        '|',
+                            ('picking_type_id', '=', picking_type_id),
+                            ('picking_type_id', '=', False),
+                    ]"
+                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_batch_tree_ref" model="ir.ui.view">
+        <field name="name">stock.picking.view.list.inherit.stock.picking.batch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">batch_sequence</attribute>
+            </xpath>
+            <field name="company_id" position="before">
+                <field name="batch_sequence" widget="handle"/>
+            </field>
+            <field name="company_id" position="replace"/>
+            <field name="batch_id" position="replace"/>
+            <field name="scheduled_date" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="priority" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

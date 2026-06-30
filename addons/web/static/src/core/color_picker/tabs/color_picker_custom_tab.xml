@@ -1,0 +1,45 @@
+<templates xml:space="preserve">
+<t t-name="web.ColorPickerCustomTab">
+    <div class="d-flex flex-column align-items-start p-2 pb-0" t-on-keydown="props.colorPickerNavigation">
+        <div class="o_colorpicker_section" t-on-click="props.onColorClick"
+            t-on-mouseover="props.onColorPointerOver" t-on-mouseout="props.onColorPointerOut"
+            t-on-focusin="props.onFocusin" t-on-focusout="props.onColorPointerOut">
+            <t t-foreach="usedCustomColors" t-as="color" t-key="color_index">
+                <button t-if="color.toLowerCase() !== props.currentCustomColor?.toLowerCase()"
+                    class="o_color_button o_color_picker_button btn p-0" t-att-data-color="color"
+                    t-attf-style="background-color: {{color}}"/>
+            </t>
+            <button t-if="!props.defaultColorSet and isValidCustomColor(props.currentCustomColor)"
+                class="o_color_button o_color_picker_button btn p-0"
+                t-att-class="{'selected': props.defaultColorSet === false and !props.currentColorPreview}"
+                t-attf-style="background-color: {{props.currentCustomColor}}"
+                t-att-data-color="props.currentCustomColor"/>
+            <button t-if="!!props.currentColorPreview" class="o_color_button o_color_picker_button btn p-0"
+                t-att-class="{ 'selected': !!props.currentColorPreview }"
+                t-attf-style="background-color: {{props.currentColorPreview}}"
+                t-att-data-color="props.currentColorPreview"/>
+        </div>
+        <t t-foreach="Object.values(props.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
+            <div class="o_colorpicker_section" t-on-click="props.onColorClick"
+                t-on-mouseover="props.onColorPointerOver"
+                t-on-mouseout="props.onColorPointerOut"
+                t-on-focusin="props.onFocusin"
+                t-on-focusout="props.onColorPointerOut">
+                <t t-foreach="grayscaleColors" t-as="color" t-key="color">
+                    <button t-att-data-color="color" class="o_color_button o_color_picker_button btn p-0"
+                        t-att-class="{'selected': color === props.defaultColorSet and !props.currentColorPreview}"
+                        t-attf-style="background-color: var(--{{props.cssVarColorPrefix+color}})"/>
+                </t>
+            </div>
+        </t>
+        <CustomColorPicker
+            selectedColor="props.currentCustomColor"
+            setOnCloseCallback.bind="props.setOnCloseCallback"
+            setOperationCallbacks.bind="props.setOperationCallbacks"
+            onColorSelect.bind="(color) => this.props.applyColor(color.hex)"
+            onColorPreview.bind="props.onColorPreview"
+            noTransparency="props.noTransparency"
+            defaultOpacity="props.defaultOpacity"/>
+    </div>
+</t>
+</templates>

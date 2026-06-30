@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="check_identity" name="Check Identity">
+        <t t-call="web.login_layout">
+            <div class="oe_check_identity_form">
+                <div class="text-center">
+                    <img t-attf-src="/logo.png?company={{ request.env.company.id }}" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="request.env.company.name"/>
+                    <h3>Confirm access</h3>
+                </div>
+                <owl-component name="auth_timeout.check_identity_form" t-att-props="json.dumps({'redirect': redirect})"/>
+            </div>
+        </t>
+    </template>
+</odoo>

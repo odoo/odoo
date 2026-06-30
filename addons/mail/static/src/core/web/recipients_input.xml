@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.RecipientsInput">
+        <div class="o-mail-RecipientsInput d-flex flex-wrap flex-grow-1 align-items-center gap-1 mx-1" t-ref="recipientsInputRef">
+            <RecipientsInputTagsList tags="this.getTagsFromMailThread()" updateRecipient.bind="updateRecipient"/>
+            <div class="flex-grow-1">
+                <AutoComplete placeholder="this.getPlaceholder()" sources="this.getAutoCompleteSources()"/>
+            </div>
+        </div>
+    </t>
+</templates>

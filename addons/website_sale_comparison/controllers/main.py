@@ -1,52 +1,48 @@
-# -*- coding: utf-8 -*-
-from odoo import http, _
-from odoo.http import request
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-import json
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.http import Controller, request, route
 
 
-class WebsiteSaleProductComparison(WebsiteSale):
+class WebsiteSaleProductComparison(Controller):
 
-    @http.route('/shop/compare/', type='http', auth="public", website=True)
+    @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
     def product_compare(self, **post):
-        values = {}
         product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
         if not product_ids:
-            return request.redirect("/shop")
+            return request.redirect('/shop')
+
         # use search to check read access on each record/ids
         products = request.env['product.product'].search([('id', 'in', product_ids)])
-        values['products'] = products.with_context(display_default_code=False)
-
-        res = {}
-        for num, product in enumerate(products):
-            for var in product.attribute_line_ids:
-                cat_name = var.attribute_id.category_id.name or _('Uncategorized')
-                att_name = var.attribute_id.name
-                if not product.attribute_value_ids: # create_variant = False
-                    continue
-                res.setdefault(cat_name, {}).setdefault(att_name, [' - '] * len(products))
-                val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
-                res[cat_name][att_name][num] = val[0].name
-        values['specs'] = res
-        values['compute_currency'] = self._get_compute_currency_and_context()[0]
-        return request.render("website_sale_comparison.product_compare", values)
-
-    @http.route(['/shop/get_product_data'], type='json', auth="public", website=True)
-    def get_product_data(self, product_ids, cookies=None):
-        ret = {}
-        compute_currency, pricelist_context, _ = self._get_compute_currency_and_context()
-        prods = request.env['product.product'].with_context(pricelist_context, display_default_code=False).search([('id', 'in', product_ids)])
-
-        if cookies is not None:
-            ret['cookies'] = json.dumps(request.env['product.product'].search([('id', 'in', list(set(product_ids + cookies)))]).ids)
-
-        prods.mapped('name')
-        for prod in prods:
-            ret[prod.id] = {
-                'render': request.env['ir.ui.view'].render_template(
-                    "website_sale_comparison.product_product",
-                    {'compute_currency': compute_currency, 'product': prod, 'website': request.website}
-                ),
-                'product': dict(id=prod.id, name=prod.name, display_name=prod.display_name),
+        return request.render(
+            'website_sale_comparison.product_compare',
+            {
+                'products': products.with_context(display_default_code=False),
             }
-        return ret
+        )
+
+    @route('/shop/compare/get_product_data', type='jsonrpc', auth='public', website=True)
+    def get_product_data(self, product_ids):
+        products = request.env['product.product'].search([('id', 'in', product_ids)])
+        product_data = []
+
+        for product in products:
+            combination_info = product._get_combination_info_variant()
+            product_data_item = {
+                'id': product.id,
+                'display_name': combination_info['display_name'],
+                'website_url': product.website_url,
+                'image_url': product._get_image_1024_url(),
+                'price': combination_info['price'],
+                'prevent_zero_price_sale': combination_info['prevent_zero_price_sale'],
+                'currency_id': combination_info['currency'].id,
+            }
+            if combination_info['has_discounted_price']:
+                product_data_item['strikethrough_price'] = combination_info['list_price']
+            elif (
+                combination_info.get('compare_list_price')
+                and combination_info['compare_list_price'] > combination_info['price']
+            ):
+                product_data_item['strikethrough_price'] = combination_info['compare_list_price']
+            product_data.append(product_data_item)
+
+        return product_data

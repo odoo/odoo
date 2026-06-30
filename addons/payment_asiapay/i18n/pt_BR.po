@@ -1,0 +1,191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_asiapay
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-11 00:37+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-19/payment_asiapay/pt_BR/>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment (success code %"
+"(success_code)s; primary response code %(response_code)s). Please try again."
+msgstr ""
+"Ocorreu um erro durante o processamento de seu pagamento (código de sucesso %"
+"(success_code)s; código de resposta primária %(response_code)s). Tente "
+"novamente."
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
+msgid "AsiaPay"
+msgstr "AsiaPay"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
+msgid "AsiaPay Merchant ID"
+msgstr "AsiaPay – ID do comerciante"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
+msgid "AsiaPay Secure Hash Function"
+msgstr "AsiaPay – Função hash segura"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
+msgid "AsiaPay Secure Hash Secret"
+msgstr "AsiaPay – Segredo hash seguro"
+
+#. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_provider.py:0
+msgid "AsiaPay does not support the following currencies: %(currencies)s."
+msgstr "O AsiaPay não é compatível com as seguintes moedas: %(currencies)s."
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
+msgid "Asiapay Brand"
+msgstr "Marca da AsiaPay"
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__bimopay
+msgid "BimoPay"
+msgstr "BimoPay"
+
+#. module: payment_asiapay
+#: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+msgid "Brand"
+msgstr "Marca"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__code
+msgid "Code"
+msgstr "Código"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Exibir nome"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_asiapay
+#: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+msgid "Merchant ID"
+msgstr "ID do comerciante"
+
+#. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_provider.py:0
+msgid "Only one currency can be selected by AsiaPay account."
+msgstr "Só é possível selecionar uma moeda por conta do AsiaPay."
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
+msgid "PayDollar"
+msgstr "PayDollar"
+
+#. module: payment_asiapay
+#: model:ir.model,name:payment_asiapay.model_payment_provider
+msgid "Payment Provider"
+msgstr "Provedor de serviços de pagamento"
+
+#. module: payment_asiapay
+#: model:ir.model,name:payment_asiapay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transação de pagamento"
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__pesopay
+msgid "PesoPay"
+msgstr "PesoPay"
+
+#. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_transaction.py:0
+msgid "Received data with missing success code."
+msgstr "Dados recebidos sem o código de sucesso."
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
+msgid "SHA1"
+msgstr "SHA1"
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha256
+msgid "SHA256"
+msgstr "SHA256"
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha512
+msgid "SHA512"
+msgstr "SHA512"
+
+#. module: payment_asiapay
+#: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+msgid "Secure Hash Function"
+msgstr "Função hash segura"
+
+#. module: payment_asiapay
+#: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+msgid "Secure Hash Secret"
+msgstr "Segredo hash seguro"
+
+#. module: payment_asiapay
+#: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
+msgid "SiamPay"
+msgstr "SiamPay"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
+msgid "The Merchant ID solely used to identify your AsiaPay account."
+msgstr ""
+"O ID do comerciante usado exclusivamente para identificar sua conta do "
+"AsiaPay."
+
+#. module: payment_asiapay
+#: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
+msgid "The brand associated to your AsiaPay account."
+msgstr "A marca associada à sua conta do AsiaPay."
+
+#. module: payment_asiapay
+#: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
+msgid "The secure hash function associated to your AsiaPay account."
+msgstr "A função hash segura associada à sua conta do AsiaPay."
+
+#. module: payment_asiapay
+#: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "O código técnico deste provedor de pagamento."
+
+#. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_transaction.py:0
+msgid "Unknown success code: %s"
+msgstr "Código de sucesso desconhecido: %s"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Nenhuma transação encontrada com a referência %s."
+
+#~ msgid "Received data with missing reference %(ref)s."
+#~ msgstr "Dados recebidos sem a referência %(ref)s."

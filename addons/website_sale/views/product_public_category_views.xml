@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_public_category_form_view" model="ir.ui.view">
+        <field name="name">product.public.category.form</field>
+        <field name="model">product.public.category</field>
+        <field name="arch" type="xml">
+            <form string="Website Public Categories">
+                <sheet>
+                    <field
+                        name="image_1920"
+                        widget="image"
+                        class="oe_avatar"
+                        options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
+                    />
+                    <div>
+                        <group class="col-md-4 col-lg-6 pe-3">
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="website_description"/>
+                            <field name="cover_image" widget="image" alt="Cover Image"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_public_category_tree_view" model="ir.ui.view">
+        <field name="name">product.public.category.list</field>
+        <field name="model">product.public.category</field>
+        <field name="arch" type="xml">
+            <list string="Product Public Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_public_category_action" model="ir.actions.act_window">
+        <field name="name">eCommerce Categories</field>
+        <field name="res_model">product.public.category</field>
+        <field name="path">ecommerce-categories</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new category
+            </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+            </p>
+        </field>
+    </record>
+
+</odoo>

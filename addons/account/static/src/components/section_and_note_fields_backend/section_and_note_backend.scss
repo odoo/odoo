@@ -1,0 +1,82 @@
+
+// The goal of this file is to contain CSS hacks related to allowing
+// section and note on sale order and invoice.
+
+table.o_section_and_note_list_view {
+    --o-SectionAndNote-border-color: #{$gray-500};
+    $_SectionAndNote-transition: 0.1s ease-in-out;
+
+    tr {
+        &.o_is_line_note {
+            font-style: italic;
+        }
+
+        &.o_is_line_section, &.o_is_line_subsection {
+            --table-striped-bg: var(--table-bg-type);
+
+            .o_list_section_options {
+                width: 1px;  // to prevent the column to expand
+            }
+
+            .o_field_product_label_section_and_note_cell .o_input {
+                text-overflow: ellipsis;
+            }
+        }
+
+        &.o_is_line_section {
+            --table-hover-bg: #{rgba($body-emphasis-color, .08)};
+            --table-bg-type: #{rgba($body-emphasis-color, .06)};
+            --ListRenderer-data-row-focused-striped-bg: var(--table-bg-type);
+
+            font-weight: $font-weight-bolder;
+
+            &:where(:not(:empty)) {
+                // When dragging, an empty tr is created we don't want
+                // a border here.
+                border-top-color: var(--o-SectionAndNote-border-color);
+            }
+
+            &.o_dragged {
+                border-width: $border-width 0;
+            }
+        }
+
+        &.o_is_line_subsection {
+            --table-hover-bg: #{rgba($body-emphasis-color, .05)};
+            --table-bg-type: #{rgba($body-emphasis-color, .03)};
+
+            font-weight: $font-weight-bold;
+
+            &.o_dragged {
+                // We rely on td borders, when dragged we need to remove
+                // the borders on .o_data_row to avoid double borders
+                --ListRenderer-data-row-border-bottom-width: 0;
+            }
+
+            td {
+                border-bottom-width: $border-width;
+
+                &:not(.o_handle_cell) {
+                    border-color: var(--o-SectionAndNote-border-color);
+                }
+            }
+        }
+
+        // Check if next sibling is a section to apply a border-color.
+        &:where(:not(.o_dragged):has(+ .o_is_line_section:not(.o_dragged, .d-table-row))) {
+            border-color: var(--o-SectionAndNote-border-color);
+        }
+    }
+
+    // Check if first tr in the table is a section to apply a border-color on
+    // the <th> els.
+    &:where(:has(tbody > tr:first-child.o_is_line_section:not(.o_dragged, .d-table-row))) th {
+        border-color: var(--o-SectionAndNote-border-color);
+    }
+}
+
+.o_field_section_and_note_text {
+    > span {
+        white-space: pre-wrap !important;
+    }
+}

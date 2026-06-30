@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_website">
+            <field name="name">ir.actions.server.form.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@name='usage']" position="inside">
+                        <group invisible="state != 'code' or context.get('is_modal')">
+                            <field name="website_published" string="Use in website"/>
+                            <field name="xml_id" invisible="1"/>
+                            <field name="website_path" invisible="not website_published"/>
+                            <field name="website_url" widget="url" readonly="1" invisible="not website_published"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//page[@name='usage']" position="attributes">
+                        <attribute name="invisible" add="state != 'code' or context.get('is_modal')" separator="and"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_server_action_search_website">
+            <field name="name">ir.actions.server.search.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <filter string="Website" name="website"
+                        domain="[('website_published', '=', True), ('state', '=', 'code')]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductPageOption">
+    <!-- Dummy element to allow styling this specific option container -->
+    <div class="d-none o_wsale_product_page_options"/>
+
+    <BuilderRow label.translate="Page Width">
+        <BuilderButtonGroup action="'productPageContainerWidth'" applyTo="'#product_detail'">
+            <BuilderButton
+                title.translate="Regular"
+                actionParam="{ previewClass: 'o_wsale_container_lg container-lg'}"
+                actionValue="'regular'"
+                iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+            />
+            <BuilderButton
+                title.translate="Full-width"
+                id="'opt_product_page_container_full'"
+                actionParam="{ previewClass: 'o_wsale_container_fluid container-fluid'}"
+                actionValue="'fluid'"
+                iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Images Area">
+        <BuilderSelect
+            id="'o_wsale_image_width'"
+            action="'productPageImageWidth'"
+            applyTo="'#product_detail'"
+        >
+            <BuilderSelectItem
+                title.translate="Hide"
+                id="'opt_product_page_image_width_hide'"
+                actionParam="{ previewClass: 'o_wsale_product_page_opt_image_width_none'}"
+                actionValue="'none'"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/website_sale/static/src/img/snippet_options/image-width-none.svg"/>
+                    Hide Images
+                </div>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Fixed 33% width"
+                actionParam="{ previewClass: 'o_wsale_product_page_opt_image_width_33_pc'}"
+                actionValue="'33_pc'"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/website_sale/static/src/img/snippet_options/image-width-33.svg"/>
+                    Fixed 33%
+                </div>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Fixed 50% width"
+                actionParam="{ previewClass: 'o_wsale_product_page_opt_image_width_50_pc'}"
+                actionValue="'50_pc'"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/website_sale/static/src/img/snippet_options/image-width-50.svg"/>
+                    Fixed 50%
+                </div>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Fixed 66%"
+                actionParam="{ previewClass: 'o_wsale_product_page_opt_image_width_66_pc'}"
+                actionValue="'66_pc'"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/website_sale/static/src/img/snippet_options/image-width-66.svg"/>
+                    Fixed 66%
+                </div>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Full-width"
+                id="'opt_product_page_image_width_full'"
+                actionParam="{ previewClass: 'o_wsale_product_page_opt_image_width_100_pc'}"
+                actionValue="'100_pc'"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/website_sale/static/src/img/snippet_options/image-width-100.svg"/>
+                    100%
+                </div>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow
+        label.translate="Position"
+        t-if="!this.isActiveItem('opt_product_page_image_width_full') and !this.isActiveItem('opt_product_page_image_width_hide')"
+        tooltip.translate="Reverses the horizontal order of items on desktop and larger screens (mobile layout remains unchanged)"
+        level="1"
+    >
+        <BuilderButtonGroup
+            action="'productPageContainerOrder'"
+            applyTo="'#product_detail_main'"
+        >
+            <BuilderButton
+                actionParam="{ previewClass: ''}"
+                actionValue="'regular'"
+                iconImg="'/website/static/src/img/snippets_options/image_left.svg'"
+            />
+            <BuilderButton
+                actionParam="{ previewClass: 'flex-lg-row-reverse'}"
+                actionValue="'inverse'"
+                iconImg="'/website/static/src/img/snippets_options/image_right.svg'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <!-- Image config -->
+    <t t-if="!this.isActiveItem('opt_product_page_image_width_hide')">
+        <div class="o_wsale_panel_section_title ps-2 pt-2 pb-1 fw-bold">Images</div>
+        <hr class="mx-2 mt-0 mb-2"/>
+    </t>
+
+    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+	    <BuilderRow label.translate="Main Image">
+	        <BuilderButton id="'o_wsale_replace_main_image'" type="'success'" className="'flex-grow-1'" preview="false"
+	            applyTo="'#product_detail_main'" action="'productReplaceMainImage'"
+	        >Replace</BuilderButton>
+	    </BuilderRow>
+	    <BuilderRow label.translate="Extra Media">
+	        <BuilderButton id="'o_wsale_add_extra_images'" className="'btn-success-color-hover'" action="'productAddExtraImage'">Add More</BuilderButton>
+	        <BuilderButton id="'o_wsale_clear_extra_images'" className="'btn-danger-color-hover'" action="'productRemoveAllExtraImages'">Remove All</BuilderButton>
+	    </BuilderRow>
+        <div class="pb-2"/> <!-- Spacer -->
+    </t>
+
+    <t t-if="domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+	    <BuilderRow label.translate="Display" applyTo="'#product_detail_main'">
+	        <BuilderSelect action="'productPageImageLayout'" id="'o_wsale_image_layout'">
+	            <BuilderSelectItem actionValue="'carousel'">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="/website_sale/static/src/img/snippet_options/image-width-100.svg"/>Carousel
+                    </div>
+                </BuilderSelectItem>
+	            <BuilderSelectItem actionValue="'grid'">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="oi oi-apps"/>Grid
+                    </div>
+                </BuilderSelectItem>
+	        </BuilderSelect>
+	    </BuilderRow>
+    </t>
+    <!-- Carousel config -->
+    <t
+        t-if="domState.hasCarousel and domState.hasImages and domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
+    >
+	    <BuilderRow label.translate="Thumbnails" level="1">
+	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
+	            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }" title="Left"></BuilderButton>
+	            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title="Bottom"></BuilderButton>
+	        </BuilderButtonGroup>
+	    </BuilderRow>
+    </t>
+    <!-- Grid config -->
+    <t
+        t-if="domState.isGrid"
+    >
+        <t
+            t-if="
+                domState.hasGrid and
+                domState.multipleImages and
+                !this.isActiveItem('opt_product_page_image_width_hide') and
+                !this.isActiveItem('opt_product_page_image_width_full')
+            "
+        >
+            <BuilderRow label.translate="Columns" level="1">
+                <BuilderSelect action="'productPageImageGridColumns'" id="'o_wsale_grid_columns'">
+                    <BuilderSelectItem actionValue="1">1</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+        </t>
+	    <BuilderRow
+            t-if="
+                domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
+            "
+            label.translate="Spacing"
+            level="1"
+        >
+            <BuilderSelect
+                action="'productPageImageGridSpacing'"
+                applyTo="'#o-grid-product .o_wsale_product_page_grid_row'"
+            >
+                <t t-set="noneLabel"><em>None</em></t>
+                <t t-set="smallLabel">Small</t>
+                <t t-set="mediumLabel">Medium</t>
+                <t t-set="bigLabel">Big</t>
+
+                <t t-set="gapsMap" t-value="[
+                    {label: noneLabel, saveValue: 'none'},
+                    {label: smallLabel, saveValue: 'small'},
+                    {label: mediumLabel, saveValue: 'medium'},
+                    {label: bigLabel, saveValue: 'big'},
+                ]"/>
+
+                <t t-foreach="gapsMap" t-as="gapEntry" t-key="gapEntry.saveValue">
+                    <BuilderSelectItem
+                        id="'o_wsale_product_page_grid_gap_' + gapEntry_index"
+                        actionParam="{ previewClass: 'gap-' + gapEntry_index}"
+                        actionValue="gapEntry.saveValue"
+                    >
+                        <t t-out="gapEntry.label"/>
+                    </BuilderSelectItem>
+                </t>
+	        </BuilderSelect>
+	    </BuilderRow>
+    </t>
+    <BuilderRow
+        label.translate="Roundness"
+        t-if="
+                (domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
+                !this.isActiveItem('opt_product_page_image_width_hide')
+            "
+        level="domState.multipleImages ? 1 : 0"
+    >
+        <BuilderSelect
+            action="'productPageRoundness'"
+            applyTo="'#product_detail'"
+        >
+            <t t-set="noneLabel"><em>None</em></t>
+            <t t-set="smallLabel">Small</t>
+            <t t-set="mediumLabel">Medium</t>
+            <t t-set="bigLabel">Big</t>
+
+            <t t-set="roundnessMap" t-value="[
+                {label: noneLabel, saveValue: 'none'},
+                {label: smallLabel, saveValue: 'small'},
+                {label: mediumLabel, saveValue: 'medium'},
+                {label: bigLabel, saveValue: 'big'},
+            ]"/>
+
+            <t t-foreach="roundnessMap" t-as="roundEntry" t-key="roundEntry.saveValue">
+                <BuilderSelectItem
+                    actionParam="{ previewClass: 'o_wsale_product_page_opt_image_radius_' + roundEntry.saveValue}"
+                    actionValue="roundEntry.saveValue"
+                >
+                    <t t-out="roundEntry.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow
+        t-if="!this.isActiveItem('opt_product_page_image_width_hide')"
+        label.translate="Auto-crop"
+    >
+        <BuilderSelect action="'productPageImageRatio'" applyTo="'#product_detail'">
+            <t t-set="disabledLabel"><em>Disabled</em></t>
+            <t t-set="widerLabel">Wider (21/9)</t>
+            <t t-set="wideLabel">Wide (16/9)</t>
+            <t t-set="horizontalLabel">Horizontal (6/5)</t>
+            <t t-set="landscapeLabel">Landscape (4/3)</t>
+            <t t-set="defaultLabel">Default (1/1)</t>
+            <t t-set="portraitLabel">Portrait (4/5)</t>
+            <t t-set="verticalLabel">Vertical (2/3)</t>
+
+            <t t-set="ratiosMap" t-value="[
+                {label: disabledLabel, saveValue: 'auto'},
+                {label: widerLabel, saveValue: '21_9'},
+                {label: wideLabel, saveValue: '16_9'},
+                {label: horizontalLabel, saveValue: '6_5'},
+                {label: landscapeLabel, saveValue: '4_3'},
+                {label: defaultLabel, saveValue: '1_1'},
+                {label: portraitLabel, saveValue: '4_5'},
+                {label: verticalLabel, saveValue: '2_3'},
+            ]"/>
+
+            <t t-foreach="ratiosMap" t-as="ratioEntry" t-key="ratioEntry.saveValue">
+                <BuilderSelectItem
+                    actionParam="{ previewClass: 'o_wsale_product_page_opt_image_ratio_' + ratioEntry.saveValue}"
+                    actionValue="ratioEntry.saveValue"
+                >
+                    <t t-out="ratioEntry.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <t t-set-slot="collapse">
+            <BuilderRow
+                t-if="!this.isActiveItem('opt_product_page_image_width_hide')"
+                label.translate="Mobile"
+                level="1"
+            >
+                <BuilderSelect action="'productPageImageRatioMobile'" applyTo="'#product_detail'">
+                    <t t-set="disabledLabel"><em>Inherit desktop</em></t>
+                    <t t-set="widerLabel">Wider (21/9)</t>
+                    <t t-set="wideLabel">Wide (16/9)</t>
+                    <t t-set="horizontalLabel">Horizontal (6/5)</t>
+                    <t t-set="landscapeLabel">Landscape (4/3)</t>
+                    <t t-set="defaultLabel">Default (1/1)</t>
+                    <t t-set="portraitLabel">Portrait (4/5)</t>
+                    <t t-set="verticalLabel">Vertical (2/3)</t>
+
+                    <t t-set="ratiosMap" t-value="[
+                        {label: disabledLabel, saveValue: 'auto'},
+                        {label: widerLabel, saveValue: '21_9'},
+                        {label: wideLabel, saveValue: '16_9'},
+                        {label: horizontalLabel, saveValue: '6_5'},
+                        {label: landscapeLabel, saveValue: '4_3'},
+                        {label: defaultLabel, saveValue: '1_1'},
+                        {label: portraitLabel, saveValue: '4_5'},
+                        {label: verticalLabel, saveValue: '2_3'},
+                    ]"/>
+
+                    <t t-foreach="ratiosMap" t-as="ratioEntry" t-key="ratioEntry.saveValue">
+                        <BuilderSelectItem
+                            actionParam="{ previewClass: 'o_wsale_product_page_opt_image_ratio_mobile_' + ratioEntry.saveValue}"
+                            actionValue="ratioEntry.saveValue"
+                        >
+                            <t t-out="ratioEntry.label"/>
+                        </BuilderSelectItem>
+                    </t>
+                </BuilderSelect>
+            </BuilderRow>
+        </t>
+    </BuilderRow>
+
+    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+	    <BuilderRow label.translate="Zoom on click" level="1">
+            <BuilderCheckbox
+                action="'websiteConfig'"
+                actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"
+            />
+	    </BuilderRow>
+    </t>
+
+    <div class="o_wsale_panel_section_title ps-2 pt-2 pb-1 fw-bold">Product Details</div>
+    <hr class="mx-2 mt-0 mb-2"/>
+    <BuilderRow label.translate="Purchase Style">
+        <t
+            t-set="CtaLargeViews"
+            t-value="[
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large'
+            ]"
+        />
+        <t t-set="CtaBoxedViews" t-value="['website_sale.cta_wrapper_boxed']"/>
+        <BuilderSelect action="'websiteConfig'" id="'o_wsale_product_cta_style'">
+            <BuilderSelectItem id="cta_default_opt" actionParam="{ views: [] }">
+                <em>Default</em>
+            </BuilderSelectItem>
+            <BuilderSelectItem id="cta_boxed_opt" actionParam="{ views: CtaBoxedViews }">
+                Boxed
+            </BuilderSelectItem>
+            <BuilderSelectItem id="cta_large_opt" actionParam="{ views: CtaLargeViews }">
+                Large
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Purchase Options" id="'o_wsale_cart_opt'">
+        <BuilderButton title.translate="Buy Now" className="'o_we_buy_now_btn'"
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_buy_now'] }"
+        >
+            <i class="fa fa-fw fa-bolt"/>
+            Buy Now
+        </BuilderButton>
+        <BuilderButton title.translate="Select Quantity" className="'o_we_buy_now_btn'"
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_quantity'] }"
+        >
+            Quantity
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow id="'o_we_actions_opt'" label.translate="Actions">
+        <!-- Filled by other modules -->
+    </BuilderRow>
+    <BuilderRow label.translate="Separators">
+        <BuilderCheckbox
+            applyTo="'#product_detail'"
+            action="'previewableWebsiteConfig'"
+            actionParam="{views: ['website_sale.cta_separator'], previewClass: 'o_wsale_product_page_opt_separators'}"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Tax Indication">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.tax_indication'] }"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Tags">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_tags'] }"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Terms and Conditions">
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_terms_and_conditions'] }"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Reviews">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_comment'] }"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Search Bar">
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_search'] }"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

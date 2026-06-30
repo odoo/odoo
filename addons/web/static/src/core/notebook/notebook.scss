@@ -1,0 +1,110 @@
+.o_notebook {
+    --Notebook-margin-x: 0;
+    --Notebook-padding-x: 0;
+    --Notebook__link-border-color: transparent;
+    --Notebook__link-border-color--active: #{$border-color};
+    --Notebook__link-border-color--hover: #{$gray-200};
+    --Notebook__link-border-top-color--active: #{$border-color};
+
+    .o_notebook_headers {
+        margin: 0 var(--Notebook-margin-x, 0);
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        @include media-breakpoint-down(md) {
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .nav {
+        padding: 0 var(--Notebook-padding-x, 0);
+        background-color: $o-view-background-color;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+        margin: 0 -1px 0 0;
+
+        &.disabled {
+            .nav-link {
+                cursor: not-allowed;
+                opacity: .3;
+            }
+        }
+    }
+
+    .nav-link {
+        border-color: var(--Notebook__link-border-color, transparent);
+
+        &.active {
+            &, &:hover, &:focus, &:active {
+                border-color: var(--Notebook__link-border-color--active);
+                border-top-color: var(--Notebook__link-border-top-color--active, var(--Notebook__link-border-color--active));
+                border-bottom-color: $o-view-background-color;
+            }
+        }
+
+        &:hover, &:focus, &:active {
+            outline: none;
+        }
+
+        &:focus-visible, &.active:focus-visible {
+            box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+        }
+
+        &:hover {
+            border-color: var(--Notebook__link-border-color--hover);
+        }
+
+        &.o_page_invalid {
+            color: o-text-color('danger') !important;
+            background-color: #{$o-input-invalid-bg} !important;
+        }
+    }
+
+    .tab-pane:not(.show) {
+        transition: none;
+    }
+
+    &.vertical {
+        .o_notebook_headers {
+            overflow-x: visible;
+        }
+
+        .nav {
+            width: max-content;
+            border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin
+        }
+
+        .nav-item {
+            margin: 0 0 -1px 0;
+
+            &:first-child .nav-link {
+                border-top-width: 0;
+            }
+        }
+
+        .nav-link {
+            margin-bottom: 0;
+
+            &.active {
+                &, &:hover, &:focus, &:active {
+                    border-color: var(--Notebook__link-border-color--active);
+                    border-left-color: var(--Notebook__link-border-top-color--active, var(--Notebook__link-border-color--active));
+                    border-right-color: $o-view-background-color;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        .o_notebook_content .oe-toolbar {
+            @include o-position-sticky($top: 0px);
+            margin-left: var(--Notebook-margin-x, $o-horizontal-padding);
+            margin-right: var(--Notebook-margin-x, $o-horizontal-padding);
+            width: auto;
+        }
+    }
+}

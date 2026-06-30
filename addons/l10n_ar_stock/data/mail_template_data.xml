@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="email_template_ar_remitos_delivery_guide" model="mail.template">
+            <field name="name">Delivery guide: Send by email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ user.email_formatted or object.company_id.email_formatted }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="subject">{{ object.company_id.name }} Document (Ref {{ object.l10n_ar_delivery_guide_number }})</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.l10n_ar_delivery_guide_number">
+            document <strong t-out="object.l10n_ar_delivery_guide_number or ''">00001-00000001</strong>
+        </t>
+        <t t-else="">
+            document
+        </t>
+        <t t-if="object.origin">
+            (with reference: <t t-out="object.origin or ''">SUB003</t>)
+        </t>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

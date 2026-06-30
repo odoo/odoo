@@ -1,0 +1,223 @@
+@keyframes o-tour-pointer-bounce-horizontal {
+    from {
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1));
+    }
+    to {
+        transform: translateX(var(--TourPointer__bounce-offset));
+    }
+}
+
+@keyframes o-tour-pointer-bounce-vertical {
+    from {
+        transform: translateY(calc(var(--TourPointer__bounce-offset) * -1));
+    }
+    to {
+        transform: translateY(var(--TourPointer__bounce-offset));
+    }
+}
+
+@keyframes o-tour-pointer-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes o-tour-pointer-info-expand {
+    from {
+        width: 0;
+        height: 0;
+    }
+}
+
+.o_tour_pointer {
+    --TourPointer__anchor-space: 0;
+    --TourPointer__bounce-offset: 3px;
+    --TourPointer__offset: 8px;
+    --TourPointer__scale: 1.12;
+    --TourPointer__color: #{$o-enterprise-color};
+    --TourPointer__color-accent: #{lighten($o-enterprise-color, 7%)};
+    --TourPointer__border-width: 1px;
+    --TourPointer__border-color-rgb: 255, 255, 255;
+    --TourPointer__border-color: rgba(var(--TourPointer__border-color-rgb), 1);
+    --TourPointer__arrow-size: 1rem;
+    --TourPointer__animation-duration: 500ms;
+    --TourPointer__expand-duration: 200ms;
+    --TourPointer__text-color: black;
+    --TourPointer__reveal-animation: o-tour-pointer-fade-in 400ms ease;
+
+    --TourPointer__translate-x: 0;
+    --TourPointer__translate-y: 0;
+
+    z-index: $zindex-tooltip;
+    max-width: 270px;
+    border: var(--TourPointer__border-width) solid transparent;
+    transform: translate(var(--TourPointer__translate-x), var(--TourPointer__translate-y));
+    transition: width var(--TourPointer__expand-duration),
+        height var(--TourPointer__expand-duration);
+
+    &.o_bouncing {
+        &.o_left,
+        &.o_right {
+            animation: o-tour-pointer-bounce-horizontal var(--TourPointer__animation-duration)
+                    ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_top,
+        &.o_bottom {
+            animation: o-tour-pointer-bounce-vertical var(--TourPointer__animation-duration) ease-in
+                    infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+    }
+
+    .o_tour_pointer_tip {
+        width: var(--TourPointer__width);
+        height: var(--TourPointer__height);
+        border: var(--TourPointer__border-width) solid white;
+        border-radius: 0 50% 50% 50%;
+        background-image: radial-gradient(
+            var(--TourPointer__color-accent),
+            var(--TourPointer__color)
+        );
+        box-shadow: 0 0 40px 2px rgba(var(--TourPointer__border-color-rgb), 0.5);
+    }
+
+    .o_tour_pointer_content {
+        background-color: $light;
+        color: transparent;
+        transition: color 0s ease var(--TourPointer__expand-duration);
+
+        // Force style so that it does not depend on where the tooltip is attached
+        line-height: $line-height-base;
+        @include font-size($font-size-base);
+        font-family: $font-family-sans-serif;
+        font-weight: normal;
+
+        .o_skip_tour {
+            display: inline-block;
+            margin-top: 4px;
+            color: gray;
+            cursor: pointer;
+
+            &:hover {
+                color: darken(gray, 20%);
+            }
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &.o_left .o_tour_pointer_tip {
+        transform: rotate(90deg) translateY(var(--TourPointer__offset))
+            scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+
+    &.o_right .o_tour_pointer_tip {
+        transform: rotate(270deg) translateY(var(--TourPointer__offset))
+            scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+
+    &.o_top .o_tour_pointer_tip {
+        transform: rotate(180deg) translateY(var(--TourPointer__offset))
+            scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+
+    &.o_bottom .o_tour_pointer_tip {
+        transform: rotate(0deg) translateY(var(--TourPointer__offset))
+            scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+
+    &.o_open {
+        border-color: #{$o-gray-400};
+        background-color: #{$o-gray-300};
+        animation: var(--TourPointer__reveal-animation);
+
+        .o_tour_pointer_tip {
+            width: var(--TourPointer__arrow-size);
+            height: var(--TourPointer__arrow-size);
+            border-color: #{$o-gray-400};
+            border-radius: 0;
+            background: $light;
+            box-shadow: none;
+        }
+
+        .o_tour_pointer_content {
+            color: $o-black;
+        }
+
+        &.o_left {
+            --TourPointer__translate-x: calc(var(--TourPointer__arrow-size) / -2);
+
+            .o_tour_pointer_tip {
+                transform: translateX(-50%) rotate(45deg);
+                /*rtl:begin:ignore*/
+                right: calc(var(--TourPointer__arrow-size) * -1);
+                top: calc(var(--TourPointer__arrow-size) / 2);
+                /*rtl:end:ignore*/
+            }
+        }
+
+        &.o_right {
+            --TourPointer__translate-x: calc(var(--TourPointer__arrow-size) / 2);
+
+            .o_tour_pointer_tip {
+                transform: translateX(50%) rotate(45deg);
+                /*rtl:begin:ignore*/
+                left: calc(var(--TourPointer__arrow-size) * -1);
+                top: calc(var(--TourPointer__arrow-size) / 2);
+                /*rtl:end:ignore*/
+            }
+        }
+
+        &.o_top {
+            --TourPointer__translate-y: calc(var(--TourPointer__arrow-size) / -2);
+
+            .o_tour_pointer_tip {
+                transform: translateY(-50%) rotate(45deg);
+                /*rtl:begin:ignore*/
+                bottom: calc(var(--TourPointer__arrow-size) * -1);
+                left: calc(var(--TourPointer__arrow-size) / 2);
+                /*rtl:end:ignore*/
+            }
+        }
+
+        &.o_bottom {
+            --TourPointer__translate-y: calc(var(--TourPointer__arrow-size) / 2);
+
+            .o_tour_pointer_tip {
+                transform: translateY(50%) rotate(45deg);
+                /*rtl:begin:ignore*/
+                top: calc(var(--TourPointer__arrow-size) * -1);
+                left: calc(var(--TourPointer__arrow-size) / 2);
+                /*rtl:end:ignore*/
+            }
+        }
+
+        // Exception for when the info bubble would overflow to the right:
+        // we offset the content to the left
+        &.o_expand_left {
+            &.o_top,
+            &.o_bottom {
+                --TourPointer__translate-x: calc(
+                    var(--TourPointer__width) + var(--TourPointer__border-width) - 100%
+                );
+
+                .o_tour_pointer_tip {
+                    /*rtl:begin:ignore*/
+                    left: initial;
+                    right: calc(var(--TourPointer__arrow-size) / 2);
+                    /*rtl:end:ignore*/
+                }
+            }
+        }
+    }
+}
+
+@media print {
+    .o_tour_pointer {
+        display: none !important;
+    }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRange">
+    <BuilderComponent>
+        <div class="o-hb-range d-flex flex-row flex-nowrap align-items-center"
+            t-att-data-action-id="info.actionId"
+            t-att-data-action-param="info.actionParam"
+            t-att-data-action-value="info.actionValue"
+            t-att-data-class-action="info.classAction"
+            t-att-data-style-action="info.styleAction"
+            t-att-data-style-action-value="info.styleActionValue"
+            t-att-data-attribute-action="info.attributeAction"
+            t-att-data-attribute-action-value="info.attributeActionValue">
+            <input
+            type="range"
+            class="o-hb-rangeInput"
+            t-ref="inputRef"
+            t-att-class="className"
+            t-att-min="min"
+            t-att-max="max"
+            t-att-step="props.step"
+            t-att-value="rangeInputValue"
+            t-on-change="onChange"
+            t-on-input="onInput"
+            t-on-keydown="onKeydown" />
+            <output t-if="props.displayRangeValue" t-out="displayValue" class="ms-1"/>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

@@ -1,0 +1,176 @@
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { registry } from "@web/core/registry";
+import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+
+registry.category("web_tour.tours").add("BarcodeScanningTour", {
+    steps: () =>
+        [
+            // The following step is to make sure that the Chrome widget initialization ends
+            // If we try to use the barcode parser before its initiation, we will have
+            // some inconsistent JS errors:
+            // TypeError: Cannot read properties of undefined (reading 'parse_barcode')
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Add a product with its barcode
+            scan_barcode("0123456789"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand"),
+            scan_barcode("0123456789"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand", 2),
+
+            // Test "Prices product" EAN-13 `23.....{NNNDD}` barcode pattern
+            scan_barcode("2305000000004"),
+            ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "0.00"),
+            scan_barcode("2305000123451"),
+            ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "123.45"),
+
+            // Test "Weighted product" EAN-13 `21.....{NNDDD}` barcode pattern
+            scan_barcode("2100005000000"),
+            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 0, "0.00"),
+            scan_barcode("2100005080002"),
+            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 8),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Add the product with its barcode
+            scan_barcode("12345601"),
+            ProductScreen.selectedOrderlineHas("Packaging Product", 1),
+            scan_barcode("12345601"),
+            ProductScreen.selectedOrderlineHas("Packaging Product", 2),
+
+            // Add the product packaging with its barcode
+            scan_barcode("12345610"),
+            ProductScreen.selectedOrderlineHas("Packaging Product", 12),
+            scan_barcode("12345610"),
+            ProductScreen.selectedOrderlineHas("Packaging Product", 22),
+
+            // Add Product which has no barcode, but it's packaging has one
+            scan_barcode("12345618"),
+            ProductConfiguratorPopup.pickMulti("Cushion"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Packaging Product2", 10),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Add the Product 1 with GS1 barcode
+            scan_barcode("0108431673020125100000001"),
+            ProductScreen.selectedOrderlineHas("Product 1"),
+            scan_barcode("0108431673020125100000001"),
+            ProductScreen.selectedOrderlineHas("Product 1", 2),
+
+            // Add the product 1 with GS1 barcode and quantity
+            scan_barcode("0108431673020125305"),
+            ProductScreen.selectedOrderlineHas("Product 1", 7),
+            scan_barcode("01084316730201253010"),
+            ProductScreen.selectedOrderlineHas("Product 1", 17),
+
+            // Add the Product 2 with normal barcode
+            scan_barcode("08431673020126"),
+            ProductScreen.selectedOrderlineHas("Product 2"),
+            scan_barcode("08431673020126"),
+            ProductScreen.selectedOrderlineHas("Product 2", 2),
+
+            // Add the Product 3 with normal barcode
+            scan_barcode("3760171283370"),
+            ProductScreen.selectedOrderlineHas("Product 3"),
+            scan_barcode("3760171283370"),
+            ProductScreen.selectedOrderlineHas("Product 3", 2),
+
+            // Scanning lot number of product temoplate and variant have GS1 barcode should add the product to the order.
+            scan_barcode("010512364869541610784512"),
+            ProductScreen.selectedOrderlineHas("GS1 Variant Product", 1),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // scan the customer barcode
+            scan_barcode("0421234567890"),
+            ProductScreen.customerIsSelected("John Doe"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_quantity_package_of_non_basic_unit", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("555555"),
+            ProductScreen.selectedOrderlineHas("Cord", 12),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_variants_merge_line_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("A variant product"),
+            ProductConfiguratorPopup.pickRadio("S"),
+            Dialog.confirm(),
+            Order.hasLine({
+                productName: "A variant product",
+                quantity: 1,
+                attributeLine: "S, blue",
+            }),
+            scan_barcode("TEST123"),
+            Order.hasLine({
+                productName: "A variant product",
+                quantity: 2,
+                attributeLine: "S, Blue",
+            }),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_gs1_barcode_scan_missing_product_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 1,
+                    attributeLine: "S",
+                })
+            ),
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 2,
+                    attributeLine: "S",
+                })
+            ),
+            Chrome.endTour(),
+        ].flat(),
+});

@@ -1,0 +1,37 @@
+// Snippets Modal Preview
+// ======================
+// Performs an animation on :hover showcasing the user how the snippet behaves
+// in use. Measurements and values are arbitrary, the goal is just to provide
+// a preview.
+.o_snippet_preview_wrap {
+    [data-snippet="s_ecomm_categories_showcase"] {
+        overflow: hidden;
+
+        .s_ecomm_categories_showcase_wrapper {
+            flex-wrap: nowrap;
+
+            .s_ecomm_categories_showcase_block {
+                transition: flex 0.35s ease;
+                flex: 1;
+                min-height: auto;
+                height: 650px;
+
+                &:first-child {
+                    flex: 2;
+                }
+            }
+        }
+    }
+
+    &:is(:hover, :focus-visible) [data-snippet="s_ecomm_categories_showcase"] {
+        .s_ecomm_categories_showcase_wrapper {
+            .s_ecomm_categories_showcase_block {
+                flex: 1;
+
+                &:nth-child(2) {
+                    flex: 3;
+                }
+            }
+        }
+    }
+}

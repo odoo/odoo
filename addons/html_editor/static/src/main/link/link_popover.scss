@@ -1,0 +1,72 @@
+.o_we_preview_favicon {
+    .o_image {
+        max-width: 100%;
+        max-height: 100%;
+        background-position: top;
+        margin-top: 0.3em;
+    }
+
+    > img {
+        max-height: 16px;
+        max-width: 16px;
+    }
+}
+
+.o-we-linkpopover {
+    .custom-fill-color, .custom-text-color, .custom-border, .input-group {
+        label {
+            width: 70px;
+        }
+    }
+
+    .form-check-input {
+        --border-color: var(--#{$prefix}dark-border-subtle) !important;
+    }
+
+    .form-control:focus, .form-select:focus, .form-check-input:focus {
+        border-color: $input-focus-border-color !important;
+        box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
+    }
+
+    .o_link_popover_container {
+        min-width: 300px;
+    }
+}
+
+.o_seo_option_child {
+    padding-left: 20px;
+    position: relative;
+
+    &::before, &::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        background: #999;
+    }
+
+    &::before {
+        top: 0;
+        height: calc(100% - 14px);
+        width: 1px;
+    }
+
+    &::after {
+        top: 16px;
+        width: 10px;
+        height: 1px;
+    }
+}
+
+.custom-border {
+    @include o-input-number-no-arrows();
+
+    input.form-control {
+        width: 35px;
+    }
+    .input-group-text {
+        padding: 0 0.35rem;
+    }
+    select.form-select {
+        width: 60px;
+    }
+}

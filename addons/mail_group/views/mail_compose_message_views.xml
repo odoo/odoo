@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_compose_message_action_mail_group" model="ir.actions.act_window">
+        <field name="name">Send email</field>
+        <field name="res_model">mail.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'mail.group.member',
+            'default_res_ids': active_ids
+        }</field>
+        <field name="binding_model_id" ref="model_mail_group_member"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

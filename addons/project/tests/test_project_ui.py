@@ -3,9 +3,48 @@
 import odoo.tests
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').sudo().implied_ids |= cls.env.ref('project.group_project_milestone')
+
     def test_01_project_tour(self):
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('project_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.project_tour.ready", login="admin")
+        self.start_tour("/odoo", 'project_tour', login="admin")
+
+    def test_project_task_history(self):
+        """This tour will check that the history works properly."""
+        stage = self.env['project.task.type'].create({'name': 'To Do'})
+        _dummy, project2 = self.env['project.project'].create([{
+            'name': 'Without tasks project',
+            'type_ids': stage.ids,
+        }, {
+            'name': 'Test History Project',
+            'type_ids': stage.ids,
+        }])
+
+        self.env['project.task'].create({
+            'name': 'Test History Task',
+            'stage_id': stage.id,
+            'project_id': project2.id,
+        })
+
+        self.start_tour('/odoo?debug=1', 'project_task_history_tour', login='admin')
+
+    def test_project_task_last_history_steps(self):
+        """This tour will check that the history works properly."""
+        stage = self.env['project.task.type'].create({'name': 'To Do'})
+        project = self.env['project.project'].create([{
+            'name': 'Test History Project',
+            'type_ids': stage.ids,
+        }])
+
+        self.env['project.task'].create({
+            'name': 'Test History Task',
+            'stage_id': stage.id,
+            'project_id': project.id,
+        })
+
+        self.start_tour('/odoo', 'project_task_last_history_steps_tour', login='admin')

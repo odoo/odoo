@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+
+<template id="sale_project.milestone_deadline_inherit" inherit_id="project.milestone_deadline">
+<xpath expr="//t[@t-if=&quot;milestone['deadline']&quot;]" position="before">
+<t t-if="milestone['quantity_percentage']">
+<font style="color: rgb(190, 190, 190);">
+<t t-if="milestone['sale_line_display_name']">
+(<t t-out="milestone['sale_line_display_name']"/> -
+</t>
+<t t-out="100 * milestone['quantity_percentage']"/>%)</font>
+</t>
+</xpath>
+</template>
+
+<template id="project_update_default_description" inherit_id="project.project_update_default_description">
+<xpath expr="//tr[hasclass('revenue_data')]" position="replace">
+<tr>
+<td t-out="profitability['labels'][revenue['id']]"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'] + revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'])"/>
+</tr>
+<tr>
+<td colspan="4">
+<div class="mt-2">
+<table class="table table-sm table-bordered">
+<thead>
+<tr>
+<td class="w-55" style="font-weight: bolder;">Sales Order Items</td>
+<td style="font-weight: bolder; text-align: right; width: 15%;">Sold</td>
+<td style="font-weight: bolder; text-align: right; width: 15%;">Delivered</td>
+<td style="font-weight: bolder; text-align: right; width: 15%;">Invoiced</td>
+</tr>
+</thead>
+
+<tbody>
+<tr t-foreach="revenue['sol']" t-as="sol">
+<td>
+<t t-out="sol['name']"/>
+</td>
+<td class="text-end">
+<t t-out="sol['product_uom_qty']"/> <t t-out="sol['product_uom_id'][1]"/>
+</td>
+<td class="text-end">
+<t t-out="sol['qty_delivered']"/> <t t-out="sol['product_uom_id'][1]"/>
+</td>
+<td class="text-end">
+<t t-out="sol['qty_invoiced']"/> <t t-out="sol['product_uom_id'][1]"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</xpath>
+</template>
+</odoo>

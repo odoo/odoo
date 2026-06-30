@@ -1,0 +1,279 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_dpopay
+#
+# Bone NI <bounkirdni@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-06-14 14:59+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/pos_dpopay/"
+"lo/>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid ""
+"Bearer token used for authenticating requests. Automatically refreshed when "
+"expired."
+msgstr ""
+"Bearer token ທີ່ໃຊ້ສຳລັບການຢືນຢັນຕົວຕົນຂອງຄຳຮ້ອງຂໍ. ຈະຖືກຕໍ່ອາຍຸໂດຍອັດຕະໂນມັດເມື່ອໝົດອາຍຸ."
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
+msgid "Card"
+msgstr "ບັດ"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
+msgstr ""
+"ໝາຍເອົາບ່ອນນີ້ເພື່ອໃຊ້ສະພາບແວດລ້ອມ sandbox ຂອງ DPO Pay ສຳລັບຈຸດປະສົງໃນການທົດສອບ."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid ""
+"Choose allowed payment mode:\n"
+"Card - regular card payments\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
+msgstr ""
+"ເລືອກຮູບແບບການຊຳລະເງິນທີ່ອະນຸຍາດ:\n"
+"ບັດ - ການຊຳລະຜ່ານບັດປົກກະຕິ\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Customer's phone number used to complete the Mobile Money payment."
+msgstr "ເບີໂທລະສັບຂອງລູກຄ້າທີ່ໃຊ້ເພື່ອເຮັດການຊຳລະເງິນ Mobile Money ໃຫ້ສຳເລັດ."
+
+#. module: pos_dpopay
+#: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
+msgid "DPO Pay"
+msgstr "DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "DPO Pay Chain-ID"
+msgstr "ID ຕ່ອງໂສ້ DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "DPO Pay Client ID"
+msgstr "ID ລູກຄ້າ DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid "DPO Pay Client Secret"
+msgstr "ລະຫັດລັບລູກຄ້າ DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "DPO Pay Merchant ID"
+msgstr "ID ຜູ້ຂາຍ DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid "DPO Pay Terminal ID"
+msgstr "ID ເຄື່ອງຮູດບັດ DPO Pay"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "DPO Pay terminal is currently offline."
+msgstr "ເຄື່ອງຮູດບັດ DPO Pay ກຳລັງອອບລາຍຢູ່."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "ຊື່ທີ່ສະແດງ"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Dpo Pay Error"
+msgstr "ຂໍ້ຜິດພາດ DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid "Dpopay Bearer Token"
+msgstr "Dpopay Bearer Token"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid "Dpopay Payment Mode"
+msgstr "ຮູບແບບການຊຳລະເງິນ Dpopay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Enable Test Mode"
+msgstr "ເປີດໃຊ້ໂໝດທົດສອບ"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
+msgstr "ປ້ອນຄ່າສ່ວນຫົວຂອງ Chain-ID (ຕົວຢ່າງ: DPO-DTM-Testing)"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
+msgstr "ປ້ອນ ID ຜູ້ຂາຍທີ່ກຳນົດໂດຍ DPO Pay (ຕົວຢ່າງ: 123456789012)."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid ""
+"Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
+"XXXXXXXX)."
+msgstr ""
+"ປ້ອນ ID ເຄື່ອງຮູດບັດ (TID) ທີ່ບໍ່ຊ້ຳກັນຂອງເຄື່ອງ POS DPO Pay ຂອງທ່ານ (ຕົວຢ່າງ: XXXXXXXX)."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to cancel payment."
+msgstr "ຍົກເລີກການຊຳລະເງິນບໍ່ສຳເລັດ."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to fetch last transaction result."
+msgstr "ດຶງຂໍ້ມູນຜົນການເຮັດທຸລະກຳຫຼ້າສຸດບໍ່ສຳເລັດ."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve payment status."
+msgstr "ດຶງຂໍ້ມູນສະຖານະການຊຳລະເງິນບໍ່ສຳເລັດ."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve transaction result."
+msgstr "ດຶງຂໍ້ມູນຜົນການເຮັດທຸລະກຳບໍ່ສຳເລັດ."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid Chain ID. Please verify the configuration. %s"
+msgstr "Chain ID ບໍ່ຖືກຕ້ອງ. ກະລຸນາກວດສອບການຕັ້ງຄ່າ. %s"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid endpoint"
+msgstr "ຈຸດເຊື່ອມຕໍ່ (Endpoint) ບໍ່ຖືກຕ້ອງ"
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
+msgid "Mobile Money"
+msgstr "Mobile Money"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Mobile Money Phone Number(Last 4 Digit)"
+msgstr "ເບີໂທລະສັບ Mobile Money (4 ຕົວເລກສຸດທ້າຍ)"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is declined by DPO Pay."
+msgstr "ການຊຳລະເງິນຖືກປະຕິເສດໂດຍ DPO Pay."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is unsuccessful."
+msgstr "ການຊຳລະເງິນບໍ່ສຳເລັດ."
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Please ensure the device is online and confirm that the Merchant ID (MID) "
+"and Terminal ID (TID) are correct. %s"
+msgstr ""
+"ກະລຸນາຮັບປະກັນວ່າອຸປະກອນອອນລາຍຢູ່ ແລະ ຢືນຢັນວ່າ ID ຜູ້ຂາຍ (MID) ແລະ ID ເຄື່ອງຮູດບັດ (TID) ຖືກຕ້"
+"ອງ. %s"
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "ວິທີການຊຳລະເງິນຂອງຈຸດຂາຍ"
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "ການຊຳລະເງິນຂອງຈຸດຂາຍ"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "RRN"
+msgstr "RRN"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Reference number required for Mobile Money refund transactions."
+msgstr "ເລກອ້າງອີງທີ່ຈຳເປັນສຳລັບການເຮັດທຸລະກຳຄືນເງິນ Mobile Money."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "Retrieval Reference Number generated for the DPO Pay transaction."
+msgstr "ເລກອ້າງອີງການດຶງຂໍ້ມູນທີ່ສ້າງຂຶ້ນສຳລັບທຸລະກຳ DPO Pay."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "The Client ID provided by DPO Pay for authenticating requests."
+msgstr "ID ລູກຄ້າທີ່ສະໜອງໃຫ້ໂດຍ DPO Pay ສຳລັບການຢືນຢັນຕົວຕົນຂອງຄຳຮ້ອງຂໍ."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid ""
+"The Client Secret provided by DPO Pay for secure access. Keep it "
+"confidential."
+msgstr ""
+"ລະຫັດລັບລູກຄ້າທີ່ສະໜອງໃຫ້ໂດຍ DPO Pay ສຳລັບການເຂົ້າເຖິງທີ່ປອດໄພ. ກະລຸນາເກັບຮັກສາເປັນຄວາມລັບ."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Transaction Reference"
+msgstr "ການອ້າງອີງທຸລະກຳ"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Transaction amount must be greater than zero."
+msgstr "ຈຳນວນເງິນທຸລະກຳຕ້ອງຫຼາຍກວ່າສູນ."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to initiate DPO payment. Please try again."
+msgstr "ບໍ່ສາມາດເລີ່ມຕົ້ນການຊຳລະເງິນ DPO ໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to reach DPO Pay terminal."
+msgstr "ບໍ່ສາມາດເຊື່ອມຕໍ່ຫາເຄື່ອງຮູດບັດ DPO Pay ໄດ້."
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
+msgstr ""
+"ບໍ່ສາມາດດຶງຂໍ້ມູນ DPO Pay bearer token ໄດ້: ກວດສອບ ID ລູກຄ້າ ແລະ ລະຫັດລັບລູກຄ້າ."

@@ -1,99 +1,642 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import json
 import logging
 
-from odoo import api, fields, models, tools
+from lxml import etree
+from werkzeug import urls
+from werkzeug.exceptions import NotFound
 
+from odoo import SUPERUSER_ID, api, fields, models
+from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools import file_open, ormcache
+from odoo.tools.translate import LazyTranslate, _
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.website_sale import const
+
+logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
+
+
+CART_SESSION_CACHE_KEY = 'sale_order_id'
+FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
+PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
+PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
 
 
 class Website(models.Model):
     _inherit = 'website'
 
-    pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
-    salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
-    pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
-                                    string='Price list available for this Ecommerce/Website')
+    #=== DEFAULT METHODS ===#
 
-    @api.one
+    def _default_salesteam_id(self):
+        team = self.env.ref('sales_team.salesteam_website_sales', raise_if_not_found=False)
+        if team and team.active:
+            return team.id
+        return None
+
+    def _default_recovery_mail_template(self):
+        try:
+            return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
+        except ValueError:
+            return False
+
+    def _default_confirmation_email_template(self):
+        template_id = self.env['ir.config_parameter'].sudo().get_param(
+            'sale.default_confirmation_template'
+        )
+        default_template = template_id and self.env['mail.template'].browse(int(template_id)).exists()
+        if default_template:
+            return default_template
+        return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+
+    #=== FIELDS ===#
+
+    salesperson_id = fields.Many2one(
+        string="Salesperson",
+        comodel_name='res.users',
+        domain=[('share', '=', False)],
+    )
+    salesteam_id = fields.Many2one(
+        string="Sales Team",
+        comodel_name='crm.team',
+        index='btree_not_null',
+        ondelete='set null',
+        default=_default_salesteam_id,
+    )
+    show_line_subtotals_tax_selection = fields.Selection(
+        string="Line Subtotals Tax Display",
+        selection=[
+            ('tax_excluded', "Tax Excluded"),
+            ('tax_included', "Tax Included"),
+        ],
+        compute='_compute_show_line_subtotals_tax_selection',
+        readonly=False,
+        store=True,
+    )
+
+    add_to_cart_action = fields.Selection(
+        selection=[
+            ('stay', "Stay on Product Page"),
+            ('go_to_cart', "Go to cart"),
+        ],
+        default='stay',
+    )
+    auth_signup_uninvited = fields.Selection(default='b2c')
+    account_on_checkout = fields.Selection(
+        string="Customer Accounts",
+        selection=[
+            ('optional', "Optional"),
+            ('disabled', "Disabled (buy as guest)"),
+            ('mandatory', "Mandatory (no guest checkout)"),
+        ],
+        default='optional',
+    )
+    cart_recovery_mail_template_id = fields.Many2one(
+        string="Cart Recovery Email",
+        comodel_name='mail.template',
+        domain=[('model', '=', 'sale.order')],
+        default=_default_recovery_mail_template,
+    )
+    contact_us_button_url = fields.Char(
+        string="Contact Us Button URL", translate=True, default="/contactus",
+    )
+    cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
+    send_abandoned_cart_email = fields.Boolean(
+        string="Send email to customers who abandoned their cart.",
+    )
+    send_abandoned_cart_email_activation_time = fields.Datetime(
+        string="Time when the 'Send abandoned cart email' feature was activated.",
+        compute='_compute_send_abandoned_cart_email_activation_time',
+        store=True,
+    )
+    shop_page_container = fields.Selection(
+        selection=[
+            ('regular', "Regular"),
+            ('fluid', "Full-width"),
+        ],
+        default='regular',
+    )
+    shop_ppg = fields.Integer(
+        string="Number of products in the grid on the shop", default=21,
+    )
+    shop_ppr = fields.Integer(string="Number of grid columns on the shop", default=3)
+
+    shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
+
+    shop_opt_products_design_classes = fields.Char(
+        string="Shop Design Class",
+        default=(
+            'o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs '
+            'o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 '
+            'o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show '
+            'o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta '
+            'o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist '
+            'o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description '
+            'o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1'
+        ),
+        help="CSS class for shop products design"
+    )
+
+    shop_default_sort = fields.Selection(
+        selection='_get_product_sort_mapping', required=True, default='website_sequence asc')
+
+    shop_extra_field_ids = fields.One2many(
+        string="E-Commerce Extra Fields",
+        comodel_name='website.sale.extra.field',
+        inverse_name='website_id',
+    )
+
+    product_page_container = fields.Selection(
+        selection=[
+            ('unset', "Unset"),
+            ('regular', "Regular"),
+            ('fluid', "Full-width"),
+        ],
+        default='unset'
+    )
+
+    product_page_cols_order = fields.Selection(
+        selection=[
+            ('regular', "Regular order"),
+            ('inverse', "Inverse order"),
+        ],
+        string="Product Page main columns order",
+        default='regular',
+    )
+
+    product_page_image_layout = fields.Selection(
+        selection=[
+            ('carousel', "Carousel"),
+            ('grid', "Grid"),
+        ],
+        required=True,
+        default='carousel',
+    )
+    product_page_image_width = fields.Selection(
+        selection=[
+            ('none', "Hidden"),
+            ('33_pc', "33 %"),
+            ('50_pc', "50 %"),
+            ('66_pc', "66 %"),
+            ('100_pc', "100 %"),
+        ],
+        required=True,
+        default='50_pc',
+    )
+    product_page_image_spacing = fields.Selection(
+        selection=[
+            ('none', "None"),
+            ('small', "Small"),
+            ('medium', "Medium"),
+            ('big', "Big"),
+        ],
+        required=True,
+        default='none',
+    )
+    product_page_image_roundness = fields.Selection(
+        selection=[
+            ('none', "None"),
+            ('small', "Small"),
+            ('medium', "Medium"),
+            ('big', "Big"),
+        ],
+        required=True,
+        default='none',
+    )
+    product_page_image_ratio = fields.Selection(
+        selection=[
+            ('auto', "Auto"),
+            ('21_9', "Wider (21/9)"),
+            ('16_9', "Wide (16/9)"),
+            ('4_3', "Landscape (4/3)"),
+            ('6_5', "Horizontal (6/5)"),
+            ('1_1', "Default (1/1)"),
+            ('4_5', "Portrait (4/5)"),
+            ('2_3', "Vertical (2/3)"),
+        ],
+        required=True,
+        default='1_1',
+    )
+    product_page_image_ratio_mobile = fields.Selection(
+        selection=[
+            ('auto', "Auto"),
+            ('21_9', "Wider (21/9)"),
+            ('16_9', "Wide (16/9)"),
+            ('4_3', "Landscape (4/3)"),
+            ('6_5', "Horizontal (6/5)"),
+            ('1_1', "Default (1/1)"),
+            ('4_5', "Portrait (4/5)"),
+            ('2_3', "Vertical (2/3)"),
+        ],
+        required=True,
+        default='auto',
+    )
+    ecommerce_access = fields.Selection(
+        selection=[
+            ('everyone', "All users"),
+            ('logged_in', "Logged in users"),
+        ],
+        required=True,
+        default='everyone',
+    )
+    product_page_grid_columns = fields.Integer(default=2)
+
+    prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
+
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center",
+        default=lambda self: self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_product_feed',
+        ),
+    )
+
+    currency_id = fields.Many2one(
+        string="Default Currency",
+        comodel_name='res.currency',
+        compute='_compute_currency_id',
+    )
+    pricelist_ids = fields.One2many(
+        string="Price list available for this Ecommerce/Website",
+        comodel_name='product.pricelist',
+        compute="_compute_pricelist_ids",
+    )
+    confirmation_email_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        domain=[('model', '=', 'sale.order')],
+        default=_default_confirmation_email_template,
+    )
+
+    #=== COMPUTE METHODS ===#
+
     def _compute_pricelist_ids(self):
-        self.pricelist_ids = self.env["product.pricelist"].search([("website_id", "=", self.id)])
-
-    @api.multi
-    def _compute_pricelist_id(self):
         for website in self:
-            if website._context.get('website_id') != website.id:
-                website = website.with_context(website_id=website.id)
-            website.pricelist_id = website.get_current_pricelist()
+            website = website.with_company(website.company_id)
+            ProductPricelist = website.env['product.pricelist']  # with correct company in env
+            website.pricelist_ids = ProductPricelist.sudo().search_fetch(
+                ProductPricelist._get_website_pricelists_domain(website)
+            )
+
+    @api.depends('company_id')
+    def _compute_currency_id(self):
+        for website in self:
+            website.currency_id = (
+                request and hasattr(request, 'pricelist') and request.pricelist.currency_id
+                or website.company_id.sudo().currency_id
+            )
+
+    @api.depends('send_abandoned_cart_email')
+    def _compute_send_abandoned_cart_email_activation_time(self):
+        for website in self:
+            if website.send_abandoned_cart_email:
+                website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
+
+    @api.depends('company_id.account_fiscal_country_id')
+    def _compute_show_line_subtotals_tax_selection(self):
+        for website in self:
+            website.show_line_subtotals_tax_selection = 'tax_excluded'
+
+    #=== SELECTION METHODS ===#
+
+    @staticmethod
+    def _get_product_sort_mapping():
+        return [
+            ('website_sequence asc', _("Featured")),
+            ('publish_date desc', _("Newest Arrivals")),
+            ('name asc', _("Name (A-Z)")),
+            ('list_price asc', _("Price - Low to High")),
+            ('list_price desc', _("Price - High to Low")),
+        ]
+
+    #=== BUSINESS METHODS ===#
+
+    @api.model
+    def get_configurator_shop_page_styles(self):
+        """Format and return the ids and images of each shop page style for website onboarding.
+
+        :return: The shop page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def get_configurator_product_page_styles(self):
+        """Format and return ids and images of each product page style for website onboarding.
+
+        :return: The product page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def configurator_apply(
+        self, *, shop_page_style_option=None, product_page_style_option=None, **kwargs
+    ):
+        """Override of `website` to apply eCommerce page style configurations.
+
+        :param str shop_page_style_option: The key of the selected shop page style option. See
+                                           `const.SHOP_PAGE_STYLE_MAPPING`.
+        :param str product_page_style_option: The key of the selected product page style option. See
+                                              `const.PRODUCT_PAGE_STYLE_MAPPING`.
+        """
+        res = super().configurator_apply(**kwargs)
+
+        website = self.get_current_website()
+        website_settings = {}
+        category_settings = {}
+        views_to_disable = []
+        views_to_enable = []
+        scss_customization_params = {}
+        ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
+        Assets = self.env['website.assets']
+
+        def parse_style_config(style_config_):
+            website_settings.update(style_config_['website_fields'])
+            category_settings.update(style_config_.get('category_fields', {}))
+            views_to_disable.extend(style_config_['views']['disable'])
+            views_to_enable.extend(style_config_['views']['enable'])
+            scss_customization_params.update(style_config_.get('scss_customization_params', {}))
+
+        # Extract shop page settings.
+        if shop_page_style_option:
+            style_config = const.SHOP_PAGE_STYLE_MAPPING[shop_page_style_option]
+            parse_style_config(style_config)
+
+        # Extract product page settings.
+        if product_page_style_option:
+            style_config = const.PRODUCT_PAGE_STYLE_MAPPING[product_page_style_option]
+            parse_style_config(style_config)
+
+        # Apply eCommerce page style configurations.
+        if website_settings:
+            website.write(website_settings)
+        if category_settings:
+            self.env['product.public.category'].search(website.website_domain()).write(
+                category_settings
+            )
+        for xml_id in views_to_disable:
+            ThemeUtils.disable_view(xml_id)
+        for xml_id in views_to_enable:
+            ThemeUtils.enable_view(xml_id)
+
+        for footer_id in ThemeUtils._footer_templates:
+            footer_view = self.with_context(website_id=website.id).viewref(
+                footer_id,
+                raise_if_not_found=False,  # don't raise on custom footers not installed on website
+            )
+            if not footer_view.active:
+                continue
+
+            footer_updated = False
+            try:
+                arch_tree = etree.fromstring(footer_view.arch)
+            except etree.XMLSyntaxError as e:
+                logger.warning("Failed to update ecommerce footer view %s: %s", footer_id, e)
+            else:
+                # TODO this should be moved as a website feature (not eCommerce-specific)
+                footer_div_node = arch_tree.xpath(
+                    "//section/div[hasclass('container') or hasclass('o_container_small') or hasclass('container-fluid')]",
+                )
+                # The xml view could have been modified in the backend, we don't
+                # want the xpath error to break the configurator feature
+                if not footer_div_node:
+                    logger.warning(
+                        "Failed to match footer width with header in ecommerce footer view %s",
+                        footer_id,
+                    )
+                else:
+                    # Logic for matching header width
+                    if 'website.footer_copyright_content_width_fluid' in views_to_enable:
+                        footer_updated = True
+                        footer_div_node[0].set("class", "container-fluid s_allow_columns")
+                    elif 'website.footer_copyright_content_width_small' in views_to_enable:
+                        footer_updated = True
+                        footer_div_node[0].set("class", "o_container_small s_allow_columns")
+
+                if footer_id == 'website_sale.template_footer_website_sale':
+                    ecommerce_categories_node = arch_tree.xpath("//t[@t-set='ecommerce_categories']")
+                    if not ecommerce_categories_node:
+                        logger.warning("Skipping ecommerce categories in ecommerce footer view %s", footer_id)
+                    else:
+                        # Logic for inserting eCommerce categories in footer
+                        ecommerce_categories = self.env['product.public.category'].search([], limit=6)
+                        # Deliberately hardcode categories inside the view arch, it will be transformed into
+                        # static nodes after a save/edit thanks to the t-ignore in parent node.
+                        footer_updated = True
+                        ecommerce_categories_node[0].attrib['t-value'] = json.dumps([
+                            {
+                                'name': cat.name,
+                                'id': cat.id,
+                            }
+                            for cat in ecommerce_categories
+                        ])
+
+                if footer_updated:
+                    footer_view.write({'arch': etree.tostring(arch_tree)})
+
+        if 'website_sale.template_footer_website_sale' in views_to_enable:
+            scss_customization_params['footer-template'] = 'website_sale'
+
+        # For a website editor to recognize the correct header/footer templates
+        # (reason `isApplied` method of footer plugin)
+        if scss_customization_params:
+            Assets.make_scss_customization(
+                '/website/static/src/scss/options/user_values.scss',
+                scss_customization_params,
+            )
+
+        return res
+
+    def configurator_addons_apply(self, industry_name=None, **kwargs):
+        """Override of `website` to generate eCommerce categories for a given industry using AI."""
+
+        def generate_categories(industry_name_):
+            lang = self.env.context.get('lang')
+            prompt = (
+                f"You are a seasoned Marketing Expert specializing in crafting high-converting eCommerce experiences.\n"
+                f"Your task is to develop compelling category names and descriptions for a {industry_name_}'s new online store.\n"
+                f"The goal is to create categories that are persuasive, attention-grabbing, and concise, encouraging visitors to explore the offerings.\n"
+                f"All content should be in {lang}.\n"
+                f"Here's the format you will use to generate the categories:\n"
+                f'{{"categories": ['
+                f'{{"name": "$category_name_1", "description": "$category_description_1"}}, '
+                f'{{"name": "$category_name_2", "description": "$category_description_2"}}, '
+                f'{{"name": "$category_name_3", "description": "$category_description_3"}}, '
+                f'{{"name": "$category_name_4", "description": "$category_description_4"}}, '
+                f'{{"name": "$category_name_5", "description": "$category_description_5"}}, '
+                f'{{"name": "$category_name_6", "description": "$category_description_6"}}, '
+                f'{{"name": "$category_name_7", "description": "$category_description_7"}}, '
+                f'{{"name": "$category_name_8", "description": "$category_description_8"}}'
+                f']}}\n'
+                f"Constraints:\n"
+                f"Language: {lang}\n"
+                f"Category Names: Must be nouns only (no adjectives).\n"
+                f"Description Length: Keep descriptions very short and to the point (ideally under 20 words).\n"
+                f"Persuasion: Descriptions should be persuasive and designed to attract attention.\n"
+                f"Number of Categories: Exactly 8 categories are required.\n"
+                f"Now, generate the 8 eCommerce categories for the {industry_name_}, adhering to the specified format and constraints."
+            )
+            IrConfigParameterSudo = self.env['ir.config_parameter'].sudo()
+            database_id = IrConfigParameterSudo.get_param('database.uuid')
+            try:
+                response = self._OLG_api_rpc('/api/olg/1/chat', {
+                    'prompt': prompt,
+                    'conversation_history': [],
+                    'database_id': database_id,
+                })
+            except AccessError:
+                logger.warning("API is unreachable for the category generation")
+                return None
+
+            if response['status'] == 'success':
+                content = response['content'].replace('```json\n', '').replace('\n```', '')
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError:
+                    logger.warning("API response is not a valid JSON for the category generation")
+            elif response['status'] == 'error_prompt_too_long':
+                logger.warning("Prompt is too long for the category generation")
+            elif response['status'] == 'limit_call_reached':
+                logger.warning("Limit call reached for the category generation")
+            else:
+                logger.warning("Response could not be generated for the category generation")
+            return None
+
+        res = super().configurator_addons_apply(industry_name=industry_name, **kwargs)
+
+        if self.env['product.public.category'].search_count([], limit=1):
+            logger.info("Categories already exist, skipping AI generation.")
+            return
+
+        category_specs = generate_categories(industry_name)
+        if not isinstance(category_specs, dict):
+            return
+
+        if len(category_specs.get('categories')) == 8:
+            images_names = [f'shape_mixed_{i}.png' for i in range(1, 9)]
+            categories = []
+            for idx, cat in enumerate(category_specs['categories']):
+                image_name = images_names[idx]
+                img_path = 'website_sale/static/src/img/categories/' + image_name
+                with file_open(img_path, 'rb') as file:
+                    image_base64 = base64.b64encode(file.read())
+                categories.append({
+                    'name': cat['name'],
+                    'website_description': cat['description'],
+                    'image_1920': image_base64,
+                    'cover_image': image_base64,
+                })
+            self.env['product.public.category'].sudo().create(categories)
+        return res
 
     # This method is cached, must not return records! See also #8795
-    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
-    def _get_pl_partner_order(self, country_code, show_visible, website_pl, current_pl, all_pl, partner_pl=False, order_pl=False):
+    @ormcache(
+        'country_code', 'show_visible', 'current_pl_id', 'website_pricelist_ids', 'partner_pl_id',
+    )
+    def _get_pl_partner_order(
+        self, country_code, show_visible, current_pl_id, website_pricelist_ids, partner_pl_id=False
+    ):
         """ Return the list of pricelists that can be used on website for the current user.
+
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
-        :param int website_pl: The default pricelist used on this website
-        :param int current_pl: The current pricelist used on the website
-                               (If not selectable but the current pricelist we had this pricelist anyway)
-        :param list all_pl: List of all pricelist available for this website
-        :param int partner_pl: the partner pricelist
-        :param int order_pl: the current cart pricelist
-        :returns: list of pricelist ids
+        :param int current_pl_id: The current pricelist used on the website
+            (If not selectable but currently used anyway, e.g. pricelist with promo code)
+        :param tuple website_pricelist_ids: List of ids of pricelists available for this website
+        :param int partner_pl_id: the partner pricelist
+        :returns: list of product.pricelist ids
+        :rtype: list
         """
+        self.ensure_one()
         pricelists = self.env['product.pricelist']
+
+        def check_pricelist(pricelist):
+            if show_visible:
+                return pricelist.selectable or pricelist.id == current_pl_id
+            else:
+                return True
+
+        # Note: 1. pricelists from all_pl are already website compliant (went through
+        #          `_get_website_pricelists_domain`)
+        #       2. do not read `property_product_pricelist` here as `_get_pl_partner_order`
+        #          is cached and the result of this method will be impacted by that field value.
+        #          Pass it through `partner_pl_id` parameter instead to invalidate the cache.
+
+        # If there is a GeoIP country, find a pricelist for it
         if country_code:
-            for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
-                for group_pricelists in cgroup.pricelist_ids:
-                    if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
-                        pricelists |= group_pricelists
+            pricelists |= self.env['res.country.group'].search(
+                [('country_ids.code', '=', country_code)]
+            ).pricelist_ids.filtered(
+                lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
+            )
 
-        partner = self.env.user.partner_id
-        is_public = self.user_id.id == self.env.user.id
-        if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
-            if partner.property_product_pricelist.website_id:
-                pricelists |= partner.property_product_pricelist
+        # no GeoIP or no pricelist for this country
+        if not pricelists:
+            pricelists = pricelists.browse(website_pricelist_ids).filtered(
+                lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids))
 
-        if not pricelists:  # no pricelist for this country, or no GeoIP
-            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
-        else:
-            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.sudo().code)
+        # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
+        if not self.env.user._is_public():
+            # keep partner_pricelist only if website compliant
+            partner_pricelist = pricelists.browse(partner_pl_id).filtered(
+                lambda pl:
+                    pl._is_available_on_website(self)
+                    and check_pricelist(pl)
+                    and pl._is_available_in_country(country_code)
+            )
+            pricelists |= partner_pricelist
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.ids
-
-    def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
-        pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
-        return self.env['product.pricelist'].browse(pl_ids)
+        # sudo is needed to ensure no records rules are applied during the sorted call,
+        # we only want to reorder the records on hand, not filter them.
+        return pricelists.sudo().sorted().ids
 
     def get_pricelist_available(self, show_visible=False):
-
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request and request.website or None
-        if not website:
-            if self.env.context.get('website_id'):
-                website = self.browse(self.env.context['website_id'])
-            else:
-                website = self.search([], limit=1)
-        isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
-        partner = self.env.user.partner_id
-        order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
-        partner_pl = partner.property_product_pricelist
-        pricelists = website._get_pl_partner_order(isocountry, show_visible,
-                                                   website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   request and request.session.get('website_sale_current_pl') or None,
-                                                   website.pricelist_ids,
-                                                   partner_pl=partner_pl and partner_pl.id or None,
-                                                   order_pl=order_pl and order_pl.id or None)
-        return self.env['product.pricelist'].browse(pricelists)
+        self.ensure_one()
+
+        ProductPricelist = self.env['product.pricelist']
+
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
+
+        country_code = self._get_geoip_country_code()
+        website = self.with_company(self.company_id)
+
+        partner_sudo = website.env.user.partner_id
+        is_user_public = self.env.user._is_public()
+        if not is_user_public:
+            # Don't needlessly trigger `depends_context` recompute
+            ctx = {'country_code': country_code} if country_code else {}
+            partner_pricelist_id = partner_sudo.with_context(**ctx).property_product_pricelist.id
+        else:  # public user: do not compute partner pl (not used)
+            partner_pricelist_id = False
+        website_pricelists = website.sudo().pricelist_ids
+
+        current_pricelist_id = request and request.session.get(PRICELIST_SESSION_CACHE_KEY) or None
+
+        pricelist_ids = website._get_pl_partner_order(
+            country_code,
+            show_visible,
+            current_pl_id=current_pricelist_id,
+            website_pricelist_ids=tuple(website_pricelists.ids),
+            partner_pl_id=partner_pricelist_id,
+        )
+
+        return ProductPricelist.browse(pricelist_ids)
 
     def is_pricelist_available(self, pl_id):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -103,226 +646,458 @@ class Website(models.Model):
         """
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
-    def get_current_pricelist(self):
-        """
-        :returns: The current pricelist record
-        """
-        # The list of available pricelists for this user.
-        # If the user is signed in, and has a pricelist set different than the public user pricelist
-        # then this pricelist will always be considered as available
-        available_pricelists = self.get_pricelist_available()
-        pl = None
-        partner = self.env.user.partner_id
-        if request and request.session.get('website_sale_current_pl'):
-            # `website_sale_current_pl` is set only if the user specifically chose it:
-            #  - Either, he chose it from the pricelist selection
-            #  - Either, he entered a coupon code
-            pl = self.env['product.pricelist'].browse(request.session['website_sale_current_pl'])
-            if pl not in available_pricelists:
-                pl = None
-                request.session.pop('website_sale_current_pl')
-        if not pl:
-            # If the user has a saved cart, it take the pricelist of this cart, except if
-            # the order is no longer draft (It has already been confirmed, or cancelled, ...)
-            pl = partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
-            if not pl:
-                # The pricelist of the user set on its partner form.
-                # If the user is not signed in, it's the public user pricelist
-                pl = partner.property_product_pricelist
-            if available_pricelists and pl not in available_pricelists:
-                # If there is at least one pricelist in the available pricelists
-                # and the chosen pricelist is not within them
-                # it then choose the first available pricelist.
-                # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
-                # If the user is signed in, and has a special pricelist (different than the public user pricelist),
-                # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
-                pl = available_pricelists[0]
+    def _get_geoip_country_code(self):
+        return request and request.geoip.country_code or False
 
-        if not pl:
-            _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
-        return pl
-
-    @api.multi
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)]
+        website = self or self.get_current_website()
+        website_domain = website.website_domain()
+        if self.env.user._is_internal():
+            user_domain = Domain.TRUE
+        else:
+            user_domain = [
+                ('is_published', '=', True),
+                ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
+            ]
+        company_domain = [('company_id', 'in', [False, website.company_id.id])]
+        return Domain.AND([self._product_domain(), website_domain, user_domain, company_domain])
 
-    @api.model
-    def sale_get_payment_term(self, partner):
-        DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
-        return partner.property_payment_term_id.id or self.env.ref(DEFAULT_PAYMENT_TERM, False).id
+    def _product_domain(self):
+        return [('sale_ok', '=', True)]
 
-    @api.multi
-    def _prepare_sale_order_values(self, partner, pricelist):
+    def _create_cart(self):
         self.ensure_one()
-        affiliate_id = request.session.get('affiliate_id')
-        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery', 'invoice'])
-        default_user_id = partner.parent_id.user_id.id or partner.user_id.id
-        values = {
-            'partner_id': partner.id,
-            'pricelist_id': pricelist.id,
-            'payment_term_id': self.sale_get_payment_term(partner),
+
+        partner_sudo = self.env.user.partner_id
+
+        so_data = self._prepare_sale_order_values(partner_sudo)
+        sale_order_sudo = self.env['sale.order'].with_user(
+            SUPERUSER_ID
+        ).with_company(self.company_id).create(so_data)
+
+        # The order was created with SUPERUSER_ID, revert back to request user.
+        sale_order_sudo = sale_order_sudo.with_user(self.env.user).sudo()
+
+        request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
+        request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
+        request.cart = sale_order_sudo
+
+        return sale_order_sudo
+
+    def _prepare_sale_order_values(self, partner_sudo):
+        self.ensure_one()
+
+        return {
+            'company_id': self.company_id.id,
+            'partner_id': partner_sudo.id,
+
+            'fiscal_position_id': request.fiscal_position.id,
+            'pricelist_id': request.pricelist.id,
+
             'team_id': self.salesteam_id.id,
-            'partner_invoice_id': addr['invoice'],
-            'partner_shipping_id': addr['delivery'],
-            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+            'website_id': self.id,
         }
-        company = self.company_id or pricelist.company_id
-        if company:
-            values['company_id'] = company.id
 
-        return values
+    def _get_and_cache_current_pricelist(self):
+        """Retrieve and cache the current pricelist for the session.
 
-    @api.multi
-    def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
-        """ Return the current sales order after mofications specified by params.
-        :param bool force_create: Create sales order if not already existing
-        :param str code: Code to force a pricelist (promo code)
-                         If empty, it's a special case to reset the pricelist with the first available else the default.
-        :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
-        :param int force_pricelist: pricelist_id - if set,  we change the pricelist with this one
-        :returns: browse record for the current sales order
+        Note: self.ensure_one()
+
+        :return: The determined pricelist, which could be empty, as a sudoed record.
+        :rtype: product.pricelist
         """
         self.ensure_one()
-        partner = self.env.user.partner_id
-        sale_order_id = request.session.get('sale_order_id')
-        if not sale_order_id:
-            last_order = partner.last_website_so_id
-            available_pricelists = self.get_pricelist_available()
-            # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
-            sale_order_id = last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
 
-        pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
+        ProductPricelistSudo = self.env['product.pricelist'].sudo()
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
-        if self.env['product.pricelist'].browse(force_pricelist).exists():
-            pricelist_id = force_pricelist
-            request.session['website_sale_current_pl'] = pricelist_id
-            update_pricelist = True
+        if PRICELIST_SESSION_CACHE_KEY in request.session:
+            pricelist_sudo = ProductPricelistSudo.browse(
+                request.session[PRICELIST_SESSION_CACHE_KEY]
+            )
+            if pricelist_sudo and (
+                pricelist_sudo.exists()
+                and pricelist_sudo._is_available_on_website(self)
+                and pricelist_sudo._is_available_in_country(self._get_geoip_country_code())
+            ):
+                return pricelist_sudo.sudo()
 
-        if not self._context.get('pricelist'):
-            self = self.with_context(pricelist=pricelist_id)
-
-        # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
-
-        # create so if needed
-        if not sale_order and (force_create or code):
-            # TODO cache partner_id session
-            pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
-            so_data = self._prepare_sale_order_values(partner, pricelist)
-            sale_order = self.env['sale.order'].sudo().create(so_data)
-
-            # set fiscal position
-            if request.website.partner_id.id != partner.id:
-                sale_order.onchange_partner_shipping_id()
-            else: # For public user, fiscal position based on geolocation
-                country_code = request.session['geoip'].get('country_code')
-                if country_code:
-                    country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
-                    fp_id = request.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)
-                    sale_order.fiscal_position_id = fp_id
-                else:
-                    # if no geolocation, use the public user fp
-                    sale_order.onchange_partner_shipping_id()
-
-            request.session['sale_order_id'] = sale_order.id
-
-            if request.website.partner_id.id != partner.id:
-                partner.write({'last_website_so_id': sale_order.id})
-
-        if sale_order:
-            # case when user emptied the cart
-            if not request.session.get('sale_order_id'):
-                request.session['sale_order_id'] = sale_order.id
-
-            # check for change of pricelist with a coupon
-            pricelist_id = pricelist_id or partner.property_product_pricelist.id
-
-            # check for change of partner_id ie after signup
-            if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
-                flag_pricelist = False
-                if pricelist_id != sale_order.pricelist_id.id:
-                    flag_pricelist = True
-                fiscal_position = sale_order.fiscal_position_id.id
-
-                # change the partner, and trigger the onchange
-                sale_order.write({'partner_id': partner.id})
-                sale_order.onchange_partner_id()
-                sale_order.onchange_partner_shipping_id() # fiscal position
-                sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
-
-                # check the pricelist : update it if the pricelist is not the 'forced' one
-                values = {}
-                if sale_order.pricelist_id:
-                    if sale_order.pricelist_id.id != pricelist_id:
-                        values['pricelist_id'] = pricelist_id
-                        update_pricelist = True
-
-                # if fiscal position, update the order lines taxes
-                if sale_order.fiscal_position_id:
-                    sale_order._compute_tax_id()
-
-                # if values, then make the SO update
-                if values:
-                    sale_order.write(values)
-
-                # check if the fiscal position has changed with the partner_id update
-                recent_fiscal_position = sale_order.fiscal_position_id.id
-                if flag_pricelist or recent_fiscal_position != fiscal_position:
-                    update_pricelist = True
-
-            if code and code != sale_order.pricelist_id.code:
-                code_pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
-                if code_pricelist:
-                    pricelist_id = code_pricelist.id
-                    update_pricelist = True
-            elif code is not None and sale_order.pricelist_id.code:
-                # code is not None when user removes code and click on "Apply"
-                pricelist_id = partner.property_product_pricelist.id
-                update_pricelist = True
-
-            # update the pricelist
-            if update_pricelist:
-                request.session['website_sale_current_pl'] = pricelist_id
-                values = {'pricelist_id': pricelist_id}
-                sale_order.write(values)
-                for line in sale_order.order_line:
-                    if line.exists():
-                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
-
+        if cart_sudo := request.cart:
+            if not request.env.cr.readonly:
+                # If there is a cart, recompute on the cart and take it from there
+                cart_sudo._compute_pricelist_id()
+            pricelist_sudo = cart_sudo.pricelist_id
         else:
-            request.session['sale_order_id'] = None
-            return None
+            pricelist_sudo = self.env.user.partner_id.property_product_pricelist
+            available_pricelists = self.get_pricelist_available()
+            if available_pricelists and pricelist_sudo not in available_pricelists:
+                pricelist_sudo = available_pricelists[0].sudo()
 
-        return sale_order
+        request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist_sudo.id
 
-    def sale_get_transaction(self):
-        tx_id = request.session.get('sale_transaction_id')
-        if tx_id:
-            transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
-            # payment was not not proceeded. For example:
-            # - Select SIPS for payment
-            # - Be redirected to SIPS website
-            # - Go back to eCommerce without paying
-            # - Be redirected to SIPS website again => error
-            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
-            # here to reuse any previous transaction for SIPS.
-            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
-                return transaction
-            else:
-                request.session['sale_transaction_id'] = False
-        return False
+        return pricelist_sudo
+
+    def _get_and_cache_current_fiscal_position(self):
+        """Retrieve and cache the current fiscal position for the session.
+
+        Note: self.ensure_one()
+
+        :return: A sudoed fiscal position record.
+        :rtype: account.fiscal.position
+        """
+        self.ensure_one()
+
+        AccountFiscalPositionSudo = self.env['account.fiscal.position'].sudo()
+        fpos_sudo = AccountFiscalPositionSudo
+
+        if FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
+            fpos_sudo = AccountFiscalPositionSudo.browse(
+                request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
+            )
+            if fpos_sudo and fpos_sudo.exists():
+                return fpos_sudo
+
+        partner_sudo = self.env.user.partner_id
+
+        # If the current user is the website public user, the fiscal position
+        # is computed according to geolocation.
+        if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
+            country = self.env['res.country'].search(
+                [('code', '=', request.geoip.country_code)],
+                limit=1,
+            )
+            partner_geoip = self.env['res.partner'].sudo().new({'country_id': country.id})
+            fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_geoip)
+
+        if not fpos_sudo:
+            fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_sudo)
+
+        request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fpos_sudo.id
+
+        return fpos_sudo
+
+    def _get_and_cache_current_cart(self):
+        """ Retrieves and caches the current cart for the session.
+
+        Note: self.ensure_one()
+
+        :return: A sudoed Sales order record.
+        :rtype: sale.order
+        """
+        self.ensure_one()
+
+        SaleOrderSudo = self.env['sale.order'].sudo()
+
+        sale_order_sudo = SaleOrderSudo
+        if CART_SESSION_CACHE_KEY in request.session:
+            sale_order_sudo = SaleOrderSudo.browse(request.session[CART_SESSION_CACHE_KEY])
+
+            try:
+                # fetch the record field or raise a missingError
+                # avoids a query with the use of exists()
+                sale_order_sudo and sale_order_sudo.state
+            except MissingError:
+                self.sale_reset()
+                sale_order_sudo = SaleOrderSudo
+
+            if sale_order_sudo and (
+                sale_order_sudo.state != 'draft'
+                or sale_order_sudo.get_portal_last_transaction().state in (
+                    'pending', 'authorized', 'done'
+                )
+                or sale_order_sudo.website_id != self
+            ):
+                self.sale_reset()
+                sale_order_sudo = SaleOrderSudo
+
+            # If customer logs in, the cart must be recomputed based on his information (in the
+            # first non readonly request).
+            if (
+                sale_order_sudo
+                and not self.env.user._is_public()
+                and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
+                and not request.env.cr.readonly
+            ):
+                sale_order_sudo._update_address(self.env.user.partner_id.id, ['partner_id'])
+        elif (
+            self.env.user
+            and not self.env.user._is_public()
+            # If the company of the partner doesn't allow them to buy from this website, updating
+            # the cart customer would raise because of multi-company checks.
+            # No abandoned cart should be returned in this situation.
+            and self.env.user.partner_id.filtered_domain(
+                self.env['res.partner']._check_company_domain(self.company_id.id)
+            )
+        ):  # Search for abandonned cart.
+            partner_sudo = self.env.user.partner_id
+            abandonned_cart_sudo = SaleOrderSudo.search([
+                ('partner_id', '=', partner_sudo.id),
+                ('website_id', '=', self.id),
+                ('state', '=', 'draft'),
+            ], limit=1)
+            if abandonned_cart_sudo:
+                if not request.env.cr.readonly:
+                    # Force the recomputation of the pricelist and fiscal position when resurrecting
+                    # an abandonned cart
+                    abandonned_cart_sudo._update_address(partner_sudo.id, ['partner_id'])
+                    abandonned_cart_sudo._verify_cart()
+                sale_order_sudo = abandonned_cart_sudo
+
+        if (
+            (sale_order_sudo or not self.env.user._is_public())
+            and sale_order_sudo.id != request.session.get(CART_SESSION_CACHE_KEY)
+        ):
+            # Store the id of the cart if there is one, or False if the user is logged in, to avoid
+            # searching for an abandoned cart again for that user.
+            request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
+            if 'website_sale_cart_quantity' not in request.session:
+                request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
+        return sale_order_sudo
 
     def sale_reset(self):
-        request.session.update({
-            'sale_order_id': False,
-            'sale_transaction_id': False,
-            'website_sale_current_pl': False,
-        })
+        request.session.pop(CART_SESSION_CACHE_KEY, None)
+        request.session.pop('website_sale_cart_quantity', None)
+        request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+        request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
-            return self.env.ref('website.backend_dashboard').read()[0]
-        return super(Website, self).action_dashboard_redirect()
+            return self.env['ir.actions.actions']._for_xml_id('website.backend_dashboard')
+        return super().action_dashboard_redirect()
+
+    def get_suggested_controllers(self):
+        suggested_controllers = super().get_suggested_controllers()
+        suggested_controllers.append((_('eCommerce'), self.env['ir.http']._url_for('/shop'), 'website_sale'))
+        return suggested_controllers
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if not self.has_ecommerce_access():
+            return result
+        if search_type in ['products', 'product_categories_only', 'all']:
+            result.append(self.env['product.public.category']._search_get_detail(self, order, options))
+        if search_type in ['products', 'products_only', 'all']:
+            result.append(self.env['product.template']._search_get_detail(self, order, options))
+        return result
+
+    def _get_product_page_proportions(self):
+        """
+        Returns the number of columns (css) that both the images and the product details should take.
+        """
+        self.ensure_one()
+
+        return {
+            'none': (0, 12),
+            '50_pc': (6, 6),
+            '66_pc': (8, 4),
+            '100_pc': (12, 12),
+        }.get(self.product_page_image_width)
+
+    def _get_product_page_grid_image_spacing_classes(self):
+        spacing_map = {
+            'none': 'gap-0',
+            'small': 'gap-1',
+            'medium': 'gap-2',
+            'big': 'gap-3',
+        }
+        return spacing_map.get(self.product_page_image_spacing)
+
+    def _get_product_page_grid_image_rounded_classes(self):
+        roundness_map = {
+            'none': 'o_wsale_product_page_opt_image_radius_none',
+            'small': 'o_wsale_product_page_opt_image_radius_small',
+            'medium': 'o_wsale_product_page_opt_image_radius_medium',
+            'big': 'o_wsale_product_page_opt_image_radius_big',
+        }
+        return roundness_map.get(self.product_page_image_roundness)
+
+    def _get_product_page_container(self):
+        return self.shop_page_container if self.product_page_container == 'unset' else self.product_page_container
+
+    @api.model
+    def _send_abandoned_cart_email(self):
+        for website in self.search([]):
+            if not website.send_abandoned_cart_email:
+                continue
+            all_abandoned_carts = self.env['sale.order'].search([
+                ('is_abandoned_cart', '=', True),
+                ('cart_recovery_email_sent', '=', False),
+                ('website_id', '=', website.id),
+                ('date_order', '>=', website.send_abandoned_cart_email_activation_time),
+            ])
+            if not all_abandoned_carts:
+                continue
+
+            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
+            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
+            for sale_order in abandoned_carts:
+                template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                email_vals = {} if template.email_to or template.partner_to or template.use_default_to else {
+                    'email_to': sale_order.partner_id.email_formatted
+                }
+                template.send_mail(sale_order.id, email_values=email_vals)
+                sale_order.cart_recovery_email_sent = True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        websites = super().create(vals_list)
+        for website in websites:
+            website._create_checkout_steps()
+        return websites
+
+    def _create_checkout_steps(self):
+        generic_steps = self.env['website.checkout.step'].sudo().search([
+            ('website_id', '=', False),
+        ])
+        for step in generic_steps:
+            is_published = True
+            if step.step_href == '/shop/extra_info':
+                is_published = self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
+            step.copy({'website_id': self.id, 'is_published': is_published})
+
+    def _get_checkout_step(self, href):
+        return self.env['website.checkout.step'].sudo().search([
+            ('website_id', '=', self.id),
+            ('step_href', '=', href),
+        ], limit=1)
+
+    def _get_allowed_steps_domain(self):
+        return [
+            ('website_id', '=', self.id),
+            ('is_published', '=', True)
+        ]
+
+    def _get_checkout_steps(self):
+        steps = self.env['website.checkout.step'].sudo().search(
+            self._get_allowed_steps_domain(), order='sequence'
+        )
+        return steps
+
+    def _get_checkout_step_values(self):
+        def rewrite(path):
+            return self.env['ir.http'].url_rewrite(path)[0]
+        href = rewrite(request.httprequest.path)
+        # /shop/address is associated with the delivery step
+        if href == rewrite('/shop/address'):
+            href = rewrite('/shop/checkout')
+
+        allowed_steps_domain = self._get_allowed_steps_domain()
+        current_step = request.env['website.checkout.step'].sudo()
+        for step in current_step.search(allowed_steps_domain):
+            if rewrite(step.step_href) == href:
+                current_step = step
+                href = step.step_href
+                break
+        next_step = current_step._get_next_checkout_step(allowed_steps_domain)
+        previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
+
+        next_href = next_step.step_href
+        # try_skip_step option required on /shop/checkout next button
+        if next_step.step_href == '/shop/checkout':
+            next_href = '/shop/checkout?try_skip_step=true'
+        # redirect handled by '/shop/address/submit' route when all values are properly filled
+        if request.httprequest.path == rewrite('/shop/address'):
+            next_href = False
+
+        return {
+            'current_website_checkout_step_href': href,
+            'previous_website_checkout_step': previous_step,
+            'next_website_checkout_step': next_step,
+            'next_website_checkout_step_href': next_href,
+        }
+
+    def has_ecommerce_access(self):
+        """ Return whether the current user is allowed to access eCommerce-related content. """
+        return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def _get_canonical_url(self):
+        """ Override of `website` to customize the canonical URL for product pages.
+
+        A product page URL can have a category in its path. However, since the page is exactly the
+        same whether the category is present or not, the canonical URL shouldn't include the
+        category.
+        """
+        canonical_url = urls.url_parse(super()._get_canonical_url())
+        path = canonical_url.path
+        url_lang_code = ''
+
+        current_lang_code = request.lang.url_code
+        if self.env['ir.http']._get_default_lang().url_code != current_lang_code:
+            _, url_lang_code, *rest = path.split('/', 2)
+            if current_lang_code == url_lang_code:
+                path = '/' + (rest[0] if rest else '')
+        try:
+            rule = self.env['ir.http']._match(path)[0].rule
+        except NotFound:
+            rule = None
+        if rule == (
+            '/shop/<model("product.public.category"):category>/<model("product.template"):product>'
+        ):
+            path_parts = path.split('/')
+            path_parts.pop(2)
+            if url_lang_code:
+                path_parts.insert(1, url_lang_code)
+            canonical_url = canonical_url.replace(path='/'.join(path_parts))
+        return canonical_url.to_url()
+
+    def _get_snippet_defaults(self, snippet):
+        return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
+
+    def _get_product_image_ratio(self):
+        """Get the product image aspect ratio based on the website's design classes.
+
+        Returns:
+            str: The aspect ratio as a string (e.g., '16_9', '4_3', '1_1')
+        """
+        classes = self.shop_opt_products_design_classes or ''
+        ratio_mapping = {
+            'o_wsale_products_opt_thumb_16_9': '16_9',
+            'o_wsale_products_opt_thumb_4_3': '4_3',
+            'o_wsale_products_opt_thumb_6_5': '6_5',
+            'o_wsale_products_opt_thumb_4_5': '4_5',
+            'o_wsale_products_opt_thumb_2_3': '2_3',
+        }
+        for class_name, ratio in ratio_mapping.items():
+            if class_name in classes:
+                return ratio
+        return '1_1'
+
+    def _get_product_image_ratio_height(self):
+        match self._get_product_image_ratio():
+            case '16_9':
+                return '36px'
+            case '4_3':
+                return '48px'
+            case '6_5':
+                return '53px'
+            case '4_5':
+                return '96px'
+        return '64px'
+
+    def _get_basic_feed_product_domain(self):
+        return Domain.AND([
+            Domain('is_published', '=', True),
+            Domain('type', 'in', ('consu', 'combo')),
+            self.website_domain(),
+        ])
+
+    def _default_feed_is_valid(self):
+        self.ensure_one()
+        product_count = self.env['product.product'].search_count(
+            self._get_basic_feed_product_domain(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
+        )
+        return product_count <= const.PRODUCT_FEED_SOFT_LIMIT
+
+    def _populate_product_feeds(self):
+        """Populate product feeds for the website with default values."""
+        self.env['product.feed'].create([
+            {
+                'name': website.env._("GMC 1"),
+                'website_id': website.id,
+            } for website in self.filtered(lambda w: w._default_feed_is_valid())
+        ])

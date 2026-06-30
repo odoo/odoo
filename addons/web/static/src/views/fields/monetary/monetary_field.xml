@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.MonetaryField">
+        <span t-if="props.readonly" t-esc="formattedValue" />
+        <div class="text-nowrap d-inline-flex w-100 align-items-baseline position-relative" t-else="">
+            <span class="o_input position-absolute pe-none d-flex w-100">
+                <span t-if="!props.hideSymbol and currency and currency.position === 'before'" t-out="currencySymbol + nbsp"/>
+                <span class="opacity-0 d-inline-block overflow-hidden mw-100 o_monetary_ghost_value" t-out="state.value"/>
+                <span t-if="!props.hideSymbol and currency and currency.position === 'after'" t-out="nbsp + currencySymbol"/>
+            </span>
+            <span class="opacity-0" t-if="!props.hideSymbol and currency and currency.position === 'before'" t-out="currencySymbol + nbsp"/>
+            <input t-ref="numpadDecimal" t-on-input="onInput" t-att-id="props.id" t-att-type="props.inputType" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
+            <span class="opacity-0" t-if="!props.hideSymbol and currency and currency.position === 'after'" t-out="nbsp + currencySymbol"/>
+        </div>
+    </t>
+
+</templates>

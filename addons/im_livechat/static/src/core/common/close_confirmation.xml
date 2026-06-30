@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.CloseConfirmation">
+        <div
+            class="o-livechat-CloseConfirmation position-absolute w-100 h-100 d-flex justify-content-center align-items-center" t-on-click.stop="() => this.props.onCloseConfirmationDialog()">
+            <div class="o-livechat-CloseConfirmation-dialog rounded bg-view bg-opacity-100 p-3 m-3 d-flex flex-column position-relative" t-ref="dialog">
+                <div class="position-absolute top-0 end-0 p-1 o-xsmaller">
+                    <button class="o-livechat-CloseConfirmation-close btn-close" t-on-click.stop="() => this.props.onCloseConfirmationDialog()"/>
+                </div>
+                <span class="pt-2 pb-3">Leaving will end the live chat. Do you want to proceed?</span>
+                <button class="o-livechat-CloseConfirmation-leave btn btn-danger p-2 gap-1" t-on-keydown.stop.prevent="onKeydown" t-on-click.stop="() => this.props.onClickLeaveConversation()" t-ref="confirm"><i class="fa fa-fw fa-sign-out"/>Yes, leave conversation</button>
+            </div>
+        </div>
+    </t>
+</templates>

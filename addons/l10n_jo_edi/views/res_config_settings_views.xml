@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_calculation_rounding_method']" position="attributes">
+                    <attribute name="readonly" separator="or" add="country_code == 'JO'"/>
+                </xpath>
+
+                <xpath expr="//block[@id='invoicing_settings']" position="after">
+                    <block title="Electronic Invoicing (Jordan)" id="l10n_jo_co_settings" invisible="country_code != 'JO'">
+                        <setting string="JoFotara Credentials" help="Configure your Production credentials here">
+                            <div class="content-group">
+                                <div class="row">
+                                    <label string="Activity Number" for="l10n_jo_edi_sequence_income_source" class="o_light_label col-lg-4"/>
+                                    <field name="l10n_jo_edi_sequence_income_source"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Secret Key" for="l10n_jo_edi_secret_key" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_jo_edi_secret_key"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Client ID" for="l10n_jo_edi_client_identifier" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_jo_edi_client_identifier"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Taxpayer Type" for="l10n_jo_edi_taxpayer_type" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_jo_edi_taxpayer_type"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting
+                            id="l10n_jo_edi_demo_mode"
+                            help="Activate this mode to test the electronic invoicing flows with internal validations only"
+                            groups="base.group_no_one">
+                            <field string="Demo Mode" name="l10n_jo_edi_demo_mode"/>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

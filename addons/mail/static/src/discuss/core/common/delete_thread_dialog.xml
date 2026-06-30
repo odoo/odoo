@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.DeleteThreadDialog">
+        <ActionPanel title.translate="Delete Thread" icon="'fa fa-trash'" resizable="false">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="fs-5 mb-0">Permanently delete this thread?</p>
+                <button class="btn btn-danger" t-on-click="onConfirmation">
+                    Delete Thread
+                </button>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

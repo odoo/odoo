@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Max file size for migration (default 1GB) -->
+        <record id="cloud_storage_migration_max_file_size" model="ir.config_parameter">
+            <field name="key">cloud_storage_migration_max_file_size</field>
+            <field name="value">1000000000</field>
+        </record>
+
+        <!-- Max batch file size for migration (default 1GB) -->
+        <record id="cloud_storage_migration_max_batch_file_size" model="ir.config_parameter">
+            <field name="key">cloud_storage_migration_max_batch_file_size</field>
+            <field name="value">1000000000</field>
+        </record>
+
+        <!-- Models to migrate (comma separated, empty by default) -->
+        <record id="cloud_storage_migration_message_models" model="ir.config_parameter">
+            <field name="key">cloud_storage_migration_message_models</field>
+            <field name="value"></field>
+        </record>
+        <record id="cloud_storage_migration_all_models" model="ir.config_parameter">
+            <field name="key">cloud_storage_migration_all_models</field>
+            <field name="value"></field>
+        </record>
+
+        <!-- Min attachment id for migration progress tracking -->
+        <record id="cloud_storage_migration_min_attachment_id" model="ir.config_parameter">
+            <field name="key">cloud_storage_migration_min_attachment_id</field>
+            <field name="value">0</field>
+        </record>
+    </data>
+</odoo>
+

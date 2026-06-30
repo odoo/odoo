@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_pricelist_partners" model="ir.actions.act_window">
+        <field name="name">Members / Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="context">{"search_default_specific_property_product_pricelist": active_id, "default_specific_property_product_pricelist": active_id}</field>
+        <field name="domain">[('specific_property_product_pricelist', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Add this pricelist to a grade in order to assign it to a partner or a member.
+            </p>
+        </field>
+    </record>
+    <record id="action_grade_partners" model="ir.actions.act_window">
+        <field name="name">Members / Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="domain">[('grade_id', '=', active_id)]</field>
+        <field name="context">{"search_default_grade_id": active_id, "default_grade_id": active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Add this grade to a partner or member.
+            </p>
+        </field>
+    </record>
+    <record id="view_res_partner_filter_assign" model="ir.ui.view">
+        <field name="name">res.partner.inherit.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="specific_property_product_pricelist"/>
+                <field name="grade_id"/>
+            </field>
+            <xpath expr="//filter[@name='group_country']" position="after">
+                <filter name="group_grade" string="Level" context="{'group_by': 'grade_id'}"/>
+                <filter name="group_pricelist" string="Pricelist" context="{'group_by': 'specific_property_product_pricelist'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_res_partner_grade_tree" model="ir.ui.view">
+        <field name="name">res.partner.inherit.list</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="grade_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_res_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.relation</field>
+        <field name="model">res.partner</field>
+        <field name="priority">14</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="grade_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

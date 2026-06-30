@@ -1,0 +1,30 @@
+.o-discuss-CallMenu-buttonContent {
+    max-width: 150px;
+    @include o-mail-call-bordered(.7);
+
+    &.o-is-talking {
+        box-shadow: inset 0 0 0 2px var(--discuss-talkingColor, $o-discuss-talkingColor);
+    }
+
+    &.o-isOdooCommunity {
+        height: $o-navbar-height - 20px !important; // same button height as in enterprise.
+        overflow: hidden;
+        color: $o-action !important;
+    }
+}
+
+.o-discuss-CallMenu-animation {
+    animation: flash 2s;
+    animation-direction: alternate;
+    animation-iteration-count: 2;
+
+    &.o-isOdooCommunity {
+        transform: translateY(10px);
+    }
+}
+
+.o-discuss-CallMenu-dropdownMore, .o-discuss-CallMenu-channelInfo {
+    &:hover {
+        background-color: mix($gray-200, $gray-300) !important;
+    }
+}

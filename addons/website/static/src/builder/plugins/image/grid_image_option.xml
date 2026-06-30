@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.GridImageOption">
+    <BuilderRow t-if="state.isOptionActive" label.translate="Position">
+        <BuilderSelect action="'setGridImageMode'" >
+            <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'contain'">Contain</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

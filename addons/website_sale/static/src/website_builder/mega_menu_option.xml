@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website.MegaMenuOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderRow[last()]" position="after">
+        <BuilderRow t-if="productCategories.length" label.translate="eCommerce Categories">
+            <div class="o_switch ms-4">
+                <BuilderCheckbox id="'fetch_ecom_categories_opt'"
+                    classAction="'fetchEcomCategories'"
+                    action="'toggleFetchEcomCategories'"
+                    preview="false"
+                />
+            </div>
+        </BuilderRow>
+    </xpath>
+</t>
+
+</templates>

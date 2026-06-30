@@ -1,0 +1,225 @@
+/* --- Fonts --- */
+
+@font-face{
+    font-family: 'Inconsolata';
+    src: url(../fonts/Inconsolata.otf);
+}
+
+button {
+    transition: all 150ms linear;
+}
+
+select > option {
+    background: $light;
+}
+
+.navbar-menu {
+    :not(.btn-check) + .btn:active, .btn:first-child:active{
+        --btn-active-border-color: transparent;
+    }
+}
+
+.btn-light {
+    --btn-hover-bg: #{$o-gray-100};
+    --btn-hover-border-color: transparent;
+    --btn-active-bg: #{$o-gray-300};
+    --btn-color: #{$o-gray-900};
+    --btn-active-border-color: transparent;
+}
+
+.btn-secondary {
+    --btn-bg: #F4F4F4;
+    --btn-border-color: #cccccc;
+    --btn-color: #{$o-gray-900};
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-color: #{$o-gray-700};
+    --btn-disabled-border-color: var(--btn-border-color);
+    &:disabled, &.disabled {
+        filter: saturate(0);
+    }
+}
+
+.bg-secondary {
+    --background-color: #F4F4F4;
+}
+
+[type="text"], [type="password"], [type="number"], [type="email"], [type="tel"], textarea, select {
+    width: 100%;
+    display: block;
+    outline: none;
+}
+
+.form-select {
+    background-color: $body-bg;
+}
+
+.text-large {
+    font-size: large;
+}
+
+/* --- Display --- */
+
+.z-1000 {
+    z-index: 1000;
+}
+
+.h-inherit {
+    height: inherit;
+}
+
+/*  ********* The leftpane contains the order, numpad and paypad ********* */
+
+.leftpane {
+    width: $pos-left-pane-width;
+    max-width: $pos-left-pane-width;
+
+    @include media-breakpoint-down(xl) {
+        width: $pos-left-pane-width-tablet;
+        max-width: $pos-left-pane-width-tablet;
+    }
+}
+
+
+@media screen and (max-width: 992px) {
+    .order,
+    .leftpane {
+        max-width: inherit;
+        border-right: none;
+    }
+}
+
+.pos .numpad {
+    /*rtl:ignore*/
+    direction: ltr;
+}
+.o_mobile_overscroll {
+    overscroll-behavior: none;
+}
+
+.pos .button.validation.load-order-button {
+    height: calc(var(--btn-height-size) * 2);
+}
+
+@media screen and (max-width: 992px) {
+    .pos .button.validation.load-order-button {
+        height: 70px;
+    }
+}
+
+/*  ********* The Webkit Scrollbar  ********* */
+
+.pos.big-scrollbars *::-webkit-scrollbar{
+    width:  40px;
+    height: 40px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-track{
+    background: $gray-200;
+    border-left: none;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 40px;
+    border-radius: 3px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button{
+    width:  40px;
+    height: 40px;
+    border-radius: 3px;
+    background: rgb(210,210,210);
+    background-size: cover;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:decrement{
+    background-image: url('../img/scroll-up.png');
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:increment{
+    background-image: url('../img/scroll-down.png');
+}
+
+/* Fade */
+
+.o-fade {
+    transition: opacity .2s;
+}
+
+.o-fade-enter, .o-fade-leave {
+    opacity: 0;
+}
+
+/*
+    We block the top-header when a temp screen is displayed.
+    Similar to blocking the whole ui when a popup is displayed.
+*/
+/* .pos .block-top-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+} */
+
+/* Debug */
+
+.drag-handle {
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+.pos .button.validation.with-more-button {
+    height: calc(var(--btn-height-size) * 2);
+}
+
+// Set all the colors but the "no-color" one
+@for $size from 2 through length($o-colors) {
+    .o_colorlist_item_color_transparent_#{$size - 1} {
+        $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
+        $-background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 5%);
+        --bg: #{$-background-color};
+        --hover-bg: #{darken($-background-color, 5%)};
+        --border-color: #{$-border-color};
+    }
+
+    .o_colorlist_item_numpad_color_#{$size - 1} {
+        $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
+        $-background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 5%);
+        --bg: #{$-background-color};
+        --border-color: #{$-border-color};
+        --hover-bg: #{darken($-background-color, 5%)};
+    }
+
+    .o_colorlist_item_color_#{$size - 1} {
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
+        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+        @include o-print-color($-bg, background-color, bg-opacity);
+        @include o-print-color($-color, color, text-opacity);
+        border-color: #{darken(nth($o-colors, $size), 20%)};
+        &:hover {
+            border-color: #{darken(nth($o-colors, $size), 20%)};
+        }
+    }
+
+    .o_colorlist_item_wo_border_color_#{$size - 1} {
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
+        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+        @include o-print-color($-bg, background-color, bg-opacity);
+        @include o-print-color($-color, color, text-opacity);
+    }
+}
+
+// this is to override the property in `web/static/src/webclient/webclient_layout.scss'
+body.modal-open {
+    position: initial !important;
+}
+
+// External CSS to wrap long notes coming from another component (TagsList)
+.pos .internal-note-container span {
+    text-align: start;
+}
+
+.pos .internal-note-container span > div {
+    white-space: normal;
+}

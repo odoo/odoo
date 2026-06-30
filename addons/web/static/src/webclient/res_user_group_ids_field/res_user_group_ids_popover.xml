@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.ResUserGroupIdsPopover">
+    <div class="m-2">
+        <table class="table table-sm table-borderless w-100 mb-0">
+            <tbody>
+                <tr>
+                    <td>
+                        <span t-if="privilege" class="fw-bold" t-out="privilege.name"/>
+                        <span t-else="">Group</span>
+                    </td>
+                    <td>
+                        <a class="fw-bold" href="#" t-on-click="() => this.onGroupClicked(group)" t-out="group.name"/>
+                    </td>
+                </tr>
+                <tr t-if="impliedGroups.length">
+                    <td>Implied by</td>
+                    <td>
+                        <div t-foreach="impliedGroups" t-as="group" t-key="group.id">
+                            - <t t-out="getGroupDisplayName(group)"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr t-if="exclusiveImplyGroups.length">
+                    <td>Exclusively implies</td>
+                    <td>
+                        <div t-foreach="exclusiveImplyGroups" t-as="group" t-key="group.id">
+                            - <t t-esc="getGroupDisplayName(group)"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr t-if="jointImplyGroups.length or jointExtraImplyGroups.length">
+                    <td>Jointly implies</td>
+                    <td>
+                        <div t-foreach="jointImplyGroups" t-as="group" t-key="group.id" class="text-muted">
+                            - <t t-esc="getGroupDisplayName(group)"/>
+                        </div>
+                        <t t-if="jointExtraImplyGroups.length">
+                            <t t-if="state.showExtraGroups">
+                                <div t-foreach="jointExtraImplyGroups" t-as="group" t-key="group.id" class="text-muted">
+                                    - <t t-esc="getGroupDisplayName(group)"/>
+                                </div>
+                            </t>
+                            <div t-else="">
+                                <a href="#" t-on-click="() => this.state.showExtraGroups = true">View extra groups</a>
+                            </div>
+                        </t>
+                    </td>
+                </tr>
+                <tr t-if="group.disjointIds.length">
+                    <td class="align-top text-danger">Incompatibility</td>
+                    <td>
+                        <div t-foreach="group.disjointIds" t-as="groupId" t-key="groupId">
+                            - <t t-esc="getGroupDisplayName(groups[groupId])"/>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</t>
+
+</templates>

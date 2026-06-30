@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mass_mailing.MailingListSubscribeOption">
+
+    <BuilderRow label.translate="Newsletter" t-if="!isActiveItem('form_opt')">
+        <BuilderSelect dataAttributeAction="'listId'">
+            <t t-foreach="mailingLists" t-as="item" t-key="item.id">
+                <BuilderSelectItem dataAttributeActionValue="item.id.toString()">
+                    <t t-out = "item.name"/>
+                </BuilderSelectItem>
+            </t>
+            <t t-if="!mailingLists.length">
+                <BuilderSelectItem>None</BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Display Thanks Message" t-if="!isActiveItem('form_opt')">
+        <BuilderCheckbox action="'toggleThanksMessage'"/>
+    </BuilderRow>
+
+</t>
+
+<t t-name="website_mass_mailing.MailingListSubscribeFormOption">
+
+    <BuilderRow label.translate="Placeholder">
+        <BuilderTextInput attributeAction="'placeholder'" applyTo="'.s_newsletter_subscribe_form_input'"/>
+    </BuilderRow>
+
+</t>
+
+</templates>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.NotificationItem">
+    <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative o-py-1_5 bg-transparent" t-on-click="onClick" t-ref="root" t-att-class="{
+            'o-important': props.important,
+            'o-interest': props.muted === 0,
+            'text-muted border-secondary': props.muted === 1,
+            'opacity-50 border-secondary': props.muted === 2,
+            'px-3 gap-1 o-small': ui.isSmall,
+            'border-top-0': props.first,
+            'o-px-2_5 gap-2': !ui.isSmall,
+            'o-active': props.isActive,
+        }">
+            <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
+                <img t-if="props.iconSrc" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': ui.isSmall, 'rounded': !ui.isSmall }" alt="Notification Item Image" t-att-src="props.iconSrc"/>
+                <t t-if="props.slots and props.slots.icon" t-slot="icon"/>
+            </div>
+            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': ui.isSmall, 'ps-1': !ui.isSmall }">
+                <div class="o-mail-NotificationItem-line d-flex text-nowrap">
+                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': ui.isSmall }" t-att-style="props.nameMaxLine !== undefined ? webkitLineClamp(props.nameMaxLine) : ''">
+                        <t t-slot="name"/>
+                    </span>
+                    <span class="flex-grow-1"/>
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': props.muted, 'o-fw-600': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
+                        <t t-esc="dateText"/>
+                    </small>
+                    <t t-if="props.slots and props.slots.sideContent">
+                        <t t-slot="sideContent"/>
+                    </t>
+                </div>
+                <div class="d-flex o-mail-NotificationItem-line">
+                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate, 'small': !ui.isSmall }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
+                        <t t-slot="body-icon"/>
+                        <t t-if="props.slots?.body" name="notificationBody" t-slot="body"/>
+                    </div>
+                    <div class="flex-grow-1"/>
+                    <div class="d-flex align-items-start position-relative">
+                        <span class="position-absolute" t-if="props.hasMarkAsReadButton">
+                            <span t-if="rootHover.isHover" class="bg-view" t-att-class="{ 'ms-1': !props.muted }">
+                                <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-ref="markAsRead"><i class="fa fa-check text-success"/></span>
+                            </span>
+                        </span>
+                        <span t-if="!props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ props.counter > 0 and props.muted === 2 ? 'o-muted' : '' }} {{ props.important ? 'o-important' : '' }} {{ props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="props.counter" t-esc="props.counter"/></span>
+                    </div>
+                </div>
+            </div>
+        </button>
+    </ActionSwiper>
+</t>
+
+</templates>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentPanel">
+        <ActionPanel title.translate="Attachments" minWidth="200" initialWidth="400" icon="'fa fa-paperclip'">
+            <div class="d-flex flex-column py-2 flex-grow-1">
+                <div class="flex-grow-1" t-att-class="{
+                    'd-flex justify-content-center align-items-center': props.thread.attachments.length === 0,
+                }">
+                    <p t-if="props.thread.attachments.length === 0" class="text-center fst-italic text-500">
+                        <t t-if="props.thread.channel_type === 'channel'">This channel doesn't have any attachments.</t>
+                        <t t-else="">This conversation doesn't have any attachments.</t>
+                    </p>
+                    <div t-else="" t-foreach="attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
+                        <DateSection date="dateDay" className="'my-1'"/>
+                        <AttachmentList attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                    </div>
+                </div>
+                <span t-ref="load-older"/>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

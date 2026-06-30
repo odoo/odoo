@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
-import argparse
 import os
 import re
 import sys
@@ -10,16 +6,20 @@ import jinja2
 
 from . import Command
 
+
 class Scaffold(Command):
     """ Generates an Odoo module skeleton. """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epilog = "Built-in templates available are: %s" % ', '.join(
+            d for d in os.listdir(builtins())
+            if d != 'base'
+        )
+
     def run(self, cmdargs):
         # TODO: bash completion file
-        parser = argparse.ArgumentParser(
-            prog="%s scaffold" % sys.argv[0].split(os.path.sep)[-1],
-            description=self.__doc__,
-            epilog=self.epilog(),
-        )
+        parser = self.parser
         parser.add_argument(
             '-t', '--template', type=template, default=template('default'),
             help="Use a custom module template, can be a template name or the"
@@ -33,16 +33,21 @@ class Scaffold(Command):
             sys.exit(parser.print_help())
         args = parser.parse_args(args=cmdargs)
 
+        if args.template.id == 'l10n_payroll':
+            name_split = args.name.split('-')
+            params = {
+                'name': name_split[0],
+                'code': name_split[1]
+            }
+        else:
+            params = {'name': args.name}
+
         args.template.render_to(
             snake(args.name),
             directory(args.dest, create=True),
-            {'name': args.name})
-
-    def epilog(self):
-        return "Built-in templates available are: %s" % ', '.join(
-            d for d in os.listdir(builtins())
-            if d != 'base'
+            params=params,
         )
+
 
 builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -63,7 +68,7 @@ def snake(s):
 def pascal(s):
     return ''.join(
         ss.capitalize()
-        for ss in re.sub('[_\s]+', ' ', s).split()
+        for ss in re.sub(r'[_\s]+', ' ', s).split()
     )
 
 def directory(p, create=False):
@@ -73,7 +78,7 @@ def directory(p, create=False):
     if create and not os.path.exists(expanded):
         os.makedirs(expanded)
     if not os.path.isdir(expanded):
-        die("%s is not a directory" % p)
+        sys.exit("%s is not a directory" % p)
     return expanded
 
 env = jinja2.Environment()
@@ -91,7 +96,7 @@ class template(object):
         self.path = identifier
         if os.path.isdir(self.path):
             return
-        die("{} is not a valid module template".format(identifier))
+        sys.exit(f"{identifier} is not a valid module template")
 
     def __str__(self):
         return self.id
@@ -110,11 +115,14 @@ class template(object):
         """
         # overwrite with local
         for path, content in self.files():
+            path = env.from_string(path).render(params)
             local = os.path.relpath(path, self.path)
             # strip .template extension
             root, ext = os.path.splitext(local)
             if ext == '.template':
                 local = root
+            if self.id == "l10n_payroll":
+                modname = f"l10n_{params['code']}_hr_payroll"
             dest = os.path.join(directory, modname, local)
             destdir = os.path.dirname(dest)
             if not os.path.exists(destdir):
@@ -127,10 +135,7 @@ class template(object):
                     env.from_string(content.decode('utf-8'))\
                        .stream(params or {})\
                        .dump(f, encoding='utf-8')
-
-def die(message, code=1):
-    print(message, file=sys.stderr)
-    sys.exit(code)
+                    f.write(b'\n')
 
 def warn(message):
     # ASK: shall we use logger ?

@@ -1,0 +1,98 @@
+.o_hr_recruitment_kanban {
+    .o_kanban_renderer {
+        padding: 0px;
+        border-top: 0px !important;
+
+        &.o_kanban_ungrouped .o_kanban_record {
+            width: 100%;
+            --KanbanRecord-padding-v: 4px !important;
+            --KanbanRecord-padding-h: 0px !important;
+            --Ribbon-font-size: 0.6rem;
+            --Ribbon-wrapper-width: 5rem;
+            --Ribbon-height: 1.9;
+
+            &:not(.o_kanban_ghost) {
+                justify-content: center;
+            }
+        }
+
+        .o_kanban_card_header_title {
+            line-height: 1.3rem !important;
+            margin-bottom: 4px !important;
+            margin-top: 1px !important;
+        }
+
+        .o_kanban_card_header {
+            margin-bottom: 1px;
+        }
+
+        .o_field_many2one_avatar_user .o_avatar{
+            column-gap: 0.375rem;
+        }
+    }
+}
+
+.o_kanban_view {
+    .o_kanban_renderer {
+        .o_hr_recruitment_kanban_card_mobile_screen {
+            min-height: 130px;
+        }
+
+        &.o_kanban_grouped {
+            .o_hr_recruitment_kanban_card_large_screen {
+                display: none;    
+            }
+        }
+
+        &.o_kanban_ungrouped {
+            @media only screen and (max-width: 768px) {
+                .o_hr_recruitment_kanban_card_large_screen {
+                    display: none;    
+                }
+            }
+            @media only screen and (min-width: 768px) {
+                .o_hr_recruitment_kanban_card_mobile_screen {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.o_hr_recruitment_kanban .o_content .o_kanban_renderer .o_kanban_record {
+    margin: 0px;
+}
+
+.o_hr_recruitment_kanban_card_mobile_screen {
+    min-height: 0px !important;
+}
+
+.o_hr_recruitment_kanban {
+    .o_m2o_avatar {
+        margin-right: 0px !important;
+    }
+
+    .number {
+        font-size: 2rem !important;
+        margin-top: 0.1rem;
+        margin-bottom: 0rem;
+        margin-left: 0rem;
+        margin-right: 0.5rem;
+        font-weight: bold;
+        align-content: center;
+    }
+}
+
+.activity_badge {
+    --badge-padding-x: .55em;
+}
+
+.number_description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hr_recruitment_is_favorite_job .o_favorite a {
+    display: flex;
+}

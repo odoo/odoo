@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="event_event_view_form_website_create" model="ir.ui.view">
+    <field name="name">event.event.form.website_create</field>
+    <field name="model">event.event</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="event.view_event_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//form" position="attributes">
+            <attribute name="js_class">website_new_content_form</attribute>
+        </xpath>
+        <xpath expr="//form" position="inside">
+            <!-- We need this for `computePath` used in `onAddContent` to redirect to the event after creation. -->
+            <field name="website_url" invisible="1"/>
+        </xpath>
+        <xpath expr="//header" position="replace"/>
+        <xpath expr="//div[hasclass('oe_button_box')]" position="replace"/>
+        <xpath expr="//field[@name='kanban_state']" position="replace"/>
+    </field>
+</record>
+
+<record id="event_event_action_add" model="ir.actions.act_window">
+    <field name="name">New Event</field>
+    <field name="res_model">event.event</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="view_id" ref="event_event_view_form_website_create"/>
+    <field name="context">{'default_address_id': False}</field>
+</record>
+
+</odoo>

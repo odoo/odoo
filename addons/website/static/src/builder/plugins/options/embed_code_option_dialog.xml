@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.EmbedCodeOptionDialog">
+        <Dialog title="props.title">
+            <p class="h5">Do not copy/paste code you do not understand, this could put your data at risk.</p>
+            <p>
+                <button class="btn btn-link ps-0" t-on-click="onInjectHeadOrBody">
+                    If you need to add analytics or marketing tags, inject code in your &lt;head&gt; or &lt;body&gt; instead.
+                </button>
+            </p>
+            <CodeEditor mode="props.mode"
+                        class="'o_website_code_editor_field'"
+                        theme="'monokai'"
+                        onChange.bind="onCodeChange"
+                        value="this.state.value"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm" data-hotkey="q">Save</button>
+                <button class="btn" t-on-click="this.props.close" data-hotkey="x">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

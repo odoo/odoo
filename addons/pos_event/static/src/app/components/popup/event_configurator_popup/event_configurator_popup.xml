@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventConfiguratorPopup">
+        <Dialog title="dialogTitle">
+            <div class="o_event_configurator_popup">
+                <div t-if="this.props.slotResult?.slotName"
+                    class="d-flex justify-content-center text-primary fs-3 pt-2 pb-3">
+                    <span class="ms-1" t-esc="this.props.slotResult?.slotName"/>
+                </div>
+                <t t-foreach="this.props.tickets" t-as="ticket" t-key="ticket.id">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            <div class="fs-5">
+                                <span t-esc="ticket.name"/>
+                            </div>
+                            <span t-attf-class="{{ this.ticketIsAvailable(ticket) ? 'text-success' : 'text-danger'}} fs-6">
+                                <t t-if="this.getTicketMaxQty(ticket) === 'unlimited'">
+                                    Unlimited
+                                </t>
+                                <t t-elif="this.getTicketMaxQty(ticket) > 0">
+                                    <t t-esc="this.getTicketMaxQty(ticket)"/> left
+                                </t>
+                                <t t-else="">
+                                    Sold out
+                                </t>
+                            </span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span t-esc="env.utils.formatCurrency(ticket.price)" />
+                            <NumericInput class="'w-100'" tModel="[this.state[ticket.id], 'qty']" min="0"/>
+                        </div>
+                    </div>
+                    <hr t-if="ticket_index !== this.props.tickets.length - 1" class="hr" />
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

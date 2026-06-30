@@ -1,0 +1,67 @@
+.o-mail-ChatWindow {
+    width: $o-mail-ChatWindow-width;
+
+    z-index: $zindex-sticky;
+    &.o-mobile {
+        z-index: $zindex-sticky - 2 !important;
+    }
+    &:not(.o-mobile) {
+        --border-opacity: .15;
+        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
+    }
+    outline: none;
+}
+
+.o-mail-ChatWindow-moreActions {
+    color: inherit !important;
+    background-color: inherit !important;
+    &:hover, &.o-active, &.o-hover {
+        color: var(--mail-ChatWindow-moreActionsHoverColor, black) !important;
+        backdrop-filter: invert(.025);
+        border-color: transparent !important;
+    }
+    &:not(.o-active):not(.o-hover) .fa-caret-down {
+        opacity: 25%;
+    }
+}
+
+.o-mail-ChatWindow-closePanel {
+    z-index: 2;
+}
+
+.o-mail-ChatWindow-counter {
+    margin-bottom: map-get($spacers, 1) / 2;
+}
+
+.o-mail-ChatWindow-country {
+    width: 24px;
+}
+
+.o-mail-ChatWindow-header {
+    .o-mail-ActionList-group {
+        gap: map-get($spacers, 3);
+
+        button:not(:hover):not(:focus-visible):not(:active):not(.btn-success) {
+            --o-mail-ActionList-Button-opacity: .5;
+        }
+
+        @include media-breakpoint-up(md) {
+            gap: map-get($spacers, 1);
+        }
+    }
+
+    .o-mail-ChatWindow-threadAvatar img {
+        height: $o-mail-Avatar-sizeSmall;
+        width: $o-mail-Avatar-sizeSmall;
+    }
+}
+
+.o-mail-ChatWindow-imStatus {
+    bottom: 2px;
+    right: -2px;
+}
+
+.o-mail-ChatWindow-typing {
+    font-size: $small-font-size * 0.9;
+    z-index: $o-mail-NavigableList-zIndex - 2;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website_cf_turnstile.turnstile_container">
+        <div
+            t-attf-class="s_turnstile s_turnstile_container cf-turnstile {{additionalClasses}}"
+            t-att-data-action="action"
+            t-att-data-appearance="appeareance || 'interaction-only'"
+            t-att-data-before-interactive-callback="beforeInteractiveGlobalCallback || '() => {}'"
+            t-att-data-callback="executeGlobalCallback || '() => {}'"
+            t-att-data-error-callback="errorGlobalCallback || '() => {}'"
+            data-response-field-name="turnstile_captcha"
+            t-att-data-sitekey="sitekey"
+            t-att-style="style"
+        ></div>
+    </t>
+    <t t-name="website_cf_turnstile.turnstile_remote_script">
+        <script id="s_turnstile_remote_script" class="s_turnstile" t-att-src="remoteScriptUrl"></script>
+    </t>
+</templates>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_message_tree_audit_log" model="ir.ui.view">
+        <field name="name">mail.message.list.inherit.audit.log</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <list edit="0" delete="0" create="0" action="action_open_document" type="object">
+                <field name="date"/>
+                <field name="author_id" widget="many2one_avatar"/>
+                <field name="res_id" string="Name"/>
+                <field name="account_audit_log_preview"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_message_tree_audit_log_search" model="ir.ui.view">
+        <field name="name">mail.message.search</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search string="Messages Search">
+                <field name="account_audit_log_move_id"/>
+                <field name="account_audit_log_account_id"/>
+                <field name="account_audit_log_tax_id"/>
+                <field name="account_audit_log_partner_id"/>
+                <field name="account_audit_log_company_id"/>
+                <field name="author_id"/>
+                <field name="date"/>
+                <filter string="Journal Entry" name="account_move" domain="[('model', '=', 'account.move')]"/>
+                <filter string="Account" name="account_account" domain="[('model', '=', 'account.account')]"/>
+                <filter string="Taxes" name="account_tax" domain="[('model', '=', 'account.tax')]"/>
+                <filter string="Partners" name="res_partner" domain="[('model', '=', 'res.partner')]"/>
+                <filter string="Company" name="res_company" domain="[('model', '=', 'res.company')]"/>
+                <separator/>
+                <field string="Field Value" name="tracking_value_ids" filter_domain="[
+                    '|', ('tracking_value_ids.old_value_char', 'ilike', self),
+                    '|', ('tracking_value_ids.new_value_char', 'ilike', self),
+                    '|', ('tracking_value_ids.old_value_text', 'ilike', self),
+                         ('tracking_value_ids.new_value_text', 'ilike', self),
+                ]"/>
+                <field string="Field" name="tracking_value_ids" filter_domain="[('tracking_value_ids.field_id', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Update" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
+                <filter string="Create" name="create_only" domain="[('tracking_value_ids', '=', False)]" groups="base.group_system"/>
+                <filter string="Restricted" name="restricted_by_audit_trail" domain="[('account_audit_log_restricted', '=', True)]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <group>
+                    <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Updated Data" name="group_by_res_id" domain="[]" context="{'group_by': 'res_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_audit_trail_report" model="ir.actions.act_window">
+        <field name="name">Audit Trail</field>
+        <field name="res_model">mail.message</field>
+        <field name="view_id" ref="view_message_tree_audit_log"/>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>
+        </field>
+        <field name="domain">[
+            ('message_type', '=', 'notification'),
+            ('model', 'in', ('account.move', 'account.account', 'account.tax', 'res.partner', 'res.company')),
+        ]</field>
+        <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
+    </record>
+
+    <menuitem id="account_audit_trail_menu" name="Audit Trail" action="action_account_audit_trail_report" parent="account.account_logs_menu"/>
+</odoo>

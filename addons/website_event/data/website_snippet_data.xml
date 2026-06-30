@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!-- Dynamic Event Snippet: Upcoming Events Filter -->
+    <record id="ir_filters_event_list_snippet" model="ir.filters">
+        <field name="name">Upcoming Events</field>
+        <field name="model_id">event.event</field>
+        <field name="user_ids" eval="False" />
+        <field name="domain">[
+            ('date_begin', '&gt;=', 'now'),
+            ('is_visible_on_website', '=', True)
+        ]</field>
+        <field name="sort">["date_begin asc"]</field>
+    </record>
+    <record id="website_snippet_filter_event_list" model="website.snippet.filter">
+        <field name="filter_id" ref="website_event.ir_filters_event_list_snippet"/>
+        <field name="field_names">name,subtitle</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Upcoming Events</field>
+    </record>
+
+    <!-- Dynamic Event Snippet : Upcoming and Ongoing Events Filter -->
+    <record id="ir_filters_event_list_snippet_unfinished" model="ir.filters">
+        <field name="name">Upcoming and Ongoing Events</field>
+        <field name="model_id">event.event</field>
+        <field name="user_ids" eval="False" />
+        <field name="domain">[('is_finished', '=', False), ('is_visible_on_website', '=', True)]</field>
+        <field name="sort">["date_begin asc"]</field>
+    </record>
+    <record id="website_snippet_filter_event_list_unfinished" model="website.snippet.filter">
+        <field name="filter_id" ref="website_event.ir_filters_event_list_snippet_unfinished"/>
+        <field name="field_names">name,subtitle</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Upcoming and Ongoing Events</field>
+    </record>
+
+</data></odoo>

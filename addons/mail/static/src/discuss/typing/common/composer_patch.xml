@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-Composer-coreHeader')]" position="before">
+            <div t-if="thread?.model === 'discuss.channel' and !compact and !env.inMeetingView" class="o-discuss-Typing d-flex position-absolute top-0 w-100 bg-100 pe-none o-pt-0_5 pe-2 z-1">
+                <Typing t-if="thread.hasOtherMembersTyping" channel="thread" size="'medium'"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

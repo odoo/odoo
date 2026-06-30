@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.SeparatorOption">
+    <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Border" direction="'top'"/>
+    <BuilderRow label.translate="Width">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'w-25'">25%</BuilderSelectItem>
+            <BuilderSelectItem classAction="'w-50'">50%</BuilderSelectItem>
+            <BuilderSelectItem classAction="'w-75'">75%</BuilderSelectItem>
+            <BuilderSelectItem classAction="'w-100'" id="'so_width_100'">100%</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"></BuilderButton>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"></BuilderButton>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"></BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

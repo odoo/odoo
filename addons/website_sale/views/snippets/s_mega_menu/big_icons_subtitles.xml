@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_big_icons_subtitles"
+        name="eCommerce: Menu - Big icons &amp; subtitles"
+        groups="base.group_user"
+    >
+        <section
+            class="s_mega_menu_big_icons_subtitles pt24 pb24 o_colored_level o_cc o_cc1"
+            data-oe-shape-data="{'shape':'html_builder/Grids/07','colors':{'c5':'o-color-3'},'flip':[]}"
+        >
+            <div class="o_we_shape o_html_builder_Grids_07" style="background-image: url('/html_editor/shape/html_builder/Grids/07.svg?c5=o-color-3');"/>
+            <div class="container">
+                <div class="row">
+                    <t
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=9)"
+                        t-as="category"
+                    >
+                        <div class="col-12 col-lg-4">
+                            <nav class="nav flex-column w-100">
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="col-lg-4 nav-link px-2 my-2 rounded text-wrap"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <img
+                                            t-if="category.image_1920"
+                                            t-att-src="image_data_uri(category.image_1920)"
+                                            class="fa rounded rounded-circle shadow me-3"
+                                            alt=""
+                                        />
+                                        <div class="flex-grow-1">
+                                            <h4 class="mt-0 mb-0" t-esc="category.name"/>
+                                        </div>
+                                    </div>
+                                </a>
+                            </nav>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

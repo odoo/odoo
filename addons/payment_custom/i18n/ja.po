@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_transfer
+#
+# Translators:
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-10-15 07:20+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"payment_custom/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid ""
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
+"small>"
+msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">銀行アプリでスキャンして下さい</"
+"small>"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">コミュニケーション: </strong>"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Account"
+msgstr "銀行口座"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Accounts"
+msgstr "銀行口座"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "コード"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "カスタム"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "カスタムモード"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "QRコードを有効化"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "電信送金で支払う際にQRコードを使用できるようにします。"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "Finalize your payment"
+msgstr "支払を確定する"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "OR"
+msgstr "又は"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
+msgstr "カスタムプロバイダのみがカスタムモードを持つべきです。"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "決済プロバイダー"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "支払取引"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Please use the following transfer details"
+msgstr "下記口座へお振込をお願い致します。"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
+msgstr "保留メッセージを再ロード"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr "顧客は支払に%(provider_name)sを選択しました。"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "この決済プロバイダーのテクニカルコード。"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
+msgid "Wire Transfer"
+msgstr "電信送金"
+
+#~ msgid "; multiple order found"
+#~ msgstr "; 複数の注文が見つかりました"
+
+#~ msgid "; no order found"
+#~ msgstr "; 注文が見つかりません"
+
+#~ msgid "Adyen"
+#~ msgstr "Adyen"
+
+#~ msgid "Authorize.Net"
+#~ msgstr "Authorize.Net"
+
+#~ msgid "Buckaroo"
+#~ msgstr "Buckaroo"
+
+#~ msgid "Manual Configuration"
+#~ msgstr "手動構成"
+
+#~ msgid "Ogone"
+#~ msgstr "Ogone"
+
+#~ msgid "PayUmoney"
+#~ msgstr "PayUmoney"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "決済サービス"
+
+#~ msgid "Paypal"
+#~ msgstr "PayPal"
+
+#~ msgid "Provider"
+#~ msgstr "プロバイダ"
+
+#~ msgid "Sips"
+#~ msgstr "Sips"
+
+#~ msgid "Stripe"
+#~ msgstr "Stripe"
+
+#~ msgid "received data for reference %s"
+#~ msgstr "参照%sの受信データ"

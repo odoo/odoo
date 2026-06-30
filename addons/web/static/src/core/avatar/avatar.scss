@@ -1,0 +1,13 @@
+// Avatar
+.o_avatar img,
+.o_avatar .o_avatar_empty,
+img.o_avatar {
+    height: var(--Avatar-size, #{$o-avatar-size});
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.o_avatar_empty {
+    background: $o-black;
+    opacity: .1;
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.SplitBillScreen">
+        <div class="splitbill-screen screen h-100">
+            <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
+                    <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
+                        <i class="oi oi-chevron-left fa-fw"/><t t-if="!this.ui.isSmall" t-esc="' Back'"/>
+                    </button>
+                    <div class="top-content-center flex-grow-1" t-att-class="{'pe-5':!this.ui.isSmall}">
+                        <h4 class="mb-0">Bill Splitting</h4>
+                    </div>
+                </div>
+
+                <div class="main d-flex flex-column flex-lg-row flex-grow-1 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom bg-view overflow-auto">
+                        <OrderDisplay mode="'receipt'" order="currentOrder" t-slot-scope="scope">
+                            <t t-set="line" t-value="scope.line" />
+                             <Orderline line="line"
+                                mode="'split'"
+                                t-if="line.product_id.id != pos.config?.discount_product_id?.id"
+                                t-on-click="() => this.onClickLine(line)"
+                                class="{'selected active': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
+                        </OrderDisplay>
+                    </div>
+                    <div class="controls d-flex flex-column flex-nowrap w-100 w-lg-50 p-1">
+                        <div class="order-info m-auto py-3 py-lg-4 rounded-3 text-center">
+                            <div class="d-flex flex-row justify-content-center align-items-baseline">
+                                <t t-set="price" t-value="env.utils.formatCurrency(newOrderPrice)" />
+                                <span class="subtotal text-dark fw-bold"
+                                    t-att-style="'font-size:' + adjustFontSize(price)"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-1' : '' }}">
+                                    <PriceFormatter price="price" />
+                                </span>
+                                <span class="text-dark text-start ms-2"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
+                                    / <PriceFormatter price="env.utils.formatCurrency(currentOrder.priceIncl)" />
+                                </span>
+                            </div>
+                            <div class="text-dark"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
+                                <t t-esc="this.getNumberOfProducts()" /> product(s) selected
+                            </div>
+                            <t t-set="discountPc" t-value="currentOrder.globalDiscountPc" />
+                            <div t-if="discountPc" class="text-dark"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
+                                With <t t-esc="discountPc" />% discount
+                            </div>
+                        </div>
+
+                        <div class="pay-button w-100 w-lg-100 mt-2">
+                            <button class="btn btn-lg btn-primary w-100 pay-split-order"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-4 py-2' : 'fs-1 py-4' }}"
+                                t-on-click="paySplittedOrder">
+                                Payment
+                            </button>
+                            <div class="d-flex gap-2 w-100 mt-2">
+                                <button class="btn btn-lg btn-secondary w-100 split-order-button"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
+                                    t-att-disabled="!this.getNumberOfProducts()"
+                                    t-on-click="createSplittedOrder">
+                                    Split Order
+                                </button>
+                                <button class="btn btn-lg btn-secondary w-100 transfer-split-order"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
+                                    t-on-click="transferSplittedOrder">
+                                    Transfer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ReplaceMediaOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton
+            action="'replaceMedia'"
+            title="state.tooltipName"
+            className="'flex-grow-1'"
+            type="'success'"
+            preview="false"
+            label.translate="Replace" />
+        <BuilderButton icon="'fa-link'"
+            t-if="state.canSetLink"
+            id="'media_link_opt'"
+            action="'setLink'"
+            title.translate="Redirect the user elsewhere when he clicks on the media."/>
+    </BuilderRow>
+    <BuilderRow label.translate="Your URL" level = "1" t-if="isActiveItem('media_link_opt')">
+        <BuilderUrlPicker title.translate="Your URL"
+        action="'setUrl'"
+        inputClasses="'o_we_large'"
+        placeholder.translate="www.example.com"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Open in New Window" level = "1" t-if="state.hasHref">
+        <BuilderCheckbox action="'setNewWindow'"/>
+    </BuilderRow>
+</t>
+
+</templates>

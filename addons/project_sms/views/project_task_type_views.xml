@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="task_type_edit_view_form_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.task.type.view.form.inherit.project.sms</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="sms_template_id" context="{'default_model': 'project.task'}" options="{'no_quick_create': True}" invisible="user_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="task_type_edit_view_tree_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.task.type.view.list.inherit.project.sms</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_tree"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="sms_template_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="task_type_search_view_search_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.task.type.view.search.inherit.project.sms</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_search"/>
+        <field name="arch" type="xml">
+            <field name="rating_template_id" position="after">
+                <field name="sms_template_id" domain="[('model', '=', 'project.task')]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

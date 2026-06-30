@@ -1,0 +1,41 @@
+.o_self_cart_page{
+
+   .product_img{
+     max-width: 120px;
+   }
+
+
+  .delete-fade-out {
+    animation: deleteFadeOut 0.25s forwards;
+  }
+
+
+  @keyframes deleteFadeOut {
+  from { opacity: 1;  }
+  to { opacity: 0;  }
+}
+
+  @include media-breakpoint-down(sm) {
+
+    .product_img {
+      max-width: 90px;
+    }
+
+    .cart_container {
+      padding: 0;
+
+      .order_box{
+        border-radius: 0 !important;
+        border-bottom: none !important;
+      }
+    }
+  }
+}
+
+@include o-kiosk-portrait(){
+   .o_self_cart_page {
+       .product_img{
+         max-width: 150px !important;
+      }
+   }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="FieldMany2ManyTagsEmailTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_tag')]" position="replace">
+            <div t-attf-class="badge rounded-pill align-items-center dropdown o_tag o_tag_color_0 #{tag.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}"
+                 t-att-data-color="tag.colorIndex"
+                 t-att-data-index="tag_index"
+                 t-att-data-id="tag.resId"
+                 t-att-title="tag.text"
+                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-ref="{{tagEquals(tag, state.tagToUpdate) ? 'tagToUpdate' : `tag_${tag_index}`}}">
+                <span class="o_badge_text" t-att-title="tag.email"><t t-esc="tag.text"/></span>
+                <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa fa-times o_delete ms-1" title="Delete" aria-label="Delete"/>
+            </div>
+        </xpath>
+    </t>
+    <t t-name="FieldMany2ManyTagsEmailTags" t-inherit="web.Many2ManyTagsField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="autofocus">props.context.forward_mode</attribute>
+            <attribute name="quickCreate">quickCreate</attribute>
+        </xpath>
+        <xpath expr="//TagsList" position="attributes">
+            <attribute name="updateRecipient.bind">updateRecipient</attribute>
+        </xpath>
+    </t>
+</templates>

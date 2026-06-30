@@ -1,0 +1,22 @@
+.o_tree_editor {
+    .o_tree_editor_node {
+        .o_tree_editor_node_control_panel > button {
+            opacity: .2;
+        }
+
+        &.o_hovered_button {
+            .o_tree_editor_node_control_panel > button {
+                opacity: .5;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    .o_record_selector .o-autocomplete,
+    .o_multi_record_selector .o_record_autocomplete_with_caret {
+        min-width: unset;
+        flex: 1 0 50px;
+    }
+}

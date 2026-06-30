@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_dashboard.DashboardDateFilter">
+        <Dropdown navigationOptions="{ 'shouldFocusChildInput': false }">
+            <button class="btn btn-secondary o-btn-date-filter">
+                <i class="fa fa-calendar me-2"/>
+                <span class="o-date-filter-value" t-esc="inputValue"/>
+            </button>
+            <t t-set-slot="content">
+                <DateFilterDropdown
+                    value="props.value"
+                    update="props.update"
+                />
+            </t>
+        </Dropdown>
+        <button class="btn btn-secondary ms-1 btn-previous-date" t-on-click="this.selectPrevious" t-att-disabled="this.props.value === undefined">
+            <i class="fa fa-caret-left"/>
+        </button>
+        <button class="btn btn-secondary ms-1 btn-next-date" t-on-click="this.selectNext" t-att-disabled="this.props.value === undefined">
+            <i class="fa fa-caret-right"/>
+        </button>
+    </t>
+</templates>

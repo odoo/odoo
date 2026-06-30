@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="calendar_popover_delete_view" model="ir.ui.view">
+        <field name="name">calendar.popover.delete.wizard.view.form</field>
+        <field name="model">calendar.popover.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Event">
+                <field name="delete" widget="radio"/>
+                <footer>
+                    <button name="close" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_delete_wizard_form" model="ir.ui.view">
+        <field name="name">calendar.popover.delete.wizard.form</field>
+        <field name="model">calendar.popover.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Event">
+                <field name="calendar_event_id" invisible="1"/>
+                <div col="2" class="alert alert-warning" role="alert">
+                    <span>Are you sure you want to delete this event? <br/></span>
+                </div>
+                <group col="2">
+                    <field name="recipient_ids"
+                           widget="many2many_tags_email"
+                           context="{'force_email': True,' show_email': True, 'no_create_edit': True}"
+                    />
+                </group>
+                <group col="2">
+                    <field name="subject" placeholder="Subject"/>
+                </group>
+                <field name="body"
+                       class="oe-bordered-editor"
+                       options="{'style-inline': true}"/>
+                <footer>
+                    <button string="Send and delete"
+                            name="action_send_mail_and_delete"
+                            type="object"
+                            class="btn-primary o_cw_send_notify_delete"/>
+                    <button string="Delete"
+                            name="action_delete"
+                            type="object"
+                            class="btn-primary mx-1"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_event_delete_wizard" model="ir.actions.act_window">
+        <field name="name">Event Cancel Wizard</field>
+        <field name="res_model">calendar.popover.delete.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_event_delete_wizard_form"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

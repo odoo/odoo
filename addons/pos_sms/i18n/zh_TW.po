@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_sms
+#
+# Translators:
+# Wil Odoo, 2025
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 08:11+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/pos_sms/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: pos_sms
+#: model:sms.template,body:pos_sms.sms_template_data_point_of_sale
+msgid ""
+"\n"
+"                {{ object.company_id.name }} : Your order with reference: "
+"{{ object.pos_reference }} was processed succesfully with amount "
+"{{  object.currency_id.format(object.amount_total) }}. Use "
+"{{ object.pos_reference }}  for further reference\n"
+"            "
+msgstr ""
+"\n"
+"                {{ object.company_id.name }}：你的訂單（參考編號："
+"{{ object.pos_reference }}）已成功處理，金額為 "
+"{{  object.currency_id.format(object.amount_total) }}。日後參考請使用 "
+"{{ object.pos_reference }}\n"
+"            "
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sms.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sms.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: pos_sms
+#: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
+msgid "POS: Sent Order Confirmation via Text"
+msgstr "POS：透過簡訊發送訂單確認"
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS 銷售點設定"
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POS 銷售點訂單"
+
+#. module: pos_sms
+#: model_terms:ir.ui.view,arch_db:pos_sms.pos_sms_res_config_settings_view_form
+msgid "Receipt template"
+msgstr "收據範本"
+
+#. module: pos_sms
+#: model:ir.model.fields,help:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,help:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "SMS will be sent to the customer based on this template"
+msgstr "簡訊將根據此範本發送給客戶"
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "Sms Receipt template"
+msgstr "簡訊收據範本"

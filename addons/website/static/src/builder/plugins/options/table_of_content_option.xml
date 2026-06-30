@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TableOfContentOption">
+    <BuilderRow label.translate="Content">
+        <BuilderButton
+            type="'success'"
+            action="'addItem'"
+            actionParam="'.s_table_of_content_main > section:last-of-type'"
+            preview="false">
+            Add Section
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="website.TableOfContentNavbarOption">
+    <BuilderRow label.translate="Position" action="'navbarPosition'">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-long-arrow-left'" title.translate="Left" actionParam="'left'"/>
+            <BuilderButton icon="'fa-long-arrow-up'" title.translate="Top" actionParam="'top'"/>
+            <BuilderButton icon="'fa-long-arrow-right'" title.translate="Right" actionParam="'right'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Sticky">
+        <BuilderCheckbox classAction="'s_table_of_content_navbar_sticky'" preview="false"/>
+    </BuilderRow>
+</t>
+
+</templates>

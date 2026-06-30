@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.DateSection">
+    <div class="o-mail-DateSection d-flex align-items-center w-100 fw-bold z-1" t-attf-class="{{ props.className }}">
+        <hr class="o-discuss-separator flex-grow-1"/>
+        <span class="px-2 smaller text-muted opacity-50" t-att-class="{ 'user-select-none': isMobileOS }"><t t-esc="props.date"/></span>
+        <hr class="o-discuss-separator flex-grow-1"/>
+    </div>
+</t>
+</templates>

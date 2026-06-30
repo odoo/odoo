@@ -1,0 +1,49 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.LanguageSelector">
+        <t t-if="state.languages.length === 1">
+            <t t-call="html_editor.translateButton">
+                <t t-set="onClick" t-value="() => this.onSelected(state.languages[0][1])"/>
+            </t>
+        </t>
+        <Dropdown t-else="" menuRef="menuRef">
+            <t t-call="html_editor.translateButton">
+                <t t-set="onClick" t-value="() => {}"/>
+            </t>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
+                            <div class="lang" t-esc="language[1]"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="html_editor.translateButton">
+        <button class="btn btn-light" name="translate" t-att-title="props.title"
+            t-att-disabled="props.isDisabled" t-on-click="onClick">
+            <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+            <svg class="oe-language-icon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="796 796 200 200" enable-background="new 796 796 200 200" xml:space="preserve">
+            <g>
+                <path d="M973.166,818.5H818.833c-12.591,0-22.833,10.243-22.833,22.833v109.333c0,12.59,10.243,22.833,22.833,22.833h154.333
+                    c12.59,0,22.834-10.243,22.834-22.833V841.333C996,828.743,985.756,818.5,973.166,818.5z M896,961.5h-77.167
+                    c-5.973,0-10.833-4.859-10.833-10.833V841.333c0-5.974,4.86-10.833,10.833-10.833H896V961.5z M978.58,872.129
+                    c-0.547,9.145-5.668,27.261-20.869,39.845c4.615,1.022,9.629,1.573,14.92,1.573v12c-10.551,0-20.238-1.919-28.469-5.325
+                    c-7.689,3.301-16.969,5.325-28.125,5.325v-12c5.132,0,9.924-0.501,14.366-1.498c-8.412-7.016-13.382-16.311-13.382-26.78h11.999
+                    c0,8.857,5.66,16.517,14.884,21.623c4.641-2.66,8.702-6.112,12.164-10.351c5.628-6.886,8.502-14.521,9.754-20.042h-49.785v-12
+                    h22.297v-11.986h12V864.5h21.055c1.986,0,3.902,0.831,5.258,2.28C977.986,868.199,978.697,870.155,978.58,872.129z"/>
+                <g>
+                    <g>
+                        <path d="M839.035,914.262l-4.45,11.258h-15.971l26.355-61.09h15.971l25.746,61.09h-16.583l-4.363-11.258H839.035z
+                            M852.475,879.876l-8.902,22.604h17.629L852.475,879.876z"/>
+                    </g>
+                </g>
+            </g>
+            </svg>
+        </button>
+    </t>
+
+</templates>

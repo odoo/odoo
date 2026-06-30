@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
+        <span name="sale_combo_configurator_title" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </span>
+        <span name="preselected_product_title" position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </span>
+        <span name="sale_combo_configurator_total" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </span>
+        <button name="sale_combo_configurator_confirm_button" position="attributes">
+            <attribute name="t-if">!this.props.isFrontend</attribute>
+        </button>
+        <button name="sale_combo_configurator_cancel_button" position="attributes">
+            <attribute name="t-if">!this.props.isFrontend</attribute>
+        </button>
+        <button name="sale_combo_configurator_confirm_button" position="after">
+            <button
+                name="website_sale_combo_configurator_continue_button"
+                class="btn btn-primary w-100 w-lg-auto"
+                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
+                t-on-click="() => this.confirm({goToCart: false})"
+                t-att-disabled="!areAllCombosSelected"
+            >
+                <i class="fa fa-shopping-cart me-2"/>
+                Add to Cart
+            </button>
+            <button
+                name="website_sale_combo_configurator_checkout_button"
+                class="btn btn-outline-primary w-100 w-lg-auto"
+                t-if="this.props.isFrontend"
+                t-on-click="() => this.confirm({goToCart: true})"
+                t-att-disabled="!areAllCombosSelected"
+            >
+                Go to Checkout
+                <i class="fa fa-angle-right ms-2"/>
+            </button>
+        </button>
+    </t>
+</templates>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>SVGs to Clip Path converter</title>
+    </head>
+    <body>
+        <p>This tool is made to help designers import shapes that have a clip path component.</p>
+        <p>The shape must have at least one path set with an <code>id="filterPath"</code> and a maximum of 5 background colors</p>
+        <input id="svgPicker" type="file" multiple>
+        <button id="submitButton" type="button" name="convert">convert</button>
+        <div id="downloadArea">
+          <p>Your download link will appear here</p>
+        </div>
+        <script src="./convert-to-percentages.js" charset="utf-8"></script>
+    </body>
+</html>

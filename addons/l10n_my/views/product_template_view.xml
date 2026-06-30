@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="product_template_form_inherit_l10n_my" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.l10n_my</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']" position="inside">
+                <field name="l10n_my_tax_classification_code" invisible="'MY' not in fiscal_country_codes or type == 'service'"/>
+                <field name="l10n_my_tax_classification_code" string="Malaysian Service Type Code" invisible="'MY' not in fiscal_country_codes or type != 'service'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

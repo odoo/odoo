@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tcs_report_it_act_25" model="account.report">
+        <field name="name">TCS I.T. Act 25 Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tcs_report_25_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tcs_report_line_section_394_1_1" model="account.report.line">
+                <field name="name">Section 394(1) SI.1: Sale of alcoholic liquor for human consumption</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_1_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.1</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_2" model="account.report.line">
+                <field name="name">Section 394(1) SI.2: Sale of tendu leaves</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.2</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_3" model="account.report.line">
+                <field name="name">Section 394(1) SI.3: Sale of timber (forest lease or otherwise) or other forest produce (non-tendu) under forest lease</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_3_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_4" model="account.report.line">
+                <field name="name">Section 394(1) SI.4: Sale of scrap</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_4_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.4</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_5" model="account.report.line">
+                <field name="name">Section 394(1) SI.5: Sale of minerals – coal, lignite, or iron ore</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_5_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.5</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_6_a" model="account.report.line">
+                <field name="name">Section 394(1) SI.6(a): Sale of motor vehicles</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_6_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.6(a)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_6_b" model="account.report.line">
+                <field name="name">Section 394(1) SI.6(b): Sale of notified goods</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_6_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.6(b)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_7_a" model="account.report.line">
+                <field name="name">Section 394(1) SI.7 D(a): Remittance under LRS for education, medical treatment</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_7_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.7 D(a)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_7_b" model="account.report.line">
+                <field name="name">Section 394(1) SI.7 D(b): Remittance under LRS for purposes other than education or medical</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_7_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.7 D(b)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_8" model="account.report.line">
+                <field name="name">Section 394(1) SI.8: Sale of Overseas Tour Programme Package</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_8_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.8</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_394_1_9" model="account.report.line">
+                <field name="name">Section 394(1) SI.9: Use of parking lot / toll plaza / mine / quarry (excluding mineral oil mining)</field>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_394_1_9_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-394(1) SI.9</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

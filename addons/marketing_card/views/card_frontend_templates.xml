@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="card_campaign_preview" name="Share campaign">
+        <t t-call="web.frontend_layout">
+            <t t-set="title" t-value="card.display_name"/>
+            <t t-set="body_classname" t-value="'o_card_campaign_preview_frontend'"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+            <t t-set="no_livechat" t-value="1"/>
+            <t t-set="share_url" t-value="card._get_redirect_url()"/>
+            <t t-set="share_url_quoted" t-value="quote(share_url)"/>
+            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                <div class="mb-5 d-flex flex-column align-items-center justify-content-center">
+                    <h1 t-out="campaign.request_title">Share with your community!</h1>
+                    <p t-out="campaign.request_description or None" class="mb-5"/>
+                    <a t-att-href="card._get_card_url()" class="border border-3"
+                       style="max-width: 80%; height: auto; max-height: 80%;">
+                        <img t-att-src="card._get_card_url()" class="w-100"/>
+                    </a>
+                    <a t-att-href="share_url" target="_blank"><small>Where does this link to?</small></a>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <h4>Select where to share</h4>
+                    <div class="text-start o_no_link_popover">
+                        <div id="url-div">
+                            <a class="fa fa-2x fa-facebook rounded m-2" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-2x fa-twitter rounded m-2" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
+                            <a class="fa fa-2x fa-linkedin rounded m-2" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-2x fa-whatsapp rounded m-2" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-2x fa-pinterest rounded m-2" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div id="thanks-section" t-if="not is_html_empty(campaign.reward_message) or campaign.reward_target_url" style="width: 50%;"
+                t-attf-class="alert alert-info d-flex flex-column align-items-center {{'d-none' if not card.share_status == 'shared' else ''}}">
+                    <p t-if="campaign.reward_message" t-out="campaign.reward_message"/>
+                    <p t-if="campaign.reward_target_url"><a t-att-href="campaign.reward_target_url">Click here for your reward!</a></p>
+                </div>
+            </div>
+            <footer class="d-flex flex-column align-items-center fixed-bottom">
+                <span>Powered By <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a></span>
+            </footer>
+            <script>
+                document.querySelectorAll("#url-div a").forEach((anchor) =&gt; {
+                    anchor.addEventListener("click", (event) =&gt; {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        window.open(
+                            event.target.href,
+                            event.target.target,
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600",
+                        );
+                        const thanksSection = document.getElementById("thanks-section")
+                        if (thanksSection) {
+                            thanksSection.classList.remove("d-none");
+                        }
+                    });
+                });
+            </script>
+        </t>
+    </template>
+
+    <template id="card_campaign_crawler" name="Share campaign Crawler View">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta property="og:image" t-att-content="image_url"/>
+                <meta property="og:image:alt" t-attf-content="{{ target_name }}"/>
+                <meta property="og:title" t-att-content="target_name"/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:description" t-att-content="post_suggestion"/>
+            </t>
+            <t t-set="title" t-value="target_name"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+        </t>
+    </template>
+</odoo>

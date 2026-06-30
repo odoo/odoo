@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_br" model="res.partner" forcecreate="1">
+        <field name="name">BR Company</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="vat">49233848000150</field>
+        <field name="l10n_br_ie_code">9102799558</field>
+        <field name="l10n_br_im_code">01071.069.624-0</field>
+        <field name="street_name">Rua Marechal Deodoro</field>
+        <field name="street_number">630</field>
+        <field name="street_number2">Complemento II</field>
+        <field name="street2">Centro</field>
+        <field name="country_id" ref="base.br"/>
+        <field name="state_id" ref="base.state_br_pr"/>
+        <field name="city_id" ref="l10n_br.city_br_008"/>
+        <field name="zip">80010-010</field>
+        <field name="phone">+55 11 96123-4567</field>
+        <field name="email">info@company.brexample.com</field>
+        <field name="website">www.brexample.com</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="base.demo_company_br" model="res.company" forcecreate="1">
+        <field name="name">BR Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_br"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_br')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_br'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>br</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_br')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

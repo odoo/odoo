@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="sms.SmsWidget" t-inherit="mail.EmojisTextField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_input_buttons')]/button[hasclass('fa-magic')]" position="replace"/>
+        <xpath expr="/*[last()]/*[last()]" position="after">
+            <div class="o_sms_container mt-3">
+                <span class="text-muted o_sms_count me-1">
+                    <t t-out="nbrChar"/>/<t t-out="160 * nbrSMS" /> <t t-out="nbrCharExplanation" /> | <t t-out="nbrSMS"/> SMS (<t t-out="encoding"/>)
+                    <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank"
+                        title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle align-middle"/>
+                </span>
+                <button t-if="props.dynamicPlaceholder"
+                    class="btn btn-link py-0 border-0"
+                    title="Insert Field"
+                    t-on-click="onDynamicPlaceholderOpen"
+                ><span class="fa fa-magic me-1"/><span>Insert Field</span></button>
+            </div>
+        </xpath>
+    </t>
+</templates>

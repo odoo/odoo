@@ -3,14 +3,12 @@
 
 {
     'name': 'Customer References',
-    'category': 'Website',
-    'website': 'https://www.odoo.com/page/website-builder',
-    'summary': 'Publish Your Customer References',
+    'category': 'Website/Website',
+    'summary': 'Publish your customer references',
     'version': '1.0',
     'description': """
-Odoo Customer References
-===========================
-""",
+Publish your customers as business references on your website to attract new potential prospects.
+    """,
     'depends': [
         'website_crm_partner_assign',
         'website_partner',
@@ -25,6 +23,12 @@ Odoo Customer References
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
     ],
-    'qweb': [],
     'installable': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'assets': {
+        'website.website_builder_assets': [
+            'website_customer/static/src/website_builder/**/*',
+        ],
+    },
 }

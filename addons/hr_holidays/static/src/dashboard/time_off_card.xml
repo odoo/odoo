@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card py-3 text-primary">
+        <t t-set="data" t-value="props.data"/>
+        <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
+        <t t-set="parsed_duration" t-value="formatNumber(this.lang, duration)"/>
+        <t t-set="show_popover" t-value="true"/>
+
+        <strong class="o_timeoff_name cursor-pointer btn-link" t-on-click="navigateTimeOffType"><t t-esc="props.name"/></strong>
+        <span class="o_timeoff_duration">
+            <t t-if="data and data.icon">
+                <img t-att-src="data.icon" />
+            </t>
+            <span t-att-style="data.holds_changes ? 'color: #B6D369;' : ''">
+                <t t-esc="parsed_duration"/>
+            </span>
+        </span>
+        <span
+            t-att-class="'text-uppercase o_timeoff_details p-1' + (warning ? ' alert alert-warning' : '')"
+            t-on-click.stop="(ev) => (show_popover &amp;&amp; this.onClickInfo(ev))">
+            <t t-if="data.request_unit == 'hour'" name="duration_unit">hours</t>
+            <t t-else="">days</t>
+            <t t-if="props.requires_allocation" name="duration_type">
+                available
+            </t>
+            <t t-else="">
+                taken
+            </t>
+            <span t-if="show_popover"
+                t-att-class="'o_timeoff_info fa' + (warning ? ' fa-exclamation-triangle' : ' fa-question-circle-o')"
+            />
+        </span>
+        <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
+            <t t-if="data.closest_allocation_remaining != data.virtual_remaining_leaves">
+                (<t t-esc="data.closest_allocation_remaining"/> <t t-if="data.request_unit == 'hour'">hours</t><t t-else="">days</t>
+                valid until <span t-esc="data.closest_allocation_expire"/>)
+            </t>
+            <t t-else="">
+                (valid until <span t-esc="data.closest_allocation_expire"/>)
+            </t>
+        </span>
+    </div>
+
+    <t t-name="hr_holidays.TimeOffCardMobile">
+        <t t-set="data" t-value="props.data"/>
+        <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken" />
+
+        <span class="float-end o_timeoff_card_mobile">
+            <t t-if="props.requires_allocation" name="duration_type">
+                <strong t-esc="duration" class="o_timeoff_green text-success"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
+            </t>
+            <t t-else="">
+                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="hr_holidays.TimeOffCardPopover">
+        <ul class="list-unstyled p-3 mb-0">
+            <li class="d-flex justify-content-between">
+                <span><span class="btn-link p-0 cursor-pointer" t-on-click="allocatedLeaves">Allocated</span> (<span class="btn-link p-0 cursor-pointer" t-on-click="props.onClickNewAllocationRequest">new request</span>):</span>
+                <span class="ps-1" t-esc="props.allocated"/>
+            </li>
+            <li class="d-flex justify-content-between" t-if="props.accrual_bonus != 0">
+                Accrual (Future): <span class="ps-1" t-esc="props.accrual_bonus"/>
+            </li>
+            <li class="d-flex justify-content-between btn-link cursor-pointer" t-on-click="() => this.navigateInfo(['validate'])">Approved: <span class="ps-1" t-esc="props.approved"/></li>
+            <li class="d-flex justify-content-between border-bottom btn-link cursor-pointer" t-on-click="() => this.navigateInfo(['confirm','validate1'])">Planned: <span class="ps-1" t-esc="props.planned"/></li>
+            <li class="d-flex justify-content-between">Available: <span class="ps-1" t-esc="props.left"/></li>
+        </ul>
+        <div t-if="props.warning" class="alert alert-warning mb-0 pb-0 o_time_off_card_popover_warning">
+            <span class="d-inline-block m-0 mb-3"
+                t-if="props.errorLeaves.length">
+                Some leaves cannot be linked to any allocation. To see those leaves, 
+                <a t-on-click="() => this.openLeaves()" class="cursor-pointer">click here</a>.
+            </span>
+            <span class="d-inline-block m-0 mb-3"
+                t-if="props.closest &amp;&amp; props.closest &lt; props.left">
+                <i class="fa fa-warning"/> Only <t t-esc="props.closest"/>
+                <t t-if="props.request_unit == 'hour'"> hours</t>
+                <t t-else=""> days</t>
+                can be used before the allocation expires.
+            </span>
+            <span class="d-inline-block m-0 mb-3"
+                t-if="props.accrualExcess">
+                The leaves planned in the future are exceeding the maximum value of the allocation.
+                It will not be possible to take all of them.
+            </span>
+        </div>
+    </t>
+</templates>

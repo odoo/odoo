@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SelectionBox">
+        <div class="o_selection_box list-group flex-row w-auto" t-att-class="{'m-1 gap-1': env.isSmall}" role="alert">
+            <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1" t-att-class="{'shadow': env.isSmall}">
+                <span t-if="isDomainSelected">All <b><t t-esc="nbTotal"/><t t-if="hasLimitedCount">+</t></b> selected</span>
+                <t t-else="">
+                    <b t-esc="nbSelected"/> selected
+                    <button t-if="!env.isSmall and isPageSelected and (!isRecordCountTrustable or nbTotal > nbSelected)"
+                        class="o_select_domain btn btn-sm btn-info p-1 ms-2 me-n2 border-0 fw-normal"
+                        title="Select all records matching the search"
+                        t-on-click="onSelectDomain">
+                        <i class="oi oi-fw oi-arrow-right"/>
+                        Select all <span t-if="isRecordCountTrustable"><t t-esc="nbTotal"/><t t-if="hasLimitedCount">+</t></span>
+                    </button>
+                </t>
+                <button title="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" t-on-click="onUnselectAll">
+                    <i class="oi oi-close"/>
+                </button>
+            </span>
+            <button t-if="env.isSmall and !isDomainSelected and (!isRecordCountTrustable or nbTotal > nbSelected)"
+                class="o_select_domain btn btn-info shadow"
+                title="Select all records matching the search"
+                t-on-click="onSelectDomain">
+                All
+            </button>
+        </div>
+    </t>
+
+</templates>

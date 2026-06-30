@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="inherit_id" ref="web.view_base_document_layout"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='paperformat_id']" position="after">
+                    <field name="from_invoice" invisible="1"/>
+                    <field name="vat"/>
+                    <field name="account_number" string="Bank Account Number" required="qr_code" placeholder="BE71096123456769"/>
+                    <field name="qr_code" string="QR Code" invisible="not from_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_base_document_layout_configurator" model="ir.actions.act_window">
+            <field name="name">Configure your document layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">base.document.layout</field>
+            <field name="view_id" ref="account.view_base_document_layout"/>
+            <field name="context">{"dialog_size": "extra-large"}</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.highlightConfigurator">
+    <div class="hb-row d-flex position-relative pe-2">
+        <div class="hb-row-label d-flex align-items-center">
+            <label for="highlightPicker" class="text-nowrap text-truncate">Highlight</label>
+        </div>
+        <div class="hb-row-content d-flex">
+            <button id="highlightPicker" title="highlightPicker" class="o-hb-btn btn btn-secondary" t-on-click="openHighlightPicker">
+                <t t-if="this.state.highlightId === 'multiple'">
+                    <span class="mx-3 d-inline-block"></span>
+                </t>
+                <t t-else="" t-out="this.highlightIdToName[this.state.highlightId]"/>
+            </button>
+            <button class="btn btn-sm btn-light fa fa-trash" title="Reset" t-on-click="deleteHighlight"/>
+        </div>
+    </div>
+
+    <div class="hb-row hb-row-sublevel hb-row-sublevel-1 d-flex position-relative pe-2">
+        <div class="hb-row-label d-flex align-items-center">
+            <label for="colorButton" class="text-nowrap text-truncate">Color</label>
+        </div>
+        <div class="hb-row-content d-flex">
+            <button id="colorButton" title="color" class="o_we_color_preview" t-attf-style="background-color:{{this.state.color}}" t-on-click="openColorPicker">
+            </button>
+        </div>
+    </div>
+
+    <div class="hb-row hb-row-sublevel hb-row-sublevel-1 d-flex position-relative pe-2">
+        <div class="hb-row-label d-flex align-items-center">
+            <label for="thicknessInput" class="text-nowrap text-truncate">Thickness</label>
+        </div>
+        <div class="hb-row-content d-flex">
+            <div class="d-flex flex-row flex-nowrap align-items-center o-hb-input-field-number justify-content-end">
+                <input type="number" id="thicknessInput" class="o-hb-input-base o-hb-input-number text-end" t-att-value="this.state.thickness" t-on-input="onThicknessChange"/>
+                <span class="o-hb-input-field-unit">px</span>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

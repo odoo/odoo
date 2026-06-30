@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="account.Onboarding">
+        <div class="">
+            <div class="col-auto my-1" t-foreach="recordOnboardingSteps" t-as="step" t-key="step.id">
+                <i class="fa me-2 fs-5" t-att-class="{
+                    'fa-circle text-secondary': step.state == 'not_done',
+                    'fa-check-circle text-success': step.state != 'not_done',
+                }"/>
+                <a href="#"
+                   t-att-data-method="step.action"
+                   data-model="onboarding.onboarding.step"
+                   t-out="step.title"
+                   t-att-title="step.description"
+                   t-on-click.stop.prevent="() => this.onboardingLinkClicked(step)"
+                />
+            </div>
+
+        </div>
+    </t>
+
+</template>

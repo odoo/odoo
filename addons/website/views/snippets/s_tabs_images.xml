@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_tabs_images" name="Tabs Images">
+    <section class="s_tabs_common s_tabs_images pt48 pb48">
+        <div class="container">
+            <div class="s_tabs_main s_tabs_nav_vertical s_tabs_nav_with_descriptions s_col_no_resize s_col_no_bgcolor row">
+                <div class="s_tabs_nav col-md-3 mb-3 overflow-y-hidden overflow-x-auto" data-name="Tab Header" role="navigation">
+                    <ul class="nav nav-underline flex-nowrap flex-md-column" role="tablist" style="--nav-pills-link-active-bg: var(--nav-link-color);">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active text-break" id="nav_tabs_images_link_1" data-bs-toggle="tab" href="#nav_tabs_images_content_1" role="tab" aria-controls="nav_tabs_images_content_1" aria-selected="true">
+                                First Slide
+                                <small class="oe_unbreakable o_nav_tabs_description opacity-75">A slide description</small>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link text-break" id="nav_tabs_images_link_2" data-bs-toggle="tab" href="#nav_tabs_images_content_2" role="tab" aria-controls="nav_tabs_images_content_2" aria-selected="false">
+                                Second Slide
+                                <small class="oe_unbreakable o_nav_tabs_description opacity-75">What is this slide about</small>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link text-break" id="nav_tabs_images_link_3" data-bs-toggle="tab" href="#nav_tabs_images_content_3" role="tab" aria-controls="nav_tabs_images_content_3" aria-selected="false">
+                                Third Slide
+                                <small class="oe_unbreakable o_nav_tabs_description opacity-75">Add your touch to complete the image</small>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link text-break" id="nav_tabs_images_link_4" data-bs-toggle="tab" href="#nav_tabs_images_content_4" role="tab" aria-controls="nav_tabs_images_content_4" aria-selected="false">
+                                Fourth Slide
+                                <small class="oe_unbreakable o_nav_tabs_description opacity-75">Describe the scene as you envision it</small>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link text-break" id="nav_tabs_images_link_5" data-bs-toggle="tab" href="#nav_tabs_images_content_5" role="tab" aria-controls="nav_tabs_images_content_5" aria-selected="false">
+                                Fifth Slide
+                                <small class="oe_unbreakable o_nav_tabs_description opacity-75">Add a unique perspective or detail</small>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="s_tabs_content tab-content col-md-9">
+                    <div class="tab-pane fade show active" id="nav_tabs_images_content_1" role="tabpanel" aria-labelledby="nav_tabs_images_link_1">
+                        <div class="oe_structure oe_empty">
+                            <section class="s_text_block" data-snippet="s_text_block" data-name="Tab">
+                                <div class="container s_allow_columns">
+                                    <img src="/web/image/website.s_tabs_images_default_image_1" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav_tabs_images_content_2" role="tabpanel" aria-labelledby="nav_tabs_images_link_2">
+                        <div class="oe_structure oe_empty">
+                            <section class="s_text_block" data-snippet="s_text_block" data-name="Tab">
+                                <div class="container s_allow_columns">
+                                    <img src="/web/image/website.s_tabs_images_default_image_2" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav_tabs_images_content_3" role="tabpanel" aria-labelledby="nav_tabs_images_link_3">
+                        <div class="oe_structure oe_empty">
+                            <section class="s_text_block" data-snippet="s_text_block" data-name="Tab">
+                                <div class="container s_allow_columns">
+                                    <img src="/web/image/website.s_tabs_images_default_image_3" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav_tabs_images_content_4" role="tabpanel" aria-labelledby="nav_tabs_images_link_4">
+                        <div class="oe_structure oe_empty">
+                            <section class="s_text_block" data-snippet="s_text_block" data-name="Tab">
+                                <div class="container s_allow_columns">
+                                    <img src="/web/image/website.s_tabs_images_default_image_4" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav_tabs_images_content_5" role="tabpanel" aria-labelledby="nav_tabs_images_link_5">
+                        <div class="oe_structure oe_empty">
+                            <section class="s_text_block" data-snippet="s_text_block" data-name="Tab">
+                                <div class="container s_allow_columns">
+                                    <img src="/web/image/website.s_tabs_images_default_image_5" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_tabs_images_000_scss" name="Tabs Images 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_tabs_images/000.scss</path>
+</asset>
+
+</odoo>

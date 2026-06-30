@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_team_salesteams_view_form_in_sale_crm" model="ir.ui.view">
+        <field name="name">crm.team.form</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="crm.sales_team_form_view_in_crm"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//span[@name='opportunities']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

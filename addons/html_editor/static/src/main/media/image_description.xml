@@ -1,0 +1,33 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageDescription">
+        <button class="btn btn-light" t-att-title="props.title" t-on-click="this.props.openImageDescriptionPopover">
+            Description
+        </button>
+    </t>
+
+    <t t-name="html_editor.ImageDescriptionPopover">
+        <div class="o-we-image-description-popover p-3">
+            <input
+                t-ref="description"
+                type="text"
+                t-model="this.state.description"
+                placeholder="Description"
+                title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
+                name="description"
+                class="border-dark-subtle form-control mb-2"
+            />
+            <input
+                type="text"
+                t-model="this.state.tooltip"
+                placeholder="Tooltip"
+                title="'Title tag' is shown as a tooltip when you hover the picture."
+                name="tooltip"
+                class="border-dark-subtle form-control mb-2"
+            />
+            <div class="mt-3">
+                <button class="o_we_apply_link btn btn-sm btn-primary" t-on-click="this.onSave">Apply</button>
+                <button class="o_we_discard_link btn btn-sm btn-dark ms-1" t-on-click="this.props.close">Discard</button>
+            </div>
+        </div>
+    </t>
+</templates>

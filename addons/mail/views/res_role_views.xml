@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_role_view_search" model="ir.ui.view">
+            <field name="name">res.role.view.search</field>
+            <field name="model">res.role</field>
+            <field name="arch" type="xml">
+                <search string="Roles Search">
+                    <field name="name" string="Role"/>
+                    <field name="user_ids"/>
+                    <filter string="My Roles" name="my_role_ids" domain="[('user_ids', '=', uid)]"/>
+                    <group>
+                        <filter string="Users" name="filter_user_ids" domain="[]" context="{'group_by': 'user_ids'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="res_role_view_tree" model="ir.ui.view">
+            <field name="name">res.role.list</field>
+            <field name="model">res.role</field>
+            <field name="arch" type="xml">
+                <list string="Role" editable="bottom" sample="1">
+                    <field name="name" string="Role"/>
+                    <field name="user_ids" widget="many2many_avatar_user"/>
+                </list>
+            </field>
+        </record>
+        <record id="res_role_view_form" model="ir.ui.view">
+            <field name="name">res.role.form</field>
+            <field name="model">res.role</field>
+            <field name="arch" type="xml">
+                <form string="Role">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Role"/>
+                            <field name="user_ids" widget="many2many_avatar_user" options="{'no_create': True}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="res_role_action" model="ir.actions.act_window">
+            <field name="name">Roles</field>
+            <field name="res_model">res.role</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="res_role_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No roles found. Let's create one!</p>
+                <p>Notify multiple people at once by @-mentioning roles in conversations.</p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -3,7 +3,7 @@ Adds support for authentication by LDAP server.
 This module allows users to login with their LDAP username and password, and
 will automatically create Odoo users for them on the fly.
 
-**Note:** This module only work on servers who have Python's ``ldap`` module installed.
+**Note:** This module only work on servers that have Python's ``python-ldap`` module installed.
 
 Configuration:
 --------------

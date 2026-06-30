@@ -2,28 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import functools
-import unittest
 
-from odoo.tools import frozendict, pycompat
-from odoo.tools.func import compose
-
-
-class TestCompose(unittest.TestCase):
-    def test_basic(self):
-        str_add = compose(str, lambda a, b: a + b)
-        self.assertEqual(str_add(1, 2), "3")
-
-    def test_decorator(self):
-        """ ensure compose() can be partially applied as a decorator
-        """
-        @functools.partial(compose, pycompat.text_type)
-        def mul(a, b):
-            return a * b
-
-        self.assertEqual(mul(5, 42), u"210")
+from odoo.tests.common import BaseCase
+from odoo.tools import frozendict, lazy
+from odoo import Command
 
 
-class TestFrozendict(unittest.TestCase):
+class TestFrozendict(BaseCase):
     def test_frozendict_immutable(self):
         """ Ensure that a frozendict is immutable. """
         vals = {'name': 'Joe', 'age': 42}
@@ -61,5 +46,31 @@ class TestFrozendict(unittest.TestCase):
         # dict with tuples, lists, and embedded dicts
         hash(frozendict({
             'user_id': (42, 'Joe'),
-            'line_ids': [(0, 0, {'values': [42]})],
+            'line_ids': [Command.create({'values': [42]})],
         }))
+
+
+class TestLazy(BaseCase):
+    def test_lazy_compare(self):
+        """ Ensure that a lazy can be compared with an other lazy. """
+        self.assertEqual(lazy(lambda: 1) <= lazy(lambda: 42), True)
+        self.assertEqual(lazy(lambda: 42) <= lazy(lambda: 1), False)
+        self.assertEqual(lazy(lambda: 42) == lazy(lambda: 42), True)
+        self.assertEqual(lazy(lambda: 1) == lazy(lambda: 42), False)
+        self.assertEqual(lazy(lambda: 42) != lazy(lambda: 42), False)
+        self.assertEqual(lazy(lambda: 1) != lazy(lambda: 42), True)
+
+        # Object like recordset implement __eq__
+        class Obj:
+            def __init__(self, num):
+                self.num = num
+
+            def __eq__(self, other):
+                if isinstance(other, Obj):
+                    return self.num == other.num
+                raise ValueError('Object does not have the correct type')
+
+        self.assertEqual(lazy(lambda: Obj(42)) == lazy(lambda: Obj(42)), True)
+        self.assertEqual(lazy(lambda: Obj(1)) == lazy(lambda: Obj(42)), False)
+        self.assertEqual(lazy(lambda: Obj(42)) != lazy(lambda: Obj(42)), False)
+        self.assertEqual(lazy(lambda: Obj(1)) != lazy(lambda: Obj(42)), True)

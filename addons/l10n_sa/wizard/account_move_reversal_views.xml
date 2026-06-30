@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal_inherit_l10n_sa" model="ir.ui.view">
+            <field name="name">account.move.reversal.form.inherit.l10n_sa</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="model">account.move.reversal</field>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="before">
+                    <field name="l10n_sa_reason" string="ZATCA Reason" invisible="move_type == 'entry' or country_code != 'SA'"/>
+                </field>
+                <field name="reason" position="attributes">
+                    <attribute name="invisible" separator="or" add="country_code == 'SA'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-inherit="website_sale_stock.product_availability" t-inherit-mode="extension">
+        <div id="threshold_message" position="attributes">
+            <attribute name="t-elif" add="!show_click_and_collect_availability" separator=" and "/>
+        </div>
+    </t>
+
+</templates>

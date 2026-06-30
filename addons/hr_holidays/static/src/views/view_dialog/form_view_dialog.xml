@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.FormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button
+                class="btn btn-primary o_form_button_save"
+                t-on-click="saveButtonClicked"
+                t-if="canSave"
+                data-hotkey="q">
+                <span t-if="this.record.isNew">Submit Request</span>
+                <span t-else="">Save</span>
+            </button>
+        </xpath>
+
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="replace">
+            <button type="button"
+                    class="btn btn-secondary o_form_button_cancel"
+                    data-hotkey="j"
+                    t-on-click.stop="discard"
+                    t-if="canClose">
+                Discard
+            </button>
+        </xpath>
+
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="before">
+            <button
+                t-if="canApprove"
+                t-attf-class="btn #{canSave ? 'btn-secondary': 'btn-primary'}"
+                t-on-click="() => this.onClick('action_approve')"
+                data-hotkey="x">Approve</button>
+            <button
+                t-if="canValidate"
+                t-attf-class="btn #{canSave ? 'btn-secondary': 'btn-primary'}"
+                t-on-click="() => this.onClick('action_approve')"
+                data-hotkey="x">Validate</button>
+            <button
+                t-if="canRefuse"
+                t-attf-class="btn #{(canValidate or canApprove) ? 'btn-secondary' : 'btn-primary'}"
+                t-on-click="() =>this.onClick('action_refuse')"
+                data-hotkey="x">Refuse</button>
+        </xpath>
+        <xpath expr="." position="inside">
+            <button class="btn btn-danger ms-auto" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
+                Delete Time Off
+            </button>
+            <button class="btn btn-danger" t-att-class="{'ms-auto': !canDelete}" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="x">
+                Cancel Time Off
+            </button>
+        </xpath>
+    </t>
+</templates>

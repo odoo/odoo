@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="discuss_channel_rtc_session_view_search" model="ir.ui.view">
+        <field name="name">discuss.channel.rtc.session.search</field>
+        <field name="model">discuss.channel.rtc.session</field>
+        <field name="arch" type="xml">
+            <search string="Search RTC session">
+                <field name="channel_member_id"/>
+                <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="discuss_channel_rtc_session_view_tree" model="ir.ui.view">
+        <field name="name">discuss.channel.rtc.session.list</field>
+        <field name="model">discuss.channel.rtc.session</field>
+        <field name="arch" type="xml">
+            <list string="RTC Session">
+                <header>
+                    <button name="action_disconnect" type="object" string="Disconnect"/>
+                </header>
+                <field name="id"/>
+                <field name="channel_member_id"/>
+                <field name="channel_id"/>
+                <field name="write_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="discuss_channel_rtc_session_view_form" model="ir.ui.view">
+        <field name="name">discuss.channel.rtc.session.form</field>
+        <field name="model">discuss.channel.rtc.session</field>
+        <field name="arch" type="xml">
+            <form string="RTC Session">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="channel_member_id"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identity">
+                            <field name="channel_id"/>
+                            <field name="partner_id"/>
+                            <field name="guest_id"/>
+                        </group>
+                        <group string="State">
+                            <field name="is_screen_sharing_on"/>
+                            <field name="is_camera_on"/>
+                            <field name="is_muted"/>
+                            <field name="is_deaf"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="discuss_channel_rtc_session_action" model="ir.actions.act_window">
+        <field name="name">RTC sessions</field>
+        <field name="res_model">discuss.channel.rtc.session</field>
+        <field name="context">{'search_default_group_by_channel': True}</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

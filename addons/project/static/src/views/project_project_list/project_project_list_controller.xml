@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <button class="btn btn-primary o_list_button_add" position="replace">
+            <ProjectTemplateDropdown t-if="!editedRecord and activeActions.create and props.showButtons"
+                onCreate="() => this.onClickCreate()"
+                newButtonClasses="'btn btn-primary o_list_button_add'"
+                context="props.context"
+            />
+        </button>
+    </t>
+</templates>

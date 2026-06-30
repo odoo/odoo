@@ -1,26 +1,29 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+﻿# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # TODO: Avoid to uninstall the database
 # TODO: We can update the server or the clients without to uninstall the all-in-one
 # TODO: Add startmenu handling (link to localhost + uninstall)
 
+Unicode True
+
 !include 'MUI2.nsh'
 !include 'FileFunc.nsh'
+!include 'WordFunc.nsh'
 !include 'LogicLib.nsh'
 !include 'Sections.nsh'
-!include 'LogicLib.nsh'
+!include 'x64.nsh'
 
 !macro IfKeyExists ROOT MAIN_KEY KEY
     # This macro comes from http://nsis.sourceforge.net/Check_for_a_Registry_Key
     Push $R0
     Push $R1
     Push $R2
- 
+
     # XXX bug if ${ROOT}, ${MAIN_KEY} or ${KEY} use $R0 or $R1
- 
+
     StrCpy $R1 "0" # loop index
     StrCpy $R2 "0" # not found
- 
+
     ${Do}
         EnumRegKey $R0 ${ROOT} "${MAIN_KEY}" "$R1"
         ${If} $R0 == "${KEY}"
@@ -29,9 +32,9 @@
         ${EndIf}
         IntOp $R1 $R1 + 1
     ${LoopWhile} $R0 != ""
- 
+
     ClearErrors
- 
+
     Exch 2
     Pop $R0
     Pop $R1
@@ -41,7 +44,7 @@
 !define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '11'
+    !define MAJOR_VERSION '15'
 !endif
 
 !ifndef MINOR_VERSION
@@ -53,49 +56,48 @@
 !endif
 
 !ifndef VERSION
-    !define VERSION "0"
-#!define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}-r${REVISION_VERSION}"
+    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}"
+!endif
+
+!ifndef PYTHONVERSION
+	!define PYTHONVERSION '3.10.11'
+!endif
+
+!ifndef SERVICENAME
+	!define SERVICENAME 'odoo-server-${VERSION}'
+!endif
+
+!ifndef TOOLSDIR
+	!define TOOLSDIR 'c:\odoobuild'
 !endif
 
 !define PRODUCT_NAME "Odoo"
 !define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}.${MINOR_VERSION}"
 
-!define REGISTRY_ROOT HKLM
 !define UNINSTALL_BASE_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall"
 !define UNINSTALL_REGISTRY_KEY "${UNINSTALL_BASE_REGISTRY_KEY}\${DISPLAY_NAME}"
 
 !define UNINSTALL_REGISTRY_KEY_SERVER "${UNINSTALL_BASE_REGISTRY_KEY}\Odoo Server ${VERSION}"
 
-!define REGISTRY_KEY "Software\${DISPLAY_NAME}"
+!define REGISTRY_KEY "SOFTWARE\${DISPLAY_NAME}"
 
 !define DEFAULT_POSTGRESQL_HOSTNAME 'localhost'
 !define DEFAULT_POSTGRESQL_PORT 5432
 !define DEFAULT_POSTGRESQL_USERNAME 'openpg'
 !define DEFAULT_POSTGRESQL_PASSWORD 'openpgpwd'
 
+!define DEFAULT_ODOO_DB_USERNAME 'odoo'
+!define DEFAULT_ODOO_DB_PASSWORD 'odoopwd'
+
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
-OutFile "openerp-allinone-setup-${VERSION}.exe"
-SetCompressor /FINAL lzma
-#SetCompress auto
-ShowInstDetails show
-
-#XPStyle on
-
-InstallDir "$PROGRAMFILES\Odoo ${VERSION}"
-InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
+OutFile "${TOOLSDIR}\server\odoo_setup_${VERSION}.exe"
+SetCompressor /SOLID /FINAL lzma
+ShowInstDetails hide
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
 
 RequestExecutionLevel admin
-
-#VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
-#VIAddVersionKey "CompanyName" "${PUBLISHER}"
-#VIAddVersionKey "FileDescription" "Installer of ${DISPLAY_NAME}" 
-#VIAddVersionKey "LegalCopyright" "${PUBLISHER}"
-#VIAddVersionKey "LegalTrademark" "OpenERP is a trademark of ${PUBLISHER}"
-#VIAddVersionKey "FileVersion" "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
-#VIProductVersion "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
 
 !insertmacro GetParameters
 !insertmacro GetOptions
@@ -114,18 +116,22 @@ Var HWNDPostgreSQLPort
 Var HWNDPostgreSQLUsername
 Var HWNDPostgreSQLPassword
 
+Var TextOdooDBUsername
+Var TextOdooDBPassword
+
+Var HWNDOdooDBUsername
+Var HWNDOdooDBPassword
+
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.8-1-windows.exe"
-!define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
-!define MUI_ICON "${PIXMAPS_PATH}\openerp-icon.ico"
+!define MUI_ICON "${PIXMAPS_PATH}\odoo-icon.ico"
 
-!define MUI_WELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\openerp-intro.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\openerp-intro.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\odoo-intro.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\odoo-intro.bmp"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "${PIXMAPS_PATH}\openerp-slogan.bmp"
+!define MUI_HEADERIMAGE_BITMAP "${PIXMAPS_PATH}\odoo-slogan.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 
@@ -135,15 +141,16 @@ Var HWNDPostgreSQLPassword
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ComponentLeave
 !insertmacro MUI_PAGE_COMPONENTS
 Page Custom ShowPostgreSQL LeavePostgreSQL
+Page Custom ShowOdooDB LeaveOdooDB
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dir_leave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_CHECKED
 !define MUI_FINISHPAGE_RUN_TEXT "$(DESC_FinishPageText)"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
-!define MUI_FINISHPAGE_LINK $(DESC_FinishPage_Link) 
+!define MUI_FINISHPAGE_LINK $(DESC_FinishPage_Link)
 !define MUI_FINISHPAGE_LINK_LOCATION "https://www.odoo.com/page/contactus"
 !insertmacro MUI_PAGE_FINISH
 
@@ -157,7 +164,7 @@ Page Custom ShowPostgreSQL LeavePostgreSQL
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ; English
-LangString DESC_OpenERP_Server ${LANG_ENGLISH} "Install the Odoo Server with all the Odoo standard modules."
+LangString DESC_Odoo_Server ${LANG_ENGLISH} "Install the Odoo Server with all the Odoo standard modules."
 LangString DESC_PostgreSQL ${LANG_ENGLISH} "Install the PostgreSQL RDBMS used by Odoo."
 LangString DESC_FinishPage_Link ${LANG_ENGLISH} "Contact Odoo for Partnership and/or Support"
 LangString DESC_AtLeastOneComponent ${LANG_ENGLISH} "You have to choose at least one component"
@@ -171,14 +178,22 @@ LangString DESC_PostgreSQL_Hostname ${LANG_ENGLISH} "Hostname"
 LangString DESC_PostgreSQL_Port ${LANG_ENGLISH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_ENGLISH} "Username"
 LangString DESC_PostgreSQL_Password ${LANG_ENGLISH} "Password"
-LangString Profile_AllInOne ${LANG_ENGLISH} "All In One"
-LangString Profile_Server ${LANG_ENGLISH} "Server only"
-LangString TITLE_OpenERP_Server ${LANG_ENGLISH} "Odoo Server"
+LangString DESC_OdooDBSection ${LANG_ENGLISH} "Odoo PostgreSQL User"
+LangString DESC_OdooDBPage ${LANG_ENGLISH} "Configure the Odoo PostgreSQL user credentials"
+LangString DESC_OdooDB_Username ${LANG_ENGLISH} "Odoo DB Username"
+LangString DESC_OdooDB_Password ${LANG_ENGLISH} "Odoo DB Password"
+LangString WARNING_OdooDBUsernameIsEmpty ${LANG_ENGLISH} "The Odoo database username cannot be empty"
+LangString WARNING_OdooDBPasswordIsEmpty ${LANG_ENGLISH} "The Odoo database password cannot be empty"
+LangString WARNING_OdooDBUsernameInvalid ${LANG_ENGLISH} "The Odoo database username must contain only letters, digits and underscores, and start with a letter or underscore"
+LangString Profile_AllInOne ${LANG_ENGLISH} "Odoo Server And PostgreSQL Server"
+LangString Profile_Server ${LANG_ENGLISH} "Odoo Server Only"
+LangString TITLE_Odoo_Server ${LANG_ENGLISH} "Odoo Server"
 LangString TITLE_PostgreSQL ${LANG_ENGLISH} "PostgreSQL Database"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
+LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
 ; French
-LangString DESC_OpenERP_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
+LangString DESC_Odoo_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
 LangString DESC_PostgreSQL ${LANG_FRENCH} "Installation de la base de données PostgreSQL utilisée par Odoo."
 LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez Odoo pour un Partenariat et/ou du Support"
 LangString DESC_AtLeastOneComponent ${LANG_FRENCH} "Vous devez choisir au moins un composant"
@@ -192,42 +207,51 @@ LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "Hôte"
 LangString DESC_PostgreSQL_Port ${LANG_FRENCH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
-LangString Profile_AllInOne ${LANG_FRENCH} "All In One"
-LangString Profile_Server ${LANG_FRENCH} "Seulement le serveur"
-LangString TITLE_OpenERP_Server ${LANG_FRENCH} "Serveur Odoo"
+LangString DESC_OdooDBSection ${LANG_FRENCH} "Utilisateur Odoo PostgreSQL"
+LangString DESC_OdooDBPage ${LANG_FRENCH} "Configurez les identifiants de l'utilisateur Odoo pour PostgreSQL"
+LangString DESC_OdooDB_Username ${LANG_FRENCH} "Utilisateur Odoo"
+LangString DESC_OdooDB_Password ${LANG_FRENCH} "Mot de passe Odoo"
+LangString WARNING_OdooDBUsernameIsEmpty ${LANG_FRENCH} "Le nom d'utilisateur Odoo ne peut pas être vide"
+LangString WARNING_OdooDBPasswordIsEmpty ${LANG_FRENCH} "Le mot de passe Odoo ne peut pas être vide"
+LangString WARNING_OdooDBUsernameInvalid ${LANG_FRENCH} "Le nom d'utilisateur Odoo ne peut contenir que des lettres, chiffres et underscores, et doit commencer par une lettre ou un underscore"
+LangString Profile_AllInOne ${LANG_FRENCH} "Serveur Odoo Et Serveur PostgreSQL"
+LangString Profile_Server ${LANG_FRENCH} "Seulement Le Serveur Odoo"
+LangString TITLE_Odoo_Server ${LANG_FRENCH} "Serveur Odoo"
 LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de données PostgreSQL"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
+LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
+InstType /NOCUSTOM
 InstType $(Profile_AllInOne)
 InstType $(Profile_Server)
 
-Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
+Section $(TITLE_Odoo_Server) SectionOdoo_Server
     SectionIn 1 2
 
-    # TODO: install in a temp dir before
-    
     # Installing winpython
     SetOutPath "$INSTDIR\python"
-    File /r /x "__pycache__" "..\..\..\WinPython\python-3.6.2\*"
+    File /r /x "__pycache__" "${TOOLSDIR}\WinPy64\python-${PYTHONVERSION}.amd64\*"
 
     SetOutPath "$INSTDIR\nssm"
-    File /r /x "src" "..\..\..\nssm-2.24\*"
+    File /r /x "src" "${TOOLSDIR}\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
+    File /r /x "wkhtmltopdf" /x "enterprise" "${TOOLSDIR}\server\*"
+
+    SetOutPath "$INSTDIR\vcredist"
+    File /r "${TOOLSDIR}\vcredist\*.exe"
 
     # Install Visual C redistribuable files
     DetailPrint "Installing Visual C++ redistributable files"
-    nsExec::Exec '"$INSTDIR\service\vcredist\vcredist_x86.exe" /q'
+    nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
-    File /r "${STATIC_PATH}\wkhtmltopdf\*"
-    File /r "${STATIC_PATH}\less\*"
+    File /r "${TOOLSDIR}\wkhtmltopdf\*"
 
-# If there is a previous install of the OpenERP Server, keep the login/password from the config file
+    # If there is a previous install of the Odoo Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_user" $TextPostgreSQLUsername
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_password" $TextPostgreSQLPassword
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_user" $TextOdooDBUsername
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_password" $TextOdooDBPassword
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_port" $TextPostgreSQLPort
     # Fix the addons path
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "addons_path" "$INSTDIR\server\odoo\addons"
@@ -239,25 +263,31 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
         WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
+    # Productivity Apps
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "default_productivity_apps" "True"
     DetailPrint "Installing Windows service"
-    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set AppDirectory "$\"$INSTDIR\server$\""'
-    
-    nsExec::Exec "net stop ${SERVICENAME}"
-    sleep 2
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init -c "$INSTDIR\server\odoo.conf" --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
 
-    nsExec::Exec "net start ${SERVICENAME}"
-    sleep 2
-
+    Call RestartOdooService
 SectionEnd
-    
+
 Section $(TITLE_PostgreSQL) SectionPostgreSQL
-    SectionIn 1 2
+    SectionIn 1
     SetOutPath '$TEMP'
+    VAR /GLOBAL postgresql_exe_filename
+    VAR /GLOBAL postgresql_url
+
+    StrCpy $postgresql_exe_filename "postgresql-16.14-1-windows-x64.exe"
+
+    StrCpy $postgresql_url "https://get.enterprisedb.com/postgresql/$postgresql_exe_filename"
     nsExec::Exec 'net user openpgsvc /delete'
 
-    File ${POSTGRESQL_EXE}
+    DetailPrint "Downloading PostgreSQl"
+    NScurl::http get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /PAGE /END
+    pop $0
 
     ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ActiveComputerName" "ComputerName"
     StrCmp $0 "" win9x
@@ -266,7 +296,8 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ComputerName" "ComputerName"
     done:
     Rmdir /r "$INSTDIR\PostgreSQL"
-    ExecWait '"$TEMP\${POSTGRESQL_EXE_FILENAME}" \
+    DetailPrint "Installing PostgreSQL"
+    ExecWait '"$TEMP\$postgresql_exe_filename" \
         --mode unattended \
         --prefix "$INSTDIR\PostgreSQL" \
         --datadir "$INSTDIR\PostgreSQL\data" \
@@ -274,6 +305,19 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         --serviceaccount "openpgsvc" --servicepassword "0p3npgsvcPWD" \
         --superaccount "$TextPostgreSQLUsername" --superpassword "$TextPostgreSQLPassword" \
         --serverport $TextPostgreSQLPort'
+
+    DetailPrint "Creating Odoo database user with CREATEDB privilege"
+    ${WordReplace} $TextOdooDBPassword "'" "''" "+" $R0
+    System::Call 'Kernel32::SetEnvironmentVariableW(w "PGPASSWORD", w "$TextPostgreSQLPassword")'
+    nsExec::ExecToStack `"$INSTDIR\PostgreSQL\bin\psql.exe" -w -U "$TextPostgreSQLUsername" -h "$TextPostgreSQLHostname" -p $TextPostgreSQLPort -d postgres -c "CREATE ROLE $TextOdooDBUsername WITH CREATEDB NOSUPERUSER NOCREATEROLE LOGIN PASSWORD '$R0'"`
+    Pop $R1
+    Pop $R2
+    System::Call 'Kernel32::SetEnvironmentVariableW(w "PGPASSWORD", w "")'
+    ${If} $R1 != 0
+        DetailPrint "Failed to create Odoo database user (psql exit code $R1)"
+    ${Else}
+        DetailPrint "Odoo database user created successfully"
+    ${EndIf}
 SectionEnd
 
 Section -Post
@@ -282,9 +326,6 @@ Section -Post
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "${DISPLAY_NAME}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${MAJOR_VERSION}.${MINOR_VERSION}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Publisher" "${PUBLISHER}"
-;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "Version" "${VERSION}"
-;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}.${MINOR_VERSION}"
-;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${REVISION_VERSION}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@odoo.com"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "https://www.odoo.com"
@@ -295,11 +336,12 @@ Section -Post
 SectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SectionOpenERP_Server} $(DESC_OpenERP_Server)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SectionOdoo_Server} $(DESC_Odoo_Server)
     !insertmacro MUI_DESCRIPTION_TEXT ${SectionPostgreSQL} $(DESC_PostgreSQL)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
+    SetRegView 64
     # Check if the server is installed
     !insertmacro IfKeyExists "HKLM" "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     Pop $R0
@@ -312,15 +354,25 @@ Section "Uninstall"
 
     Rmdir /r "$INSTDIR\server"
     Rmdir /r "$INSTDIR\thirdparty"
+    Rmdir /r "$INSTDIR\python"
+    Rmdir /r "$INSTDIR\nssm"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 
 Function .onInit
-    Push $R0
+    VAR /GLOBAL previous_install_dir
+    SetRegView 64
+    ReadRegStr $previous_install_dir HKLM "${REGISTRY_KEY}" "Install_Dir"
+    ${If} $previous_install_dir == ""
+        StrCpy $INSTDIR "$PROGRAMFILES64\Odoo ${VERSION}"
+        WriteRegStr HKLM "${REGISTRY_KEY}" "Install_dir" "$INSTDIR"
+    ${Else}
+        StrCpy $INSTDIR $previous_install_dir
+    ${EndIf}
 
+    Push $R0
     ${GetParameters} $cmdLineParams
     ClearErrors
-
     Pop $R0
 
     StrCpy $Option_AllInOne 0
@@ -330,6 +382,9 @@ Function .onInit
     StrCpy $TextPostgreSQLPort ${DEFAULT_POSTGRESQL_PORT}
     StrCpy $TextPostgreSQLUsername ${DEFAULT_POSTGRESQL_USERNAME}
     StrCpy $TextPostgreSQLPassword ${DEFAULT_POSTGRESQL_PASSWORD}
+
+    StrCpy $TextOdooDBUsername ${DEFAULT_ODOO_DB_USERNAME}
+    StrCpy $TextOdooDBPassword ${DEFAULT_ODOO_DB_PASSWORD}
 
     Push $R0
     ${GetOptions} $cmdLineParams '/allinone' $R0
@@ -344,7 +399,7 @@ Function .onInit
         MessageBox MB_OK|MB_ICONINFORMATION "All In One"
 
     NoAllInOneMode:
-    
+
     !insertmacro MUI_LANGDLL_DISPLAY
 
     ClearErrors
@@ -352,9 +407,23 @@ Function .onInit
     IfErrors DoInstallPostgreSQL 0
     StrCmp $0 "" DoInstallPostgreSQL
     StrCpy $HasPostgreSQL 1
-    #SectionSetText ${SectionPostgreSQL} ""
     !insertmacro UnselectSection ${SectionPostgreSQL}
     SectionSetFlags ${SectionPostgreSQL} ${SF_RO}
+
+    EnumRegKey $R5 HKLM "SOFTWARE\PostgreSQL\Installations" 0
+    ReadRegStr $R6 HKLM "SOFTWARE\PostgreSQL\Installations\$R5" "Base Directory"
+
+    System::Call 'Kernel32::SetEnvironmentVariableW(w "PGPASSWORD", w "${DEFAULT_ODOO_DB_PASSWORD}")'
+    nsExec::ExecToStack `"$R6\bin\psql.exe" -w -U "${DEFAULT_ODOO_DB_USERNAME}" -h "${DEFAULT_POSTGRESQL_HOSTNAME}" -p ${DEFAULT_POSTGRESQL_PORT} -d postgres -tAc "SELECT 1"`
+    Pop $R7
+    Pop $R8
+    System::Call 'Kernel32::SetEnvironmentVariableW(w "PGPASSWORD", w "")'
+
+    ${If} $R7 != 0
+        StrCpy $TextOdooDBUsername "${DEFAULT_POSTGRESQL_USERNAME}"
+        StrCpy $TextOdooDBPassword "${DEFAULT_POSTGRESQL_PASSWORD}"
+    ${EndIf}
+
 
     DoInstallPostgreSQL:
 FunctionEnd
@@ -369,11 +438,9 @@ Function PostgreSQLOnBack
 FunctionEnd
 
 Function ShowPostgreSQL
-    SectionGetFlags ${SectionOpenERP_Server} $0
-    IntOp $0 $0 & ${SF_SELECTED}
-    IntCmp $0 ${SF_SELECTED} LaunchPostgreSQLConfiguration
-    Abort
-    LaunchPostgreSQLConfiguration:
+    GetCurInstType $R0
+    IntCmp $R0 1 bypassPostgresConfig
+    Intcmp $R0 2 bypassPostgresConfig
 
     nsDialogs::Create /NOUNLOAD 1018
     Pop $0
@@ -407,6 +474,7 @@ Function ShowPostgreSQL
     Pop $HWNDPostgreSQLPassword
 
     nsDialogs::Show
+    bypassPostgresConfig:
 FunctionEnd
 
 Function LeavePostgreSQL
@@ -437,20 +505,80 @@ Function LeavePostgreSQL
         MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_PasswordIsEmpty)
         Abort
     ${EndIf}
+
+FunctionEnd
+
+Function ShowOdooDB
+    GetCurInstType $R0
+    IntCmp $R0 1 bypassOdooDBConfig
+    IntCmp $R0 2 bypassOdooDBConfig
+
+    ${If} $HasPostgreSQL == 1
+        Goto bypassOdooDBConfig
+    ${EndIf}
+
+    nsDialogs::Create /NOUNLOAD 1018
+    Pop $0
+
+    ${If} $0 == error
+        Abort
+    ${EndIf}
+
+    ${NSD_CreateLabel} 0 0 100% 10u $(DESC_OdooDBPage)
+    Pop $0
+
+    ${NSD_CreateLabel} 0 45 90u 12u $(DESC_OdooDB_Username)
+    Pop $0
+    ${NSD_CreateText} 130 45 130u 12u $TextOdooDBUsername
+    Pop $HWNDOdooDBUsername
+
+    ${NSD_CreateLabel} 0 75 90u 12u $(DESC_OdooDB_Password)
+    Pop $0
+    ${NSD_CreateText} 130 75 130u 12u $TextOdooDBPassword
+    Pop $HWNDOdooDBPassword
+
+    nsDialogs::Show
+    bypassOdooDBConfig:
+FunctionEnd
+
+Function LeaveOdooDB
+    ${NSD_GetText} $HWNDOdooDBUsername $TextOdooDBUsername
+    ${NSD_GetText} $HWNDOdooDBPassword $TextOdooDBPassword
+
+    StrLen $1 $TextOdooDBUsername
+    ${If} $1 == 0
+        MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_OdooDBUsernameIsEmpty)
+        Abort
+    ${EndIf}
+
+    ${StrFilter} $TextOdooDBUsername "12" "_" "" $R0
+    ${If} $R0 != $TextOdooDBUsername
+        MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_OdooDBUsernameInvalid)
+        Abort
+    ${EndIf}
+
+    StrCpy $R1 $TextOdooDBUsername 1
+    ${StrFilter} $R1 "1" "" "" $R2
+    ${If} $R1 == $R2
+        MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_OdooDBUsernameInvalid)
+        Abort
+    ${EndIf}
+
+    StrLen $1 $TextOdooDBPassword
+    ${If} $1 == 0
+        MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_OdooDBPasswordIsEmpty)
+        Abort
+    ${EndIf}
 FunctionEnd
 
 Function ComponentLeave
-    SectionGetFlags ${SectionOpenERP_Server} $0
+    SectionGetFlags ${SectionOdoo_Server} $0
     IntOp $0 $0 & ${SF_SELECTED}
     IntCmp $0 ${SF_SELECTED} Done
 
     SectionGetFlags ${SectionPostgreSQL} $0
     IntOp $0 $0 & ${SF_SELECTED}
     IntCmp $0 ${SF_SELECTED} DontInstallPostgreSQL
-
-    ChooseAtLeastOneComponent:
-        MessageBox MB_ICONEXCLAMATION|MB_OK $(DESC_AtLeastOneComponent)
-        Abort
 
     DontInstallPostgreSQL:
         MessageBox MB_ICONEXCLAMATION|MB_OK $(DESC_CanNotInstallPostgreSQL)
@@ -460,4 +588,20 @@ FunctionEnd
 
 Function LaunchLink
     ExecShell "open" "http://localhost:8069/"
+FunctionEnd
+
+Function RestartOdooService
+    DetailPrint "Restarting Odoo Service"
+    ExecWait "net stop ${SERVICENAME}"
+    ExecWait "net start ${SERVICENAME}"
+FunctionEnd
+
+Function dir_leave
+    StrLen $0 $PROGRAMFILES64
+    StrCpy $0 $INSTDIR $0
+    StrCmp $0 $PROGRAMFILES64 continue
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION "$(UnsafeDirText)" IDYES continue IDNO aborting
+    aborting:
+        Abort
+    continue:
 FunctionEnd

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.CashMoveReceipt">
+        <div class="pos-receipt">
+            <ReceiptHeader order="props.order" />
+            <div class="pos-receipt-order-data text-center">
+                <div><t t-esc="props.date" /></div>
+            </div>
+            <div class="pos-receipt-center-align">
+                CASH
+                <t t-esc="props.translatedType.toUpperCase()" />
+            </div>
+            <div class="pt-3">
+                AMOUNT
+                <span t-esc="props.formattedAmount" class="pos-receipt-right-align" />
+            </div>
+            <div>
+                REASON
+                <span t-esc="props.reason" class="pos-receipt-right-align" />
+            </div>
+            <t t-set="company" t-value="props.order.company" />
+            <div class="d-flex gap-2 pt-3">
+                <!-- Left: Company Address -->
+                <div class="w-50 text-break text-start" style="font-size: 75%;">
+                    <div t-out="company.name"/>
+                    <div>
+                        <t t-if="company.street" t-out="company.street"/>
+                        <t t-if="company.city" t-out="', ' + company.city"/>
+                        <t t-if="company.state_id?.code" t-out="', ' + company.state_id.code"/>
+                        <t t-if="company.zip" t-out="', ' +  company.zip"/>
+                    </div>
+                </div>
+
+                <!-- Right: Contact Info -->
+                <div class="w-50 text-break text-end" style="font-size: 75%;">
+                    <div>
+                        <div t-if="company.vat" t-out="vatText"/>
+                        <div t-if="company.phone">
+                            Tel: <t t-out="company.phone"/>
+                        </div>
+                        <div t-if="company.email" t-out="company.email"/>
+                        <div t-if="company.website" t-out="company.website"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

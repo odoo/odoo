@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallDeviceSelect">
+        <select
+            t-if="!isPermissionGranted(props.kind)"
+            name="inputDevice"
+            class="form-select d-flex shadow-sm"
+            t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
+            t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+        >
+            <option value="">Permission Needed</option>
+        </select>
+        <select
+            t-else=""
+            name="inputDevice"
+            class="form-select d-flex shadow-sm"
+            t-on-change="onChangeSelectAudioInput"
+        >
+            <option t-if="!isBrowserChrome" value="">Browser Default</option>
+            <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
+                <option t-if="device.kind === props.kind" t-att-selected="isSelected(device.deviceId)" t-att-value="device.deviceId">
+                    <t t-esc="device.label || 'device ' + device_index"/>
+                </option>
+            </t>
+        </select>
+    </t>
+
+</templates>

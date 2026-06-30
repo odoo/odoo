@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ProcessStepsOption">
+    <BuilderRow label.translate="Connector">
+        <BuilderSelect>
+            <t t-foreach="connectorOptionParams" t-as="connectorOptionParam" t-key="connectorOptionParam_index">
+                <BuilderSelectItem action="'changeConnector'" id="getConnectorId(connectorOptionParam.key)" actionParam="connectorOptionParam.key"><t t-out="connectorOptionParam.param"/></BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <BuilderColorPicker
+            styleAction="'stroke'"
+            t-if="!this.isActiveItem('no_connector_opt')"
+            applyTo="'.s_process_step_connector path'"
+            action="'changeArrowColor'"
+            enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+</t>
+
+</templates>

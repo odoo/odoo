@@ -1,0 +1,202 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_pine_labs
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 09:49+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"pos_pine_labs/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "A client id issued directly to the merchant by Pine Labs."
+msgstr "Pine Labsin suoraan kauppiaalle myöntämä asiakastunnus."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "A merchant id issued directly to the merchant by Pine Labs."
+msgstr "Pine Labsin suoraan kauppiaalle myöntämä kauppiastunnus."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "A security token issued directly to the merchant by Pine Labs."
+msgstr "Pine Labsin suoraan kauppiaalle myöntämä turvakoodi."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "A store id issued directly to the merchant by Pine Labs."
+msgstr "Pine Labsin suoraan kauppiaalle myöntämä myymälätunnus."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Accepted payment modes by Pine Labs for transactions."
+msgstr "Pine Labsin hyväksymät maksutavat tapahtumia varten."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
+msgid "All"
+msgstr "Kaikki"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "Negatiivisen summan sisältäviä tapahtumia ei voida käsitellä."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__card
+msgid "Card"
+msgstr "Kortti"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Pine Labs Allowed Payment Modes"
+msgstr "Pine Labsin sallimat maksutavat"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "Pine Labs Client ID"
+msgstr "Pine Labsin asiakastunnus"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs Error"
+msgstr "Pine Labs Virhe"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "Pine Labs Merchant ID"
+msgstr "Pine Labs kauppias ID"
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"Pine Labs POS transaction cancelled. Retry again for collecting payment."
+msgstr ""
+"Pine Labs kassatapahtuma peruutettu. Yritä maksamista uudelleen myöhemmin."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "Pine Labs Security Token"
+msgstr "Pine Labs pääsytunniste"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "Pine Labs Store ID"
+msgstr "Pine Labs Kaupan ID"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Pine Labs Test Mode"
+msgstr "Pine Labsin testitila"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs get payment status request failed"
+msgstr "Pine Labs hae maksun tilan pyyntö epäonnistui"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs make payment request failed"
+msgstr "Pine Labs maksupyyntö epäonnistui"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs payment cancellation request failed"
+msgstr "Pine Labsin maksun peruutuspyyntö epäonnistui"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "PineLabs Transaction ID"
+msgstr "PineLabs -maksutapahtuman tunnus"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Kassan maksutavat"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Kassan maksut"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Reference number mismatched"
+msgstr "Viitenumero ei täsmää"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid ""
+"Required during the refund order process: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
+msgstr ""
+"Tarvitaan myyntipalautuksen yhteydessä: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Test Pine Labs transaction process."
+msgstr "Testaa Pine Labsin tapahtumaprosessia."
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"The expected error code for the Pine Labs POS status request was not "
+"included in the response."
+msgstr ""
+"Pine Labsin kassatilapyynnön odotettu virhekoodi ei sisältynyt vastaukseen."
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Tämä maksupääte on voimassa vain INR-valuutalle"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Transaction failed due to inactivity"
+msgstr "Tapahtuma epäonnistui epäaktiivisuuden vuoksi"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
+msgid "Upi"
+msgstr "Upi"
+
+#~ msgid "Pine Labs PlutusTransactionReferenceID"
+#~ msgstr "Pine Labs PlutusTransactionReferenceID"

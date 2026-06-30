@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectTaskKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <button class="btn btn-primary o-kanban-button-new" position="replace">
+            <ProjectTaskTemplateDropdown t-if="canCreate and props.showButtons"
+                projectId="props.context.default_project_id"
+                onCreate="() => this.createRecord()"
+                newButtonClasses="'btn btn-primary o-kanban-button-new'"
+                context="props.context"
+            />
+        </button>
+        <t t-component="props.Renderer" position="attributes">
+            <attribute name="hideKanbanStagesNocontent">hideKanbanStagesNocontent</attribute>
+        </t>
+    </t>
+</templates>

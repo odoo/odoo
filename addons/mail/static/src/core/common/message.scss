@@ -1,0 +1,178 @@
+.o-mail-Message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-card {
+        background-color: $o-view-background-color;
+        --border-opacity: .2;
+    }
+
+    &.o-highlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+        z-index: 2;
+    }
+
+    &.o-actionMenuMobileOpen {
+        background-color: rgba($o-action, .075);
+        outline: 1px solid rgba($o-action, .125);
+        outline-offset: -1px;
+    }
+}
+
+.o-mail-Message-date {
+    color: $text-muted;
+}
+
+.o-mail-Message-sidebar {
+    flex-basis: $o-mail-Message-sidebarWidth;
+    max-width: $o-mail-Message-sidebarWidth;
+
+    &.o-inChatWindow {
+        flex-basis: $o-mail-Message-sidebarSmallWidth;
+        max-width: $o-mail-Message-sidebarSmallWidth;
+    }
+}
+
+.o-mail-Message-avatarContainer {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
+
+    &.o-inChatWindow {
+        width: $o-mail-Avatar-sizeSmall;
+        height: $o-mail-Avatar-sizeSmall;
+    }
+}
+
+.o-mail-Message-body {
+
+    &:not(.o-note) {
+        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+        padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+
+        .o-mail-Message.o-editing & {
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
+        }
+    }
+
+    & > p:last-child, .o-mail-Message-richBody > p:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+    // warning table. If detected, we prevent the issue by removing flotation.
+    table[align="left"][width="100%"] {
+        float: none;
+    }
+}
+
+.o-mail-Message-bubble {
+    background-color: var(--o-message-bubble-bg) !important;
+    border-color: var(--o-message-bubble-border-color) !important;
+
+    &.o-muted {
+        background-color: $o-view-background-color !important;
+    }
+}
+
+.o-mail-Message-bubbleTail {
+    width: 6px;
+    height: 12px;
+    z-index: 1;
+    top: 0;
+
+    .o-mail-Message-bubbleTailBg {
+        color: var(--o-message-bubble-bg);
+    }
+    .o-mail-Message-bubbleTailBorder {
+        color: var(--o-message-bubble-border-color);
+    }
+}
+
+.o-mail-Message-bubble, .o-mail-Message-bubbleTail {
+    $_bubble_colors_map: (
+        'o-blue': $info,
+        'o-green': $success,
+        'o-orange': $warning,
+    );
+
+    @each $_type, $_color in $_bubble_colors_map {
+        &.#{$_type} {
+            $_border-base: mix($_color, $body-color, 75%);
+            --o-message-bubble-bg: #{mix($o-view-background-color, $_color, 90%)};
+            --o-message-bubble-border-color: #{mix($o-view-background-color, $_border-base, 80%)};
+            --o-message-bubble-color-base: #{$_color};
+        }
+    }
+}
+
+.o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
+    flex-direction: row-reverse;
+
+    .o-mail-Message-core, .o-mail-Message-textContent {
+        flex-direction: row-reverse;
+    }
+    .o-mail-Message-header {
+        justify-content: flex-end;
+    }
+    .o-mail-Message-author {
+        display: none;
+    }
+}
+
+.o-mail-Message-expandBtn {
+    i {
+        opacity: #{$o-opacity-muted};
+    }
+
+    &:hover, &.focus, &.show {
+        i {
+            opacity: 100%;
+        }
+    }
+}
+
+.o-mail-Message-actions {
+    --o-mail-ActionList-Button-opacity: .35;
+    --o-mail-ActionList-Button-opacity--hover: 1;
+    --o-mail-ActionList-Button-color--hover: var(--mail-Message-actionIconHoveredColor, black);
+
+    .btn-danger, .btn-success {
+        --o-mail-ActionList-Button-opacity: .5;
+    }
+
+    i {
+        font-size: 1rem;
+    }
+
+    .o-mail-Message.o-isMobileOS & i.oi-ellipsis-v {
+        opacity: 15%;
+    }
+}
+
+.o-mail-Message-moreMenu {
+    z-index: $o-mail-NavigableList-zIndex;
+}
+
+.o-mail-Message-pendingProgress {
+    animation: o-mail-message-pendingProgress-animation 0s ease-in 0.5s forwards;
+    visibility: hidden;
+}
+
+@keyframes o-mail-message-pendingProgress-animation {
+    to {
+        visibility: visible;
+    }
+}
+
+.o-mail-Message-searchHighlight {
+    background: rgba($warning, 0.75);
+}
+
+.o-mail-Message-starred {
+    color: $o-main-favorite-color;
+    filter: drop-shadow(1px 1px 0px #000000b0);
+}
+
+.o-mail-Message-translated {
+    color: $o-enterprise-action-color;
+}

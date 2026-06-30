@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FooterCopyrightOption">
+    <BuilderRow label.translate="Colors">
+        <BuilderColorPicker
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'copyright-custom',
+                gradientColor: 'copyright-gradient',
+                combinationColor: 'copyright',
+                nullValue: 'NULL',
+            }"/>
+    </BuilderRow>
+    <t t-if="this.languages.length > 1">
+        <BuilderRow label.translate="Language Selector">
+            <BuilderSelect id="'footer_language_selector_opt'" preview="false" action="'websiteConfig'">
+                <BuilderSelectItem id="'language_selector_none_opt'" actionParam="{ views: [] }">None</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{ views: ['portal.footer_language_selector'] }">Dropdown</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{ views: ['portal.footer_language_selector', 'website.footer_language_selector_inline'] }">Inline</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="!isActiveItem('language_selector_none_opt')" level="1" label.translate="Label">
+            <BuilderSelect id="'footer_language_selector_label_opt'" preview="false" action="'websiteConfig'">
+                <BuilderSelectItem actionParam="{ views: [] }">Text</BuilderSelectItem>
+                <BuilderSelectItem
+                        actionParam="{ views: ['website.footer_language_selector_flag', 'website.footer_language_selector_no_text'] }">
+                    Flag
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                        actionParam="{ views: ['website.footer_language_selector_flag'] }">
+                    Flag and Text
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                        actionParam="{ views: ['website.footer_language_selector_code', 'website.footer_language_selector_no_text'] }">
+                    Code
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                        actionParam="{
+                            views: [
+                                'website.footer_language_selector_flag',
+                                'website.footer_language_selector_code',
+                                'website.footer_language_selector_no_text',
+                            ]
+                        }">
+                    Flag and Code
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

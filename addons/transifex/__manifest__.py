@@ -5,7 +5,7 @@
     'name': 'Transifex integration',
     'version': '1.0',
     'summary': 'Add a link to edit a translation in Transifex',
-    'category': 'Extra Tools',
+    'category': 'Hidden/Tools',
     'description':
     """
 Transifex integration
@@ -13,7 +13,7 @@ Transifex integration
 This module will add a link to the Transifex project in the translation view.
 The purpose of this module is to speed up translations of the main modules.
 
-To work, Odoo uses Transifex configuration files `.tx/config` to detec the
+To work, Odoo uses Transifex configuration files `.tx/config` to detect the
 project source. Custom modules will not be translated (as not published on
 the main Transifex project).
 
@@ -22,7 +22,17 @@ project.
         """,
     'data': [
         'data/transifex_data.xml',
-        'data/ir_translation_view.xml',
+        'views/code_translation_views.xml',
+        'security/ir.model.access.csv'
     ],
-    'depends': ['base'],
+    'assets': {
+        'web.assets_backend': [
+            'transifex/static/src/views/fields/translation_dialog.xml',
+            'transifex/static/src/views/*.js',
+            'transifex/static/src/views/*.xml',
+        ],
+    },
+    'depends': ['base', 'web'],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

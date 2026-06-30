@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="zm_tax_report" model="account.report">
+        <field name="name">VAT Return</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.zm"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="zm_tax_report_no_vat" model="account.report.column">
+                <field name="name">a. VAT Exclusive Value</field>
+                <field name="expression_label">no_vat</field>
+            </record>
+            <record id="zm_tax_report_vat" model="account.report.column">
+                <field name="name">b. VAT</field>
+                <field name="expression_label">vat</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="zm_tax_report_title_sales" model="account.report.line">
+                <field name="name">Sales</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="zm_tax_report_line_08" model="account.report.line">
+                        <field name="name">8 - Standard rated local sales</field>
+                        <field name="code">zm_vat_08</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_08_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_08_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_08_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_08_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_09" model="account.report.line">
+                        <field name="name">9 - Local sales taxed at minimum taxable value (MTV)</field>
+                        <field name="code">zm_vat_09</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_09_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_09_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_09_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_09_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_10" model="account.report.line">
+                        <field name="name">10 - Disposal of capital assets</field>
+                        <field name="code">zm_vat_10</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_10_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_10_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_10_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_10_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_11" model="account.report.line">
+                        <field name="name">11 - Total standard Rated Outputs</field>
+                        <field name="code">zm_vat_11</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_11_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_08.no_vat + zm_vat_09.no_vat + zm_vat_10.no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_11_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_08.vat + zm_vat_09.vat + zm_vat_10.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_12" model="account.report.line">
+                        <field name="name">12 - Export of standard rated goods and services</field>
+                        <field name="code">zm_vat_12</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_12_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_12_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_13" model="account.report.line">
+                        <field name="name">13 - Export of zero-rated goods and services</field>
+                        <field name="code">zm_vat_13</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_13_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_13_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_14" model="account.report.line">
+                        <field name="name">14 - Other zero-rated outputs (e.g. supplies to donor funded projects or supplies to diplomatic missions etc.)</field>
+                        <field name="code">zm_vat_14</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_14_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_14_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_15" model="account.report.line">
+                        <field name="name">15 - Total zero-Rated Outputs</field>
+                        <field name="code">zm_vat_15</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_15_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_12.no_vat + zm_vat_13.no_vat + zm_vat_14.no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_16" model="account.report.line">
+                        <field name="name">16 - Total taxable sales</field>
+                        <field name="code">zm_vat_16</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_16_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_11.no_vat + zm_vat_15.no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_17" model="account.report.line">
+                        <field name="name">17 - Imported services (Reverse VAT)</field>
+                        <field name="code">zm_vat_17</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_17_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_17_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_17_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_17_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_18" model="account.report.line">
+                        <field name="name">18 - Total tax due on outputs</field>
+                        <field name="code">zm_vat_18</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_18_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_11.vat + zm_vat_17.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_19" model="account.report.line">
+                        <field name="name">19 - Local exempt sales</field>
+                        <field name="code">zm_vat_19</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_19_novat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_19_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_20" model="account.report.line">
+                        <field name="name">20 - Export of exempt goods and services</field>
+                        <field name="code">zm_vat_20</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_20_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_20_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_21" model="account.report.line">
+                        <field name="name">21 - Total exempt sales</field>
+                        <field name="code">zm_vat_21</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_21_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_19.no_vat + zm_vat_20.no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_22" model="account.report.line">
+                        <field name="name">22 - Total sales</field>
+                        <field name="code">zm_vat_22</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_22_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_16.no_vat + zm_vat_21.no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="zm_tax_report_title_purchases" model="account.report.line">
+                <field name="name">Purchases</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="zm_tax_report_line_24" model="account.report.line">
+                        <field name="name">24 - Standard rated local purchases and allowable administrative expenses taxed at normal taxable value</field>
+                        <field name="code">zm_vat_24</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_24_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_24_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_24_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_24_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_25" model="account.report.line">
+                        <field name="name">25 - Local purchases taxed at minimum taxable value (MTV)</field>
+                        <field name="code">zm_vat_25</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_25_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_25_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_25_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_25_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_26" model="account.report.line">
+                        <field name="name">26 - Zero rated local purchases</field>
+                        <field name="code">zm_vat_26</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_26_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_26_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_27" model="account.report.line">
+                        <field name="name">27 - Standard rated imports</field>
+                        <field name="code">zm_vat_27</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_27_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_27_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_27_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_27_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_28" model="account.report.line">
+                        <field name="name">28 - Zero-rated imports</field>
+                        <field name="code">zm_vat_28</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_28_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_28_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_29" model="account.report.line">
+                        <field name="name">29 - Standard rated capital expenditure</field>
+                        <field name="code">zm_vat_29</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_29_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_29_no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_29_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_29_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_30" model="account.report.line">
+                        <field name="name">30 - Total taxable inputs</field>
+                        <field name="code">zm_vat_30</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_30_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_24.no_vat + zm_vat_25.no_vat + zm_vat_26.no_vat + zm_vat_27.no_vat + zm_vat_28.no_vat + zm_vat_29.no_vat</field>
+                            </record>
+                            <record id="zm_tax_report_line_30_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_24.vat + zm_vat_25.vat + zm_vat_27.vat + zm_vat_29.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_31" model="account.report.line">
+                        <field name="name">31 - Exempt local purchases</field>
+                        <field name="code">zm_vat_31</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_31_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_31_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_32" model="account.report.line">
+                        <field name="name">32 - Exempt imports</field>
+                        <field name="code">zm_vat_32</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_32_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_32_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_33" model="account.report.line">
+                        <field name="name">33 - Non-deductible purchases</field>
+                        <field name="code">zm_vat_33</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_33_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_33_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_34" model="account.report.line">
+                        <field name="name">34 - Purchases from unregistered suppliers</field>
+                        <field name="code">zm_vat_34</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_34_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">zm_vat_34_no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_35" model="account.report.line">
+                        <field name="name">35 - Total purchases</field>
+                        <field name="code">zm_vat_35</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_35_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_30.no_vat + zm_vat_31.no_vat + zm_vat_32.no_vat + zm_vat_33.no_vat + zm_vat_34.no_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="zm_tax_report_title_input_tax" model="account.report.line">
+                <field name="name">Calculation of Input Tax Allowed</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="zm_tax_report_line_37" model="account.report.line">
+                        <field name="name">37 - Input Tax directly attributable to Taxable Sales</field>
+                        <field name="code">zm_vat_37</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_37_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_38" model="account.report.line">
+                        <field name="name">38 - Input Tax directly attributable to Exempt Sales</field>
+                        <field name="code">zm_vat_38</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_38_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line39selection" model="account.report.line">
+                        <field name="name">39 - Apportionment of input tax (Please indicate whether or not to use Apportionment of input tax.)</field>
+                        <field name="code">zm_vat_39</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line39selection_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_39a" model="account.report.line">
+                        <field name="name">39a - First Method of apportionment (Please select which method of apportionment to use. Yes is 39a, No is 39b.)</field>
+                        <field name="code">zm_vat_39a</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_39a_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                            <record id="zm_tax_report_line_39a_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">( zm_vat_16.no_vat / zm_vat_22.no_vat ) * zm_vat_30.vat</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_39b" model="account.report.line">
+                        <field name="name">39b - Second Method of apportionment</field>
+                        <field name="code">zm_vat_39b</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_39b_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">( zm_vat_37.vat + ( zm_vat_30.vat - zm_vat_37.vat - zm_vat_38.no_vat ) * ( zm_vat_16.no_vat / zm_vat_22.no_vat ))</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_40" model="account.report.line">
+                        <field name="name">40 - Input Tax Credit Allowed</field>
+                        <field name="code">zm_vat_40</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_40_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(1 - zm_vat_39.vat) * zm_vat_37.vat + zm_vat_39.vat * ((zm_vat_39a.no_vat * zm_vat_39a.vat) + ((1 - zm_vat_39a.no_vat) * zm_vat_39b.vat))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="zm_tax_report_title_tax_due" model="account.report.line">
+                <field name="name">Calculation of Tax Due</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="zm_tax_report_line_41" model="account.report.line">
+                        <field name="name">41 - Total Output Tax</field>
+                        <field name="code">zm_vat_41</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_41_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_18.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_42" model="account.report.line">
+                        <field name="name">42 - Input Tax Allowed</field>
+                        <field name="code">zm_vat_42</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_42_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_27.vat + zm_vat_40.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_43" model="account.report.line">
+                        <field name="name">43 - Net VAT Payable/Claimable</field>
+                        <field name="code">zm_vat_43</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_43_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_41.vat - zm_vat_42.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_44" model="account.report.line">
+                        <field name="name">44 - Withholding VAT Credit (From Sch.-XIII)</field>
+                        <field name="code">zm_vat_44</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_44_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-zm_vat_44_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zm_tax_report_line_45" model="account.report.line">
+                        <field name="name">45 - Net VAT Payable/Claimable</field>
+                        <field name="code">zm_vat_45</field>
+                        <field name="expression_ids">
+                            <record id="zm_tax_report_line_45_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">zm_vat_43.vat + zm_vat_44.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

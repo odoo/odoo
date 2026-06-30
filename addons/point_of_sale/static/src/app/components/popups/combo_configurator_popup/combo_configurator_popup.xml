@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ComboConfiguratorPopup">
+        <Dialog t-if="this.hasMultipleChoices()" title="props.productTemplate.display_name" contentClass="'combo-configurator-popup'">
+            <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="mb-0" t-esc="combo.name"></h3>
+                    <t t-if="combo.qty_free > 0">
+                        <h5 class="text-muted ms-2 mb-0">
+                            <t t-esc="this.getSelectedComboItemsText(combo)"/>
+                            <span class="fst-italic"> included</span>
+                        </h5>
+                    </t>
+                </div>
+                <div class="product-list d-grid gap-1 gap-lg-2">
+                    <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" t-if="combo_item.product_id">
+                        <t t-set="product" t-value="combo_item.product_id"/>
+                        <label class="combo-item d-block h-100 w-100 rounded cursor-pointer transition-base"
+                            t-att-class="{ 'selected': state.qty[combo.id][combo_item.id] and combo.qty_max == 1 }"
+                            t-attf-for="combo-{{combo.id}}-combo_item-{{combo_item.id}}">
+                            <ProductCard name="product.display_name"
+                                class="'flex-column h-100'"
+                                isComboPopup="true"
+                                productId="product.id"
+                                product="product"
+                                comboExtraPrice="formattedComboPrice(combo_item)"
+                                color="product.color || product.pos_categ_ids?.at(-1)?.color"
+                                imageUrl="pos.config.show_product_images and product.getImageUrl()"
+                                onClick="() => this.onClickProduct(product, combo_item)">
+                                <t t-if="this.showQuantityButtons(combo_item)" t-set-slot="quantityButtons">
+                                    <QuantityButtons
+                                        quantity="state.qty[combo.id][combo_item.id]"
+                                        setQuantity="quantity => this.setQuantity(combo_item, quantity)"
+                                        isPlusButtonDisabled="this.totalQuantityForCombo(combo.id) == combo.qty_max"
+                                        btnClasses="'d-inline-block w-auto'"
+                                    />
+                                </t>
+                            </ProductCard>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-column flex-lg-row align-items-center gap-2 w-100">
+                    <t t-if="this.ui.isSmall">
+                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-esc="this.formatTotalPrice(props.productTemplate)"/></div>
+                    </t>
+                    <button class="confirm btn btn-primary btn-lg lh-lg w-100 w-lg-25"
+                        t-att-disabled="!this.isConfirmButtonEnabled()" t-on-click="confirm">
+                        Add to order
+                    </button>
+                    <t t-if="!this.ui.isSmall">
+                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-esc="this.formatTotalPrice(props.productTemplate)"/></div>
+                    </t>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

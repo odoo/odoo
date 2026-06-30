@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale.ComboConfiguratorDialog">
+        <Dialog
+            title="props.display_name"
+            contentClass="'sale-combo-configurator-dialog'"
+            bodyClass="'d-flex flex-column gap-4'"
+        >
+            <div t-if="unconfigurableCombos.length" class="mb-4">
+                <span class="d-inline-block mb-3 h4">
+                    Included
+                </span>
+                <div class="container">
+                    <div
+                        t-foreach="unconfigurableCombos"
+                        t-as="combo"
+                        t-key="combo.id"
+                        class="row mb-3"
+                    >
+                        <t t-set="product" t-value="combo.combo_items[0].product"/>
+                        <div class="col-2 p-0">
+                            <img
+                                t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                                alt="Product Image"
+                                role="img"
+                                class="img-thumbnail rounded"
+                            />
+                        </div>
+                        <div
+                            name="preselected_product_name"
+                            class="col d-flex justify-content-center text-break flex-column"
+                        >
+                            <span
+                                name="preselected_product_title"
+                                t-out="product.display_name"
+                                class="h5"
+                            />
+                            <div
+                                t-if="product.description"
+                                t-out="product.description"
+                                class="text-muted small text-truncate"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-foreach="configurableCombos" t-as="combo" t-key="combo.id">
+                <span
+                    name="sale_combo_configurator_title"
+                    t-attf-class="d-inline-block mb-3 h4 {{combo_index !== 0? 'mt-4' : ''}}"
+                    t-out="combo.name"
+                />
+                <div class="row row-cols-1 row-cols-md-3 g-3">
+                    <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
+                        <ProductCard
+                            product="getSelectedOrProvidedComboItem(combo.id, comboItem).product"
+                            extraPrice="comboItem.extra_price"
+                            onClick="() => this.selectComboItem(combo.id, comboItem)"
+                            isSelected="state.selectedComboItems.get(combo.id)?.id === comboItem.id"
+                            isConfigurable="comboItem.is_configurable"
+                        />
+                    </t>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-column-reverse flex-lg-row gap-3 w-100">
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <button
+                            name="sale_combo_configurator_confirm_button"
+                            class="btn btn-primary w-100 w-lg-auto"
+                            t-att-disabled="!areAllCombosSelected || state.isLoading"
+                            t-on-click="confirm"
+                        >
+                            Add to order
+                        </button>
+                        <button
+                            name="sale_combo_configurator_cancel_button"
+                            class="btn btn-secondary w-100 w-lg-auto"
+                            t-on-click="cancel"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="d-flex gap-3 align-items-center">
+                        <div t-if="props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">
+                            <QuantityButtons
+                                quantity="state.quantity"
+                                setQuantity="quantity => this.setQuantity(quantity)"
+                                isMinusButtonDisabled="state.quantity === 1"
+                                btnClasses="'d-inline-block w-auto'"
+                            />
+                        </div>
+                        <div t-if="props.options?.showPrice ?? true" class="w-100 w-md-auto">
+                            <span
+                                name="sale_combo_configurator_total"
+                                class="h6 mb-0"
+                                t-out="totalMessage"
+                            />
+                            <span
+                                t-if="this.props.price_info"
+                                t-out="this.props.price_info"
+                                class="text-muted"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

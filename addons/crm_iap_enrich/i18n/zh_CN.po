@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_iap_enrich
+#
+# Translators:
+# Martin Trigaux, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 15:21+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/crm_iap_enrich/zh_Hans/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span>基于电子邮件地址或电子邮件地址找不到公司数据是电子邮件提供商之一。没有"
+"信用消耗。</span>"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr "<span>因为电子邮件地址看起来无效，所以无法进行填充。</span>"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "允许手动丰富"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "An error occurred during lead enrichment"
+msgstr "线索丰富过程中发生错误"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM：丰富线索 (IAP)"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: crm_iap_enrich
+#: model:ir.model,website_form_label:crm_iap_enrich.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "创建商机"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "IAP付费丰富线索"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich lead with company data"
+msgstr "用公司数据充实线索"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich opportunity with company data"
+msgstr "用公司数据丰富机会"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "丰富结束"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_crm_lead
+msgid "Lead"
+msgstr "线索"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment (based on email address)"
+msgstr "丰富的线索（基于电子邮件地址）"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Lead enriched based on email address"
+msgstr "基于电子邮件地址的丰富线索"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Not enough credits for Lead Enrichment"
+msgstr "没有足够的积分用于铅富集"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "The leads/opportunities have successfully been enriched"
+msgstr "线索/机会已成功丰富"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on "
+"this lead."
+msgstr "是否已根据此电子邮件执行基于电子邮件的IAP服务以进行线索丰富。"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "线索/商机"
+
+#~ msgid "Sent batch %s enrich requests: failed with exception %s"
+#~ msgstr "已发送批处理 %s 丰富请求：失败，出现异常%s"

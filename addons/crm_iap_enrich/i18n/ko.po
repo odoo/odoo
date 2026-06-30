@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_iap_enrich
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-17 19:01+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"crm_iap_enrich/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> 이메일 주소 또는 이메일 주소를 기반으로 하는 회사 데이터가 이메일 제공"
+"자 중 하나가 아닙니다. 크레딧이 소비되지 않았습니다. </span>"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr "<span>유효하지 않은 이메일 주소이기 때문에 보완할 수 없습니다.</span>"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "수동 강화 허용"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "An error occurred during lead enrichment"
+msgstr "영업제안을 보안하는 동안 오류가 발생했습니다."
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM : 영업제안 강화(인앱결제)"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: crm_iap_enrich
+#: model:ir.model,website_form_label:crm_iap_enrich.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "영업기회 생성"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "강화"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich lead with company data"
+msgstr "회사 데이터로 영업제안을 보완합니다."
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich opportunity with company data"
+msgstr "회사 데이터로 영업기회를 보완합니다."
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "강화 완료"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_crm_lead
+msgid "Lead"
+msgstr "리드"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment (based on email address)"
+msgstr "영업제안 보완 (이메일 주소 기반)"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Lead enriched based on email address"
+msgstr "이메일 주소를 기반으로 영업제안이 강화됨"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Not enough credits for Lead Enrichment"
+msgstr "영업제안을 보완하기 위한 크레딧이 부족합니다."
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "The leads/opportunities have successfully been enriched"
+msgstr "영업제안/영업기회가 성공적으로 보완되었습니다."
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on "
+"this lead."
+msgstr ""
+"이 영업제안에 대해 이메일 기반 영업제안 강화를 위한 IAP 서비스가 수행되었는"
+"지 여부."

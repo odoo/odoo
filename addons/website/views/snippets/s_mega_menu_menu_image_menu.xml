@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_menu_image_menu" name="Menu - Image - Menu" groups="base.group_user">
+    <section class="s_mega_menu_menu_image_menu py-4 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-4 py-2 text-center">
+                    <h4>Left Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-out="text"/>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4 py-2 text-center">
+                    <img class="img-fluid" src="/web/image/website.s_mega_menu_menu_image_menu_default_image" alt="Mega menu default image"/>
+                </div>
+                <div class="col-12 col-lg-4 py-2 text-center">
+                    <h4>Right Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-out="text"/>
+                        </t>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

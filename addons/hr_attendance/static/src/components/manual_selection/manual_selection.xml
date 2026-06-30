@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.public_kiosk_manual_selection">
+        <div class="position-absolute top-0 start-0 w-100 h-100">
+            <div class="d-flex gap-2 p-2 bg-white" style="top: 0px;">
+                    <button
+                        t-on-click="() => this.props.onClickBack()"
+                        class="o_hr_attendance_back_button btn btn-secondary rounded-pill d-flex flex-row align-items-center"
+                        t-if="this.props.displayBackButton">
+                        <i class="oi oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+                        Back
+                    </button>
+                <div class="o_control_panel_main d-flex justify-content-between align-items-lg-center flex-grow-1">
+                    <div class="o_cp_searchview d-flex input-group h-100">
+                        <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
+                            <i class="o_searchview_icon d-print-none oi oi-search m-2" aria-label="Search..." title="Search..."/>
+                            <div class="o_searchview_input_container position-relative w-100">
+                                <input t-on-input="onSearchInput" type="text" class="d-print-none border-0" style="width: 95%;" placeholder="Search..."/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-2">
+                        <Pager
+                            t-if="state.employeesData.count > state.limit"
+                            total="state.employeesData.count"
+                            offset="state.offset"
+                            limit="state.limit"
+                            onUpdate.bind="_onPagerChanged"/>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex h-100 flex-column flex-md-row bg-300">
+                <t t-if="!env.isSmall">
+                    <div class="o_hr_kiosk_sidebar ps-2 py-2 overflow-auto">
+                        <div class="list-group">
+                            <a t-on-click="() => this.onDepartmentClick()" class="list-group-item py-3 list-group-item-action text-start">
+                                All
+                            </a>
+                            <t t-foreach="this.props.departments" t-as="dep" t-key="dep.id">
+                                <a t-on-click="() => this.onDepartmentClick(dep.id)" class="list-group-item py-3 list-group-item-action d-flex justify-content-between align-items-center">
+                                    <span class="text-truncate"><t t-esc="dep.name"/></span>
+                                    <small class="badge bg-secondary rounded-pill ms-3"><t t-esc="dep.count"/></small>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <Dropdown>
+                        <button class="btn btn-light m-2 me-auto align-self-start">
+                            <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-esc="departmentName"/></span>
+                            <i class="fa fa-caret-down ms-2"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <a t-on-click="() => this.onDepartmentClick()" class="d-flex text-start text-reset p-3">
+                                All
+                            </a>
+                            <DropdownItem
+                                t-foreach="this.props.departments"
+                                t-as="dep"
+                                t-key="dep.id"
+                                class="'py-3 d-flex justify-content-between align-items-center'"
+                                onSelected="() => this.onDepartmentClick(dep.id)">
+                                <span class="text-truncate"><t t-esc="dep.name"/></span>
+                                <small class="badge bg-secondary rounded-pill ms-3"><t t-esc="dep.count"/></small>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </t>
+
+                <div class="o_hr_kiosk_manual_selection w-100 p-2 pt-0 pt-md-2 bg-300 overflow-auto">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4 g-2">
+                        <t t-foreach="this.state.employeesData.records" t-as="employee" t-key="employee.id">
+                            <div t-on-click="() => this.props.onSelectEmployee(employee.id)" class="col">
+                                <div class="card d-flex flex-column align-items-center h-100 p-2 pt-1">
+                                    <div class="small ms-auto">
+                                        <t t-if="employee.status == 'checked_in'">
+                                            <span class="text-success">
+                                                <t t-if="employee.mode == 'kiosk'">On site</t>
+                                                <t t-else="">Online</t>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-danger">Absent</span>
+                                        </t>
+                                    </div>
+                                    <img class="rounded-circle" alt="Employee Avatar" loading="lazy" t-attf-src="{{employee.avatar}}"/>
+                                    <div class="d-flex flex-column align-items-center mt-2">
+                                        <h6 class="mb-0" t-esc="employee.display_name"/>
+                                        <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-esc="employee.job_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

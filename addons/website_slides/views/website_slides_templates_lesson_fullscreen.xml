@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<!-- Slide template for the fullscreen mode -->
+<template id="slide_fullscreen" name="Fullscreen">
+    <t t-set="head">
+        <link rel="canonical" t-att-href="slide.website_absolute_url" />
+    </t>
+    <t t-call="website.layout">
+        <div class="o_wslides_fs_main d-flex flex-column"
+            t-att-data-channel-id="slide.channel_id.id"
+            t-att-data-channel-enroll="slide.channel_id.enroll"
+            t-att-data-signup-allowed="signup_allowed"
+            t-att-data-session-answers="session_answers">
+
+            <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
+                <div class="d-flex">
+                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
+                        <i class="fa fa-bars"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
+                    </a>
+                    <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
+                        <t t-call="portal_rating.rating_stars_static_popup_composer">
+                            <t t-set="rating_avg" t-value="rating_avg"/>
+                            <t t-set="rating_total" t-value="rating_count"/>
+                            <t t-set="object" t-value="channel"/>
+                            <t t-set="token" t-value="channel.access_token"/>
+                            <t t-set="hash" t-value="message_post_hash"/>
+                            <t t-set="pid" t-value="message_post_pid"/>
+                            <t t-set="default_message" t-value="last_message"/>
+                            <t t-set="default_message_id" t-value="last_message_id"/>
+                            <t t-set="default_rating_value" t-value="last_rating_value"/>
+                            <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
+                            <t t-set="force_submit_url" t-value="'/mail/message/update_content' if last_message_id else False"/>
+                            <t t-set="disable_composer" t-value="not channel.can_review"/>
+                            <t t-set="_link_btn_classes" t-value="'d-inline-block text-white fw-light shadow-none'"/>
+                            <t t-set="icon" t-value="'fa fa-pencil'"/>
+                            <t t-set="_text_classes" t-value="'d-none d-md-inline-block'"/>
+                            <t t-set="hide_rating_avg" t-value="True"/>
+                            <t t-set="is_fullscreen" t-value="True"/>
+                        </t>
+                    </a>
+                </div>
+                <div class="d-flex ms-auto">
+                    <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
+                        <i class="fa fa-share-alt"/>
+                        <span class="d-none d-md-inline-block ms-2">Share</span>
+                    </a>
+                    <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
+                        <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
+                    </a>
+                    <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
+                        <i class="fa fa-home"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="o_wslides_fs_container d-flex position-relative overflow-hidden flex-grow-1">
+                <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex flex-grow-1 order-2"></div>
+
+                <div class="o_wslides_fs_sidebar o_wslides_fs_sidebar_hidden text-white flex-shrink-0 order-1">
+                    <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
+                        <div class="o_wslides_fs_sidebar_header mb-3">
+                            <a class="d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
+                                <h1 class="h5" t-field="slide.channel_id.name"/>
+                            </a>
+                            <div t-if="not is_public_user">
+                                <span t-attf-class="o_wslides_channel_completion_completed badge text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
+                                    <i class="fa fa-check"/> Completed
+                                </span>
+                                <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} w-100 align-items-center">
+                                    <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
+                                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
+                                    </div>
+                                    <div class="ms-3 small">
+                                        <span class="o_wslides_progress_percentage" t-out="slide.channel_id.completion"/> %
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="mx-n3 list-unstyled my-0 pb-2 overflow-auto">
+                            <t t-foreach="category_data" t-as="category">
+                                <t t-if="category.get('slides')">
+                                    <t t-call="website_slides.slide_fullscreen_sidebar_category">
+                                        <t t-set="slides" t-value="category['slides']"/>
+                                        <t t-set="current_slide" t-value="slide"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </ul>
+                    </div>
+                    <a href="#" class="o_wslides_fs_toggle_sidebar d-md-none bg-black-50"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+
+<template id="slide_fullscreen_sidebar_category" name="Slides category template for fullscreen view side bar">
+    <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
+    <t t-if="category" t-set="category" t-value="category.get('category')"/>
+    <li class="o_wslides_fs_sidebar_section py-2 px-3">
+        <a t-if="category" class="text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
+            <b t-field="category.name"/>
+            <div class="flex-grow-1"/>
+            <i class="fa fa-fw fa-caret-left" role="img"/>
+            <i class="fa fa-fw fa-caret-down" role="img"/>
+        </a>
+        <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
+            t-attf-id="collapse-#{category.id if category else 0}">
+            <t t-set="is_member" t-value="current_slide.channel_id.is_member"/>
+            <t t-set="can_access_channel" t-value="is_member or current_slide.channel_id.can_publish"/>
+            <t t-foreach="slides" t-as="slide">
+                <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
+                <t t-set="use_slide_icon" t-value="True"/>
+                <t t-set="can_access" t-value="can_access_channel or slide.is_preview"/>
+                <t t-set="is_member" t-value="current_slide.channel_id.is_member"/>
+                <t t-set="is_member_or_invited" t-value="is_member or current_slide.channel_id.is_member_invited"/>
+                <li t-attf-class="o_wslides_fs_sidebar_list_item d-flex py-1 #{'active' if slide.id == current_slide.id else ''}"
+                    t-att-data-id="slide.id"
+                    t-att-data-can-access="can_access"
+                    t-att-data-name="slide.name"
+                    t-att-data-category="slide.slide_category"
+                    t-att-data-video-source-type="slide.video_source_type"
+                    t-att-data-slug="slug(slide)"
+                    t-att-data-has-question="1 if slide.question_ids else 0"
+                    t-att-data-is-quiz="0"
+                    t-att-data-completed="slide_completed"
+                    t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'infographic'] else False"
+                    t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
+                    t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
+                    t-att-data-is-member="is_member"
+                    t-att-data-is-member-or-invited="is_member_or_invited"
+                    t-att-data-session-answers="session_answers"
+                    t-att-data-website-share-url="slide.website_share_url"
+                    t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)">
+                    <div class="ms-2 o_wslides_sidebar_content overflow-hidden">
+                        <a t-if="can_access" class="d-block" href="#">
+                            <div class="d-flex">
+                                <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
+                                <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2"/>
+                                <div class="o_wslides_fs_slide_name text-truncate" t-out="slide.name"/>
+                            </div>
+                        </a>
+                        <span t-else="" class="d-block" href="#">
+                            <div class="d-flex">
+                                <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
+                                <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2 text-600"/>
+                                <div class="o_wslides_fs_slide_name text-600 text-truncate" t-out="slide.name"/>
+                            </div>
+                        </span>
+                        <ul class="list-unstyled w-100 small fw-light" t-if="slide.sudo().slide_resource_ids or (slide.question_ids and not slide.slide_category =='quiz')" >
+                            <t t-if="can_access_channel" t-foreach="slide.slide_resource_ids" t-as="resource">
+                                <li class="ps-1 mb-1">
+                                    <a t-if="resource.resource_type == 'url'" class="o_wslides_fs_slide_link" t-att-href="resource.link" target="_blank">
+                                        <i class="fa fa-link me-2"/><span t-out="resource.name"/>
+                                    </a>
+                                    <a t-else="" class="o_wslides_fs_slide_link ps-0" t-att-href="resource.download_url">
+                                        <i class="fa fa-download me-2"/><span t-out="resource.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                            <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-0">
+                                <li t-if="slide.channel_id.enroll == 'public' or (slide.channel_id.enroll == 'invite' and slide.channel_id.is_member_invited)"
+                                    class="o_wslides_fs_slide_link mb-1">
+                                    <i class="fa fa-download me-1"/>
+                                    <t t-call="website_slides.join_course_link">
+                                        <t t-set="for_resources" t-value="1"/>
+                                    </t>
+                                </li>
+                            </div>
+                            <li class="o_wslides_fs_sidebar_list_item ps-0 mb-1" t-if="slide.question_ids and not slide.slide_category == 'quiz'"
+                                t-att-data-id="slide.id"
+                                t-att-data-can-access="can_access"
+                                t-att-data-video-source-type="slide.video_source_type"
+                                t-att-data-name="slide.name"
+                                t-att-data-category="slide.slide_category"
+                                t-att-data-slug="slug(slide)"
+                                t-att-data-has-question="1 if slide.question_ids else 0"
+                                t-att-data-is-quiz="1"
+                                t-att-data-completed="slide_completed"
+                                t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
+                                t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
+                                t-att-data-is-member="is_member"
+                                t-att-data-is-member-or-invited="is_member_or_invited"
+                                t-att-data-session-answers="session_answers"
+                                t-att-data-website-share-url="slide.website_share_url">
+                                <a t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name" href="#" t-att-index="i">
+                                    <i class="fa fa-flag-checkered text-warning"/>Quiz
+                                </a>
+                                <span t-else="" class="text-600">
+                                    <i class="fa fa-flag-checkered text-warning"/>Quiz
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </t>
+        </ul>
+    </li>
+</template>
+
+
+</data></odoo>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="label_product_product_view">
+            <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="product_info">
+                    <t t-set="barcode" t-value="product_info['barcode']"/>
+                    <t t-set="currency_id" t-value="pricelist.currency_id or product.currency_id"/>
+                    <t t-foreach="range(product_info['quantity'])" t-as="qty">
+                        <t t-translation="off">
+^XA^CI28
+                            <t t-set="price_unformatted" t-value="pricelist._get_product_price(product, 1)"/>
+                            <t t-set="price" t-value="currency_id.format(pricelist._get_product_price(product, 1))"/>
+                            <t t-set="reference_unit_name" t-value="product.uom_id.relative_uom_id.name"/>
+                            <t t-set="price_per_unit" t-value="currency_id.format(price_unformatted / product.uom_id.factor)"/>
+                            <t t-set="show_price_per_unit" t-value="product.uom_id.factor != 1 and reference_unit_name"/>
+
+                            <t t-if="'normal' in zpl_template" t-call="stock.normal_zpl_label" />
+                            <t t-elif="'small' in zpl_template" t-call="stock.small_zpl_label" />
+                            <t t-elif="'alternative' in zpl_template" t-call="stock.alternative_zpl_label" />
+                            <t t-elif="'jewelry' in zpl_template" t-call="stock.jewelry_zpl_label" />
+^XZ
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="normal_zpl_label">
+            <t t-if="product._name == 'product.product'">
+^FT35,40^A0N,25^FD<t t-out="f'[{product.default_code}] {product.name}' if product.default_code else product.name"/>^FS
+^FT35,65^A0N,20^FD<t t-out="product.product_template_attribute_value_ids._get_combination_name()"/>^FS
+            </t>
+            <t t-else="">
+^FT35,40^A0N,25^FD<t t-out="product_info['display_name_markup']"/>^FS
+            </t>
+            <t t-if="barcode">
+^FO35,77^BY2 ^BCN,100,Y,N,N ^FD<t t-out="barcode"/>^FS
+            </t>
+            <t t-if="price_included">
+                <t t-if="show_price_per_unit">
+^FO150,210 ^A0N,25^FH ^FD( <t t-esc="price_per_unit"/> / <t t-esc="reference_unit_name" /> )^FS
+                </t>
+^FO300,200 ^A0N,40^FH ^FD<t t-esc="price"/>^FS
+            </t>
+        </template>
+
+        <template id="alternative_zpl_label">
+            <t t-if="product._name == 'product.product'">
+^FT35,30^A0N,20^FD<t t-out="f'[{product.default_code}] {product.name}' if product.default_code else product.name"/>^FS
+^FT35,48^A0N,15^FD<t t-out="product.product_template_attribute_value_ids._get_combination_name()"/>^FS
+            </t>
+            <t t-else="">
+^FT35,30^A0N,20^FD<t t-out="product_info['display_name_markup']"/>^FS
+            </t>
+            <t t-if="barcode">
+^FO35,55^BY2 ^BCN,100,Y,N,N ^FD<t t-out="barcode"/>^FS
+            </t>
+            <t t-if="price_included">
+                <t t-if="show_price_per_unit">
+^FO160,185 ^A0N,18^FH ^FD( <t t-esc="price_per_unit"/> / <t t-esc="reference_unit_name" /> )^FS
+                </t>
+^FO290,165 ^A0N,30^FH ^FD<t t-esc="price"/>^FS
+            </t>
+        </template>
+
+        <template id="small_zpl_label">
+^FT35,30^A0N,20^FD<t t-out="product.name"/>^FS
+            <t t-if="barcode">
+^FO35,50^BY1 ^BCN,80,Y,N,N ^FD<t t-out="barcode"/>^FS
+            </t>
+            <t t-if="price_included">
+^FO150,165 ^A0N,25^FH ^FD<t t-esc="price"/>^FS
+            </t>
+        </template>
+
+        <template id="jewelry_zpl_label">
+^FT210,30^A0N,25^FD<t t-out="product.name"/>^FS
+            <t t-if="barcode">
+^FO35,5^BY1 ^BCN,80,Y,N,N ^FD<t t-out="barcode"/>^FS
+            </t>
+            <t t-if="price_included">
+^FO290,50 ^A0N,30^FH ^FD<t t-esc="price"/>^FS
+            </t>
+        </template>
+
+
+
+        <template id="label_lot_template_view">
+            <t t-foreach="docs" t-as="lot">
+                <t t-translation="off">
+^XA^CI28
+^FO100,50
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
+^FO100,100
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
+                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                        <t t-set="final_barcode" t-value="''" />
+                        <t t-if="lot['lot_record'].product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(lot['lot_record'].product_id.barcode)) + lot['lot_record'].product_id.barcode"/>
+                        <!-- TODO: must keep lot/sn as last value in barcode because we cannot pad '0's without changing lot/sn name until we can scan in FNC1. -->
+                        <t t-if="lot['lot_record'].product_id.tracking == 'lot'" name="datamatrix_lot" t-set="final_barcode" t-value="(final_barcode or '') + '10' + lot['name']"/>
+                        <t t-elif="lot['lot_record'].product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + lot['name']"/>
+^FO425,150^BY3
+^BXN,8,200
+^FD<t t-out="final_barcode"/>^FS
+                    </t>
+                    <t t-else="" name="code128_barcode">
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="lot['name']"/>^FS
+                    </t>
+^XZ
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_cover" name="Text Cover">
+    <section class="s_text_cover o_colored_level o_cc o_cc5">
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="11">
+                <div class="o_grid_item g-height-9 g-col-lg-5 col-lg-5 o_cc o_cc1" style="z-index: 1; grid-area: 2 / 3 / 11 / 8; --grid-item-padding-x: 24px; --grid-item-padding-y: 24px;">
+                    <h1 class="display-3">Sell Online. <br/>Easily.</h1>
+                    <p class="lead"><br/>Sell online easily with a user-friendly platform that streamlines all the steps, including setup, inventory management, and payment processing.<br/></p>
+                    <a t-att-href="cta_btn_href" class="btn btn-lg btn-primary"><t t-out="cta_btn_text">Contact us</t></a>
+                </div>
+                <div class="o_grid_item g-height-11 g-col-lg-6 col-lg-6 o_cc o_cc1 oe_img_bg o_not_editable d-none d-lg-block o_snippet_mobile_invisible" style="grid-area: 1 / 7 / 12 / 13; --grid-item-padding-x: 0px; --grid-item-padding-y: 0px; background-image: url('/web/image/website.s_text_cover_default_image');"/>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_text_cover_000_scss" name="Text cover 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_text_cover/000.scss</path>
+</asset>
+
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallInfiniteMirroringWarning">
+        <div class="d-flex justify-content-start align-items-start position-fixed top-0 end-0 w-100 pe-none">
+            <div class="d-flex o-discuss-CallInfiniteMirroringWarning rounded justify-content-between fs-3 w-100 m-5 px-3 py-2 pe-auto">
+                <div class="d-flex align-items-center fs-4">
+                    To avoid the infinite mirror effect, please share a specific window or tab or another monitor.
+                </div>
+                <div class="d-flex gap-2 flex-shrink-0">
+                    <button class="btn btn-link text-info fs-4" t-on-click="() => this.props.onClose({ stopScreensharing: true })">
+                        Stop sharing
+                    </button>
+                    <button class="o-discuss-CallInfiniteMirroringWarning-dismiss border-0 bg-transparent opacity-50 opacity-100-hover pe-auto" t-on-click="() => this.props.onClose()">
+                        <i class="fa fa-lg fa-times-circle"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

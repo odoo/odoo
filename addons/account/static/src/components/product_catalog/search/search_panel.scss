@@ -1,0 +1,22 @@
+.o_section_input {
+    border: none;
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid var(--primary);
+}
+
+.o_selected_section {
+    background-color: var(--list-group-active-bg);
+
+    .o_section_name {
+        font-weight: bold;
+    }
+}
+
+.o_row_handle {
+    @include o-grab-cursor;
+    color: #adb5bd;
+    &:hover {
+        color: #666666;
+    }
+}

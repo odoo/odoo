@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="loyalty_mail_view_tree_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.mail.view.list.inherit.pos.loyalty</field>
+        <field name="model">loyalty.mail</field>
+        <field name="inherit_id" ref="loyalty.loyalty_mail_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="pos_report_print_id" invisible="trigger != 'create'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    &, .o_translation_select_option {
+        --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
+    }
+
+    &[data-oe-translation-state="translated"], &[data-oe-translation-state="translated"] .o_translation_select_option,
+    &.o_dirty, &.oe_translated, .oe_translated {
+        --text-translate-highlight-color: #{rgba($o-we-translated-content-color, 0.5)};
+    }
+
+    &, .o_translation_select_option, .oe_translated, &[data-oe-field="mega_menu_content"] *, .o_translation_state_inner_span {
+        background-color: var(--text-translate-highlight-color) !important;
+    }
+}
+
+.s_website_form, .s_searchbar_input, .js_subscribe, .s_group, .s_donation_form {
+    input:not(.o_translatable_attribute) {
+        pointer-events: none;
+    }
+}
+.s_website_form {
+    textarea:not(.o_translatable_attribute):not(.o_translatable_text) {
+        pointer-events: none;
+    }
+}
+
+.s_share, .s_social_media {
+    > span[data-oe-translation-state] > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}

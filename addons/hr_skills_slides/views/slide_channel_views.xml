@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="slide_channel_view_list" model="ir.ui.view">
+        <field name="name">slide.channel.view.list</field>
+        <field name="model">slide.channel</field>
+        <field name="arch" type="xml">
+            <list string="eLearning Courses" sample="1" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="description" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="prerequisite_channel_ids" widget="many2many_tags" optional="hide"/>
+                <field name="prerequisite_of_channel_ids" widget="many2many_tags" optional="hide"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+                <field name="channel_type" string="Course Type" optional="show"/>
+                <field name="visibility" optional="hide"/>
+                <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
+                <field name="is_published" string="Published" optional="hide"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="slide_channel_training_elearning_action" model="ir.actions.act_window">
+        <field name="name">eLearning Courses</field>
+        <field name="res_model">slide.channel</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="slide_channel_view_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                <strong>Create a course</strong>
+            </p>
+            <p>
+                Your eLearning platform starts here!<br/>
+                Upload content, set up rewards, manage attendees...
+            </p>
+        </field>
+    </record>
+</odoo>

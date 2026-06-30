@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <!-- Carrier -->
 
         <record id="product_product_delivery_poste" model="product.product">
             <field name="name">The Poste</field>
-            <field name="default_code">Delivery</field>
+            <field name="default_code">Delivery_009</field>
             <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
             <field name="list_price">20.0</field>
+            <field name="invoice_policy">order</field>
         </record>
 
         <record id="delivery_carrier" model="delivery.carrier">
@@ -22,22 +22,19 @@
             <field name="product_id" ref="delivery.product_product_delivery_poste"/>
         </record>
 
-        <record id="product_product_delivery_normal" model="product.product">
-            <field name="name">Normal Delivery Charges</field>
-            <field name="default_code">Delivery</field>
-            <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_all"/>
-            <field name="sale_ok" eval="False"/>
-            <field name="purchase_ok" eval="False"/>
-            <field name="list_price">10.0</field>
+        <!-- Local Delivery -->
+        <record id="product.product_product_local_delivery" model="product.product">
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
         </record>
 
-        <record id="normal_delivery_carrier" model="delivery.carrier">
-            <field name="name">Normal Delivery Charges</field>
-            <field name="fixed_price">10.0</field>
-            <field name="sequence">3</field>
+        <record id="delivery_local_delivery" model="delivery.carrier">
+            <field name="name">Local Delivery</field>
+            <field name="fixed_price">5.0</field>
+            <field name="free_over" eval="True"/>
+            <field name="amount">50</field>
+            <field name="sequence">4</field>
             <field name="delivery_type">fixed</field>
-            <field name="product_id" ref="delivery.product_product_delivery_normal"/>
+            <field name="product_id" ref="product.product_product_local_delivery"/>
         </record>
 
         <record id="delivery_price_rule1" model="delivery.price.rule">
@@ -62,10 +59,10 @@
             <field eval="0" name="list_base_price"/>
         </record>
 
-        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
-            <field name="name">property_delivery_carrier_id</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
-            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
+        <record id="delivery.payment_provider_cod" model="payment.provider">
+            <field name="state">disabled</field>
         </record>
-    </data>
+
+        <function model="ir.default" name="set" eval="('res.partner', 'property_delivery_carrier_id', obj().env.ref('delivery.delivery_local_delivery').id)"/>
+
 </odoo>

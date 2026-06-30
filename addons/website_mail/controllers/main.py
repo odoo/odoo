@@ -1,41 +1,61 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 from odoo import http
 from odoo.http import request
 
 
 class WebsiteMail(http.Controller):
 
-    @http.route(['/website_mail/follow'], type='json', auth="public", website=True)
+    @http.route(['/website_mail/follow'], type='jsonrpc', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         # TDE FIXME: check this method with new followers
         res_id = int(id)
         is_follower = message_is_follower == 'on'
-        record = request.env[object].browse(res_id)
+        record = request.env[object].browse(res_id).exists()
+        if not record:
+            return False
+
+        record.check_access('read')
 
         # search partner_id
         if request.env.user != request.website.user_id:
             partner_ids = request.env.user.partner_id.ids
         else:
             # mail_thread method
-            partner_ids = record.sudo()._find_partner_from_emails([email], check_followers=True)
-            if not partner_ids or not partner_ids[0]:
-                name = email.split('@')[0]
-                partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
+            try:
+                self.env['ir.http']._verify_request_recaptcha_token('website_mail_follow')
+            except Exception:
+                no_create = True
+            else:
+                no_create = False
+            partner_ids = record.sudo()._partner_find_from_emails_single([email], no_create=no_create).ids
         # add or remove follower
         if is_follower:
-            record.check_access_rule('read')
             record.sudo().message_unsubscribe(partner_ids)
             return False
         else:
-            record.check_access_rule('read')
             # add partner to session
             request.session['partner_id'] = partner_ids[0]
             record.sudo().message_subscribe(partner_ids)
             return True
 
-    @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
-    def is_follower(self, model, res_id, **post):
+    @http.route(['/website_mail/is_follower'], type='jsonrpc', auth="public", website=True, readonly=True)
+    def is_follower(self, records, **post):
+        """ Given a list of `models` containing a list of res_ids, return
+            the res_ids for which the user is follower and some practical info.
+
+            :param records: dict of models containing record IDS, eg: {
+                    'res.model': [1, 2, 3..],
+                    'res.model2': [1, 2, 3..],
+                    ..
+                }
+
+            :returns: [
+                    {'is_user': True/False, 'email': 'admin@yourcompany.example.com'},
+                    {'res.model': [1, 2], 'res.model2': [1]}
+                ]
+        """
         user = request.env.user
         partner = None
         public_user = request.website.user_id
@@ -44,18 +64,18 @@ class WebsiteMail(http.Controller):
         elif request.session.get('partner_id'):
             partner = request.env['res.partner'].sudo().browse(request.session.get('partner_id'))
 
-        values = {
+        res = defaultdict(list)
+        if partner:
+            for model in records:
+                mail_followers_ids = request.env['mail.followers'].sudo()._read_group([
+                    ('res_model', '=', model),
+                    ('res_id', 'in', records[model]),
+                    ('partner_id', '=', partner.id)
+                ], ['res_id'])
+                # `_read_group` will filter out the ones not matching the domain
+                res[model].extend(res_id for [res_id] in mail_followers_ids)
+
+        return [{
             'is_user': user != public_user,
             'email': partner.email if partner else "",
-            'is_follower': False,
-            'alias_name': False,
-        }
-
-        record = request.env[model].sudo().browse(int(res_id))
-        if record and partner:
-            values['is_follower'] = bool(request.env['mail.followers'].search_count([
-                ('res_model', '=', model),
-                ('res_id', '=', record.id),
-                ('partner_id', '=', partner.id)
-            ]))
-        return values
+        }, res]

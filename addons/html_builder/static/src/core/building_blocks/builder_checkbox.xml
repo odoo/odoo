@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderCheckbox">
+    <BuilderComponent>
+        <div
+            t-att-data-action-id="info.actionId"
+            t-att-data-action-param="info.actionParam"
+            t-att-data-action-value="info.actionValue"
+            t-att-data-class-action="info.classAction"
+            t-att-data-style-action="info.styleAction"
+            t-att-data-style-action-value="info.styleActionValue"
+            t-att-data-attribute-action="info.attributeAction"
+            t-att-data-attribute-action-value="info.attributeActionValue"
+            t-on-pointerenter="() => this.onPointerEnter(props.id)"
+            t-on-pointerleave="() => this.onPointerLeave(props.id)">
+            <CheckBox className="getClassName()" onChange="onChange" value="state.isActive"/>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

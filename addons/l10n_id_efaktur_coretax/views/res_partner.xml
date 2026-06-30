@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_tax_form_view" model="ir.ui.view">
+        <field name="name">res.partner.tax.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group" position="inside">
+                <field name="l10n_id_pkp" invisible="country_id and country_code != 'ID'"/>
+                <field name="l10n_id_kode_transaksi" invisible="not l10n_id_pkp"/>
+            </xpath>
+            <page name="accounting" position="inside">
+                <group string="Indonesian Taxes"  invisible="not l10n_id_pkp">
+                    <group>
+                        <field name="l10n_id_nik"/>
+                        <field name="l10n_id_tku" placeholder="000000"/>
+                        <label for="l10n_id_buyer_document_type" string="Document Type"/>
+                        <div class="d-flex gap-2">
+                            <field name="l10n_id_buyer_document_type" />
+                            <span class="d-flex gap-2 w-10">
+                                <field name="l10n_id_buyer_document_number" invisible="l10n_id_buyer_document_type == 'TIN'" placeholder="e.g. 0123456"/>
+                            </span>
+                        </div> 
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="view_pos_note_tree" model="ir.ui.view">
+        <field name="name">Note Models</field>
+        <field name="model">pos.note</field>
+        <field name="arch" type="xml">
+            <list string="Note Models" editable="bottom">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_note_model" model="ir.actions.act_window">
+        <field name="name">Note Models</field>
+        <field name="res_model">pos.note</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_pos_note_model"
+             parent="menu_point_config_product"
+             action="action_pos_note_model"
+             sequence="11"/>
+</odoo>

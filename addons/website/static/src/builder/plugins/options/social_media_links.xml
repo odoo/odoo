@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SocialMediaLinks">
+    <div class="p-1 px-2 ps-3">
+        <table t-ref="root" class="o_social_media_list">
+            <tbody>
+                <!-- The `fabricatedKey` is a hack. I wish I could use `item.id` for the `t-key`. But the `applyTo`s are not properly updated, and thus it does not target the correct element if the domPosition changes (for example, after a deletion of an earlier item in the list). So `fabricatedKey` is a mix of `item.id` and `item.domPosition`. This causes the inner components to be re-created as soon as one of the two changes -->
+                <tr t-foreach="this.computeItems()" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
+                    <td>
+                        <button class="btn o_drag_handle ps-0">
+                            <i class="oi oi-draggable"/>
+                        </button>
+                    </td>
+                    <td width="100%">
+                        <BuilderTextInput
+                            t-if="item.media"
+                            action="'editRecordedSocialMediaLink'"
+                            actionParam="item.media"
+                            placeholder="`https://${item.media}.com/your-page`"
+                        />
+                        <BuilderTextInput
+                            t-else=""
+                            action="'editSocialMediaLink'"
+                            attributeAction="'href'"
+                            applyTo="`a:nth-of-type(${item.domPosition})`"
+                            placeholder="'https://example.com/your-page'"
+                        />
+                    </td>
+                    <td style="'min-width: 2.5em'">
+                        <BuilderCheckbox
+                            t-if="item.media"
+                            action="'toggleRecordedSocialMediaLink'"
+                            actionParam="item.domPosition ? { domPosition: item.domPosition } : { media: item.media, elementAfter: item.nextLink }"
+                        />
+                        <div t-else="" style="margin: 0 3px">
+                            <BuilderButton
+                                type="'danger'"
+                                className="'fa fa-fw fa-minus'"
+                                title.translate="Remove link"
+                                action="'deleteSocialMediaLink'"
+                                applyTo="`a:nth-of-type(${item.domPosition})`"
+                                preview="false"
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="p-1 px-2 ps-3">
+        <BuilderButton action="'addSocialMediaLink'" preview="false">Add New Social Network</BuilderButton>
+    </div>
+</t>
+
+<t t-name="website.example_social_media_link">
+    <a href="https://www.example.com" target="_blank" aria-label="example">
+        <i class="fa rounded shadow-sm o_editable_media fa-pencil"/>
+    </a>
+</t>
+
+</templates>

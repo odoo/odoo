@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_form_sale_purchase_stock" model="ir.ui.view">
+            <field name="name">purchase.order.form.sale.purchase.stock</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_stock.purchase_order_view_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="dest_address_id" position="attributes">
+                    <attribute name="groups">sales_team.group_sale_salesman</attribute>
+                    <attribute name="readonly">locked or has_sale_order</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

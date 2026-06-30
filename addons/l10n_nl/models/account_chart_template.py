@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import models
 
 
-class WizardMultiChartsAccounts(models.TransientModel):
-    _inherit = 'wizard.multi.charts.accounts'
+class AccountChartTemplate(models.AbstractModel):
+    _inherit = 'account.chart.template'
 
-    @api.multi
-    def execute(self):
-        # Add tag to 999999 account
-        res = super(WizardMultiChartsAccounts, self).execute()
-        account = self.env['account.account'].search([('code', '=', '999999'), ('company_id', '=', self.company_id.id)])
-        if account:
-            account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_12').id)]
-        return res
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code == 'nl':
+            if cash_tag := self.env.ref('l10n_nl.account_tag_25', raise_if_not_found=False):
+                company.account_journal_suspense_account_id.tag_ids += cash_tag
+                company.transfer_account_id.tag_ids += cash_tag

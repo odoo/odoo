@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="rateUSD" model="res.currency.rate">
+        <field name="company_id" ref="base.demo_company_uy"/>
+        <field name="rate">0.026</field>
+        <field name="currency_id" ref="base.USD"/>
+        <field eval="('2023-03-02')" name="name"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,425 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment_survey
+#
+# Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Miku Laitinen <miku.laitinen@gmail.com>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2022
+# Miika Nissi <miika.nissi@tawasta.fi>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Iipponen <erno@web-veistamo.fi>, 2022
+# Martin Trigaux, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 15:24+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"hr_recruitment_survey/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
+"        <t>\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Start the written interview\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hyvä <t t-out=\"object.partner_id.name or "
+"'applicant'\">[osallistujan nimi]</t><br/><br/>\n"
+"        <t>\n"
+"            Olet edennyt rekrytointiprosessin läpi ja haluaisimme,että "
+"vastaat joihinkin kysymyksiin.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Aloita kirjallinen haastattelu\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Vastaa haastatteluun <t t-out=\"format_date(object.deadline)"
+"\">[eräpäivä]</t> mennessä.<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            Toivotamme sinulle onnea! Kiitos etukäteen osallistumisestasi.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Siirry rekrytointiin"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid ""
+"<span class=\"o_stat_text\">Consult</span>\n"
+"                        <span class=\"o_stat_text\">Interview</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Konsultoi</span>\n"
+"                        <span class=\"o_stat_text\">Haastattelu</span>"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
+msgid "About you"
+msgstr "Tietoja sinusta"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid "Activities"
+msgstr "Toimenpiteet"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Lisää uusi kysely"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
+msgid "Applicant"
+msgstr "Hakija"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Applicant: Interview"
+msgstr "Hakija: Haastattelu"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
+msgid "Apply for a Job"
+msgstr "Hae työpaikkaa"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"Valitse tähän työtehtävään liittyvä haastattelulomake. Voit tulostaa ja "
+"täyttää sen kaikkien tehtävään pyrkivien hakijoiden osalta"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Display Interview Form"
+msgstr "Näytä haastattelulomake"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
+msgid "Education"
+msgstr "Koulutus"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
+msgid "From which university did or will you graduate?"
+msgstr "Mistä yliopistosta valmistuit tai valmistut?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
+msgid "Getting on with colleagues"
+msgstr "Kollegoiden kanssa toiminta"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
+msgid "Getting perks such as free parking, gym passes"
+msgstr "Etuuksien saaminen, kuten ilmainen pysäköinti, kuntosalijäsenyys"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
+msgid "Having a good pay"
+msgstr "Hyvä palkka"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
+msgid "Having a nice office environment"
+msgstr "Mukava toimistoympäristö"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
+msgid "Having freebies such as tea, coffee and stationery"
+msgstr "Ilmaistuotteet, kuten tee, kahvi ja paperitarvikkeet"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
+msgid "Important"
+msgstr "Tärkeä"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interview Form"
+msgstr "Haastattelulomake"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+msgid "Interview Form: %s"
+msgstr "Haastattelulomake: %s"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
+msgid "Interview Survey"
+msgstr "Haastattelukysely"
+
+#. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interviews"
+msgstr "Haastattelut"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
+msgid "Job Position"
+msgstr "Työtehtävä"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "Knowledge"
+msgstr "Tietokirjasto"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
+msgid "Management quality"
+msgstr "Hallinnon laatu"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
+msgid "Not important"
+msgstr "Ei tärkeä"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
+msgid "Office location"
+msgstr "Toimiston sijainti"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Participate to {{ object.survey_id.display_name }} interview"
+msgstr "Osallistu {{ object.survey_id.display_name }} haastatteluun"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid "Past work experiences"
+msgstr "Aiempi työkokemus"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"Vastaa näihin kysymyksiin, jotta rekrytoinnista vastaavat voivat käsitellä "
+"hakemuksesi etukäteen."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+"Täytä tiedot itsestäsi: kuka olet, mikä on koulutuksesi, kokemuksesi ja muut "
+"huomion arvoiset asiat.\n"
+"    Se auttaa meitä hakemuksesi hallinnoinnissa."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Please provide an applicant name."
+msgstr "Ilmoita hakijan nimi."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+"Kerro lyhyesti koulutustaustastasi: koulut, sijainti, "
+"tutkintotodistukset, ..."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr "Kerro meille hieman lisää itsestäsi: mitkä ovat pääosaamisalueesi, ..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Rekrytointi"
+
+#. module: hr_recruitment_survey
+#: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
+msgid "Recruitment Form"
+msgstr "Rekrytointilomake"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
+msgid "Responses"
+msgstr "Vastaukset"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr "Katso haastatteluraportti"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "Send Interview"
+msgstr "Lähetä haastattelu"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Send an interview"
+msgstr "Lähetä haastattelu"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+msgid "Survey"
+msgstr "Kysely"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_invite
+msgid "Survey Invitation Wizard"
+msgstr "Ohjattu kyselykutsu"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "Kyselyn tyyppi"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Käyttäjäsyöte kyselyssä"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
+msgid "Thank you for answering this survey. We will come back to you soon."
+msgstr "Kiitos kyselyyn vastaamisesta. Palaamme asiaan pian."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
+msgid "The applicant \"%s\" has finished the survey."
+msgstr "Hakija \"%s\" on lopettanut kyselyn."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
+msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
+msgstr "Kysely %(survey_link)s on lähetetty osoitteeseen %(partner_link)s"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
+msgid "Very important"
+msgstr "Erittäin tärkeä"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
+msgid "Were you referred by an employee?"
+msgstr "Onko työntekijä suosittellut sinua?"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to?"
+msgstr "Mitä tietoja ja taitoja sinulla jo on hakemaasi työhön liittyen?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
+msgid "What is important for you?"
+msgstr "Mikä on sinulle tärkeää?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
+msgid "Which country are you from?"
+msgstr "Mistä maasta olet kotoisin?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
+msgid "Working with state of the art technology"
+msgstr "Työskentely uusimman teknologian parissa"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"Voit luoda kyselyitä, joita käytetään rekrytoinnissa. Suunnittele helposti "
+"haastattelusi,\n"
+"                lähetä kutsut ja analysoi vastauksia."

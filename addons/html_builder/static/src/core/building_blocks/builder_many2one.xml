@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderMany2One">
+    <BuilderComponent>
+        <SelectMany2X
+            model="props.model"
+            fields="props.fields"
+            limit="props.limit"
+            nullText="props.nullText"
+            domain="props.domain"
+            selected="domState.selected ? [domState.selected] : []"
+            select="select.bind(this)"
+            preview="hasPreview ? preview.bind(this) : undefined"
+            revert.bind="revert"
+            create="props.createAction ? create.bind(this) : undefined"
+
+            message="domState.selected?.display_name || props.defaultMessage"
+        />
+        <button type="button"
+                t-if="domState.selected and props.allowUnselect"
+                class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
+                t-on-click="() => this.select()"
+                t-on-pointerenter="hasPreview ? () => this.preview() : () => {}"
+                t-on-pointerleave="revert"
+                t-on-focusin="hasPreview ? () => this.preview() : () => {}"
+                t-on-focusout="revert"
+                aria-label="Unselect">
+            <i class="oi oi-close" role="presentation"/>
+        </button>
+    </BuilderComponent>
+</t>
+
+</templates>

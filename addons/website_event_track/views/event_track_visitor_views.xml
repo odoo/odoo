@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="event_track_visitor_view_search" model="ir.ui.view" >
+        <field name="name">event.track.visitor.view.search</field>
+        <field name="model">event.track.visitor</field>
+        <field name="arch" type="xml">
+            <search string="Track Visitors">
+                <field name="track_id"/>
+                <field name="visitor_id"/>
+                <field name="partner_id"/>
+                <field name="is_wishlisted"/>
+                <group>
+                    <filter string="Track" name="groupby_track_id" context="{'group_by': 'track_id'}"/>
+                    <filter string="Visitor" name="groupby_visitor_id" context="{'group_by': 'visitor_id'}"/>
+                    <filter string="Customer" name="groupby_partner_id" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_track_visitor_view_form" model="ir.ui.view">
+        <field name="name">event.track.visitor.view.form</field>
+        <field name="model">event.track.visitor</field>
+        <field name="arch" type="xml">
+            <form string="Track Visitor">
+                <sheet string="Track Visitor">
+                    <group>
+                        <group>
+                            <field name="track_id"/>
+                            <field name="is_wishlisted"/>
+                        </group>
+                        <group>
+                            <field name="visitor_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_track_visitor_view_list" model="ir.ui.view">
+        <field name="name">event.track.visitor.view.list</field>
+        <field name="model">event.track.visitor</field>
+        <field name="arch" type="xml">
+            <list string="Track Visitors">
+                <field name="track_id"/>
+                <field name="visitor_id"/>
+                <field name="partner_id"/>
+                <field name="is_wishlisted"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_track_visitor_action" model="ir.actions.act_window">
+        <field name="name">Track Visitors</field>
+        <field name="res_model">event.track.visitor</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No Track Visitors yet!
+            </p><p>
+              Track Visitors store statistics on your events, including how many times tracks have been wishlisted.
+            </p><p>
+              They will be created automatically once attendees start browsing your events.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import mrp_repair
-from . import stock_traceability
+from . import repair
+from . import production
+from . import stock_move

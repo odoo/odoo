@@ -3,99 +3,1571 @@
 # * sale_timesheet
 #
 # Translators:
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-09 10:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Lao (http://www.transifex.com/odoo/odoo-9/language/lo/)\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2026-06-06 12:39+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/"
+"sale_timesheet/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_res_company
-msgid "Companies"
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_move.py:0
+#: code:addons/sale_timesheet/models/project.py:0
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Record timesheets\n"
+"                </p><p>\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    customers if required.\n"
+"                </p>\n"
+"            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    ບັນທຶກໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (Timesheets)\n"
+"                </p><p>\n"
+"                    ທ່ານສາມາດລົງທະບຽນ ແລະ ຕິດຕາມຊົ່ວໂມງເຮັດວຽກຂອງທ່ານຕາມໂຄງການໃນແຕ່ລະ"
+"ມື້.\n"
+"                    ທຸກໆເວລາທີ່ໃຊ້ເຂົ້າໃນໂຄງການຈະກາຍເປັນຕົ້ນທຶນ ແລະ ສາມາດອອກໃບເກັບເງິນຄືນໃ"
+"ຫ້ແກ່\n"
+"                    ລູກຄ້າໄດ້ ຫາກມີຄວາມຕ້ອງການ.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_hr_employee
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
+msgid " Candidate Orders"
+msgstr " ໃບສັ່ງຊື້ທີ່ເຂົ້າຂ່າຍ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
+msgid "% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit."
+msgstr ""
+"% ຂອງໃບລາຍງານຊົ່ວໂມງເຮັດວຽກທີ່ສາມາດເກັບເງິນໄດ້ ເມື່ອທຽບໃສ່ກັບຈຳນວນໃບລາຍງານຊົ່ວໂມງເຮັດວຽກທັງໝົດ"
+"ທີ່ເຊື່ອມໂຍງກັບບັນຊີວິເຄາະ (AA) ຂອງໂຄງການ, ໂດຍປັດເປັນຫົວໜ່ວຍ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "%(amount)s %(label)s will be added to the new Sales Order."
+msgstr "%(amount)s %(label)s ຈະຖືກເພີ່ມເຂົ້າໃນໃບສັ່ງຊື້ໃໝ່."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid ", for a revenue of"
+msgstr ", ສໍາລັບລາຍຮັບຂອງ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid ", leading to a"
+msgstr ", ນໍາໄປສູ່"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
+msgid "<span class=\"o_stat_text\">Invoice</span>"
+msgstr "<span class=\"o_stat_text\">ໃບເກັບເງິນ</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "<span class=\"o_stat_text\">Recorded</span>"
+msgstr "<span class=\"o_stat_text\">ບັນທຶກແລ້ວ</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
+msgid "<span class=\"o_stat_text\">Sales Order</span>"
+msgstr "<span class=\"o_stat_text\">ໃບສັ່ງຊື້</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
+msgid "<strong>Invoiced:</strong>"
+msgstr "<strong>ອອກໃບເກັບເງິນແລ້ວ:</strong>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
+msgid "<strong>Invoices:</strong>"
+msgstr "<strong>ໃບເກັບເງິນ:</strong>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
+msgid "<strong>Sales Order:</strong>"
+msgstr "<strong>ໃບສັ່ງຊື້:</strong>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
+msgid "<strong>To invoice:</strong>"
+msgstr "<strong>ເພື່ອອອກໃບເກັບເງິນ:</strong>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "<u>Profitability</u>"
+msgstr "<u>ຄວາມສາມາດໃນການສ້າງກຳໄລ</u>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "<u>Sales</u>"
+msgstr "<u>ການຂາຍ</u>"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "About us"
+msgstr "ກ່ຽວກັບພວກເຮົາ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"ອີງຕາມການກຳນົດຄ່າຜະລິດຕະພັນ, ຈຳນວນທີ່ສົ່ງມອບສາມາດຄິດໄລ່ໂດຍອັດຕະໂນມັດຜ່ານລະບົບ:\n"
+"  - ດ້ວຍຕົນເອງ (Manual): ຈຳນວນຖືກກຳນົດດ້ວຍຕົນເອງໃນແຖວລາຍການ\n"
+"  - ວິເຄາະຈາກຄ່າໃຊ້ຈ່າຍ (Analytic From expenses): ຈຳນວນແມ່ນຜົນລວມຂອງຈຳນວນຈາກຄ່າໃຊ້ຈ່າຍ"
+"ທີ່ລົງບັນຊີແລ້ວ\n"
+"  - ໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (Timesheet): ຈຳນວນແມ່ນຜົນລວມຂອງຊົ່ວໂມງທີ່ບັນທຶກໃນໜ້າວຽກທີ່ເຊື່ອມໂຍ"
+"ງກັບແຖວການຂາຍນີ້\n"
+"  - ການເຄື່ອນໄຫວສາງ (Stock Moves): ຈຳນວນແມ່ນມາຈາກການເບີກສິນຄ້າທີ່ຢືນຢັນແລ້ວ\n"
+
+#. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
+#: model:project.project,name:sale_timesheet.project_support
+msgid "After-Sales Services"
+msgstr "ການບໍລິການຫຼັງການຂາຍ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
+msgid "Allocated Hours"
+msgstr "ຊົ່ວໂມງທີ່ໄດ້ຈັດສັນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid "Amount to invoice"
+msgstr "ຈຳນວນເງິນທີ່ຈະອອກໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
+#: model:ir.model.constraint,message:sale_timesheet.constraint_project_sale_line_employee_map_uniqueness_employee
+msgid "An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again."
+msgstr ""
+"ພະນັກງານຄົນໜຶ່ງບໍ່ສາມາດຖືກເລືອກຫຼາຍກວ່າໜຶ່ງຄັ້ງໃນການຈັບຄູ່. ກະລຸນາລຶບລາຍການທີ່ຊ້ຳກັນອອກ ແລ້ວລອງໃໝ່ອີກຄັ້"
+"ງ."
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "ລາຍການວິເຄາະ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
+msgid "Analytic lines"
+msgstr "ລາຍການວິເຄາະ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
+"ໃນນາມບໍລິສັດບໍລິການມືອາຊີບຊັ້ນນຳ,\n"
+"                                ພວກເຮົາຮູ້ວ່າຄວາມສຳເລັດແມ່ນຂຶ້ນກັບ\n"
+"                                ຄວາມມຸ່ງໝັ້ນທີ່ພວກເຮົາມີໃຫ້ແກ່ການບໍລິການທີ່ດີເລີດ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "At least one line should be filled."
+msgstr "ຢ່າງໜ້ອຍໜຶ່ງລາຍການຕ້ອງໄດ້ຮັບການຕື່ມຂໍ້ມູນ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "Based on Timesheets"
+msgstr "ອີງຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__allow_billable
+msgid "Billable"
+msgstr "ສາມາດເກັບເງິນໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
+msgid "Billable Hours"
+msgstr "ຊົ່ວໂມງທີ່ເກັບເງິນໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
+msgid "Billable Percentage"
+msgstr "ເປີເຊັນທີ່ເກັບເງິນໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_type
+msgid "Billable Type"
+msgstr "ປະເພດການເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_manual
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_manual
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed Manually"
+msgstr "ເກັບເງິນດ້ວຍຕົນເອງ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed at a Fixed Price"
+msgstr "ເກັບເງິນໃນລາຄາຄົງທີ່"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_fixed
+msgid "Billed at a Fixed price"
+msgstr "ເກັບເງິນໃນລາຄາຄົງທີ່"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_milestones
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_milestones
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed on Milestones"
+msgstr "ເກັບເງິນຕາມຂັ້ນຕອນສຳເລັດ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_time
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed on Timesheets"
+msgstr "ເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Billing"
+msgstr "ການຄິດໄລ່ເງິນ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billing Type"
+msgstr "ປະເພດການເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
+msgid "By Billing Type"
+msgstr "ຕາມປະເພດການເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
+msgid "Choose the Sales Order to invoice"
+msgstr "ເລືອກໃບສັ່ງຊື້ເພື່ອອອກໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
+msgid "Commercial Entity"
+msgstr "ນິຕິບຸກຄົນທາງການຄ້າ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__commercial_partner_id
+msgid "Commercial Partner"
+msgstr "ຄູ່ຄ້າທາງການຄ້າ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__company_id
+msgid "Company"
+msgstr "ບໍລິສັດ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "ການກຳນົດຄ່າ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Configure your services"
+msgstr "ກຳນົດຄ່າການບໍລິການຂອງທ່ານ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost
+msgid "Cost"
+msgstr "ຕົ້ນທຶນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost_currency_id
+msgid "Cost Currency"
+msgstr "ສະກຸນເງິນຕົ້ນທຶນ"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+msgid "Create Invoice"
+msgstr "ສ້າງໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create Invoice from project"
+msgstr "ສ້າງໃບເກັບເງິນຈາກໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
+msgid "Create SO Line from project"
+msgstr "ສ້າງລາຍການໃບສັ່ງຊື້ຈາກໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create SO from project"
+msgstr "ສ້າງໃບສັ່ງຊື້ຈາກໂຄງການ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+msgid "Create Sales Order"
+msgstr "ສ້າງໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+msgid "Create Sales Order from Project"
+msgstr "ສ້າງໃບສັ່ງຊື້ຈາກໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+msgid "Create a Sales Order"
+msgstr "ສ້າງໃບສັ່ງຊື້ໃໝ່"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
+msgid "Created by"
+msgstr "ສ້າງໂດຍ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
+msgid "Created on"
+msgstr "ສ້າງເມື່ອ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
+msgid "Currency"
+msgstr "ສະກຸນເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__partner_id
+msgid "Customer"
+msgstr "ລູກຄ້າ"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr "ບໍລິການລູກຄ້າ (ຊົ່ວໂມງຈ່າຍລ່ວງໜ້າ)"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
+msgid "Customer Ratings"
+msgstr "ການໃຫ້ຄະແນນຂອງລູກຄ້າ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
+msgid "Customer of the sales order"
+msgstr "ລູກຄ້າຂອງໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Days Ordered,"
+msgstr "ຈຳນວນມື້ທີ່ສັ່ງ,"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Days Remaining)"
+msgstr "ຈຳນວນມື້ທີ່ເຫຼືອ)"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "Delivered"
+msgstr "ສົ່ງມອບແລ້ວ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+msgid "Discard"
+msgstr "ຍົກເລີກ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
+msgid "Display Create Order"
+msgstr "ສະແດງປຸ່ມສ້າງໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
+msgid "Display Name"
+msgstr "ຊື່ທີ່ສະແດງ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
+msgid "Draft Invoice"
+msgstr "ຮ່າງໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
+msgstr "ພະນັກງານ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
+msgid "Employee rate"
+msgstr "ອັດຕາພະນັກງານ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
+msgid "Employee that has timesheets on the project."
+msgstr "ພະນັກງານທີ່ມີໃບລາຍງານຊົ່ວໂມງເຮັດວຽກໃນໂຄງການນີ້."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
+msgid "End Date"
+msgstr "ວັນທີສິ້ນສຸດ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Fixed price services"
+msgstr "ການບໍລິການລາຄາຄົງທີ່"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Furniture Delivery (Manual)"
+msgstr "ການສົ່ງເຟີນີເຈີ (ດ້ວຍຕົນເອງ)"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"ແມ່ແບບໃບສະເໜີລາຄາທີ່ດີຈະຊ່ວຍ\n"
+"                                <strong>ເພີ່ມອັດຕາຄວາມສຳເລັດຂອງທ່ານ</strong> ຢ່າງຫຼວ"
+"ງຫຼາຍ.\n"
+"                                ພາກສ່ວນທຳອິດມັກຈະກ່ຽວກັບບໍລິສັດຂອງທ່ານ,\n"
+"                                ຜົນງານອ້າງອີງ, ວິທີການເຮັດວຽກ ຫຼື\n"
+"                                ການຮັບປະກັນ, ທີມງານຂອງທ່ານ, SLA, ເງື່ອນໄຂຕ່າງໆ, ແລະ "
+"ອື່ນໆ."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
+msgid "Has Displayed Warning Upsell"
+msgstr "ໄດ້ສະແດງຄຳເຕືອນການຂາຍເພີ່ມແລ້ວ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
+msgid "Has Multi Sol"
+msgstr "ມີຫຼາຍລາຍການໃບສັ່ງຊື້ (Multi SOL)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
+msgid "Hourly Cost"
+msgstr "ຕົ້ນທຶນຕໍ່ຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
+msgid "ID"
+msgstr "ລະຫັດ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"ຫາກທ່ານແກ້ໄຂໃບສະເໜີລາຄາຈາກໜ້າ 'ສະແດງຕົວຢ່າງ',\n"
+"                        ທ່ານຈະອັບເດດສະເພາະໃບສະເໜີລາຄານັ້ນເທົ່ານັ້ນ. ຫາກທ່ານແກ້ໄຂ\n"
+"                        ແມ່ແບບໃບສະເໜີລາຄາ (ຈາກເມນູການກຳນົດຄ່າ), ໃບສະເໜີລາຄາໃນອະນາຄົດ"
+"ທັງໝົດ\n"
+"                        ຈະໃຊ້ແມ່ແບບທີ່ຖືກແກ້ໄຂນີ້."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
+msgid "Info Invoice"
+msgstr "ຂໍ້ມູນໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/models/account.py:0
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_account_move
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Invoice"
+msgstr "ໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
+msgid "Invoice Policy"
+msgstr "ນະໂຍບາຍການອອກໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "Invoice based on timesheets (delivered quantity) on projects or tasks you'll create later on."
+msgstr ""
+"ອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (ຈຳນວນທີ່ສົ່ງມອບ) ໃນໂຄງການ ຫຼື ໜ້າວຽກທີ່ທ່ານຈະສ້າງຂຶ້ນພາ"
+"ຍຫຼັງ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "Invoice based on timesheets (delivered quantity), and create a project for the order with a task for each sales order line to track the time spent."
+msgstr ""
+"ອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (ຈຳນວນທີ່ສົ່ງມອບ), ແລະ ສ້າງໂຄງການສຳລັບການສັ່ງຊື້ທີ່ມີໜ້າວ"
+"ຽກສຳລັບແຕ່ລະລາຍການໃບສັ່ງຊື້ເພື່ອຕິດຕາມເວລາທີ່ໃຊ້."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "Invoice based on timesheets (delivered quantity), and create a task in an existing project to track the time spent."
+msgstr ""
+"ອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (ຈຳນວນທີ່ສົ່ງມອບ), ແລະ ສ້າງໜ້າວຽກໃນໂຄງການທີ່ມີຢູ່ແລ້ວເພື່"
+"ອຕິດຕາມເວລາທີ່ໃຊ້."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "Invoice based on timesheets (delivered quantity), and create an empty project for the order to track the time spent."
+msgstr ""
+"ອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ (ຈຳນວນທີ່ສົ່ງມອບ), ແລະ ສ້າງໂຄງການເປົ່າສຳລັບການສັ່ງຊື້ເພື່"
+"ອຕິດຕາມເວລາທີ່ໃຊ້."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
+msgid "Invoice created from the timesheet"
+msgstr "ໃບເກັບເງິນທີ່ສ້າງຈາກໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
+msgid "Invoice your time and material to customers"
+msgstr "ອອກໃບເກັບເງິນຄ່າເວລາ ແລະ ວັດສະດຸໃຫ້ແກ່ລູກຄ້າ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "Invoiced"
+msgstr "ອອກໃບເກັບເງິນແລ້ວ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+msgid "Invoices"
+msgstr "ໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid "Invoicing"
+msgstr "ການອອກໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
+msgid "Invoicing Timesheet Enabled"
+msgstr "ເປີດໃຊ້ງານການອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
+msgid "Is Cost Manually Changed"
+msgstr "ຕົ້ນທຶນຖືກປ່ຽນດ້ວຍຕົນເອງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
+msgid "Is Project map empty"
+msgstr "ແຜນຜັງໂຄງການວ່າງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
+msgid "Is Sales Order Item Manually Edited"
+msgstr "ລາຍການໃບສັ່ງຊື້ຖືກແກ້ໄຂດ້ວຍຕົນເອງ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move
+msgid "Journal Entry"
+msgstr "ການລົງບັນຊີປະຈຳວັນ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_line
+msgid "Journal Item"
+msgstr "ລາຍການບັນຊີ"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "ສະຖາປະນິກລະດັບເລີ່ມຕົ້ນ (ເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງ)"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr "ການປະກອບເຮືອນຄົວ (ຕາມຂັ້ນຕອນສຳເລັດ)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
+msgid "Last Updated by"
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_date
+msgid "Last Updated on"
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
+msgid "Lines"
+msgstr "ລາຍການ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+msgstr ""
+"ກຳນົດຈຳນວນເອງໃນການສັ່ງຊື້: ອອກໃບເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນເອງ, ໂດຍບໍ່ມີການສ້າງບັນຊີວິເຄາະ.\n"
+"ໃບລາຍງານຊົ່ວໂມງໃນສັນຍາ: ອອກໃບເກັບເງິນຕາມຊົ່ວໂມງທີ່ຕິດຕາມໃນໃບລາຍງານຊົ່ວໂມງທີ່ກ່ຽວຂ້ອງ.\n"
+"ສ້າງໜ້າວຽກ ແລະ ຕິດຕາມຊົ່ວໂມງ: ສ້າງໜ້າວຽກເມື່ອຢືນຢັນໃບສັ່ງຊື້ ແລະ ຕິດຕາມຊົ່ວໂມງເຮັດວຽກ."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
+msgid "Margin"
+msgstr "ສ່ວນຕ່າງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Materials"
+msgstr "ວັດສະດຸ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr "ວິທີການອັບເດດຈຳນວນທີ່ສົ່ງມອບ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Milestone services"
+msgstr "ບໍລິການຕາມຂັ້ນຕອນສຳເລັດ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "No Invoice"
+msgstr "ບໍ່ມີໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "No Sales Order"
+msgstr "ບໍ່ມີໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "No Sales Order Item"
+msgstr "ບໍ່ມີລາຍການໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
+msgid "No activities found"
+msgstr "ບໍ່ພົບກິດຈະກຳ"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No activities found. Let's start a new one!"
+msgstr "ບໍ່ພົບກິດຈະກຳ. ມາເລີ່ມຕົ້ນໃໝ່ນຳກັນ!"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
+msgid "No data yet!"
+msgstr "ຍັງບໍ່ມີຂໍ້ມູນ!"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__non_billable
+msgid "Non Billable Tasks"
+msgstr "ໜ້າວຽກທີ່ເກັບເງິນບໍ່ໄດ້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Non-Billable"
+msgstr "ເກັບເງິນບໍ່ໄດ້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_tree_inherit
+msgid "Non-billable"
+msgstr "ເກັບເງິນບໍ່ໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
+msgid "Non-billable Hours"
+msgstr "ຊົ່ວໂມງທີ່ເກັບເງິນບໍ່ໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
+msgid "Number of hours spent multiplied by the unit price per hour/day."
+msgstr "ຈຳນວນຊົ່ວໂມງທີ່ໃຊ້ ຄູນໃຫ້ກັບລາຄາຕໍ່ຫົວໜ່ວຍຕໍ່ ຊົ່ວໂມງ/ມື້."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
+msgid "Number of hours/days linked to a SOL."
+msgstr "ຈຳນວນຊົ່ວໂມງ/ມື້ ທີ່ເຊື່ອມໂຍງກັບລາຍການໃບສັ່ງຊື້ (SOL)."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__non_billable_time
+msgid "Number of hours/days not linked to a SOL."
+msgstr "ຈຳນວນຊົ່ວໂມງ/ມື້ ທີ່ບໍ່ໄດ້ເຊື່ອມໂຍງກັບລາຍການໃບສັ່ງຊື້ (SOL)."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_count
+msgid "Number of timesheets"
+msgstr "ຈຳນວນໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
+msgid "Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
+msgstr ""
+"ສະເພາະໃບລາຍງານຊົ່ວໂມງທີ່ຍັງບໍ່ໄດ້ອອກໃບເກັບເງິນ (ແລະ ກວດສອບແລ້ວ, ຖ້າມີ) ຈາກໄລຍະເວລານີ້ເທົ່ານັ້ນທີ່ຈ"
+"ະຖືກອອກໃບເກັບເງິນ. ຫາກບໍ່ໄດ້ລະບຸໄລຍະເວລາ, ໃບລາຍງານຊົ່ວໂມງທັງໝົດທີ່ຍັງບໍ່ໄດ້ອອກໃບເກັບເງິນຈະຖືກອອກໃ"
+"ບເກັບເງິນໂດຍບໍ່ແບ່ງແຍກ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Operation not supported"
+msgstr "ການດຳເນີນການບໍ່ຮອງຮັບ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
+msgid "Order Reference"
+msgstr "ການອ້າງອີງການສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Ordered,"
+msgstr "ສັ່ງແລ້ວ,"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Offer"
+msgstr "ຂໍ້ສະເໜີຂອງພວກເຮົາ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Quality"
+msgstr "ຄຸນນະພາບຂອງພວກເຮົາ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Service"
+msgstr "ການບໍລິການຂອງພວກເຮົາ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__service_upsell_threshold
+msgid "Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered."
+msgstr ""
+"ເປີເຊັນຂອງເວລາທີ່ສົ່ງມອບ ເມື່ອທຽບໃສ່ກັບຈຳນວນທີ່ຈ່າຍລ່ວງໜ້າ ເຊິ່ງຕ້ອງບັນລຸເພື່ອໃຫ້ລະບົບແຈ້ງເຕືອນໂອກາດໃນກ"
+"ານຂາຍເພີ່ມ (Upselling)."
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Price"
+msgstr "ລາຄາ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__pricing_type
+msgid "Pricing"
+msgstr "ການກຳນົດລາຄາ"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
-msgid "Product Template"
-msgstr "ແບບ​ຟອມ​ສິນ​ຄ້າ"
+msgid "Product"
+msgstr "ຜະລິດຕະພັນ"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_product
+msgid "Product Variant"
+msgstr "ລຸ້ນຜະລິດຕະພັນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
+msgid "Product of the sales order item. Must be a service invoiced based on timesheets on tasks."
+msgstr ""
+"ຜະລິດຕະພັນຂອງລາຍການໃບສັ່ງຊື້. ຕ້ອງແມ່ນການບໍລິການທີ່ອອກໃບເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງໃນໜ້າວຽກ."
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
+msgstr ""
+"ຄຸນນະພາບຜະລິດຕະພັນແມ່ນພື້ນຖານຂອງພວກເຮົາ;\n"
+"                                ພວກເຮົາສ້າງມັນດ້ວຍຄວາມເອົາໃຈໃສ່ຢ່າງຕໍ່ເນື່ອງ\n"
+"                                ຕໍ່ກັບເນື້ອຜ້າ, ປະສິດທິພາບ ແລະ ຝີມືການຜະລິດ."
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_project
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__project_id
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
-msgid "Project associated to this sale"
-msgstr ""
+#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
+msgstr "ແຖວການຂາຍໂຄງການ, ການຈັບຄູ່ພະນັກງານ"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
+msgid "Project Template"
+msgstr "ແມ່ແບບໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_update
+msgid "Project Update"
+msgstr "ການອັບເດດໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
+msgid "Project for which we are creating a sales order"
+msgstr "ໂຄງການທີ່ພວກເຮົາກຳລັງສ້າງໃບສັ່ງຊື້ໃຫ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
+msgid "Project rate"
+msgstr "ອັດຕາໂຄງການ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
+msgid "Project to make billable"
+msgstr "ໂຄງການທີ່ຈະເຮັດໃຫ້ເກັບເງິນໄດ້"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+msgid "Quotation"
+msgstr "ໃບສະເໜີລາຄາ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "Remaining"
+msgstr "ທີ່ເຫຼືອ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
+msgid "Remaining Days on SO"
+msgstr "ຈຳນວນມື້ທີ່ເຫຼືອໃນໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
+msgid "Remaining Hours Available"
+msgstr "ຊົ່ວໂມງທີ່ເຫຼືອທີ່ສາມາດໃຊ້ໄດ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
+msgid "Remaining Hours on SO"
+msgstr "ຊົ່ວໂມງທີ່ເຫຼືອໃນໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Remaining)"
+msgstr "ທີ່ເຫຼືອ)"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
+msgid "Review your timesheets by billing type and make sure your time is billable."
+msgstr ""
+"ກວດສອບໃບລາຍງານຊົ່ວໂມງຂອງທ່ານຕາມປະເພດການເກັບເງິນ ແລະ ໃຫ້ແນ່ໃຈວ່າເວລາຂອງທ່ານສາມາດເກັບເງິນໄ"
+"ດ້."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account.py:0
+msgid "Sale Order"
+msgstr "ໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
+msgid "Sale Order Analytic Account"
+msgstr "ບັນຊີວິເຄາະໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid "Sale line/Employee map"
+msgstr "ແຖວການຂາຍ/ການຈັບຄູ່ພະນັກງານ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "ໃບເກັບເງິນຊຳລະລ່ວງໜ້າ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__order_id
+#: model:project.project,name:sale_timesheet.so_template_project
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order"
 msgstr "ໃບສັ່ງຊື້"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__so_line
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Sales Order Item"
+msgstr "ລາຍການໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "Sales Order Items"
+msgstr "ລາຍການໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
+msgstr "ແຖວລາຍການໃບສັ່ງຊື້"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
+msgid "Sales Orders"
+msgstr "ໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right "
-"unit of measure in your employees."
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
+"ລາຍການໃບສັ່ງຊື້ທີ່ຈະຖືກເລືອກໂດຍຄ່າເລີ່ມຕົ້ນໃນໃບລາຍງານຊົ່ວໂມງຂອງພະນັກງານທີ່ກ່ຽວຂ້ອງ. ມັນຈະຂ້າມລາຍການ"
+"ໃບສັ່ງຊື້ທີ່ກຳນົດໄວ້ໃນໂຄງການ ແລະ ໜ້າວຽກ, ແລະ ສາມາດປ່ຽນແປງໄດ້ໃນແຕ່ລະການບັນທຶກໃບລາຍງານຊົ່ວໂມງຫາ"
+"ກຈຳເປັນ. ເວົ້າອີກຢ່າງໜຶ່ງ, ມັນກຳນົດອັດຕາການເກັບເງິນຄ່າເວລາຂອງພະນັກງານໂດຍອີງໃສ່ຄວາມຊ່ຽວຊານ, ທັກສ"
+"ະ ຫຼື ປະສົບການຂອງເຂົາເຈົ້າ.\n"
+"ຫາກທ່ານຕ້ອງການເກັບເງິນຄ່າບໍລິການດຽວກັນໃນອັດຕາທີ່ຕ່າງກັນ, ທ່ານຈຳເປັນຕ້ອງສ້າງສອງລາຍການໃບສັ່ງຊື້ແຍກກັ"
+"ນ ເພາະແຕ່ລະລາຍການສາມາດມີລາຄາຕໍ່ຫົວໜ່ວຍໄດ້ພຽງລາຄາດຽວໃນເວລາດຽວກັນ.\n"
+"ທ່ານຍັງສາມາດກຳນົດຕົ້ນທຶນບໍລິສັດຕໍ່ຊົ່ວໂມງຂອງພະນັກງານສຳລັບໃບລາຍງານຊົ່ວໂມງໃນໂຄງການນີ້ໂດຍສະເພາະ. ມັນ"
+"ຈະຂ້າມຕົ້ນທຶນໃບລາຍງານຊົ່ວໂມງທີ່ຕັ້ງໄວ້ໃນຂໍ້ມູນພະນັກງານ."
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
-msgid "Timesheet Cost"
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid "Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable."
 msgstr ""
+"ລາຍການໃບສັ່ງຊື້ທີ່ຈະຖືກເພີ່ມເວລາທີ່ໃຊ້ເຂົ້າໄປເພື່ອອອກໃບເກັບເງິນໃຫ້ລູກຄ້າ. ລຶບລາຍການໃບສັ່ງຊື້ອອກຈາກການບັນ"
+"ທຶກໃບລາຍງານຊົ່ວໂມງເພື່ອເຮັດໃຫ້ມັນເກັບເງິນບໍ່ໄດ້."
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-msgid "Timesheet UoM"
-msgstr ""
+#: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
+msgid "Sales order to which the project is linked."
+msgstr "ໃບສັ່ງຊື້ທີ່ໂຄງການນີ້ເຊື່ອມໂຍງຢູ່."
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
+msgid "Sales order to which the task is linked."
+msgstr "ໃບສັ່ງຊື້ທີ່ໜ້າວຽກນີ້ເຊື່ອມໂຍງຢູ່."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+msgid "Search in Invoice"
+msgstr "ຄົ້ນຫາໃນໃບເກັບເງິນ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+msgid "Search in Sales Order"
+msgstr "ຄົ້ນຫາໃນໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/controllers/portal.py:0
+msgid "Search in Sales Order Item"
+msgstr "ຄົ້ນຫາໃນລາຍການໃບສັ່ງຊື້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
+msgid "Select a non billable project on which tasks can be created."
+msgstr "ເລືອກໂຄງການທີ່ເກັບເງິນບໍ່ໄດ້ ເຊິ່ງສາມາດສ້າງໜ້າວຽກໃສ່ໄດ້."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr "ຂາຍບໍລິການ ແລະ ອອກໃບເກັບເງິນຕາມເວລາທີ່ໃຊ້"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "ສະຖາປະນິກອາວຸໂສ (ເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງ)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
+msgid "Service"
+msgstr "ການບໍລິການ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
+msgid "Service Revenues"
+msgstr "ລາຍຮັບຈາກການບໍລິການ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold_ratio
+msgid "Service Upsell Threshold Ratio"
+msgstr "ອັດຕາສ່ວນເກນການຂາຍບໍລິການເພີ່ມ"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.time_product_product_template
+msgid "Service on Timesheets"
+msgstr "ການບໍລິການໃນໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__timesheet_product_id
+msgid "Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item."
+msgstr ""
+"ບໍລິການທີ່ຈະຖືກໃຊ້ໂດຍຄ່າເລີ່ມຕົ້ນເມື່ອອອກໃບເກັບເງິນຕາມເວລາທີ່ໃຊ້ໃນໜ້າວຽກ. ມັນສາມາດຖືກແກ້ໄຂໃນແຕ່ລະໜ້າວ"
+"ຽກໂດຍການເລືອກລາຍການໃບສັ່ງຊື້ສະເພາະ."
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
+#: model:project.project,label_tasks:sale_timesheet.project_support
+msgid "Services"
+msgstr "ການບໍລິການ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "Sold"
+msgstr "ຂາຍແລ້ວ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
+msgid "Start Date"
+msgstr "ວັນທີເລີ່ມຕົ້ນ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+msgid "Task"
+msgstr "ໜ້າວຽກ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "ການເກີດຊ້ຳຂອງໜ້າວຽກ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
+msgid "Task rate"
+msgstr "ອັດຕາໜ້າວຽກ"
+
+#. module: sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.so_template_project
+msgid "Tasks"
+msgstr "ໜ້າວຽກ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "ການວິເຄາະໜ້າວຽກ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+msgid "The %s product is required by the Timesheets app and cannot be archived nor deleted."
+msgstr ""
+"ຜະລິດຕະພັນ %s ແມ່ນມີຄວາມຈຳເປັນສຳລັບແອັບ ໃບລາຍງານຊົ່ວໂມງ ແລະ ບໍ່ສາມາດເກັບເຂົ້າຄັງ ຫຼື ລຶບໄດ້."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid ""
+"The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
+"Missing employee(s): %s"
+msgstr ""
+"ບໍ່ສາມາດສ້າງໃບສັ່ງຊື້ໄດ້ ເພາະທ່ານບໍ່ໄດ້ລະບຸພະນັກງານບາງຄົນທີ່ໄດ້ບັນທຶກໃບລາຍງານຊົ່ວໂມງໃນໂຄງການນີ້. ກະລຸນ"
+"າລະບຸລາຍຊື່ພະນັກງານທີ່ກ່ຽວຂ້ອງທັງໝົດກ່ອນທີ່ຈະສ້າງໃບສັ່ງຊື້.\n"
+"ພະນັກງານທີ່ຕົກຫຼົ່ນ: %s"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "The cost of the project is now at"
+msgstr "ຕົ້ນທຶນຂອງໂຄງການໃນປັດຈຸບັນແມ່ນ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "The project has already a sale order."
+msgstr "ໂຄງການນີ້ມີໃບສັ່ງຊື້ແລ້ວ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "The project is already linked to a sales order item."
+msgstr "ໂຄງການນີ້ໄດ້ເຊື່ອມໂຍງກັບລາຍການໃບສັ່ງຊື້ແລ້ວ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "The sales order cannot be created because some timesheets of this project are already linked to another sales order."
+msgstr ""
+"ບໍ່ສາມາດສ້າງໃບສັ່ງຊື້ໄດ້ ເພາະໃບລາຍງານຊົ່ວໂມງບາງອັນຂອງໂຄງການນີ້ໄດ້ເຊື່ອມໂຍງກັບໃບສັ່ງຊື້ອື່ນແລ້ວ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
+msgid "The selected Sales Order should contain something to invoice."
+msgstr "ໃບສັ່ງຊື້ທີ່ເລືອກຄວນມີລາຍການທີ່ຈະອອກໃບເກັບເງິນໄດ້."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__pricing_type
+msgid "The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority."
+msgstr ""
+"ອັດຕາໜ້າວຽກແມ່ນເໝາະສົມຫາກທ່ານຕ້ອງການເກັບເງິນຄ່າບໍລິການທີ່ຕ່າງກັນໃຫ້ແກ່ລູກຄ້າທີ່ຕ່າງກັນໃນອັດຕາທີ່ຕ່າງກັນ. "
+"ອັດຕາຄົງທີ່ແມ່ນເໝາະສົມຫາກທ່ານເກັບເງິນຄ່າບໍລິການໃນອັດຕາຄົງທີ່ຕໍ່ຊົ່ວໂມງ ຫຼື ຕໍ່ມື້ທີ່ເຮັດວຽກ ໂດຍບໍ່ສົນວ່າພະນັກງາ"
+"ນຄົນໃດເປັນຜູ້ເຮັດ. ອັດຕາພະນັກງານແມ່ນດີກວ່າຫາກພະນັກງານຂອງທ່ານໃຫ້ບໍລິການດຽວກັນແຕ່ໃນອັດຕາທີ່ຕ່າງກັນ. ຕົ"
+"ວຢ່າງ: ທີ່ປຶກສາລະດັບເລີ່ມຕົ້ນ ແລະ ລະດັບອາວຸໂສ ອາດຈະໃຫ້ບໍລິການດຽວກັນ (= ການໃຫ້ຄຳປຶກສາ), ແຕ່ໃນອັດຕ"
+"າທີ່ຕ່າງກັນຍ້ອນລະດັບຄວາມອາວຸໂສຂອງເຂົາເຈົ້າ."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
+msgid "This cost overrides the employee's default employee hourly wage in employee's HR Settings"
+msgstr ""
+"ຕົ້ນທຶນນີ້ຈະຂ້າມຄ່າຈ້າງຕໍ່ຊົ່ວໂມງເລີ່ມຕົ້ນຂອງພະນັກງານທີ່ຕັ້ງໄວ້ໃນການຕັ້ງຄ່າບຸກຄະລາກອນ (HR Settings)"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
+msgstr ""
+"ນີ້ແມ່ນ <strong>ແມ່ແບບໃບສະເໜີລາຄາຕົວຢ່າງ</strong>. ທ່ານຄວນ\n"
+"                                ປັບແຕ່ງມັນໃຫ້ເໝາະສົມກັບຄວາມຕ້ອງການຂອງທ່ານຈາກແອັບ <i>ກາ"
+"ນຂາຍ (Sales)</i>,\n"
+"                                ໂດຍໃຊ້ເມນູ: ການກຳນົດຄ່າ (Configuration) /\n"
+"                                ແມ່ແບບໃບສະເໜີລາຄາ (Quotation Templates)."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold
+msgid "Threshold"
+msgstr "ເກນກຳນົດ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Time Billing"
+msgstr "ການເກັບເງິນຕາມເວລາ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Time-based services"
+msgstr "ບໍລິການທີ່ອີງຕາມເວລາ"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
+msgid "Timesheet"
+msgstr "ໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
+msgid "Timesheet Costs"
+msgstr "ຕົ້ນທຶນໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_encode_uom_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
+msgid "Timesheet Encoding Unit"
+msgstr "ຫົວໜ່ວຍການບັນທຶກໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
+msgid "Timesheet Product"
+msgstr "ຜະລິດຕະພັນໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__timesheet_revenues
+msgid "Timesheet Revenues"
+msgstr "ລາຍຮັບຈາກໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_total_duration
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
+msgid "Timesheet Total Duration"
+msgstr "ໄລຍະເວລາລວມໃນໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "ກິດຈະກຳໃນໃບລາຍງານຊົ່ວໂມງ"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
-msgid "Timesheet activities associated to this sale"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_move.py:0
+#: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_sales_order
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_sales_order_item
+#: model:ir.actions.report,name:sale_timesheet.timesheet_report_account_move
+#: model:ir.actions.report,name:sale_timesheet.timesheet_report_sale_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__timesheet_ids
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__sale_order_line__qty_delivered_method__timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheets"
-msgstr ""
+msgstr "ໃບລາຍງານຊົ່ວໂມງເຮັດວຽກ"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:128
-#, python-format
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets (Billed Manually)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງ (ເກັບເງິນດ້ວຍຕົນເອງ)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets (Billed on Milestones)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງ (ເກັບເງິນຕາມຂັ້ນຕອນສຳເລັດ)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets (Billed on Timesheets)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງ (ເກັບເງິນຕາມໃບລາຍງານຊົ່ວໂມງ)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets (Fixed Price)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງ (ລາຄາຄົງທີ່)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets (Non Billable)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງ (ເກັບເງິນບໍ່ໄດ້)"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
+msgid "Timesheets Analysis"
+msgstr "ການວິເຄາະໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
+msgid "Timesheets Analysis Report"
+msgstr "ບົດລາຍງານການວິເຄາະໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
+msgid "Timesheets by Billing Type"
+msgstr "ໃບລາຍງານຊົ່ວໂມງຕາມປະເພດການເກັບເງິນ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "Timesheets for the"
+msgstr "ໃບລາຍງານຊົ່ວໂມງສຳລັບ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets of %s"
+msgstr "ໃບລາຍງານຊົ່ວໂມງຂອງ %s"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
+msgid "Timesheets on project (one fare per SO/Project)"
+msgstr "ໃບລາຍງານຊົ່ວໂມງໃນໂຄງການ (ໜຶ່ງອັດຕາຕໍ່ ໃບສັ່ງຊື້/ໂຄງການ)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Timesheets revenues"
+msgstr "ລາຍຮັບຈາກໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
+msgid "Timesheets revenues minus the costs"
+msgstr "ລາຍຮັບຈາກໃບລາຍງານຊົ່ວໂມງລົບໃຫ້ຕົ້ນທຶນ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Timesheets taken into account when invoicing your time"
+msgstr "ໃບລາຍງານຊົ່ວໂມງທີ່ຖືກນຳມາຄິດໄລ່ເມື່ອອອກໃບເກັບເງິນຄ່າເວລາຂອງທ່ານ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
+msgid "Timesheets taken when invoicing time spent"
+msgstr "ໃບລາຍງານຊົ່ວໂມງທີ່ໃຊ້ເມື່ອອອກໃບເກັບເງິນຕາມເວລາທີ່ໃຊ້"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid "Total amount to invoice on the sales order, including all items (services, storables, expenses, ...)"
+msgstr ""
+"ຈຳນວນເງິນລວມທີ່ຈະອອກໃບເກັບເງິນໃນໃບສັ່ງຊື້, ລວມທັງທຸກລາຍການ (ບໍລິການ, ສິນຄ້າໃນສາງ, ຄ່າໃຊ້ຈ່າຍ, "
+"...)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
+#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_total_duration
+#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_total_duration
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
+msgid "Total recorded duration, expressed in the encoding UoM, and rounded to the unit"
+msgstr "ໄລຍະເວລາທີ່ບັນທຶກທັງໝົດ, ສະແດງໃນຫົວໜ່ວຍການບັນທຶກ, ແລະ ປັດເປັນຫົວໜ່ວຍ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Total:"
+msgstr "ລວມ:"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
+msgid "Track Service"
+msgstr "ຕິດຕາມການບໍລິການ"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "Track your working hours by projects every day and invoice this time to your customers."
+msgstr ""
+"ຕິດຕາມຊົ່ວໂມງເຮັດວຽກຂອງທ່ານຕາມໂຄງການໃນແຕ່ລະມື້ ແລະ ອອກໃບເກັບເງິນຕາມເວລານີ້ໃຫ້ແກ່ລູກຄ້າຂອງທ່ານ."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
+msgid "Unit Price"
+msgstr "ລາຄາຕໍ່ຫົວໜ່ວຍ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
+msgid "Unit price of the sales order item."
+msgstr "ລາຄາຕໍ່ຫົວໜ່ວຍຂອງລາຍການໃບສັ່ງຊື້."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "Value does not exist in the pricing type"
+msgstr "ຄ່ານີ້ບໍ່ມີຢູ່ໃນປະເພດການກຳນົດລາຄາ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
+msgid "View Timesheets"
+msgstr "ເບິ່ງໃບລາຍງານຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
+msgid "Warn the salesperson for an upsell when work done exceeds"
+msgstr "ເຕືອນພະນັກງານຂາຍເພື່ອຂາຍເພີ່ມ (Upsell) ເມື່ອວຽກທີ່ເຮັດສຳເລັດເກີນ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
+msgid "Warning Employee Rate"
+msgstr "ຄຳເຕືອນອັດຕາພະນັກງານ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
-"should split your order to include only one contract based on time and "
-"material."
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
 msgstr ""
+"ພວກເຮົາໝັ້ນໃຈສະເໝີວ່າຜະລິດຕະພັນຂອງພວກເຮົາ\n"
+"                                ຖືກຕັ້ງລາຄາຢ່າງຍຸດຕິທຳ ເພື່ອໃຫ້ທ່ານ\n"
+"                                ມີຄວາມສຸກໃນການຊື້ພວກມັນ."
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
-msgid "account analytic line"
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
+msgid "Wizard"
+msgstr "ຕົວຊ່ວຍສ້າງ"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"ທ່ານສາມາດ <strong>ກຳນົດຄຳອະທິບາຍຕໍ່ຜະລິດຕະພັນ</strong>. Odoo ຈະ\n"
+"                        ສ້າງໃບສະເໜີລາຄາໂດຍອັດຕະໂນມັດໂດຍໃຊ້ຄຳອະທິບາຍ\n"
+"                        ຂອງຜະລິດຕະພັນທັງໝົດໃນຂໍ້ສະເໜີ. ສານບານ\n"
+"                        ທາງດ້ານຊ້າຍຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດຕາມຮູບແບບທີ່ທ່ານ\n"
+"                        ໃຊ້ໃນຄຳອະທິບາຍຂອງທ່ານ (ຫົວຂໍ້ 1, ຫົວຂໍ້ 2, ...)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "You can only apply this action from a project."
+msgstr "ທ່ານສາມາດນຳໃຊ້ການດຳເນີນການນີ້ຈາກໂຄງການເທົ່ານັ້ນ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."
+msgstr ""
+"ທ່ານບໍ່ສາມາດເຊື່ອມໂຍງໂຄງການທີ່ເກັບເງິນໄດ້ ເຂົ້າກັບລາຍການໃບສັ່ງຊື້ທີ່ມາຈາກຄ່າໃຊ້ຈ່າຍ ຫຼື ໃບເກັບເງິນຈາກຜູ້ສ"
+"ະໜອງ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+msgid "You cannot link a billable project to a sales order item that is not a service."
+msgstr ""
+"ທ່ານບໍ່ສາມາດເຊື່ອມໂຍງໂຄງການທີ່ເກັບເງິນໄດ້ ເຂົ້າກັບລາຍການໃບສັ່ງຊື້ທີ່ບໍ່ແມ່ນການບໍລິການ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account.py:0
+msgid "You cannot modify timesheets that are already invoiced."
+msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂໃບລາຍງານຊົ່ວໂມງທີ່ໄດ້ອອກໃບເກັບເງິນແລ້ວ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account.py:0
+msgid "You cannot remove a timesheet that has already been invoiced."
+msgstr "ທ່ານບໍ່ສາມາດລຶບໃບລາຍງານຊົ່ວໂມງທີ່ໄດ້ອອກໃບເກັບເງິນແລ້ວ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "days"
+msgstr "ມື້"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/sale_order.py:0
+msgid "days remaining"
+msgstr "ມື້ທີ່ເຫຼືອ"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+msgid "hours"
+msgstr "ຊົ່ວໂມງ"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
+msgid "margin ("
+msgstr "ສ່ວນຕ່າງ ("
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
+msgid "of hours sold."
+msgstr "ຂອງຊົ່ວໂມງທີ່ຂາຍ."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/sale_order.py:0
+msgid "remaining"
+msgstr "ທີ່ເຫຼືອ"

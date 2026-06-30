@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRow">
+    <BuilderComponent>
+        <div
+            class="hb-row d-flex position-relative pe-2"
+            t-att-class="this.getLevelClass()"
+            t-ref="root"
+            t-att-data-label="props.label"
+            t-att-data-disabled="props.disabled"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            >
+
+            <button
+                t-ref="collapse"
+                t-if="props.slots.collapse"
+                class="o_hb_collapse_toggler btn border-0 bg-transparent"
+                t-att-class="{ 'active fa-rotate-90': state.expanded }"
+                title="Toggle more options"
+                t-on-click="toggleCollapseContent"
+                t-att-aria-expanded="state.expanded ? 'true' : 'false'"
+                t-att-aria-controls="collapseContentId">
+                <i
+                    class="fa fa-caret-right"
+                    role="img"
+                />
+            </button>
+
+            <t t-if="props.label">
+                <div
+                    class="hb-row-label d-flex align-items-center"
+                    t-att-class="{'hb-row-label-actionable': props.slots.collapse, 'bg-transparent': !props.label.trim()}"
+                    t-attf-class="#{this.props.extraLabelClass || ''}"
+                    t-on-pointerover="openTooltip"
+                    t-on-pointerleave="closeTooltip"
+                    t-on-click="toggleCollapseContent"
+                    >
+
+                    <span class="text-nowrap text-truncate" t-out="props.label" t-ref="label"/>
+                    <i t-if="props.tooltip" class="fa fa-question icon-sup" t-att-class="this.isBackendRTL ? 'fa-flip-horizontal' : ''"/>
+                </div>
+                <div
+                    class="hb-row-content d-flex"
+                    t-ref="content"
+                    t-on-click="onRowContentClick"
+                    >
+                    <t t-slot="default"/>
+                </div>
+            </t>
+            <div
+                t-else=""
+                class="d-flex"
+                style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;"
+                t-ref="content"
+                >
+                <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
+            </div>
+        </div>
+        <div t-if="displayCollapseContent" t-att-class="collapseContentClass" t-ref="collapse-content" t-att-id="collapseContentId">
+            <t t-slot="collapse"/>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>
