@@ -392,30 +392,6 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    showComboSelectionPage(product) {
-        const selectedCombos = [];
-        for (const combo of product.combo_ids) {
-            const { combo_item_ids } = combo;
-            if (
-                combo_item_ids.length > 1 ||
-                combo.qty_max > 1 ||
-                this.isProductConfigurable(combo_item_ids[0]?.product_id)
-            ) {
-                return { show: true, selectedCombos: [] };
-            }
-            selectedCombos.push({
-                combo_item_id: this.models["product.combo.item"].get(combo_item_ids[0].id),
-                qty: 1,
-                configuration: {
-                    attribute_custom_values: [],
-                    attribute_value_ids: [],
-                    price_extra: 0,
-                },
-            });
-        }
-        return { show: false, selectedCombos };
-    }
-
     isProductConfigurable(product) {
         if (!product) {
             return false;
@@ -685,6 +661,13 @@ export class SelfOrder extends Reactive {
 
     isProductSnoozed(product) {
         return this.snoozedProductTracker.isProductSnoozed(product);
+    }
+
+    isProductAvailable(product) {
+        return (
+            !product.pos_categ_ids.length ||
+            product.pos_categ_ids.some((categ) => this.isCategoryAvailable(categ.id))
+        );
     }
 
     async initKioskData() {

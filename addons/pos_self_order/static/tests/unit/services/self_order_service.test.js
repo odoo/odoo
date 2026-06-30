@@ -95,26 +95,6 @@ describe("initHardware", () => {
     });
 });
 
-test("showComboSelectionPage", async () => {
-    const store = await setupSelfPosEnv();
-    const models = store.models;
-    const product = models["product.template"].get(7);
-    const combo = models["product.combo"].get(2);
-    product.combo_ids = [2];
-
-    const defaultReturnValue = { show: true, selectedCombos: [] };
-    expect(store.showComboSelectionPage(product)).toMatchObject(defaultReturnValue);
-    // only One choice
-    models["product.combo.item"].get(3).delete();
-    const showCombo = store.showComboSelectionPage(product);
-    expect(showCombo.show).toBe(false);
-    expect(showCombo.selectedCombos).toHaveLength(1);
-    expect(showCombo.selectedCombos[0].combo_item_id.id).toBe(4);
-    // qty_max is more than one
-    combo.qty_max = 3;
-    expect(store.showComboSelectionPage(product)).toMatchObject(defaultReturnValue);
-});
-
 test("applyPendingComboConversion", async () => {
     const store = await setupSelfPosEnv();
 

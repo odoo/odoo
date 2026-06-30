@@ -34,10 +34,11 @@ export class EventPage extends Component {
             touchedFields: new Set(),
         });
 
-        this.eventNameRef = useRef("eventName");
         this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        useStickyTitleObserver("eventName", (isSticky) => (this.state.showStickyTitle = isSticky));
+        this.eventNameRef = useStickyTitleObserver(
+            (isSticky) => (this.state.showStickyTitle = isSticky)
+        );
     }
 
     get eventTickets() {

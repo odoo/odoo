@@ -24,7 +24,7 @@
                     <div class="container o_self_container ">
                          <!-- Name & Image -->
                         <div class="d-flex flex-column align-items-center">
-                            <h1 class="mt-kiosk-p-3 mb-3" t-out="this.currentCombo.name" t-custom-ref="productName"/>
+                            <h1 class="mt-kiosk-p-3 mb-3" t-out="this.currentCombo.name" t-ref="this.productNameRef"/>
                             <div t-if="this.props.productTemplate.showProductImageInSelf" class="o_self_combo_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
                                 <img class="rounded-4 object-fit-scale" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
                             </div>
@@ -42,58 +42,44 @@
                     <div class="d-flex o_self_fade" t-if="!this.isAttributeSelection() and !this.state.showResume">
                         <div class="d-flex flex-column w-100">
                             <div t-if="this.selectedChoice.qty_free &gt; 0 and this.selectedChoice.qty_free  &lt; this.selectedChoice.qty_max" class="d-flex align-items-center gap-1 mb-3 mb-lg-4">
-                                <h2 class="mb-1" t-out="this.selectedChoice.name"/>
+                                <h2 t-out="this.selectedChoice.name"/>
                                 <h4 class="text-muted"><t t-out="this.selectedChoice.qty_free"/> included &amp; <t t-out="this.selfOrder.formatMonetary(this.selectedChoice.base_price)"/> per extra unit</h4>
                             </div>
                             <div class="o_self_combo_products row  justify-content-center" t-att-class="{ 'small-item-nb': this.comboItems.length &lt; 3}">
                                 <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': this.comboItems.length &lt; 4}" t-foreach="this.comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
-                                    <t t-set="product" t-value="comboItem.product_id"/>
                                     <t t-set="itemState" t-value="this.getItemState(comboItem)"/>
-                                    <t t-set="itemSelected" t-value="itemState.selected"/>
-                                    <t t-set="itemQty" t-value="itemState.qty || 0"/>
-                                    <t t-set="isOutOfStock" t-value="this.selfOrder.isProductSnoozed(product.product_tmpl_id)"/>
-                                    <t t-set="extraPrice" t-value="comboItem.extra_price"/>
-                                    <t t-if="this.selectedChoice.qty_free == 0" t-set="extraPrice" t-value="comboItem.extra_price + this.selectedChoice.base_price"/>
-                                    <div t-on-click="() => this.selectItem(comboItem)"
-                                            role="button"
-                                            class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"
-                                            t-att-class="{'border-primary': itemSelected, 'border-transparent': !itemSelected, 'opacity-50': isOutOfStock }">
-                                        <div t-att-class="{'d-none d-md-block': !product.showProductImageInSelf}" class="o_self_product_image w-25 w-sm-100 ratio ratio-1x1 flex-shrink-0 ms-2 ms-sm-0">
-                                            <img class="d-md-none  object-fit-scale rounded-4" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
-                                            <img class="d-none d-md-block object-fit-scale" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
-                                        </div>
+                                    <t t-set="extraPrice" t-value="comboItem.extra_price + (this.selectedChoice.qty_free == 0 ? this.selectedChoice.base_price : 0)"/>
+                                    <ProductCard
+                                        product="comboItem.product_id"
+                                        hidePrice="true" selectProduct="() => this.selectItem(comboItem)"
+                                        class="'combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0
+                                            rounded-4 shadow-sm overflow-hidden border-2 text-start ' + (itemState.selected ? 'border-primary ' : 'border-transparent ')" 
+                                    >
                                         <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
-                                        + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
+                                            + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
                                         </span>
-                                        <div class="d-flex flex-column flex-grow-1 py-0 py-md-3 px-md-2 align-item-start align-items-md-center">
-                                            <div class="text-md-center">
-                                                <ProductNameWidget product="product"/>
+                                        <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(comboItem)"/>
+                                        <div t-if="extraPriceSelected" class="badge px-2 py-1 rounded-3 text-bg-primary fw-medium">
+                                            Extra: <t t-out="this.selfOrder.formatMonetary(extraPriceSelected)"/>
+                                        </div>
+                                        <div t-if="this.hasMultiItemSelection"  class="item_qty_container d-flex flex-grow-1 align-items-end mt-2 pb-2">
+                                            <t t-set="itemQty" t-value="itemState.qty || 0"/>
+                                            <t t-set="addItemEnabled" t-value="this.canAddMoreItems()"/>
+                                            <div t-if="!itemQty" class="btn btn-secondary" t-att-class="{'opacity-50':!addItemEnabled}">
+                                                Add
                                             </div>
-                                            <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(comboItem)"/>
-                                            <div t-if="extraPriceSelected">
-                                                <span class="badge px-2 py-1 rounded-3 text-bg-primary fw-medium">
-                                                    Extra: <t t-out="this.selfOrder.formatMonetary(extraPriceSelected)"/>
-                                                </span>
-                                            </div>
-                                            <div t-if="isOutOfStock" class="badge mt-2 my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">Out of stock</div>
-                                            <div t-elif="this.hasMultiItemSelection "  class="item_qty_container d-flex flex-grow-1 align-items-end mt-2">
-                                                <t t-set="addItemEnabled" t-value="this.canAddMoreItems()"/>
-                                                <div t-if="!itemQty" class="btn btn-secondary" t-att-class="{'opacity-50':!addItemEnabled}">
-                                                    Add
-                                                </div>
-                                                <div t-else="" class="btn-group">
-                                                    <button type="button"
-                                                            t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, -1)"
-                                                            class="btn btn-secondary btn py-2 px-3 px-lg-2 "><i class="oi oi-minus fa-fw"/></button>
-                                                    <div class="o-so-tabular-nums d-flex justify-content-center align-items-center m-0 py-2 px-3 text-bg-secondary fs-4 fw-bold" t-out="itemQty"/>
-                                                    <button type="button"
-                                                        t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, 1)"
-                                                        t-att-disabled="!addItemEnabled"
-                                                        class="btn btn-secondary btn py-2 px-3 px-lg-2" ><i class="oi oi-plus fa-fw" /></button>
-                                                </div>
+                                            <div t-else="" class="btn-group">
+                                                <button type="button"
+                                                    t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, -1)"
+                                                    class="btn btn-secondary btn py-2 px-3 px-lg-2"><i class="oi oi-minus fa-fw"/></button>
+                                                <div class="o-so-tabular-nums d-flex justify-content-center align-items-center m-0 py-2 px-3 text-bg-secondary fs-4 fw-bold" t-out="itemQty"/>
+                                                <button type="button"
+                                                    t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, 1)"
+                                                    t-att-disabled="!addItemEnabled"
+                                                    class="btn btn-secondary btn py-2 px-3 px-lg-2" ><i class="oi oi-plus fa-fw" /></button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </ProductCard>
                                 </div>
                             </div>
                         </div>
