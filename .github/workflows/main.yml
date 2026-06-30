@@ -32,8 +32,8 @@ jobs:
     - name: Ejecutar Pruebas Unitarias de Odoo
       run: |
         cd docker-config
-        # Ejecutamos las pruebas conectándonos directamente al contenedor de PostgreSQL
-        docker compose exec -T web odoo -d postgres --db_host=db --db_port=5432 --db_user=odoo --db_password=odoo -i validacion_descuento_maximo --test-enable --stop-after-init > odoo_tests.log 2>&1
+        # Usamos el entrypoint oficial del contenedor, la BD correcta y el flag de actualización (-u)
+        docker compose exec -T web /entrypoint.sh odoo -d odoo_ventas -u validacion_descuento_maximo --test-enable --stop-after-init > odoo_tests.log 2>&1
 
     # PASO 4 [TASK 2]: Guardar el reporte para el profesor y Saúl
     - name: Publicar Reporte de Pruebas como Artifact
