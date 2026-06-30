@@ -2,6 +2,8 @@
 
 from datetime import date, timedelta
 
+from freezegun import freeze_time
+
 from odoo import Command
 from odoo.tests import users
 from odoo.tests.common import HttpCase, new_test_user
@@ -12,6 +14,12 @@ class TestAvatarCardTour(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # Freeze on a fixed mid-week day so the time off below (created relative
+        # to "today") always ends on a working day. When it ends on a Sat/Sun
+        # its date_to is the weekend's 00:00, so the "currently on leave" window
+        # closes at midnight and the avatar card's out-of-office indicator flakes
+        # away once the run crosses it (runbot 242512).
+        cls.startClassPatcher(freeze_time("2024-06-12"))
         new_test_user(
             cls.env,
             login="hr_user",
