@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1+e\n"
+"Project-Id-Version: Odoo Server saas~19.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 20:06+0000\n"
-"PO-Revision-Date: 2026-06-05 20:06+0000\n"
+"POT-Creation-Date: 2026-06-30 01:37+0000\n"
+"PO-Revision-Date: 2026-06-30 01:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -128,6 +128,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+msgid "All documents in a batch must share the same ObligadoEmision. Got: %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__l10n_es_applicability
 msgid "Applicability (Spain)"
 msgstr ""
@@ -151,6 +157,14 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_state__cancelled
 msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_issuer.py:0
+msgid ""
+"Cannot delete the Veri*Factu SIF for '%(partner)s': it has chained documents"
+" that must be preserved for audit purposes."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -179,6 +193,11 @@ msgid "Chain Index"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__chain_sequence_id
+msgid "Chain Sequence"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 msgid "Check Invoice(s)"
@@ -187,6 +206,7 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_res_company
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__company_id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__company_id
 msgid "Company"
 msgstr ""
 
@@ -201,22 +221,19 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model,website_form_label:l10n_es_edi_verifactu.model_res_partner
-msgid "Create a Customer"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model_terms:ir.actions.act_window,help:l10n_es_edi_verifactu.l10n_es_edi_verifactu_certificate_action
 msgid "Create the first certificate"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__create_uid
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__create_date
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__create_date
 msgid "Created on"
 msgstr ""
 
@@ -229,6 +246,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_certificate_certificate__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_partner__display_name
@@ -238,6 +256,11 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__document_type
 msgid "Document Type"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_l10n_es_edi_verifactu_document_form
+msgid "Download XML"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -304,6 +327,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_certificate_certificate__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_partner__id
@@ -360,11 +384,13 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__write_uid
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__write_date
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -420,9 +446,19 @@ msgid "Networking error: %s"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__next_batch_time
+msgid "Next Batch Time"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "No Sujeto VAT taxes must have 0 amount."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__obligado_partner_id
+msgid "Obligado Partner"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -451,6 +487,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "Other"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__obligado_partner_id
+msgid ""
+"Partner acting as the 'ObligadoEmision' for this document. For regular "
+"invoices this is the company's own partner. For self-billing vendor bills "
+"this is the vendor."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -519,6 +563,11 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.actions.server,name:l10n_es_edi_verifactu.action_l10n_es_edi_verifactu_button_cancel
 msgid "Request Veri*Factu Cancellation"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__obligado_partner_id
+msgid "Required to issue"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -603,11 +652,6 @@ msgstr ""
 msgid ""
 "The CSV of the response from the tax agency. There may not be one in case "
 "all documents of the batch were rejected."
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_next_batch_time
-msgid "The Datetime at which the next submission to the AEAT can be made."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -752,6 +796,11 @@ msgid "There are no taxes set on the invoice"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model.constraint,message:l10n_es_edi_verifactu.constraint_l10n_es_edi_verifactu_issuer_unique_issuer_per_obligado
+msgid "There can only be one virtual SIF per company and obligado."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
@@ -834,6 +883,12 @@ msgid "Veri*Factu Certificates"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_issuer.py:0
+msgid "Veri*Factu Chain Sequence for %(company)s / %(partner)s (%(pid)s)"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_l10n_es_edi_verifactu_document
 msgid "Veri*Factu Document"
 msgstr ""
@@ -845,17 +900,6 @@ msgid "Veri*Factu Document %s"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_chain_sequence_id
-msgid "Veri*Factu Document Chain Sequence"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/res_company.py:0
-msgid "Veri*Factu Document Sequence for company %(name)s (%(id)s)"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_document_ids
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_document_ids
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
@@ -863,8 +907,8 @@ msgid "Veri*Factu Documents"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_next_batch_time
-msgid "Veri*Factu Next Batch Time"
+#: model:ir.model,name:l10n_es_edi_verifactu.model_l10n_es_edi_verifactu_issuer
+msgid "Veri*Factu Issuer"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -972,6 +1016,16 @@ msgstr ""
 msgid ""
 "We only allow a single Veri*Factu Tax Applicability (Impuesto) per document:"
 " %(applicabilities)s."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__xml_attachment_raw
+msgid "XML"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__xml_attachment_filename
+msgid "XML Filename"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
