@@ -107,9 +107,9 @@ export class PowerboxPlugin extends Plugin {
             withSequence(60, { id: "widget", name: _t("Widget") }),
             withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
-        hints: withSequence(30, {
-            selector: baseContainerGlobalSelector,
-            text: _t('Type "/" for commands'),
+        properties: withSequence(30, {
+            predicate: baseContainerGlobalSelector,
+            hint: _t('Type "/" for commands'),
         }),
     };
 

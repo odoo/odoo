@@ -177,13 +177,11 @@ export class ListPlugin extends Plugin {
             { commandId: "toggleListCL" },
         ].map((item) => withSequence(15, item)),
 
-        hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
-
         /** Properties */
-        properties: {
-            predicate: (node) => closestElement(node, "LI"),
-            powerButtons: false,
-        },
+        properties: [
+            { predicate: `LI, LI > ${baseContainerGlobalSelector}`, hint: _t("List") },
+            { predicate: (node) => closestElement(node, "LI"), powerButtons: false },
+        ],
 
         /** Handlers */
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),

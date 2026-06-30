@@ -13,8 +13,6 @@ import { debounce } from "@web/core/utils/timing";
 /**
  * @typedef {import("@html_editor/editor").EditorContext} EditorContext
  * @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData
- * @typedef {import("plugins").CSSSelector} CSSSelector
- * @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString
  */
 
 /**
@@ -22,12 +20,11 @@ import { debounce } from "@web/core/utils/timing";
  *   selectionData: SelectionData,
  *   editable: EditorContext["editable"]
  * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
- * @typedef {{ selector: CSSSelector; text: LazyTranslatedString; }[]} hints
  */
 
 export class HintPlugin extends Plugin {
     static id = "hint";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["history", "selection", "properties"];
     static shared = ["updateHints"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -115,12 +112,13 @@ export class HintPlugin extends Plugin {
         const editableSelection = selectionData.editableSelection;
         this.clearHints();
         if (editableSelection.isCollapsed) {
-            const hints = this.getResource("hints");
             for (const provideTargets of this.getResource("hint_targets_providers")) {
                 for (const target of provideTargets(selectionData, this.editable)) {
-                    const nodeHint = hints.find((h) => target.matches(h.selector))?.text;
-                    if (target && nodeHint && this.shouldDisplayHint(target)) {
-                        this.makeHint(target, nodeHint);
+                    const nodeHint = this.dependencies.properties.get(target, "hint");
+                    // A function gives a hint whose text can change over time.
+                    const text = typeof nodeHint === "function" ? nodeHint() : nodeHint;
+                    if (target && text && this.shouldDisplayHint(target)) {
+                        this.makeHint(target, text);
                     }
                 }
             }
