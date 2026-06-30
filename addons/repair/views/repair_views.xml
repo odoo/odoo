@@ -102,11 +102,13 @@
                     </div>
                     <group>
                         <group>
-                            <field name="allowed_lot_ids" invisible="1"/>
+                            <field name="allowed_lot_ids" invisible="1" groups="stock.group_stock_user"/>
                             <field name="repair_request" invisible="not sale_order_line_id"/>
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" readonly="sale_order_id"/>
                             <field name="product_id" readonly="state in ['cancel', 'done']"/>
-                            <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" options="{'no_create': True, 'no_create_edit': True}" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="tracking in ['serial', 'lot']"/>
+                            <field name="lot_id" context="{'default_product_id': product_id}"
+                                groups="stock.group_production_lot,stock.group_stock_user" options="{'no_create': True, 'no_create_edit': True}"
+                                invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="tracking in ['serial', 'lot']"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="product_qty" invisible="not product_id"/>
                             <div class="o_row" invisible="not product_id">
@@ -120,7 +122,8 @@
                             <field name="schedule_date" readonly="state in ['done', 'cancel']"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"
+                                groups="stock.group_stock_user"/>
                             <field name="parts_availability_state" invisible="True"/>
                             <field name="parts_availability"
                                 invisible="state not in ['confirmed', 'under_repair']"
