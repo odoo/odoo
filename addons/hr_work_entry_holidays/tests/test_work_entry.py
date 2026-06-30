@@ -201,6 +201,39 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.assertEqual(sum_remote_hours, 35, "It should equal the number of hours richard worked in remote")  # 5 days * 8 hours - 5 hours for leave
         self.assertEqual(sum_leave_hours, 5.0, "It should equal the number of hours richard was on leave")
 
+    def test_generate_multi_split_preserves_leave_work_entries(self):
+        self.leave_remote_type.leave_validation_type = 'no_validation'
+        leave = self.env['hr.leave'].create({
+            'name': 'Sick Leave',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': date(2015, 11, 2),  # Monday
+            'request_date_to': date(2015, 11, 6),
+        })
+        leave.action_approve()
+
+        wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'name': 'Remote Work',
+            'allocation_mode': 'employee',
+            'company_id': self.env.company.id,
+            'employee_ids': [(6, 0, self.richard_emp.ids)],
+            'holiday_status_id': self.leave_remote_type.id,
+            'date_from': date(2015, 11, 4),
+            'date_to': date(2015, 11, 5),
+        })
+        wizard.action_generate_time_off()
+
+        work_entries = self.richard_emp.generate_work_entries(self.start.date(), self.end.date())
+        leave_work_entries = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
+        remote_work_entries = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_remote)
+
+        self.assertEqual(
+            set(leave_work_entries.mapped('date')),
+            {date(2015, 11, 2), date(2015, 11, 3), date(2015, 11, 6)})
+        self.assertEqual(
+            set(remote_work_entries.mapped('date')),
+            {date(2015, 11, 4), date(2015, 11, 5)})
+
     def test_reset_leave_work_entries(self):
         """
         This test ensures that when the employee's calendar_id.company_id is False,

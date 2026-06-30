@@ -20,6 +20,18 @@ class HrLeave(models.Model):
         vals['work_entry_type_id'] = self.holiday_status_id.work_entry_type_id.id
         return vals
 
+    def _split_leaves(self, split_date_from, split_date_to=False):
+        split_source_dates = {
+            leave.id: (leave.request_date_from, leave.request_date_to)
+            for leave in self
+        }
+        new_leaves = super()._split_leaves(split_date_from, split_date_to)
+        modified_leaves = self.filtered(
+            lambda leave: split_source_dates[leave.id] != (leave.request_date_from, leave.request_date_to)
+        )
+        (modified_leaves | new_leaves).filtered(lambda leave: leave.state == 'validate')._cancel_work_entry_conflict()
+        return new_leaves
+
     def _cancel_work_entry_conflict(self):
         """
         Creates a leave work entry for each hr.leave in self.
