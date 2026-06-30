@@ -73,7 +73,14 @@
                                             options='{"no_open": True, "no_create": True}'/>
                                     </div>
                                 </div>
-                                <field name="vat" placeholder="e.g. BE0477472701"/>
+
+                                <field name="available_additional_identifiers_metadata" invisible="1"/>
+                                <label for="vat"/>
+                                <div id="vat_div" class="o_row d-flex">
+                                    <field name="vat" nolabel="1" placeholder="e.g. BE0477472701"/>
+                                    <field name="additional_identifiers" widget="additional_identifiers_button" nolabel="1"/>
+                                </div>
+                                <field name="additional_identifiers" widget="additional_identifiers_list" colspan="2" nolabel="1"/>
                             </group>
                             <group>
                                 <field name="barcode"/>
