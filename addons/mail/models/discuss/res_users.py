@@ -59,7 +59,7 @@ class ResUsers(models.Model):
         # return whether the features are enabled
         get_param = self.env["ir.config_parameter"].sudo().get_param
         store.add_global_values(
-            hasGifPickerFeature=bool(get_param("discuss.tenor_api_key")),
+            hasGifPickerFeature=bool(get_param("discuss.klipy_api_key")),
             hasMessageTranslationFeature=bool(get_param("mail.google_translate_api_key")),
             hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
                 "|",

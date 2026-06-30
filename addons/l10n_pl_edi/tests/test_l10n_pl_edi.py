@@ -1,5 +1,5 @@
 import base64
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from lxml import etree
 
@@ -9,6 +9,7 @@ from odoo.tests import freeze_time, patch, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.l10n_pl_edi.models.account_move import AccountMove
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 
@@ -34,6 +35,14 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             'city': 'Warsaw',
             'zip': '00-001',
         })
+
+        cls.company_2 = cls.setup_other_company(
+            name='PL2 Company',
+            vat='PL1111111111',
+            street='Other Street 2',
+            city='Krakow',
+            zip='30-001',
+        )['company']
 
         cls.partner_pl = cls.env['res.partner'].create({
             'name': 'Test Customer PL',
@@ -78,6 +87,13 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             private_key_id=key.id,
         ))
         cls.company.sudo().write({
+            'l10n_pl_edi_register': True,
+            'l10n_pl_edi_certificate': cert.id,
+            'l10n_pl_edi_access_token': "aa33ccee",
+            'l10n_pl_edi_refresh_token': "bb44ddff",
+        })
+
+        cls.company_2.sudo().write({
             'l10n_pl_edi_register': True,
             'l10n_pl_edi_certificate': cert.id,
             'l10n_pl_edi_access_token': "aa33ccee",
@@ -723,7 +739,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             cron_runs_before = len(capt.records)
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
-        bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
+        bill_1 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetched')])
         self.assertTrue(bill_1)
         bill_1_attachment = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
@@ -733,12 +749,50 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(bill_1_attachment.raw, file.read())
 
-        bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
-        self.assertFalse(bill_2)
+        bill_2 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetch_ready')])
+        self.assertTrue(bill_2)
 
         self.assertEqual(len(capt.records), cron_runs_before + 1)
         self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
         self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
+
+    def test_l10n_pl_edi_download_problematic_bill_do_not_stop_others(self):
+        """Test that when an error occurs on a single bill, the rest don't get stuck."""
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [{'ksefNumber': 'KSEF-BILL-001'}, {'ksefNumber': 'KSEF-BILL-002'}],
+            }
+
+        def get_invoice_by_ksef_number(ksef_number):
+            return {'xml_content': b'foo'}
+
+        call_count = 0
+
+        def l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content):
+            nonlocal call_count
+            if call_count == 0:
+                call_count = 1
+                return {'currency_id': None}  # Should raise a NOT NULL db error
+            return {'currency_id': self.env.company.currency_id.id}
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch.object(AccountMove, 'l10n_pl_edi_get_ksef_bill_vals_from_xml', side_effect=l10n_pl_edi_get_ksef_bill_vals_from_xml),
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        bills = self.env['account.move'].search([('l10n_pl_edi_number', 'in', ('KSEF-BILL-001', 'KSEF-BILL-002'))])
+        bills_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', bills.ids),
+        ])
+        self.assertEqual(len(bills), 2)
+        self.assertEqual(len(bills_attachments), 2)
+        self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetch_failed'))
+        self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetched'))
 
     def test_import_invoice_with_net_and_gross_unit_price(self):
         self._assert_import_invoice('invoice_with_net_and_gross_unit_price.xml', [
@@ -863,3 +917,83 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 "price_subtotal": 1064.7
             }
         ])
+
+    def test_l10n_pl_edi_download_bill_same_db(self):
+        """
+        Test that when company_1 sends an invoice to company_2 via KSeF (out_invoice with a ksef number),
+        company_2 in the same database can still fetch and create the corresponding bill
+        (in_invoice) with the same KSeF number.
+        """
+        ksef_number = '1234567883-20260123-AAAA1111BBBB-01'
+        self.standard_invoice.action_post()
+        self.standard_invoice.l10n_pl_edi_number = ksef_number
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [{'ksefNumber': ksef_number}],
+            }
+
+        def get_invoice_by_ksef_number(ksef_nr):
+            path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
+            with tools.file_open(path, mode='rb') as file:
+                return {'xml_content': file.read()}
+
+        # Disable access token for all companies except company_2 to be sure that the cron will try to fetch bills for company_2 only
+        self.env['res.company'].search([('id', '!=', self.company_2.id)]).l10n_pl_edi_access_token = False
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number) as capt,
+        ):
+            self.env['account.move'].sudo()._cron_l10n_pl_edi_download_bills()
+
+        capt.assert_called_once_with(ksef_number)
+        bill = self.env['account.move'].search([
+            ('l10n_pl_edi_number', '=', ksef_number),
+            ('company_id', '=', self.company_2.id),
+        ])
+        self.assertEqual(bill.move_type, 'in_invoice')
+        moves_count = self.env['account.move'].search_count([('l10n_pl_edi_number', '=', ksef_number)])
+        self.assertEqual(moves_count, 2)
+
+    @freeze_time('2026-01-23')
+    def test_l10n_pl_edi_download_bill_far_in_the_past(self):
+        """
+        Test that when the last processed bill is far in the past (>3 months),
+        the download logic slides the 2-month query window forward until it
+        reaches the current date, rather than issuing a single >3-month query
+        (which would cause a 400 error from the KSeF API).
+        """
+
+        old_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': '2025-08-23',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 100.0, 'tax_ids': []})],
+        })
+        old_bill.l10n_pl_edi_number = 'OLD-BILL-NUMBER-001'
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            date_from = datetime.fromisoformat(query_criteria['dateRange']['from'])
+            if date_from.month == 12:
+                return {
+                    'hasMore': False,
+                    'invoices': [{'ksefNumber': 'KSEF-NEW-BILL-001'}],
+                }
+            return {'hasMore': False, 'invoices': []}
+
+        def get_invoice_by_ksef_number(ksef_number):
+            path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
+            with tools.file_open(path, mode='rb') as file:
+                return {'xml_content': file.read()}
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata) as capt,
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        self.assertEqual(capt.call_count, 3)
+        new_bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-NEW-BILL-001')])
+        self.assertTrue(new_bill)

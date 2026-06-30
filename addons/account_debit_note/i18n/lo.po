@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-06 19:47+0000\n"
+"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"PO-Revision-Date: 2026-06-22 08:12+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/"
 "account_debit_note/lo/>\n"
@@ -25,6 +25,16 @@ msgid "<span class=\"o_stat_text\">Debit Notes</span>"
 msgstr "<span class=\"o_stat_text\">ໃບບິນເພີ່ມໜີ້</span>"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Debit Note Date</strong>"
+msgstr "<strong>ວັນທີໃບບິນເພີ່ມໜີ້</strong>"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Invoice Date</strong>"
+msgstr "<strong>ວັນທີໃບເກັບເງິນ</strong>"
+
+#. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
 msgstr "ຕົວຊ່ວຍເພີ່ມໃບບິນເພີ່ມໜີ້"
@@ -35,13 +45,33 @@ msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Debit Note"
+msgstr "ໃບບິນເພີ່ມໜີ້ທີ່ຍົກເລີກແລ້ວ"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Invoice"
+msgstr "ໃບເກັບເງິນທີ່ຍົກເລີກແລ້ວ"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Debit Note"
+msgstr "ໃບບິນເພີ່ມໜີ້ Proforma ທີ່ຍົກເລີກແລ້ວ"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Invoice"
+msgstr "ໃບເກັບເງິນ Proforma ທີ່ຍົກເລີກແລ້ວ"
+
+#. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
 msgstr ""
-"ໝາຍເອົາຫ້ອງນີ້ ຖ້າທ່ານບໍ່ຕ້ອງການໃຊ້ເລກລຳດັບດຽວກັນສຳລັບໃບເກັບເງິນ ແລະ ໃບບິນເພີ່ມໜີ້ ທີ່ສ້າງຂຶ້ນຈາກປຶ້ມບັນຊີ"
-"ນີ້"
+"ໝາຍເອົາຫ້ອງນີ້ ຖ້າທ່ານບໍ່ຕ້ອງການໃຊ້ເລກລຳດັບດຽວກັນສຳລັບໃບເກັບເງິນ ແລະ ໃບບິນເພີ່ມໜີ້ "
+"ທີ່ສ້າງຂຶ້ນຈາກປຶ້ມບັນຊີນີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -70,6 +100,7 @@ msgid "Created on"
 msgstr "ສ້າງເມື່ອ"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -105,6 +136,26 @@ msgid "Display Name"
 msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Debit Note"
+msgstr "ຮ່າງໃບບິນເພີ່ມໜີ້"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Invoice"
+msgstr "ຮ່າງໃບເກັບເງິນ"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Debit Note"
+msgstr "ຮ່າງໃບບິນເພີ່ມໜີ້ Proforma"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Invoice"
+msgstr "ຮ່າງໃບເກັບເງິນ Proforma"
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
@@ -122,8 +173,13 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
-"ໃນກໍລະນີທີ່ທ່ານຕ້ອງການແກ້ໄຂທຸກໆລາຍການ, ການສຳເນົາລາຍການເຫຼົ່ານັ້ນຈະຊ່ວຍໃຫ້ສະດວກຂຶ້ນ. ພວກເຮົາຈະບໍ່ສຳ"
-"ເນົາລາຍການສຳລັບໃບບິນເພີ່ມໜີ້ທີ່ສ້າງມາຈາກໃບບິນຫຼຸດໜີ້. "
+"ໃນກໍລະນີທີ່ທ່ານຕ້ອງການແກ້ໄຂທຸກໆລາຍການ, ການສຳເນົາລາຍການເຫຼົ່ານັ້ນຈະຊ່ວຍໃຫ້ສະດວກຂຶ້ນ. "
+"ພວກເຮົາຈະບໍ່ສຳເນົາລາຍການສຳລັບໃບບິນເພີ່ມໜີ້ທີ່ສ້າງມາຈາກໃບບິນຫຼຸດໜີ້. "
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Invoice"
+msgstr "ໃບເກັບເງິນ"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -173,6 +229,16 @@ msgid "Original Invoice Debited"
 msgstr "ໃບເກັບເງິນຕົ້ນສະບັບທີ່ຖືກເພີ່ມໜີ້"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Debit Note"
+msgstr "ໃບບິນເພີ່ມໜີ້ Proforma"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Invoice"
+msgstr "ໃບເກັບເງິນ Proforma"
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
 msgstr "ເຫດຜົນ"
@@ -210,8 +276,8 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
-"ທ່ານສາມາດສ້າງໃບບິນເພີ່ມໜີ້ໄດ້ສະເພາະສຳລັບ ໃບເກັບເງິນລູກຄ້າ, ໃບບິນຫຼຸດໜີ້ລູກຄ້າ, ໃບບິນຜູ້ສະໜອງ ຫຼື ໃບບິນຫຼຸ"
-"ດໜີ້ຜູ້ສະໜອງ ເທົ່ານັ້ນ."
+"ທ່ານສາມາດສ້າງໃບບິນເພີ່ມໜີ້ໄດ້ສະເພາະສຳລັບ ໃບເກັບເງິນລູກຄ້າ, ໃບບິນຫຼຸດໜີ້ລູກຄ້າ, ໃບບິນຜູ້ສະໜອງ ຫຼື "
+"ໃບບິນຫຼຸດໜີ້ຜູ້ສະໜອງ ເທົ່ານັ້ນ."
 
 #. module: account_debit_note
 #. odoo-python
@@ -223,10 +289,9 @@ msgstr "ທ່ານສາມາດເພີ່ມໜີ້ໄດ້ສະເພ
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
-msgstr ""
-"ທ່ານບໍ່ສາມາດສ້າງໃບບິນເພີ່ມໜີ້ໃຫ້ກັບໃບເກັບເງິນທີ່ມີການເຊື່ອມໂຍງກັບໃບບິນເພີ່ມໜີ້ອື່ນຢູ່ແລ້ວ."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr "ທ່ານບໍ່ສາມາດສ້າງໃບບິນເພີ່ມໜີ້ໃຫ້ກັບໃບເກັບເງິນທີ່ມີການເຊື່ອມໂຍງກັບໃບບິນເພີ່ມໜີ້ອື່ນຢູ່ແລ້ວ."
 
 #. module: account_debit_note
 #. odoo-python

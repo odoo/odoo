@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-06-10 21:19+0000\n"
-"Last-Translator: Dmytro Kyrychuk <dmytro.kyrychuck@gmail.com>\n"
+"PO-Revision-Date: 2026-06-25 09:23+0000\n"
+"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/stock/"
 "uk/>\n"
 "Language: uk\n"
@@ -396,6 +396,22 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* Постачальник: Віртуальне місцезнаходження, що представляє джерело "
+"походження товарів, які надходять від ваших постачальників\n"
+"* Віртуальне: Віртуальне місцезнаходження, яке використовується для "
+"створення ієрархічної структури вашого складу шляхом об'єднання його "
+"дочірніх локацій. Не може безпосередньо містити товари\n"
+"* Внутрішнє: Фізичні місця зберігання всередині ваших складів\n"
+"* Клієнт: Віртуальне місцезнаходження, що представляє місце призначення для "
+"товарів, які відправляються вашим клієнтам\n"
+"* Втрати запасів: Віртуальне місцезнаходження, що слугує протилежною "
+"стороною (кореспондентом) для складських операцій, які проводяться для "
+"коригування рівня запасів (фізична інвентаризація)\n"
+"* Виробництво: Віртуальне місцезнаходження-відповідник для виробничих "
+"операцій. Тобто, це місцезнаходження споживає компоненти та виробляє готову "
+"продукцію\n"
+"* Транзит: Місцезнаходження-відповідник, яке слід використовувати для "
+"операцій між компаніями або між різними складами"
 
 #. module: stock
 #. odoo-python
@@ -2915,6 +2931,13 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Видалення переміщень товару після того, як трансфер виконано?\n"
+"\n"
+"Це все одно, що повернутися в минуле, щоб скасувати всі операції, запущені "
+"після цього переміщення. Хтозна, яким буде кінцевий результат, тому краще "
+"цього не робити.\n"
+"\n"
+"Спробуйте замість цього змінити «виконану» кількість на 0."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -7047,7 +7070,7 @@ msgstr "Роздрукувати етикетки як:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr "Дрік на \"Запакувати\""
+msgstr "Друк при пакуванні"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -10432,7 +10455,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
 msgid "Transit"
-msgstr ""
+msgstr "Транзит"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -10743,7 +10766,7 @@ msgstr "Переглядайте та розподіляйте отримані 
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Virtual"
-msgstr ""
+msgstr "Віртуальний"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
