@@ -1,0 +1,24 @@
+.o_task_timer {
+    .o_timer_display {
+        letter-spacing: 0.05em;
+        min-width: 90px;
+        justify-content: center;
+    }
+
+    .o_timer_blink {
+        animation: o_timer_blink 1s step-start infinite;
+        font-size: 8px;
+        vertical-align: middle;
+    }
+}
+
+@keyframes o_timer_blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.o_timer_stop_dialog {
+    .o_timer_elapsed_badge {
+        display: inline-block;
+    }
+}
