@@ -1419,7 +1419,10 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
 
-    if isinstance(search_domain := model.env.context.get('search_domain'), Domain):
+    context = dict(model.env.context)
+    if level >= OptimizationLevel.DYNAMIC_VALUES:
+        context['search_from_field'] = field
+    if isinstance(search_domain := context.get('search_domain'), Domain):
         # model with search_domain like (field, 'any', comodel_domain)
         # => comodel with comodel_domain
         comodel_domain = Domain.OR(
@@ -1430,9 +1433,10 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
         if comodel_domain.is_false() and not search_domain.is_false():
             # we don't know the condition, accept all
             comodel_domain = Domain.TRUE
-        comodel = comodel.with_context(search_domain=comodel_domain)
-
+        context['search_domain'] = comodel_domain
+    comodel = comodel.with_context(context)
     domain = domain._optimize(comodel, level)
+
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
     if domain.is_false():
@@ -1914,6 +1918,9 @@ def _operator_access_rule_domain(condition, model):
     operation = condition.value
     if operation not in ('read', 'write', 'create', 'unlink'):
         condition._raise("Invalid value for 'access' operator")
+
+    if operation == 'read' and field in model.env.registry.field_inverses.get(model.env.context.get('search_from_field'), ()):
+        return Domain.TRUE  # the join will restrain the field to a not-null value
 
     comodel = comodel.sudo(False)
     access_domain = comodel._access_domain(operation)

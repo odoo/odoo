@@ -453,6 +453,9 @@ class MailActivity(models.Model):
         # search by model and res_id
         sec_domain = Domain.FALSE
         env = self.with_context(active_test=False).env
+        inverse_field = self.env.context.get('search_from_field')
+        if self._fields['res_id'] not in self.env.registry.field_inverses.get(inverse_field, ()):
+            inverse_field = None
         for res_model_name in res_model_names:
             if res_model_name not in env:
                 continue
@@ -464,6 +467,7 @@ class MailActivity(models.Model):
             # similar implementation to what is in mail.message._search
             comodel_domain = Domain.FALSE
             comodel_domain_remaining = Domain.TRUE
+            only_read = bool(inverse_field)
             for domain_operation, doc_operation in comodel._mail_get_operation_for_mail_message_operation('read'):
                 domain_operation, comodel_domain_remaining = (
                     comodel_domain_remaining & domain_operation,
@@ -471,13 +475,20 @@ class MailActivity(models.Model):
                 )
                 comodel_rule = comodel._access_domain(doc_operation)
                 if comodel_rule.is_false():
+                    only_read = False
                     continue
                 if doc_operation == 'read':
                     comodel_rule = Domain.TRUE  # covered by the search below
+                else:
+                    only_read = False
                 comodel_domain |= (domain_operation & comodel_rule)
             if comodel_res_ids is not None:
                 comodel_domain &= Domain('id', 'in', comodel_res_ids)
-            comodel_domain = comodel_domain.optimize_full(comodel.sudo())
+            if not (only_read and inverse_field.model_name == res_model_name):
+                # if we only read and we have access
+                comodel_domain &= comodel._access_domain('read')
+            comodel = comodel.sudo()
+            comodel_domain = comodel_domain.optimize_full(comodel)
             query = comodel._search(comodel_domain)
             if query.is_empty():
                 continue
