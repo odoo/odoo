@@ -158,10 +158,20 @@
                             class="oe_stat_button"
                             icon="fa-bars"
                             type="object"
-                            invisible="not account_move_id"
+                            invisible="not account_move_id or payment_mode != 'own_account'"
                             groups="account.group_account_invoice">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Journal Entry</span>
+                            </div>
+                        </button>
+                        <button name="action_open_account_payment"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            type="object"
+                            invisible="not account_move_id or payment_mode == 'own_account'"
+                            groups="account.group_account_invoice">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payment</span>
                             </div>
                         </button>
                     </div>

@@ -1459,25 +1459,26 @@ class HrExpense(models.Model):
 
     def action_open_account_move(self):
         self.ensure_one()
-        if self.payment_mode == 'company_account':
-            res_model = 'account.payment'
-            record_id = self.account_move_id.origin_payment_id
-        else:
-            res_model = 'account.move'
-            record_id = self.account_move_id
+        return self._open_linked_record('account.move', self.account_move_id)
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': res_model,
-            'name': record_id.name,
-            'view_mode': 'form',
-            'res_id': record_id.id,
-            'views': [(False, 'form')],
-        }
+    def action_open_account_payment(self):
+        self.ensure_one()
+        return self._open_linked_record('account.payment', self.account_move_id.origin_payment_id)
 
     # ----------------------------------------
     # Business
     # ----------------------------------------
+
+    @api.model
+    def _open_linked_record(self, res_model, record):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': res_model,
+            'name': record.name,
+            'view_mode': 'form',
+            'res_id': record.id,
+            'views': [(False, 'form')],
+        }
 
     def _check_can_approve(self):
         if not all(self.mapped('can_approve')):

@@ -28,7 +28,7 @@ class HrExpensePostWizard(models.TransientModel):
     company_id = fields.Many2one(comodel_name='res.company', default=lambda self: self.env.company, string='Company', readonly=True)
 
     accounting_date = fields.Date(  # The date used for the accounting entries or the one we'd like to use if not yet posted
-        string="Accounting Date",
+        string="Bill Date",
         default=fields.Date.context_today,
         help="Specify the bill date of the related vendor bill."
     )
