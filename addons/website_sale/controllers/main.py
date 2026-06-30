@@ -1976,6 +1976,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             extra_step_view = self.env.website.viewref("website_sale.extra_info")
             extra_step = self.env.website._get_checkout_step("/shop/extra_info")
             extra_step_view.active = extra_step.is_published = options.get("extra_step") == "true"
+            # Invalidate next/previous breadcrumb steps
+            self.env.transaction.invalidate_ormcache()
 
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
