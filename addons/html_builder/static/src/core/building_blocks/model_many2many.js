@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, props, proxy, status, t } from "@odoo/owl";
+import { Component, onWillStart, useEffect, props, proxy, status, t } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";
@@ -42,8 +42,8 @@ export class ModelMany2Many extends Component {
         onWillStart(async () => {
             await this.handleProps(this.props);
         });
-        onWillUpdateProps(async (newProps) => {
-            await this.handleProps(newProps);
+        useEffect(() => {
+            this.handleProps(this.props);
         });
     }
     async handleProps(props) {
