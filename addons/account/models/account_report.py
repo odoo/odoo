@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.orm.fields import Field
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -51,7 +52,7 @@ class AccountReport(models.Model):
 
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(string="Sequence")
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(string="Active", default=True, company_dependent=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     groupby = fields.Char(
         string="Group By",
