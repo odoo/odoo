@@ -119,7 +119,7 @@ export const busService = {
                     session.websocket_worker_version
                 }`,
                 db: session.db,
-                lastNotificationId: parseInt(localStorage.getItem("bus.last_notification_id") ?? 0),
+                lastNotificationId: parseInt(localStorage.getItem("bus.last_notification_id")) || 0,
                 uid,
                 startTs: startedAt.valueOf(),
             });
