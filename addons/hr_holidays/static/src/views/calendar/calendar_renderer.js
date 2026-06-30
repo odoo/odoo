@@ -1,9 +1,9 @@
-import { CalendarRenderer } from '@web/views/calendar/calendar_renderer';
+import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 
-import { TimeOffCalendarCommonRenderer } from './common/calendar_common_renderer';
-import { TimeOffCalendarYearRenderer } from './year/calendar_year_renderer';
+import { TimeOffCalendarCommonRenderer } from "./common/calendar_common_renderer";
+import { TimeOffCalendarYearRenderer } from "./year/calendar_year_renderer";
 
-import { TimeOffDashboard } from '../../dashboard/time_off_dashboard';
+import { TimeOffDashboard } from "../../dashboard/time_off_dashboard";
 
 export class TimeOffCalendarRenderer extends CalendarRenderer {
     static template = "hr_holidays.CalendarRenderer";
