@@ -180,6 +180,16 @@ class Session(MutableMapping):
         self['session_token'] = session_token
 
 
+class Device(typing.TypedDict):
+    ip_address: str
+    user_agent: str
+    first_activity: int
+    last_activity: int | None
+    country: str
+    city: str
+    trusted: typing.NotRequired[bool]
+
+
 def get_default_session() -> dict:
     """ The dictionary to initialise a new session with. """
     return {
@@ -280,7 +290,7 @@ def touch(session: Session):
     session.is_dirty = True
 
 
-def get_device(session: Session, request: Request) -> dict:
+def get_device(session: Session, request: Request) -> Device:
     """
     :return: dict that corresponds to the current device
     """
@@ -312,7 +322,7 @@ def get_device(session: Session, request: Request) -> dict:
     return new_device
 
 
-def update_device(session: Session, request: Request) -> dict | None:
+def update_device(session: Session, request: Request) -> Device | None:
     """
     :return: dict if the current device has been updated, ``None`` otherwise
     """
@@ -343,7 +353,7 @@ def update_device_fingerprint(session: Session, request: Request, fingerprint: s
     :return: ``True`` if the current device is trusted, ``False`` otherwise
     """
     device = get_device(session, request)
-    if device['trusted']:
+    if device.get('trusted'):
         session['_device_fingerprint'] = fingerprint
     elif consteq(session.setdefault('_device_fingerprint', fingerprint), fingerprint):
         device['trusted'] = True
@@ -351,6 +361,8 @@ def update_device_fingerprint(session: Session, request: Request, fingerprint: s
     else:
         _logger.warning("Untrusted device for session %s (uid=%s): %s %s",
             session.sid[:8], session.uid, device['ip_address'], device['user_agent'])
+        device['trusted'] = False
+        session.is_dirty = True
     return device['trusted']
 
 
