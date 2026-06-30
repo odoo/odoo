@@ -69,7 +69,7 @@ class HrJob(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.", groups="hr_recruitment.group_hr_recruitment_interviewer")
     color = fields.Integer("Color Index")
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sql="_compute_sql_is_favorite", compute_sudo=True)
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True)
     favorite_recruiter_ids = fields.Many2many('hr.employee', 'job_favorite_recruiter_rel', 'job_id', 'recruiter_id', default=_get_default_favorite_recruiter_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
@@ -180,15 +180,6 @@ class HrJob(models.Model):
                 favorited_jobs |= job
         favorited_jobs.write({'favorite_recruiter_ids': [Command.link(employee.id)]})
         unfavorited_jobs.write({'favorite_recruiter_ids': [Command.unlink(employee.id)]})
-
-    def _compute_sql_is_favorite(self, table):
-        employee = self.env.user.employee_id
-        if not employee:
-            return SQL("FALSE")
-        return SQL(
-            "%s IN (SELECT job_id FROM job_favorite_recruiter_rel WHERE recruiter_id = %s)",
-            table.id, employee.id,
-        )
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.employee_id)

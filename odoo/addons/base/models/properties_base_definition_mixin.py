@@ -19,19 +19,12 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
     properties_base_definition_id = fields.Many2one(
         "properties.base.definition",
         compute="_compute_properties_base_definition_id",
-        compute_sql="_compute_sql_properties_base_definition_id",
         compute_sudo=True,
     )
 
     def _compute_properties_base_definition_id(self):
         self.properties_base_definition_id = self.env["properties.base.definition"] \
             ._get_definition_for_property_field(self._name, "properties")
-
-    def _compute_sql_properties_base_definition_id(self, table):
-        # Allow the export to work
-        parent = self.env["properties.base.definition"] \
-            ._get_definition_id_for_property_field(self._name, "properties")
-        return SQL("%s", parent)
 
     def _search_properties_base_definition_id(self, operator, value):
         if operator != "in":

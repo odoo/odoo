@@ -72,12 +72,9 @@ class ResPartner(models.Model):
     """
     _inherit = 'res.partner'
 
-    currency_id = fields.Many2one('res.currency', compute='_get_company_currency', compute_sql='_get_company_currency_sql', compute_sudo=True, readonly=True)
+    currency_id = fields.Many2one('res.currency', compute='_get_company_currency', compute_sudo=True, readonly=True)
     monetary = fields.Monetary()  # implicitly depends on currency_id as currency_field
 
     def _get_company_currency(self):
         for partner in self:
             partner.currency_id = partner.sudo().company_id.currency_id
-
-    def _get_company_currency_sql(self, table):
-        return table.company_id.currency_id

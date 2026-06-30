@@ -98,6 +98,8 @@ class TestOrmDiscussion(models.Model):
         'test_orm_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users', context={'active_test': False})
     messages = fields.One2many('test_orm.message', 'discussion', copy=True)
+    has_repeated_important_messages = fields.Boolean(
+        compute='_compute_has_repeated_important_messages', compute_sudo=False)
     message_concat = fields.Text(string='Message concatenate')
     important_messages = fields.One2many('test_orm.message', 'discussion',
                                          domain=[('important', '=', True)])
@@ -115,6 +117,14 @@ class TestOrmDiscussion(models.Model):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
 
+    @api.depends('messages.important')
+    def _compute_has_repeated_important_messages(self):
+        for discussion in self:
+            discussion.has_repeated_important_messages = (
+                any(message.important for message in discussion.messages)
+                and any(message.important for message in discussion.messages)
+            )
+
 
 class TestOrmMessage(models.Model):
     _name = 'test_orm.message'
@@ -126,11 +136,18 @@ class TestOrmMessage(models.Model):
     name = fields.Char(string='Title', compute='_compute_name', store=True)
     display_name = fields.Char(string='Abstract')
     size = fields.Integer(compute='_compute_size', search='_search_size')
+    auto_sql_size = fields.Integer(compute='_compute_sql_size', compute_sudo=False)
+    manual_sql_size = fields.Integer(compute='_compute_sql_size', compute_sql='_compute_manual_sql_size', compute_sudo=False)
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
+    auto_sql_author_partner = fields.Many2one(
+        'res.partner', compute='_compute_sql_author_partner', compute_sudo=False)
+    manual_sql_author_partner = fields.Many2one(
+        'res.partner', compute='_compute_sql_author_partner',
+        compute_sql='_compute_manual_sql_author_partner', compute_sudo=False)
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
@@ -185,6 +202,16 @@ class TestOrmMessage(models.Model):
         for message in self:
             message.size = len(message.body or '')
 
+    @api.depends('body')
+    def _compute_sql_size(self):
+        for message in self:
+            size = len(message.body) if message.body else 0
+            message.auto_sql_size = size
+            message.manual_sql_size = size
+
+    def _compute_manual_sql_size(self, table):
+        return SQL("COALESCE(LENGTH(%s), 0)", table.body)
+
     def _search_size(self, operator, value):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
             return []
@@ -214,6 +241,15 @@ class TestOrmMessage(models.Model):
     def _compute_author_partner(self):
         for message in self:
             message.author_partner = message.author.partner_id
+
+    @api.depends('author', 'author.partner_id')
+    def _compute_sql_author_partner(self):
+        for message in self:
+            message.auto_sql_author_partner = message.author.partner_id
+            message.manual_sql_author_partner = message.author.partner_id
+
+    def _compute_manual_sql_author_partner(self, table):
+        return table.author.partner_id
 
     @api.model
     def _search_author_partner(self, operator, value):

@@ -150,7 +150,7 @@ class CrmLead(models.Model):
                                                          compute="_compute_recurring_revenue_monthly_prorated")
     recurring_revenue_prorated = fields.Monetary('Prorated Recurring Revenues', currency_field='company_currency',
                                                  compute="_compute_recurring_revenue_prorated", store=True)
-    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sql="_compute_sql_company_currency", compute_sudo=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_automation_last = fields.Datetime('Last Action', readonly=True)
@@ -276,12 +276,6 @@ class CrmLead(models.Model):
                 lead.company_currency = self.env.company.currency_id
             else:
                 lead.company_currency = lead.company_id.currency_id
-
-    def _compute_sql_company_currency(self, table):
-        return SQL(
-            '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
-            table.company_id, table.company_id.currency_id, self.env.company.currency_id.id
-        )
 
     @api.depends('user_id', 'type')
     def _compute_team_id(self):

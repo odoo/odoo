@@ -151,7 +151,6 @@ class StockPickingType(models.Model):
     )
     is_favorite = fields.Boolean(
         compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
-        compute_sql='_compute_sql_is_favorite',
         compute_sudo=True, string='Show Operation in Overview'
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
@@ -245,12 +244,6 @@ class StockPickingType(models.Model):
         )
         to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
         (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
-
-    def _compute_sql_is_favorite(self, table):
-        return SQL(
-            "%s IN (SELECT picking_type_id FROM picking_type_favorite_user_rel WHERE user_id = %s)",
-            table.id, self.env.uid,
-        )
 
     @api.depends('code')
     def _compute_hide_reservation_method(self):

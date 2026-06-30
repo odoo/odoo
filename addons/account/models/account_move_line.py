@@ -139,21 +139,18 @@ class AccountMoveLine(models.Model):
     consolidation_debit = fields.Monetary(
         string="Converted debit",
         compute='_compute_consolidation_rate',
-        compute_sql='_compute_sql_debit_converted',
         compute_sudo=True,
         currency_field='consolidation_currency_id',
     )
     consolidation_credit = fields.Monetary(
         string="Converted credit",
         compute='_compute_consolidation_rate',
-        compute_sql='_compute_sql_credit_converted',
         compute_sudo=True,
         currency_field='consolidation_currency_id',
     )
     consolidation_balance = fields.Monetary(
         string="Converted balance",
         compute='_compute_consolidation_rate',
-        compute_sql='_compute_sql_balance_converted',
         compute_sudo=True,
         currency_field='consolidation_currency_id',
     )
@@ -320,15 +317,13 @@ class AccountMoveLine(models.Model):
     )
     residual_at_date = fields.Monetary(
         string='Residual (at date)',
-        compute='_compute_residual_at_date',
-        compute_sql='_compute_sql_residual_at_date', compute_sudo=True,
+        compute='_compute_residual_at_date', compute_sudo=True,
         currency_field='company_currency_id',
         help="The residual amount (at date) on a journal item expressed in the company currency.",
     )
     residual_currency_at_date = fields.Monetary(
         string='Residual in currency (at date)',
-        compute='_compute_residual_at_date',
-        compute_sql='_compute_sql_residual_currency_at_date', compute_sudo=True,
+        compute='_compute_residual_at_date', compute_sudo=True,
         help="The residual amount (at date) on a journal item expressed in its currency.",
     )
 
@@ -496,7 +491,6 @@ class AccountMoveLine(models.Model):
     payment_date = fields.Date(
         string='Next Payment Date',
         compute='_compute_payment_date',
-        compute_sql='_compute_sql_payment_date',
         compute_sudo=True,
         search='_search_payment_date',
     )
@@ -841,61 +835,6 @@ class AccountMoveLine(models.Model):
             if line.currency_id == line.company_id.currency_id and not line.move_id.is_invoice(True):
                 line.amount_currency = line.balance
 
-    def _compute_sql_consolidation_rate(self, table):
-        currency_translation = self.env.context.get('currency_translation', 'current')
-        if len(self.env.companies.currency_id) == 1:
-            return SQL("1")
-
-        date_from = self.env.context.get('date_from')
-        date_to = self.env.context['date_to']
-        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
-
-        raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
-        raw_rates_table = SQL(
-            """(
-                SELECT %(historical)s::jsonb AS historical,
-                       %(average)s::jsonb AS average,
-                       %(current)s::jsonb AS current
-            )""",
-            historical=json.dumps(historical),
-            average=json.dumps(average),
-            current=json.dumps(current),
-        )
-        cta_alias = table._make_alias(currency_translation)
-        if currency_translation == 'cta':
-            conversion_table = SQL(
-                """(
-                    SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
-                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
-                                ELSE %(current)s->>(%(base_line_company)s::text)
-                           END::numeric AS rate
-                )""",
-                base_line_date=table.date,
-                base_line_company=table.company_id,
-                base_line_account_type=table.account_id.account_type,
-                historical=raw_rates_alias.historical,
-                average=raw_rates_alias.average,
-                current=raw_rates_alias.current,
-            )
-        else:
-            conversion_table = SQL(
-                "(SELECT (%(current)s->>(%(base_line_company)s::text))::numeric AS rate)",
-                base_line_company=table.company_id,
-                current=raw_rates_alias.current,
-            )
-        table._query.add_join(kind='JOIN', alias=raw_rates_alias, table=raw_rates_table, condition=SQL("TRUE"))
-        table._query.add_join(kind='LEFT JOIN LATERAL', alias=cta_alias, table=conversion_table, condition=SQL("TRUE"))
-        return SQL("COALESCE(%s, 1)", cta_alias.rate)
-
-    def _compute_sql_debit_converted(self, table):
-        return SQL("(%s * %s)", table.consolidation_rate, table.debit)
-
-    def _compute_sql_credit_converted(self, table):
-        return SQL("(%s * %s)", table.consolidation_rate, table.credit)
-
-    def _compute_sql_balance_converted(self, table):
-        return SQL("(%s * %s)", table.consolidation_rate, table.balance)
-
     @api.depends_context('allowed_company_ids', 'currency_translation')
     def _compute_consolidation_rate(self):
         line2rate = {}
@@ -1063,28 +1002,6 @@ class AccountMoveLine(models.Model):
             condition=SQL("TRUE"),
         )
         return partial_summary_alias
-
-    @api.depends_context('recon_limit')
-    def _compute_sql_residual_at_date(self, table):
-        if not self.env.context.get('recon_limit'):
-            return table.amount_residual
-        partial_summary_alias = self._join_partial_summary_query(table)
-        return SQL(
-            "(%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0))",
-            balance_field=table.balance,
-            partial_summary_amount_field=partial_summary_alias.amount_to_date,
-        )
-
-    @api.depends_context('recon_limit')
-    def _compute_sql_residual_currency_at_date(self, table):
-        if not self.env.context.get('recon_limit'):
-            return table.amount_residual_currency
-        partial_summary_alias = self._join_partial_summary_query(table)
-        return SQL(
-            "%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0)",
-            balance_field=table.amount_currency,
-            partial_summary_amount_field=partial_summary_alias.amount_currency_to_date,
-        )
 
     @api.depends_context('recon_limit')
     def _compute_residual_at_date(self):
@@ -1566,17 +1483,6 @@ class AccountMoveLine(models.Model):
     def _compute_payment_date(self):
         for line in self:
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
-
-    def _compute_sql_payment_date(self, table):
-        return SQL("""
-            CASE
-                WHEN %(discount_date)s IS NOT NULL AND %(today)s <= %(discount_date)s THEN %(discount_date)s
-                ELSE %(date_maturity)s
-            END""",
-            today=fields.Date.context_today(self),
-            discount_date=table.discount_date,
-            date_maturity=table.date_maturity,
-        )
 
     @api.depends('matched_debit_ids', 'matched_credit_ids')
     def _compute_reconciled_lines_ids(self):

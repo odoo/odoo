@@ -620,7 +620,6 @@ class AccountMove(models.Model):
             ('cancel', "Cancelled"),
         ],
         compute='_compute_status_in_payment',
-        compute_sql='_compute_sql_status_in_payment',
         compute_sudo=False,
     )
     amount_total_words = fields.Char(
@@ -696,7 +695,6 @@ class AccountMove(models.Model):
         ],
         string='Sent',
         compute='_compute_move_sent_values',
-        compute_sql='_compute_sql_move_sent_values',
         compute_sudo=False,
     )
     invoice_user_id = fields.Many2one(
@@ -853,9 +851,6 @@ class AccountMove(models.Model):
     def _compute_move_sent_values(self):
         for move in self:
             move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
-
-    def _compute_sql_move_sent_values(self, table):
-        return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", table.is_move_sent)
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1342,16 +1337,6 @@ class AccountMove(models.Model):
 
             if not move.status_in_payment:
                 move.status_in_payment = move.state
-
-    def _compute_sql_status_in_payment(self, table):
-        # TODO not the same logic as the compute?
-        state = table.state
-        payment_state = table.payment_state
-        return SQL("""CASE
-            WHEN %s = 'draft' THEN 'draft'
-            WHEN %s = 'cancel' THEN 'cancel'
-            ELSE %s
-            END""", state, state, payment_state)
 
     @api.depends('reconciled_payment_ids')
     def _compute_payment_count(self):

@@ -265,7 +265,6 @@ class Website(models.Model):
         string="Default Currency",
         comodel_name="res.currency",
         compute="_compute_currency_id",
-        compute_sql="_compute_sql_currency_id",
         compute_sudo=True,
     )
     pricelist_ids = fields.One2many(
@@ -302,10 +301,6 @@ class Website(models.Model):
             website.currency_id = (
                 request and hasattr(request, "pricelist") and request.pricelist.currency_id
             ) or website.company_id.sudo().currency_id
-
-    def _compute_sql_currency_id(self, table):  # noqa: ARG002
-        msg = "website.currency_id is not searchable"
-        raise ValueError(msg)  # depends on request
 
     @api.depends("send_abandoned_cart_email")
     def _compute_send_abandoned_cart_email_activation_time(self):

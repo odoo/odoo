@@ -77,12 +77,6 @@ class ProjectProject(models.Model):
         for project in self:
             project.is_favorite = project in favorite_project_ids
 
-    def _compute_sql_is_favorite(self, table):
-        return SQL(
-            "%s IN (SELECT project_id FROM project_favorite_user_rel WHERE user_id = %s)",
-            table.id, self.env.uid,
-        )
-
     def _set_favorite_user_ids(self, is_favorite):
         self_sudo = self.sudo() # To allow project users to set projects as favorite
         if is_favorite:
@@ -98,14 +92,14 @@ class ProjectProject(models.Model):
     partner_phone = fields.Char(related='partner_id.phone', readonly=False, export_string_translation=False)
     partner_email = fields.Char(related='partner_id.email', readonly=False, export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
-    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sql="_compute_sql_currency_id", compute_sudo=True, string="Currency", readonly=True, export_string_translation=False)
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sudo=True, string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
     account_id = fields.Many2one('account.analytic.account', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", ondelete='set null')
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         string='Members', export_string_translation=False, copy=False)
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite', compute_sql='_compute_sql_is_favorite',
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False, copy=True)
     label_tasks = fields.Char(string='Use Tasks as', default=lambda s: s.env._('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
@@ -366,9 +360,6 @@ class ProjectProject(models.Model):
         default_currency_id = self.env.company.currency_id
         for project in self:
             project.currency_id = project.company_id.currency_id or default_currency_id
-
-    def _compute_sql_currency_id(self, table):
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):

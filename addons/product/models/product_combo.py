@@ -19,7 +19,7 @@ class ProductCombo(models.Model):
         copy=True,
     )
     combo_item_count = fields.Integer(string="Product Count", compute='_compute_combo_item_count')
-    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id', compute_sql='_compute_sql_currency_id', compute_sudo=True)
+    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id', compute_sudo=True)
     base_price = fields.Float(
         string="Combo Price",
         help="The minimum price among the products in this combo. This value will be used to"
@@ -49,10 +49,6 @@ class ProductCombo(models.Model):
             combo.currency_id = (
                 combo.company_id.sudo().currency_id or main_company.currency_id
             )
-
-    def _compute_sql_currency_id(self, table):
-        main_company = self.env['res.company']._get_main_company()
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, main_company.currency_id.id)
 
     @api.depends('combo_item_ids')
     def _compute_base_price(self):

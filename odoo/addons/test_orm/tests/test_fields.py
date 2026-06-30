@@ -222,6 +222,80 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             sum(invalid_transitive_depends in get_trigger_tree([field]).root for field in fields.values()), 1,
         )
 
+    def test_10_computed_auto_compute_sql(self):
+        Message = self.env['test_orm.message']
+        Discussion = self.env['test_orm.discussion']
+        self.assertTrue(Message._fields['auto_sql_size'].compute_sql)
+        self.assertTrue(Message._fields['author_partner'].compute_sql)
+        self.assertTrue(Message._fields['auto_sql_author_partner'].compute_sql)
+        self.assertTrue(Discussion._fields['has_repeated_important_messages'].compute_sql)
+        self.assertFalse(Message._fields['double_size'].compute_sql)
+
+        records = Message.create([
+            {'body': 'abc'},
+            {'body': 'abcdef'},
+            {'body': False},
+        ])
+        expected = records.filtered(lambda record: len(record.body or '') > 3)
+        domain = [('id', 'in', records.ids), ('auto_sql_size', '>', 3)]
+        manual_domain = [('id', 'in', records.ids), ('manual_sql_size', '>', 3)]
+
+        self.assertEqual(Message.search(domain), expected)
+        self.assertEqual(Message.search(manual_domain), expected)
+
+        auto_query = Message._search(domain).select()
+        manual_query = Message._search(manual_domain).select()
+        auto_sql = self.env.cr.mogrify(*auto_query._sql_tuple[:2]).decode()
+        manual_sql = self.env.cr.mogrify(*manual_query._sql_tuple[:2]).decode()
+        self.assertIn('COALESCE', auto_sql)
+        self.assertIn('LENGTH', auto_sql)
+        self.assertIn('COALESCE', manual_sql)
+        self.assertIn('LENGTH', manual_sql)
+
+        with self.assertQueries([
+            'SELECT ... FROM "test_orm_message" ... WHERE ... COALESCE ... LENGTH ... > ...',
+        ]):
+            Message.search(domain)
+        with self.assertQueries([
+            'SELECT ... FROM "test_orm_message" ... WHERE ... COALESCE ... LENGTH ... > ...',
+        ]):
+            Message.search(manual_domain)
+
+        author_domain = [
+            ('id', 'in', records.ids),
+            ('auto_sql_author_partner', '=', self.env.user.partner_id.id),
+        ]
+        manual_author_domain = [
+            ('id', 'in', records.ids),
+            ('manual_sql_author_partner', '=', self.env.user.partner_id.id),
+        ]
+        self.assertEqual(Message.search(author_domain), records)
+        self.assertEqual(Message.search(manual_author_domain), records)
+        with self.assertQueries([
+            'SELECT ... FROM "test_orm_message" ... JOIN "res_users" ... WHERE ...',
+        ]):
+            Message.search(author_domain)
+        with self.assertQueries([
+            'SELECT ... FROM "test_orm_message" ... JOIN "res_users" ... WHERE ...',
+        ]):
+            Message.search(manual_author_domain)
+
+        search_method_domain = [
+            ('id', 'in', records.ids),
+            ('author_partner', '=', self.env.user.partner_id.id),
+        ]
+        self.assertEqual(Message.search(search_method_domain), records)
+        query = Message._search(search_method_domain, order='author_partner').select()
+        sql = self.env.cr.mogrify(*query._sql_tuple[:2]).decode()
+        self.assertIn('res_users', sql)
+
+        with self.assertLogs('odoo.orm.compute_sql', level='WARNING') as logs:
+            Discussion.search([
+                ('id', '=', self.env.ref('test_orm.discussion_0').id),
+                ('has_repeated_important_messages', '=', True),
+            ])
+        self.assertTrue(any('potentially inefficient SQL' in msg for msg in logs.output))
+
     @mute_logger('odoo.fields')
     def test_10_computed_stored_x_name(self):
         # create a custom model with two fields

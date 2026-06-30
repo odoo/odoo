@@ -37,14 +37,13 @@ class AccountAccount(models.Model):
     description = fields.Text(translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
-    company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id', compute_sql='_compute_sql_company_currency_id', compute_sudo=True)
+    company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id', compute_sudo=True)
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
-    code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', inverse='_inverse_code', compute_sql='_compute_sql_code', compute_sudo=True)
+    code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', inverse='_inverse_code', compute_sudo=True)
     code_store = fields.Char(company_dependent=True)
-    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code', compute_sql='_compute_sql_placeholder_code', compute_sudo=True)
+    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code', compute_sudo=True)
     code_path = fields.Char(
         compute=lambda self: self._compute_field_path('code'),
-        compute_sql=lambda self, table: self._compute_sql_field_path(table, 'code'),
         depends=['code', 'parent_ids'],
         depends_context=('company',),
         compute_sudo=True,
@@ -52,13 +51,12 @@ class AccountAccount(models.Model):
     )
     name_path = fields.Char(
         compute=lambda self: self._compute_field_path('name'),
-        compute_sql=lambda self, table: self._compute_sql_field_path(table, 'name'),
         depends=['name', 'parent_ids'],
         compute_sudo=True,
         help="similar to parent path but with names instead of ids, used to order and search accounts",
     )
     active = fields.Boolean(default=True, tracking=True)
-    used = fields.Boolean(compute='_compute_used', compute_sql='_compute_sql_used', compute_sudo=True)
+    used = fields.Boolean(compute='_compute_used', compute_sudo=True)
     account_type = fields.Selection(
         selection=[
             ("asset_receivable", "Receivable"),
@@ -102,7 +100,6 @@ class AccountAccount(models.Model):
         ],
         string="Internal Group",
         compute="_compute_internal_group",
-        compute_sql='_compute_sql_internal_group',
         compute_sudo=True,
     )
     reconcile = fields.Boolean(string='Payment Reconciliation', tracking=True,
@@ -125,7 +122,7 @@ class AccountAccount(models.Model):
         ondelete='restrict',
         tracking=True,
     )
-    root_id = fields.Many2one('account.root', compute='_compute_account_root', search='_search_account_root', compute_sql='_compute_sql_account_root', compute_sudo=True)
+    root_id = fields.Many2one('account.root', compute='_compute_account_root', search='_search_account_root', compute_sudo=True)
     parent_id = fields.Many2one(
         comodel_name='account.account',
         string="Parent Account",
@@ -304,10 +301,6 @@ class AccountAccount(models.Model):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
             record.code = record_root.code_store
 
-    def _compute_sql_code(self, table):
-        table = table._with_model(self.with_company(self.env.company.root_id).sudo())
-        return table.code_store
-
     def _inverse_code(self):
         for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
@@ -330,52 +323,6 @@ class AccountAccount(models.Model):
                 company = authorized_companies[0]
                 if code := record.with_company(company).code:
                     record.placeholder_code = f'{code} ({company.name})'
-
-    def _compute_sql_placeholder_code(self, table):
-        query = table._query
-        if 'account_first_company' not in query._joins:
-            # When multiple accounts are selected, ``placeholder_code`` is used for all of them
-            # as it is in the default ``_order`` (e.g., for ``account_asset_id`` and
-            # ``account_depreciation_id`` in ``account_assets``).
-
-            # As ``placeholder_code`` represents the account's code in the first active company
-            # to which the account belongs in the hierarchy, we must ensure that we do not introduce
-            # a second ``JOIN`` to the account-company relation to avoid redundancy in joins.
-            query.add_join(
-                'LEFT JOIN',
-                'account_first_company',
-                SQL(
-                    """(
-                        SELECT DISTINCT ON (rel.account_account_id)
-                            rel.account_account_id AS account_id,
-                            rel.res_company_id AS company_id,
-                            SPLIT_PART(res_company.parent_path, '/', 1) AS root_company_id,
-                            res_company.name AS company_name
-                        FROM account_account_res_company_rel rel
-                        JOIN res_company
-                            ON res_company.id = rel.res_company_id
-                        WHERE rel.res_company_id IN %(authorized_company_ids)s
-                    ORDER BY rel.account_account_id, company_id
-                    )""",
-                    authorized_company_ids=self.env.user._get_company_ids(),
-                    to_flush=self._fields['company_ids'],
-                ),
-                SQL('account_first_company.account_id = %(account_id)s', account_id=table.id),
-            )
-        account_first_company = TableSQL('account_first_company', None, query)
-
-        return SQL(
-            """
-                COALESCE(
-                    %(code_store)s->>%(active_company_root_id)s,
-                    %(code_store)s->>%(account_first_company_root_id)s || ' (' || %(account_first_company_name)s || ')'
-                )
-            """,
-            code_store=SQL.identifier(table._alias, 'code_store', self._fields['code_store']),  # get raw field (because it is company dependent)
-            active_company_root_id=str(self.env.company.root_id.id),
-            account_first_company_name=account_first_company.company_name,
-            account_first_company_root_id=account_first_company.root_company_id,
-        )
 
     def _search_placeholder_code(self, operator, value):
         if operator not in ('=ilike', 'in'):
@@ -401,43 +348,11 @@ class AccountAccount(models.Model):
             else:
                 record[f'{fname}_path'] = False
 
-    def _compute_sql_field_path(self, table, fname):
-        path_table = table._make_alias('path_table')
-        ancestor_table = TableSQL('ancestor', self.with_company(self.env.company.root_id).sudo(), path_table._query)
-        table._query.add_join(
-            'LEFT JOIN',
-            path_table,
-            SQL("""(
-                    SELECT child.id AS id,
-                           CASE
-                           WHEN COUNT(%(ancestors_codes)s) = COUNT(%(ancestors_ids)s)
-                           THEN STRING_AGG(%(ancestors_codes)s, ' / ' ORDER BY ord)
-                            END AS code_path,
-                           STRING_AGG(%(ancestors_names)s, ' / ' ORDER BY ord) AS name_path
-                      FROM account_account child
-        CROSS JOIN LATERAL UNNEST(STRING_TO_ARRAY(RTRIM(child.parent_path, '/'), '/')) WITH ORDINALITY AS t(id, ord)
-                      JOIN account_account ancestor ON ancestor.id = t.id::int
-                  GROUP BY child.id
-                )""",
-                ancestors_ids=ancestor_table.id,
-                ancestors_codes=ancestor_table.code,
-                ancestors_names=ancestor_table.name,
-            ),
-            SQL('%(path_table_id)s = %(account_id)s', path_table_id=path_table.id, account_id=table.id),
-        )
-        return path_table[f'{fname}_path']
-
     @api.depends_context('company')
     @api.depends('code')
     def _compute_account_root(self):
         for record in self:
             record.root_id = self.env['account.root']._from_account_code(record.placeholder_code)
-
-    def _compute_sql_account_root(self, table):
-        return SQL(
-            "SUBSTRING(%(placeholder_code)s, 1, 2)",
-            placeholder_code=table.placeholder_code,
-        )
 
     def _search_account_root(self, operator, value):
         if operator not in ('in', 'child_of', 'any'):
@@ -476,15 +391,18 @@ class AccountAccount(models.Model):
         }
 
     def _compute_used(self):
-        domain = Domain('id', 'in', self.ids) & Domain('used', '=', True)
-        used_ids = set(self.sudo().with_context(active_test=False)._search(domain))
+        used_ids = self._get_used_account_ids([('account_id', 'in', self.ids)])
         for record in self:
             record.used = record.id in used_ids
 
-    def _compute_sql_used(self, table):
-        query = Query(table._model.sudo().env['account.move.line'])
-        query.add_where(SQL("%s = %s", query.table.account_id, table.id))
-        return SQL("EXISTS %s", query.subselect(''))
+    def _get_used_account_ids(self, domain):
+        return {
+            account.id
+            for account, in self.env['account.move.line'].sudo().with_context(active_test=False)._read_group(
+                domain=domain,
+                groupby=['account_id'],
+            )
+        }
 
     @api.model
     def _search_new_account_code(self, start_code, cache=None):
@@ -594,9 +512,6 @@ class AccountAccount(models.Model):
     def _compute_company_currency_id(self):
         self.company_currency_id = self.env.company.currency_id
 
-    def _compute_sql_company_currency_id(self, table):
-        return SQL("%s", self.env.company.currency_id.id)
-
     @api.depends_context('company')
     def _compute_company_fiscal_country_code(self):
         self.company_fiscal_country_code = self.env.company.account_fiscal_country_id.code
@@ -690,9 +605,6 @@ class AccountAccount(models.Model):
             Domain('account_type', '=like', self._get_internal_group(v) + '%')
             for v in value
         )
-
-    def _compute_sql_internal_group(self, table):
-        return SQL("split_part(%s, '_', 1)", table.account_type)
 
     @api.depends('account_type')
     def _compute_reconcile(self):

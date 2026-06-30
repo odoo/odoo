@@ -54,7 +54,6 @@ class HrEmployee(models.Model):
         string="Employee Record",
         compute='_compute_version_id',
         search='_search_version_id',
-        compute_sql='_compute_sql_version_id',
         ondelete='cascade',
         required=True,
         store=False,
@@ -119,7 +118,7 @@ class HrEmployee(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', compute_sql='_compute_sql_presence_state', compute_sudo=False, default='out_of_working_hour')
+        ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', compute_sudo=False, default='out_of_working_hour')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     hr_icon_display = fields.Selection([
@@ -744,11 +743,6 @@ class HrEmployee(models.Model):
         domain = Domain('id', operator, value)
         return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
 
-    def _compute_sql_version_id(self, table):
-        # HACK required to make inherits work on a computed field
-        # (could be a CASE WHEN with the version_id from the content for the current user)
-        return table.current_version_id
-
     def _get_version(self, date=fields.Date.today()):
         """
         Return the version that should be used for the given date.
@@ -1094,27 +1088,6 @@ class HrEmployee(models.Model):
                 elif presence_status == "offline" and employee.id in working_now_list:
                     state = 'absent'
             employee.hr_presence_state = state
-
-    def _compute_sql_presence_state(self, table):
-        # Ugly hack to be able to groupby hr_presence_state: that's not efficient since we will compute
-        # the hr_presence_state on every record in the DB to generate this new groupby specification.
-        limit_records = self.env['ir.config_parameter'].get_int('hr.employee.hr_presence_state.limit', 1000)
-        all_records = self.sudo().with_context(active_test=False).search_fetch([], limit=limit_records + 1, order='id')
-        # Protection against too much inefficient code.
-        if len(all_records) > limit_records:
-            raise UserError(self.env._("Cannot search or group by hr_presence state: too many employees (%s)", len(all_records)))
-        states_map = all_records.with_env(self.env).grouped('hr_presence_state')
-        if not states_map:  # No record, no result
-            return SQL('NULL')
-
-        id_field = SQL.identifier(table._alias, 'id')
-        when_cases = SQL('\n').join(
-            [
-                SQL('WHEN %s IN %s THEN %s', id_field, records._ids, state)
-                for state, records in states_map.items()
-            ],
-        )
-        return SQL("CASE %s END", when_cases)
 
     @api.depends('user_id')
     def _compute_last_activity(self):

@@ -194,7 +194,6 @@ class DiscussChannel(models.Model):
         string="Rating (%)",
         aggregator="avg",
         compute="_compute_livechat_rating_percentage",
-        compute_sql="_compute_sql_livechat_rating_percentage",
         compute_sudo=True,
     )
 
@@ -303,12 +302,6 @@ class DiscussChannel(models.Model):
             channel.livechat_rating_percentage = self._rating_selection_to_percentage(
                 channel.livechat_rating,
             )
-
-    def _compute_sql_livechat_rating_percentage(self, table):
-        # This method allows to filter out non-rated sessions of the aggregation
-        return self._rating_selection_to_percentage_sql(
-            SQL.identifier(table._alias, "livechat_rating"),
-        )
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_agent_history_ids(self):
