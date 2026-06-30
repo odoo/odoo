@@ -342,6 +342,15 @@ test("should remove font-size from list item containing sublist", async () => {
     });
 });
 
+test("should not remove font size of nested li while removing format of first list item", async () => {
+    await testEditor({
+        styleContent: "ol { font: 14px Roboto }",
+        contentBefore: `<ul><li class="h2-fs"><p>[a]</p><ul class="o_default_font_size"><li class="h2-fs">b</li></ul></li></ul>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<ul><li><p>[a]</p><ul><li class="h2-fs">b</li></ul></li></ul>`,
+    });
+});
+
 test("should remove font-size class from list item containing sublist", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
