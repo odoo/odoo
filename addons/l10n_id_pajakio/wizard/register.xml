@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pajakio_registration_form_view" model="ir.ui.view">
+        <field name="name">l10n_id_pajakio.registration.form.form</field>
+        <field name="model">l10n_id_pajakio.registration.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="email"/>
+                    <field name="password" password="True"/>
+                    <!-- user_name and phone are only needed if registering user -->
+                    <field name="user_name" invisible="not context.get('register_user')"/>
+                    <field name="phone" invisible="not context.get('register_user')"/>
+                    <!-- company_name, address, and city should only show if registering company  -->
+                    <field name="company_name" invisible="not context.get('register_company')"/>
+                    <field name="address" invisible="not context.get('register_company')"/>
+                    <field name="city" invisible="not context.get('register_company')"/>
+                    <!-- npwp shows when registering company or signing in -->
+                    <field name="npwp" invisible="not (context.get('register_company') or context.get('sign_in'))"/>
+                </group>
+                <footer>
+                    <button string="Sign In" type="object" name="action_sign_in" class="btn-primary"
+                        invisible="not context.get('sign_in')"/>
+                    <button string="Register User" type="object" name="action_register_user" class="btn-primary"
+                        invisible="not context.get('register_user')"/>
+                    <button string="Register Company" type="object" name="action_register_company" class="btn-primary"
+                        invisible="not context.get('register_company')"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
