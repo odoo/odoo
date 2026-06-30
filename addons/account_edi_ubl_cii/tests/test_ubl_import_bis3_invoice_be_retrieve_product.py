@@ -82,3 +82,61 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
             'name': "turlutututu",
             'product_id': product.id,
         }])
+
+    def test_import_product_by_supplier_info(self):
+        """Product has no barcode/default_code but is matched via product.supplierinfo Vendor Product Code."""
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Test Vendor',
+            'vat': 'BE0202239951',
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': partner.commercial_partner_id.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_code': 'VENDOR-PRODUCT-001',
+        })
+
+        _fn, xml_content = self._import_file_content('test_import_product_by_supplier_info', 'xml')
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': xml_content,
+            'name': 'test_import_product_by_supplier_info.xml',
+        })
+        imported_invoice = self._import_invoice_as_attachment_on(
+            attachment=xml_attachment,
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertEqual(imported_invoice.invoice_line_ids.product_id, product)
+
+    def test_import_product_by_supplier_info_as_first_preference(self):
+        """
+        Product A matches by supplier info, Product B matches by barcode.
+        Product A should win because supplier info has higher priority in the search plan.
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'Test Vendor',
+            'vat': 'BE0202239951',
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': partner.commercial_partner_id.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_code': 'VENDOR-PRODUCT-002',
+        })
+        _product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'barcode': '1234567890128',  # matches StandardItemIdentification in XML
+        })
+
+        _fn, xml_content = self._import_file_content('test_import_product_by_supplier_info_as_first_preference', 'xml')
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': xml_content,
+            'name': 'test_import_product_by_supplier_info_as_first_preference.xml',
+        })
+        imported_invoice = self._import_invoice_as_attachment_on(
+            attachment=xml_attachment,
+            journal=self.company_data['default_journal_purchase'],
+        )
+        matched_product = imported_invoice.invoice_line_ids.product_id
+        self.assertEqual(matched_product, self.product_a)

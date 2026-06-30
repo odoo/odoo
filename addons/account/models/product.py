@@ -314,6 +314,40 @@ class ProductProduct(models.Model):
         if default_code:
             return {'criteria': [{'domain': [('default_code', '=', default_code)]}]}
 
+    def _import_retrieve_product_from_supplierinfo(self, product_values):
+        vendor_partner_id = product_values.get('vendor_partner_id')
+        if not vendor_partner_id:
+            return {}
+
+        codes = [
+            code for code in [
+                product_values.get('sellers_item_id'),
+                product_values.get('standard_item_id'),
+                product_values.get('buyers_item_id'),
+            ]
+            if code
+        ]
+        if not codes:
+            return {}
+
+        def find_by_supplierinfo(values):
+            for code in codes:
+                supplierinfo = self.env['product.supplierinfo'].search([
+                    ('partner_id', '=', vendor_partner_id),
+                    ('product_code', '=', code),
+                ], limit=1)
+                if not supplierinfo:
+                    continue
+                if supplierinfo.product_id:
+                    return supplierinfo.product_id
+                if supplierinfo.product_tmpl_id:
+                    return self.search([
+                        ('product_tmpl_id', '=', supplierinfo.product_tmpl_id.id),
+                    ], limit=1)
+            return self.env['product.product']
+
+        return {'criteria': [{'search_method': find_by_supplierinfo}]}
+
     def _import_retrieve_product_from_name(self, product_values):
 
         name = product_values.get('name')
@@ -486,9 +520,10 @@ class ProductProduct(models.Model):
 
     def _get_retrieval_product_search_plan(self):
         return [
-            (5, self._import_retrieve_product_from_barcode),
-            (10, self._import_retrieve_product_from_default_code),
-            (15, self._import_retrieve_product_from_name),
+            (5, self._import_retrieve_product_from_supplierinfo),
+            (10, self._import_retrieve_product_from_barcode),
+            (15, self._import_retrieve_product_from_default_code),
+            (20, self._import_retrieve_product_from_name),
         ]
 
     def _retrieve_product(self, company=None, extra_domain=None, **product_vals):

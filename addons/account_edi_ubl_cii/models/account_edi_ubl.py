@@ -3222,11 +3222,20 @@ class AccountEdiUBL(models.AbstractModel):
         line_tree = collected_values['line_tree']
         partner = collected_values.get('customer_values', {}).get('customer')
         name = collected_values['to_write'].get('name')
+        sellers_item_id = line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID')
+        buyers_item_id = line_tree.findtext('.//{*}Item/{*}BuyersItemIdentification/{*}ID')
+        standard_item_id = line_tree.findtext('.//{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID="0160"]')
 
         product_values = collected_values['product_values'] = {
-            'default_code': line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID'),
+            'barcode': standard_item_id,
+            'default_code': sellers_item_id or buyers_item_id,
             'name': line_tree.findtext('.//{*}Item/{*}Name'),
-            'barcode': line_tree.findtext('.//{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID="0160"]'),
+
+            'sellers_item_id': sellers_item_id,
+            'buyers_item_id': buyers_item_id,
+            'standard_item_id': standard_item_id,
+            'vendor_partner_id': partner.commercial_partner_id.id if partner else None,
+
             'invoice_predictive': {
                 'invoice': collected_values['invoice'],
                 'name': name,
