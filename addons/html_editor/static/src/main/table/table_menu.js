@@ -8,6 +8,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
@@ -226,6 +227,7 @@ export class TableMenu extends Component {
             this.tableGrid,
             this.props.target
         );
+        const isTouchDevice = hasTouch();
         return [
             !this.isFirst && {
                 name: "move_left",
@@ -263,19 +265,21 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
-            this.hasCustomColumnWidth && {
-                name: "reset_column_size",
-                icon: "fa-table",
-                text: _t("Reset column size"),
-                action: (target) =>
-                    this.props.resetColumnWidth(closestElement(target, isTableCell)),
-            },
-            this.hasCustomTableSize && {
-                name: "reset_table_size",
-                icon: "fa-table",
-                text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(closestElement(target, "table")),
-            },
+            !isTouchDevice &&
+                this.hasCustomColumnWidth && {
+                    name: "reset_column_size",
+                    icon: "fa-table",
+                    text: _t("Reset column size"),
+                    action: (target) =>
+                        this.props.resetColumnWidth(closestElement(target, isTableCell)),
+                },
+            !isTouchDevice &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "fa-table",
+                    text: _t("Reset table size"),
+                    action: (target) => this.props.resetTableSize(closestElement(target, "table")),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "fa-times-circle",
@@ -307,6 +311,7 @@ export class TableMenu extends Component {
             this.tableGrid,
             this.props.target
         );
+        const isTouchDevice = hasTouch();
         return [
             this.isFirst &&
                 !this.isTableHeader && {
@@ -366,18 +371,20 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
-            this.hasCustomRowHeight && {
-                name: "reset_row_size",
-                icon: "fa-table",
-                text: _t("Reset row size"),
-                action: (target) => this.props.resetRowHeight(closestElement(target, "tr")),
-            },
-            this.hasCustomTableSize && {
-                name: "reset_table_size",
-                icon: "fa-table",
-                text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(closestElement(target, "table")),
-            },
+            !isTouchDevice &&
+                this.hasCustomRowHeight && {
+                    name: "reset_row_size",
+                    icon: "fa-table",
+                    text: _t("Reset row size"),
+                    action: (target) => this.props.resetRowHeight(closestElement(target, "tr")),
+                },
+            !isTouchDevice &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "fa-table",
+                    text: _t("Reset table size"),
+                    action: (target) => this.props.resetTableSize(closestElement(target, "table")),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "fa-times-circle",

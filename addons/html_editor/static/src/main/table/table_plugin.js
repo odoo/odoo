@@ -32,6 +32,7 @@ import { getElementHoveredEdge } from "@html_editor/utils/perspective_utils";
 import { rgbaToHex } from "@web/core/utils/colors";
 
 export const BORDER_SENSITIVITY = 5;
+const LONG_PRESS_DELAY = 200;
 
 const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
 function isUnremovableTableComponent(node, root) {
@@ -218,6 +219,10 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "dblclick", this.fitToContent);
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
+        this.addDomListener(this.editable, "touchstart", this.onTouchStart);
+        this.addDomListener(this.editable, "touchmove", this.onTouchMove);
+        this.addDomListener(this.editable, "touchend", this.onTouchEnd);
+        this.addDomListener(this.editable, "touchcancel", this.onTouchEnd);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
         this.addDomListener(this.editable, "keydown", (ev) => {
             this._isKeyDown = true;
@@ -1572,6 +1577,63 @@ export class TablePlugin extends Plugin {
                 }
             }
         }
+    }
+
+    onTouchStart(ev) {
+        clearTimeout(this.tableSelectionLongPress);
+        const cell = closestElement(ev.target, isTableCell);
+        if (!cell) {
+            return;
+        }
+        this.tableSelectionLongPress = setTimeout(() => {
+            this.touchStartCell = cell;
+            this.lastFocusCell = cell;
+            const [anchorNode, anchorOffset] = getDeepestPosition(cell, 0);
+            const [focusNode, focusOffset] = getDeepestPosition(cell, nodeSize(cell));
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            });
+            this.selectTableCells(this.dependencies.selection.getEditableSelection());
+        }, LONG_PRESS_DELAY);
+    }
+
+    onTouchMove(ev) {
+        if (!this.touchStartCell) {
+            clearTimeout(this.tableSelectionLongPress);
+            return;
+        }
+        ev.preventDefault();
+        const touch = ev.touches[0];
+        const element = this.document.elementFromPoint(touch.clientX, touch.clientY);
+        if (!element) {
+            return;
+        }
+        const focusCell = closestElement(element, isTableCell);
+        if (!focusCell || focusCell === this.lastFocusCell) {
+            return;
+        }
+
+        this.lastFocusCell = focusCell;
+        const [anchorNode, anchorOffset] = getDeepestPosition(this.touchStartCell, 0);
+        const [focusNode, focusOffset] = getDeepestPosition(focusCell, nodeSize(focusCell));
+
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
+
+        this.selectTableCells(this.dependencies.selection.getEditableSelection());
+    }
+
+    onTouchEnd() {
+        clearTimeout(this.tableSelectionLongPress);
+        delete this.touchStartCell;
+        delete this.lastFocusCell;
     }
 
     onMousedown(ev) {
