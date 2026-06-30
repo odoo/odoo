@@ -161,26 +161,59 @@ class IrAttachment(models.Model):
         try:
             # add fname to checklist, in case the transaction aborts
             self._mark_for_gc(fname)
+
             # check if file exists and prevent sha-1 collision
             try:
                 with open(full_path, 'rb') as existing_file:
                     if self._same_content(bin_value, existing_file):
                         return
-                    raise RuntimeError(f"The attachment {fname} collides with an existing file.")
+                    e = f"The attachment {fname} collides with an existing file."
+                    raise RuntimeError(e)
             except FileNotFoundError:
                 pass
-            # make sure the directory exists
-            dirname = os.path.dirname(full_path)
-            if not os.path.isdir(dirname):
-                os.makedirs(dirname, DIRECTORY_MODE, exist_ok=True)
-            # write and set permissions
-            with open(full_path, 'wb') as fp:
-                shutil.copyfileobj(bin_value, fp)
-            # Prevent changing the content of the file, as it would
-            # break the checksum and store_fname fields. This doesn't
-            # prevent removing it thought. Sysadmins can use umask(1) to
-            # restrict the permissions further.
-            os.chmod(full_path, 0o444)  # r--r--r--
+
+            # Copy ``bin_value`` in the upload folder, prevent changing
+            # the copy's content (as this would corrupt the checksum and
+            # filename) and then move (i.e. "commit") it to it right
+            # place in the filestore.
+            upload_dir = self._full_path('upload')
+            prefix = os.path.basename(fname) + '-'
+            try:  # noqa: SIM105
+                os.mkdir(upload_dir, DIRECTORY_MODE)
+            except FileExistsError:
+                pass
+            tmp_path = os.path.join(upload_dir, prefix + uuid.uuid4().hex[:16])
+            try:
+                try:
+                    # Fast hardlink, works for io.FileIO when it's on the same filesystem
+                    if not (hasattr(bin_value, 'name') and isinstance(bin_value, (tempfile._TemporaryFileWrapper, io.IOBase))):
+                        raise OSError("Cannot hardlink in _file_write")  # noqa: TRY301
+                    os.link(bin_value.name, tmp_path)
+                except OSError:
+                    # Copy, works for all io.IOBase
+                    with open(tmp_path, 'wb') as tmp_file:
+                        shutil.copyfileobj(bin_value, tmp_file)
+                        tmp_file.flush()
+                        os.fchmod(tmp_file.fileno(), 0o444)  # r--r--r--
+                else:
+                    os.chmod(tmp_path, 0o444)  # r--r--r--
+
+                # "commit" the file by moving it to its right place
+                try:
+                    os.replace(tmp_path, full_path)
+                    tmp_path = None
+                except FileNotFoundError:  # missing directory
+                    os.makedirs(os.path.dirname(full_path), DIRECTORY_MODE, exist_ok=True)
+                    os.replace(tmp_path, full_path)
+                    tmp_path = None
+            finally:
+                # Clean-up the temporary file
+                if tmp_path:
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        _logger.debug("Failed to remove temporary file: %s", tmp_path, exc_info=True)
+
         except OSError as e:
             e.add_note(f"_file_write writing {full_path}")
             raise
@@ -202,10 +235,8 @@ class IrAttachment(models.Model):
         # touch the full_path
         try:
             open(full_path, 'wb').close()
-        except FileNotFoundError:
-            # raised when directory does not exist, create the dir and the file
-            dirname = os.path.dirname(full_path)
-            os.makedirs(dirname, exist_ok=True)
+        except FileNotFoundError:  # missing directory
+            os.makedirs(os.path.dirname(full_path), DIRECTORY_MODE, exist_ok=True)
             open(full_path, 'wb').close()
 
     @api.autovacuum
@@ -229,6 +260,16 @@ class IrAttachment(models.Model):
     def _gc_file_store_unsafe(self, grace_period):
         # Generate the file names to check
         limit_time = datetime.now().timestamp() - grace_period
+
+        # Clean up old uploaded files
+        upload_dir = self._full_path('upload')
+        if os.path.isdir(upload_dir):
+            for dirpath, _subdirs, filenames in os.walk(upload_dir):
+                for filename in filenames:
+                    path = os.path.join(dirpath, filename)
+                    if os.path.getmtime(path) < limit_time:
+                        _logger.debug("filestore gc removing old uploaded file %s", path)
+                        os.unlink(path)
 
         def files_to_gc():
             for dirpath, _subdirs, filenames in os.walk(self._full_path('checklist')):
@@ -292,7 +333,7 @@ class IrAttachment(models.Model):
                     else:
                         os.replace(check_file, del_check_file)
                 except OSError:
-                    _logger.debug("_file_gc could not move %s", check_file)
+                    _logger.debug("_file_gc could not move %s", check_file, exc_info=True)
                     continue
                 # 2. Check the mtime of the moved check file
                 if not (os.path.getmtime(del_check_file) < limit_time):
@@ -302,6 +343,8 @@ class IrAttachment(models.Model):
                 # 3. Move the file
                 try:
                     os.replace(full_path, del_full_path)
+                except FileNotFoundError:
+                    pass  # check file created but the whole file does not exist
                 except OSError:
                     _logger.info("_file_gc could not move %s", full_path, exc_info=True)
                     continue
@@ -317,6 +360,8 @@ class IrAttachment(models.Model):
                 # 5. Remove moved files
                 try:
                     os.unlink(del_full_path)
+                except FileNotFoundError:
+                    pass
                 except OSError:
                     _logger.info("_file_gc could not unlink %s", full_path, exc_info=True)
                 else:
@@ -995,7 +1040,10 @@ class IrAttachment(models.Model):
                 file.seek(0)
             except OSError:  # not accessible/seekable
                 upload_dir = self._full_path('upload')
-                os.makedirs(upload_dir, DIRECTORY_MODE, exist_ok=True)
+                try:  # noqa: SIM105
+                    os.mkdir(upload_dir, DIRECTORY_MODE)
+                except FileExistsError:
+                    pass
                 file_upload = exit_stack.enter_context(
                     tempfile.NamedTemporaryFile(
                         dir=upload_dir,
@@ -1040,16 +1088,7 @@ class IrAttachment(models.Model):
                     .create(create_vals | computed_fields)
                     .with_env(self.env)
             )
-            self._mark_for_gc(attach.store_fname)
-            try:
-                # check the destination (overrides of _file_fname)
-                dst_path = self._full_path(computed_fields['store_fname'])
-                if computed_fields['store_fname'] not in dst_path:
-                    raise OSError("store_fname may no longer be local")  # noqa: TRY301
-                os.link(src_path, dst_path)  # Fast hardlink
-                os.chmod(dst_path, 0o444)  # r--r--r--
-            except OSError:
-                self._file_write(computed_fields['store_fname'], file_upload or file)
+            self._file_write(computed_fields['store_fname'], file_upload or file)
 
         attach.index_content = attach._index(attach.raw, attach.mimetype, attach.checksum)
         return attach
