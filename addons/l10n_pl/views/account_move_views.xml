@@ -5,6 +5,16 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                    <div class="alert alert-warning" role="alert"
+                        invisible="not l10n_pl_show_mpp_warning">
+                        Split Payment is legally mandatory for transactions exceeding 15,000 PLN involving sensitive goods. Proceeding without MPP may expose you to a 30% VAT penalty.
+                    </div>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="l10n_pl_mpp" readonly="state != 'draft'" invisible="not l10n_pl_is_currency_PLN"/>
+            </xpath>
+
             <xpath expr="//group[@id='header_right_group']//field[@name='date']" position="attributes">
                 <attribute name="invisible" add="country_code != 'PL'" separator=" and "/>
             </xpath>

@@ -10,6 +10,11 @@
                     <field name="l10n_pl_vat_gtu"/>
                 </group>
             </xpath>
+            <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
+                <group name="MPP" string="MPP">
+                    <field name="l10n_pl_subject_to_split_payment"/>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>

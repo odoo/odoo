@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_pl_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='payment_communication']" position="after">
+            <div class="mb-3" t-if="o.l10n_pl_is_currency_PLN and o.l10n_pl_mpp and o.move_type in ('out_invoice', 'out_refund')">
+                Mechanizm podzielonej płatności
+            </div>
+        </xpath>
+    </template>
+</odoo>
