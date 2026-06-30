@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_order_receipt import TestPosOrderReceipt
 
@@ -43,11 +45,9 @@ class TestOrderReceiptPosLoyalty(TestPosOrderReceipt):
             data['frontend_data'] = frontend_data
             data['backend_data'] = backend_data
 
-        # Add function to model
-        order_model = self.env.registry.models['pos.order']
-        order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
-        self.start_pos_tour("test_receipt_data_pos_loyalty")
-        loyalty_frontend = data['frontend_data']['extra_data']['loyalties']
-        loyalty_backend = data['backend_data']['extra_data']['loyalties']
-        for [backend, frontend] in zip(loyalty_backend, loyalty_frontend):
-            self.comparator(backend, frontend)
+        with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
+            self.start_pos_tour("test_receipt_data_pos_loyalty")
+            loyalty_frontend = data['frontend_data']['extra_data']['loyalties']
+            loyalty_backend = data['backend_data']['extra_data']['loyalties']
+            for [backend, frontend] in zip(loyalty_backend, loyalty_frontend):
+                self.comparator(backend, frontend)
