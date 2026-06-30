@@ -7,6 +7,14 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
 
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_approve_discount"
+                        string="Aprobar descuento"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'requires_review'"
+                        groups="validacion_descuento_maximo.group_discount_supervisor"/>
+            </xpath>
             <xpath expr="//sheet" position="inside">
                 <group string="Control de Descuentos">
                     <field name="descuento_maximo_permitido" readonly="1"/>
