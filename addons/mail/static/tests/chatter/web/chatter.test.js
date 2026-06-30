@@ -51,35 +51,32 @@ test("simple chatter on a record", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
-    await waitStoreFetch(
+    await waitStoreFetch([
         [
-            [
-                "mail.thread",
-                {
-                    access_params: {},
-                    request_list: [
-                        "activities",
-                        "attachments",
-                        "contact_fields",
-                        "defaultSubject",
-                        "followers",
-                        "has_pinned_messages",
-                        "scheduledMessages",
-                        "showSubjectInSmallComposer",
-                        "suggestedRecipients",
-                        "suggestedSubject",
-                    ],
-                    thread_id: partnerId,
-                    thread_model: "res.partner",
-                },
-            ],
-            [
-                "/mail/thread/messages",
-                { thread_id: partnerId, thread_model: "res.partner", fetch_params: { limit: 30 } },
-            ],
+            "/mail/thread/messages",
+            { thread_id: partnerId, thread_model: "res.partner", fetch_params: { limit: 30 } },
         ],
-        { ignoreOrder: true }
-    );
+        [
+            "mail.thread",
+            {
+                access_params: {},
+                request_list: [
+                    "activities",
+                    "attachments",
+                    "contact_fields",
+                    "defaultSubject",
+                    "followers",
+                    "has_pinned_messages",
+                    "scheduledMessages",
+                    "showSubjectInSmallComposer",
+                    "suggestedRecipients",
+                    "suggestedSubject",
+                ],
+                thread_id: partnerId,
+                thread_model: "res.partner",
+            },
+        ],
+    ]);
 });
 
 test("can post a message on a record thread", async () => {
