@@ -1,33 +1,44 @@
-name: CI - Validar Entorno Docker Compose
+# 1. El nombre del flujo que verás en la pestaña "Actions" de GitHub
+name: CI Odoo - Sprint 3
 
+# 2. DISPARADORES (Triggers): ¿Cuándo debe activarse este pipeline?
+# Le decimos que corra CADA VEZ que alguien haga "git push" o un "Pull Request"
+# hacia las ramas 19.0, main o develop.
 on:
   push:
-    branches: ["19.0", "feature/**"]
+    branches: [ "19.0", "main", "develop" ]
   pull_request:
-    branches: ["19.0"]
+    branches: [ "19.0", "main", "develop" ]
 
+# 3. TRABAJOS (Jobs): Las acciones que va a ejecutar el servidor virtual
 jobs:
-  build-and-validate:
-    runs-on: ubuntu-latest
+  test-and-build:
+    runs-on: ubuntu-latest # Levanta una máquina virtual limpia con Linux Ubuntu en la nube
 
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
+    # PASO 1: Descarga el código de tu repositorio dentro de esa máquina virtual
+    - name: Checkout del código
+      uses: actions/checkout@v4
 
-      - name: Levantar contenedores con Docker Compose
-        working-directory: ./docker-config
-        run: docker compose up -d
+    # PASO 2: Levanta el entorno de Odoo de tu equipo en la nube
+    - name: Levantar entorno de desarrollo (Docker Compose)
+      run: |
+        cd docker-config   # Entra a la carpeta donde Roydan dejó el compose
+        docker compose up -d # Descarga Postgres 15 y Odoo 19 y los enciende[cite: 1]
+        echo "Esperando 15 segundos a que PostgreSQL y Odoo inicialicen..."
+        sleep 15             # Le damos un tiempo para que la base de datos acepte conexiones
 
-      - name: Esperar que Odoo arranque
-        run: sleep 30
+    # PASO 3 [TASK 1]: La ejecución de las pruebas unitarias
+    - name: Ejecutar Pruebas Unitarias de Odoo
+      run: |
+        cd docker-config
+        # Cambiamos el puerto a 8070 para el comando de pruebas, evitando el conflicto con el puerto 8069 de fondo
+        docker compose exec -T web /entrypoint.sh odoo -d odoo_ventas -u validacion_descuento_maximo --test-enable --stop-after-init --http-port=8070 > odoo_tests.log 2>&1
 
-      - name: Verificar que los contenedores están corriendo
-        working-directory: ./docker-config
-        run: docker compose ps
-
-      - name: Verificar que Odoo responde en el puerto 8069
-        run: curl --retry 5 --retry-delay 10 -f http://localhost:8069
-
-      - name: Apagar contenedores
-        working-directory: ./docker-config
-        run: docker compose down
+    # PASO 4 [TASK 2]: Guardar el reporte para el profesor y Saúl
+    - name: Publicar Reporte de Pruebas como Artifact
+      uses: actions/upload-artifact@v4
+      if: always() # ¡CRUCIAL! Hace que el log se suba SIEMPRE, incluso si los tests fallaron.
+      with:
+        name: odoo-test-results        # Nombre del archivo .zip descargable en GitHub
+        path: docker-config/odoo_tests.log # Ruta del archivo que queremos que guarde
