@@ -886,8 +886,24 @@ class AccountJournal(models.Model):
         action['context'] = {'default_journal_id': self.id}
         return action
 
+    def _deduce_special_journal_from_attachment(self, attachment, move_type):
+        """Helper allowing modules to select a dedicated journal based on an attachment.
+
+        This method can be overridden by modules that need custom logic to determine
+        a specific journal depending on the provided attachment and move type.
+
+        Example:
+            Self-billing invoices may be imported into a dedicated sales journal.
+
+        :param  attachment: The attachment being processed.
+        :param  move_type: The type of move related to the attachment.
+        :return: A `account.journal` record if a special journal applies, otherwise None.
+        """
+        return None
+
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
+        given_journal = self
         if not self:
             self = self.env['account.journal'].browse(self._context.get("default_journal_id"))
         move_type = self._context.get("default_move_type", "entry")
@@ -914,8 +930,10 @@ class AccountJournal(models.Model):
         # will create an invoice with a tentative to enhance with EDI / OCR..
         all_invoices = self.env['account.move']
         for attachment in attachments:
+            special_journal = self._deduce_special_journal_from_attachment(attachment, move_type) if not given_journal else None
+            journal_id = (special_journal or self).id
             invoice = self.env['account.move'].create({
-                'journal_id': self.id,
+                'journal_id': journal_id,
                 'move_type': move_type,
             })
 

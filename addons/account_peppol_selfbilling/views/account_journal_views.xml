@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_account_journal_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='advanced_settings']/group/group" position="inside">
-                <field name="is_self_billing" invisible="type != 'purchase'"/>
+                <field name="is_self_billing"/>
             </xpath>
         </field>
     </record>
