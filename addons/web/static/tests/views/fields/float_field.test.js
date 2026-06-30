@@ -15,6 +15,7 @@ import { registry } from "@web/core/registry";
 
 class Partner extends models.Model {
     float_field = fields.Float({ string: "Float field" });
+    other_field = fields.Float();
 
     _records = [
         { id: 1, float_field: 0.36 },
@@ -25,6 +26,7 @@ class Partner extends models.Model {
         { id: 100, float_field: 2.034567e3 },
         { id: 101, float_field: 3.75675456e6 },
         { id: 102, float_field: 6.67543577586e12 },
+        { id: 200, float_field: 0, other_field: 3.2 },
     ];
 }
 
@@ -455,4 +457,26 @@ test("float field can be updated by another field/widget", async () => {
 
     expect(".o_field_widget[name=float_field] input:eq(0)").toHaveValue("41.00");
     expect(".o_field_widget[name=float_field] input:eq(1)").toHaveValue("41.00");
+});
+
+test("field with placeholder values", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 200,
+        arch: `<form>
+                   <field name="other_field" invisible="True"/>
+                   <field name="float_field" options="{'placeholder_field': 'other_field'}"/>
+               </form>`,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("", {
+        message: "A float field with a placeholder and a value of 0 should not display any value.",
+    });
+    expect(".o_field_widget[name=float_field] input").toHaveAttribute("placeholder", "3.20", {
+        message: "The placeholder should be set from the external field.",
+    });
+
+    await contains(".o_field_widget[name=float_field] input").edit("8.9");
+    expect(".o_field_widget input").toHaveValue("8.90");
 });

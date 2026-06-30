@@ -2,8 +2,9 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatField">
-        <span t-if="this.props.readonly" t-out="this.formattedValue" />
-        <input 
+        <span t-if="this.props.readonly" t-out="this.formattedValue"
+              t-att-class="{'text-muted': this.placeholderValue &amp;&amp; !this.formattedValue}"/>
+        <input
             t-else="" 
             t-on-focusin="this.onFocusIn" 
             t-on-focusout="this.onFocusOut" 
@@ -13,7 +14,9 @@
             inputmode="decimal" 
             class="o_input" 
             autocomplete="off"
-            t-att-step="this.props.step" />
+            t-att-step="this.props.step"
+            t-att-class="{'o_field_placeholder': this.placeholderValue}"
+            t-att-placeholder="this.placeholderValue"/>
     </t>
 
 </templates>
