@@ -672,11 +672,12 @@
         }
     }
 }
+
 .o_wsale_products_opt_design_grid {
     --o-wsale-card-height: 100%;
-    --o-wsale-card-border-width: 0 var(--border-width, #{$border-width}) var(--border-width, #{$border-width}) 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
     --o-wsale-card-info-grow: 1;
     --o-wsale-card-info-shadow: inset 0 var(--border-width, #{$border-width}) 0 0 var(--o-border-color);
+    --o-wsale-card-border-width: 0 var(--border-width, #{$border-width}) var(--border-width, #{$border-width}) 0 #{"/*rtl: 0 0 " + var(--border-width, #{$border-width}) + " " + var(--border-width, #{$border-width}) + "*/"};
     --o-wsale-card-thumb-margin: calc(var(--o-wsale-products-grid-gap-y) * 0.5);
     --o-wsale-card-info-padding: MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)}) MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)}) MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)});
     --o-wsale-card-border-radius: 0px !important;
