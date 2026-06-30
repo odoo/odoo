@@ -101,3 +101,76 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
         },
     ],
 });
+registry.category("web_tour.tours").add("invoicePoSOrderWithPartner", {
+    steps: () => [
+        {
+            trigger: "input[name='pos_reference']",
+            run: "edit 2500-002-00003",
+        },
+        {
+            trigger: ".o_portal_wrap input[name='date_order']",
+            run: function () {
+                const date_order = luxon.DateTime.now();
+                document.querySelector(".o_portal_wrap input[name='date_order']").value =
+                    date_order.toFormat("yyyy-MM-dd");
+            },
+        },
+        {
+            trigger: ".o_portal_wrap input[name='ticket_code']",
+            run: "edit inPoS",
+        },
+        {
+            trigger: ".o_portal_wrap button:contains('Request Invoice')",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".o_portal_wrap input[name='name']",
+            run: function ({ anchor: nameInput }) {
+                if (nameInput.value.trim() !== "Rangilo Gujarati") {
+                    throw new Error("The name input must be prefilled with correct partner name.");
+                }
+            },
+        },
+        {
+            trigger: ".o_portal_wrap input[name='vat']",
+            run: function ({ anchor: vatInput }) {
+                if (vatInput.value.trim() !== "24AAGCC7144L6ZE") {
+                    throw new Error("The vat input must be prefilled with correct partner vat.");
+                }
+            },
+        },
+        {
+            trigger: ".o_portal_wrap input[name='zip']",
+            run: function ({ anchor: zipInput }) {
+                if (zipInput.value.trim() !== "654321") {
+                    throw new Error("The vat input must be prefilled with correct partner zip.");
+                }
+            },
+        },
+        {
+            trigger: ".o_portal_wrap select[name='country_id']",
+            run: function ({ anchor: countryInput }) {
+                if (countryInput.value !== "104") {
+                    throw new Error("The country must be selected to India.");
+                }
+            },
+        },
+        {
+            trigger: ".o_portal_wrap select[name='state_id']",
+            run: function ({ anchor: stateInput }) {
+                if (stateInput.value !== "588") {
+                    throw new Error("The state must be selected to Gujarat.");
+                }
+            },
+        },
+        {
+            trigger: ".o_portal_wrap button:contains('Get my invoice')",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".rounded.text-bg-success.fw-normal.badge",
+        },
+    ],
+});
