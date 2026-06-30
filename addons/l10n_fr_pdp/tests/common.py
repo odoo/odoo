@@ -1,12 +1,16 @@
 import datetime
-import requests
+import json
 
+from base64 import b64encode
+from contextlib import contextmanager
 from freezegun import freeze_time
 from unittest import mock
 from unittest.mock import patch
-from urllib.parse import quote_plus
+from urllib.parse import parse_qs, quote_plus, urlsplit
 
 from odoo import Command, fields
+from odoo.tests.common import MockHTTPClient
+from odoo.tools.misc import file_open
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -19,6 +23,131 @@ FAKE_UUID = [
     'aaaaaaaa-bbbb-cccc-dddd-dddddddddddd',
 ]
 FILE_PATH = 'l10n_fr_pdp/tests/test_files/assets'
+
+PDP_PROXY_URL = 'https://pdp.test.odoo.com'
+
+
+def _is_lookup_of(identifiers):
+    return lambda r: (
+        r.method == 'GET'
+        and urlsplit(r.url).path.endswith('/lookup')
+        and parse_qs(urlsplit(r.url).query)['peppol_identifier'][0] in identifiers
+    )
+
+
+@contextmanager
+def mock_pdp_lookup_success(identifiers, ubl_services=True):
+    def result(request):
+        identifier = parse_qs(urlsplit(request.url).query)['peppol_identifier'][0]
+        quoted = quote_plus(identifier)
+        return {'result': {
+            'identifier': identifier,
+            'smp_base_url': "http://example.com/smp",
+            'ttl': 60,
+            'service_group_url': f"http://example.com/smp/iso6523-actorid-upis%3A%3A{quoted}",
+            'services': [{
+                'href': f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{quoted}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
+                'document_id': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+            }] if ubl_services else [],
+        }}
+
+    with MockHTTPClient(matcher=_is_lookup_of(identifiers), return_json=result) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_pdp_lookup_not_found(identifiers):
+    with MockHTTPClient(
+        matcher=_is_lookup_of(identifiers),
+        return_status=404,
+        return_json={'error': {'code': "NOT_FOUND", 'message': "no naptr record", 'retryable': False}},
+    ) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_pdp_annuaire_lookup(*valid_identifiers):
+    def in_annuaire(request):
+        return parse_qs(urlsplit(request.url).query)['pdp_identifier'][0] in valid_identifiers
+    with MockHTTPClient(
+        matcher=lambda r: r.method == 'GET' and urlsplit(r.url).path.endswith('/annuaire_lookup'),
+        return_json=lambda r: {'result': {'in_annuaire': in_annuaire(r)}},
+    ) as mock_response:
+        yield mock_response
+
+
+def _pdp_jsonrpc_mock(endpoint, result):
+    return MockHTTPClient(
+        method='POST',
+        matcher=lambda r: r.headers.get('Content-Type') == 'application/json',
+        url=f'{PDP_PROXY_URL}{endpoint}',
+        return_json=(lambda r: {'result': result(r)}) if callable(result) else {'result': result},
+    )
+
+
+@contextmanager
+def mock_pdp_registration(peppol_state='receiver'):
+    with (
+        _pdp_jsonrpc_mock('/api/pdp/1/connect', {'id_client': ID_CLIENT, 'refresh_token': FAKE_UUID}),
+        _pdp_jsonrpc_mock('/api/pdp/1/register_receiver', {}),
+        _pdp_jsonrpc_mock('/api/pdp/1/update_user', {}),
+        _pdp_jsonrpc_mock('/api/pdp/1/cancel_peppol_registration', {}),
+        _pdp_jsonrpc_mock('/api/pdp/2/participant_status', {'peppol_state': peppol_state}),
+    ):
+        yield
+
+
+@contextmanager
+def mock_pdp_send_document():
+    def result(request):
+        documents = json.loads(request.body)['params']['documents']
+        return {'messages': [{'message_uuid': FAKE_UUID[0]}] * len(documents)}
+    with _pdp_jsonrpc_mock('/api/pdp/1/send_document', result):
+        yield
+
+
+@contextmanager
+def mock_pdp_send_response():
+    # Yields the mock so the caller can read the sent request from ``mock.calls``.
+    def result(request):
+        reference_uuids = json.loads(request.body)['params']['reference_uuids']
+        return {'messages': [{'message_uuid': FAKE_UUID[2]}] * len(reference_uuids)}
+    with _pdp_jsonrpc_mock('/api/pdp/1/send_response', result) as send_response_mock:
+        yield send_response_mock
+
+
+@contextmanager
+def mock_pdp_documents_retrieval(error=False):
+    state = 'error' if error else 'done'
+    documents = {
+        FAKE_UUID[0]: {
+            'accounting_supplier_party': False, 'filename': 'test_outgoing.xml', 'enc_key': '', 'document': '',
+            'state': state, 'direction': 'outgoing', 'document_type': 'Invoice', 'origin_message_uuid': FAKE_UUID[0],
+        },
+        FAKE_UUID[1]: {
+            'accounting_supplier_party': '0184:16356706', 'filename': 'test_incoming',
+            'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='r').read(),
+            'document': b64encode(file_open(f'{FILE_PATH}/document', mode='rb').read()).decode(),
+            'state': state, 'direction': 'incoming', 'document_type': 'Invoice', 'origin_message_uuid': FAKE_UUID[1],
+        },
+    }
+
+    def get_document(request):
+        uuid = json.loads(request.body)['params']['message_uuids'][0]
+        return {uuid: documents[uuid]}
+
+    with (
+        _pdp_jsonrpc_mock('/api/pdp/1/ack', {}),
+        _pdp_jsonrpc_mock('/api/pdp/1/get_all_ppf_documents', {}),
+        _pdp_jsonrpc_mock('/api/pdp/1/get_all_documents', {'messages': [{
+            'accounting_supplier_party': None, 'filename': 'test_incoming.xml', 'uuid': FAKE_UUID[1],
+            'origin_message_uuid': FAKE_UUID[1], 'state': 'done', 'direction': 'incoming', 'document_type': 'Invoice',
+            'sender': '0184:16356706', 'receiver': '0088:5798009811512', 'timestamp': '2022-12-30',
+            'error': 'Test error' if error else False,
+        }]}),
+        _pdp_jsonrpc_mock('/api/pdp/1/get_document', get_document),
+    ):
+        yield
 
 
 class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
@@ -93,70 +222,6 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._get_pdp_proxy_user',
             return_value=False,
         ))
-
-    # -------------------------------------------------------------------------
-    # REQUEST HANDLING
-    # -------------------------------------------------------------------------
-
-    # We block all requests by default.
-    @classmethod
-    def _request_handler(cls, s: requests.Session, r: requests.PreparedRequest, /, **kw):
-        response = requests.Response()
-        response.status_code = 200
-        json = {}
-        if r.path_url.startswith('/api/peppol/1/lookup') or r.path_url.startswith('/api/pdp/1/lookup'):
-            json = {
-                "error": {
-                    "code": "NOT_FOUND",
-                    "message": "Blocked Request",
-                },
-            }
-        elif r.path_url.startswith('/api/pdp/1/annuaire_lookup'):
-            json = {'in_annuaire': False}
-        response.json = lambda: json
-        return response
-
-    @classmethod
-    def _get_annuaire_lookup_response(cls, peppol_identifier, expected_peppol_identifier):
-        response = requests.Response()
-        response.status_code = 200
-        response.json = lambda: {
-            "result": {
-                "in_annuaire": peppol_identifier == expected_peppol_identifier,
-            }
-        }
-        return response
-
-    @classmethod
-    def _get_peppol_lookup_response(cls, peppol_identifier, expected_peppol_identifier, ubl3_services=True):
-        response = requests.Response()
-        if peppol_identifier == expected_peppol_identifier:
-            url_quoted_peppol_identifier = quote_plus(peppol_identifier)
-            response.status_code = 200
-            response.json = lambda: {
-                "result": {
-                    "identifier": peppol_identifier,
-                    "smp_base_url": "http://example.com/smp",
-                    "ttl": 60,
-                    "service_group_url": f"http://example.com/smp/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}",
-                    "services": [
-                            {
-                                "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
-                                "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
-                            },
-                        ] if ubl3_services else [],
-                }
-            }
-        else:
-            response.status_code = 404
-            response.json = lambda: {
-                "error": {
-                    "code": "NOT_FOUND",
-                    "message": "no naptr record",
-                    "retryable": False,
-                },
-            }
-        return response
 
     # -------------------------------------------------------------------------
     # ACCOUNTING HELPERS

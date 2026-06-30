@@ -1,62 +1,18 @@
-from contextlib import contextmanager
-from requests import PreparedRequest, Response, Session
-from unittest.mock import patch
-
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
-from .common import ID_CLIENT, FAKE_UUID, TestL10nFrPdpCommon
+from .common import TestL10nFrPdpCommon, mock_pdp_registration
 
 
 @tagged('-at_install', 'post_install', 'post_install_l10n')
 class TestPdpUser(TestL10nFrPdpCommon):
-
-    @classmethod
-    def _get_mock_responses(cls):
-        participant_state = cls.env.context.get('participant_state', 'receiver')
-        return {
-            '/api/pdp/1/connect': {
-                'result': {
-                    'id_client': ID_CLIENT,
-                    'refresh_token': FAKE_UUID,
-                }
-            },
-            '/api/pdp/1/register_receiver': {'result': {}},
-            '/api/pdp/1/update_user': {'result': {}},
-            '/api/pdp/2/participant_status': {
-                'result': {
-                    'peppol_state': participant_state,
-                }
-            },
-            '/api/pdp/1/cancel_peppol_registration': {'result': {}},
-        }
-
-    @classmethod
-    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
-        response = Response()
-        response.status_code = 200
-
-        url = r.path_url
-        responses = cls._get_mock_responses()
-
-        if url not in responses:
-            return super()._request_handler(s, r, **kw)
-        response.json = lambda: responses[url]
-        return response
 
     def _get_participant_vals(self):
         return {
             'pdp_identifier': '000000000',
             'contact_email': 'yourcompany@test.example.com',
         }
-
-    @contextmanager
-    def _set_context(self, other_context):
-        cls = self.__class__
-        env = cls.env(context=dict(cls.env.context, **other_context))
-        with patch.object(cls, "env", env):
-            yield env
 
     def test_pdp_create_participant_missing_siren(self):
         self.env.company.partner_id.write({
@@ -81,7 +37,8 @@ class TestPdpUser(TestL10nFrPdpCommon):
         self.assertFalse(self.env.company.pdp_identifier)
         wizard = self.env['pdp.registration'].create({'contact_email': 'yourcompany@test.example.com'})
         self.assertEqual(wizard.pdp_identifier, '944716448')
-        wizard.button_register_pdp_participant()
+        with mock_pdp_registration():
+            wizard.button_register_pdp_participant()
         self.assertRecordValues(self.env.company, [{
             'pdp_identifier': '944716448',
             'routing_identifier': '0225:944716448',
@@ -126,7 +83,8 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'pdp_identifier': '944716448',
             'contact_email': 'yourcompany@test.example.com',
         })
-        wizard.button_register_pdp_participant()
+        with mock_pdp_registration():
+            wizard.button_register_pdp_participant()
         self.assertRecordValues(company, [{
             'account_peppol_proxy_state': 'smp_registration',
             'pdp_identifier': '944716448',
@@ -140,15 +98,15 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'pdp_identifier': '944716448',
             'contact_email': 'yourcompany@test.example.com',
         })
-        wizard.button_register_pdp_participant()
-        self.assertRecordValues(company, [{
-            'account_peppol_proxy_state': 'smp_registration',
-            'pdp_identifier': '944716448',
-            'routing_identifier': '0225:944716448',
-        }])
+        with mock_pdp_registration(peppol_state='receiver'):
+            wizard.button_register_pdp_participant()
+            self.assertRecordValues(company, [{
+                'account_peppol_proxy_state': 'smp_registration',
+                'pdp_identifier': '944716448',
+                'routing_identifier': '0225:944716448',
+            }])
 
-        # The participant should be automatically registered as receiver after some time
-        with self._set_context({'participant_state': 'receiver'}):
+            # The participant should be automatically registered as receiver after some time
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
 
@@ -158,23 +116,23 @@ class TestPdpUser(TestL10nFrPdpCommon):
         company = self.env.company
         wizard = self.env['pdp.registration'].create(self._get_participant_vals())
 
-        with self._set_context({'participant_state': 'rejected'}):
+        with mock_pdp_registration(peppol_state='rejected'):
             wizard.button_register_pdp_participant()
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(company.account_peppol_proxy_state, 'rejected')
 
     def test_pdp_create_duplicate_participant(self):
         """ If you create a duplicate participant, it will take over the previous one"""
-        wizard = self.env['pdp.registration'].create(self._get_participant_vals())
-        wizard.button_register_pdp_participant()
+        with mock_pdp_registration(peppol_state='receiver'):
+            wizard = self.env['pdp.registration'].create(self._get_participant_vals())
+            wizard.button_register_pdp_participant()
 
-        wizard.company_id.account_peppol_proxy_state = 'not_registered'
-        wizard.account_peppol_proxy_state = 'not_registered'
-        wizard.button_register_pdp_participant()
-        self.assertEqual(self.env.company.account_peppol_proxy_state, 'smp_registration')
+            wizard.company_id.account_peppol_proxy_state = 'not_registered'
+            wizard.account_peppol_proxy_state = 'not_registered'
+            wizard.button_register_pdp_participant()
+            self.assertEqual(self.env.company.account_peppol_proxy_state, 'smp_registration')
 
-        # The participant is still a receiver on IAP
-        with self._set_context({'participant_state': 'receiver'}):
+            # The participant is still a receiver on IAP
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
 
