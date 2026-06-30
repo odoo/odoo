@@ -119,7 +119,10 @@ class ResCompany(models.Model):
             )
 
     def _force_update_l10n_fr_f10_moves(self):
-        companies = self.filtered(lambda company: company.l10n_fr_f10_enable_reporting)
+        companies = self.filtered(
+            lambda company: company.l10n_fr_f10_enable_reporting
+            and company._pdp_get_flow_10_start_date()
+        )
         if not companies:
             return
         account_ids = self.env['account.account'].search([
