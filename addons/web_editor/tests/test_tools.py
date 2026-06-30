@@ -25,6 +25,8 @@ class TestVideoUtils(common.BaseCase):
         'dai.ly': 'https://dai.ly/x578has',
         'dailymotion_embed': 'https://www.dailymotion.com/embed/video/x578has?autoplay=1',
         'dailymotion_video_extra': 'https://www.dailymotion.com/video/x2jvvep_hakan-yukur-klip_sport',
+        'peertube_infothema_net': 'https://infothema.net/w/6EeX6iZnkUPshrXnqLC75D',
+        'peertube_media_zat_im': 'https://media.zat.im/w/35badfed-5322-48ac-b5c1-71b1ad88262e',
     }
 
     def test_player_regexes(self):
@@ -41,6 +43,9 @@ class TestVideoUtils(common.BaseCase):
         self.assertIsNotNone(re.search(tools.player_regexes['dailymotion'], TestVideoUtils.urls['dailymotion']))
         #instagram
         self.assertIsNotNone(re.search(tools.player_regexes['instagram'], TestVideoUtils.urls['instagram']))
+        #peertube
+        self.assertIsNotNone(re.search(tools.player_regexes['peertube'], TestVideoUtils.urls['peertube_infothema_net']))
+        self.assertIsNotNone(re.search(tools.player_regexes['peertube'], TestVideoUtils.urls['peertube_media_zat_im']))
 
     def test_get_video_source_data(self):
         self.assertEqual(3, len(tools.get_video_source_data(TestVideoUtils.urls['youtube'])))
@@ -77,6 +82,12 @@ class TestVideoUtils(common.BaseCase):
         #instagram
         self.assertEqual('instagram', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[0])
         self.assertEqual('B6dXGTxggTG', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[1])
+        #peertube
+        self.assertEqual('peertube', tools.get_video_source_data(TestVideoUtils.urls['peertube_infothema_net'])[0])
+        self.assertEqual('6EeX6iZnkUPshrXnqLC75D', tools.get_video_source_data(TestVideoUtils.urls['peertube_infothema_net'])[1])
+        self.assertEqual('peertube', tools.get_video_source_data(TestVideoUtils.urls['peertube_media_zat_im'])[0])
+        self.assertEqual('35badfed-5322-48ac-b5c1-71b1ad88262e', tools.get_video_source_data(TestVideoUtils.urls['peertube_media_zat_im'])[1])
+
 
     def test_get_video_url_data(self):
         self.assertEqual(4, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))

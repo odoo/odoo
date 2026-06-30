@@ -54,23 +54,29 @@ export class VideoSelector extends Component {
             youtube: 'youtube',
             dailymotion: 'dailymotion',
             vimeo: 'vimeo',
+            peertube: 'peertube',
         };
 
         this.OPTIONS = {
             autoplay: {
                 label: _t("Autoplay"),
                 description: _t("Videos are muted when autoplay is enabled"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo, this.PLATFORMS.peertube],
                 urlParameter: 'autoplay=1',
             },
             loop: {
                 label: _t("Loop"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo, this.PLATFORMS.peertube],
                 urlParameter: 'loop=1',
+            },
+            peer_to_peer: {
+                label: _t("Peer To Peer"),
+                platforms: [this.PLATFORMS.peertube],
+                urlParameter: 'p2p=1',
             },
             hide_controls: {
                 label: _t("Hide player controls"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo, this.PLATFORMS.peertube],
                 urlParameter: 'controls=0',
             },
             hide_fullscreen: {

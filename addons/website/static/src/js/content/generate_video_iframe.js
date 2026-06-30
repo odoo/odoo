@@ -1,15 +1,6 @@
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 const { _manageIframeSrc } = ObservingCookieWidgetMixin;
 
-const SUPPORTED_DOMAINS = [
-    "youtu.be",
-    "youtube.com",
-    "youtube-nocookie.com",
-    "instagram.com",
-    "player.vimeo.com",
-    "vimeo.com",
-    "dailymotion.com",
-];
 
 /**
  * Builds a video iframe for a saved `src` and appends it to the DOM.
@@ -36,11 +27,6 @@ export function generateVideoIframe(parentEl) {
     const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
     if (!m) {
         // Unsupported protocol or wrong URL format, don't inject iframe
-        return;
-    }
-    const domain = m[1].replace(/^www\./, "");
-    if (!SUPPORTED_DOMAINS.includes(domain)) {
-        // Unsupported domain, don't inject iframe
         return;
     }
     const iframeEl = document.createElement("iframe");
