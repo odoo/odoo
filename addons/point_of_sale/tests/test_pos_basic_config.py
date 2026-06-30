@@ -943,6 +943,20 @@ class TestPoSBasicConfig(TestPoSCommon):
 
             self.assertEqual(response['pos.config'][0]['_base_url'], company_website.domain)
 
+    def test_load_data_always_loads_current_user(self):
+        """
+        We always load the current user, even when it was not modified since the
+        last load.
+        """
+
+        last_load_date = self.env.user.write_date + timedelta(seconds=1)
+        users = self.env['res.users'].with_context(
+            pos_last_server_date=last_load_date,
+            pos_limited_loading=True,
+        )._load_pos_data_search_read({}, self.config)
+
+        self.assertEqual([user['id'] for user in users], [self.env.uid])
+
     def test_invoice_past_refund(self):
         """ Test invoicing a past refund
 
