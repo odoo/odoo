@@ -79,12 +79,29 @@ class PaymentTransaction(models.Model):
             "ClientBackURL": urljoin(base_url, const.PAYMENT_RETURN_ROUTE),
             "OrderResultURL": urljoin(base_url, const.PAYMENT_RETURN_ROUTE),
             "IgnorePayment": ignored_payment_methods,
-            "Language": payment_utils.get_language_code(
-                self.env.context.get("lang", "en_US"), const.LANGUAGE_CODES_MAPPING
-            ),
         }
+<<<<<<< 03d95ba7f6110a33807c9a6fc4f135d8d54a9d81
         url_params["CheckMacValue"] = self.provider_id._ecpay_calculate_signature(url_params)
         return {"api_url": self.provider_id._ecpay_get_api_url(), "url_params": url_params}
+||||||| 30c9e8c5b1e34b94c8aab8681e2c051a3b70f013
+        rendering_values.update({
+            "CheckMacValue": self.provider_id._ecpay_calculate_signature(rendering_values),
+            "api_url": self.provider_id._ecpay_get_api_url(),
+        })
+        return rendering_values
+=======
+        # Find the language code based on the user lang; ECPay defaults to zh_TW if omitted
+        language_code = payment_utils.get_language_code(
+            self.env.context.get("lang", "en_US"), const.LANGUAGE_CODES_MAPPING, fallback=None
+        )
+        if language_code:
+            rendering_values["Language"] = language_code
+        rendering_values.update({
+            "CheckMacValue": self.provider_id._ecpay_calculate_signature(rendering_values),
+            "api_url": self.provider_id._ecpay_get_api_url(),
+        })
+        return rendering_values
+>>>>>>> 5a600896d1f2918aad4fe75e3ea44be2452280c3
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
