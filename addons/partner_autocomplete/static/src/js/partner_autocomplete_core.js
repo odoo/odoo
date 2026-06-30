@@ -70,14 +70,15 @@ export function usePartnerAutocomplete() {
         return isGST;
     }
 
-    async function autocomplete(value, queryCountryId) {
+    async function autocomplete(value, queryCountryId, field='name') {
         value = value.trim();
-        const isVAT = await isVATNumber(value);
-        if (isVAT){
-        	value = sanitizeVAT(value);
+        if (field !== 'name') {
+            value = sanitizeVAT(value);
+            if (field === 'vat' && !isVATNumber(value)) {
+                return [];
+            }
         }
-        const isGST = isGSTNumber(value);
-        return await getSuggestions(value, isVAT || isGST, queryCountryId);
+        return await getSuggestions(value, field, queryCountryId);
     }
 
     /**
@@ -148,24 +149,22 @@ export function usePartnerAutocomplete() {
      * Use Odoo Autocomplete API to return suggestions
      *
      * @param {string} value
-     * @param {boolean} isVAT
+     * @param {string} field
      * @returns {Promise}
      * @private
      */
-    async function getSuggestions(value, isVAT, queryCountryId) {
-        const method = isVAT ? 'autocomplete_by_vat' : 'autocomplete_by_name';
-
+    async function getSuggestions(value, field, queryCountryId) {
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
-        if (!isVAT && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        // if (!field && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        if (field === 'name' && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
             return [];
         }
-
         const prom = orm.silent.call(
             'res.partner',
-            method,
-            [value, queryCountryId],
+            'autocomplete_by_field',
+            [value, queryCountryId, field.toLowerCase()],
         );
 
         let suggestions = [];
@@ -176,9 +175,11 @@ export function usePartnerAutocomplete() {
             throw e;
           }
         }
-
-        if (!isVAT && suggestions.length === 0) {
-            lastNoResultsQuery = value;
+        if (suggestions.length === 0) {
+            if (field === 'name') {
+                lastNoResultsQuery = value;
+            }
+            return [];
         }
 
         await Promise.all(suggestions.map(async (suggestion) => {
