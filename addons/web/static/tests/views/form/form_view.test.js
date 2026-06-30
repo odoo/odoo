@@ -4154,6 +4154,21 @@ test(`form view properly change its title`, async () => {
     expect(`.o_breadcrumb`).toHaveText("New");
 });
 
+test(`form view properly format the title`, async () => {
+    Partner._records[0].name =
+        "a long name\naddress of the first record\ncountry of the first record";
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    expect(`.o_breadcrumb`).toHaveText("a long name");
+});
+
 test(`archive/unarchive a record`, async () => {
     // add active field on partner model to have archive option
     Partner._fields.active = fields.Boolean();
