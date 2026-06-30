@@ -1852,7 +1852,7 @@ class SaleOrder(models.Model):
             downpayment_wizard = order.env['sale.advance.payment.inv'].create({
                 'sale_order_ids': order,
                 'advance_payment_method': 'fixed',
-                'fixed_amount': order.amount_paid,
+                'fixed_amount': (order.amount_paid - order.amount_invoiced),
             })
             generated_invoices |= downpayment_wizard._create_invoices(order)
 
