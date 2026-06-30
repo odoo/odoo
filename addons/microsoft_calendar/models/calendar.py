@@ -30,7 +30,7 @@ ATTENDEE_CONVERTER_M2O = {
 VIDEOCALL_URL_PATTERNS = (
     r'https://teams.microsoft.com',
 )
-MAX_RECURRENT_EVENT = 720
+MAX_RECURRENT_EVENT = 730
 
 _logger = logging.getLogger(__name__)
 
