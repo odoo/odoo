@@ -62,7 +62,8 @@ class ProductTemplate(models.Model):
         if (public_description := vals.get('public_description')):
             vals['public_description'] = adapt_translated_field_value(
                 self.env, public_description,
-                lambda lang, v: '' if is_html_empty(v) else v
+                lambda lang, v: '' if is_html_empty(v) else v,
+                self._fields["public_description"],
             )
         return super().write(vals)
 

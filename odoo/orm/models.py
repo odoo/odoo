@@ -40,7 +40,6 @@ from operator import itemgetter
 
 import psycopg2.errors
 import psycopg2.extensions
-from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
@@ -2853,79 +2852,38 @@ class BaseModel(metaclass=MetaModel):
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
                 translations.pop('en_US')
-            translations = {
-                lang: translation if isinstance(translation, str) else None
-                for lang, translation in translations.items()
-            }
             if not translations:
                 return False
 
-            translation_fallback = translations['en_US'] if translations.get('en_US') is not None \
-                else translations[self.env.lang] if translations.get(self.env.lang) is not None \
-                else next((v for v in translations.values() if v is not None), None)
-            self.invalidate_recordset([field_name])
-            self.env.cr.execute(SQL(
-                """ UPDATE %(table)s
-                    SET %(field)s = NULLIF(
-                        jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
-                        '{}'::jsonb)
-                    WHERE id = %(id)s
-                """,
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(field_name),
-                fallback=Json({'en_US': translation_fallback}),
-                value=Json(translations),
-                id=self.id,
-            ))
+            drop_langs = {lang for lang, value in translations.items() if not isinstance(value, str)}
+            translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
+            if drop_langs:
+                stored_translations = field._get_stored_translations(self)
+                if stored_translations is None:
+                    if not translations:
+                        return False
+                    if 'en_US' not in translations:
+                        translations['en_US'] = translations['en_US'] if translations.get('en_US') is not None \
+                            else translations[self.env.lang] if translations.get(self.env.lang) is not None \
+                            else next((v for v in translations.values() if v is not None), None)
+                    write_value = StoredTranslations(translations)
+                else:
+                    write_value = StoredTranslations({
+                        **{lang: value for lang, value in stored_translations.items() if lang not in drop_langs},
+                        **translations
+                    })
+            else:
+                write_value = translations
+            self[field_name] = write_value
+            return True
         else:
-            old_values = field._get_stored_translations(self)
-            if not old_values:
+            stored_translations = field._get_stored_translations(self)
+            if not stored_translations:
                 return False
-
-            for lang in translations:
-                # for languages to be updated, use the unconfirmed translated value to replace the language value
-                if f'_{lang}' in old_values:
-                    old_values[lang] = old_values.pop(f'_{lang}')
-            translations = {lang: _translations for lang, _translations in translations.items() if _translations}
-
-            old_source_lang_value = old_values[next(
-                lang
-                for lang in [f'_{source_lang}', source_lang, '_en_US', 'en_US']
-                if lang in old_values)]
-            old_values_to_translate = {
-                lang: value
-                for lang, value in old_values.items()
-                if lang != source_lang and lang in translations
-            }
-            old_translation_dictionary = field.get_translation_dictionary(old_source_lang_value, old_values_to_translate)
-
-            if digest:
-                # replace digested old_en_term with real old_en_term
-                digested2term = {
-                    digest(old_en_term): old_en_term
-                    for old_en_term in old_translation_dictionary
-                }
-                translations = {
-                    lang: {
-                        digested2term[src]: value
-                        for src, value in lang_translations.items()
-                        if src in digested2term
-                    }
-                    for lang, lang_translations in translations.items()
-                }
-
-            new_values = old_values
-            for lang, _translations in translations.items():
-                _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
-                _new_translations = {**_old_translations, **_translations}
-                new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
-            field._update_cache(self.with_context(prefetch_langs=True), StoredTranslations(new_values), dirty=True)
-
-        # the following write is incharge of
-        # 1. mark field as modified
-        # 2. execute logics in the override `write` method
-        # even if the value in cache is the same as the value written
-        self[field_name] = self[field_name]
+            stored_translations = StoredTranslations(stored_translations)
+            source_lang_env = self.with_context(lang=source_lang).env
+            write_value = stored_translations.translated(source_lang_env, field, translations, digest=digest)
+            self[field_name] = write_value
         return True
 
     def get_field_translations(self, field_name: str, langs: Collection[str] | None = None) -> tuple[list[dict[str, str]], dict[str, typing.Any]]:
@@ -3934,10 +3892,13 @@ class BaseModel(metaclass=MetaModel):
                     #     (column or {'en_US': next(iter(expr.values()))}) | expr
                     # )
                     expr = SQL(
-                        """CASE WHEN %(expr)s IS NULL THEN NULL ELSE
-                            COALESCE(%(table)s.%(column)s, jsonb_build_object(
-                                'en_US', jsonb_path_query_first(%(expr)s, '$.*')
-                            )) || %(expr)s
+                        """CASE
+                            WHEN (%(expr)s -> 0)::boolean THEN
+                                COALESCE(
+                                    %(table)s.%(column)s,
+                                    jsonb_build_object('en_US', jsonb_path_query_first(%(expr)s -> 1, '$.*'))
+                                ) || (%(expr)s -> 1)
+                            ELSE (%(expr)s -> 1)
                         END""",
                         table=SQL.identifier(self._table),
                         column=column,
@@ -4925,22 +4886,8 @@ class BaseModel(metaclass=MetaModel):
                         k: v for k, v in old_stored_translations.items() if k in valid_langs and k != lang
                     })
                 else:
-                    old_translations = {
-                        k: old_stored_translations.get(f'_{k}', v)
-                        for k, v in old_stored_translations.items()
-                        if k in valid_langs
-                    }
-                    # {from_lang_term: {lang: to_lang_term}
-                    translation_dictionary = field.get_translation_dictionary(
-                        old_translations.pop(lang, old_translations['en_US']),
-                        old_translations
-                    )
-                    # {lang: {old_term: new_term}}
-                    translations = defaultdict(dict)
-                    for from_lang_term, to_lang_terms in translation_dictionary.items():
-                        for lang, to_lang_term in to_lang_terms.items():
-                            translations[lang][from_lang_term] = to_lang_term
-                    new.update_field_translations(name, translations)
+                    translations = StoredTranslations(old_stored_translations).extract_term_translations(self.env, field)
+                    new.update_field_translations(name, translations, source_lang=lang)
 
     def copy(self, default: ValuesType | None = None) -> Self:
         """ Duplicate record ``self`` updating it with default values.
