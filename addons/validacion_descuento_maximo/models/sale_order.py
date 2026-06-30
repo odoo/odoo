@@ -2,31 +2,39 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
-DISCOUNT_LIMIT_ERROR = (
-    "¡Alerta de Control (MVP)! Este pedido supera el 15% de descuento permitido. "
-    "El presupuesto ha sido retenido en estado 'Requiere Revisión' para la aprobación de Diego."
-)
-
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    # Campo personalizado para el 15% del MVP
     descuento_maximo_permitido = fields.Float(
         string='Descuento Máximo Permisible (%)',
-        default=15.0
+        related='company_id.discount_limit_percentage',
+        readonly=True
     )
 
-    # Añadimos el nuevo estado "Requiere Revisión" al flujo de ventas nativo
     state = fields.Selection(
         selection_add=[('requires_review', 'Requiere Revisión')],
         ondelete={'requires_review': 'set default'}
     )
 
+    def _get_discount_limit(self):
+        self.ensure_one()
+        return self.company_id.discount_limit_percentage or 0.0
+
+    def _get_discount_limit_error(self):
+        self.ensure_one()
+        return (
+            "¡Alerta de Control (MVP)! Este pedido supera el "
+            f"{self._get_discount_limit()}% de descuento permitido. "
+            "El presupuesto ha sido retenido en estado 'Requiere Revisión' "
+            "para aprobación."
+        )
+
     def _has_discount_above_limit(self):
         self.ensure_one()
+        discount_limit = self._get_discount_limit()
+
         return any(
-            line.discount > self.descuento_maximo_permitido
+            line.discount > discount_limit
             for line in self.order_line
             if not line.display_type
         )
@@ -35,7 +43,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order._has_discount_above_limit():
                 order.with_context(skip_discount_limit_validation=True).write({
-                'state': 'requires_review',
+                    'state': 'requires_review',
                 })
                 return False
         return True
@@ -53,7 +61,6 @@ class SaleOrder(models.Model):
         if self.env.context.get('skip_discount_limit_validation'):
             return result
 
-        #evita revalidar si solo cambia estado
         if set(vals.keys()) == {'state'}:
             return result
 
@@ -64,11 +71,13 @@ class SaleOrder(models.Model):
         if self._raise_discount_limit_error() is False:
             return True
         return super(SaleOrder, self).action_confirm()
-    
+
     def action_approve_discount(self):
         self.ensure_one()
 
-        if not self.env.user.has_group('validacion_descuento_maximo.group_discount_supervisor'):
+        if not self.env.user.has_group(
+            'validacion_descuento_maximo.group_discount_supervisor'
+        ):
             raise UserError("No tiene permiso para aprobar este descuento.")
 
         self.with_context(skip_discount_limit_validation=True).write({
