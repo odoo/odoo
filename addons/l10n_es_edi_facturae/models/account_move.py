@@ -180,15 +180,6 @@ class AccountMove(models.Model):
             **self.mapped("partner_id")._l10n_es_edi_facturae_export_check(),
         }
 
-    def _l10n_es_edi_facturae_get_default_enable(self):
-        self.ensure_one()
-        return not self.invoice_pdf_report_id \
-            and not self.l10n_es_edi_facturae_xml_id \
-            and not self.l10n_es_is_simplified \
-            and self.is_invoice(include_receipts=True) \
-            and self.country_code == 'ES' \
-            and self.company_id.sudo().l10n_es_edi_facturae_certificate_ids  # We only enable Facturae if a certificate is valid or has been valid (which will raise an error)
-
     def _l10n_es_edi_facturae_get_filename(self):
         self.ensure_one()
         return f'{self.name.replace("/", "_")}_facturae_signed.xml'
