@@ -2409,3 +2409,21 @@ test("formats should be enabled when inline code selected", async () => {
 
     expect("strong").toHaveCount(0);
 });
+
+test("preview operation in unbreakable -- color case", async () => {
+    const { el } = await setupEditor(
+        `<div class="oe_unbreakable">
+            [<br>]
+        </div>`
+    );
+    await contains(".o-we-toolbar .o-select-color-foreground").click();
+    await contains(".o_font_color_selector .o_color_button:eq(0)").hover();
+    // Sanity assert: the hover should show us a preview
+    expect(el.innerHTML).toBe(
+        `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable">
+            <font data-oe-zws-empty-inline="" class="text-o-color-1">\u200b</font>
+        </div><p data-selection-placeholder=""><br></p>`
+    );
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+});

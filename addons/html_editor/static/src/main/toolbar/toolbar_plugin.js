@@ -466,7 +466,7 @@ export class ToolbarPlugin extends Plugin {
         }
         // Even without textContent we display the toolbar if the selection contains a <br>
         return targetedNodes.some(
-            (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName === "BR"
+            (node) => node.nodeType === Node.ELEMENT_NODE && ["BR", "FONT"].includes(node.tagName)
         );
     }
 
