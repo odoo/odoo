@@ -18,23 +18,34 @@
         <field name="arch" type="xml">
             <form create="0" delete="0">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="oe_title">
+                                <label for="name"/>
+                                <h1><field name="name"/></h1>
+                            </div>
+                        </div>
+                        <field
+                            name="image_url"
+                            widget="image_url"
+                            class="oe_avatar"
+                            options="{'size': [128,128]}"
+                        />
                     </div>
-                    <field name="image_url" widget="image_url" class="oe_avatar" options="{'size': [128,128]}"/>
                     <group name="main_group">
                         <group name="country_details">
-                            <field name="name"/>
                             <field name="currency_id"/>
                             <field name="code"/>
                         </group>
                         <group name="phone_vat_settings">
                             <field name="phone_code" options="{'format': false}"/>
                             <field name="vat_label"/>
-                            <field name="zip_required"/>
+                            <field name="zip_applicability"/>
                             <field name="state_required"/>
                         </group>
                     </group>
-                    <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one">
+                    <group string="Advanced Address Formatting" name="advanced_address_formatting" groups="base.group_no_one">
                         <label for="address_view_id"/>
                         <div class="o_row">
                             <field name="address_view_id"/>
@@ -47,13 +58,16 @@
                         </div>
                         <field name="name_position" class="oe_inline"/>
                     </group>
-                    <label for="state_ids"/>
-                    <field name="state_ids">
-                        <list editable="bottom">
-                            <field name="name"/>
-                            <field name="code"/>
-                        </list>
-                    </field>
+                    <notebook>
+                        <page name="states" string="States">
+                            <field name="state_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

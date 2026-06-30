@@ -18,7 +18,6 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
         'l10n_latam_invoice_document',
         'uom',
         'account',
-        'portal_address_extended',
     ],
     'auto_install': ['account'],
     'data': [

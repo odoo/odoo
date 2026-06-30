@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="address_form_fields" inherit_id="portal.address_form_fields">
-        <div id="div_city_id" position="after">
+        <div id="div_street" position="before">
             <t t-if="res_company.country_id.code == 'PE'">
                 <div
                     id="div_district"

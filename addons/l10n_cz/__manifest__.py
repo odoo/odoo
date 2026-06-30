@@ -22,7 +22,6 @@ Tento modul definuje:
         'account',
         'account_edi_ubl_cii',
         'base_vat',
-        'base_address_extended',
     ],
     'auto_install': ['account'],
     'data': [

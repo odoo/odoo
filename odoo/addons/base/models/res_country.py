@@ -84,7 +84,7 @@ class ResCountry(models.CachedModel):
         compute="_compute_image_url", string="Flag",
         help="Url of static flag image",
     )
-    phone_code = fields.Integer(string='Country Calling Code')
+    phone_code = fields.Integer(string="Phone Prefix")
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     country_group_codes = fields.Json(compute="_compute_country_group_codes")
@@ -97,7 +97,11 @@ class ResCountry(models.CachedModel):
     vat_label = fields.Char(string='Vat Label', translate=True, prefetch=True, help="Use this field if you want to change vat label.")
 
     state_required = fields.Boolean(default=False)
-    zip_required = fields.Boolean(default=True)
+    zip_applicability = fields.Selection(
+        string="Zip Applicability",
+        selection=[("required", "Required"), ("optional", "Optional"), ("not_applicable", "Not Applicable")],
+        default="required",
+    )
 
     _name_uniq = models.Constraint(
         'unique (name)',

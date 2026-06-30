@@ -38,6 +38,9 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     ],
     'auto_install': ['account'],
     'data': [
+        'data/res_city_data.xml',
+        'data/res_country_data.xml',
+
         'views/account_move_view.xml',
         'views/account_report.xml',
         'views/report_voucher.xml',

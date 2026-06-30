@@ -10,7 +10,6 @@
     'license': 'LGPL-3',
     'depends': [
         'base_vat',
-        'portal_address_extended',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
         'account_debit_note',
