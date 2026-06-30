@@ -11,7 +11,13 @@ import * as PaymentScreenViva from "./utils/payment_screen_viva_com_util";
 
 const mockVivaWebhook = () => ({
     content: "Waiting for Viva payment to be processed",
+<<<<<<< a991a76192d153c993d6900ea4564b8e667f068e
     trigger: ".paymentline_status_title",
+||||||| c8f217e2e2249e1f40a673f02119e85fb9878671
+    trigger: ".electronic_status",
+=======
+    trigger: ".send_force_done",
+>>>>>>> f655a524c5c5ba462c60082d1bb0c2a4d691ee3b
     run: async function () {
         const payment_terminal =
             posmodel.getPendingPaymentLine("viva_com").payment_method_id.payment_interface;
