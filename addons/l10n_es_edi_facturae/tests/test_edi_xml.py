@@ -202,6 +202,42 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.action_send_and_print()
 
+    def test_facturae_enabled_only_for_opted_in_partner(self):
+        """ Factura-e being applicable is not enough: the partner must have opted in. """
+        # Single
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_a.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        self.assertEqual(self.partner_a.invoice_edi_format, 'es_facturae')
+        wizard_1 = self.create_send_and_print(invoice)
+        self.assertIn('es_facturae', wizard_1.extra_edis or [])
+
+        self.partner_a.invoice_edi_format = False
+        wizard_2 = self.create_send_and_print(invoice)
+        self.assertNotIn('es_facturae', wizard_2.extra_edis or [])
+
+        # Multi
+        self.partner_a.invoice_edi_format = 'es_facturae'
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice_2.action_post()
+        invoices = invoice + invoice_2
+        # Factura-e is applicable to both invoices, but only the opted-in partner is counted.
+        self.assertFalse(self.partner_b.invoice_edi_format)
+        self.assertTrue(self.env['account.move.send']._is_es_facturae_applicable(invoice_2))
+        wizard_3 = self.create_send_and_print(invoices)
+        self.assertEqual(wizard_3.summary_data['es_facturae']['count'], 1)
+
+        self.partner_a.invoice_edi_format = False
+        wizard_4 = self.create_send_and_print(invoices)
+        self.assertNotIn('es_facturae', wizard_4.summary_data)
+
     def test_in_invoice(self):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
