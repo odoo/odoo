@@ -65,7 +65,7 @@ class IrQweb(models.AbstractModel):
 
     def _compile_directive_snippet_call(self, el, compile_context, indent):
         snippet_key = el.attrib.pop('t-snippet-call')
-        snippet_name = el.attrib.pop('string', None)
+        snippet_name = el.attrib.pop('string') if 'string' in el.attrib else self.env['ir.ui.view']._get_template_view(snippet_key).name
 
         # We modify the tree to make the t-call in the t-set just before the
         # t-call. This allows us to use the rendering that is stored in the

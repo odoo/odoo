@@ -406,7 +406,7 @@ class TestQwebDataSnippet(TransactionCase):
         })
 
         cls.env['ir.ui.view'].create({
-            'name': 's_a',
+            'name': 'Name of s_a',
             'type': 'qweb',
             'key': 'website.s_a',
             'arch': '''
@@ -419,13 +419,13 @@ class TestQwebDataSnippet(TransactionCase):
             '''
         })
         cls.env['ir.ui.view'].create({
-            'name': 's_b',
+            'name': 'Name of s_b',
             'type': 'qweb',
             'key': 'website.s_b',
             'arch': '''
                 <t t-name="s_b">
                     <section class="foo">
-                        <t t-snippet-call="website.s_a"/>
+                        <t t-snippet-call="website.s_a" string="Another name for s_a"/>
                     </section>
                 </t>
             '''
@@ -472,7 +472,7 @@ class TestQwebDataSnippet(TransactionCase):
 
     def test_t_call_inside_snippet(self):
         expected_output = '''
-            <section class="hello" data-snippet="s_a">
+            <section class="hello" data-snippet="s_a" data-name="Name of s_a">
                 <article>
                     <span>Hello</span>
                 </article>
@@ -483,8 +483,8 @@ class TestQwebDataSnippet(TransactionCase):
 
     def test_t_snippet_call_inside_snippet(self):
         expected_output = '''
-            <section class="foo" data-snippet="s_b">
-                <section class="hello" data-snippet="s_a">
+            <section class="foo" data-snippet="s_b" data-name="Name of s_b">
+                <section class="hello" data-snippet="s_a" data-name="Another name for s_a">
                     <article>
                         <span>Hello</span>
                     </article>
@@ -496,7 +496,7 @@ class TestQwebDataSnippet(TransactionCase):
 
     def test_t_call_as_snippet_root(self):
         expected_output = '''
-            <article data-snippet="s_c">
+            <article data-snippet="s_c" data-name="s_c">
                 <span>Hello</span>
                 <p>World!</p>
             </article>
@@ -525,8 +525,8 @@ class TestQwebDataSnippet(TransactionCase):
         })
 
         expected_output = '''
-            <section class="foo" data-snippet="s_b">
-                <section class="hello" data-snippet="s_a">
+            <section class="foo" data-snippet="s_b" data-name="Name of s_b">
+                <section class="hello" data-snippet="s_a" data-name="Another name for s_a">
                     <article>
                         <span>Hello</span>
                     </article>
@@ -539,7 +539,7 @@ class TestQwebDataSnippet(TransactionCase):
 
     def test_t_snippet_call_as_snippet_root(self):
         expected_output = '''
-            <section class="hello" data-snippet="s_a">
+            <section class="hello" data-snippet="s_a" data-name="Name of s_a">
                 <article>
                     <span>Hello</span>
                 </article>
