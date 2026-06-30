@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { after, animationFrame, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -270,7 +270,7 @@ test("add favorite with enter which already exists", async () => {
     mockService("notification", {
         add(message, options) {
             expect.step("notification");
-            expect(message).toBe("A name for your favorite filter is required.");
+            expect(message).toBe("A filter with same name already exists.");
             expect(options).toEqual({ type: "danger" });
         },
     });
@@ -296,4 +296,47 @@ test("add favorite with enter which already exists", async () => {
     await press("Enter");
 
     expect.verifySteps(["notification"]);
+});
+
+test("save custom favorite filter on enter", async () => {
+    class TestComponent extends Component {
+        static components = { SearchBar };
+        static template = xml`<div><SearchBar/></div>`;
+        static props = ["*"];
+
+        setup() {
+            useSetupAction({
+                getContext: () => ({ someKey: "foo" }),
+            });
+        }
+    }
+
+    onRpc("create_or_replace", ({ args, route }) => {
+        expect.step(route);
+
+        const irFilter = args[0];
+        expect(irFilter.context).toEqual({
+            group_by: [],
+            someKey: "foo",
+        });
+
+        return 7;
+    });
+
+    await mountWithSearch(TestComponent, {
+        resModel: "foo",
+        searchMenuTypes: ["favorite"],
+        searchViewId: false,
+    });
+
+    await toggleSearchBarMenu();
+    await toggleSaveFavorite();
+
+    await editFavoriteName("aaa");
+    await press("Enter");
+    await animationFrame();
+
+    expect(getFacetTexts()).toEqual(["aaa"]);
+
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
 });
