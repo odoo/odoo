@@ -2749,7 +2749,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         user_admin = self.env.ref('base.user_admin')
         employee_admin = self.env['hr.employee'].search([('user_id', '=', user_admin.id)])
         self.employee_emp.write({"parent_id": employee_admin.id, "leave_manager_id": False})
-        leave_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True)
+        leave_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id)
         holidays_type_5 = leave_type.create({
             'name': 'Limited with 2 approvals and Responsible IDS',
             'request_unit': 'hour',

@@ -48,24 +48,43 @@ class TestTrackingAPI(TestTrackingCommon):
 
     @users('employee')
     def test_mail_track_mixin(self):
-        mixin_records = self.env['mail.test.track.mixin'].create([
-            {
-                'char_field': 'init 1',
-                'selection_field': 'first',
-            }, {
-                'char_field': 'init 2',
-                'selection_field': False,
-            }
-        ])
-        self.flush_tracking()
-
         original_track_finalize = MailTrackMixin._track_finalize
+
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records = self.env['mail.test.track.mixin'].create([
+                {
+                    'char_field': 'init 1',
+                    'selection_field': 'first',
+                }, {
+                    'char_field': 'init 2',
+                    'selection_field': False,
+                }
+            ])
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 0)
+        self.assertFalse(self._new_msgs)
+
+        # manual preparation
         with patch.object(MailTrackMixin, '_track_finalize',
                           autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
              self.mock_mail_gateway(), self.mock_mail_app():
             mixin_records._track_prepare(mixin_records._track_get_fields())
             mixin_records.write({
                 'char_field': 'updated 1',
+                'selection_field': False,
+            })
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 2)
+        self.assertFalse(self._new_msgs)
+
+        # automatic write support
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records.write({
+                'char_field': 'updated 1.1',
                 'selection_field': 'second',
             })
             self.flush_tracking()
@@ -117,7 +136,6 @@ class TestTrackingAPI(TestTrackingCommon):
             {'body': '<p>Manual Tracking Parent 2</p>', 'tracking_values': track_2},
         ], strict=True):
             self.assertMessageFields(msg, expected)
-
 
     @users('employee')
     def test_tracking_create(self):
@@ -1127,6 +1145,13 @@ class TestTrackingInternals(TestTrackingCommon):
         )
         self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 13,
             "Properties field should have the same sequence as their parent")
+        self.assertEqual(properties_record_1.fields_get(['properties'], {'tracking'})['properties']['tracking_sequence'], 13,
+            "Properties field should have the same sequence as their parent")
+        # ensure that properties are before parent, so they are rendered after
+        # see `reversed` in `@_message_compute_body_with_trackings`
+        res = properties_record_1._mail_track_order_fields(properties_record_1._track_get_fields_info(['properties', 'properties_parent_id']))
+        self.assertEqual(res[1][0], 'properties_parent_id')
+        self.assertEqual(res[0][0], 'properties')
 
         # test monetary property tracking when parent changes
         record = self.properties_record_monetary
@@ -1509,3 +1534,28 @@ class TestTrackingInternals(TestTrackingCommon):
         ])
         fields_toremove.with_context(force_delete=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
+        # should have updated field_info in DB
+        self.assertMessageFields(record_other.message_ids[0], {
+            'tracking_values': [
+                ('customer_id', 'many2one', False, self.test_partner),  # not removed
+                (False, 'char', 'email.from.1@example.com', 'email.from.2@example.com', {
+                    'field_info': {
+                        'desc': 'Email From', 'name': 'email_from', 'type': 'char', 'sequence': 100,
+                    },
+                }),
+                (False, 'many2one', False, self.env.user, {
+                    'field_info': {
+                        'desc': 'Responsible', 'name': 'user_id', 'type': 'many2one', 'sequence': 1,
+                    },
+                })
+            ],
+        })
+        self.assertMessageFields(record_other.message_ids[1], {
+            'tracking_values': [
+                (False, 'char', False, 'email.from.1@example.com', {
+                    'field_info': {
+                        'desc': 'Email From', 'name': 'email_from', 'type': 'char', 'sequence': 100,
+                    },
+                }),
+            ],
+        })
