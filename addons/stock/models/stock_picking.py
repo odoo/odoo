@@ -1624,7 +1624,7 @@ class StockPicking(models.Model):
         another_action = False
         pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_allocation_report)
         moves = pickings_show_report.move_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.quantity and not m.move_dest_ids)
-        if moves:
+        if moves and not self.env.context.get('barcode_view'):
             # don't show reception report if all already assigned/nothing to assign
             wh_location_ids = self.env['stock.location']._search([
                 ('id', 'child_of', pickings_show_report.picking_type_id.warehouse_id.view_location_id.ids),
