@@ -4117,9 +4117,8 @@ class MailThread(models.AbstractModel):
         if message.message_type == 'tracking':
             body = "\n%s\n%s" % (message.subtype_id.description, body)
 
-        if message.author_id:
-            title = "%s: %s" % (message.author_id.name, title)
-            icon = "/web/image/res.partner/%d/avatar_128" % message.author_id.id
+        if message.model:
+            icon = modules.module.get_module_icon(self.env[message.model]._original_module)
         else:
             icon = '/web/static/img/odoo-icon-192x192.png'
 
@@ -4146,10 +4145,11 @@ class MailThread(models.AbstractModel):
                     count=total_attachments - 1,
                 )
 
+        author = message.author_id or message.author_guest_id
         return {
             'title': title,
             'options': {
-                'body': html2plaintext(body, include_references=False),
+                'body': f"{author.name}: {html2plaintext(body, include_references=False)}",
                 'icon': icon,
                 'data': {
                     'model': message.model or '',

@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 import odoo
 
+from odoo.tools import html2plaintext
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tools.jwt import InvalidVapidError
@@ -15,6 +16,8 @@ from odoo.tests import tagged
 from markupsafe import Markup
 from unittest.mock import patch
 from types import SimpleNamespace
+
+_original_prepare_payload = odoo.addons.mail.models.mail_thread.MailThread._notify_by_web_push_prepare_payload
 
 
 @tagged('post_install', '-at_install', 'mail_push')
@@ -127,13 +130,12 @@ class TestWebPushNotification(SMSCommon):
                         self.assertNotIn("False", payload_value['title'])
                     else:
                         self.assertEqual(payload_value['title'], f'#{channel.name}')
-                    icon = (
-                        '/web/static/img/odoo-icon-192x192.png'
-                        if sender == self.guest
-                        else f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
-                    )
+                    author = self.guest if sender == self.guest else self.user_email.partner_id
+                    icon_record = channel if channel.channel_type in ["channel", "group"] else author
+                    icon = f"/web/image/{icon_record._name}/{icon_record.id}/avatar_128"
+                    body = f"{author.name}: Test Push" if channel.channel_type != "chat" else "Test Push"
                     self.assertEqual(payload_value['options']['icon'], icon)
-                    self.assertEqual(payload_value['options']['body'], 'Test Push')
+                    self.assertEqual(payload_value['options']['body'], body)
                     self.assertEqual(payload_value['options']['data']['res_id'], channel.id)
                     self.assertEqual(payload_value['options']['data']['model'], channel._name)
                     self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
@@ -310,7 +312,7 @@ class TestWebPushNotification(SMSCommon):
             if has_notif:
                 # user_inbox is notified by Odoo, hence receives a push notification
                 self.assertPushNotification(
-                    mail_push_count=0, title_content=self.user_email.name,
+                    mail_push_count=0, title_content=test_record.display_name,
                     body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
                 )
             else:
@@ -333,8 +335,8 @@ class TestWebPushNotification(SMSCommon):
                     self.assertPushNotification(
                         mail_push_count=0,
                         endpoint='https://test.odoo.com/webpush/user2', keys=('vapid_private_key', 'vapid_public_key'),
-                        title=f'{self.user_admin.name}: {self.record_simple.display_name}',
-                        body_content='Test Push Body',
+                        title=self.record_simple.display_name,
+                        body_content=f"{self.user_admin.name}: Test Push Body",
                         options={
                             'data': {'model': self.record_simple._name, 'res_id': self.record_simple.id,},
                         },
@@ -352,13 +354,10 @@ class TestWebPushNotification(SMSCommon):
         inviting_channel_member.sudo()._rtc_join_call()
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-        self.assertEqual(
-            payload_value['title'],
-            "Incoming call",
-        )
+        self.assertEqual(payload_value['title'], inviting_user.partner_id.name)
         options = payload_value['options']
         self.assertTrue(options['requireInteraction'])
-        self.assertEqual(options['body'], f"Conference: {channel.name}")
+        self.assertEqual(options['body'], "Incoming call")
         self.assertEqual(options['actions'], [
             {
                 "action": "DECLINE",
@@ -419,7 +418,7 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(
-            f'{container_update_subtype.description}\n{container.name}*{container2.name}* {container.name}',
+            f'{self.user_email.name}: {container_update_subtype.description}\n{container.name}*{container2.name}* {container.name}',
             payload_value['options']['body'],
             'Tracking changes should be included in push notif payload'
         )
@@ -563,6 +562,18 @@ class TestWebPushNotification(SMSCommon):
                 vapid_public_key=self.vapid_public_key,
             )
 
+    def _force_raw_body_payload(self, message, **kwargs):
+        payload = _original_prepare_payload(self, message, **kwargs)
+        # strip author name from message body to make testing simpler
+        payload['options']['body'] = html2plaintext(message.body, include_references=False)
+        return payload
+
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.MailThread,
+        '_notify_by_web_push_prepare_payload',
+        side_effect=_force_raw_body_payload,
+        autospec=True,
+    )
     @patch.object(
         odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
     )
@@ -570,7 +581,7 @@ class TestWebPushNotification(SMSCommon):
         odoo.addons.mail.models.mail_thread, 'push_to_end_point',
         wraps=odoo.addons.mail.tools.web_push.push_to_end_point,
     )
-    def test_push_notifications_truncate_payload(self, thread_push_mock, session_post_mock):
+    def test_push_notifications_truncate_payload(self, thread_push_mock, session_post_mock, prepare_mock):
         """Ensure that when we send large bodies with various character types,
         the final encrypted data (post-encryption) never exceeds 4096 bytes.
 
@@ -628,7 +639,8 @@ class TestWebPushNotification(SMSCommon):
                     len(encrypted_payload), 4096, 'Final encrypted payload should not exceed 4096 bytes'
                 )
                 self.assertEqual(
-                    len(json.loads(payload_before_encryption)['options']['body']), expected_body_length
+                    len(json.loads(payload_before_encryption)['options']['body']),
+                    expected_body_length,
                 )
                 self.assertEqual(
                     len(encrypted_payload),
@@ -636,6 +648,12 @@ class TestWebPushNotification(SMSCommon):
                     'Encrypted size should be exactly the base payload size + body size + encryption overhead.'
                 )
 
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.MailThread,
+        '_notify_by_web_push_prepare_payload',
+        side_effect=_force_raw_body_payload,
+        autospec=True,
+    )
     @patch.object(
         odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
     )
@@ -647,7 +665,7 @@ class TestWebPushNotification(SMSCommon):
         odoo.addons.mail.tools.web_push, '_encrypt_payload',
         wraps=odoo.addons.mail.tools.web_push._encrypt_payload,
     )
-    def test_push_notifications_truncate_payload_mocked_size_limit(self, web_push_encrypt_payload_mock, thread_push_mock, session_post_mock):
+    def test_push_notifications_truncate_payload_mocked_size_limit(self, web_push_encrypt_payload_mock, thread_push_mock, session_post_mock, prepare_mock):
         """Illustrative test for text contents truncation.
 
         We want to ensure we truncate utf-8 values properly based on maximum payload size.
