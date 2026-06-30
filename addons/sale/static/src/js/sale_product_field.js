@@ -52,6 +52,12 @@ async function applyProduct(record, product) {
         // and the value isn't expected to change anyway.
         update_values.product_uom_id = product.uom;
     }
+    if (product.product_type === "combo" && product.selectedComboItems?.length) {
+        update_values.selected_combo_items = JSON.stringify(
+            product.selectedComboItems.map(serializeComboItem)
+        );
+        update_values.virtual_id = product.virtual_id || uuid();
+    }
     await record._update(update_values);
 }
 
@@ -258,6 +264,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             selectedComboItems: selectedComboItems,
             edit: edit,
+            configureComboProduct: product => this._configureOptionalComboProduct(product),
             save: async (mainProduct, optionalProducts) => {
                 // Don't add main product if it's a combo product as it has already been added
                 // from combo configurator
@@ -290,6 +297,57 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             },
             ...this._getAdditionalDialogProps(),
         });
+    }
+
+    async _configureOptionalComboProduct(product) {
+        const saleOrder = this.props.record.model.root.data;
+        const { combos, ...remainingData } = await rpc('/sale/combo_configurator/get_data', {
+            product_tmpl_id: product.product_tmpl_id,
+            currency_id: product.currency_id || this.props.record.data.currency_id.id,
+            quantity: product.quantity,
+            date: serializeDateTime(saleOrder.date_order),
+            company_id: saleOrder.company_id.id,
+            pricelist_id: saleOrder.pricelist_id.id,
+            selected_combo_items: [],
+            ...this._getAdditionalRpcParams(),
+        });
+        const comboChoices = combos.map(combo => new ProductCombo(combo));
+        const preselectedComboItems = comboChoices
+            .map(combo => combo.preselectedComboItem)
+            .filter(Boolean);
+        if (preselectedComboItems.length === comboChoices.length) {
+            return this._getOptionalComboData(remainingData, preselectedComboItems);
+        }
+        return new Promise(resolve => {
+            this.dialog.add(ComboConfiguratorDialog, {
+                combos: comboChoices,
+                ...remainingData,
+                company_id: saleOrder.company_id.id,
+                pricelist_id: saleOrder.pricelist_id.id,
+                date: serializeDateTime(saleOrder.date_order),
+                save: async (comboProductData, selectedComboItems) => {
+                    resolve(this._getOptionalComboData(
+                        { ...remainingData, ...comboProductData },
+                        selectedComboItems
+                    ));
+                },
+                discard: () => resolve(false),
+                ...this._getAdditionalDialogProps(),
+            });
+        });
+    }
+
+    _getOptionalComboData(comboProductData, selectedComboItems) {
+        const selectedItems = selectedComboItems.map(item => {
+            item.name = item.product.display_name;
+            return item;
+        });
+        const extraPrice = selectedItems.reduce((price, item) => price + item.totalExtraPrice, 0);
+        return {
+            quantity: comboProductData.quantity,
+            price: comboProductData.price + extraPrice,
+            selectedComboItems: selectedItems,
+        };
     }
 
     async _openComboConfigurator(edit = false, hasOptionalProducts = false) {
