@@ -283,7 +283,7 @@ export class DynamicList extends DataPoint {
             });
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                this.model.offline.scheduleORM(
+                this.model.offlinePlugin.scheduleORM(
                     this.resModel,
                     "unlink",
                     [resIds],
@@ -492,7 +492,7 @@ export class DynamicList extends DataPoint {
         } catch (e) {
             if (e instanceof ConnectionLostError) {
                 const records = this.records.filter((r) => resIds.includes(r.resId));
-                this.model.offline.scheduleORM(
+                this.model.offlinePlugin.scheduleORM(
                     this.resModel,
                     method,
                     [resIds],

@@ -18,6 +18,7 @@ import {
     markRaw,
     proxy,
     useListener,
+    useScope,
 } from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
@@ -99,6 +100,8 @@ export class CommandPalette extends Component {
         config: Object,
         closeMe: { type: Function, optional: true },
     };
+    
+    scope = useScope();
 
     setup() {
         if (this.props.bus) {
@@ -198,7 +201,9 @@ export class CommandPalette extends Component {
         this.categoryNames = {};
         const proms = this.providersByNamespace[namespace].map((provider) => {
             const { provide } = provider;
-            const result = provide(this.env, options);
+            const result = this.scope.run(() => {
+                return provide(this.env, options);
+            });
             return result;
         });
         let commands = (await this.keepLast.add(Promise.all(proms))).flat();

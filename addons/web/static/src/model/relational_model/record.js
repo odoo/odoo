@@ -195,7 +195,7 @@ export class Record extends DataPoint {
                 });
             } catch (e) {
                 if (e instanceof ConnectionLostError) {
-                    return this.model.offline.scheduleORM(
+                    return this.model.offlinePlugin.scheduleORM(
                         this.resModel,
                         "unlink",
                         [[this.resId]],
@@ -347,9 +347,9 @@ export class Record extends DataPoint {
     setOfflineChanges(id) {
         let scheduledORM;
         if (id) {
-            scheduledORM = this.model.offline.scheduledORM[id];
+            scheduledORM = this.model.offlinePlugin._ormToSync()[id];
         } else {
-            scheduledORM = Object.values(this.model.offline.scheduledORM).find(
+            scheduledORM = Object.values(this.model.offlinePlugin._ormToSync()).find(
                 (s) =>
                     s.value.extras?.actionId === this.model.env.config.actionId &&
                     s.value.method === "web_save" && // Only web_save changes are applied
@@ -1223,7 +1223,7 @@ export class Record extends DataPoint {
         ) {
             // We are trying to sa ve urgently because the user is closing the page when offline.
             // Unfortunately, we can't save on IndexedDB before unload.
-            if (this.model.offline.offline) {
+            if (this.model.offlinePlugin.isOffline()) {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     _t(
                         `Heads up! Your recent changes cannot be saved automatically while you are offline. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
@@ -1361,7 +1361,7 @@ export class Record extends DataPoint {
         delete offlineChanges.id; // id never changes, and should not be written
 
         this._offlineTimeStamp = this._offlineTimeStamp || Date.now();
-        this._offlineId = this.model.offline.scheduleORM(
+        this._offlineId = this.model.offlinePlugin.scheduleORM(
             this.resModel,
             "web_save",
             [this.resId ? [this.resId] : [], offlineChanges],
@@ -1451,7 +1451,7 @@ export class Record extends DataPoint {
             });
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                return this.model.offline.scheduleORM(
+                return this.model.offlinePlugin.scheduleORM(
                     this.resModel,
                     method,
                     [[this.resId]],

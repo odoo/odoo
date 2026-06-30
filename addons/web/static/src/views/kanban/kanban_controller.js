@@ -25,7 +25,8 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, props, proxy, t, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillStart, plugin, props, proxy, t, useEffect } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
@@ -64,7 +65,7 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
@@ -457,7 +458,7 @@ export class KanbanController extends Component {
     get isNewButtonAvailableOffline() {
         const { onCreate } = this.props.archInfo;
         if (this.canQuickCreate && onCreate === "quick_create") {
-            return this.offlineService.isAvailableOffline(
+            return this.offlinePlugin.isAvailableOffline(
                 this.env.config.actionId,
                 "kanban_quick_create",
                 false
@@ -468,7 +469,7 @@ export class KanbanController extends Component {
             return false;
         }
 
-        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
+        return this.offlinePlugin.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     get isNewButtonDisabled() {

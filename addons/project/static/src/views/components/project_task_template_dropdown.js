@@ -1,4 +1,5 @@
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -30,7 +31,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.addDialog = useOwnedDialogs();
         this.displayTasksLimit = 10;
         this.state = proxy({ taskTemplates: [] });
@@ -68,19 +69,19 @@ export class ProjectTaskTemplateDropdown extends Component {
         if (viewType === "list") {
             return (
                 !this.props.archInfo.editable &&
-                this.offlineService.isAvailableOffline(actionId, "form", false)
+                this.offlinePlugin.isAvailableOffline(actionId, "form", false)
             );
         } else if (viewType === "kanban") {
             if (this.props.archInfo.activeActions.quickCreate) {
-                return this.offlineService.isAvailableOffline(
+                return this.offlinePlugin.isAvailableOffline(
                     actionId,
                     "kanban_quick_create",
                     false
                 );
             }
-            return this.offlineService.isAvailableOffline(actionId, "form", false);
+            return this.offlinePlugin.isAvailableOffline(actionId, "form", false);
         } else if (viewType === "form") {
-            return this.offlineService.isAvailableOffline(actionId, "form", false);
+            return this.offlinePlugin.isAvailableOffline(actionId, "form", false);
         }
         return false;
     }

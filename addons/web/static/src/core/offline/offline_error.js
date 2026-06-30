@@ -1,6 +1,8 @@
+import { plugin } from "@odoo/owl";
 import { UncaughtPromiseError } from "../errors/error_service";
 import { ConnectionLostError } from "../network/rpc";
 import { registry } from "../registry";
+import { OfflinePlugin } from "./offline_plugin";
 
 const errorHandlerRegistry = registry.category("error_handlers");
 
@@ -19,7 +21,8 @@ export function lostConnectionHandler(env, error, originalError) {
         return false;
     }
     if (originalError instanceof ConnectionLostError) {
-        env.services.offline.offline = true;
+        const offlinePlugin = plugin(OfflinePlugin);
+        offlinePlugin.setOffline(true);
         return true;
     }
 }
