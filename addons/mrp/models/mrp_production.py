@@ -1039,6 +1039,19 @@ class MrpProduction(models.Model):
             if record.product_tracking == 'lot' and len(record.lot_producing_ids) > 1:
                 raise UserError(_("You cannot set more than 1 lot"))
 
+    @api.constrains('date_finished', 'date_start')
+    def _check_date_finished_not_future(self):
+        today = fields.Date.context_today(self)
+        for production in self:
+            if production.state != 'done' or not production.date_finished:
+                continue
+            if production.date_start and production.date_finished < production.date_start:
+                raise ValidationError(_("The end date cannot be set before the start date."))
+            if (
+                fields.Date.context_today(production, timestamp=production.date_finished) > today
+            ):
+                raise ValidationError(_("The end date cannot be set in the future."))
+
     def write(self, vals):
         if 'product_id' in vals and self.state != 'draft':
             vals.pop('product_id')
@@ -1106,6 +1119,7 @@ class MrpProduction(models.Model):
                 production.move_raw_ids.write({'date': production.date_start, 'date_deadline': production.date_start})
             if vals.get('date_finished'):
                 production.move_finished_ids.write({'date': production.date_finished})
+                production.move_raw_ids.write({'date': production.date_finished, 'date_deadline': production.date_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
                 production.with_context(no_procurement=True)._autoconfirm_production()
                 if production in production_to_replan:

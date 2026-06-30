@@ -4,6 +4,7 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 
@@ -25,14 +26,33 @@ class MrpProduction(models.Model):
             account.wip_move_count = len(account.wip_move_ids)
 
     def write(self, vals):
+        if 'date_finished' in vals and 'state' not in vals:
+            date_finished = fields.Datetime.to_datetime(vals['date_finished'])
+            productions = self.filtered(lambda p: p.state == 'done' and p.date_finished != date_finished)
+            stock_moves = productions.move_raw_ids | productions.move_finished_ids
+            if stock_moves.sudo().account_move_id:
+                raise UserError(_("You cannot change the end date of a manufacturing order with associated journal entries."))
         res = super().write(vals)
         for production in self.sudo():
+            if vals.get('date_finished'):
+                production._update_date_finished_analytic_lines()
             if vals.get('name'):
                 production.move_raw_ids.analytic_account_line_ids.ref = production.display_name
                 for workorder in production.workorder_ids:
                     workorder.mo_analytic_account_line_ids.ref = production.display_name
                     workorder.mo_analytic_account_line_ids.name = _("[WC] %s", workorder.display_name)
         return res
+
+    def _update_date_finished_analytic_lines(self):
+        for production in self:
+            analytic_date = fields.Date.context_today(production, timestamp=production.date_finished)
+            stock_moves = production.move_raw_ids | production.move_finished_ids
+            analytic_lines = (
+                stock_moves.analytic_account_line_ids
+                | production.workorder_ids.mo_analytic_account_line_ids
+                | production.workorder_ids.wc_analytic_account_line_ids
+            )
+            analytic_lines.sudo().write({'date': analytic_date})
 
     def action_view_move_wip(self):
         self.ensure_one()
