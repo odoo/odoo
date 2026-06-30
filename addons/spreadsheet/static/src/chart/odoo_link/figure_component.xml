@@ -13,7 +13,10 @@
     </div>
     <div t-name="spreadsheet.ScorecardChart" t-inherit="o-spreadsheet-ScorecardChart" t-inherit-mode="extension">
         <xpath expr="//canvas[1]" position="attributes">
-            <attribute name="t-on-click">() => this.onClick()</attribute>
+            <attribute name="t-on-click">(ev) => this.onClick(ev, false)</attribute>
+            <attribute name="t-on-auxclick">(ev) => this.onClick(ev, true)</attribute>
+            <attribute name="t-on-mousemove">(ev) => this.onMouseMove(ev)</attribute>
+            <attribute name="t-on-mouseleave">(ev) => this.onMouseLeave(ev)</attribute>
             <attribute name="t-att-role">this.env.model.getters.isDashboard() and this.hasOdooLink ? "button" : ""</attribute>
         </xpath>
     </div>
