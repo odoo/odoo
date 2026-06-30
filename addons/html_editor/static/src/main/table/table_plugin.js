@@ -40,8 +40,6 @@ import { _t } from "@web/core/l10n/translation";
 export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;
 
-const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
-
 /**
  * @typedef { Object } TableShared
  * @property { TablePlugin['insertTable'] } insertTable
@@ -206,11 +204,6 @@ export class TablePlugin extends Plugin {
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
-                return false;
-            }
-        },
         is_node_fully_selected_predicates: (node) => {
             if (closestElement(node, ".o_selected_td")) {
                 return true;
@@ -239,7 +232,9 @@ export class TablePlugin extends Plugin {
                 // a structurally broken table.
                 is: "THEAD, TBODY, TFOOT, TR, TH, TD",
                 removable: "cascade",
+                splittable: false,
             },
+            { is: "TABLE", splittable: false },
         ],
 
         /** Selectors */

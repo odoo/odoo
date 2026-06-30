@@ -62,12 +62,8 @@ export class UserSignaturePlugin extends Plugin {
 
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
 
-        /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeType === Node.ELEMENT_NODE && node.matches(SIGNATURE_SELECTOR)) {
-                return false;
-            }
-        },
+        /** Regions */
+        region_properties: { is: SIGNATURE_SELECTOR, splittable: false },
 
         /** Processors */
         clean_for_save_processors: (root) => this.cleanForSave(root),
