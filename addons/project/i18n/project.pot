@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1\n"
+"Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"PO-Revision-Date: 2026-06-30 00:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -281,6 +281,11 @@ msgstr ""
 msgid ""
 "<i class=\"d-none d-md-inline fa fa-fw fa-user me-2\" title=\"Customer\" "
 "name=\"partner_id\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
+msgid "<i class=\"fa fa-calendar px-1 mt-1\" role=\"img\" aria-label=\"Deadline\"/>"
 msgstr ""
 
 #. module: project
@@ -1286,6 +1291,12 @@ msgid "Contact Number"
 msgstr ""
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
+msgid "Convert Project to Template"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
 msgstr ""
@@ -1333,19 +1344,24 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: model:ir.model,website_form_label:project.model_res_partner
-msgid "Create a Customer"
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
-msgid "Create a Project"
+msgid "Create Project"
 msgstr ""
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
-msgid "Create a Project from Template %s"
+msgid "Create Project (Template: %s)"
+msgstr ""
+
+#. module: project
+#: model:ir.model,website_form_label:project.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_create_project_template
+msgid "Create a Project Template"
 msgstr ""
 
 #. module: project
@@ -1387,11 +1403,6 @@ msgstr ""
 msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
-msgid "Create tasks by email:"
 msgstr ""
 
 #. module: project
@@ -1599,6 +1610,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Deadline"
@@ -2917,6 +2929,11 @@ msgid "No project role found. Let's create one!"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.open_view_project_template
+msgid "No project templates found. Let's create one!"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
@@ -3193,6 +3210,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Planned Date"
@@ -3427,6 +3445,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_template_dropdown.xml:0
+#: model:ir.actions.act_window,name:project.open_view_project_template
+#: model:ir.ui.menu,name:project.menu_project_config_project_template
 msgid "Project Templates"
 msgstr ""
 
@@ -3508,6 +3528,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Project's Email"
 msgstr ""
@@ -3931,6 +3952,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to paste images in description"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.open_view_project_template
+msgid ""
+"Save time by using project templates with pre-filled details.<br>\n"
+"                    Standardize workflows and ensure consistency across projects."
 msgstr ""
 
 #. module: project
