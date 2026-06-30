@@ -13,6 +13,8 @@ import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineCrmLivechatModels();
@@ -39,7 +41,11 @@ test("can create a lead from the thread action after the conversation ends", asy
     await click(".o-mail-DiscussContent-header button[title='Create Lead']");
     await insertText(".o-livechat-LivechatCommandDialog-form input", "testlead");
     await click(".o-mail-ActionPanel button", { text: "Create Lead" });
+    const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channel_id]]);
+    const time = deserializeDateTime(date).toLocaleString(luxon.DateTime.TIME_SIMPLE, {
+        locale: user.lang,
+    });
     await contains(
-        `.o-mail-NotificationMessage:text('${serverState.partnerName} created a new lead: testlead1:00 PM')`
+        `.o-mail-NotificationMessage:text('${serverState.partnerName} created a new lead: testlead${time}')`
     );
 });

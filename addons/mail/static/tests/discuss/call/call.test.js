@@ -53,6 +53,8 @@ import {
 
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1473,6 +1475,7 @@ test("open conversation from call invitation (discuss app)", async () => {
 
 test("Meeting chat panel excludes call notifications for 'New Meeting' channels", async () => {
     mockDate("2026-01-01 10:00:00");
+    const pyEnv = await startServer();
     const env = await start();
     const rtc = env.services["discuss.rtc"];
     await openDiscuss();
@@ -1480,13 +1483,18 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await contains(".o-mail-MeetingReadyBanner");
     await press("escape");
     await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
-    await contains(".o-mail-NotificationMessage:text('Mitchell Admin started a call.11:00 AM')");
+    const messages = pyEnv["mail.message"].search_read([["message_type", "=", "notification"]]);
+    const time = deserializeDateTime(messages.at(-1).date).toLocaleString(
+        luxon.DateTime.TIME_SIMPLE,
+        { locale: user.lang }
+    );
+    await contains(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`);
     await rtc.enterFullscreen();
     await contains(".o-mail-Meeting");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:text('In call messages')");
     await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
-    await contains(".o-mail-NotificationMessage:text('Mitchell Admin started a call.11:00 AM')", {
+    await contains(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`, {
         count: 0,
     });
 });
