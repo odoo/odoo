@@ -512,6 +512,8 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_clickbot': [
             'web/static/src/webclient/clickbot/clickbot.js',
+            'web/static/src/webclient/clickbot/clickbot_overlay.js',
+            'web/static/src/webclient/clickbot/clickbot_overlay.xml',
         ],
         "web.chartjs_lib" : [
             '/web/static/lib/Chart/Chart.js',
