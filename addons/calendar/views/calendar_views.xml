@@ -6,14 +6,15 @@
         <field name="name">calendar.event.type</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
-            <list string="Meeting Types" sample="1" editable="bottom">
-                <field name="name"/>
+            <list string="Tags" sample="1" editable="bottom">
+                <field name="name" string="Event Tag"/>
+                <field name="color" widget="color_picker"/>
             </list>
         </field>
     </record>
 
     <record id="action_calendar_event_type" model="ir.actions.act_window">
-        <field name="name">Meeting Types</field>
+        <field name="name">Tags</field>
         <field name="res_model">calendar.event.type</field>
         <field name="view_id" ref="view_calendar_event_type_tree"/>
     </record>
@@ -57,11 +58,37 @@
         </field>
     </record>
 
+    <record id="calendar_alarm_view_kanban" model="ir.ui.view">
+        <field name="name">calendar.alarm.view.kanban</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <kanban string="Calendar Alarm" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <h5><field name="name"/></h5>
+                        <div name="calendar_alarm_template_details">
+                            <field name="mail_template_id" invisible="not mail_template_id"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="calendar_alarm_view_search" model="ir.ui.view"> 
+        <field name="name">calendar.alarm.view.search</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="group_by_alarm_type" string="Type" context="{'group_by': 'alarm_type'}"/>
+            </search>
+        </field>
+    </record>
+
     <record id="action_calendar_alarm" model="ir.actions.act_window">
         <field name="name">Reminders</field>
         <field name="res_model">calendar.alarm</field>
-        <field name="view_mode">list,form</field>
-        <field name="view_id" ref="view_calendar_alarm_tree"/>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <!-- Calendar Events : Views and Actions  -->
@@ -189,10 +216,10 @@
                                             <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
                                         </span>
                                     </span>
-                                    <div name="send_buttons" class="d-flex gap-2 pt-2 pb-3" invisible="not attendees_count">
-                                        <button name="action_open_composer" class="btn btn-sm btn-secondary" help="Send Email to attendees" type="object" string="EMAIL" icon="mail" icon_class="oi-filled" invisible="not user_can_edit"/>
-                                    </div>
                                 </div>
+                            </div>
+                            <div name="send_buttons" class="d-flex gap-2 pb-3" invisible="not attendees_count">
+                                <button name="action_open_composer" class="btn btn-sm btn-secondary" help="Send Email to attendees" type="object" string="EMAIL" icon="mail" icon_class="oi-filled" invisible="not user_can_edit"/>
                             </div>
                             <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
                             <field name="partner_ids" widget="many2manyattendee_email"
@@ -577,6 +604,13 @@
         name="Reminders"
         sequence="50"
         action="action_calendar_alarm"/>
+
+    <menuitem 
+        id="calendar_submenu_event_type"
+        parent="calendar_menu_config"
+        name="Tags"
+        sequence="55"
+        action="action_calendar_event_type"/>
 
     <menuitem
         id="menu_calendar_configuration"

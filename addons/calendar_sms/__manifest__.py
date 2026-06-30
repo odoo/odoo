@@ -9,6 +9,7 @@
     'depends': ['calendar', 'sms'],
     'data': [
         'data/sms_data.xml',
+        'views/calendar_alarm_views.xml',
         'views/calendar_views.xml',
     ],
     'auto_install': True,

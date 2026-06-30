@@ -2033,6 +2033,10 @@ class CalendarEvent(models.Model):
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy', 'create_uid'}
 
     @api.model
+    def _get_valid_event_domain(self):
+        return Domain('res_model', '!=', 'hr.leave')
+
+    @api.model
     def get_default_duration(self):
         ir_default_get = self.env['ir.default'].sudo()._get
         res = ir_default_get('calendar.event', 'duration', user_id=True, company_id=True)

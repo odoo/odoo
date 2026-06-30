@@ -10,11 +10,15 @@
                 <data>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button" type="object"
-                            name="schedule_meeting"
+                            name="action_schedule_meeting"
                             icon="calendar_today"
                             icon_class="oi-filled"
                             context="{'partner_id': id, 'partner_name': name}">
-                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                            <div class="o_stat_info">
+                                <span class="o_stat_text"><field name="meeting_display_label"/></span>
+                                <field name="meeting_next_date" class="o_stat_value" invisible="not meeting_next_date"/>
+                                <field name="meeting_count" class="o_stat_value" invisible="meeting_next_date or not meeting_count"/>
+                            </div>
                         </button>
                     </div>
                 </data>
