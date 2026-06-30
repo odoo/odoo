@@ -1,6 +1,6 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, plugin, props, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { AnimatedNumber } from "./animated_number";
-import { useService } from "@web/core/utils/hooks";
 
 export const columnProgressProps = {
     aggregate: t.object(),
@@ -17,7 +17,7 @@ export class ColumnProgress extends Component {
     props = props(columnProgressProps);
 
     setup() {
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
     }
 
     async onBarClick(bar) {

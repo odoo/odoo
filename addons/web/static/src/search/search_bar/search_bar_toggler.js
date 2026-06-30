@@ -1,5 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -16,10 +17,10 @@ export class SearchBarToggler extends Component {
 export class OfflineSearchBarToggler extends SearchBarToggler {
     static template = "web.SearchBar.Toggler.Offline";
     setup() {
-        const offlineService = useService("offline");
+        const offlinePlugin = plugin(OfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
-            const availableSearches = await offlineService.getAvailableSearches(actionId, viewType);
+            const availableSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);
             this.isDisabled = Object.keys(availableSearches).length <= 1;
         });
     }

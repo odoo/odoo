@@ -8,7 +8,8 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, proxy, useListener } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, plugin, proxy, useListener } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const systrayRegistry = registry.category("systray");
 
@@ -34,7 +35,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.pwa = useService("pwa");
         this.root = useRef("root");
         this.appSubMenus = useRef("appSubMenus");
@@ -238,9 +239,9 @@ export class NavBar extends Component {
 
     _isAvailable(menu) {
         return (
-            !this.offlineService.offline ||
+            !this.offlinePlugin.isOffline() ||
             !menu.actionID ||
-            this.offlineService.isAvailableOffline(menu.actionID)
+            this.offlinePlugin.isAvailableOffline(menu.actionID)
         );
     }
 

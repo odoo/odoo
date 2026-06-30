@@ -67,12 +67,12 @@
                     </CogMenu>
                 </t>
                 <t t-set-slot="control-panel-actions">
-                    <SearchBar t-if="!this.offlineService.offline" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
+                    <SearchBar t-if="!this.offlinePlugin.isOffline()" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
                     <OfflineSearchBar t-else="" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-if="!this.hasSelectedRecords">
-                        <t t-if="this.offlineService.offline" t-component="this.searchBarToggler.offlineComponent" t-props="this.searchBarToggler.props"/>
+                        <t t-if="this.offlinePlugin.isOffline()" t-component="this.searchBarToggler.offlineComponent" t-props="this.searchBarToggler.props"/>
                         <t t-else="" t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                     </t>
                 </t>

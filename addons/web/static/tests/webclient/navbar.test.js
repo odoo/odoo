@@ -27,6 +27,7 @@ import { onRendered } from "@web/owl2/utils";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { mockOffline } from "../web_test_helpers";
 
 const systrayRegistry = registry.category("systray");
@@ -549,7 +550,7 @@ test("Do not execute adapt when navbar is destroyed", async () => {
 test.tags("desktop");
 test("[Offline] unavailable menus are disabled", async () => {
     const setOffline = mockOffline();
-    mockService("offline", {
+    patchWithCleanup(OfflinePlugin.prototype, {
         isAvailableOffline(actionId) {
             return [2, 10, 121].includes(actionId);
         },

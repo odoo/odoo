@@ -3,12 +3,12 @@
 
     <t t-name="web.OfflineSystray">
         <Dropdown
-            t-if="this.offlineService.offline or this.offlineService.hasScheduledCalls"
+            t-if="this.offlinePlugin.isOffline() or this.offlinePlugin.hasScheduledCalls"
             navigationOptions="{ 'shouldFocusChildInput': false }"
-            disabled="!this.offlineService.hasScheduledCalls">
+            disabled="!this.offlinePlugin.hasScheduledCalls">
             <div
                 t-if="this.env.isSmall"
-                t-on-click="() => this.offlineService.checkConnection()"
+                t-on-click="() => this.offlinePlugin.checkConnection()"
                 class="o_nav_entry o_offline_systray">
                     <i t-attf-class="{{ this.labelIcon }} {{ this.labelColor }}"
                     role="img"
@@ -18,13 +18,13 @@
             <button t-else=""
                 t-attf-class="o_nav_entry px-2 o_tag {{ this.labelColor }} o_offline_systray"
                 data-available-offline=""
-                t-on-click="() => this.offlineService.checkConnection()"
+                t-on-click="() => this.offlinePlugin.checkConnection()"
                 data-tooltip="Click to check connection and Sync">
-                <i t-attf-class="{{ this.labelIcon }} me-1"/><t t-out="this.labelText"></t><i t-if="this.offlineService.hasScheduledCalls" class="fa fa-caret-down ms-2"/>
+                <i t-attf-class="{{ this.labelIcon }} me-1"/><t t-out="this.labelText"></t><i t-if="this.offlinePlugin.hasScheduledCalls" class="fa fa-caret-down ms-2"/>
             </button>
             <t t-set-slot="content">
                 <div class="o_offline_systray_content px-2">
-                    <t t-foreach="this.groupEntries" t-as="entry" t-key="entry[0]">
+                    <t t-foreach="this.groupEntries()" t-as="entry" t-key="entry[0]">
                         <div class="o_horizontal_separator text-uppercase fw-bolder small mb-1">
                             <span t-out="entry[0]"/>
                         </div>
@@ -37,7 +37,7 @@
                                     'px-0': true,
                                     'd-flex': true,
                                     'o_cursor_auto': !element.clickable,
-                                    'o_disabled_while_sync': this.offlineService.syncingORM,
+                                    'o_disabled_while_sync': this.offlinePlugin.syncingORM(),
                                     'mb-2': element_last,
                                  }">
                                 <div t-attf-class="text-truncate {{element.error ? 'text-danger': ''}} {{ element.clickable ? '' : 'text-muted'}}" t-att-data-tooltip="element.error ?? element.displayName">

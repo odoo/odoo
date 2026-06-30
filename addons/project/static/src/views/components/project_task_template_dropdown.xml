@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="project.TemplateDropdown">
-        <button t-if="!this.state.taskTemplates.length or this.offlineService.offline" type="button" t-att-data-available-offline="this.isNewButtonAvailableOffline" t-att-class="this.props.newButtonClasses" t-att-data-hotkey="this.props.hotkey" t-on-click.stop="this.props.onCreate" data-bounce-button="">New</button>
+        <button t-if="!this.state.taskTemplates.length or this.offlinePlugin.isOffline()" type="button" t-att-data-available-offline="this.isNewButtonAvailableOffline" t-att-class="this.props.newButtonClasses" t-att-data-hotkey="this.props.hotkey" t-on-click.stop="this.props.onCreate" data-bounce-button="">New</button>
         <Dropdown t-else="" menuClass="'py-0'">
             <button t-attf-class="{{ this.props.newButtonClasses }} o-dropdown-caret" t-att-data-hotkey="this.props.hotkey" data-bounce-button="">
                 New

@@ -20,6 +20,7 @@ import {
     tick,
     waitFor,
 } from "@odoo/hoot";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import {
     Component,
     EventBus,
@@ -346,7 +347,7 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     expect(".o_form_renderer").not.toHaveClass("o_form_readonly"); // We can create/edit offline
     expect(".o_form_renderer").toHaveClass("o_form_editable");
     expect(".o_field_widget[name=foo] input").toHaveValue("new foo");
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
     expect.verifySteps(["web_save"]);
 
     // The edited record will be saved the next time we are online
@@ -361,7 +362,7 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     offline = false;
     await runAllTimers(); // execute checkConnection
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 
     await contains(".o_breadcrumb .o_back_button").click();
@@ -414,7 +415,7 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     await contains(".o_breadcrumb .o_back_button").click();
     expect(".o_list_view").toHaveCount(1);
     expect(".o_data_cell:first").toHaveText("yop"); // Old value, not yet saved
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
     expect.verifySteps(["web_save"]);
     expect.waitForErrors([
         `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
@@ -432,7 +433,7 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     offline = false;
     await runAllTimers(); // execute checkConnection
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     // TODO: It should be nice to reload the current view after sync ?? For me it should be "new foo"
     expect(".o_data_cell:first").toHaveText("yop");
     await expect.waitForSteps(["web_save"]);
@@ -4261,7 +4262,7 @@ test(`[Offline] archiving a record`, async () => {
 
     expect(`.o_breadcrumb`).toHaveText("first record");
     await setOffline(true);
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     // open action menu and delete
     await toggleActionMenu();
@@ -4283,7 +4284,7 @@ test(`[Offline] archiving a record`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["action_archive"]);
 });
 
@@ -4313,7 +4314,7 @@ test(`[Offline] Unarchiving a record`, async () => {
 
     expect(`.o_breadcrumb`).toHaveText("first record");
     await setOffline(true);
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     // open action menu and delete
     await toggleActionMenu();
@@ -4332,7 +4333,7 @@ test(`[Offline] Unarchiving a record`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["action_unarchive"]);
 });
 
@@ -6352,7 +6353,7 @@ test(`[Offline] deleting a record`, async () => {
 
     expect(`.o_breadcrumb`).toHaveText("first record");
     await setOffline(true);
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     // open action menu and delete
     await toggleActionMenu();
@@ -6374,7 +6375,7 @@ test(`[Offline] deleting a record`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["unlink"]);
 });
 

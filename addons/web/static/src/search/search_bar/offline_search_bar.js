@@ -1,6 +1,7 @@
 import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, signal } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -45,10 +46,10 @@ export class OfflineSearchBar extends Component {
             limit: INITIAL_SEARCH_LIMIT,
         });
 
-        const offlineService = useService("offline");
+        const offlinePlugin = plugin(OfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
-            this.allSearches = await offlineService.getAvailableSearches(actionId, viewType);
+            this.allSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);
             this.emptySearch = this.allSearches.find((search) => !search.facets.length) || null;
             this.state.searches = this.allSearches;
         });

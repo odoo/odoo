@@ -1,6 +1,6 @@
 // @ts-check
 
-import { EventBus, markRaw, toRaw } from "@odoo/owl";
+import { EventBus, markRaw, plugin, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
@@ -25,6 +25,7 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -112,7 +113,7 @@ const DEFAULT_HOOKS = {
 };
 
 export class RelationalModel extends Model {
-    static services = ["action", "dialog", "notification", "orm", "offline"];
+    static services = ["action", "dialog", "notification", "orm"];
     static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -124,15 +125,16 @@ export class RelationalModel extends Model {
     static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
     static withCache = true;
 
+    offlinePlugin = plugin(OfflinePlugin);
+
     /**
      * @param {RelationalModelParams} params
      * @param {Services} services
      */
-    setup(params, { action, dialog, notification, offline }) {
+    setup(params, { action, dialog, notification }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
-        this.offline = offline;
 
         this.bus = new EventBus();
 
@@ -301,7 +303,7 @@ export class RelationalModel extends Model {
                         values = value.filter((v) => v.id && v.display_name);
                     }
                     if (values.length) {
-                        this.offline.cacheMany2XSearch(field.relation, values);
+                        this.offlinePlugin.cacheMany2XSearch(field.relation, values);
                     }
                 }
             }
@@ -348,7 +350,7 @@ export class RelationalModel extends Model {
         // Do not use a cached result if we're online and this isn't the first load of the model,
         // except if we're loading another record (form view) or creating a new record (onchange).
         const noCache =
-            !this.offline.offline &&
+            !this.offlinePlugin.isOffline() &&
             !firstLoad &&
             (!config.isMonoRecord || (this.root.config.resId === config.resId && config.resId));
         return {
@@ -790,7 +792,7 @@ export class RelationalModel extends Model {
             const params = config.isMonoRecord
                 ? { resId }
                 : { search: this.env.searchModel.getCurrentSearch() };
-            this.offline.setAvailableOffline(actionId, viewType, params);
+            this.offlinePlugin.setAvailableOffline(actionId, viewType, params);
         }
     }
 

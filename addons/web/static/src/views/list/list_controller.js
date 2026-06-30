@@ -26,7 +26,8 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onWillPatch, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 // -----------------------------------------------------------------------------
 
@@ -62,7 +63,7 @@ export class ListController extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -267,13 +268,13 @@ export class ListController extends Component {
 
     get isNewButtonAvailableOffline() {
         if (this.archInfo.editable && !this.model.root.isGrouped) {
-            return this.offlineService.isAvailableOffline(
+            return this.offlinePlugin.isAvailableOffline(
                 this.env.config.actionId,
                 "list_quick_create",
                 false
             );
         }
-        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
+        return this.offlinePlugin.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     getExportableFields() {

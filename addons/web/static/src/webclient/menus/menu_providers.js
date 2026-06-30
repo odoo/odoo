@@ -3,8 +3,8 @@ import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 import { DefaultCommandItem } from "@web/core/commands/command_palette";
-
-import { Component } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { Component, plugin } from "@odoo/owl";
 
 class AppIconCommand extends Component {
     static template = "web.AppIconCommand";
@@ -30,13 +30,14 @@ const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("menu", {
     namespace: "/",
     async provide(env, options) {
+        const offlinePlugin = plugin(OfflinePlugin);
         const result = [];
         const menuService = env.services.menu;
         let { apps, menuItems } = computeAppsAndMenuItems(menuService.getMenuAsTree("root"));
         function isAvailable(menu) {
             return (
-                env.services.offline.offline &&
-                !env.services.offline.isAvailableOffline(menu.actionID)
+                offlinePlugin.isOffline() &&
+                !offlinePlugin.isAvailableOffline(menu.actionID)
             );
         }
         if (options.searchValue !== "") {

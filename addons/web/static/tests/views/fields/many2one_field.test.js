@@ -1,4 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import {
     click,
     middleClick,
@@ -411,7 +412,7 @@ test("[Offline] many2one", async () => {
     // go online and save the record.
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 

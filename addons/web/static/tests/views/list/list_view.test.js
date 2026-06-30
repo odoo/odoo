@@ -79,6 +79,7 @@ import {
 
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { currencies } from "@web/core/currency";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
@@ -622,7 +623,7 @@ test(`[Offline] editable list (create)`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]);
 });
 
@@ -674,7 +675,7 @@ test(`[Offline] editable list (edit)`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]);
 });
 
@@ -775,7 +776,7 @@ test(`[Offline] create record when offline`, async () => {
     // go online and save the record.
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
@@ -864,7 +865,7 @@ test(`[Offline] edit record when offline`, async () => {
     // go online and save the record.
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
@@ -909,7 +910,7 @@ test(`[Offline] list with priority widget`, async () => {
 test.tags("desktop");
 test(`[Offline] disable unavailable records when offline`, async () => {
     const setOffline = mockOffline();
-    mockService("offline", {
+    patchWithCleanup(OfflinePlugin.prototype, {
         isAvailableOffline(actionId, viewType, resId) {
             if (actionId === 234 && viewType === "form") {
                 return [2, 3].includes(resId);
@@ -20146,7 +20147,7 @@ test(`[Offline] delete records`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["unlink"]);
 });
 
@@ -20196,7 +20197,7 @@ test(`[Offline] archiving records`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["action_archive"]);
 });
 
@@ -20245,7 +20246,7 @@ test(`[Offline] unarchiving records`, async () => {
 
     await setOffline(false);
 
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["action_unarchive"]);
 });
 

@@ -38,7 +38,8 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, props, status, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, plugin, props, status, proxy, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -222,7 +223,7 @@ export class Many2XAutocomplete extends Component {
     props = props(many2XAutocompleteProps);
     setup() {
         this.orm = useService("orm");
-        this.offline = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -349,11 +350,11 @@ export class Many2XAutocomplete extends Component {
             });
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                return this.offline.searchMany2XRecords(this.props.resModel, name);
+                return this.offlinePlugin.searchMany2XRecords(this.props.resModel, name);
             }
             throw e;
         }
-        this.offline.cacheMany2XSearch(this.props.resModel, result);
+        this.offlinePlugin.cacheMany2XSearch(this.props.resModel, result);
         return result;
     }
 
@@ -429,13 +430,13 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildNoRecordsSuggestion());
             } else if (this.addStartTypingSuggestion({ request, records })) {
                 suggestions.push(this.buildStartTypingSuggestion());
-            } else if (this.offline.offline) {
+            } else if (this.offlinePlugin.isOffline()) {
                 suggestions.push(this.buildNoRecordsSuggestion());
             }
         }
 
         // Only add action suggestions if online!
-        if (!this.offline.offline) {
+        if (!this.offlinePlugin.isOffline()) {
             for (const action of this.actionSuggestions) {
                 const enabled = action.enabled ?? (() => true);
                 if (enabled({ request, records })) {
@@ -577,7 +578,7 @@ export class Many2XAutocomplete extends Component {
                 limit: this.props.searchMoreLimit,
                 context,
             });
-            this.offline.cacheMany2XSearch(
+            this.offlinePlugin.cacheMany2XSearch(
                 resModel,
                 nameGets.map((r) => ({ id: r[0], display_name: r[1] }))
             );

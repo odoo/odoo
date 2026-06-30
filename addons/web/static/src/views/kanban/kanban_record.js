@@ -159,9 +159,9 @@ export class KanbanRecord extends CardRenderer {
             classes.push("o_record_selected");
         }
         if (
-            this.offlineService.offline &&
+            this.offlinePlugin.isOffline() &&
             !this.props.record.model.useSampleModel &&
-            !this.offlineService.isAvailableOffline(this.env.config.actionId, "form", record.resId)
+            !this.offlinePlugin.isAvailableOffline(this.env.config.actionId, "form", record.resId)
         ) {
             classes.push("o_disabled_offline");
         }

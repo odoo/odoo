@@ -1,4 +1,5 @@
 import { WebClient } from "@web/webclient/webclient";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 import { animationFrame, expect, queryAllTexts, runAllTimers, test } from "@odoo/hoot";
 import {
@@ -53,7 +54,7 @@ test("offline systray item: click to check connection (desktop)", async () => {
 
     await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
     expect.verifySteps(["version_info"]);
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
 });
 
@@ -69,7 +70,7 @@ test("offline systray item: click to check connection (mobile)", async () => {
 
     await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
     expect.verifySteps(["version_info"]);
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
 });
 
@@ -84,10 +85,10 @@ test("scheduledORM", async () => {
         },
     });
     await runAllTimers(); // execute time, wait for the start syncORM
-    await getService("offline").setAvailableOffline(22, "form", { resId: false });
+    await getService(OfflinePlugin).setAvailableOffline(22, "form", { resId: false });
     await setOffline(true);
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[]],
@@ -103,7 +104,7 @@ test("scheduledORM", async () => {
             },
         }
     );
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[22]],
@@ -120,7 +121,7 @@ test("scheduledORM", async () => {
             },
         }
     );
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "lead",
         "web_save",
         [[]],
@@ -207,7 +208,7 @@ test("scheduledORM: inError", async () => {
     await runAllTimers(); // execute time, wait for the start syncORM
     await setOffline(true);
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[]],
@@ -224,7 +225,7 @@ test("scheduledORM: inError", async () => {
         }
     );
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "lead",
         "web_save",
         [[]],
@@ -277,10 +278,10 @@ test("scheduledORM: mobile", async () => {
         },
     });
     await runAllTimers(); // execute time, wait for the start syncORM
-    await getService("offline").setAvailableOffline(22, "form", { resId: false });
+    await getService(OfflinePlugin).setAvailableOffline(22, "form", { resId: false });
     await setOffline(true);
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[]],
@@ -296,7 +297,7 @@ test("scheduledORM: mobile", async () => {
             },
         }
     );
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[22]],
@@ -313,7 +314,7 @@ test("scheduledORM: mobile", async () => {
             },
         }
     );
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "lead",
         "web_save",
         [[]],
@@ -402,7 +403,7 @@ test("scheduledORM: inError mobile", async () => {
     await runAllTimers(); // execute time, wait for the start syncORM
     await setOffline(true);
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "partner",
         "web_save",
         [[]],
@@ -419,7 +420,7 @@ test("scheduledORM: inError mobile", async () => {
         }
     );
 
-    getService("offline").scheduleORM(
+    getService(OfflinePlugin).scheduleORM(
         "lead",
         "web_save",
         [[]],
