@@ -22,7 +22,8 @@ class ResGroups(models.Model):
                         'id': category.id,
                         'name': category.name,
                         'description': category.description,
-                        'groups': [[group.id, group.name] for group in category.group_ids]
+                        'groups': [[group.id, group.name]
+                                   for group in category.group_ids.sorted(lambda g: (len(g.all_implied_ids & category.group_ids), g.sequence, g.id))]
                     } for category in section.child_ids.sorted(lambda c: c.sequence) if category.group_ids
                 ]
             } for section in self.env['ir.module.category'].search([('parent_id', '=', False), ('child_ids.group_ids', '!=', False)], order="sequence")
