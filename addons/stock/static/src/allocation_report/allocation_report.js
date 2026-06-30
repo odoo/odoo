@@ -39,6 +39,7 @@ export class AllocationReport extends Component {
         this.ui = useService("ui");
         this.context = this.props.action.context;
         this.mutex = new Mutex();
+        this._onGoingJob = false;
 
         useBus(this.env.bus, "print_labels", (ev) => this.onPrintLabels(ev.detail));
         useBus(this.env.bus, "open_record", (ev) => this.openRecord(ev.detail));
@@ -128,10 +129,16 @@ export class AllocationReport extends Component {
     }
 
     async updateMoveReservation(toReserve, productId, outLine) {
+        if (this._onGoingJob) {
+            return; // Prevent concurrency errors.
+        }
         const productLine = this.productLinesById[productId];
-        this.mutex.exec(
+        this._onGoingJob = this.mutex.exec(
             async () => await this._updateMoveReservation(toReserve, productLine, outLine)
         );
+        this._onGoingJob.then(() => {
+            this._onGoingJob = false;
+        });
     }
 
     async _updateMoveReservation(toReserve, productLine, outLine) {
@@ -296,6 +303,9 @@ export class AllocationReport extends Component {
     }
 
     onClickAssignAll() {
+        if (this._onGoingJob) {
+            return; // Prevent concurrency errors.
+        }
         const allocationsData = [];
         for (const productLine of this.productLines) {
             const allocionData = [productLine.sourceIds, []];
@@ -308,7 +318,7 @@ export class AllocationReport extends Component {
             }
             allocationsData.push(allocionData);
         }
-        this.mutex.exec(async () => {
+        this._onGoingJob = this.mutex.exec(async () => {
             const updatedData = await this.ormService.call(
                 "stock.allocation.report",
                 "action_assign_all",
@@ -328,6 +338,9 @@ export class AllocationReport extends Component {
                 productLine.freeQty.set(productLine.freeQty() - allocatedQuantity);
                 this.shareQuantity(productLine);
             }
+        });
+        this._onGoingJob.then(() => {
+            this._onGoingJob = false;
         });
     }
 
