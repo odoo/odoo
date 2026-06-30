@@ -1,16 +1,25 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, proxy, signal, t, toRaw, useOnChange, useProps } from "@odoo/owl";
+import {
+    asyncComputed,
+    Component,
+    signal,
+    t,
+    toRaw,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import { parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
+import { ViewPlugin } from "@web/views/view_plugin";
 import { MultiCreatePopover } from "./multi_create_popover";
 
 export const multiSelectionButtonsProps = {
@@ -30,26 +39,23 @@ export const multiSelectionButtonsProps = {
 
 export class MultiSelectionButtons extends Component {
     static template = "web.MultiSelectionButtons";
-    props = useProps(multiSelectionButtonsProps);
     static components = {
         Popover: MultiCreatePopover,
     };
 
+    props = useProps(multiSelectionButtonsProps);
+    viewService = usePlugin(ViewPlugin);
+    dialogService = usePlugin(DialogPlugin);
+
     addButtonRef = signal.ref();
     rootRef = signal.ref();
 
-    setup() {
-        this.viewService = useService("view");
-        this.dialogService = useService("dialog");
-        this.state = proxy({ isReady: false });
-        onWillRender(() => {
-            if (this.props.reactive.visible && !this.state.isReady) {
-                this.loadMultiCreateView().then(() => {
-                    this.state.isReady = true;
-                });
-            }
-        });
+    multiCreateViewData = asyncComputed(
+        async () => this.props.reactive.visible && this.loadMultiCreateView(),
+        { initial: false }
+    );
 
+    setup() {
         this.multiCreateValues = this.props.reactive.multiCreateValues;
         this.callbackRecorder = new CallbackRecorder();
         useSetupAction({
@@ -111,17 +117,20 @@ export class MultiSelectionButtons extends Component {
         });
         const parser = new FormArchParser();
         const arch = views.form.arch;
-        this.multiCreateArchInfo = parser.parse(parseXML(arch), relatedModels, resModel);
-        const { activeFields } = extractFieldsFromArchInfo(this.multiCreateArchInfo, fields);
-        this.multiCreateRecordProps = { resModel, fields, activeFields, context };
+        const multiCreateArchInfo = parser.parse(parseXML(arch), relatedModels, resModel);
+        const { activeFields } = extractFieldsFromArchInfo(multiCreateArchInfo, fields);
+        return {
+            multiCreateArchInfo,
+            multiCreateRecordProps: { resModel, fields, activeFields, context },
+        };
     }
 
     getMultiCreatePopoverProps() {
         return {
             timeRange: this.props.reactive.showMultiCreateTimeRange ? this.getTimeRange() : null,
-            multiCreateArchInfo: { ...this.multiCreateArchInfo },
+            multiCreateArchInfo: { ...this.multiCreateViewData().multiCreateArchInfo },
             multiCreateRecordProps: {
-                ...this.multiCreateRecordProps,
+                ...this.multiCreateViewData().multiCreateRecordProps,
                 values: this.multiCreateValues,
             },
             onAdd: (multiCreateData) => {
