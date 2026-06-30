@@ -52,14 +52,12 @@ export class BaseContainerPlugin extends Plugin {
             }
             this.cleanEmptyStructuralContainers();
         },
-        is_node_splittable_predicates: (node) => {
-            if (
+        region_properties: {
+            is: (node) =>
                 node.nodeName === "DIV" &&
                 (!this.config.baseContainers.includes(node.tagName) ||
-                    !this.isCandidateForBaseContainerAllowUnsplittable(node))
-            ) {
-                return false;
-            }
+                    !this.isCandidateForBaseContainerAllowUnsplittable(node)),
+            splittable: false,
         },
         is_valid_for_base_container_predicates: [
             (node) => {
@@ -77,7 +75,7 @@ export class BaseContainerPlugin extends Plugin {
             (element, options) => {
                 if (
                     !options?.allowUnsplittable &&
-                    !(this.checkPredicates("is_node_splittable_predicates", element) ?? true)
+                    this.dependencies.region.getProperty(element, "splittable") === false
                 ) {
                     return false;
                 }
@@ -123,12 +121,12 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = !(
-            this.checkPredicates("is_node_splittable_predicates", node) ?? true
-        );
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
-        if (isUnsplittable || !isCandidateForBase) {
+        if (
+            this.dependencies.region.getProperty(node, "splittable") === false ||
+            !isCandidateForBase
+        ) {
             return;
         }
 
@@ -169,7 +167,7 @@ export class BaseContainerPlugin extends Plugin {
     /**
      * Evaluate if an element would be eligible to become a baseContainer
      * without considering unsplittable.
-     *
+     * TODO: update the docstring
      * This function is only meant to be used during `is_node_splittable_predicates` to
      * avoid an infinite loop:
      * Considering a `DIV`,

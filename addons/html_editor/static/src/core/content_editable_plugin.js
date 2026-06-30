@@ -1,7 +1,17 @@
 import { Plugin } from "@html_editor/plugin";
-import { isMediaElement } from "@html_editor/utils/dom_info";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    isContentEditable,
+    isContentEditableAncestor,
+    isMediaElement,
+} from "@html_editor/utils/dom_info";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+
+// In the `contenteditable` attribute consideration, disconnected nodes can be
+// unsplittable only if they are explicitly set under a contenteditable="false"
+// element.
+const isExplicitlyNotContentEditable = (node) =>
+    !isContentEditable(node) && (node.isConnected || closestElement(node, "[contenteditable]"));
 
 /** @typedef {import("@html_editor/editor").EditorContext} EditorContext */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -29,6 +39,20 @@ export class ContentEditablePlugin extends Plugin {
     resources = {
         normalize_processors: withSequence(5, this.normalize.bind(this)),
         clean_for_save_processors: withSequence(Infinity, this.cleanForSave.bind(this)),
+        // Splitting or merging across a contenteditable boundary would modify
+        // non-editable content, so such nodes are unsplittable.
+        region_properties: [
+            { is: isExplicitlyNotContentEditable, splittable: false },
+            // An editable node placed directly inside a non-editable one:
+            // splitting it would modify the non-editable parent's content.
+            {
+                is: (node) =>
+                    node.parentElement &&
+                    isContentEditableAncestor(node) &&
+                    isExplicitlyNotContentEditable(node.parentElement),
+                splittable: false,
+            },
+        ],
     };
 
     normalize(root) {

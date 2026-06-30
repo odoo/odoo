@@ -25,19 +25,11 @@ export class ProtectedNodePlugin extends Plugin {
         normalize_processors: withSequence(0, this.normalize.bind(this)),
 
         /** Predicates */
-        is_node_splittable_predicates: [
-            (node) => {
-                // avoid merge
-                if (isProtecting(node)) {
-                    return false;
-                }
-            },
-            (node) => {
-                if (isUnprotecting(node)) {
-                    return false;
-                }
-            },
-        ],
+        region_properties: {
+            // avoid merge
+            is: (node) => isProtecting(node) || isUnprotecting(node),
+            splittable: false,
+        },
         is_mutation_savable_predicates: this.isMutationSavable.bind(this),
 
         /** Providers */

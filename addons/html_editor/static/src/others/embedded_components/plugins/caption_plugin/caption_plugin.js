@@ -59,14 +59,8 @@ export class CaptionPlugin extends Plugin {
         region_properties: [
             { within: CAPTION_SPAN_SELECTOR, formattable: false, toolbar: DISABLED_NAMESPACE },
             { is: "FIGCAPTION > .o_caption_editable", hintText: _t("Write a caption...") },
-        ],
-        is_node_splittable_predicates: [
-            (node) => {
-                // avoid merge
-                if (["FIGURE", "FIGCAPTION"].includes(node.nodeName)) {
-                    return false;
-                }
-            },
+            // avoid merge
+            { is: "FIGURE, FIGCAPTION", splittable: false },
         ],
         is_link_allowed_on_selection_predicates: () => {
             if (this.isLinkAllowedOnSelection()) {
