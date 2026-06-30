@@ -467,20 +467,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda c: c.can_access_from_current_website()
             )
             category_entries = (
-                (not search
-                and available_categories)
-                or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            )
+                not search and available_categories
+            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not category_entries:
                 parent = category.parent_id
                 available_categories = parent.child_id.filtered(
                     lambda c: c.can_access_from_current_website()
                 )
                 category_entries = (
-                    (not search
-                    and available_categories)
-                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
-                )
+                    not search and available_categories
+                ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not search and not request.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
                 # from a regular `search`, but we have not checked access to `category`'s children,
@@ -512,7 +508,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttributeValue = request.env["product.attribute.value"]
         pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
         if products:
-            product_query = request.env['product.template']._search(product_domain)
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            product_query = request.env["product.template"]._search(
+                self._get_shop_domain(search_term, category, attribute_value_dict={})
+            )
             grouped_pavs = ProductAttributeValue._read_group(
                 domain=[
                     ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
@@ -893,9 +892,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         ProductCategory = request.env["product.public.category"]
         original_category = category
-        category = category or product.public_categ_ids.filtered(
-            lambda c: c.can_access_from_current_website()
-        )[:1]
+        category = (
+            category
+            or product.public_categ_ids.filtered(lambda c: c.can_access_from_current_website())[:1]
+        )
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
             product._to_markup_data(website),
@@ -908,8 +908,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if last_attributes_search := request.session.get("attribute_values", []):
             keep = QueryURL(
-                self._get_shop_path(original_category),
-                attribute_values=last_attributes_search
+                self._get_shop_path(original_category), attribute_values=last_attributes_search
             )
         else:
             keep = QueryURL(self._get_shop_path(original_category))
@@ -946,7 +945,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attribute_value_images": attribute_value_images,
             "categories": ProductCategory.search([("parent_id", "=", False)]),
             "category": category,
-            'original_category': original_category,
+            "original_category": original_category,
             "combination_info": combination_info,
             "has_available_uoms": len(product._get_available_uoms()) > 0,
             "keep": keep,
@@ -958,7 +957,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
             "shop_path": SHOP_PATH,
-            "user_email": request.env.user.email or request.session.get("stock_notification_email", ""),
+            "user_email": request.env.user.email
+            or request.session.get("stock_notification_email", ""),
         }
 
     def _prepare_breadcrumb_markup_data(self, base_url, category):
