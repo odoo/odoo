@@ -6,16 +6,11 @@ from num2words import num2words
 
 from odoo import api, models
 from odoo.exceptions import UserError
-<<<<<<< 3e05567fe95b1d428a8b77f0d6dd6f72d955b8dd
-from odoo.tools import float_compare, frozendict, html2plaintext
+
+from odoo.tools import float_compare, float_round, frozendict, html2plaintext
 
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.clean_node_dict import clean_node_dict
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.ubl_tr_invoice import TrInvoice
-||||||| 65937b5cdc6c638a9e9ff7085cbab1567ca24142
-from odoo.tools import html2plaintext
-=======
-from odoo.tools import float_round, html2plaintext
->>>>>>> 05f4e2bd0f4a73b7166533de98f89bd3294dd9a1
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
