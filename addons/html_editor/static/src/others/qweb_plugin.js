@@ -58,11 +58,6 @@ export class QWebPlugin extends Plugin {
         clipboard_content_processors: this.clearDataAttributes.bind(this),
 
         /** Predicates */
-        is_node_splittable_predicates: (node) => {
-            if (isUnsplittableQWebElement(node)) {
-                return false;
-            }
-        },
         is_empty_link_legit_predicates: (linkEl) => {
             if (linkEl.getAttributeNames().some((name) => name.startsWith("t-"))) {
                 return true;
@@ -89,6 +84,7 @@ export class QWebPlugin extends Plugin {
         region_properties: [
             { is: PROTECTED_QWEB_SELECTOR, formattable: true },
             { is: isUnremovableQWebElement, removable: false },
+            { is: isUnsplittableQWebElement, splittable: false },
         ],
 
         /** Providers */

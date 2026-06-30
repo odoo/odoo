@@ -52,14 +52,12 @@ export class BaseContainerPlugin extends Plugin {
             }
             this.cleanEmptyStructuralContainers();
         },
-        is_node_splittable_predicates: (node) => {
-            if (
+        region_properties: {
+            is: (node) =>
                 node.nodeName === "DIV" &&
                 (!this.config.baseContainers.includes(node.tagName) ||
-                    !this.isCandidateForBaseContainerAllowUnsplittable(node))
-            ) {
-                return false;
-            }
+                    !this.isCandidateForBaseContainerAllowUnsplittable(node)),
+            splittable: false,
         },
         is_valid_for_base_container_predicates: [
             (node) => {
@@ -77,7 +75,7 @@ export class BaseContainerPlugin extends Plugin {
             (element, options) => {
                 if (
                     !options?.allowUnsplittable &&
-                    !(this.checkPredicates("is_node_splittable_predicates", element) ?? true)
+                    this.dependencies.region.getProperty(element, "splittable") === false
                 ) {
                     return false;
                 }
@@ -123,12 +121,12 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = !(
-            this.checkPredicates("is_node_splittable_predicates", node) ?? true
-        );
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
-        if (isUnsplittable || !isCandidateForBase) {
+        if (
+            this.dependencies.region.getProperty(node, "splittable") === false ||
+            !isCandidateForBase
+        ) {
             return;
         }
 
@@ -170,19 +168,21 @@ export class BaseContainerPlugin extends Plugin {
      * Evaluate if an element would be eligible to become a baseContainer
      * without considering unsplittable.
      *
-     * This function is only meant to be used during `is_node_splittable_predicates` to
-     * avoid an infinite loop:
+     * This function is only meant to be used while evaluating the `splittable`
+     * region property, to avoid an infinite loop:
      * Considering a `DIV`,
-     * - During `is_node_splittable_predicates`, one predicate should return false
-     *   if the `DIV` is NOT a baseContainer candidate (Odoo specification),
-     *   therefore `is_valid_for_base_container_predicates` should be evaluated.
+     * - For the `splittable` region property, one declaration should mark the
+     *   `DIV` as unsplittable if it is NOT a baseContainer candidate (Odoo
+     *   specification), therefore `is_valid_for_base_container_predicates`
+     *   should be evaluated.
      * - During `is_valid_for_base_container_predicates`, one predicate should
      *   return false if the `DIV` is unsplittable, because a node has to be
      *   splittable to use the featureSet associated with paragraphs.
-     * Each resource has to call the other. To avoid the issue, during
-     * `is_node_splittable_predicates`, the baseContainer predicate will execute
-     * all predicates for `is_valid_for_base_container_predicates` except the one
-     * using `is_node_splittable_predicates`, since it is already being evaluated.
+     * Each one has to evaluate the other. To avoid the issue, while evaluating
+     * the `splittable` region property, the baseContainer declaration executes
+     * all predicates for `is_valid_for_base_container_predicates` except the
+     * one using the `splittable` region property, since it is already being
+     * evaluated.
      *
      * In simpler terms:
      * A `DIV` is unsplittable by default;
