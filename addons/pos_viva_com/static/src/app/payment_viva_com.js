@@ -75,13 +75,13 @@ export class PaymentVivaCom extends PaymentInterface {
             this._show_error(response.error);
             return false;
         }
+        paymentLine.setPaymentStatus("waitingCard");
         return this.waitForPaymentConfirmation(paymentLine);
     }
 
     _viva_com_pay(line) {
         const order = line.pos_order_id;
         let customerTrns = " ";
-        line.setPaymentStatus("waitingCard");
 
         if (order.partner) {
             customerTrns = order.partner.name + " - " + order.partner.email;
