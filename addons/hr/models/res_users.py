@@ -175,6 +175,34 @@ class ResUsers(models.Model):
     saturday_location_id = fields.Many2one('hr.work.location', **related_employee_field('saturday_location_id', string='Saturdays'), user_writeable=True)
     sunday_location_id = fields.Many2one('hr.work.location', **related_employee_field('sunday_location_id', string='Sundays'), user_writeable=True)
 
+    # Redefine role to add light user -> that will just limit the groups compared to a user.
+    role = fields.Selection([('light', 'Light User'), ('group_user', 'User'), ('group_system', 'Administrator')],
+                                         compute='_compute_role', inverse='_inverse_user', readonly=False, string="Role")
+
+    def _compute_role(self):
+        # TODO DBE: not tested, just writing the idea.
+        super()._compute_role()
+        minimal_light_user_groups = self.minimal_light_user_groups()
+        group_user = self.env.ref('base.group_user')
+        group_no_one = self.env.ref('base.group_no_one')
+        for user in self:
+            # If what's left is more that user_lite groups -> cannot be lite user.
+            user_groups = user.all_group_ids._origin - group_user - group_user.implied_ids - group_no_one
+            if user_groups == minimal_light_user_groups:
+                user.role = 'light'
+
+    def _inverse_role(self):
+        minimal_light_user_groups = self.minimal_light_user_groups()
+        for user in self:
+            if user.role == 'light':
+                user.groups_ids = minimal_light_user_groups
+
+    def _get_minimal_light_user_groups(self):
+        """ List of all groups of the light user. Can be overriden by other modules to exetend the group list. """
+        return [
+            # Bla bla bla
+        ]
+
     @api.depends_context('uid')
     def _compute_is_system(self):
         self.is_system = self.env.user._is_system()
