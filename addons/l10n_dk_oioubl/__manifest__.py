@@ -1,7 +1,7 @@
 {
     'author': 'Odoo',
     'name': 'Denmark - E-invoicing',
-    'version': '0.1',
+    'version': '0.2',
     'category': 'Accounting/Localizations/EDI',
     'description': """
 E-invoice implementation for the Denmark

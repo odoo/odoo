@@ -119,10 +119,10 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
             building_number = tools.street_split(partner.street).get('street_number')
             if not building_number:
                 constraints[f"oioubl201_{partner_type}_building_number_required"] = \
-                        _("The following partner's street number is missing: %s", partner.display_name)
+                    _("The following partner's street number is missing: %s", partner.display_name)
             if partner.country_code == "FR" and not partner.commercial_partner_id.company_registry:
                 constraints["oioubl201_company_registry_required_for_french_partner"] = \
-                        _("The company registry is required for french partner: %s", partner.display_name)
+                    _("The company registry is required for french partner: %s", partner.display_name)
             constraints[f'oioubl201_{partner_type}_vat_required'] = self._check_required_fields(partner.commercial_partner_id, 'vat')
 
         return constraints
@@ -352,3 +352,18 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
         tax_subtotal_node = super()._get_tax_subtotal_node(vals)
         tax_subtotal_node['cbc:Percent'] = None
         return tax_subtotal_node
+
+    def _get_line_discount_allowance_charge_node(self, vals):
+        # Unlike EN16931/PEPPOL, OIOUBL requires a TaxCategory on line-level
+        # AllowanceCharge nodes (e.g. a discount on a product line).
+        # https://www.oioubl.info/Classes/en/AllowanceCharge.html
+        node = super()._get_line_discount_allowance_charge_node(vals)
+        if node:
+            base_line = vals['base_line']
+            aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
+            node['cac:TaxCategory'] = [
+                self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+                for grouping_key in aggregated_tax_details
+                if grouping_key
+            ]
+        return node
