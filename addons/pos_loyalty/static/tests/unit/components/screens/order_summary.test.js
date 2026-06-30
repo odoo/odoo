@@ -13,23 +13,8 @@ test("_updateGiftCardOrderline", async () => {
     const order = store.addNewOrder();
 
     const product = models["product.product"].get(1);
-    // Program #3 - loyalty program for gift cards
-    const program = models["loyalty.program"].get(3);
-    // Card #3 - gift card which program type is gift_card
-    const card = models["loyalty.card"].get(3);
-
     await addProductLineToOrder(store, order);
-
     const points = product.lst_price;
-
-    order.uiState.couponPointChanges[card.id] = {
-        coupon_id: card.id,
-        program_id: program.id,
-        product_id: product.id,
-        points: points,
-        manual: false,
-    };
-
     const component = await mountWithCleanup(OrderSummary);
 
     await component._updateGiftCardOrderline("ABC123", points);

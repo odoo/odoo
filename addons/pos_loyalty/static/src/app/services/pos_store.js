@@ -14,7 +14,6 @@ let nextId = -1;
 const mutex = new Mutex();
 const updateRewardsMutex = new Mutex();
 const updateProgramsMutex = new Mutex();
-const pointsForProgramsCountedRules = {};
 const { DateTime } = luxon;
 
 export function loyaltyIdsGenerator() {
@@ -120,6 +119,7 @@ patch(PosStore.prototype, {
                 program.program_type !== "loyalty" && program.date_to
                     ? serializeDate(program.date_to)
                     : null,
+            program_type: program.program_type,
         });
     },
     /**
@@ -138,27 +138,25 @@ patch(PosStore.prototype, {
         if (!order || order.delivery_provider_id) {
             return;
         }
-        const changesPerProgram = {};
+        const couponsPerProgram = {};
         const programsToCheck = new Set();
         // By default include all programs that are considered 'applicable'
         for (const program of this.models["loyalty.program"].getAll()) {
             if (order._programIsApplicable(program)) {
-                programsToCheck.add(program.id);
+                programsToCheck.add(program);
             }
         }
-        for (const pe of Object.values(order.uiState.couponPointChanges)) {
-            if (!changesPerProgram[pe.program_id]) {
-                changesPerProgram[pe.program_id] = [];
-                programsToCheck.add(pe.program_id);
+        for (const card of order.loyalty_card_ids) {
+            if (!couponsPerProgram[card.program_id.id]) {
+                couponsPerProgram[card.program_id.id] = [];
+                programsToCheck.add(card.program_id);
             }
-            changesPerProgram[pe.program_id].push(pe);
+            couponsPerProgram[card.program_id.id].push(card);
         }
         for (const coupon of order._code_activated_coupon_ids) {
-            programsToCheck.add(coupon.program_id.id);
+            programsToCheck.add(coupon.program_id);
         }
-        const programs = [...programsToCheck].map((programId) =>
-            this.models["loyalty.program"].get(programId)
-        );
+        const programs = [...programsToCheck];
         const pointsAddedPerProgram = order.pointsForPrograms(programs);
         for (const program of this.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
@@ -170,30 +168,30 @@ patch(PosStore.prototype, {
             if (program.is_nominative && !pointsAdded.length && order.getPartner()) {
                 pointsAdded.push({ points: 0 });
             }
-            const oldChanges = changesPerProgram[program.id] || [];
+            const oldCards = couponsPerProgram[program.id] || [];
             // Update point changes for those that exist
-            if (pointsAdded.length === oldChanges.length) {
+            pointsAdded.sort((a, b) => (a.code || "").localeCompare(b.code || ""));
+            oldCards.sort((a, b) => (a.code || "").localeCompare(b.code || ""));
+            if (pointsAdded.length === oldCards.length) {
                 for (let idx = 0; idx < pointsAdded.length; idx++) {
-                    const card = this.models["loyalty.card"].get(oldChanges[idx].coupon_id);
+                    const card = oldCards[idx];
                     card?.update({
-                        partner_id: order.getPartner(),
-                        points: oldChanges[idx].points
+                        points: card.points
                             ? parseFloat(card.points) -
-                              (card._temp_points ? parseFloat(card._temp_points) : 0) +
+                              parseFloat(card._temp_points || 0) +
                               parseFloat(pointsAdded[idx].points)
                             : parseFloat(card.points) + parseFloat(pointsAdded[idx].points),
                         _temp_points: parseFloat(pointsAdded[idx].points),
                     });
-                    Object.assign(oldChanges[idx], pointsAdded[idx]);
                 }
             } else if (
-                pointsAdded.length < oldChanges.length ||
+                pointsAdded.length < oldCards.length ||
                 !order._programIsApplicable(program)
             ) {
                 // Handle case where points entries have been reduced or program is no longer applicable
                 // This block removes loyalty cards that are no longer needed and updates coupon point changes
                 // Identify coupon IDs that should be removed (old entries not in the new points list)
-                const removedIds = [];
+                const removedCards = [];
 
                 // Count of points (entries without a code) for matching
                 const autoPointCounts = pointsAdded
@@ -209,42 +207,25 @@ patch(PosStore.prototype, {
                 // Track matched points to ensure correct count during filtering
                 const matchedAutoPoints = {};
 
-                // Update coupon point changes by filtering out removed entries while preserving valid ones
-                order.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) => {
-                        // Keep entries from other programs
-                        if (pe.program_id !== program.id) {
-                            return true;
+                for (const card of oldCards) {
+                    if (card.program_type === "gift_card" && card.code) {
+                        if (giftCodes.includes(card.code)) {
+                            continue;
+                        } else {
+                            removedCards.push(card);
                         }
-
-                        // Keep manual gift card codes that exist in the new points
-                        if (pe.code && pe.manual && giftCodes.includes(pe.code)) {
-                            return true;
+                    } else {
+                        const matchedCount = matchedAutoPoints[card._temp_points] || 0;
+                        const availableCount = autoPointCounts[card._temp_points] || 0;
+                        if (matchedCount < availableCount) {
+                            matchedAutoPoints[card._temp_points] = matchedCount + 1;
+                        } else {
+                            removedCards.push(card);
                         }
-
-                        // For auto-generated entries without code, keep only matching available counts
-                        if (!pe.code) {
-                            const matchedCount = matchedAutoPoints[pe.points] || 0;
-                            const availableCount = autoPointCounts[pe.points] || 0;
-
-                            if (matchedCount < availableCount) {
-                                matchedAutoPoints[pe.points] = matchedCount + 1;
-                                return true;
-                            }
-                        }
-                        removedIds.push(pe.coupon_id);
-                        return false;
-                    })
-                );
-
-                // Get the actual loyalty card records to remove
-                const couponToRemove = this.models["loyalty.card"].filter((card) =>
-                    removedIds.includes(card.id)
-                );
-
-                // Unlink the removed loyalty cards from the order
-                order.loyalty_card_ids = [["unlink", ...couponToRemove]];
-            } else if (pointsAdded.length > oldChanges.length) {
+                    }
+                }
+                order.loyalty_card_ids = [["unlink", ...removedCards]];
+            } else if (pointsAdded.length > oldCards.length) {
                 // Handle case where new points entries have been added
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
                     const { points, code = "" } = pointObj;
@@ -253,8 +234,8 @@ patch(PosStore.prototype, {
                     return acc;
                 }, {});
 
-                oldChanges.forEach((pointObj) => {
-                    const { points, code = "" } = pointObj;
+                oldCards.forEach((card) => {
+                    const { points, code = "" } = card;
                     const key = code ? `${points}_${code}` : `${points}`;
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
@@ -275,26 +256,16 @@ patch(PosStore.prototype, {
                     const coupon = await this.couponForProgram(program);
                     order.loyalty_card_ids = [["link", coupon]];
                     coupon.update({
+                        code: pa.code || coupon.code,
                         partner_id: order.getPartner(),
                         points: coupon.points + pa.points,
                         _temp_points: pa.points,
                     });
-                    const couponPointChange = {
-                        points: pa.points,
-                        program_id: program.id,
-                        coupon_id: coupon.id,
-                        code: pa.code,
-                        appliedRules: pointsForProgramsCountedRules[program.id],
-                    };
                     if (program && program.program_type === "gift_card") {
-                        couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
-                        couponPointChange.expiration_date = serializeDate(
+                        coupon.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
-                        couponPointChange.partner_id = order.getPartner()?.id;
                     }
-
-                    order.uiState.couponPointChanges[coupon.id] = couponPointChange;
                 }
             }
         }
@@ -425,11 +396,6 @@ patch(PosStore.prototype, {
                 return;
             }
             order.invalidCoupons = false;
-            order.uiState.couponPointChanges = Object.fromEntries(
-                Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
-                    this.models["loyalty.card"].get(pe.coupon_id)
-                )
-            );
         });
     },
     async applyDiscount(percent, type = "percent", order = this.getOrder()) {
@@ -571,11 +537,14 @@ patch(PosStore.prototype, {
         if (!order) {
             return result;
         }
-        const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
-            .filter((pe) => !pe.manual)
-            .map((pe) => ({
-                program_id: pe.program_id,
-                coupon_id: pe.coupon_id,
+        const excludedCouponIds = order.loyalty_card_ids
+            .filter((lc) => lc.program_type === "gift_card" && lc.code)
+            .map((lc) => lc.id);
+        const allCouponPrograms = order.loyalty_card_ids
+            .filter((lc) => !excludedCouponIds.includes(lc.id))
+            .map((lc) => ({
+                program_id: lc.program_id.id,
+                coupon_id: lc.id,
             }))
             .concat(
                 order._code_activated_coupon_ids.map((coupon) => ({

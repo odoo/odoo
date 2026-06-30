@@ -7,12 +7,12 @@ patch(OrderPaymentValidation.prototype, {
     async validateOrder(isForceValidate) {
         const pointChanges = {};
         const newCodes = [];
-        for (const pe of Object.values(this.order.uiState.couponPointChanges)) {
-            if (!pe.code && typeof pe.coupon_id === "number") {
-                pointChanges[pe.coupon_id] = pe.points;
-            } else if (pe.code && typeof pe.coupon_id === "number") {
+        for (const card of this.order.loyalty_card_ids) {
+            if (typeof card.id === "number") {
+                pointChanges[card.id] = card.points;
+            } else if (card.code && typeof card.id === "string") {
                 // New coupon with a specific code, validate that it does not exist
-                newCodes.push(pe.code);
+                newCodes.push(card.code);
             }
         }
         for (const line of this.order._get_reward_lines()) {

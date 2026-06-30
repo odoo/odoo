@@ -55,39 +55,36 @@ describe("pos.order - loyalty", () => {
     test("setPricelist", async () => {
         const store = await setupPosEnv();
         const models = store.models;
-        const order = store.addNewOrder();
-
+        const order = await getFilledOrder(store);
+        const partner = models["res.partner"].get(4);
+        order.setPartner(partner);
+        await store.updatePrograms();
+        const appliedLoyaltyCardsLength = order.loyalty_card_ids.length;
         const pricelist2 = models["product.pricelist"].get(2);
 
-        order.uiState.couponPointChanges = {
-            key1: { program_id: 1, points: 100 },
-            key2: { program_id: 2, points: 50 },
-        };
-
         order.setPricelist(pricelist2);
-
-        const remainingKeys = Object.keys(order.uiState.couponPointChanges);
-        expect(remainingKeys.length).toBe(1);
-        expect(order.uiState.couponPointChanges[remainingKeys[0]].program_id).toBe(2);
+        // Some loyalty cards associated with pricelists other than 2 should have been removed after the pricelist change.
+        expect(order.loyalty_card_ids.length).toBeLessThan(appliedLoyaltyCardsLength);
     });
 
     test("_resetPrograms", async () => {
         const store = await setupPosEnv();
-        const order = store.addNewOrder();
+        const order = await getFilledOrder(store);
 
         order.uiState.disabledRewards = new Set(["reward1"]);
         order.uiState.codeActivatedProgramRules = ["rule1"];
-        order.uiState.couponPointChanges = { key1: { points: 100 } };
 
         await addProductLineToOrder(store, order, {
             is_reward_line: true,
+            reward_id: 1,
         });
-
+        await store.updatePrograms();
+        expect(order.loyalty_card_ids.length).toBeGreaterThan(0);
         order._resetPrograms();
 
         expect(order.uiState.disabledRewards.size).toBeEmpty();
         expect(order.uiState.codeActivatedProgramRules.length).toBeEmpty();
-        expect(order.uiState.couponPointChanges).toMatchObject({});
+        expect(order.loyalty_card_ids.length).toBe(0);
     });
 
     test("_programIsApplicable", async () => {
@@ -109,19 +106,13 @@ describe("pos.order - loyalty", () => {
     test("_getRealCouponPoints", async () => {
         const store = await setupPosEnv();
         const models = store.models;
-        const order = store.addNewOrder();
+        const order = await getFilledOrder(store);
+        // Get loyalty card #1 which program_id is #1 (loyalty) and assign it to partner #4
+        const card = models["loyalty.card"].get(1);
+        card.partner_id = 4;
         const partner = models["res.partner"].get(4);
         order.setPartner(partner);
-        // Get loyalty card #1 which program_id = 1 (loyalty)
-        const card = models["loyalty.card"].get(1);
-
-        order.uiState.couponPointChanges = {
-            1: {
-                coupon_id: 1,
-                program_id: 1,
-                points: 25,
-            },
-        };
+        await store.updatePrograms();
 
         await addProductLineToOrder(store, order, {
             is_reward_line: true,
@@ -130,7 +121,7 @@ describe("pos.order - loyalty", () => {
             reward_id: 1,
         });
         await store.updatePrograms();
-        expect(order._getRealCouponPoints(card.id)).toBe(6);
+        expect(order._getRealCouponPoints(card.id)).toBe(6); // 10 + 1 (from rule 1) - 5 (spent) = 6
     });
 
     test("processGiftCard", async () => {
@@ -150,12 +141,12 @@ describe("pos.order - loyalty", () => {
         const expirationDate = DateTime.now().plus({ days: 1 }).toISODate();
         order.processGiftCard("GIFT9999", 100, expirationDate);
 
-        const couponChanges = Object.values(order.uiState.couponPointChanges);
-        expect(couponChanges.length).toBe(1);
-        expect(couponChanges[0].code).toBe("GIFT9999");
-        expect(couponChanges[0].points).toBe(100);
-        expect(couponChanges[0].expiration_date).toBe(expirationDate);
-        expect(couponChanges[0].manual).toBe(true);
+        const giftCard = order.loyalty_card_ids.find(
+            (card) => card.program_id.id === giftProgram.id
+        );
+        expect(giftCard.code).toBe("GIFT9999");
+        expect(giftCard.points).toBe(100);
+        expect(giftCard.expiration_date.toISODate()).toBe(expirationDate);
     });
 
     test("_getDiscountableOnOrder", async () => {
@@ -220,8 +211,8 @@ describe("pos.order - loyalty", () => {
         order.uiState.codeActivatedProgramRules.push("RULE2");
         expect(order.isProgramsResettable()).toBe(true);
 
-        order.uiState.codeActivatedProgramRules = [];
-        order.uiState.couponPointChanges = { key1: { points: 10 } };
+        const card = store.models["loyalty.card"].get(1);
+        order.loyalty_card_ids = [["link", card]];
         expect(order.isProgramsResettable()).toBe(true);
     });
 
@@ -274,37 +265,31 @@ describe("pos.order - loyalty", () => {
     test("setPartner and getLoyaltyPoints", async () => {
         const store = await setupPosEnv();
         const models = store.models;
-        const order = store.addNewOrder();
+        const order = await getFilledOrder(store);
 
         const partner1 = models["res.partner"].get(1);
         const partner2 = models["res.partner"].get(3);
-
-        order.setPartner(partner1);
-
-        order.uiState.couponPointChanges = {
-            key1: { program_id: 1, points: 100, coupon_id: 1 },
-            key2: { program_id: 2, points: 50, coupon_id: 2 },
-        };
-
-        order.setPartner(partner2);
-
-        const remainingKeys = Object.keys(order.uiState.couponPointChanges);
-        expect(remainingKeys.length).toBe(1);
-        expect(order.uiState.couponPointChanges[remainingKeys[0]].program_id).toBe(2);
-
-        // Verify getLoyaltyPoints method
-        order.uiState.couponPointChanges = {};
-        await addProductLineToOrder(store, order, {
-            price_unit: 10,
-        });
         await store.updatePrograms();
+        expect(order.loyalty_card_ids.filter((lc) => lc.program_id.is_nominative).length).toBe(0);
+        order.setPartner(partner1);
+        await store.updatePrograms();
+        expect(
+            order.loyalty_card_ids.filter((lc) => lc.program_id.is_nominative).length
+        ).toBeGreaterThan(0);
+        order.setPartner(partner2);
+        expect(order.loyalty_card_ids.filter((lc) => lc.program_id.is_nominative).length).toBe(0); // Removed nominative loyalty cards after partner change
+        await store.updatePrograms();
+        expect(
+            order.loyalty_card_ids.filter((lc) => lc.program_id.is_nominative).length
+        ).toBeGreaterThan(0); // Reassigned new nominative loyalty cards after partner change
+
         const loyaltyStats = order.getLoyaltyPoints();
-        expect(loyaltyStats.length).toBe(2);
+        expect(loyaltyStats.length).toBe(2); // Two loyalty cards as `loyalty` program type applied
         expect(loyaltyStats[0].points.name).toBe("Points");
         expect(loyaltyStats[0].points.won).toBe(1);
         expect(loyaltyStats[0].points.balance).toBe(0);
         expect(loyaltyStats[1].points.name).toBe("Points");
-        expect(loyaltyStats[1].points.won).toBe(1);
+        expect(loyaltyStats[1].points.won).toBe(5);
         expect(loyaltyStats[1].points.balance).toBe(0);
     });
 
