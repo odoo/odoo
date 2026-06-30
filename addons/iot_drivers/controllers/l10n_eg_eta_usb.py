@@ -79,6 +79,37 @@ def _get_error_template(error_str):
 
 
 class EtaUsbController(http.Controller):
+<<<<<<< 962988a0e291871309bd83e792a1781566004581:addons/iot_drivers/controllers/l10n_eg_eta_usb.py
+||||||| a893a307689d17f4d0a59d96b566e1dcdf17707f:addons/iot_drivers/iot_handlers/drivers/l10n_eg_drivers.py
+
+    def _is_access_token_valid(self, access_token):
+        stored_hash = config.get('proxy_access_token')
+        if not stored_hash:
+            # empty password/hash => authentication forbidden
+            return False
+        return crypt_context.verify(access_token, stored_hash)
+
+=======
+
+    def _is_access_token_valid(self, access_token):
+        stored_hash = config.get('proxy_access_token')
+        if not stored_hash:
+            _logger.warning("No proxy_access_token is set in the config")
+            return False
+        # 19.0+ stores the token directly
+        if access_token == stored_hash:
+            return True
+        # Versions prior to 19.0 stored a hash of the token
+        try:
+            hash_matches = crypt_context.verify(access_token, stored_hash)
+            if not hash_matches:
+                _logger.warning("Stored token hash does not match hash of provided token")
+            return hash_matches
+        except ValueError:
+            _logger.warning("Stored token hash is not valid")
+            return False
+
+>>>>>>> 36a3c569d6cf38d721560b7885cc13ad1dccdcab:addons/iot_drivers/iot_handlers/drivers/l10n_eg_drivers.py
     @route.iot_route('/hw_l10n_eg_eta/certificate', type='http', cors='*', csrf=False, methods=['POST'])
     def eta_certificate(self, pin, access_token):
         """Gets the certificate from the token and returns it to the main odoo instance so that we can prepare the
