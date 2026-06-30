@@ -1,4 +1,4 @@
-import { render, useLayoutEffect } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -34,16 +34,16 @@ patch(NavBar.prototype, {
             render(this, true);
             adaptCounter++;
         };
-        useLayoutEffect(
-            (adaptCounter) => {
-                // We do not want to adapt on the first render
-                // as the super class already does it.
-                if (adaptCounter > 0) {
-                    this.adapt();
-                }
-            },
-            () => [adaptCounter]
-        );
+        // useLayoutEffect(
+        //     (adaptCounter) => {
+        //         // We do not want to adapt on the first render
+        //         // as the super class already does it.
+        //         if (adaptCounter > 0) {
+        //             this.adapt();
+        //         }
+        //     },
+        //     () => [adaptCounter]
+        // );
 
         useBus(websiteSystrayRegistry, "CONTENT-UPDATED", renderAndAdapt);
     },
