@@ -4,6 +4,7 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
@@ -283,5 +284,47 @@ registry.category("web_tour.tours").add("test_payment_screen_tip_scenario", {
             NumberPopup.isShown("2.5"),
             Dialog.confirm(),
             PaymentScreen.totalIs("13.50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_editing_payment_no_duplicate", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Create an order with a payment of 50, then edit it to 100 and validate.
+            // Amount return should be 96.8, do not edit the change line during payment editing
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "50"),
+            PaymentScreen.clickValidate(),
+            Chrome.waitForOrdersSync(),
+            FeedbackScreen.isContinueEnabled(),
+            FeedbackScreen.clickEditPayment(),
+            PaymentScreen.enterPaymentLineAmount("Bank", "100"),
+            PaymentScreen.clickValidate(),
+            Chrome.waitForOrdersSync(),
+            FeedbackScreen.isContinueEnabled(),
+            FeedbackScreen.clickNextOrder(),
+
+            // Create a new order with a payment of 100, then edit it to 50 and validate.
+            // Amount return should be 46.8, delete the change line during payment editing
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "100"),
+            PaymentScreen.clickValidate(),
+            Chrome.waitForOrdersSync(),
+            FeedbackScreen.isContinueEnabled(),
+            FeedbackScreen.clickEditPayment(),
+            PaymentScreen.enterPaymentLineAmount("Bank", "50"),
+            PaymentScreen.clickPaymentlineDelButton("Cash", "96.8"),
+            PaymentScreen.clickValidate(),
+            Chrome.waitForOrdersSync(),
+            FeedbackScreen.isContinueEnabled(),
+            FeedbackScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });

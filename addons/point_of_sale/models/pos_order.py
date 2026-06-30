@@ -224,6 +224,11 @@ class PosOrder(models.Model):
                 'payment_method_id': cash_payment_method.id,
                 'is_change': True,
             }
+            # Remove old changes, can be duplicated when editing payments.
+            changes = order.payment_ids.filtered_domain([
+                ('is_change', '=', True),
+            ])
+            order.payment_ids -= changes
             order.add_payment(return_payment_vals)
             order._compute_prices()
 
