@@ -1798,12 +1798,14 @@ export class Wysiwyg extends Component {
                     await this.snippetsMenu.callPostSnippetDrop($element);
                 }
                 if (element.tagName !== 'IMG') {
+                    const event = $.Event("media_changed", { node: params.node });
+                    $element.trigger(event);
                     return;
                 }
                 return new Promise(resolve => {
                     this.snippetsMenu.trigger_up("snippet_edition_request", {exec: () => {
                         // TODO In master use a trigger parameter
-                        const event = $.Event("image_changed", {_complete: resolve});
+                        const event = $.Event("image_changed", { _complete: resolve, node: params.node });
                         $element.trigger(event);
                     }});
                 });
