@@ -105,9 +105,10 @@ export class PartnerSuggestionPlugin extends Plugin {
         const suggestions = [];
         for (const partner of this.getPartners()) {
             const name = getPartnerMentionName(partner, thread);
+            const partnerEmail = partner.displayEmail;
             if (
                 (name && normalize(name).includes(cleanedTerm)) ||
-                (partner.email && normalize(partner.email).includes(cleanedTerm))
+                (partnerEmail && normalize(partnerEmail).includes(cleanedTerm))
             ) {
                 suggestions.push(partner);
             }

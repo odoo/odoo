@@ -158,7 +158,7 @@ test("many2one_avatar_resource widget in kanban view", async () => {
         ".o_avatar_card:count(1)",
         { message: "Only one popover resource card should be opened at a time" }
     );
-    await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
     await waitFor(".o-mail-ChatWindow:count(1)");
