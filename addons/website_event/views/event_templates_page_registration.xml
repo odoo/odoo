@@ -314,6 +314,15 @@
                             <strong> You cannot order more than available seats</strong>
                         </div>
                     </t>
+                    <div t-if="availability_check and limit_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
+                        <div class="row">
+                            <t t-foreach="event.general_question_ids" t-as="question">
+                                <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
+                                    <t t-call="website_event.registration_event_question" registration_index="0"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
                     <t t-if="availability_check and limit_check" t-foreach="tickets" t-as="ticket">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
@@ -331,15 +340,6 @@
                             </div>
                         </t>
                     </t>
-                    <div t-if="availability_check and limit_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
-                        <div class="row">
-                            <t t-foreach="event.general_question_ids" t-as="question">
-                                <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
-                                    <t t-call="website_event.registration_event_question" registration_index="0"/>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
                     <t t-elif="not availability_check and limit_check">
                         <div class="modal-body border-bottom">
                             <strong> You ordered more tickets than available seats</strong>
