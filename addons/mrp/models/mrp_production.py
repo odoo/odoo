@@ -1916,7 +1916,8 @@ class MrpProduction(models.Model):
             for move in finish_moves:
                 if move.has_tracking != 'none' and not move.lot_ids:
                     move.lot_ids = order.lot_producing_ids.ids
-                move.quantity = order.product_uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
+                # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
+                move.quantity = order.product_uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
