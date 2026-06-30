@@ -624,7 +624,8 @@ export class Store extends BaseStore {
      */
     getPartnerMentionTexts(partner, thread) {
         const name = getPartnerMentionName(partner, thread);
-        return [name && `@${name}`, partner.email && `@${partner.email}`].filter(Boolean);
+        const email = partner.displayEmail;
+        return [name && `@${name}`, email && `@${email}`].filter(Boolean);
     }
 
     getMentionsFromText(body, { mentionedPartners = [], mentionedRoles = [], thread } = {}) {

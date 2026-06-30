@@ -470,6 +470,11 @@ class ResPartner(models.Model):
             return "base/static/img/avatar_placeholder_other.png"
         return super()._avatar_get_placeholder_path()
 
+    def _get_display_name_email(self):
+        """ Email shown next to the name with the ``show_email`` context. """
+        self.ensure_one()
+        return self.email
+
     def _get_complete_name(self):
         self.ensure_one()
 
@@ -1176,7 +1181,7 @@ class ResPartner(models.Model):
                             f"--{partner.name or type_description.get(partner.type, '')}--")
 
                 if partner.env.context.get('show_email') and partner.email:
-                    name = f"{name} \t --{partner.email}--"
+                    name = f"{name} \t --{partner._get_display_name_email()}--"
                 elif partner.env.context.get('partner_show_db_id'):
                     name = f"{name} \t --{partner.id}--"
 
@@ -1185,7 +1190,7 @@ class ResPartner(models.Model):
                 if partner.env.context.get('partner_show_db_id'):
                     name = f"{name} ({partner.id})"
                 if partner.env.context.get('show_email') and partner.email:
-                    name = f"{name} <{partner.email}>"
+                    name = f"{name} <{partner._get_display_name_email()}>"
                 if partner.env.context.get('show_address'):
                     name = name + "\n" + partner.address
 
