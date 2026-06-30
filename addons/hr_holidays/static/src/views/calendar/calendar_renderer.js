@@ -1,10 +1,8 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { CalendarRenderer } from '@web/views/calendar/calendar_renderer';
-
 import { TimeOffCalendarCommonRenderer } from './common/calendar_common_renderer';
 import { TimeOffCalendarYearRenderer } from './year/calendar_year_renderer';
-
 import { TimeOffDashboard } from '../../dashboard/time_off_dashboard';
 
 export class TimeOffCalendarRenderer extends CalendarRenderer {
@@ -17,6 +15,7 @@ export class TimeOffCalendarRenderer extends CalendarRenderer {
         year: TimeOffCalendarYearRenderer,
         TimeOffDashboard,
     };
+
     get employeeId() {
         return this.props.model.employeeId;
     }
