@@ -1,22 +1,15 @@
 /** @ts-check */
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import {
-    defineSpreadsheetModels,
-} from "@spreadsheet/../tests/helpers/data";
-import {
-    createModelWithDataSource,
-} from "@spreadsheet/../tests/helpers/model";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 import {
     addGlobalFilter,
     setCellContent,
     setGlobalFilterValue,
 } from "@spreadsheet/../tests/helpers/commands";
-import {
-    getCellValue,
-    getEvaluatedCell,
-} from "@spreadsheet/../tests/helpers/getters";
+import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -28,10 +21,9 @@ const { DateTime } = luxon;
  *
  */
 
-
-test("ODOO.FILTER.VALUE.V18 text filter", async function () {
+test("ODOO.FILTER.LABEL text filter", async function () {
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A10", `=ODOO.FILTER.VALUE.V18("Text Filter")`);
+    setCellContent(model, "A10", `=ODOO.FILTER.LABEL("Text Filter")`);
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("#ERROR");
     await addGlobalFilter(model, {
@@ -50,10 +42,10 @@ test("ODOO.FILTER.VALUE.V18 text filter", async function () {
     expect(getCellValue(model, "A10")).toBe("Hello");
 });
 
-test("ODOO.FILTER.VALUE.V18 empty date filter does't spill", async function () {
+test("ODOO.FILTER.LABEL empty date filter does't spill", async function () {
     mockDate("2022-03-10 00:00:00");
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A10", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A10", `=ODOO.FILTER.LABEL("Date Filter")`);
     setCellContent(model, "B10", "something");
     await animationFrame();
     await addGlobalFilter(model, {
@@ -64,10 +56,10 @@ test("ODOO.FILTER.VALUE.V18 empty date filter does't spill", async function () {
     expect(getCellValue(model, "A10")).toBe("");
 });
 
-test("ODOO.FILTER.VALUE.V18 date filter", async function () {
+test("ODOO.FILTER.LABEL date filter", async function () {
     mockDate("2022-03-10 00:00:00");
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A10", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A10", `=ODOO.FILTER.LABEL("Date Filter")`);
     await animationFrame();
     await addGlobalFilter(model, {
         id: "42",
@@ -112,21 +104,21 @@ test("ODOO.FILTER.VALUE.V18 date filter", async function () {
     expect(getCellValue(model, "A10")).toBe(``);
 });
 
-test("ODOO.FILTER.VALUE.V18 date from/to without values", async function () {
+test("ODOO.FILTER.LABEL date from/to without values", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
         label: "Date Filter",
     });
-    setCellContent(model, "A1", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A1", `=ODOO.FILTER.LABEL("Date Filter")`);
     expect(getEvaluatedCell(model, "A1").value).toBe("");
     expect(getEvaluatedCell(model, "B1").value).toBe(null);
 });
 
-test("ODOO.FILTER.VALUE.V18 date from/to with only from defined", async function () {
+test("ODOO.FILTER.LABEL date from/to with only from defined", async function () {
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A1", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A1", `=ODOO.FILTER.LABEL("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -145,9 +137,9 @@ test("ODOO.FILTER.VALUE.V18 date from/to with only from defined", async function
     expect(getEvaluatedCell(model, "B1").value).toBe("");
 });
 
-test("ODOO.FILTER.VALUE.V18 date from/to with only to defined", async function () {
+test("ODOO.FILTER.LABEL date from/to with only to defined", async function () {
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A1", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A1", `=ODOO.FILTER.LABEL("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -166,9 +158,9 @@ test("ODOO.FILTER.VALUE.V18 date from/to with only to defined", async function (
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1/1/2020");
 });
 
-test("ODOO.FILTER.VALUE.V18 date from/to with from and to defined", async function () {
+test("ODOO.FILTER.LABEL date from/to with from and to defined", async function () {
     const { model } = await createModelWithDataSource();
-    setCellContent(model, "A1", `=ODOO.FILTER.VALUE.V18("Date Filter")`);
+    setCellContent(model, "A1", `=ODOO.FILTER.LABEL("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -190,7 +182,7 @@ test("ODOO.FILTER.VALUE.V18 date from/to with from and to defined", async functi
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1/1/2021");
 });
 
-test("ODOO.FILTER.VALUE.V18 relation filter", async function () {
+test("ODOO.FILTER.LABEL relation filter", async function () {
     const { model } = await createModelWithDataSource({
         mockRPC: function (route, { method, args }) {
             if (method === "web_search_read") {
@@ -200,11 +192,13 @@ test("ODOO.FILTER.VALUE.V18 relation filter", async function () {
                     2: "Raoul Grosbedon",
                 };
                 expect.step(`read_${resIds}`);
-                return { records: resIds.map((resId) => ({ id: resId, display_name: names[resId] })) };
+                return {
+                    records: resIds.map((resId) => ({ id: resId, display_name: names[resId] })),
+                };
             }
         },
     });
-    setCellContent(model, "A10", `=ODOO.FILTER.VALUE.V18("Relation Filter")`);
+    setCellContent(model, "A10", `=ODOO.FILTER.LABEL("Relation Filter")`);
     await animationFrame();
     await addGlobalFilter(model, {
         id: "42",
@@ -241,7 +235,7 @@ test("ODOO.FILTER.VALUE.V18 relation filter", async function () {
     expect.verifySteps(["read_1", "read_1,2", "read_2"]);
 });
 
-test("ODOO.FILTER.VALUE.V18 with escaped quotes in the filter label", async function () {
+test("ODOO.FILTER.LABEL with escaped quotes in the filter label", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
@@ -249,6 +243,6 @@ test("ODOO.FILTER.VALUE.V18 with escaped quotes in the filter label", async func
         label: 'my "special" filter',
         defaultValue: { operator: "ilike", strings: ["Jean-Jacques"] },
     });
-    setCellContent(model, "A1", '=ODOO.FILTER.VALUE.V18("my \\"special\\" filter")');
+    setCellContent(model, "A1", '=ODOO.FILTER.LABEL("my \\"special\\" filter")');
     expect(getCellValue(model, "A1")).toBe("Jean-Jacques");
 });
