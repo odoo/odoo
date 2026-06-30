@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1\n"
+"Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"PO-Revision-Date: 2026-06-30 00:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1711,13 +1711,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.footer_copyright_company_name
-msgid ""
-"<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
-"Company name</span>"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "<span class=\"o_force_ltr\">+1 555-555-5556\"</span>"
 msgstr ""
@@ -2111,7 +2104,28 @@ msgid "<strong class=\"s_rating_title\">Rating</strong>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
+msgid "<strong>12k</strong>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
+msgid "<strong>15%</strong>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
+msgid "<strong>45%</strong>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
+msgid "<strong>8+</strong>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
 msgid "<strong>Amazing pages</strong>"
 msgstr ""
 
@@ -2193,7 +2207,13 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
 msgid "<strong>More leads</strong>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
+msgid "<strong>Revenue Growth</strong>"
 msgstr ""
 
 #. module: website
@@ -2223,6 +2243,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
+#: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
 msgid "<strong>Useful options</strong>"
 msgstr ""
 
@@ -4590,7 +4611,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 msgid "Cards Design"
 msgstr ""
 
@@ -5609,6 +5629,11 @@ msgid "Copyright"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_copyright_company_name
+msgid "Copyright &amp;copy;"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Core Features"
 msgstr ""
@@ -6140,6 +6165,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default switch checkbox input"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+msgid "Default website changed"
 msgstr ""
 
 #. module: website
@@ -6845,7 +6876,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Donation Button"
+msgid "Donation Inline"
 msgstr ""
 
 #. module: website
@@ -8240,6 +8271,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_bold
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_cover
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_info
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_overlay
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Form"
 msgstr ""
@@ -8440,6 +8475,12 @@ msgid "Gaming"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
+msgid "Gap"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "General"
 msgstr ""
@@ -8559,7 +8600,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 msgid "Global options for all inner cards."
 msgstr ""
 
@@ -12416,6 +12456,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Numbers Grid"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Numbers Inline"
 msgstr ""
 
 #. module: website
@@ -16967,6 +17012,22 @@ msgstr ""
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
+msgid "The new default website is %(default_website_name)s."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+msgid ""
+"The new default website is %(default_website_name)s. The following default "
+"settings were copied from the old default website to the new one: "
+"%(transferred_settings)s. Note that these settings are still present on the "
+"old default website."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
 msgid "The provided website domain is not a valid URL."
 msgstr ""
 
@@ -19555,6 +19616,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/translation_components/translatorInfoDialog.xml:0
 msgid "You are about to enter the translation mode."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/website_auth_form.js:0
+msgid "You are already logged in."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/website_auth_form.js:0
+msgid "You are already signed in."
 msgstr ""
 
 #. module: website
