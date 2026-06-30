@@ -43,11 +43,7 @@ export class CardImageOptionPlugin extends Plugin {
                 return _t("You cannot duplicate this image.");
             }
         },
-        is_node_removable_predicates: (node) => {
-            if (node.matches?.(cardImageSelector)) {
-                return false;
-            }
-        },
+        properties: { predicate: cardImageSelector, removable: false },
         builder_actions: {
             SetCoverImagePositionAction,
             RemoveCoverImageAction,
