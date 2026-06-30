@@ -6,8 +6,9 @@ from odoo import _, api, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_is_zero, float_repr
+from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext
 from odoo.tools.float_utils import float_round
+from odoo.tools.translate import _lt
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 
@@ -229,6 +230,11 @@ EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     'IS', 'LI', 'NO',
 }
 
+COCONTRACTANT_DEFAULT_NOTE = _lt('Reverse charge: In the absence of a written objection within one month of receipt of the invoice, '
+                              'the customer is deemed to acknowledge that they are a taxable person required to file periodic returns. '
+                              'If this condition is not met, the customer will be liable for the payment of the tax, interest, '
+                              'and penalties due in relation to this condition.')
+
 # -------------------------------------------------------------------------
 # SUPPORTED FILE TYPES FOR IMPORT
 # -------------------------------------------------------------------------
@@ -343,6 +349,20 @@ class AccountEdiCommon(models.AbstractModel):
     def _can_export_selfbilling(self):
         return False
 
+    def _get_belgian_cocontractant_note(self, customer, supplier):
+        invoice = self.env.context.get('tax_exemption_reason_invoice')
+        if self._is_cocontractant_fiscal_position(invoice, customer, supplier):
+            note = html2plaintext(invoice.fiscal_position_id.note) if invoice.fiscal_position_id.note else ''
+            return note or COCONTRACTANT_DEFAULT_NOTE
+        return ''
+
+    def _is_cocontractant_fiscal_position(self, invoice, customer, supplier):
+        return (invoice and
+                customer.country_id.code == 'BE' and
+                supplier.country_id == customer.country_id and
+                (co_contractant := self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)) and
+                invoice.fiscal_position_id == co_contractant
+        )
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
@@ -421,6 +441,15 @@ class AccountEdiCommon(models.AbstractModel):
             Note: In Peppol, taxes should be grouped by tax category code but *not* by
             exemption reason, see https://docs.peppol.eu/poacc/billing/3.0/bis/#_calculation_of_vat
         """
+
+        if reason := self._get_belgian_cocontractant_note(customer, supplier):
+            if tax.amount:
+                raise UserError(
+                    _("Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor tax, or ensure your custom tax uses a tax amount of 0"))
+            return {
+                'tax_exemption_reason_code': 'VATEX-EU-AE',
+                'tax_exemption_reason': reason,
+            }
 
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             return {
