@@ -58,7 +58,7 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools.cache import log_ormcache_stats
-from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from odoo.tools.misc import stripped_sys_argv, dumpstacks, toggle_continous_profiler
 
 _logger = logging.getLogger(__name__)
 
@@ -564,6 +564,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGXCPU, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGVTALRM, toggle_continous_profiler)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -901,6 +902,8 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGTTOU:
                 # decrease number of workers
                 self.population -= 1
+            elif sig == signal.SIGVTALRM:
+                toggle_continous_profiler()
 
     def process_zombie(self):
         # reap dead workers
@@ -969,6 +972,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
+        signal.signal(signal.SIGVTALRM, toggle_continous_profiler)
 
         if config['http_enable']:
             # listen to socket
