@@ -6,6 +6,7 @@
 import { App, effect, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
+import { ClickbotOverlay } from "@web/webclient/clickbot/clickbot_overlay";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
 export const FAILURE_SIGNAL = "clickbot test failed";
@@ -188,40 +189,12 @@ const EXCEPTION_RECORD_ACTIONS = {
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
-export class Clickbot {
-    constructor(env, { xmlId, logger, light, offline, currentState } = {}) {
+// State (including xmlId) is always built and owned by ClickbotLauncher (below);
+// Clickbot never constructs its own default state.
+class Clickbot {
+    constructor(env, currentState) {
         this.env = env;
-        this.xmlId = xmlId;
-        this.state = proxy(
-            currentState || {
-                light,
-                logger,
-                offline,
-                testingOffline: false,
-                appIndex: 0,
-                menuIndex: 0,
-                onlineStats: {
-                    testedApps: [],
-                    testedMenus: [],
-                    testedViews: 0,
-                    testedFormsViews: 0,
-                    testedNewRecord: 0,
-                    testedModals: 0,
-                    testedFilters: 0,
-                    studioCount: 0,
-                    errorMenuCount: 0,
-                },
-                offlineStats: {
-                    testedApps: [],
-                    testedMenus: [],
-                    testedViews: 0,
-                    testedFormsViews: 0,
-                    testedNewRecord: 0,
-                    testedModals: 0,
-                    errorMenuCount: 0,
-                },
-            }
-        );
+        this.state = proxy(currentState);
         this._actionCount = 0;
         this._calledRPC = {};
         this._errorRPC = undefined;
@@ -246,6 +219,10 @@ export class Clickbot {
             console.log("Starting ClickEverywhere test");
         }
         this.state.startTime = this.state.startTime || performance.now();
+        this.state.phase = "running";
+        if (!this.state.xmlId) {
+            this.state.totalApps = this.env.services.menu.getApps().length;
+        }
         try {
             if (!this.state.testingOffline) {
                 await this._start();
@@ -270,11 +247,14 @@ export class Clickbot {
                 console.log("Clickbot stopped by user");
                 console.log(SUCCESS_SIGNAL);
             } else {
+                this.state.error = err.message || String(err);
                 this._originalError(err);
                 this._originalError(FAILURE_SIGNAL);
             }
         } finally {
             this._cleanup();
+            this.state.timeTaken = (performance.now() - this.state.startTime) / 1000;
+            this.state.phase = "done";
         }
     }
 
@@ -285,11 +265,10 @@ export class Clickbot {
     // ── PRIVATE ─────────────────────────────────────────────
 
     async _start() {
-        if (this.xmlId) {
-            this.state.xmlId = this.xmlId;
-            const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.xmlId);
+        if (this.state.xmlId) {
+            const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.state.xmlId);
             if (!app) {
-                throw new Error(`No app found for xmlid ${this.xmlId}`);
+                throw new Error(`No app found for xmlid ${this.state.xmlId}`);
             }
             this.currentAPP = app;
             await this._testApp(app);
@@ -333,17 +312,7 @@ export class Clickbot {
         return this._start();
     }
 
-    _createStopButton() {
-        const stopButton = document.createElement("button");
-        stopButton.setAttribute("id", "stop-clickbot");
-        stopButton.classList.add("btn", "btn-danger");
-        stopButton.textContent = "Stop ClickAll!";
-        stopButton.onclick = () => this.stop();
-        document.body.appendChild(stopButton);
-    }
-
     _setup() {
-        this._createStopButton();
         this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
         rpcBus.addEventListener("RPC:REQUEST", this._onRPCRequest);
         rpcBus.addEventListener("RPC:RESPONSE", this._onRPCResponse);
@@ -383,7 +352,6 @@ export class Clickbot {
         this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
         rpcBus.removeEventListener("RPC:REQUEST", this._onRPCRequest);
         rpcBus.removeEventListener("RPC:RESPONSE", this._onRPCResponse);
-        document.getElementById("stop-clickbot")?.remove();
     }
 
     _logStatistics() {
@@ -939,6 +907,7 @@ export class Clickbot {
     }
 
     async _testApp(app) {
+        this.state.currentApp = app.name;
         if (this.state.logger) {
             console.log(`Testing app: ${app.name} (${app.xmlid})`);
         }
@@ -959,10 +928,78 @@ export class Clickbot {
         };
         const menus = this.env.services.menu.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
 
+        this.state.totalMenus = menus.length;
         while (this.state.menuIndex < menus.length) {
             await this._testMenuItem(menus[this.state.menuIndex]);
             this.state.menuIndex++;
         }
         this.state.menuIndex = 0;
+    }
+}
+
+// Drives the overlay UI: owns the one state object shared verbatim with Clickbot
+// and with ClickbotOverlay, and (re)creates the Clickbot instance on start().
+export class ClickbotLauncher {
+    constructor(env, persistedState) {
+        this.env = env;
+        this.apps = env.services.menu.getApps();
+        this.state = proxy({
+            light: false,
+            logger: true,
+            offline: false,
+            testingOffline: false,
+            appIndex: 0,
+            menuIndex: 0,
+            currentApp: "",
+            totalApps: 0,
+            totalMenus: 0,
+            phase: "launcher",
+            error: null,
+            timeTaken: 0,
+            xmlId: "", // falsy = all apps, set = restrict to that app
+            onlineStats: {
+                testedApps: [],
+                testedMenus: [],
+                testedViews: 0,
+                testedFormsViews: 0,
+                testedNewRecord: 0,
+                testedModals: 0,
+                testedFilters: 0,
+                studioCount: 0,
+                errorMenuCount: 0,
+            },
+            offlineStats: {
+                testedApps: [],
+                testedMenus: [],
+                testedViews: 0,
+                testedFormsViews: 0,
+                testedNewRecord: 0,
+                testedModals: 0,
+                errorMenuCount: 0,
+            },
+            ...persistedState,
+        });
+        this.clickbot = null;
+    }
+
+    start() {
+        this.clickbot = new Clickbot(this.env, this.state);
+        return this.clickbot.start();
+    }
+
+    stop() {
+        this.clickbot?.stop();
+    }
+
+    open() {
+        this.removeOverlay = this.env.services.overlay.add(ClickbotOverlay, { state: this });
+        if (this.state.phase !== "launcher") {
+            this.start();
+        }
+    }
+
+    close() {
+        this.clickbot?.stop();
+        this.removeOverlay?.();
     }
 }
