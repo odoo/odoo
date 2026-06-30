@@ -300,6 +300,7 @@ describe("pos_store.js", () => {
         expect(newChanges.title).toBe("NEW");
         expect(newChanges.data.length).toBe(2);
         expect(newChanges.data[0]).toEqual({
+            uuid: order.lines[0].uuid,
             basic_name: "TEST",
             customer_note: "Test Orderline Customer Note",
             product_id: 5,
@@ -313,6 +314,7 @@ describe("pos_store.js", () => {
             combo_parent_uuid: undefined,
         });
         expect(newChanges.data[1]).toEqual({
+            uuid: order.lines[1].uuid,
             basic_name: "TEST 2",
             customer_note: "",
             product_id: 6,

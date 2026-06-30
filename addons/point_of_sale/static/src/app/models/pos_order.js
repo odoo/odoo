@@ -731,6 +731,7 @@ export class PosOrder extends PosOrderAccounting {
         return {
             line: line,
             data: {
+                uuid: line.uuid,
                 basic_name: line.order_id?.config_id.module_pos_restaurant
                     ? line.product_id.name
                     : line.product_id.display_name,
@@ -789,9 +790,12 @@ export class PosOrder extends PosOrderAccounting {
 
             const quantityDiff = orderline.qty - orderline.prepQty;
             if (quantityDiff !== 0) {
-                changes[quantityDiff > 0 ? "addedQuantity" : "removedQuantity"].push(
-                    this.dataMaker(orderline, quantityDiff)
-                );
+                // With `disallowLineQuantityChange`, a newly added negative-qty line will have
+                // `prepQty = 0`, so a `-ve qty (eg: -2) - prepQty(0) = -2` does not always mean a
+                // reduced line. Checking `prepQty` first is safer. No prepQty always means it's a new line.
+                changes[
+                    quantityDiff > 0 || !orderline.prepQty ? "addedQuantity" : "removedQuantity"
+                ].push(this.dataMaker(orderline, quantityDiff));
                 if (shouldCountCategory) {
                     addCategoryCount(category, quantityDiff);
                 }
@@ -872,44 +876,46 @@ export class PosOrder extends PosOrderAccounting {
             // We don't need to add note updates here since preparation display will always show
             // the latest notes from the order lines.
             const changes = this.preparationChanges;
-            const allChanges = [...changes.addedQuantity, ...changes.removedQuantity];
 
             let prepOrder = null;
-            for (const change of allChanges) {
-                const line = change.line;
-                const data = change.data;
+            // Create preparation lines for newly added order lines.
+            for (const { line, data } of changes.addedQuantity) {
+                const order = (prepOrder ||= this.models["pos.prep.order"].create({
+                    pos_order_id: this,
+                }));
 
-                if (data.quantity > 0) {
-                    const order = (prepOrder ||= this.models["pos.prep.order"].create({
-                        pos_order_id: this,
-                    }));
-                    this.models["pos.prep.line"].create({
-                        prep_order_id: order,
-                        pos_order_line_id: line,
-                        product_id: line.getProduct().id,
-                        quantity: data.quantity,
-                        cancelled: 0,
-                        attribute_value_ids: line.attribute_value_ids,
-                    });
+                this.models["pos.prep.line"].create({
+                    prep_order_id: order,
+                    pos_order_line_id: line,
+                    product_id: line.getProduct().id,
+                    quantity: data.quantity,
+                    cancelled: 0,
+                    attribute_value_ids: line.attribute_value_ids,
+                });
+            }
+
+            // Cancel quantities from existing preparation lines for removed order lines.
+            for (const { line, data } of changes.removedQuantity) {
+                let toCancel = Math.abs(data.quantity);
+                let prepLinesToCancel;
+                if (line.model.name === "pos.order.line") {
+                    prepLinesToCancel = line.prep_line_ids;
                 } else {
-                    let toCancel = -data.quantity;
-                    let prepLinesToCancel;
-                    if (line.model.name === "pos.order.line") {
-                        prepLinesToCancel = line.prep_line_ids;
-                    } else {
-                        const mainKey = keyMaker(line);
-                        prepLinesToCancel = [...this.prepLines].filter(
-                            (pl) => !pl.pos_order_line_id && keyMaker(pl) === mainKey
-                        );
-                    }
-                    for (const prepLine of prepLinesToCancel.toReversed()) {
-                        const lineQty = prepLine.quantity - prepLine.cancelled;
-                        const cancellable = Math.min(lineQty, toCancel);
-                        prepLine.cancelled += cancellable;
-                        toCancel -= cancellable;
-                        if (toCancel <= 0) {
-                            break;
-                        }
+                    const mainKey = keyMaker(line);
+                    prepLinesToCancel = [...this.prepLines].filter(
+                        (pl) => !pl.pos_order_line_id && keyMaker(pl) === mainKey
+                    );
+                }
+
+                for (const prepLine of prepLinesToCancel.toReversed()) {
+                    const remainingQty = prepLine.quantity - prepLine.cancelled;
+                    const cancellableQty = Math.min(remainingQty, toCancel);
+
+                    prepLine.cancelled += cancellableQty;
+                    toCancel -= cancellableQty;
+
+                    if (toCancel <= 0) {
+                        break;
                     }
                 }
             }
