@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_cn_baiwang" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_cn_baiwang</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="China Electronic Invoicing (Baiwang)" id="china_edi" invisible="country_code != 'CN'">
+                    <setting string="Baiwang Integration Mode" company_dependent="1">
+                        <div class="content-group">
+                            <field name="l10n_cn_edi_mode" widget="radio"/>
+                        </div>
+                        <div class="mt8" invisible="l10n_cn_edi_mode == 'prod'"> In Test mode, e-Fapiao requests are sent to the Baiwang sandbox environment. </div>
+                        <div class="content-group" invisible="not l10n_cn_edi_mode">
+                            <div class="row mt8" groups="base.group_no_one">
+                                <label for="l10n_cn_baiwang_org_auth_code" class="col-lg-4"/>
+                                <field name="l10n_cn_baiwang_org_auth_code" placeholder="c7ed317328e8888afeeb2ac59c1b5436" readonly="1"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_cn_baiwang_subscription_status" class="col-lg-4"/>
+                                <field name="l10n_cn_baiwang_subscription_status" readonly="1"/>
+                                <button invisible="l10n_cn_baiwang_subscription_status != 'not_subscribed'"
+                                    type="object"
+                                    name="action_l10n_cn_baiwang_subscribe"
+                                    string="Subscribe to Baiwang"
+                                    class="btn-primary"
+                                    icon="fa-external-link"/>
+                            </div>
+                            <!-- <div class="row mt8">
+                                <label for="l10n_cn_baiwang_proxy_user_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_cn_baiwang_proxy_user_id" readonly="1"/>
+                            </div> -->
+                            <div class="mt16" invisible="l10n_cn_baiwang_subscription_status != 'subscribed'">
+                                <button name="action_l10n_cn_baiwang_authorize"
+                                    type="object"
+                                    string="Authorize Odoo to use Baiwang"
+                                    class="btn-primary"
+                                    icon="fa-key"/>
+                                <div class="mt8 text-muted"> After clicking authorize, check your email and approve the Baiwang authorization request. </div>
+                            </div>
+                            <div class="mt16 text-success" invisible="l10n_cn_baiwang_subscription_status != 'authorized'">
+                                <i class="fa fa-check-circle"/> Baiwang is connected. </div>
+                            <div class="mt16" groups="base.group_no_one">
+                                <button name="action_l10n_cn_baiwang_test_connection"
+                                    type="object"
+                                    string="Test Connection"
+                                    class="btn-primary"
+                                    icon="fa-plug"
+                                    invisible="l10n_cn_baiwang_subscription_status != 'authorized'"/>
+                                <button name="action_l10n_cn_baiwang_sync_registration_status"
+                                    type="object"
+                                    string="Sync Registration Status"
+                                    class="btn-secondary"
+                                    icon="fa-refresh"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

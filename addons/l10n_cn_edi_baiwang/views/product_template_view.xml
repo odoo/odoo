@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_baiwang" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.baiwang</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="China Golden Tax (Baiwang)">
+                    <field name="l10n_cn_tax_category_id" 
+                           options="{'no_create': True, 'no_open': True}" 
+                           placeholder="Search tax category..."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
