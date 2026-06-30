@@ -6,7 +6,6 @@ import {
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
-    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -64,6 +63,18 @@ describe("Popup options: empty page before edit", () => {
         });
     });
 });
+
+const hiddenPopup = `<div class="s_popup o_snippet_invisible o_draggable" data-snippet="s_popup" data-name="Popup" id="sPopup" data-invisible="1">
+    <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50)  !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
+        <div class="modal-dialog d-flex">
+            <div class="modal-content oe_structure">
+                <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false">×</button>
+                <section><p>Popup content</p></section>
+            </div>
+        </div>
+    </div>
+</div>`;
+
 describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.
@@ -96,22 +107,10 @@ describe("Popup options: popup in page before edit", () => {
                 };
             }
         );
-        builder = await setupWebsiteBuilder(
-            `<div class="s_popup o_snippet_invisible o_draggable" data-snippet="s_popup" data-name="Popup" id="sPopup" data-invisible="1">
-                <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50)  !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
-                    <div class="modal-dialog d-flex">
-                        <div class="modal-content oe_structure">
-                            <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false">×</button>
-                            <section><p>Popup content</p></section>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-            {
-                loadIframeBundles: true,
-                loadAssetsFrontendJS: true,
-            }
-        );
+        builder = await setupWebsiteBuilder(hiddenPopup, {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
     });
 
     test("editing a page with a popup snippet doesn't automatically display it", async () => {
@@ -261,11 +260,14 @@ describe("Popup options: popup in page before edit", () => {
 
 describe("Popup visibility", () => {
     test("Rapid show/hide of popup stays consistent", async () => {
-        await setupWebsiteBuilderWithSnippet("s_popup", {
+        await setupWebsiteBuilder(hiddenPopup, {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
             enableIframeTransitions: true,
         });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye-slash").click()
+        );
 
         await contains(".o_we_invisible_entry i.fa-eye").click();
         await contains(".o_we_invisible_entry i.fa-eye-slash").click();
