@@ -47,16 +47,6 @@ export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;
 
 const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
-function isUnremovableTableComponent(node, root) {
-    if (!tableInnerComponents.has(node.nodeName)) {
-        return false;
-    }
-    if (!root) {
-        return true;
-    }
-    const closestTable = closestElement(node, "table");
-    return !root.contains(closestTable);
-}
 
 /**
  * @typedef { Object } TableShared
@@ -239,11 +229,6 @@ export class TablePlugin extends Plugin {
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         /** Predicates */
-        is_node_removable_predicates: (node, root) => {
-            if (isUnremovableTableComponent(node, root)) {
-                return false;
-            }
-        },
         is_node_splittable_predicates: (node) => {
             if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
                 return false;
@@ -278,6 +263,13 @@ export class TablePlugin extends Plugin {
             // Before the other `toolbar` declarations, so that the content of the
             // selected cells (images, inline code...) gets the table toolbar too.
             withSequence(5, { within: ".o_selected_td", toolbar: "table" }),
+            {
+                // A table component is unremovable on its own, but removable along
+                // with its parent (`"cascade"`); otherwise removing it would leave
+                // a structurally broken table.
+                is: "THEAD, TBODY, TFOOT, TR, TH, TD",
+                removable: "cascade",
+            },
         ],
 
         /** Selectors */
