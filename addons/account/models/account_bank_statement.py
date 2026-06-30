@@ -108,12 +108,20 @@ class AccountBankStatement(models.Model):
         bypass_search_access=True,
     )
 
+    is_statement_posted = fields.Boolean(compute='_compute_is_statement_posted', store=True)
+    journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+
     _journal_id_date_desc_id_desc_idx = models.Index("(journal_id, date DESC, id DESC)")
     _first_line_index_idx = models.Index("(journal_id, first_line_index)")
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+    @api.depends('journal_type')
+    def _compute_is_statement_posted(self):
+        for record in self:
+            # By default when a cash statement is created he is not posted
+            record.is_statement_posted = record.journal_type != 'cash'
 
     @api.depends('create_date')
     def _compute_name(self):
@@ -166,10 +174,10 @@ class AccountBankStatement(models.Model):
 
             stmt.balance_start = balance_start
 
-    @api.depends('balance_start', 'line_ids.amount', 'line_ids.state')
+    @api.depends('balance_start', 'line_ids.amount', 'line_ids.state', 'journal_type')
     def _compute_balance_end(self):
         for stmt in self:
-            lines = stmt.line_ids.filtered(lambda x: x.state == 'posted')
+            lines = stmt.line_ids if stmt.journal_type == 'cash' else stmt.line_ids.filtered(lambda x: x.state == 'posted')
             stmt.balance_end = stmt.balance_start + sum(lines.mapped('amount'))
 
     @api.depends('balance_start')
@@ -190,8 +198,7 @@ class AccountBankStatement(models.Model):
     @api.depends('balance_end', 'balance_end_real', 'line_ids.amount', 'line_ids.state')
     def _compute_is_complete(self):
         for stmt in self:
-            stmt.is_complete = stmt.line_ids.filtered(lambda l: l.state == 'posted') and stmt.currency_id.compare_amounts(
-                stmt.balance_end, stmt.balance_end_real) == 0
+            stmt.is_complete = not stmt.is_statement_posted or (stmt.line_ids.filtered(lambda l: l.state == 'posted') and stmt.currency_id.compare_amounts(stmt.balance_end, stmt.balance_end_real) == 0)
 
     @api.depends('balance_end', 'balance_end_real')
     def _compute_is_valid(self):
@@ -237,7 +244,7 @@ class AccountBankStatement(models.Model):
             limit=1,
             order='first_line_index DESC',
         )
-        return not previous or self.currency_id.compare_amounts(self.balance_start, previous.balance_end_real) == 0
+        return not self.is_statement_posted or not previous or self.currency_id.compare_amounts(self.balance_start, previous.balance_end_real) == 0
 
     def _get_invalid_statement_ids(self, all_statements=None):
         """ Returns the statements that are invalid for _compute and _search methods."""
@@ -254,12 +261,14 @@ class AccountBankStatement(models.Model):
                                 PARTITION BY st.journal_id
                                     ORDER BY st.first_line_index
                             ) AS prev_balance_end_real,
-                            currency.decimal_places
+                            currency.decimal_places,
+                            st.is_statement_posted
                        FROM account_bank_statement st
                   LEFT JOIN res_company co ON st.company_id = co.id
                   LEFT JOIN account_journal j ON st.journal_id = j.id
                   LEFT JOIN res_currency currency ON COALESCE(j.currency_id, co.currency_id) = currency.id
                       WHERE st.first_line_index IS NOT NULL
+                        AND st.is_statement_posted = TRUE
                       {"" if all_statements else "AND st.journal_id IN %(journal_ids)s"}
                   )
            SELECT id
