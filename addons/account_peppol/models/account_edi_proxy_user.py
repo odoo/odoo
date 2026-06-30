@@ -113,24 +113,26 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self._make_request(
                 f'{self._get_server_url()}/api/peppol/1/mark_connection_out_of_sync',
                 params={'token_desync_counter': self.token_sync_version},
-                auth_type='asymmetric'
+                auth_type='asymmetric',
             )
         except AccountEdiProxyError as e:
             if e.code == 'connection_superseded':
-                self._peppol_out_of_sync_disconnect_this_database()
                 if not tools.config['test_enable'] and not modules.module.current_test:
                     self.env.cr.commit()
-                raise UserError(_('This connection has been superseded by another database. Register again.'))
+                raise UserError(_("This connection has been superseded by another database. "
+                "This may occur if a database is restored from a backup or copied without neutralization.\n"
+                "To resolve this issue, navigate to Settings > Accounting > Peppol Settings and click 'Reconnect this database'.\n"
+                "Please note: Reconnecting will override the connection of the database currently in use or the most recently synchronized one. "
+                "This database will then take over the connection and become the most recently synchronized."))
             raise
 
     def _peppol_out_of_sync_reconnect_this_database(self):
         self.ensure_one()
         assert self.is_token_out_of_sync
-        self.token_sync_version += 1
         response = self._make_request(
             f'{self._get_server_url()}/api/peppol/1/resync_connection',
             params={'token_desync_counter': self.token_sync_version},
-            auth_type='asymmetric'
+            auth_type='asymmetric',
         )
         if response.get('error'):
             if response['error'].get('code') == 'connection_superseded':
@@ -141,9 +143,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 response['error'].get('code', 'unknown_error'),
                 response['error'].get('message', "An unknown error occurred while authenticating with IAP server.")
             )
+
         self.write({
             'refresh_token': response['refresh_token'],
             'is_token_out_of_sync': False,
+            'token_sync_version': response['token_sync_version'] + 1,
         })
 
         # trigger participant status update after resync to confirm token & keep state in sync
