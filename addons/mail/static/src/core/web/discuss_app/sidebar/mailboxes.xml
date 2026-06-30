@@ -35,6 +35,7 @@
             t-att-data-mailbox-id="mailbox.id"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
+            data-available-offline=""
         >
             <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'o-ms-1_5 me-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!store.discuss.isSidebarCompact">

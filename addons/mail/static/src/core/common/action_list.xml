@@ -112,7 +112,7 @@
     <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(action, ev)" attrs="attrs">
         <t t-call="mail.Action.content"/>
     </DropdownItem>
-    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style">
+    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style" t-att-data-available-offline="action.isAvailableOffline">
         <t t-call="mail.Action.content"/>
         <t t-if="action.badge" t-call="mail.Action.badge">
             <t t-set="extraBadgeClass" t-value="'position-absolute me-n1 mt-n1 end-0'"/>

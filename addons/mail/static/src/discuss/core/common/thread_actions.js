@@ -22,6 +22,7 @@ registerThreadAction("pinned-messages", {
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-thumb-tack",
+    isAvailableOffline: true,
     name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
     sequence: 20,
     sequenceGroup: 10,
@@ -136,6 +137,7 @@ registerThreadAction("attachments", {
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-paperclip",
+    isAvailableOffline: true,
     name: _t("Attachments"),
     sequence: 10,
     sequenceGroup: 10,
@@ -217,6 +219,7 @@ registerThreadAction("member-list", {
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-users",
+    isAvailableOffline: true,
     name: _t("Members"),
     sequence: 30,
     sequenceGroup: 10,
