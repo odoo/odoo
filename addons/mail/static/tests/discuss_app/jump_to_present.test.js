@@ -144,8 +144,8 @@ test("Jump to old reply should prompt jump to present", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message:eq(0):has(:text('Hello world!'))");
+    await contains(".o-mail-Message", { count: 31 });
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Message", { count: 30 });
@@ -205,6 +205,8 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
     ]);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
+    await contains(".o-mail-Message:eq(0):has(:text('Hello world!'))");
+    await contains(".o-mail-Message", { count: 31 });
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
