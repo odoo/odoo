@@ -14,7 +14,13 @@ class JobMatchAnswerWeight(models.Model):
         required=True, ondelete='cascade', index=True)
     points = fields.Integer(
         'Points', default=1,
-        help="Points this answer grants to the job profile. May be negative.")
+        help="Points this answer grants to the job profile. May be negative. "
+             "Ignored when 'Eliminates' is set.")
+    is_eliminating = fields.Boolean(
+        'Eliminates',
+        help="If the participant picks this answer, the job profile is entirely "
+             "excluded from the results, regardless of points. Use for hard "
+             "requirements, e.g. a language the role requires.")
     # Convenience related fields for grouping and domain filtering.
     question_id = fields.Many2one(
         'survey.question', related='answer_id.question_id',

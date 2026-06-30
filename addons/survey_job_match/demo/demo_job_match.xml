@@ -114,7 +114,29 @@
             <field name="sequence">3</field>
         </record>
 
+        <!-- Q4: hard requirement (language knockout) -->
+        <record id="q4" model="survey.question">
+            <field name="survey_id" ref="survey_job_match_demo"/>
+            <field name="title">Which languages can you work in?</field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="q4_a" model="survey.question.answer">
+            <field name="question_id" ref="q4"/>
+            <field name="value">Dutch and English</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="q4_b" model="survey.question.answer">
+            <field name="question_id" ref="q4"/>
+            <field name="value">English only (no Dutch)</field>
+            <field name="sequence">2</field>
+        </record>
+
         <!-- Weights: each answer grants points to one or more profiles -->
+        <!-- Q4: "English only" disqualifies the Business Developer role (requires Dutch) -->
+        <record id="w_q4_b_biz_ko" model="job.match.answer.weight">
+            <field name="answer_id" ref="q4_b"/><field name="profile_id" ref="profile_bizdev"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
         <!-- Q1 -->
         <record id="w_q1_a_dev" model="job.match.answer.weight">
             <field name="answer_id" ref="q1_a"/><field name="profile_id" ref="profile_developer"/><field name="points">3</field>

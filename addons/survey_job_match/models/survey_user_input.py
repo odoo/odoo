@@ -40,16 +40,23 @@ class SurveyUserInput(models.Model):
         chosen_answers = self.user_input_line_ids.filtered(
             lambda line: line.answer_type == 'suggestion' and line.suggested_answer_id
         ).suggested_answer_id
+        chosen_weights = chosen_answers.match_weight_ids
+
+        # Hard requirements: a chosen answer flagged as eliminating removes the
+        # profile from the results entirely, regardless of points.
+        disqualified = chosen_weights.filtered('is_eliminating').profile_id
 
         scores = dict.fromkeys(profiles.ids, 0)
-        for weight in chosen_answers.match_weight_ids:
-            scores[weight.profile_id.id] += weight.points
+        for weight in chosen_weights:
+            if not weight.is_eliminating:
+                scores[weight.profile_id.id] += weight.points
 
         # Maximum obtainable per profile: the best answer per question toward
         # that profile (sum of positives for multi-select, best single otherwise).
         max_scores = dict.fromkeys(profiles.ids, 0)
         for question in self.survey_id.question_ids:
-            question_weights = question.suggested_answer_ids.match_weight_ids
+            question_weights = question.suggested_answer_ids.match_weight_ids.filtered(
+                lambda w: not w.is_eliminating)
             for profile in profiles:
                 points = question_weights.filtered(
                     lambda w: w.profile_id == profile).mapped('points')
@@ -63,6 +70,8 @@ class SurveyUserInput(models.Model):
 
         results = []
         for profile in profiles:
+            if profile in disqualified:
+                continue
             score = scores[profile.id]
             maximum = max_scores[profile.id]
             percentage = round(100 * score / maximum) if maximum > 0 else 0
