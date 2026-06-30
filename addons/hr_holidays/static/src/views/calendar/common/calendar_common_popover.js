@@ -17,7 +17,7 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
             name: this.title,
             type: "ir.actions.act_window",
             res_model: this.props.model.resModel,
-            res_id: this.props.resId,
+            res_id: this.props.record.id,
             views: [[false, "form"]],
         });
     }

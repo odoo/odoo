@@ -16,14 +16,14 @@ export const patchAttendeeCalendarCommonPopover = {
         this.fieldNames = ["work_location_id", "work_location_name", "work_location_type", "employee_id", "weekday", "weekly", "start_date", "employee_name"];
         super.setup(...arguments);
         this.values = {
-            work_location_id: this.record?.work_location_id,
-            work_location_name: this.record?.title,
-            work_location_type: this.record?.icon,
-            employee_id: this.record?.employeeId,
+            work_location_id: this.props.record.work_location_id,
+            work_location_name: this.props.record.title,
+            work_location_type: this.props.record.icon,
+            employee_id: this.props.record.employeeId,
             weekday: false,
             weekly: false,
-            date: this.record?.start,
-            employee_name: this.record?.employeeName,
+            date: this.props.record.start,
+            employee_name: this.props.record.employeeName,
         };
         this.fields = {
             "work_location_id": { name: "Work Location", type: "many2one", relation: "hr.work.location" },
@@ -37,25 +37,25 @@ export const patchAttendeeCalendarCommonPopover = {
         };
     },
     isWorkLocationEvent() {
-        return this.record?.resModel === "hr.employee.location";
+        return this.props.record.resModel === "hr.employee.location";
     },
     get hasFooter() {
-        return !this.isWorkLocationEvent() || this.record?.userId === user.userId;
+        return !this.isWorkLocationEvent() || this.props.record.userId === user.userId;
     },
     isCurrentUserIsOwnerWorklocation() {
-        return this.isWorkLocationEvent() && this.record?.userId === user.userId;
+        return this.isWorkLocationEvent() && this.props.record.userId === user.userId;
     },
     get isEventEditable() {
-        return ("resModel" in (this.record || {})) || super.isEventEditable;
+        return ("resModel" in (this.props.record || {})) || super.isEventEditable;
     },
     get isEventViewable() {
-        return !("resModel" in (this.record || {})) || super.isEventViewable;
+        return !("resModel" in (this.props.record || {})) || super.isEventViewable;
     },
     get displayAttendeeAnswerChoice() {
-        return !("resModel" in (this.record || {})) && super.displayAttendeeAnswerChoice;
+        return !("resModel" in (this.props.record || {})) && super.displayAttendeeAnswerChoice;
     },
     get isCurrentUserAttendee() {
-        return !("resModel" in (this.record || {})) && super.isCurrentUserAttendee;
+        return !("resModel" in (this.props.record || {})) && super.isCurrentUserAttendee;
     },
 };
 

@@ -32,20 +32,16 @@ const BASE_MODEL = {
 
 const FAKE_PROPS = {
     model: BASE_MODEL,
-    resId: 5,
+    record: FAKE_RECORD,
     close() {},
     openRecord() {},
     deleteRecord() {},
 };
 
-async function start({ record: recordOverride, ...props } = {}) {
-    const baseModel = props.model ?? BASE_MODEL;
-    const finalModel = recordOverride
-        ? { ...baseModel, records: { ...baseModel.records, 5: recordOverride } }
-        : baseModel;
+async function start({ record = FAKE_RECORD, ...props } = {}) {
     onRpc("read", ({ args }) => args[0].map((id) => ({ id, display_name: "Meeting" })));
     await mountWithCleanup(CalendarCommonPopover, {
-        props: { ...FAKE_PROPS, ...props, model: finalModel },
+        props: { ...FAKE_PROPS, ...props, record },
     });
     await animationFrame();
 }

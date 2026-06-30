@@ -54,7 +54,7 @@ export class CalendarCommonPopover extends Component {
     static props = [
         "close",
         "model",
-        "resId",
+        "record",
         "context?",
         "reloadOnClose?",
         "openRecord?",
@@ -77,7 +77,7 @@ export class CalendarCommonPopover extends Component {
             window,
             "pointerdown",
             (e) => {
-                if (!e.target.closest(`.fc-event[data-event-id="${this.props.resId}"]`)) {
+                if (!e.target.closest(`.fc-event[data-event-id="${this.props.record.id}"]`)) {
                     e.preventDefault();
                 }
             },
@@ -93,12 +93,8 @@ export class CalendarCommonPopover extends Component {
             (footer.hasAttribute("replace") && !exprToBoolean(footer.getAttribute("replace")));
     }
 
-    get record() {
-        return this.props.model.records[this.props.resId];
-    }
-
     get title() {
-        return this.record?.title || "";
+        return this.props.record.title || "";
     }
 
     get isEventEditable() {
@@ -114,7 +110,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     computeDateTimeAndDuration() {
-        const record = this.record;
+        const record = this.props.record;
         if (!record) {
             return;
         }
@@ -153,7 +149,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     formatDateDuration(start, end) {
-        if (!this.record.isAllDay || start.hasSame(end, "day")) {
+        if (!this.props.record.isAllDay || start.hasSame(end, "day")) {
             return null;
         }
         return end
@@ -250,7 +246,7 @@ export class CalendarCommonPopover extends Component {
             context: this.props.context,
             fields,
             resModel,
-            resId: this.props.resId,
+            resId: this.props.record.id,
             readonly: !this.isEventEditable,
             afterButtonClicked: () => {
                 this.props.reloadOnClose();

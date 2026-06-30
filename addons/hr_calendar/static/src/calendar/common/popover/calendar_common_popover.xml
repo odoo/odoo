@@ -3,7 +3,7 @@
     <t t-name="hr_calendar.AttendeeCalendarCommonPopover">
         <t t-if="this.isWorkLocationEvent()">
             <Record resModel="'hr.employee.location'" fieldNames="this.fieldNames" fields="this.fields" activeFields="this.fields" values="this.values" mode="'readonly'" t-slot-scope="slot">
-                <Dialog t-if="this.env.isSmall" title="this.record?.title" contentClass="'o_calendar_color_'+ this.record?.colorIndex">
+                <Dialog t-if="this.env.isSmall" title="this.props.record.title" contentClass="'o_calendar_color_'+ this.props.record.colorIndex">
                     <t t-call="hr_calendar.AttendeeCalendarCommonPopover.body"/>
                     <t t-set-slot="footer">
                         <t t-call="hr_calendar.AttendeeCalendarCommonPopover.footer"/>
@@ -12,15 +12,15 @@
                 <div t-else="" class="card-header d-flex justify-content-between py-2 pe-2">
                     <span class="popover-header border-0">
                         <t t-if="slot.record.data.work_location_type === 'office'">
-                            <i class="fa fa-fw fa-building me-2" role="img" t-att-class="`o_worklocation_color_${this.record?.colorIndex}`"/>
+                            <i class="fa fa-fw fa-building me-2" role="img" t-att-class="`o_worklocation_color_${this.props.record.colorIndex}`"/>
                         </t>
                         <t t-elif="slot.record.data.work_location_type === 'home'">
                             <i class="fa fa-fw fa-home me-2" role="img"/>
                         </t>
                         <t t-else="">
-                            <i class="fa fa-fw fa-map-marker me-2" t-att-class="`o_worklocation_color_${this.record?.colorIndex}`" role="img"/>
+                            <i class="fa fa-fw fa-map-marker me-2" t-att-class="`o_worklocation_color_${this.props.record.colorIndex}`" role="img"/>
                         </t>
-                        <t t-out="this.record?.title"/>
+                        <t t-out="this.props.record.title"/>
                     </span>
                     <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => this.props.close()">
                         <i class="fc-close fc-icon fc-icon-x"/>
@@ -42,16 +42,16 @@
     <t t-name="hr_calendar.AttendeeCalendarCommonPopover.body">
         <ul class="list-group list-group-flush">
             <div class="list-group-item">
-                <i class="fa fa-fw fa-calendar me-2" t-att-class="`o_worklocation_color_${this.record?.colorIndex}`"/>
-                <t t-if="this.record?.start?.ts !== this.record?.end?.ts">
-                    <t t-out="this.record?.start?.toFormat('d MMMM')" t-options="{'widget': 'date'}"/>
+                <i class="fa fa-fw fa-calendar me-2" t-att-class="`o_worklocation_color_${this.props.record.colorIndex}`"/>
+                <t t-if="this.props.record.start.ts !== this.props.record.end.ts">
+                    <t t-out="this.props.record.start.toFormat('d MMMM')" t-options="{'widget': 'date'}"/>
                 </t>
                 <t t-else="">
-                    <t t-out="this.record?.start?.toFormat('d MMMM yyyy')" t-options="{'widget': 'date'}"/>
+                    <t t-out="this.props.record.start.toFormat('d MMMM yyyy')" t-options="{'widget': 'date'}"/>
                 </t>
             </div>
             <div class="list-group-item">
-                <i class="fa fa-fw fa-user me-2" t-att-class="`o_worklocation_color_${this.record?.colorIndex}`"/>
+                <i class="fa fa-fw fa-user me-2" t-att-class="`o_worklocation_color_${this.props.record.colorIndex}`"/>
                 <Field name="'employee_name'" record="slot.record" readonly="true"/>
             </div>
         </ul>

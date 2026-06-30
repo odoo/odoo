@@ -263,7 +263,7 @@ export class CalendarCommonRenderer extends Component {
     getPopoverProps(record) {
         return {
             model: this.props.model,
-            resId: record.id,
+            record,
             context: this.props.model.meta.context,
             openRecord: () => this.props.editRecord(record),
             deleteRecord: () => this.props.deleteRecord(record),
