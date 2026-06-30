@@ -62,10 +62,13 @@ export class AnimateOptionPlugin extends Plugin {
                 isDisabled: this.isAnimatedTextDisabled.bind(this),
             },
         ],
-        properties: withSequence(20, {
-            predicate: (node) => closestElement(node, ".o_animated_text"),
-            toolbar: "compact",
-        }),
+        properties: [
+            withSequence(20, {
+                predicate: (node) => closestElement(node, ".o_animated_text"),
+                toolbar: "compact",
+            }),
+            { predicate: ".o_animated_text", splittable: false },
+        ],
         system_classes: ["o_animating"],
         builder_actions: {
             SetAnimationModeAction,
@@ -75,11 +78,6 @@ export class AnimateOptionPlugin extends Plugin {
         },
         normalize_processors: this.normalize.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        is_node_splittable_predicates: (node) => {
-            if (node.classList?.contains("o_animated_text")) {
-                return false;
-            }
-        },
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
         // This is done to clean the dataset of the images saved in the db.
         on_will_save_handlers: () =>
