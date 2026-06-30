@@ -1642,34 +1642,12 @@ class StockPicking(models.Model):
         if pickings_to_backorder:
             pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
         report_actions = self._get_autoprint_report_actions()
-        another_action = False
-        pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_allocation_report)
-        moves = pickings_show_report.move_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.quantity and not m.move_dest_ids)
-        if moves:
-            # don't show reception report if all already assigned/nothing to assign
-            wh_location_ids = self.env['stock.location']._search([
-                ('id', 'child_of', pickings_show_report.picking_type_id.warehouse_id.view_location_id.ids),
-                ('usage', '!=', 'supplier'),
-            ])
-            if self.env['stock.move'].search_count([
-                    ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
-                    ('product_qty', '>', 0),
-                    ('location_id', 'in', wh_location_ids),
-                    ('move_orig_ids', '=', False),
-                    ('picking_id', 'not in', pickings_show_report.ids),
-                    ('product_id', 'in', moves.product_id.ids)], limit=1):
-                action = pickings_show_report.action_view_allocation_report()
-                action['context'] = {'default_picking_ids': pickings_show_report.ids}
-                if not report_actions:
-                    return action
-                another_action = action
         if report_actions:
             return {
                 'type': 'ir.actions.client',
                 'tag': 'do_multi_print',
                 'params': {
                     'reports': report_actions,
-                    'anotherAction': another_action,
                 }
             }
         return True
