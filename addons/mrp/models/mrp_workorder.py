@@ -18,9 +18,6 @@ class MrpWorkorder(models.Model):
     _description = 'Work Order'
     _order = 'date_start, sequence, id'
 
-    def _default_sequence(self):
-        return self.operation_id.sequence or 100
-
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
         if not workcenter_ids:
@@ -31,7 +28,7 @@ class MrpWorkorder(models.Model):
 
     name = fields.Char(
         'Work Order', required=True)
-    sequence = fields.Integer("Sequence", default=_default_sequence)
+    sequence = fields.Integer("Sequence", compute='_compute_sequence', store=True, readonly=False, precompute=True)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True, index=True, tracking=True,
@@ -156,6 +153,10 @@ class MrpWorkorder(models.Model):
     qty_to_produce = fields.Float('Quantity To Produce', digits='Product Unit', compute='_compute_qty_to_produce',
         help="The quantity to produce in this workorder in the backorders chain.")
     backorder_count = fields.Integer("Count of linked backorders", compute='_compute_backorder')
+
+    def _compute_sequence(self):
+        for workorder in self:
+            workorder.sequence = workorder.operation_id.sequence or 100
 
     @api.depends('qty_ready', 'qty_remaining', 'production_bom_id.continuous')
     def _compute_state(self):
