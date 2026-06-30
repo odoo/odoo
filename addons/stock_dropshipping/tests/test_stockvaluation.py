@@ -61,7 +61,11 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         # validate the dropshipping picking
         self.assertEqual(len(self.sale_order1.picking_ids), 1)
-        self.sale_order1.picking_ids.button_validate()
+        # To be sure the following action and those who follow can be
+        # processed by Inventory's user, we need to empty the cache, so records'
+        # data will be fetched again (testing access rights) instead of reusing cache
+        self.env.invalidate_all()
+        self.sale_order1.with_user(self.res_users_stock_user).picking_ids.button_validate()
         self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 
         # create the vendor bill
