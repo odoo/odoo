@@ -2763,3 +2763,42 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_internal_customer_location_so_qty_update(self):
+        """
+        When a customer's property_stock_customer is an internal location and the delivery
+        route has a rule going to that location, updating the SO line quantity should update
+        the picking quantity correctly.
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        internal_customer_loc = self.env['stock.location'].create({
+            'name': 'Stock 2',
+            'usage': 'internal',
+            'location_id': warehouse.view_location_id.id,
+        })
+        warehouse.delivery_route_id.rule_ids = [
+            Command.create({
+                'name': 'Stock -> Stock 2',
+                'action': 'pull',
+                'location_src_id': stock_location.id,
+                'location_dest_id': internal_customer_loc.id,
+                'picking_type_id': warehouse.out_type_id.id,
+                'procure_method': 'make_to_stock',
+            }),
+        ]
+        self.partner_a.property_stock_customer = internal_customer_loc
+        self.product_a.is_storable = True
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 1)
+        so.order_line.product_uom_qty = 2
+        self.assertEqual(sum(so.picking_ids.move_ids.mapped('product_uom_qty')), 2)
