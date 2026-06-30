@@ -7,9 +7,10 @@ export class TranslateLinkInlinePlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_link_created_handlers: (linkEl) => linkEl.classList.add("o_translate_inline"),
-        before_insert_processors: (container) => {
-            this.markTranslateInline(container);
-            return container;
+        fragment_to_insert_processors: (fragment) => {
+            // This should be done earlier, when it has a parent.
+            this.markTranslateInline(fragment);
+            return fragment;
         },
         on_media_replaced_handlers: ({ newMediaEl }) => {
             this.markTranslateInline(newMediaEl);

@@ -255,7 +255,7 @@ export class FormatPlugin extends Plugin {
         /** Handlers */
         on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
         on_selectionchange_handlers: this.clearPendingFormats.bind(this),
-        before_insert_handlers: this.beforeInsert.bind(this),
+        on_will_insert_handlers: this.beforeInsert.bind(this),
         on_deleted_handlers: this.convertEmptyFormatToPendingIntent.bind(this),
 
         /** Processors */

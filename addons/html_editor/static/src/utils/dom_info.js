@@ -610,7 +610,11 @@ export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6"
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return !isParagraphRelatedElement(node) && isBlock(node);
+    return (
+        node &&
+        !isParagraphRelatedElement(node) &&
+        (isBlock(node) || childNodes(node).some(isParagraphRelatedElement))
+    );
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
@@ -666,6 +670,23 @@ export const listElementSelector = [...listContainers].join(",");
 
 export function isTableCell(node) {
     return ["TH", "TD"].includes(node.nodeName);
+}
+
+/**
+ * Return true if the given node can contain phrasing content.
+ */
+export function isPhrasingContainer(node) {
+    return (
+        node &&
+        isElement(node) &&
+        ([...node.childNodes].some(
+            (child) => isTextNode(child) && child.textContent.trim().length
+        ) ||
+            isParagraphRelatedElement(node) ||
+            isListItemElement(node) ||
+            node.nodeName === "PRE" ||
+            isTableCell(node))
+    );
 }
 
 /**
@@ -929,6 +950,16 @@ export function isContentEditableAncestor(node) {
         return false;
     }
     return node.isContentEditable && node.matches("[contenteditable]");
+}
+
+export function isEditionBoundary(node, editable) {
+    if (!node) {
+        return false;
+    }
+    if (node === editable) {
+        return true;
+    }
+    return isContentEditableAncestor(node);
 }
 
 export const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];

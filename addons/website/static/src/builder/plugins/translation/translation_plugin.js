@@ -101,12 +101,12 @@ export class TranslationPlugin extends Plugin {
             this.prepareTranslation();
         }),
         system_classes: ["o_savable_attribute"],
-        before_insert_processors: withSequence(20, (container) => {
-            makeContentsInline(container);
-            for (const el of container.querySelectorAll(this.nonTranslatedSelector)) {
+        fragment_to_insert_processors: withSequence(20, (fragment) => {
+            makeContentsInline(fragment);
+            for (const el of fragment.querySelectorAll(this.nonTranslatedSelector)) {
                 unwrapContents(el);
             }
-            return container;
+            return fragment;
         }),
         toolbar_namespace_providers: [
             (targetedNodes, editableSelection) =>

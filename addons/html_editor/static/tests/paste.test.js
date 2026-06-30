@@ -2067,18 +2067,18 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c12<i><br>ii</i>[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c12<br><i>ii</i>[]</span>f</div>',
             });
         });
 
-        test("should paste a text when selection leave a spanunsplittable (2)", async () => {
+        test("should paste a text when selection leave a span unsplittable (2)", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">2a[b<span class="a">c]d</span>ef</div>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">2a12<i><br>ii</i>[]<span class="a">d</span>ef</div>',
+                    '<div class="oe_unbreakable">2a12<br><i>ii</i>[]<span class="a">d</span>ef</div>',
             });
         });
 
@@ -2129,7 +2129,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<i><br>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<br><i>ii</i>[]</span>e<br>f</div>`,
             });
         });
     });
@@ -3684,7 +3684,7 @@ describe("Odoo editor own html", () => {
             stepFunction: async (editor) => {
                 pasteOdooEditorHtml(editor, '<div class="custom-paste oe_unbreakable">b</div>');
             },
-            contentAfter: '<p>a</p><div class="custom-paste oe_unbreakable">b</div><p>[]b</p>',
+            contentAfter: '<p>a</p><div class="custom-paste oe_unbreakable">b[]</div><p>b</p>',
         });
     });
 
@@ -4742,9 +4742,9 @@ describe("paste table cells into an existing table", () => {
                                 <p>before</p>
                                 <table class="table table-bordered o_table">
                                     <tbody>
-                                        <tr><td><p>x</p></td></tr>
+                                        <tr><td><p>x[]</p></td></tr>
                                     </tbody>
-                                </table>[]
+                                </table>
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>

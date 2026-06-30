@@ -179,49 +179,91 @@ describe("collapsed selection", () => {
         });
     });
 
-    test("never unwrap tables in breakable paragrap", async () => {
-        // P elements' content can only be "phrasing" content
-        // Adding a table within p is not possible
-        // We have split the p and insert the table unwrapped in between
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
-        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
-        insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
-        expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
-        );
-    });
+    // The following are edge cases where we try to insert in impossible places.
+    describe("inserting in impossible places", () => {
+        test("never unwrap tables in breakable paragraph", async () => {
+            // P elements' content can only be "phrasing" content
+            // Adding a table within p is not possible
+            // We have split the p and insert the table unwrapped in between
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
+            const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            expect(getContent(editor.editable)).toBe(
+                `<p>cont</p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p>ent</p>`
+            );
+        });
 
-    test("should not unwrap table in unsplittable paragraph find a suitable spot to insert table element", async () => {
-        // P elements' content can only be "phrasing" content
-        // Adding a table within an unsplittable p is not possible
-        // We have to find a better spot to insert the table
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
-        const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
-        insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
-        await tick();
-        expect(getContent(editor.editable)).toBe(
-            `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
-        );
-    });
+        test("never unwrap tables in empty breakable paragraph", async () => {
+            // P elements' content can only be "phrasing" content
+            // Adding a table within p is not possible
+            // We have split the p and insert the table unwrapped in between
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
+            const { editor } = await setupEditor(`<p>[]<br></p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
+            );
+        });
 
-    test("stops at boundary when inserting unfit content", async () => {
-        // P elements' content can only be "phrasing" content
-        // This test forces to stop at the <p contenteditable="true" />
-        // This test is a bit odd and whitebox but this is because multiple
-        // parameters of the use case are interacting
-        const { editor } = await setupEditor(
-            `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>`,
-            {}
-        );
+        test("should not unwrap table in unsplittable paragraph (don't insert at all)", async () => {
+            // P elements' content can only be "phrasing" content.
+            // Adding a table within an unsplittable p is not possible.
+            // Since we can't insert it there, we just don't do anything.
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
+            const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            await tick();
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">cont[]ent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
 
-        insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
-        expect(getContent(editor.editable)).toBe(
-            '<p data-selection-placeholder=""><br></p>' +
-                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><table><tbody><tr><td>[]<br></td></tr></tbody></table></p></div>` +
-                '<p data-selection-placeholder=""><br></p>'
-        );
+        test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at start)", async () => {
+            const { editor } = await setupEditor(`<p class="oe_unbreakable">[]content</p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            await tick();
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
+
+        test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at end)", async () => {
+            const { editor } = await setupEditor(`<p class="oe_unbreakable">content[]</p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            await tick();
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
+
+        test("should not unwrap table in unsplittable empty paragraph: replace the paragraph", async () => {
+            const { editor } = await setupEditor(`<p class="oe_unbreakable">[]<br></p>`, {});
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            await tick();
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
+
+        test("stops at boundary when inserting unfit content", async () => {
+            // P elements' content can only be "phrasing" content.
+            // Adding a table within an unsplittable p is not possible.
+            // Since we can't insert it there, we just don't do anything.
+            const { editor } = await setupEditor(
+                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>`,
+                {}
+            );
+
+            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            expect(getContent(editor.editable)).toBe(
+                '<p data-selection-placeholder=""><br></p>' +
+                    `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>` +
+                    '<p data-selection-placeholder=""><br></p>'
+            );
+        });
     });
 
     test("Should ensure a paragraph after an inserted unsplittable (add)", async () => {
@@ -322,25 +364,25 @@ describe("collapsed selection", () => {
     test("insert inline in empty paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
         insertHTML(`<span class="a">a</span>`)(editor);
-        expect(getContent(el)).toBe(`<p><span class="a">a</span>[]</p>`);
+        expect(getContent(el)).toBe(`<p><span class="a">a[]</span></p>`);
     });
 
     test("insert inline at the end of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
         insertHTML(`<span class="a">a</span>`)(editor);
-        expect(getContent(el)).toBe(`<p>b<span class="a">a</span>[]</p>`);
+        expect(getContent(el)).toBe(`<p>b<span class="a">a[]</span></p>`);
     });
 
     test("insert inline at the start of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]b</p>`);
         insertHTML(`<span class="a">a</span>`)(editor);
-        expect(getContent(el)).toBe(`<p><span class="a">a</span>[]b</p>`);
+        expect(getContent(el)).toBe(`<p><span class="a">a[]</span>b</p>`);
     });
 
     test("insert inline at the middle of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]c</p>`);
         insertHTML(`<span class="a">a</span>`)(editor);
-        expect(getContent(el)).toBe(`<p>b<span class="a">a</span>[]c</p>`);
+        expect(getContent(el)).toBe(`<p>b<span class="a">a[]</span>c</p>`);
     });
 
     test("insert block in empty paragraph", async () => {
@@ -367,14 +409,14 @@ describe("collapsed selection", () => {
         const { el, editor } = await setupEditor(`<p>[]b</p>`);
         insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable">a</div><p>[]b</p>`
+            `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable">a[]</div><p>b</p>`
         );
     });
 
     test("insert block at the middle of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]c</p>`);
         insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
-        expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a</div><p>[]c</p>`);
+        expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a[]</div><p>c</p>`);
     });
 
     test("insert content processed by a plugin", async () => {
@@ -382,11 +424,13 @@ describe("collapsed selection", () => {
             static id = "customPlugin";
             static dependencies = ["dom", "selection"];
             resources = {
-                before_insert_processors: (container) => {
+                fragment_to_insert_processors: (fragment) => {
+                    fragment.replaceChildren(parseHTML(this.document, `<p>surprise</p>`));
+                    return fragment;
+                },
+                on_will_insert_handlers: () => {
                     const second = this.editable.querySelector(".second");
                     this.dependencies.selection.setCursorStart(second);
-                    container.replaceChildren(parseHTML(this.document, `<p>surprise</p>`));
-                    return container;
                 },
             };
         }
@@ -451,7 +495,7 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.commit();
             },
-            contentAfter: '<p>a<span class="a">TEST</span>[]l</p>',
+            contentAfter: '<p>a<span class="a">TEST[]</span>l</p>',
         });
     });
 
@@ -470,7 +514,7 @@ describe("not collapsed selection", () => {
             },
             contentAfter: unformat(
                 `<table><tbody>
-                        <tr><td>cd</td><td><p><span class="a">TEST</span>[]</p></td><td>gh</td></tr>
+                        <tr><td>cd</td><td><p><span class="a">TEST[]</span></p></td><td>gh</td></tr>
                         <tr><td>ij</td><td><p><br></p></td><td>mn</td></tr>
                         <tr><td>op</td><td>qr</td><td>st</td></tr>
                     </tbody></table>`
@@ -493,7 +537,7 @@ describe("not collapsed selection", () => {
                 editor.shared.history.commit();
             },
             contentAfter: unformat(
-                `<p>a<span class="a">TEST</span>[]</p>
+                `<p>a<span class="a">TEST[]</span></p>
                     <p>kl</p>`
             ),
         });
@@ -515,7 +559,7 @@ describe("not collapsed selection", () => {
             },
             contentAfter: unformat(
                 `<p>ab</p>
-                    <p><span class="a">TEST</span>[]l</p>`
+                    <p><span class="a">TEST[]</span>l</p>`
             ),
         });
     });
@@ -534,7 +578,7 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.commit();
             },
-            contentAfter: `<p>a<span class="a">TEST</span>[]l</p>`,
+            contentAfter: `<p>a<span class="a">TEST[]</span>l</p>`,
         });
     });
 
@@ -561,7 +605,7 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.commit();
             },
-            contentAfter: `<p><span class="a">TEST</span>[]</p>`,
+            contentAfter: `<p><span class="a">TEST[]</span></p>`,
         });
     });
 
@@ -589,7 +633,7 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.commit();
             },
-            contentAfter: `<p>0<span class="a">TEST</span>[]</p>`,
+            contentAfter: `<p>0<span class="a">TEST[]</span></p>`,
         });
     });
 
@@ -617,7 +661,7 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.commit();
             },
-            contentAfter: `<p><span class="a">TEST</span>[]</p>`,
+            contentAfter: `<p><span class="a">TEST[]</span></p>`,
         });
     });
 

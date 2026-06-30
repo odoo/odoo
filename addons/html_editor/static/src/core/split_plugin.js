@@ -42,6 +42,7 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
 /**
  * @typedef { Object } SplitShared
  * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
+ * @property { SplitPlugin['isSplittable'] } isSplittable
  * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
  * @property { SplitPlugin['splitBlock'] } splitBlock
  * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
@@ -71,6 +72,7 @@ export class SplitPlugin extends Plugin {
         "splitAroundUntil",
         "splitSelection",
         "isUnsplittable",
+        "isSplittable",
         "splitBlockSegments",
     ];
     /** @type {import("plugins").EditorResources} */
@@ -226,6 +228,14 @@ export class SplitPlugin extends Plugin {
      */
     isUnsplittable(node) {
         return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    isSplittable(node) {
+        return !this.isUnsplittable(node);
     }
 
     /**
@@ -428,7 +438,8 @@ export class SplitPlugin extends Plugin {
 
             // Check if we can split at this line break.
             const unsplittable = ancestors(br, block).find(this.isUnsplittable.bind(this));
-            const canWrapInUnsplittable = allowsParagraphRelatedElements(unsplittable);
+            const canWrapInUnsplittable =
+                unsplittable && allowsParagraphRelatedElements(unsplittable);
             if (unsplittable) {
                 if (canWrapInUnsplittable) {
                     // If splitting here would split an unsplittable element,

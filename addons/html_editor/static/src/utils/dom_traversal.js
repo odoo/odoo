@@ -7,6 +7,13 @@ export const closestPath = function* (node) {
     }
 };
 
+export const descendantsPath = function* (node) {
+    yield node;
+    for (const child of node.childNodes || []) {
+        yield* descendantsPath(child);
+    }
+};
+
 /**
  * Find a node.
  * @param {findCallback} findCallback - This callback check if this function
@@ -40,6 +47,15 @@ export function findUpTo(node, limitAncestor, predicate) {
         node = node.parentElement;
     }
     return null;
+}
+
+/**
+ * @param {Node} node
+ * @param {Function} predicate
+ * @returns {Node|null}
+ */
+export function findDownTo(node, predicate) {
+    return findNode(descendantsPath(node), predicate);
 }
 
 /**
@@ -194,13 +210,13 @@ export function createDOMPathGenerator(
 ) {
     const nextDeepest =
         direction === DIRECTIONS.LEFT
-            ? (node) => lastLeaf(node.previousSibling, stopTraverseFunction)
-            : (node) => firstLeaf(node.nextSibling, stopTraverseFunction);
+            ? (node) => lastLeaf(node.previousSibling, { stopTraverseFunction })
+            : (node) => firstLeaf(node.nextSibling, { stopTraverseFunction });
 
     const firstNode =
         direction === DIRECTIONS.LEFT
-            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], stopTraverseFunction)
-            : (node, offset) => firstLeaf(node.childNodes[offset], stopTraverseFunction);
+            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], { stopTraverseFunction })
+            : (node, offset) => firstLeaf(node.childNodes[offset], { stopTraverseFunction });
 
     // Note "reasons" is a way for the caller to be able to know why the
     // generator ended yielding values.
@@ -243,27 +259,35 @@ export function createDOMPathGenerator(
  * Returns the deepest child in last position.
  *
  * @param {Node} node
- * @param {Function} [stopTraverseFunction]
+ * @param {Object} [options = {}]
+ * @param {Function} [options.stopTraverseFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function lastLeaf(node, stopTraverseFunction) {
+export function lastLeaf(node, { stopTraverseFunction, predicate } = {}) {
+    let match;
     while (node && node.lastChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
+        match = predicate?.(node) ? node : match;
         node = node.lastChild;
     }
-    return node;
+    return predicate ? match : node;
 }
 /**
  * Returns the deepest child in first position.
  *
  * @param {Node} node
- * @param {Function} [stopTraverseFunction]
+ * @param {Object} [options = {}]
+ * @param {Function} [options.stopTraverseFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function firstLeaf(node, stopTraverseFunction) {
+export function firstLeaf(node, { stopTraverseFunction, predicate } = {}) {
+    let match;
     while (node && node.firstChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
+        match = predicate?.(node) ? node : match;
         node = node.firstChild;
     }
-    return node;
+    return predicate ? match : node;
 }
 
 /**
@@ -391,4 +415,20 @@ export function trapFocus(elements, backward = false) {
         (currentIndex + (backward ? -1 : 1) + focusableElements.length) % focusableElements.length;
 
     focusableElements[nextIndex]?.focus();
+}
+
+/**
+ * Get distinct connected parents of nodes
+ *
+ * @param {Iterable} nodes
+ * @returns {Set}
+ */
+export function getConnectedParents(nodes) {
+    const parents = new Set();
+    for (const node of nodes) {
+        if (node.isConnected && node.parentElement) {
+            parents.add(node.parentElement);
+        }
+    }
+    return parents;
 }

@@ -88,7 +88,7 @@ export class ToggleBlockPlugin extends Plugin {
 
         should_show_power_buttons_predicates: this.showPowerButtons.bind(this),
 
-        before_insert_processors: this.handleInsert.bind(this),
+        fragment_to_insert_processors: this.handleInsert.bind(this),
     };
 
     setup() {
@@ -405,10 +405,10 @@ export class ToggleBlockPlugin extends Plugin {
      * Generate new toggleBlockIds for every inserted toggle, to avoid duplicating
      * copies.
      */
-    handleInsert(insertContainer) {
-        const insertedToggles = insertContainer.querySelectorAll(toggleSelector);
+    handleInsert(fragment) {
+        const insertedToggles = fragment.querySelectorAll(toggleSelector);
         this.generateUniqueIds(insertedToggles);
-        return insertContainer;
+        return fragment;
     }
 
     /**

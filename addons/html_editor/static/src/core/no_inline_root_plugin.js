@@ -1,16 +1,25 @@
-import { getDeepestPosition, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import {
+    allowsParagraphRelatedElements,
+    getDeepestPosition,
+    isEditionBoundary,
+    isParagraphRelatedElement,
+} from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
 import { endPos, startPos } from "@html_editor/utils/position";
-import { childNodes } from "@html_editor/utils/dom_traversal";
+import { childNodes, getConnectedParents } from "@html_editor/utils/dom_traversal";
 
+/**
+ * @typedef {((el: HTMLElement) => boolean | void)[]} are_inlines_allowed_at_root_predicates
+ */
 export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
-    static dependencies = ["baseContainer", "selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history", "dom"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
         fix_selection_on_editable_root_overrides: this.fixSelectionOnEditableRoot.bind(this),
+        on_inserted_handlers: this.onInserted.bind(this),
     };
 
     setup() {
@@ -23,6 +32,13 @@ export class NoInlineRootPlugin extends Plugin {
         this.addDomListener(this.editable, "pointerup", () => {
             this.isPointerDown = false;
         });
+    }
+
+    areInlinesAllowedAtRoot(node) {
+        return (
+            this.checkPredicates("are_inlines_allowed_at_root_predicates", node) ??
+            this.config.allowInlineAtRoot
+        );
     }
 
     /**
@@ -89,5 +105,23 @@ export class NoInlineRootPlugin extends Plugin {
             return true;
         }
         return false;
+    }
+    onInserted(insertedNodes) {
+        // 🤖 Inline content is not always allowed directly at an edition
+        // boundary (for example at the editable root). When insertion produced
+        // inline siblings there, wrap them into base containers so the document
+        // keeps the root-level block invariant.
+        for (const parent of getConnectedParents(insertedNodes)) {
+            if (
+                !this.areInlinesAllowedAtRoot(parent) &&
+                isEditionBoundary(parent, this.editable) &&
+                allowsParagraphRelatedElements(parent)
+            ) {
+                // Ensure that edition boundaries do not have inline content.
+                this.dependencies.dom.wrapInlinesInBlocks(parent, {
+                    baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                });
+            }
+        }
     }
 }
