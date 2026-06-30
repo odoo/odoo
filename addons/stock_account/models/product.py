@@ -497,7 +497,7 @@ class ProductProduct(models.Model):
                         ignore_manual_update = False
                         if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
                             ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
-                        in_value = move._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
+                        in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
                         in_value = (in_value * lot_qty / in_qty) if in_qty else 0
