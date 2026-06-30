@@ -46,7 +46,6 @@ export class CaptionPlugin extends Plugin {
         on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
         on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
-        hints: [{ selector: "FIGCAPTION > .o_caption_editable", text: _t("Write a caption...") }],
         hint_targets_providers: (selectionData) => {
             const captionSpan = closestElement(
                 selectionData.editableSelection.anchorNode,
@@ -57,11 +56,10 @@ export class CaptionPlugin extends Plugin {
             }
             return [];
         },
-        region_properties: {
-            within: CAPTION_SPAN_SELECTOR,
-            formattable: false,
-            toolbar: DISABLED_NAMESPACE,
-        },
+        region_properties: [
+            { within: CAPTION_SPAN_SELECTOR, formattable: false, toolbar: DISABLED_NAMESPACE },
+            { is: "FIGCAPTION > .o_caption_editable", hintText: _t("Write a caption...") },
+        ],
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
