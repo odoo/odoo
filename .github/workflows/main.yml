@@ -33,7 +33,7 @@ jobs:
       run: |
         cd docker-config
         # Cambiamos el puerto a 8070 para el comando de pruebas, evitando el conflicto con el puerto 8069 de fondo
-        docker compose exec -T web /entrypoint.sh odoo -d odoo_ventas -u validacion_descuento_maximo --test-enable --stop-after-init --http-port=8070 > odoo_tests.log 2>&1 || TEST_EXIT=$?
+        docker compose exec -T web /entrypoint.sh odoo -d odoo_ventas -u validacion_descuento_maximo --test-enable --test-tags /validacion_descuento_maximo --stop-after-init --http-port=8070 > odoo_tests.log 2>&1 || TEST_EXIT=$?
         cat odoo_tests.log
         exit ${TEST_EXIT:-0}
 
