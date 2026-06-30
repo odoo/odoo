@@ -1777,7 +1777,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
                 uom_quantity_back_to_product_uom = to_update.product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update.with_context(reserved_quant=reserved_quant).quantity += uom_quantity
+                to_update.quantity += uom_quantity
             else:
                 if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
@@ -1889,8 +1889,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves_to_assign = moves_to_assign.filtered(
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
-        moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
-        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
             rounding = roundings[move]
@@ -1975,11 +1974,23 @@ Please change the quantity done or the rounding precision of your unit of measur
                         if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)] -= move_line.quantity_product_uom
 
+                    location_ids, lot_ids = set(), set()
+                    for (location, lot, dummy, dummy) in available_move_lines:
+                        location_ids.add(location.id)
+                        lot_ids.add(lot.id)
+
+                    quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
+                        move.product_id, self.env['stock.location'].browse(location_ids),
+                        extra_domain=['|', ('lot_id', 'in', list(lot_ids)), ('lot_id', '=', False)]
+                    )
+
                     taken_quantities = {}
                     all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
+                        move_line_vals, taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity_vals(
+                            min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True
+                        )
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
