@@ -12,8 +12,17 @@
                         string="Connect"
                         type="object"
                         name="action_start_onboarding"
+                        context="{'mercado_pago_test_mode': False}"
                         invisible="mercado_pago_access_token"
                         class="btn-primary"
+                    />
+                    <button
+                        string="Connect a Test Account"
+                        type="object"
+                        name="action_start_onboarding"
+                        context="{'mercado_pago_test_mode': True}"
+                        invisible="mercado_pago_access_token"
+                        class="btn-secondary"
                     />
                     <button
                         string="Disconnect"

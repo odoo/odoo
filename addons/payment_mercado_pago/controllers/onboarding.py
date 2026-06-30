@@ -30,6 +30,7 @@ class MercadoPagoOnboardingController(Controller):
 
         # Retrieve the Mercado Pago data and Odoo metadata from the redirect data.
         provider_id = int(data["provider_id"])
+        test_mode = data.get("test_mode") == "1"  # The connection mode chosen before connecting.
         authorization_code = data.get("authorization_code")
         csrf_token = data.get("csrf_token")  # Could be missing if authorization was cancelled.
         provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
@@ -55,7 +56,9 @@ class MercadoPagoOnboardingController(Controller):
             "account_country_code": provider_sudo.mercado_pago_account_country_id.code.lower(),
         }
         try:
-            response_content = provider_sudo._send_api_request(
+            response_content = provider_sudo.with_context(
+                mercado_pago_test_mode=test_mode
+            )._send_api_request(
                 "POST", "2/get_access_token", json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
@@ -76,9 +79,10 @@ class MercadoPagoOnboardingController(Controller):
             "mercado_pago_refresh_token": response_content["refresh_token"],
             "mercado_pago_access_token_expiry": expires_in,
             "mercado_pago_public_key": response_content["public_key"],
-            # Set the provider live
-            "is_live": True,
-            "is_published": True,
+            # Set the connected mode atomically with the credentials. Test accounts stay unpublished
+            # (internal users can still test them); live accounts are published to customers.
+            "is_live": not test_mode,
+            "is_published": not test_mode,
             "allow_tokenization": True,
         })
         # Set the currency to the one compatible with the seller account.

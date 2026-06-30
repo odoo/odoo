@@ -88,9 +88,12 @@ class PaymentProvider(models.Model):
                     )
                 )
 
-    @api.constrains("is_live", "mercado_pago_access_token")
+    @api.constrains("is_live")
     def _check_mercado_pago_credentials_are_set_if_live(self):
         """Check that the Mercado Pago credentials are valid when the provider is set in live mode.
+
+        Keyed on `is_live` only (like other providers) so that resetting the credentials while live
+        -- e.g. on disconnect -- does not trip the constraint; only switching the mode does.
 
         :raise ValidationError: If the Mercado Pago credentials are not set.
         """
@@ -116,6 +119,27 @@ class PaymentProvider(models.Model):
             raise ValidationError(self.env._("Connect your account before enabling tokenization."))
 
     # === CRUD METHODS === #
+
+    def write(self, vals):
+        """Override of `payment` to reset the credentials when the connection mode changes.
+
+        Test and live use distinct Mercado Pago accounts, so the stored credentials must not outlive
+        a change of `is_live`; otherwise the provider would appear to be in one environment while
+        still holding the other's keys. The OAuth callback is exempt, as it supplies the new
+        account's credentials within the same write.
+        """
+        if "is_live" in vals and "mercado_pago_access_token" not in vals:
+            to_reset = self.filtered(
+                lambda p: (
+                    p.code == "mercado_pago"
+                    and p.is_live != vals["is_live"]
+                    and p.mercado_pago_access_token
+                )
+            )
+            if to_reset:
+                super(PaymentProvider, to_reset).write({**vals, **to_reset[:1]._get_reset_values()})
+                return super(PaymentProvider, self - to_reset).write(vals)
+        return super().write(vals)
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
@@ -156,9 +180,17 @@ class PaymentProvider(models.Model):
                 self.env._("Set the account country before connecting the account.")
             )
 
+        # The connection mode is chosen at connect time (via the `mercado_pago_test_mode` context
+        # set by the form buttons) and carried through the OAuth round-trip so that the callback can
+        # set `is_live` accordingly. Test and live use distinct accounts on distinct proxies.
+        test_mode = bool(self.env.context.get("mercado_pago_test_mode"))
         # Encode the return URL parameters here rather than passing them in the 'state' parameter
         # from IAP, because Mercado Pago doesn't JSON dumps in that parameter.
-        return_url_params = {"provider_id": self.id, "csrf_token": request.csrf_token()}
+        return_url_params = {
+            "provider_id": self.id,
+            "csrf_token": request.csrf_token(),
+            "test_mode": int(test_mode),
+        }
         return_url = urljoin(self.get_base_url(), const.OAUTH_RETURN_ROUTE)
         proxy_url_params = {
             "return_url": f"{return_url}?{urlencode(return_url_params)}",
@@ -248,7 +280,11 @@ class PaymentProvider(models.Model):
             return super()._build_request_url(endpoint, is_proxy_request=is_proxy_request, **kwargs)
 
         if is_proxy_request:
-            return urljoin(const.PROXY_URL, endpoint)
+            # During onboarding the mode lives in the context (set by the form buttons); afterwards
+            # `is_live` reflects the connected account, so fall back to routing the proxy by it.
+            test_mode = self.env.context.get("mercado_pago_test_mode", not self.is_live)
+            base_url = const.SANDBOX_PROXY_URL if test_mode else const.PROXY_URL
+            return urljoin(base_url, endpoint)
 
         return urljoin("https://api.mercadopago.com", endpoint)
 
