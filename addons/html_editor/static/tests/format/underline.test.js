@@ -385,3 +385,11 @@ test("should not add history commit for underline on collapsed selection", async
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });
+
+test("should remove underline on list item with heading", async () => {
+    await testEditor({
+        contentBefore: "<ul><li><h1><u>[test]</u></h1></li></ul>",
+        stepFunction: underline,
+        contentAfter: "<ul><li><h1>[test]</h1></li></ul>",
+    });
+});
