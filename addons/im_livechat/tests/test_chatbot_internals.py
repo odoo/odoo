@@ -318,7 +318,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "res.partner": self._filter_partners_fields(
                             {
                                 "agent_ids": [],
-                                "email": "e.e@example.com",
+                                "email_normalized": "e.e@example.com",
                                 "id": self.partner_employee.id,
                                 "tz": False,
                                 "user_ids": self.user_employee.ids,

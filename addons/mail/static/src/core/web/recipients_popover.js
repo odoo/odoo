@@ -32,7 +32,7 @@ export class RecipientsPopover extends Component {
     }
 
     get email() {
-        return this.partner.email_normalized || this.partner.email;
+        return this.partner.displayEmail;
     }
 
     get fieldNames() {

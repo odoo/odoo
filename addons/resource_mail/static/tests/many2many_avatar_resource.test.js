@@ -120,7 +120,7 @@ test("many2many_avatar_resource widget in form view", async () => {
         { count: 1 },
         "Only one popover resource card should be opened at a time"
     );
-    await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
@@ -189,7 +189,7 @@ test("many2many_avatar_resource widget in list view", async () => {
         { count: 1 },
         "Only one popover resource card should be opened at a time"
     );
-    await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
@@ -303,7 +303,7 @@ test("many2many_avatar_resource widget in kanban view", async () => {
         { count: 1 },
         "Only one popover resource card should be opened at a time"
     );
-    await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");

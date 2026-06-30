@@ -1738,12 +1738,12 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     ),
                                 },
                                 {
-                                    "email": self.user_emp_inbox.partner_id.email,
+                                    "email_normalized": self.user_emp_inbox.partner_id.email_normalized,
                                     "id": self.user_emp_inbox.partner_id.id,
                                     "name": "Ignasse Inbox",
                                 },
                                 {
-                                    "email": self.user_follower_emp_inbox.partner_id.email,
+                                    "email_normalized": self.user_follower_emp_inbox.partner_id.email_normalized,
                                     "id": self.user_follower_emp_inbox.partner_id.id,
                                     "name": "Isabelle Follower Inbox",
                                 },
@@ -1857,12 +1857,12 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     ),
                                 },
                                 {
-                                    "email": self.user_emp_inbox.partner_id.email,
+                                    "email_normalized": self.user_emp_inbox.partner_id.email_normalized,
                                     "id": self.user_emp_inbox.partner_id.id,
                                     "name": "Ignasse Inbox",
                                 },
                                 {
-                                    "email": self.user_follower_emp_inbox.partner_id.email,
+                                    "email_normalized": self.user_follower_emp_inbox.partner_id.email_normalized,
                                     "id": self.user_follower_emp_inbox.partner_id.id,
                                     "name": "Isabelle Follower Inbox",
                                 },

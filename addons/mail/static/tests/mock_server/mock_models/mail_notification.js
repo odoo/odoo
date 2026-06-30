@@ -32,7 +32,8 @@ export class MailNotification extends models.ServerModel {
         res.extend(["failure_type", "mail_message_id"]);
         res.extend(["notification_status", "notification_type"]);
         res.one("res_partner_id", (r) => {
-            r.extend(["name", "email"]);
+            r.extend(["name", "email_normalized"]);
+            r.attr("email", undefined, { predicate: (p) => !p.email_normalized });
             r.attr("display_name", undefined, { predicate: (p) => !p.name });
         });
         if (res.is_for_internal_users()) {
