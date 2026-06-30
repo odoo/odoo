@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1\n"
+"Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"PO-Revision-Date: 2026-06-30 00:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -3604,6 +3604,12 @@ msgid "Bad Debts"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_document_tax_mode_selector/account_document_tax_mode_selector.js:0
+msgid "Badges"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
 msgid "Balance"
 msgstr ""
@@ -4293,14 +4299,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Invoice"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid ""
-"Cannot change Price Tax computation method on a company that has already "
-"started invoicing."
 msgstr ""
 
 #. module: account
@@ -6990,6 +6988,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_extract
 msgid "Document Digitization"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__document_tax_mode
+#: model:ir.model.fields,field_description:account.field_account_move__document_tax_mode
+#: model:ir.model.fields,field_description:account.field_account_move_line__document_tax_mode
+msgid "Document Tax Mode"
 msgstr ""
 
 #. module: account
@@ -16358,6 +16363,11 @@ msgid "Tax Distribution"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_excluded
+msgid "Tax Excl."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_excluded
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -16404,6 +16414,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
+msgid "Tax Incl."
 msgstr ""
 
 #. module: account
@@ -17210,6 +17225,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The document tax mode must be set."
 msgstr ""
 
 #. module: account
@@ -18159,11 +18180,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting locks once a journal entry is created."
 msgstr ""
 
 #. module: account
