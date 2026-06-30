@@ -964,12 +964,15 @@ class AccountMove(models.Model):
         unposted = self.filtered(lambda move: move.sequence_number != 0 and move.state != 'posted')
         unposted.made_sequence_gap = True
         for (journal, prefix), moves in (self - unposted).grouped(lambda m: (m.journal_id, m.sequence_prefix)).items():
-            previous_numbers = set(self.env['account.move'].sudo().search([
-                ('journal_id', '=', journal.id),
-                ('sequence_prefix', '=', prefix),
-                ('sequence_number', '>=', min(moves.mapped('sequence_number')) - 1),
-                ('sequence_number', '<=', max(moves.mapped('sequence_number')) - 1),
-            ]).mapped('sequence_number'))
+            expected_previous_numbers = [n - 1 for n in moves.mapped('sequence_number') if n > 1]
+            previous_numbers = set(self.env['account.move'].sudo().search_fetch(
+                domain=[
+                    ('journal_id', '=', journal.id),
+                    ('sequence_prefix', '=', prefix),
+                    ('sequence_number', 'in', expected_previous_numbers),
+                ],
+                field_names=['sequence_number'],
+            ).mapped('sequence_number'))
             for move in moves:
                 move.made_sequence_gap = move.sequence_number > 1 and (move.sequence_number - 1) not in previous_numbers
 
