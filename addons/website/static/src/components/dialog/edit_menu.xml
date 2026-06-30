@@ -44,8 +44,11 @@
                 <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>
             </span>
             <div class="input-group-text bg-view p-0 ms-0 border-start-0">
-                <button type="button" t-if="props.menu.page_not_found and !props.menu.children.length" t-on-click="createPage"
-                    class="btn btn-sm btn-outline-primary me-1">Create Page</button>
+                <t t-if="props.menu.page_not_found and !props.menu.children.length" t-call="website.CreatePageButton">
+                    <t t-set="props" t-value="{
+                        onClick: createPage,
+                        classes: 'btn btn-sm btn-outline-primary me-1',}"/>
+                </t>
                 <button t-on-click="edit" type="button"
                     class="btn js_edit_menu fa fa-pencil text-muted px-2 rounded-0 h-100"
                     aria-label="Edit Menu Item" title="Edit Menu Item"/>
