@@ -214,15 +214,7 @@ class ResConfigSettings(models.TransientModel):
         self.website_language_count = len(language_ids)
 
     def action_website_create_new(self):
-        return {
-            'name': _('Add Website'),
-            'view_mode': 'form',
-            'view_id': self.env.ref('website.view_website_form_view_themes_modal').id,
-            'res_model': 'website',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_id': False,
-        }
+        return self.env["ir.actions.actions"]._for_xml_id("website.action_website_create_new")
 
     def action_open_robots(self):
         self.website_id._force()

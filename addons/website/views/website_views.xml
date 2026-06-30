@@ -64,6 +64,14 @@
             </field>
         </record>
 
+        <record id="action_website_create_new" model="ir.actions.act_window">
+            <field name="name">Add Website</field>
+            <field name="res_model">website</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_website_form_view_themes_modal"/>
+            <field name="target">new</field>
+        </record>
+
         <record id="view_website_tree" model="ir.ui.view">
             <field name="name">website.list</field>
             <field name="model">website</field>

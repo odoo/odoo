@@ -140,6 +140,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
             order_sudo, access_token, values, history_session_key, False, **kwargs
         )
 
+    def _get_portal_order_page_redirect(self, order_sudo):
+        return None
+
     @http.route(["/my/orders/<int:order_id>"], type="http", auth="public", website=True)
     def portal_order_page(
         self,
@@ -158,6 +161,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
             )
         except (AccessError, MissingError):
             return request.redirect("/my")
+
+        if redirect := self._get_portal_order_page_redirect(order_sudo):
+            return redirect
 
         payment_amount = self._cast_as_float(payment_amount)
         prepayment_amount = order_sudo._get_prepayment_required_amount()

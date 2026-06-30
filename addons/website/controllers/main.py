@@ -239,8 +239,13 @@ class Website(Home):
         return request.redirect(path)
 
     @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", readonly=True)
-    def get_current_website(self):
-        return self.env.context.get('host_id')
+    def get_current_website(self, context=None):
+        """Return the host website or the active company's default website."""
+        # We need to do that in order to have the correct company_id, with orm.call it's fine, not with rpc
+        # They don't pass the same context it seems, so we have to pass it explictly
+        company = self.env(context=dict(self.env.context, **context)).company
+        host_id = self.env.context.get('host_id')
+        return host_id if host_id in company.website_id.ids else company.website_id.id
 
     @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
     def client_action_redirect(self, path='', **kw):
