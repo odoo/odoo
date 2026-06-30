@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenu">
+    <t t-if="!this.navigationAtBottom" t-call="mail.MessagingMenu-navigation"/>
+    <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1 overflow-hidden min-h-0 o-min-width-0 w-100">
+        <div class="o-mail-MessagingMenu-searchContainer d-flex align-items-center gap-1 p-2">
+            <button t-foreach="this.state().activeTab.actions" t-as="action" t-key="action.id" class="btn btn-sm btn-primary flex-shrink-0" t-att-disabled="action.isDisabled?.()" t-on-click="() => this.onClickAction(action)"  t-att-title="action.title">
+                <span t-if="action.icon" t-att-class="{'me-1': action.text}">
+                    <i t-if="typeof action.icon === 'string'" t-attf-class="{{action.icon}}"/>
+                    <t t-else="" t-call="{{ action.icon.template }}"/>
+                </span>
+                <t t-out="action.text"/>
+            </button>
+            <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1'" searchTerm="this.searchTerm" setSearchTerm="(v) => this.searchTerm.set(v)"/>
+            <button
+                t-foreach="this.state().activeTab.filters"
+                t-as="filter"
+                t-key="filter.id"
+                class="btn btn-sm btn-secondary flex-shrink-0"
+                t-att-class="{ active: this.state().selectedFilter?.id === filter.id }"
+                t-att-aria-pressed="this.state().selectedFilter?.id === filter.id"
+                t-on-click="() => this.state().selectedFilter = this.state().selectedFilter?.id === filter.id ? undefined : filter"
+                t-out="filter.text"
+            />
+        </div>
+        <div t-custom-ref="tabContent" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1">
+            <t name="messagingMenuExtraItems"/>
+            <MessagingMenuItem
+                t-foreach="this.messages()" t-as="message" t-key="'msg_' + message.id"
+                message="message"
+                activeTab="this.state().activeTab"
+                onClick="() => this.onClickMessage(message)"
+            />
+            <t t-if="this.isEmpty">
+                <MessagingMenuEmpty t-if="this.noSearchResultText" title="this.noSearchResultText"/>
+                <t t-elif="this.state().activeTab.getLoadStatus(this.state().selectedFilter) === 'loaded' and this.state().activeTab.emptyState">
+                    <t t-set="emptyState" t-value="this.state().activeTab.emptyState"/>
+                    <t t-if="emptyState.component" t-component="emptyState.component" tab="this.state().activeTab" title="emptyState.title" subtitle="emptyState.subtitle"/>
+                    <MessagingMenuEmpty t-else="" title="emptyState.title" subtitle="emptyState.subtitle" action="emptyState.action"/>
+                </t>
+            </t>
+        </div>
+    </div>
+    <t t-if="this.navigationAtBottom" t-call="mail.MessagingMenu-navigation"/>
+</t>
+
+<t t-name="mail.MessagingMenu-navigation">
+    <nav t-att-class="{'o-mobile': this.ui.isSmall, 'border-top': this.navigationAtBottom}" t-attf-class="o-mail-MessagingMenu-navbar overflow-y-auto d-flex flex-shrink-0 w-100 p-1 gap-1 o-scrollbar-thin o-mail-MessagingMenu-navbar-with-{{this.store.messagingMenu.visibleTabs.length}}-elements" t-on-wheel.stop="(ev) => this.onNavbarWheel(ev)">
+        <button
+            t-foreach="this.store.messagingMenu.visibleTabs" t-key="tab.id" t-as="tab"
+            class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-shrink-1 p-1 bg-transparent position-relative border-0"
+            t-att-class="{
+                'active': this.state().activeTab.eq(tab),
+                'pb-4': this.isIosPwa,
+                'pb-2': !this.isIosPwa,
+            }"
+            t-on-click="() => this.state().selectTab(tab)"
+            t-att-aria-label="tab.label"
+            t-att-data-id="tab.id"
+        >
+            <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ this.state().activeTab.eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5"/>
+            <span class="o-xsmaller text-nowrap" t-out="tab.label"/>
+            <span t-if="tab.counter" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-count' }}" t-out="tab.counter"/>
+        </button>
+    </nav>
+</t>
+
+</templates>

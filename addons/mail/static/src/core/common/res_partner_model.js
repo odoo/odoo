@@ -69,18 +69,11 @@ export class ResPartner extends Record {
         });
     }
 
-    /**
-     * ⚠️ This is intentionally a getter and not a field!
-     *
-     * `store.menuThreads` uses this field to filter threads based on search
-     * terms. For each computation, the `menuThread` field is marked as needing a
-     * recompute, which can lead to excessive recursion—sometimes even exceeding the
-     * call stack size. This computation is simple enough that it doesn’t need a
-     * compute and has been replaced by a getter.
-     */
-    get displayName() {
-        return this.name || this.display_name;
-    }
+    displayName = fields.Attr(undefined, {
+        compute() {
+            return this.name || this.display_name;
+        },
+    });
 
     searchChat() {
         return Object.values(this.store["discuss.channel"].records).find(

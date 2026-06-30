@@ -60,7 +60,7 @@ registerThreadAction("search-messages", {
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     condition: ({ owner, thread }) =>
-        ["discuss.channel", "mail.box"].includes(thread?.model) &&
+        thread?.model === "discuss.channel" &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     hotkey: "f",

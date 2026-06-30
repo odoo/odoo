@@ -156,7 +156,10 @@ export class Dropdown extends Component {
         if (this.isBottomSheet) {
             Object.assign(options, {
                 useBottomSheet: true,
-                class: mergeClasses("o-dropdown--menu dropdown-menu show", this.props.menuClass),
+                class: mergeClasses(
+                    "o-dropdown--menu dropdown-menu show position-static",
+                    this.props.menuClass
+                ),
             });
         }
         this.popover = usePopover(DropdownPopover, options);

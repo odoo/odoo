@@ -15,16 +15,17 @@ declare module "models" {
     }
     export interface Store {
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
-        activities_to_assign_count: number;
+        activities_to_assign_count: undefined;
         activity_counter_bus_id: number;
         activityCounter: number;
         activityGroups: Object[];
-        computeGlobalCounter: () => number;
-        globalCounter: number;
+        markNeedactionMessagesAsRead: () => Promise<void>;
+        messagingMenuSystrayState: MessagingMenuState;
         onLinkFollowed: (fromThread: Thread) => void;
         onUpdateActivityGroups: () => void;
         removeAllBookmarks: () => Promise<void>;
         scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
+        showPushPermissionRequest: boolean;
         updateAppBadge: () => void;
     }
     export interface Thread {

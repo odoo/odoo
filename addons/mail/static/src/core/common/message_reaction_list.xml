@@ -8,20 +8,20 @@
             </t>
         </Dropdown>
     </t>
-    
+
     <t t-name="mail.MessageReactionList.button">
         <button class="position-relative o-mail-MessageReaction btn d-flex p-0 bg-view border o-rounded-bubble mb-1 fs-5 px-1 gap-1 align-items-center" t-on-click="() => this.onClickReaction(this.props.reaction)" t-on-contextmenu="this.onContextMenu" t-on-mouseenter="this.loadEmoji" t-custom-ref="reactionButton" t-att-class="{
             'o-selfReacted border-primary text-primary fw-bold': this.hasSelfReacted(this.props.reaction),
             'border-secondary': !this.hasSelfReacted(this.props.reaction),
             'ms-1': this.env.inChatWindow and this.env.alignedRight,
             'me-1': !(this.env.inChatWindow and this.env.alignedRight),
-            'cursor-default': !this.props.message.canAddReaction(),
+            'cursor-default': !this.props.message.canAddReaction,
         }">
             <span t-out="this.props.reaction.content"/>
             <span class="small" t-out="this.props.reaction.count"/>
         </button>
     </t>
-    
+
     <t t-name="mail.MessageReactionList.preview">
         <div class="o-mail-MessageReactionList-preview px-0 py-1 cursor-pointer d-flex" t-on-click="(ev) => this.onClickReactionList(this.props.reaction)" t-custom-ref="reactionList">
             <div class="d-flex align-items-center mx-2 gap-2">
@@ -30,5 +30,5 @@
             </div>
         </div>
     </t>
-    
+
 </template>

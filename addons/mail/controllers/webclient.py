@@ -60,15 +60,6 @@ class WebclientController(ThreadController):
                 as_thread=True,
             )
 
-    @store_handler("init_messaging", audience="everyone")
-    def store_init_messaging(self, store: Store):
-        if request.env.user._is_internal():
-            # sudo: bus.bus: reading non-sensitive last id
-            bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-            store.add_global_values(
-                lambda res: self._store_init_messaging_global_fields(res, bus_last_id),
-            )
-
     @store_handler("res.partner", audience="everyone")
     def store_get_res_partner(self, store: Store, id):
         partner = request.env["res.partner"].search_fetch([("id", "=", id)])
@@ -192,20 +183,6 @@ class WebclientController(ThreadController):
         }
         record = request.env[model].with_context(**context).search([("id", "=", id)])
         store.add(record, "_store_avatar_card_fields")
-
-    @classmethod
-    def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
-        user = request.env.user.sudo(False)
-        res.attr(
-            "inbox",
-            {
-                "counter": user.partner_id._get_needaction_count(),
-                "counter_bus_id": bus_last_id,
-                "id": "inbox",
-                "model": "mail.box",
-            },
-        )
-        user._store_bookmark_box_global_fields(res, bus_last_id)
 
     @classmethod
     def _get_supported_avatar_card_models(self):

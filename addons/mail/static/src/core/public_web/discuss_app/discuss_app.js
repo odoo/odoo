@@ -1,19 +1,19 @@
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
-import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 
-import { Component, props, t, useListener, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, t, useListener } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
-import { useService } from "@web/core/utils/hooks";
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
-import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { useService } from "@web/core/utils/hooks";
 
 export class Discuss extends Component {
     static components = {
         DiscussContent,
-        DiscussSidebar,
         MessagingMenu,
+        ResizablePanel,
     };
     static template = "mail.Discuss";
 

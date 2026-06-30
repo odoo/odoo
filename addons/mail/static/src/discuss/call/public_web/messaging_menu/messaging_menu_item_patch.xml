@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
+    <xpath expr="//t[@t-set-slot='footer']" position="inside">
+        <div t-if="this.channel()?.hasRtcSessionActive" class="o-mail-MessagingMenuItem-callParticipants d-flex align-items-center ms-n1">
+            <i class="o-mail-MessagingMenuItem-callIndicator o-discuss-inCallIconColor fa fa-lg fa-volume-control-phone fa-fw flex-shrink-0" t-att-class="{
+                'opacity-50': this.channel().notEq(this.store.rtc?.channel),
+                'opacity-75': this.channel().eq(this.store.rtc?.channel),
+            }"/>
+            <AvatarStack personas="this.callParticipants()" size="26" max="7"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>

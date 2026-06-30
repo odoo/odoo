@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenuItem">
+    <t t-set="itemProps" t-value="this.notificationItemProps"/>
+    <div class="o-mail-MessagingMenuItem" t-ref="this.root">
+        <NotificationItem t-if="itemProps" t-props="itemProps">
+            <t t-set-slot="name">
+                <t name="itemNameBefore"/>
+                <t name="itemName"><Priority t-if="this.message()?.thread?.priority" thread="this.message()?.thread"/><span t-att-class="{'ms-1': this.message()?.thread?.priority}" t-out="this.itemName"/></t>
+            </t>
+            <t t-set-slot="name-after"/>
+            <t t-set-slot="body"><span class="o-mail-MessagingMenuItem-body" t-out="this.itemPreviewText"/></t>
+            <t t-set-slot="icon"/>
+            <t t-set-slot="counterSideContent">
+                <div t-if="this.showActions" class="o-mail-MessagingMenu-actions h-100 w-100 z-1 position-absolute bottom-0 end-0 d-none">
+                    <Dropdown t-if="this.message()"
+                        position="'right-start'"
+                        menuClass="'.o-mail-DropdownMenu o-discuss-dropdownMenu border-secondary my-0 mx-1 px-1 ' + this.store.discussDropdownMenuClass(this)"
+                        state="this.messageDropdownState"
+                        manual="true"
+                        noClasses="true"
+                    >
+                        <button
+                            class="btn btn-light rounded-circle d-flex h-100 w-100 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border"
+                            t-att-class="{ 'd-none': this.isMobileOS() }"
+                            title="Message Actions"
+                            t-on-click.stop="() => this.messageDropdownState.isOpen ? this.messageDropdownState.close() : this.messageDropdownState.open()"
+                        >
+                            <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-set="partitionedActions" t-value="this.filteredMessageActionPartition"/>
+                            <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group]" dropdown="true"/>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+            <t t-set-slot="footer"/>
+        </NotificationItem>
+    </div>
+</t>
+</templates>

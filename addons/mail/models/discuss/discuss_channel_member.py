@@ -45,6 +45,10 @@ class DiscussChannelMember(models.Model):
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
+    is_unread = fields.Boolean(
+        "Has unread messages",
+        compute="_compute_is_unread", compute_sql="_compute_sql_is_unread", compute_sudo=True,
+    )
     custom_notifications = fields.Selection(
         [("all", "All Messages"), ("mentions", "Mentions Only"), ("no_notif", "Nothing")],
         "Customized Notifications",
@@ -186,6 +190,26 @@ class DiscussChannelMember(models.Model):
                 member.message_unread_counter = unread_counter_by_member.get(member.id)
         else:
             self.message_unread_counter = 0
+
+    @api.depends("message_unread_counter")
+    def _compute_is_unread(self):
+        for member in self:
+            member.is_unread = member.message_unread_counter > 0
+
+    def _compute_sql_is_unread(self, table):
+        return SQL("""
+            EXISTS (
+                SELECT 1
+                  FROM mail_message
+                 WHERE mail_message.model = 'discuss.channel'
+                   AND mail_message.res_id = %(channel_id)s
+                   AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                   AND mail_message.id >= %(separator)s
+            )
+            """,
+            channel_id=table.channel_id,
+            separator=table.new_message_separator,
+        )
 
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self):

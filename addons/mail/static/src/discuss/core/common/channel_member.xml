@@ -19,7 +19,7 @@
                 'd-flex': this.showingActions.isOpen or this.store.useMobileView,
             }">
                 <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this)">
-                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
+                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
                         <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                     </button>
                     <t t-set-slot="content">

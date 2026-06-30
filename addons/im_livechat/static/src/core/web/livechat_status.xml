@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.LivechatStatusLabel">
+        <t t-set="btn" t-value="templateParams.btn"/>
+        <t t-set="inThreadActions" t-value="templateParams.inThreadActions"/>
+        <span class="o-livechat-LivechatStatusLabel fa" t-att-title="btn.label" t-att-class="{
+            'text-success': btn.status === 'in_progress',
+            'o-help': btn.status === 'need_help',
+        }">
+            <i
+                 t-if="btn.icon"
+                 class="o-livechat-LivechatStatusLabel-icon"
+                 t-attf-class="{{ btn.icon }}"
+            />
+        </span>
+    </t>
+
+    <t t-name="im_livechat.LivechatStatusLabelOfThread">
+        <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
+        <t t-set="small" t-value="templateParams.small"/>
+        <span t-if="livechatThread.channel.channel_type === 'livechat' and (livechatThread.channel.livechat_status === 'need_help' or livechatThread.channel.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.channel.livechatStatusLabel" t-att-class="{
+            'position-absolute top-0 start-0': this.env.inChatBubble or this.env.inNotificationItem,
+            'd-flex z-1 bg-opacity-100': this.env.inChatBubble or this.env.inNotificationItem,
+            'mx-n1': this.env.inChatBubble,
+            'mx-n2 my-n1': this.env.inNotificationItem,
+            'o-help': livechatThread.channel.livechat_status === 'need_help',
+        }">
+            <t t-set="livechatStatusButton" t-value="this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>
+            <i class="o-livechat-LivechatStatusLabel-icon fa-fw" t-attf-class="{{ livechatThread.channel.livechat_end_dt ? ('fa fa-flag-checkered' + (small ? ' o-xsmaller' : '')) : small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon }}" t-att-class="{
+                'o-white': livechatThread.channel.livechat_end_dt,
+            }"/>
+        </span>
+    </t>
+
+    <t t-name="im_livechat.LivechatStatusSelection">
+    <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
+        <div class="o-livechat-LivechatStatusSelection list-group" t-custom-ref="livechat-status-selection">
+            <t t-foreach="this.store.livechatStatusButtons" t-as="btn" t-key="btn.status">
+                <t t-set="isBtnActive" t-value="livechatThread.channel.livechat_status === btn.status"/>
+                <button
+                    class="list-group-item list-group-item-action d-flex align-items-center gap-2"
+                    t-att-class="{
+                        'active': isBtnActive,
+                        'o-inProgress': btn.status === 'in_progress',
+                        'bg-view': isBtnActive and btn.status === 'in_progress',
+                        'o-need-help': isBtnActive and btn.status === 'need_help',
+                    }"
+                    t-att-disabled="!this.store.has_access_livechat"
+                    t-on-click="() => livechatThread.channel.updateLivechatStatus(btn.status)"
+                >
+                    <input
+                            type="radio"
+                            t-att-checked="isBtnActive"
+                            class="form-check-input m-0"
+                    />
+                    <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-out="btn.label"/>
+                    <t t-call="im_livechat.LivechatStatusLabel" templateParams="{ btn }"/>
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

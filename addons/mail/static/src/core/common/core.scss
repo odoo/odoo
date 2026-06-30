@@ -1,6 +1,6 @@
 $o-discuss-talkingColor: lighten($success, 10%);
 
-.o-mail-discussSidebarBgColor {
+.o-mail-DiscussApp-sidebarBgColor {
     background-color: $white !important;
 }
 
@@ -115,6 +115,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-min-height-0 {
     min-height: 0;
+}
+
+.o-min-width-0 {
+    min-width: 0;
 }
 
 .o-opacity-35 {
@@ -350,6 +354,10 @@ a.o-discuss-mention {
 }
 
 .o-discuss-inCallIconColor {
+    color: $o-action;
+}
+
+.o-discuss-inCallIcon {
     @include o-mail-call-bordered(.35);
     color: $o-action;
 
@@ -391,4 +399,23 @@ a.o-discuss-mention {
 .o-mail-favorite {
     color: $o-main-favorite-color;
     filter: drop-shadow(1px 1px 0px #000000b0);
+}
+
+.o-mail-avatarContainer {
+    height: 32px;
+    aspect-ratio: 1;
+    margin-top: map-get($spacers, 1) / 2;
+    margin-bottom: map-get($spacers, 1) / 2;
+
+    &.o-small {
+        height: 52px;
+    }
+}
+
+.o-mail-DropdownMenu {
+    max-width: 250px !important;
+
+    .o_bottom_sheet & {
+        max-width: none !important;
+    }
 }

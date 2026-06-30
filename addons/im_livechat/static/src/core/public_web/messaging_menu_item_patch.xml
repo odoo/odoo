@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='name']" position="inside">
+            <span t-if="this.channel()?.livechat_lang_id" class="fw-normal small text-uppercase text-muted ms-1" t-out="this.channel().livechat_lang_id.baseCode" t-att-title="this.channel().livechat_lang_id.name"/>
+            <span t-if="this.channel()?.livechat_status === 'need_help'" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller ms-1" t-out="this.helpState.text"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-MessagingMenuItem-body')]" position="replace">
+            <span t-if="this.channel()?.livechat_status === 'need_help' and this.channel()?.description" t-att-title="this.channel().description" t-out="this.channel().description"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

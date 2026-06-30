@@ -9,25 +9,6 @@ import { registry } from "@web/core/registry";
 export const threadCompareRegistry = registry.category("mail.thread_compare");
 
 threadCompareRegistry.add(
-    "mail.needaction",
-    /**
-     * @param {import("models").Thread thread1}
-     * @param {import("models").Thread thread2}
-     */
-    (thread1, thread2) => {
-        const aNeedaction = thread1.needactionMessages.length;
-        const bNeedaction = thread2.needactionMessages.length;
-        if (aNeedaction > 0 && bNeedaction === 0) {
-            return -1;
-        }
-        if (bNeedaction > 0 && aNeedaction === 0) {
-            return 1;
-        }
-    },
-    { sequence: 10 }
-);
-
-threadCompareRegistry.add(
     "mail.message-datetime",
     /**
      * @param {import("models").Thread thread1}

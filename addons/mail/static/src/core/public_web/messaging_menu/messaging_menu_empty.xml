@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenuEmpty">
+    <div class="o-mail-MessagingMenuEmpty d-flex flex-column align-items-center justify-content-center py-4 px-3 text-center">
+        <span class="fw-bold" t-out="this.props.title"/>
+        <span t-if="this.props.subtitle" class="text-muted small" t-out="this.props.subtitle"/>
+        <button t-if="this.props.action" class="btn btn-primary btn-sm mt-1" t-on-click="() => this.props.action.onClick()" t-out="this.props.action.text"/>
+        <t t-call-slot="default"/>
+    </div>
+</t>
+
+</templates>

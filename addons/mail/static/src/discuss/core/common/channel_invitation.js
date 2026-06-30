@@ -14,7 +14,7 @@ import { useDebounced } from "@web/core/utils/timing";
  * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
  *
  * @param {import("@web/env").OdooEnv} env environment providing the dialog service.
- * @param {import("models").DiscussChannel} channel channel to invite people to.
+ * @param {import("models").DiscussChannel} [channel] channel to invite people to.
  * @returns {void}
  */
 export function openChannelInvitationDialog(env, channel) {
@@ -25,7 +25,7 @@ export function openChannelInvitationDialog(env, channel) {
             channel,
             close: () => env.services.dialog.closeAll(),
         },
-        title: channel.displayName,
+        title: channel?.displayName ?? _t("New Chat"),
     });
 }
 
@@ -225,6 +225,12 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickInvite() {
+        if (!this.props.channel) {
+            const partnerIds = this.selectedPartners.map((partner) => partner.id);
+            await this.store.startChat(partnerIds);
+            this.props.close?.();
+            return;
+        }
         let channelId = this.props.channel.id;
         const invitePromises = [];
         if (this.props.channel?.channel_type === "chat") {
@@ -272,7 +278,7 @@ export class ChannelInvitation extends Component {
 
     get invitationButtonText() {
         if (!this.props.channel) {
-            return "";
+            return _t("Create Chat");
         }
         if (this.props.channel.default_display_mode === "video_full_screen") {
             return _t("Invite to Meeting");

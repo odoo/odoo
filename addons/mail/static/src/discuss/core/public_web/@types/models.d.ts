@@ -1,29 +1,35 @@
 declare module "models" {
-    export interface DiscussCategory {
-        appCategory: DiscussAppCategory;
-    }
     export interface DiscussChannel {
-        _computeDiscussAppCategory: () => unknown;
-        _computeIsDisplayInSidebar: () => boolean;
-        appAsUnreadChannels: DiscussApp;
+        _computeMessagingMenuTabsWithCounter: () => unknown[];
         autoOpenChatWindowOnNewMessage: Readonly<boolean>;
-        categoryAsChannelWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
-        discussAppCategory: DiscussAppCategory;
         hasSubChannelFeature: Readonly<boolean>;
         inChathubOnNewMessage: Readonly<boolean>;
-        isDisplayInSidebar: boolean;
         isLocallyPinned: boolean;
         lastSubChannelLoaded: DiscussChannel;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
         loadSubChannelsDone: boolean;
+        messagingMenuTabs: MessagingMenuTab[];
+        messagingMenuTabsWithCounter: MessagingMenuTab[];
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
-        subChannelsInSidebar: DiscussChannel[];
+        primaryMessagingMenuTab: MessagingMenuTab;
+    }
+    export interface MessagingMenu {
+        channelTab: MessagingMenuTab;
+        chatTab: MessagingMenuTab;
+        meetingTab: MessagingMenuTab;
+    }
+    export interface MessagingMenuTab {
+        channels: DiscussChannel[];
+        channelsWithCounter: DiscussChannel[];
+        matchesChannel: () => boolean;
     }
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;
+        fetchMostPopularChannelsFetcher: ReturnType<Store['makeCachedFetchData']>;
         fetchSsearchConversationsSequential: () => Promise<any>;
+        most_popular_channels: DiscussChannel[];
         searchConversations: (searchValue: string) => Promise<void>;
     }
 }

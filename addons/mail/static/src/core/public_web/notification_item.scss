@@ -2,27 +2,13 @@
     --list-group-bg: transparent;
     outline: 1px solid transparent;
     outline-offset: -1px;
+    --border-opacity: .35;
 
     &:not(.o-interest) {
-        --border-opacity: .35;
         opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
     }
-    &.o-active {
-        outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
-    }
     &:hover, &.o-active {
-        backdrop-filter: contrast(.9);
-    }
-}
-
-.o-mail-NotificationItem-avatarContainer {
-    height: 32px;
-    aspect-ratio: 1;
-    margin-top: map-get($spacers, 1) / 2;
-    margin-bottom: map-get($spacers, 1) / 2;
-
-    &.o-small {
-        height: 52px;
+        backdrop-filter: contrast(.7);
     }
 }
 

@@ -3,22 +3,16 @@
 
 <t t-name="mail.Discuss">
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': this.ui.isSmall, 'border-top border-dark o-border-opacity-15': !this.ui.isSmall }" t-att-data-active="this.store.discuss.isActive" t-custom-ref="root">
-        <DiscussSidebar t-if="!this.ui.isSmall and this.props.hasSidebar"/>
+        <ResizablePanel t-if="!this.ui.isSmall and this.props.hasSidebar" class="'o-mail-DiscussApp-sidebar d-flex flex-column h-100 border-end border-dark o-border-opacity-15 z-1 o-mail-DiscussApp-sidebarBgColor d-print-none'" handleSide="'end'" initialWidth="this.store.discuss.sidebarWidth ?? this.store.discuss.SIDEBAR_WIDTH" minWidth="300" onResize="(width) => this.store.discuss.sidebarWidth = width">
+            <MessagingMenu t-if="this.store.discuss.hasRestoredThread" state="this.store.discuss.messagingMenuSidebarState"/>
+        </ResizablePanel>
         <DiscussContent t-if="!this.ui.isSmall" thread="this.props.thread"/>
-        <MessagingMenu t-if="this.ui.isSmall"/>
+        <MessagingMenuDropdown t-if="this.ui.isSmall"/>
     </div>
 </t>
 
-<t t-name="mail.MobileMailbox">
-    <button class="btn btn-secondary flex-grow-1 p-2"
-        t-att-class="{
-            'active o-active shadow-none': mailbox.discussAppAsThread,
-        }" t-on-click="mailbox.setAsDiscussThread" t-out="mailbox.display_name"
-    />
-</t>
-
 <t t-name="mail.Discuss.loading">
-    <div t-if="this.store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 pe-none">
+    <div t-if="this.store.channels.status === 'fetching'" class="position-absolute top-0 start-0 d-flex align-items-center justify-content-center h-100 w-100 pe-none">
         <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
     </div>
 </t>

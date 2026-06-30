@@ -1,0 +1,107 @@
+.o-mail-MessagingMenu .o-dropdown.o-dropdown-caret::after {
+    display: none;
+}
+
+.o-mail-MessagingMenu-searchContainer {
+    padding-top: var(--MessagingMenu-searchContainer-padding-top, 0);
+}
+
+.o-mail-NotificationItem-counterArea:not(:empty) {
+    height: 25px;
+    width: 25px;
+    min-width: 25px;
+    min-height: 25px;
+}
+
+.o-mail-MessagingMenuItem:hover .o-mail-MessagingMenu-actions,
+.o-mail-MessagingMenu-actions:has(button[aria-expanded="true"]) {
+    display: flex !important;
+}
+
+.o-mail-MessagingMenu-tabCounter {
+    left: 50%;
+    transform: translate(50%, 25%) !important;
+}
+
+.o-mail-MessagingMenu-tabUnread {
+    left: 50%;
+    transform: translate(0, 25%) !important;
+}
+
+.o-mail-MessagingMenu-tabCounter.o-count {
+    background-color: $gray-400 !important;
+}
+
+.o-discuss-badge.o-mail-MessagingMenu-tabUnread {
+    --o-discuss-badge-bg: #{transparent};
+    opacity: 50%;
+    color: unset !important;
+}
+
+.o-mail-MessagingMenu-navbar.o-mobile {
+    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
+    container: navbar / inline-size;
+
+    &.o-mail-MessagingMenu-navbar-with-4-elements {
+        .o-mail-MessagingMenu-tab {
+            width: calc(100% / 4);
+        }
+    }
+
+    &.o-mail-MessagingMenu-navbar-with-5-elements,
+    &.o-mail-MessagingMenu-navbar-with-6-elements {
+        .o-mail-MessagingMenu-tab {
+            @container navbar (max-width: 400px) {
+                min-width: calc((100% / 4) - 0.85rem)
+            }
+
+            @container navbar (min-width: 550px) {
+                max-width: calc((100% / 5) - 1.5rem);
+
+                &:first-child {
+                    margin-left: auto;
+                }
+
+                &:last-child {
+                    margin-right: auto;
+                }
+            }
+        }
+    }
+
+    &.o-mail-MessagingMenu-navbar-with-6-elements {
+        .o-mail-MessagingMenu-tab {
+            @container navbar (min-width: 400px) and (max-width: 550px) {
+                min-width: calc((100% / 4) - 1.2rem)
+            }
+        }
+    }
+}
+
+.o-mail-MessagingMenu-tab {
+    &:hover .o-mail-MessagingMenu-tabIcon {
+        background: $gray-200;
+    }
+
+    &.active {
+        --btn-active-color: #{$o-enterprise-action-color};
+
+        .o-mail-MessagingMenu-tabIcon {
+            background: $o-component-active-bg;
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    &:focus-visible {
+        outline: $border-width solid $o-enterprise-action-color !important;
+    }
+
+    .o-mail-MessagingMenu-tabIcon {
+        width: $spacer * 3;
+    }
+}
+
+.o-mail-DiscussApp-sidebar {
+    flex-shrink: 0;
+    max-width: 30vw;
+}

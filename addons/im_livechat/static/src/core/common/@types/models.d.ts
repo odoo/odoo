@@ -51,9 +51,7 @@ declare module "models" {
         livechatNoteText: string|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
         livechatVisitorMember: ChannelMember;
-        storeAsPinnedLivechats: Store;
         transcriptUrl: Readonly<string>;
-        unpinOnThreadSwitch: boolean;
     }
     export interface LivechatChannel {
         channel_ids: DiscussChannel[];

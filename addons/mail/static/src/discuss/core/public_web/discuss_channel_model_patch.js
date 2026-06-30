@@ -8,38 +8,6 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.appAsUnreadChannels = fields.One("DiscussApp", {
-            compute() {
-                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
-            },
-        });
-        this.categoryAsChannelWithCounter = fields.One("DiscussAppCategory", {
-            compute() {
-                return this.isDisplayInSidebar && this.importantCounter > 0
-                    ? this.discussAppCategory
-                    : null;
-            },
-        });
-        this.discussAppCategory = fields.One("DiscussAppCategory", {
-            compute() {
-                if (this.self_member_id?.is_favorite) {
-                    return this.store.discuss.favoriteCategory;
-                }
-                if (this.parent_channel_id) {
-                    return;
-                }
-                if (this.discuss_category_id) {
-                    return this.discuss_category_id.appCategory;
-                }
-                // channel_type based categorization (including overrides) comes last
-                return this._computeDiscussAppCategory();
-            },
-        });
-        this.isDisplayInSidebar = fields.Attr(false, {
-            compute() {
-                return this._computeIsDisplayInSidebar();
-            },
-        });
         this.isLocallyPinned = fields.Attr(false, {
             onUpdate() {
                 this.onPinStateUpdated();
@@ -47,30 +15,46 @@ const discussChannelPatch = {
         });
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
-        this.subChannelsInSidebar = fields.Many("discuss.channel", {
+        this.messagingMenuTabs = fields.Many("MessagingMenuTab", {
+            inverse: "channels",
+            /** @this {import("models").DiscussChannel} */
             compute() {
-                return this.sub_channel_ids.filter((channel) => channel.isDisplayInSidebar);
+                return Object.values(this.store.MessagingMenuTab.records).filter((tab) =>
+                    tab.matchesChannel(this)
+                );
+            },
+            eager: true,
+        });
+        this.primaryMessagingMenuTab = fields.One("MessagingMenuTab", {
+            /** @this {import("models").DiscussChannel} */
+            compute() {
+                return this.messagingMenuTabs[0];
             },
         });
+        this.messagingMenuTabsWithCounter = fields.Many("MessagingMenuTab", {
+            inverse: "channelsWithCounter",
+            /** @this {import("models").DiscussChannel} */
+            compute() {
+                return this._computeMessagingMenuTabsWithCounter();
+            },
+            eager: true,
+        });
+    },
+    _computeMessagingMenuTabsWithCounter() {
+        if (
+            this.self_member_id?.is_pinned &&
+            !this.self_member_id.mute_until_dt &&
+            (this.self_member_id.message_unread_counter || this.message_needaction_counter)
+        ) {
+            // A tab's counter reflects its default filter (when it has one), so only
+            // count toward tabs whose default filter this channel matches.
+            return this.messagingMenuTabs.filter(
+                (t) => !t.defaultFilter || t.defaultFilter.matchesChannel?.(this)
+            );
+        }
     },
     _computeCanHide() {
         return Boolean(super._computeCanHide() || this?.isLocallyPinned);
-    },
-    _computeDiscussAppCategory() {
-        if (["group", "chat"].includes(this.channel_type)) {
-            return this.store.discuss.chatCategory;
-        }
-        if (this.channel_type === "channel") {
-            return this.store.discuss.channelCategory;
-        }
-    },
-    _computeIsDisplayInSidebar() {
-        return (
-            this.discussAppAsThread ||
-            this.self_member_id?.is_pinned ||
-            this.isLocallyPinned ||
-            this.sub_channel_ids.some((channel) => channel.isDisplayInSidebar)
-        );
     },
     delete() {
         this.store.env.services.bus_service.deleteChannel(this.busChannel);
@@ -196,10 +180,9 @@ const discussChannelPatch = {
         }
         if (!this.self_member_id?.is_pinned && !this.isLocallyPinned && this.discussAppAsThread) {
             if (this.store.discuss.isActive) {
-                const newChannel =
-                    this.store.discuss.channelCategory.channels.find(
-                        (channel) => channel.self_member_id?.is_pinned || channel.isLocallyPinned
-                    ) || this.store.inbox;
+                const newChannel = this.store.messagingMenu.channelTab.channels.find(
+                    (channel) => channel.self_member_id?.is_pinned
+                );
                 if (newChannel) {
                     newChannel.setAsDiscussThread();
                 } else {

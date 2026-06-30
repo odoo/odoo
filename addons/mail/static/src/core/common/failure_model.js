@@ -51,10 +51,6 @@ export class Failure extends Record {
         return this.notifications?.[0]?.notification_status;
     }
 
-    get iconSrc() {
-        return "/mail/static/src/img/smiley/mailfailure.svg";
-    }
-
     get body() {
         if (this.notifications.length === 1 && this.lastMessage?.thread) {
             return _t("An error occurred when sending an email on “%(record_name)s”", {

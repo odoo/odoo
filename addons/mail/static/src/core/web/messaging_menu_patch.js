@@ -1,126 +1,44 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
-
+import { NotificationItem } from "@mail/core/public_web/notification_item";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
 
-Object.assign(MessagingMenu.components, { DiscussAvatar, MessagingMenuQuickSearch });
+Object.assign(MessagingMenu.components, { NotificationItem });
 
 patch(MessagingMenu.prototype, {
     setup() {
-        super.setup();
+        super.setup(...arguments);
         this.action = useService("action");
-        this.pwa = useService("pwa");
+        this.dialog = useService("dialog");
         this.notification = useService("mail.notification.permission");
-        Object.assign(this.state, {
-            searchOpen: false,
-        });
-
-        onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
-        useLayoutEffect(
-            () => {
-                if (
-                    this.store.discuss.searchTerm &&
-                    this.lastSearchTerm !== this.store.discuss.searchTerm &&
-                    this.state.activeIndex
-                ) {
-                    this.state.activeIndex = 0;
-                }
-                if (!this.store.discuss.searchTerm) {
-                    this.state.activeIndex = null;
-                }
-                this.lastSearchTerm = this.store.discuss.searchTerm;
-            },
-            () => [this.store.discuss.searchTerm]
-        );
-        useLayoutEffect(
-            () => {
-                if (!this.dropdown.isOpen) {
-                    this.state.activeIndex = null;
-                }
-            },
-            () => [this.dropdown.isOpen]
-        );
+        this.hasTouch = hasTouch;
     },
-    beforeOpen() {
-        this.state.searchOpen = false;
-        this.store.discuss.searchTerm = "";
-        this.store.isReadyPromise.then(() => {
-            if (
-                !this.store.inbox.isLoaded &&
-                this.store.inbox.status !== "loading" &&
-                this.store.inbox.counter !== this.store.inbox.messages.length
-            ) {
-                this.store.inbox.fetchNewMessages();
-            }
-        });
+    /**
+     * Whether the OdooBot extras (delivery failures, push permission request) may be
+     * shown for the active tab.
+     */
+    get showNotificationHubExtras() {
+        const menu = this.store.messagingMenu;
+        return !this.searchTerm() && this.state().activeTab.eq(menu.odooBotNotificationsTab);
     },
-    get canPromptToInstall() {
-        return this.pwa.canPromptToInstall;
+    get showFailures() {
+        return this.store.failures.length > 0 && this.showNotificationHubExtras;
     },
-    get hasPreviews() {
-        return (
-            this.threads.length > 0 ||
-            this.visibleStandaloneMessages.length > 0 ||
-            (this.store.failures.length > 0 && this.store.discuss.activeTab === "notification") ||
-            (this.shouldAskPushPermission && this.store.discuss.activeTab === "notification") ||
-            (this.canPromptToInstall && this.store.discuss.activeTab === "notification")
-        );
+    get isEmpty() {
+        return super.isEmpty && !this.showFailures && !this.showPushPermissionRequest;
     },
-    get installationRequest() {
-        return {
-            body: _t("Come here often? Install the app for quick and easy access!"),
-            displayName: _t("Install Odoo"),
-            onClick: () => {
-                this.pwa.show();
-            },
-            partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "notification" && this.canPromptToInstall,
-        };
+    get showPushPermissionRequest() {
+        return this.store.showPushPermissionRequest && this.showNotificationHubExtras;
     },
     get notificationRequest() {
         return {
             body: _t("Stay tuned! Enable push notifications to never miss a message."),
             displayName: _t("Turn on notifications"),
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "notification" && this.shouldAskPushPermission,
         };
     },
-    get _tabs() {
-        return [
-            {
-                icon: "fa fa-bell-o",
-                activeIcon: "fa fa-bell",
-                id: "notification",
-                label: _t("Notifications"),
-                sequence: 10,
-            },
-            {
-                counter:
-                    this.store.self_user?.notification_type === "inbox"
-                        ? this.store.inbox.counter
-                        : this.store.bookmarkBox.counter,
-                icon:
-                    this.store.self_user?.notification_type === "inbox"
-                        ? "fa fa-inbox"
-                        : "fa fa-bookmark-o",
-                activeIcon: this.store.self_user?.notification_type !== "inbox" && "fa fa-bookmark",
-                id: this.store.self_user?.notification_type === "inbox" ? "inbox" : "bookmark",
-                label:
-                    this.store.self_user?.notification_type === "inbox"
-                        ? _t("Inbox")
-                        : _t("Bookmarks"),
-                sequence: 100,
-            },
-            ...super._tabs,
-        ];
-    },
-    /** @param {import("models").Failure} failure */
     onClickFailure(failure) {
         const threadIds = new Set(
             failure.notifications.map(({ mail_message_id: message }) => message.thread.id)
@@ -130,12 +48,12 @@ patch(MessagingMenu.prototype, {
             this.openThread(message.thread);
         } else {
             this.openFailureView(failure);
-            this.dropdown.close();
+            this.close?.();
         }
     },
     async openThread(thread) {
         thread.open({ focus: true, fromMessagingMenu: true });
-        this.dropdown.close();
+        this.close?.();
     },
     openFailureView(failure) {
         if (failure.type !== "email") {
@@ -160,28 +78,6 @@ patch(MessagingMenu.prototype, {
         return this.env.services.orm.call(failure.resModel, "notify_cancel_by_type", [], {
             notification_type: failure.type,
         });
-    },
-    toggleSearch() {
-        this.store.discuss.searchTerm = "";
-        this.state.searchOpen = !this.state.searchOpen;
-    },
-    get counter() {
-        let value =
-            this.store.globalCounter +
-            this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
-        if (this.canPromptToInstall) {
-            value++;
-        }
-        if (this.shouldAskPushPermission) {
-            value++;
-        }
-        return value;
-    },
-    get shouldAskPushPermission() {
-        return (
-            this.notification.permission === "prompt" &&
-            !this.store.isNotificationPermissionDismissed
-        );
     },
     getFailureNotificationName(failure) {
         if (failure.type === "email") {

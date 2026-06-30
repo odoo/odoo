@@ -28,12 +28,12 @@ export class MailCoreWeb {
             }
             this.store.activityCounter += countDiff;
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
-                this.store.inbox.counter--;
-            }
-            if (message.is_bookmarked && notifId > this.store.bookmarkBox.counter_bus_id) {
-                this.store.bookmarkBox.counter--;
+        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
+            if (this.store.messagingMenu.notificationTab && message.needaction) {
+                this.store.messagingMenu.notificationTab.init_counter_ids =
+                    this.store.messagingMenu.notificationTab.init_counter_ids.filter(
+                        (id) => id !== message.id
+                    );
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
@@ -41,7 +41,9 @@ export class MailCoreWeb {
             this.store.insert(store_data);
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
-            this.addMessageToInbox(message, notifId);
+            if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
+                message.thread.message_needaction_counter++;
+            }
             if (this.store.self_user?.im_status !== "busy") {
                 this.store.env.services["mail.out_of_focus"].notify(message);
             }
@@ -49,15 +51,16 @@ export class MailCoreWeb {
         this.busService.subscribe("mail.message/mark_as_unread", (payload, { id: notifId }) => {
             const { message_ids: messageIds, store_data } = payload;
             this.store.insert(store_data);
-            messageIds.forEach((messageId) => {
+            for (const messageId of messageIds) {
                 const message = this.store["mail.message"].get(messageId);
-                this.addMessageToInbox(message, notifId);
-                this.store.history.messages.delete(message);
-            });
+                if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
+                    message.thread.message_needaction_counter++;
+                }
+            }
         });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
-            const { message_ids: messageIds, needaction_inbox_counter } = payload;
-            const inbox = this.store.inbox;
+            const { message_ids: messageIds } = payload;
+            const unloadedMessageIds = [];
             for (const messageId of messageIds) {
                 // We need to ignore all not yet known messages because we don't want them
                 // to be shown partially as they would be linked directly to cache.
@@ -66,9 +69,10 @@ export class MailCoreWeb {
                 // (just imagine you mark 1000 messages as read ... )
                 const message = this.store["mail.message"].get(messageId);
                 if (!message) {
+                    unloadedMessageIds.push(messageId);
                     continue;
                 }
-                // update thread counter (before removing message from Inbox, to ensure isNeedaction check is correct)
+                // update thread counter before needaction changes
                 const thread = message.thread;
                 if (
                     thread &&
@@ -78,34 +82,17 @@ export class MailCoreWeb {
                 ) {
                     thread.message_needaction_counter--;
                 }
-                // move messages from Inbox to history
                 message.needaction = false;
-                inbox.messages.delete({ id: messageId });
-                const history = this.store.history;
-                history.messages.add(message);
+                message.needaction_done = true;
             }
-            if (notifId > inbox.counter_bus_id) {
-                inbox.counter = needaction_inbox_counter;
-                inbox.counter_bus_id = notifId;
-            }
-            if (inbox.counter > inbox.messages.length) {
-                inbox.fetchMoreMessages();
+            if (unloadedMessageIds.length) {
+                const unloadedSet = new Set(unloadedMessageIds);
+                this.store.messagingMenu.notificationTab.init_counter_ids =
+                    this.store.messagingMenu.notificationTab.init_counter_ids.filter(
+                        (id) => !unloadedSet.has(id)
+                    );
             }
         });
-    }
-    /**
-     * @param {import("models").Message} message
-     * @param {number} notifId the bus notification id
-     */
-    addMessageToInbox(message, notifId) {
-        const inbox = this.store.inbox;
-        if (notifId > inbox.counter_bus_id) {
-            inbox.counter++;
-        }
-        inbox.messages.add(message);
-        if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
-            message.thread.message_needaction_counter++;
-        }
     }
 }
 

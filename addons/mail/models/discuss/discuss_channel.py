@@ -1674,6 +1674,33 @@ class DiscussChannel(models.Model):
         )
         return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
 
+    def _get_last_needaction_messages(self):
+        """Return the last needaction message for each of the given channels."""
+        messages = self.env["mail.message"]
+        if not self.ids:
+            return messages
+        domain = (
+            Domain("model", "=", self._name)
+            & Domain("needaction", "=", True)
+            & Domain.custom(
+                to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
+            )
+        )
+        messages_query = messages._search(domain, order="id desc", limit=1)
+        sql = SQL(
+            """
+                   SELECT last_needaction_message_id
+                     FROM discuss_channel
+        LEFT JOIN LATERAL %s AS t(last_needaction_message_id) ON TRUE
+                    WHERE discuss_channel.id IN %s
+                 GROUP BY discuss_channel.id, t.last_needaction_message_id
+                 ORDER BY discuss_channel.id
+            """,
+            messages_query.subselect(),
+            tuple(self.ids),
+        )
+        return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
+
     def _clean_empty_message(self, message):
         super()._clean_empty_message(message)
         message.parent_id = False
