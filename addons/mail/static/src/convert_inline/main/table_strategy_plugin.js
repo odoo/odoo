@@ -84,6 +84,9 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     getCellMarginStyleInfo(styleInfo, emailNode) {
+        if (!styleInfo) {
+            return styleInfo;
+        }
         return this.filterStyleInfo(
             styleInfo,
             emailNode.layout.ancestorTag,
