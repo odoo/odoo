@@ -25,7 +25,7 @@ export class NavTabsStyleOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        is_unremovable_selectors: ".nav-item",
+        region_properties: { is: ".nav-item", removable: false },
         is_node_splittable_predicates: (node) => {
             if (this.isUnsplittable(node)) {
                 return false;

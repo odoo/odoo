@@ -20,7 +20,7 @@ export class MegaMenuOptionPlugin extends Plugin {
         },
         on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
-        is_unremovable_selectors: ".o_mega_menu > section",
+        region_properties: { is: ".o_mega_menu > section", removable: false },
         is_node_splittable_predicates: (node) => {
             //avoid merge
             if (

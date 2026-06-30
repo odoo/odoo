@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
@@ -128,7 +127,7 @@ import { omit } from "@web/core/utils/objects";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = ["operation", "domObserver", "history"];
+    static dependencies = ["operation", "domObserver", "history", "delete"];
     static shared = [
         "checkElement",
         "closestWithOption",
@@ -425,7 +424,7 @@ export class BuilderOptionsPlugin extends Plugin {
                         : {},
                     hideOverlay: Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
-                    isRemovable: isRemovable(element),
+                    isRemovable: !this.dependencies.delete.isUnremovable(element, this.editable),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
                     isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
@@ -606,7 +605,10 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     isClonable(el) {
         // TODO and isDraggable
-        return el.matches(this.clonableSelector) || isRemovable(el);
+        return (
+            el.matches(this.clonableSelector) ||
+            !this.dependencies.delete.isUnremovable(el, this.editable)
+        );
     }
 
     /**

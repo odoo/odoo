@@ -87,7 +87,15 @@ function getConnectedParents(nodes) {
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "region",
+    ];
     static shared = [
         "insert",
         "copyAttributes",
@@ -192,7 +200,7 @@ export class DomPlugin extends Plugin {
                 shouldBreakLine = true;
             } else if (
                 !visibleNodes.has(node) &&
-                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
+                (this.dependencies.region.getProperty(node, "removable") ?? true)
             ) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {

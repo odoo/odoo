@@ -8,20 +8,6 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const REGEX_BOOTSTRAP_COLUMN = /(^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
 
-function isUnremovableColumn(node, root) {
-    const isColumnInnerStructure =
-        node.nodeName === "DIV" && [...node.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
-
-    if (!isColumnInnerStructure) {
-        return false;
-    }
-    if (!root) {
-        return true;
-    }
-    const closestColumnContainer = closestElement(node, "div.o_text_columns");
-    return !root.contains(closestColumnContainer);
-}
-
 function columnIsAvailable(numberOfColumns) {
     return (selection) => {
         const row = closestElement(selection.anchorNode, ".o_text_columns .row");
@@ -91,17 +77,21 @@ export class ColumnPlugin extends Plugin {
                 hoverClass: "o_resize_handle",
             },
         ],
-        is_node_removable_predicates: (node, root) => {
-            if (isUnremovableColumn(node, root)) {
-                return false;
-            }
-        },
         region_properties: [
             { within: ".o_text_columns", powerButtons: false },
             {
                 is: `.odoo-editor-editable .o_text_columns div[class*='col-'],
                             .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
                 hintText: _t("Empty column"),
+            },
+            {
+                // A column inner structure (row/col) is unremovable on its own,
+                // but removable when its whole column container is being removed
+                // (see `removableWithin`); otherwise removing it would leave a
+                // broken column layout.
+                is: 'div.row, div.col, div[class^="col-"], div[class*=" col-"]',
+                removable: false,
+                removableWithin: "div.o_text_columns",
             },
         ],
         move_node_whitelist_selectors: ".o_text_columns",
