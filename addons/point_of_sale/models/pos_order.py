@@ -1856,15 +1856,7 @@ class PosOrderLine(models.Model):
             product = line.product_id
             cost_currency = product.sudo().cost_currency_id
             moves = line._get_stock_moves_to_consider(stock_moves, product) if stock_moves else None
-            if moves and line._is_product_storable_fifo_avco():
-                product_cost = line._get_product_cost_with_moves(moves)
-                if cost_currency.is_zero(product_cost) and line.order_id.shipping_date:
-                    if line.refunded_orderline_id:
-                        product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
-                    else:
-                        product_cost = product.standard_price
-            else:
-                product_cost = product.standard_price
+            product_cost = line._get_product_cost(moves)
             line.total_cost = line.qty * cost_currency._convert(
                 from_amount=product_cost,
                 to_currency=line.currency_id,
@@ -1873,6 +1865,22 @@ class PosOrderLine(models.Model):
                 round=False,
             )
             line.is_total_cost_computed = True
+
+    def _get_product_cost(self, stock_moves):
+        self.ensure_one()
+        product = self.product_id
+        cost_currency = product.sudo().cost_currency_id
+        moves = self._get_stock_moves_to_consider(stock_moves, product) if stock_moves else None
+        if moves and self._is_product_storable_fifo_avco():
+            product_cost = self._get_product_cost_with_moves(moves)
+            if cost_currency.is_zero(product_cost) and self.order_id.shipping_date:
+                if self.refunded_orderline_id:
+                    product_cost = self.refunded_orderline_id.total_cost / self.refunded_orderline_id.qty
+                else:
+                    product_cost = product.standard_price
+        else:
+            product_cost = product.standard_price
+        return product_cost
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
         self.ensure_one()
