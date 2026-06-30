@@ -1,20 +1,26 @@
 .o_task_timer {
     .o_timer_display {
-        letter-spacing: 0.05em;
-        min-width: 90px;
+        letter-spacing: 0.06em;
+        min-width: 95px;
         justify-content: center;
+        font-variant-numeric: tabular-nums;
     }
 
-    .o_timer_blink {
+    // Ponto pulsante de "gravando"
+    .o_timer_dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        flex-shrink: 0;
         animation: o_timer_blink 1s step-start infinite;
-        font-size: 8px;
-        vertical-align: middle;
     }
 }
 
 @keyframes o_timer_blink {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
+    50%       { opacity: 0.15; }
 }
 
 .o_timer_stop_dialog {
