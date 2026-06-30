@@ -465,20 +465,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda c: c.can_access_from_current_website()
             )
             category_entries = (
-                (not search
-                and available_categories)
-                or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            )
+                not search and available_categories
+            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not category_entries:
                 parent = category.parent_id
                 available_categories = parent.child_id.filtered(
                     lambda c: c.can_access_from_current_website()
                 )
                 category_entries = (
-                    (not search
-                    and available_categories)
-                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
-                )
+                    not search and available_categories
+                ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not search and not request.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
                 # from a regular `search`, but we have not checked access to `category`'s children,
@@ -514,16 +510,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_query = request.env["product.template"]._search(
                 self._get_shop_domain(search_term, category, attribute_value_dict)
             )
+            products_domain = [[("pav_attribute_line_ids.product_tmpl_id", "in", product_query)]]
+            if attribute_value_dict:
+                product_query_without_attributes = request.env["product.template"]._search(
+                    self._get_shop_domain(search_term, category, attribute_value_dict={})
+                )
+                # Allow selecting pavs that are not exclusive if its from the same attribute
+                products_domain.append(
+                    Domain.AND([
+                        [
+                            (
+                                "pav_attribute_line_ids.product_tmpl_id",
+                                "in",
+                                product_query_without_attributes,
+                            )
+                        ],
+                        [("attribute_id", "in", attribute_ids)],
+                    ])
+                )
+
+            filters_domain = Domain.AND([
+                [("attribute_id.visibility", "=", "visible")],
+                Domain.OR(products_domain),
+            ])
+
             grouped_pavs = ProductAttributeValue._read_group(
-                domain=[
-                    ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
-                    ("attribute_id.visibility", "=", "visible"),
-                ],
-                groupby=["attribute_id"],
-                order="attribute_id",
-                aggregates=["id:recordset"],
+                domain=filters_domain, groupby=["attribute_id"], aggregates=["id:recordset"]
             )
-            pavs_per_attribute.update(grouped_pavs)
+            pavs_per_attribute.update({att: pavs.sorted() for att, pavs in grouped_pavs})
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
@@ -894,9 +908,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         ProductCategory = request.env["product.public.category"]
         original_category = category
-        category = category or product.public_categ_ids.filtered(
-            lambda c: c.can_access_from_current_website()
-        )[:1]
+        category = (
+            category
+            or product.public_categ_ids.filtered(lambda c: c.can_access_from_current_website())[:1]
+        )
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
             product._to_markup_data(website),
@@ -909,8 +924,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if last_attributes_search := request.session.get("attribute_values", []):
             keep = QueryURL(
-                self._get_shop_path(original_category),
-                attribute_values=last_attributes_search
+                self._get_shop_path(original_category), attribute_values=last_attributes_search
             )
         else:
             keep = QueryURL(self._get_shop_path(original_category))
@@ -947,7 +961,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attribute_value_images": attribute_value_images,
             "categories": ProductCategory.search([("parent_id", "=", False)]),
             "category": category,
-            'original_category': original_category,
+            "original_category": original_category,
             "combination_info": combination_info,
             "has_available_uoms": len(product._get_available_uoms()) > 0,
             "keep": keep,
@@ -959,7 +973,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
             "shop_path": SHOP_PATH,
-            "user_email": request.env.user.email or request.session.get("stock_notification_email", ""),
+            "user_email": request.env.user.email
+            or request.session.get("stock_notification_email", ""),
         }
 
     def _prepare_breadcrumb_markup_data(self, base_url, category):
