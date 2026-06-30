@@ -239,7 +239,7 @@ class BaseAutomation(models.Model):
         readonly=False, store=True,
         help="If present, this condition must be satisfied before the update of the record. "
              "Not checked on record creation.")
-    previous_domain = fields.Char(store=False, default=lambda self: self.filter_domain)
+    previous_domain = fields.Char(compute='_compute_previous_domain')
     filter_domain = fields.Char(
         string='Apply on',
         help="If present, this condition must be satisfied before executing the automation rule.",
@@ -384,6 +384,12 @@ class BaseAutomation(models.Model):
                 automation.trg_field_ref_model_name = False
                 continue
             automation.trg_field_ref_model_name = relation
+
+    # doesn't depends on filter_domain on purpose
+    # since it is a backup for onchange when filter_domain is changed
+    def _compute_previous_domain(self):
+        for automation in self:
+            automation.previous_domain = automation.filter_domain
 
     @api.depends('trigger', 'trg_field_ref')
     def _compute_filter_pre_domain(self):
