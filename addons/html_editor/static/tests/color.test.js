@@ -4,6 +4,7 @@ import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
+import { execCommand } from "./_helpers/userCommands";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -1102,4 +1103,21 @@ test("should not apply color to selection placeholder nodes", async () => {
             <p data-selection-placeholder="">]<br></p>
         `)
     );
+});
+
+test("should create a font inside neutral styled span and remove it with removeFormat", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a></p>',
+        stepFunction: (editor) => {
+            setColor("rgb(255, 0, 0)", "color")(editor);
+            expect(getContent(editor.editable)).toBe(
+                '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;"><font style="color: rgb(255, 0, 0);">Test</font></span>\ufeff]</a>\ufeff</p>'
+            );
+
+            execCommand(editor, "removeFormat");
+        },
+        contentAfterEdit:
+            '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a>\ufeff</p>',
+    });
 });
