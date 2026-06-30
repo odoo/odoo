@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Botão de atalho no menu Faturamento → Configurações -->
+  <menuitem
+    id="menu_payment_maestro_setup"
+    name="Configurar Pagamentos (Stripe / MP)"
+    parent="account.menu_finance_configuration"
+    action="payment_maestro_setup.action_payment_setup_wizard"
+    groups="account.group_account_manager"
+    sequence="5"/>
+
+</odoo>
