@@ -10,7 +10,7 @@ from operator import itemgetter
 from xml.etree import ElementTree as ET
 
 from lxml import html
-from werkzeug.exceptions import UnprocessableEntity
+from werkzeug.exceptions import Forbidden, UnprocessableEntity
 from werkzeug.utils import send_file
 
 import odoo
@@ -284,3 +284,9 @@ class Database(Controller):
         :rtype: list
         """
         return db_list()
+
+    @route('/web/database/privileges', type='jsonrpc', auth='user')
+    def is_superuser(self):
+        if not request.env.user._is_internal():
+            raise Forbidden()
+        return request.env.cr.connection.has_high_privileges

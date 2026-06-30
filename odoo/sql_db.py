@@ -16,7 +16,7 @@ import time
 import typing
 import uuid
 import warnings
-from contextlib import contextmanager, nullcontext
+from contextlib import closing, contextmanager, nullcontext
 from datetime import datetime, timedelta
 from inspect import currentframe
 
@@ -584,6 +584,17 @@ class PsycoConnection(psycopg2.extensions.connection):
 
     def give_back(self, keep_in_pool=True):
         raise RuntimeError('not bound to a pool')
+
+    @functools.cached_property
+    def has_high_privileges(self) -> bool:
+        with closing(self.cursor()) as cr:
+            cr.execute("""
+                SELECT (rolsuper OR rolreplication OR rolbypassrls)
+                FROM pg_roles
+                WHERE rolname = CURRENT_ROLE
+            """)
+            role = cr.fetchone()
+        return role and role[0]
 
 
 class ConnectionPool:
