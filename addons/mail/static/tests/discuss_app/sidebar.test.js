@@ -1030,12 +1030,12 @@ test("Unpinning channel closes its chat window", async () => {
     await openFormView("discuss.channel");
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow:text('Sales')");
+    await contains(".o-mail-ChatWindow-displayName:text('Sales')");
     await openDiscuss();
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await openFormView("discuss.channel");
-    await contains(".o-mail-ChatWindow:text('Sales')", { count: 0 });
+    await contains(".o-mail-ChatWindow-displayName:text('Sales')", { count: 0 });
 });
 
 test.tags("focus required");
