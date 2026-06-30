@@ -17,9 +17,13 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 /** @typedef {import("models").Thread} Thread */
 /**
  * @typedef {Object} MessageActionSpecificParams
+ * @property {Object} env
+ * @property {() => boolean} isActive
  * @property {Message} message
+ * @property {() => void} optionsDropdown
  * @property {import("@odoo/owl").Signal<HTMLElement>} [reactionAnchorRef] when set, the anchor element for reactions
  * @property {Thread} [thread] when set, the thread the message is being viewed
+ * @property {(mode: "message" | "note" | false, options?: { force?: boolean }) => void} toggleComposer
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<MessageAction, UseMessageActions_Def> & MessageActionSpecificParams} MessageActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<MessageActionParams, MessageAction>} MessageActionDefinition */
@@ -34,23 +38,23 @@ export function registerMessageAction(id, definition) {
 
 registerMessageAction("reaction", {
     component: QuickReactionMenu,
-    componentProps: ({ action, message, owner }) => ({
+    componentProps: ({ action, message, isActive }) => ({
         action,
         message,
-        messageActive: owner.isActive(),
+        messageActive: isActive(),
     }),
     componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
     condition: ({ message, thread }) => message.canAddReaction(thread),
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
-    onSelected({ owner, reactionAnchorRef, rootRef }) {
+    onSelected({ reactionAnchorRef, rootRef }) {
         const anchorEl = reactionAnchorRef
             ? reactionAnchorRef()
             : rootRef?.()?.querySelector(`[name="${this.id}"]`);
-        return owner.reactionPicker.open({ el: anchorEl });
+        return this.reactionPicker.open({ el: anchorEl });
     },
-    setup: ({ message, owner, thread }) =>
-        (owner.reactionPicker = useEmojiPicker(undefined, {
+    setup({ message, thread }) {
+        this.reactionPicker = useEmojiPicker(undefined, {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
@@ -60,7 +64,8 @@ registerMessageAction("reaction", {
                     message.react(emoji);
                 }
             },
-        })),
+        });
+    },
     sequence: 10,
 });
 registerMessageAction("reply-to", {
@@ -75,7 +80,7 @@ registerMessageAction("reply-to", {
     },
     icon: "fa fa-reply",
     name: _t("Reply"),
-    onSelected: ({ message, owner, thread }) => {
+    onSelected: ({ message, thread, toggleComposer }) => {
         const composer = thread.composer;
         if (message.eq(composer.replyToMessage)) {
             composer.replyToMessage = undefined;
@@ -90,7 +95,7 @@ registerMessageAction("reply-to", {
         if (!message.isSelfAuthored && message.model !== "discuss.channel" && message.author) {
             composer.insertReplyFromNote(message);
         }
-        owner.env.inChatter?.toggleComposer("note", { force: true });
+        toggleComposer("note", { force: true });
         composer.restoredFromFullComposer = false;
         if (!composer.isFocused) {
             composer.autofocus++;
@@ -147,9 +152,9 @@ registerMessageAction("edit", {
     condition: ({ message }) => message.editable,
     icon: "fa fa-pencil",
     name: _t("Edit"),
-    onSelected: ({ message, owner, thread }) => {
+    onSelected: ({ message, optionsDropdown, thread }) => {
         message.enterEditMode(thread);
-        owner.optionsDropdown?.close();
+        optionsDropdown();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
 });
@@ -157,7 +162,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: ({ message, owner, rootRef }) => message.showDeleteConfirm(owner, rootRef),
+    onSelected: ({ message, env, rootRef }) => message.showDeleteConfirm(env, rootRef),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
@@ -212,32 +217,47 @@ registerMessageAction("end-poll", {
 });
 
 export class MessageAction extends Action {
+    /** @type {() => boolean} */
+    isActive;
     /** @type {() => Message} */
     messageFn;
+    /** @type {() => void} */
+    optionsDropdown;
     /** @type {import("@odoo/owl").Signal<HTMLElement>} */
     reactionAnchorRef;
+    /** @type {ReturnType<typeof useEmojiPicker>} */
+    reactionPicker;
     /** @type {() => Thread} */
     threadFn;
+    /** @type {(type: string, options?: Object) => void} */
+    toggleComposer;
     /**
      * @param {Object} param0
      * @param {Message|() => Message} param0.message
      * @param {import("@odoo/owl").Signal<HTMLElement>} [param0.reactionAnchorRef]
      * @param {Thread|() => Thread} [param0.thread]
+     * @param {(type: string, options?: Object) => void} [param0.toggleComposer]
      */
-    constructor({ message, reactionAnchorRef, thread }) {
+    constructor({ isActive, message, optionsDropdown, reactionAnchorRef, thread, toggleComposer }) {
         super(...arguments);
+        this.isActive = isActive;
         this.messageFn = typeof message === "function" ? message : () => message;
+        this.optionsDropdown = optionsDropdown;
         this.reactionAnchorRef = reactionAnchorRef;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
+        this.toggleComposer = toggleComposer;
     }
 
     get params() {
         const thread = this.threadFn();
         return Object.assign(super.params, {
+            isActive: this.isActive,
             message: this.messageFn(),
+            optionsDropdown: this.optionsDropdown,
             channel: thread?.channel,
             reactionAnchorRef: this.reactionAnchorRef,
             thread,
+            toggleComposer: this.toggleComposer,
         });
     }
 }
@@ -253,11 +273,22 @@ class UseMessageActions extends UseActions {
  *   message is being viewed.
  * @returns {UseMessageActions_Def}
  */
-export function useMessageActions({ message, thread, reactionAnchorRef, rootRef } = {}) {
+export function useMessageActions({
+    isActive,
+    message,
+    optionsDropdown,
+    thread,
+    reactionAnchorRef,
+    rootRef,
+    toggleComposer,
+} = {}) {
     return useAction(messageActionsRegistry, UseMessageActions, MessageAction, {
+        isActive,
         message,
+        optionsDropdown,
         reactionAnchorRef,
         rootRef,
         thread,
+        toggleComposer,
     });
 }

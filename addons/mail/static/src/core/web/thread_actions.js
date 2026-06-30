@@ -3,8 +3,8 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("mark-all-read", {
-    condition: ({ owner, thread }) =>
-        thread?.id === "inbox" && !owner.isDiscussSidebarChannelActions,
+    condition: ({ isDiscussSidebarChannelActions, thread }) =>
+        thread?.id === "inbox" && !isDiscussSidebarChannelActions,
     disabledCondition: ({ thread }) => thread.isEmpty,
     onSelected: async ({ store }) => {
         const orm = store.env.services.orm;
@@ -32,8 +32,8 @@ registerThreadAction("mark-all-read", {
     name: _t("Mark all read"),
 });
 registerThreadAction("remove-all-bookmarks", {
-    condition: ({ owner, store, thread }) =>
-        thread?.eq(store.bookmarkBox) && !owner.isDiscussSidebarChannelActions,
+    condition: ({ isDiscussSidebarChannelActions, store, thread }) =>
+        thread?.eq(store.bookmarkBox) && !isDiscussSidebarChannelActions,
     disabledCondition: ({ thread }) => thread.isEmpty,
     onSelected: ({ store }) => store.removeAllBookmarks(),
     sequence: 2,

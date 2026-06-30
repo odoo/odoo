@@ -19,13 +19,13 @@ registerThreadAction("show-threads", {
             "o-mail-SubChannelList-panel": true,
             [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
         }),
-    condition: ({ channel, owner }) =>
+    condition: ({ channel, isDiscussSidebarChannelActions }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
-        !owner.isDiscussSidebarChannelActions,
+        !isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-comments-o",
     name: _t("Threads"),
-    setup({ owner, store }) {
-        if (owner.env.inDiscussApp && !store.env.isSmall) {
+    setup({ inDiscussApp, store }) {
+        if (inDiscussApp && !store.env.isSmall) {
             this.popover = usePopover(SubChannelList, {
                 onClose: () => this.actionPanelClose(),
                 fixedPosition: true,
@@ -34,6 +34,6 @@ registerThreadAction("show-threads", {
         }
         useChildSubEnv({ subChannelMenu: { open: () => this.actionPanelOpen() } });
     },
-    sequence: ({ owner }) => (owner.props.chatWindow ? 40 : 5),
+    sequence: ({ chatWindow }) => (chatWindow ? 40 : 5),
     sequenceGroup: 10,
 });

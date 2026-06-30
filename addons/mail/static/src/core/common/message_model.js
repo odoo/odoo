@@ -714,23 +714,22 @@ export class Message extends Record {
     }
 
     /**
-     * @param {Object} owner
+     * @param {import("@web/env").OdooEnv} env
      * @param {import("@odoo/owl").Signal<HTMLElement>} [rootRef]
      */
-    showDeleteConfirm(owner, rootRef) {
+    showDeleteConfirm(env, rootRef) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
-            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
+            { message: this, onConfirm: () => this.onShowDeleteConfirm(env) },
             { rootRef }
         );
     }
 
     /**
-     * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
+     * @param {import("@web/env").OdooEnv} env
      */
-    onShowDeleteConfirm(owner) {
-        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+    onShowDeleteConfirm(env) {
+        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(env) });
     }
 
     /**

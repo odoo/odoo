@@ -1,8 +1,4 @@
-import {
-    registerComposerAction,
-    pickerGetAnchor,
-    pickerSetup,
-} from "@mail/core/common/composer_actions";
+import { registerComposerAction, pickerGetAnchor } from "@mail/core/common/composer_actions";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -11,13 +7,13 @@ import { usePopover } from "@web/core/popover/popover_hook";
 
 registerComposerAction("add-gif", {
     actionPanelComponent: GifPicker,
-    actionPanelComponentProps: ({ action, owner }) => ({
+    actionPanelComponentProps: ({ action, replyToMessageId, sendGifMessage }) => ({
         onSelect: async (gif) => {
             const href = encodeURI(gif.url);
-            await owner._sendMessage(
+            await sendGifMessage(
                 markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
                 {
-                    parentId: owner.props.composer.replyToMessage?.id,
+                    parentId: replyToMessageId(),
                 }
             );
         },
@@ -28,9 +24,9 @@ registerComposerAction("add-gif", {
         const anchorEl = pickerGetAnchor(...args);
         this.popover?.open(anchorEl, this.actionPanelComponentProps);
     },
-    condition: ({ composer, owner, store }) =>
+    condition: ({ composer, inChatter, store }) =>
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
-        !owner.env.inChatter &&
+        !inChatter() &&
         !composer.message,
     icon: "oi oi-gif-picker",
     name: _t("Send GIF"),
@@ -38,7 +34,6 @@ registerComposerAction("add-gif", {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
     setup({ store }) {
-        pickerSetup();
         if (store.env.services.ui.isSmall) {
             return;
         }
@@ -47,6 +42,6 @@ registerComposerAction("add-gif", {
             onClose: () => this.actionPanelClose(),
         });
     },
-    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ inDiscussApp }) => (!inDiscussApp() ? 40 : undefined),
+    sequenceQuick: ({ inDiscussApp }) => (inDiscussApp() ? 15 : undefined),
 });

@@ -225,9 +225,13 @@ export class Message extends Component {
 
     get messageActionsParams() {
         return {
+            env: this.env,
+            isActive: () => this.isActive(),
             message: () => this.message,
+            optionsDropdown: () => this.optionsDropdown?.close(),
             rootRef: this.rootRef,
             thread: () => this.props.thread,
+            toggleComposer: (...args) => this.env.inChatter?.toggleComposer(...args),
         };
     }
 
