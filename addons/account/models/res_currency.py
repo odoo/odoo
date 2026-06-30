@@ -177,13 +177,13 @@ class ResCurrency(models.Model):
                 LEFT JOIN res_currency_rate rate
                     ON rate.currency_id = other_company.currency_id
                     AND rate.name <= %(date_to)s
-                    AND rate.company_id = %(main_company_id)s
+                    AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
                 WHERE
                     other_company.id IN %(other_company_ids)s
                 ORDER BY other_company.id, rate.name DESC
             """,
             period_key=period_key,
-            main_company_id=main_company.root_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             date_to=date_to,
             main_company_unit_factor=main_company_unit_factor,
@@ -204,11 +204,11 @@ class ResCurrency(models.Model):
                     ON rate.currency_id = other_company.currency_id
                 WHERE
                     other_company.id IN %(other_company_ids)s
-                    AND rate.company_id = %(main_company_id)s
+                    AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
                     AND rate.name <= %(date_to)s
                     %(exclusion_condition)s
             """,
-            main_company_id=main_company.root_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             main_company_unit_factor=main_company_unit_factor,
             date_to=date_to,
@@ -246,7 +246,7 @@ class ResCurrency(models.Model):
                     rate.name <= %(date_to)s
                     AND rate.name >= %(date_from)s
                     AND other_company.id IN %(other_company_ids)s
-                    AND rate.company_id = %(main_company_id)s
+                    AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
 
                     UNION ALL
 
@@ -262,11 +262,11 @@ class ResCurrency(models.Model):
                             ON in_period_rate.currency_id = other_company.currency_id
                             AND in_period_rate.name <= %(date_to)s
                             AND in_period_rate.name >= %(date_from)s
-                            AND in_period_rate.company_id = %(main_company_id)s
+                            AND (in_period_rate.company_id = %(root_company_id)s OR in_period_rate.company_id IS NULL)
 
                         LEFT JOIN res_currency_rate out_period_rate
                             ON out_period_rate.currency_id = other_company.currency_id
-                            AND out_period_rate.company_id = %(main_company_id)s
+                            AND (out_period_rate.company_id = %(root_company_id)s OR out_period_rate.company_id IS NULL)
                             AND out_period_rate.name < %(date_from)s
 
                         WHERE
@@ -277,7 +277,7 @@ class ResCurrency(models.Model):
                 GROUP BY rate_with_days.other_company_id
             """,
             period_key=period_key,
-            main_company_id=main_company.root_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             date_from=date_from,
             date_to=date_to,
