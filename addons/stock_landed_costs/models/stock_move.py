@@ -13,7 +13,7 @@ class StockMove(models.Model):
         self.ensure_one()
         accounting_data = super()._get_value_from_extra(quantity)
         # Add landed costs value
-        lcs = self.sudo()._get_landed_cost()
+        lcs = self._get_landed_cost()
         lcs = lcs.get(self)
         if not lcs:
             return accounting_data
