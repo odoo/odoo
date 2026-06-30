@@ -174,14 +174,6 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "TABLE") {
-                return false;
-            } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
-                return true;
-            }
-        },
-
         /** Regions */
         region_properties: [
             { within: "TD, TH", powerButtons: false },
@@ -195,7 +187,8 @@ export class TablePlugin extends Plugin {
                 removableWithin: "table",
                 splittable: false,
             },
-            { is: "TABLE", splittable: false },
+            { is: "TABLE", splittable: false, placeholderHost: false },
+            { is: ".o_table td, .o_table th", placeholderHost: true },
         ],
 
         /** Selectors */

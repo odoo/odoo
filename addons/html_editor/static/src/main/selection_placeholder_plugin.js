@@ -20,7 +20,7 @@ const PLACEHOLDER_SELECTOR = `[${PLACEHOLDER_ATTRIBUTE}]`;
 
 export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
-    static dependencies = ["baseContainer", "history", "selection", "domObserver"];
+    static dependencies = ["baseContainer", "history", "selection", "domObserver", "region"];
     resources = {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
@@ -41,15 +41,6 @@ export class SelectionPlaceholderPlugin extends Plugin {
         is_selection_blocker_predicates: (blocker) => {
             if (isNotEditableNode(blocker)) {
                 return isBlock(blocker);
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (
-                container.getAttribute("contenteditable") === "true" &&
-                !isPhrasingContent(container) &&
-                allowsParagraphRelatedElements(container)
-            ) {
-                return true;
             }
         },
         region_properties: {
@@ -82,8 +73,10 @@ export class SelectionPlaceholderPlugin extends Plugin {
             this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
-                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
-                false
+                this.dependencies.region.getProperty(container, "placeholderHost") ??
+                (container.getAttribute("contenteditable") === "true" &&
+                    !isPhrasingContent(container) &&
+                    allowsParagraphRelatedElements(container))
         );
 
         const marginUpdates = [];
