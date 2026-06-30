@@ -141,7 +141,7 @@ kbd {
 }
 
 .o_web_client.o_touch_device {
-  .btn {
+  .btn:not(.btn-link-inline) {
       &, .btn-sm {
         &:where(:not(.dropdown-item)) {
           font-size: $font-size-base;
