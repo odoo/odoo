@@ -9,7 +9,7 @@ import { Plugin } from "@html_editor/plugin";
  * @property { BuilderActionsPlugin['applyAction'] } applyAction
  */
 
-/** @typedef {BuilderAction[]} builder_actions */
+/** @typedef {Record<String, BuilderAction>[]} builder_actions */
 
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";
