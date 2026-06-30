@@ -4939,33 +4939,13 @@ class AccountMove(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _get_import_source_attachment(self, selected_file_data):
-        """
-        Return the attachment to keep as source for reloading imported data.
-        The selected file may be an embedded file without its own attachment record.
-        In that case, keep the origin attachment so it can be unwrapped again when reloading.
-
-        :param dict selected_file_data: The file data selected for import.
-        :return: The selected source attachment, or its origin attachment when the selected file is embedded.
-        """
-        return selected_file_data.get('attachment') or selected_file_data.get('origin_attachment')
-
-    def _should_store_import_source_attachment(self, selected_file_data):
-        """
-        Hook to decide whether the import source attachment should be stored.
-        Modules can override this to opt out of generic reload behavior.
-
-        :param dict selected_file_data: The file data selected for import.
-        :return: True if ``import_source_attachment_id`` should be stored.
-        """
-        return True
-
     def _set_import_source_attachment(self, file_data_group, new=False):
         self.ensure_one()
         selected_file_data = self._get_selected_import_file_data(file_data_group, new=new)
-        if self._should_store_import_source_attachment(selected_file_data):
-            self.import_source_attachment_id = self._get_import_source_attachment(selected_file_data)
+        self.import_source_attachment_id = (
+            selected_file_data.get('attachment')
+            or selected_file_data.get('origin_attachment')
+        )
 
     def _extend_with_attachments(self, files_data, new=False):
         if new:
@@ -6708,6 +6688,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids.unlink()
 
     def _reset_fields_for_reload(self):
+        self.is_manually_modified = False
         with self._get_edi_creation() as move_form:
             move_form.partner_id = False
             move_form.invoice_date = False
@@ -6732,8 +6713,7 @@ class AccountMove(models.Model):
 
             files_data = self._to_files_data(self.import_source_attachment_id)
             files_data.extend(self._unwrap_attachments(files_data))
-            file_data_groups = self._group_files_data_into_groups_of_mixed_types(files_data)
-            self._extend_with_attachments(file_data_groups[0])
+            self._extend_with_attachments(files_data)
 
         except Exception as e:  # noqa: BLE001
             _logger.warning("Error while reloading imported data on account.move %d: %s", self.id, e)
