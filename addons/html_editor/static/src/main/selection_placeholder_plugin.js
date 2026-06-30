@@ -39,17 +39,6 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (blocker) => {
-            if (
-                (blocker.nodeType === Node.ELEMENT_NODE &&
-                    blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
-                !isBlock(blocker)
-            ) {
-                return false;
-            } else if (isNotEditableNode(blocker)) {
-                return true;
-            }
-        },
         region_properties: {
             within: PLACEHOLDER_SELECTOR,
             powerButtons: false,
@@ -76,8 +65,21 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * everywhere we need them, and absent wherever they are not useful.
      */
     updatePlaceholders(root = this.editable) {
-        const isSelectionBlocker = (node) =>
-            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        // A non-editable block is a selection blocker by default; plugins
+        // override this per node via the `selectionBlocker` region property.
+        // Placeholders and inline elements are never selection blockers.
+        const isSelectionBlocker = (node) => {
+            if (
+                (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
+                !isBlock(node)
+            ) {
+                return false;
+            }
+            const region = this.dependencies.region.getProperty(node, "selectionBlocker");
+            const base = isNotEditableNode(node) ? true : undefined;
+            const defined = [region, base].filter((r) => r !== undefined);
+            return defined.length ? defined.every(Boolean) : false;
+        };
         // A non-editable, phrasing or non-paragraph container can never host a
         // placeholder, whatever its `placeholderHost` region property says.
         const placeholderParents = selectElements(this.editable, "*").filter(
