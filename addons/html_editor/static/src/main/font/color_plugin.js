@@ -382,7 +382,7 @@ export class ColorPlugin extends Plugin {
                             font.style.webkitTextFillColor = color;
                         }
                     }
-                    if (node.textContent) {
+                    if (node.nodeName === "BR" || node.textContent) {
                         font.appendChild(node);
                     } else {
                         fillEmpty(font);
