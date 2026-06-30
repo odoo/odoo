@@ -27,7 +27,8 @@ export class CustomFavoriteItem extends Component {
      * @param {Event} ev
      */
     saveFavorite(ev) {
-        if (!this.state.description) {
+        const description = this.state.description?.trim() ?? "";
+        if (!description) {
             this.notificationService.add(_t("A name for your favorite filter is required."), {
                 type: "danger",
             });
@@ -35,7 +36,7 @@ export class CustomFavoriteItem extends Component {
             return this.descriptionRef.el.focus();
         }
         const favorites = this.env.searchModel.getSearchItems(
-            (s) => s.type === "favorite" && s.description === this.state.description
+            (s) => s.type === "favorite" && s.description === description
         );
         if (favorites.length) {
             this.notificationService.add(_t("A filter with same name already exists."), {
@@ -44,7 +45,7 @@ export class CustomFavoriteItem extends Component {
             ev.stopPropagation();
             return this.descriptionRef.el.focus();
         }
-        const { description, isDefault, isShared } = this.state;
+        const { isDefault, isShared } = this.state;
         const embeddedActionId = this.env.config.currentEmbeddedActionId || false;
         this.env.searchModel.createNewFavorite({
             description,
