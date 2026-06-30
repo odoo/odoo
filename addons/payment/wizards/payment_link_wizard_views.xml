@@ -31,11 +31,12 @@
                     <field name="warning_message"/>
                 </div>
                 <footer>
+                    <field name="link_copy_text" invisible="True"/>
                     <field name="link"
-                           string="Generate and Copy Payment Link"
                            readonly="1"
                            disabled="bool(warning_message)"
                            widget="PaymentWizardCopyClipboardButtonField"
+                           options="{'copy_text_field': 'link_copy_text'}"
                            data-hotkey="q"/>
                     <button string="Close"
                             class="btn btn-secondary rounded-2"

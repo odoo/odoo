@@ -32,6 +32,7 @@ class PaymentLinkWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner')
     partner_email = fields.Char(related='partner_id.email')
     link = fields.Char(string="Payment Link", compute='_compute_link')
+    link_copy_text = fields.Char(default=lambda self: _("Generate and Copy Payment Link"), readonly=True, store=False)
     company_id = fields.Many2one('res.company', compute='_compute_company_id')
     warning_message = fields.Char(compute='_compute_warning_message')
 

@@ -22,10 +22,6 @@ class PaymentWizardCopyClipboardButtonField extends CopyClipboardButtonField {
 const paymentWizardCopyClipboardButtonField = {
     ...copyClipboardButtonField,
     component: PaymentWizardCopyClipboardButtonField,
-    extractProps: (fieldInfo, dynamicInfo) => ({
-        ...copyClipboardButtonField.extractProps(fieldInfo, dynamicInfo),
-        string: fieldInfo.string,
-    }),
 };
 
 registry

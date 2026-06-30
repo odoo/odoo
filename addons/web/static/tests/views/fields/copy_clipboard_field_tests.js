@@ -34,6 +34,16 @@ QUnit.module("Fields", (hooks) => {
                             type: "text",
                             default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
                         },
+                        copy_text_field: {
+                            string: "Custom Copy",
+                            type: "char",
+                            default: "Custom Copy Text",
+                        },
+                        success_text_field: {
+                            string: "Custom Success",
+                            type: "char",
+                            default: "Custom Success Text",
+                        },
                     },
                     records: [
                         {
@@ -193,6 +203,54 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_clipboard_button");
         await nextTick();
         assert.verifySteps(["copied tooltip"]);
+    });
+
+    QUnit.test("CopyClipboardField: use custom copy text and success text from options", async function (assert) {
+        const fakePopoverService = {
+            async start() {
+                return {
+                    add(el, comp, params) {
+                        assert.strictEqual(el.textContent, "Custom Copy Text", "The button should display the copy text from copy text field in options");
+                        assert.deepEqual(
+                            params,
+                            { tooltip: "Custom Success Text" }, // Value from serverData.success_text_field
+                            "The tooltip should display the success text from the success text field in options"
+                        );
+                        assert.step("custom copy tooltip");
+                    },
+                };
+            },
+        };
+        serviceRegistry.remove("popover");
+        serviceRegistry.add("popover", fakePopoverService);
+
+        patchWithCleanup(browser, {
+            navigator: {
+                clipboard: {
+                    writeText: () => Promise.resolve(),
+                },
+            },
+        });
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="copy_text_field" invisible="1"/>
+                        <field name="success_text_field" invisible="1"/>
+                        <field name="char_field" 
+                               widget="CopyClipboardChar" 
+                               options="{'copy_text_field': 'copy_text_field', 'success_text_field': 'success_text_field'}"/>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        await click(target, ".o_clipboard_button");
+        assert.verifySteps(["custom copy tooltip"]);
     });
 
     QUnit.module("CopyClipboardButtonField");
