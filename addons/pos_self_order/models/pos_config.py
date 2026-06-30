@@ -16,7 +16,7 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     def _self_order_kiosk_default_languages(self):
-        return self.env["res.lang"].get_installed()
+        return self.sudo().env["res.lang"]._get_active_langs().sorted('name')
 
     def _self_order_default_user(self):
         users = self.env["res.users"].search(['|', ('company_ids', 'in', self.env.company.id), ('company_id', '=', False)])
