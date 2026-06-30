@@ -413,7 +413,7 @@ export class ColorPlugin extends Plugin {
                         cursors.update(callbacksForCursorUpdate.after(node, font));
                         node.after(font);
                     }
-                    if (node.textContent) {
+                    if (node.nodeName === "BR" || node.textContent) {
                         cursors.update(callbacksForCursorUpdate.append(font, node));
                         font.appendChild(node);
                         if (isTextNode(node) && isZWS(node)) {
