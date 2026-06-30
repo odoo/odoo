@@ -36,17 +36,18 @@ export class TableRowLayout extends LayoutModel {
 
 export class CellLayout extends ElementLayout {
     constructor(root = {}) {
-        root.tag = "TD";
-        super(root);
-        this.setAttributes({
-            classNames: "o-ci-cell-layout",
-            // TODO EGGMAIL: reevaluate valign and vertical-align
+        root = assignDefaultElementOptions(root, {
             attributes: {
                 valign: "top",
             },
             style: {
                 "vertical-align": "top",
             },
+        });
+        root.tag = "TD";
+        super(root);
+        this.setAttributes({
+            classNames: "o-ci-cell-layout",
         });
     }
 }

@@ -708,11 +708,13 @@ export class TableStrategyPlugin extends Plugin {
         return clusterEmailNodes;
     }
 
-    buildRow({ isLast }) {
+    buildRow({ verticalAlign }) {
         const layout = new TableRowLayout();
         const emailNode = new EmailNode({ layout });
-        emailNode.analysis.facts.acceptTableOuterSpacing = true;
         emailNode.analysis.facts.useTableStrategy = true;
+        if (!verticalAlign) {
+            emailNode.analysis.facts.acceptTableOuterSpacing = true;
+        }
         return emailNode;
     }
 
@@ -723,12 +725,14 @@ export class TableStrategyPlugin extends Plugin {
             styleContext,
         };
         const style = { width: `${widthRatio}%` };
+        const attributes = { width: `${widthRatio}%` };
         if (verticalAlign) {
             style["vertical-align"] = verticalAlign;
+            attributes.valign = verticalAlign;
         }
         Object.assign(refs.root, {
-            style: { width: `${widthRatio}%` },
-            attributes: { width: `${widthRatio}%` },
+            style,
+            attributes,
         });
         const layout = new CellLayout(refs.root);
         const cellEmailNode = new EmailNode({ layout });
@@ -739,13 +743,15 @@ export class TableStrategyPlugin extends Plugin {
             );
             cellEmailNode.appendChild(child);
         }
-        if (!isLast) {
-            cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
-        }
         cellEmailNode.analysis.facts.useTableStrategy = true;
-        cellEmailNode.analysis.facts.acceptCellNewWidth = true;
-        cellEmailNode.analysis.facts.acceptDescendantBackground = true;
-        cellEmailNode.analysis.facts.acceptDescendantBorder = true;
+        if (!verticalAlign) {
+            if (!isLast) {
+                cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
+            }
+            cellEmailNode.analysis.facts.acceptCellNewWidth = true;
+            cellEmailNode.analysis.facts.acceptDescendantBackground = true;
+            cellEmailNode.analysis.facts.acceptDescendantBorder = true;
+        }
         return cellEmailNode;
     }
 
