@@ -1,21 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="website.s_dynamic_snippet_wrapper_carousel_arrows">
+        <div class="o_carousel_arrow_wrap align-items-center pe-none">
+            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+                <span class="o_carousel_arrow oi oi-chevron-left p-3"/>
+                <span class="visually-hidden">Previous</span>
+            </a>
+        </div>
+        <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
+            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+                <span class="o_carousel_arrow oi oi-chevron-right p-3"/>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </template>
+    
+    <template id="website.s_dynamic_snippet_wrapper_carousel_base">
+        <div t-att-class="'o_dynamic_snippet_empty' if not data else None">
+            <div
+                t-if="data"
+                t-att-id="unique_id"
+                t-attf-class="carousel slide d-flex flex-column-reverse #{extra_carousel_class}"
+                t-att-data-limit="limit"
+                t-att-data-number-of-elements="number_of_elements"
+                t-att-data-number-of-elements-small-devices="number_of_elements_small_devices"
+                t-att-data-row-per-slide="row_per_slide"
+                t-att-data-bs-interval="carousel_interval"
+                role="region"
+                aria-roledescription="carousel"
+            >
+                <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-2">
+                    <t t-call="website.s_dynamic_snippet_wrapper_carousel_arrows">
+                        <t t-set="unique_id" t-value="unique_id" />
+                    </t>
+                </div>
+                <!-- Controls and indicators are set before the content so that they
+                     are focused in priority when navigating the page with tab. -->
+                <t t-set="row_per_card" t-value="1 if grouped_by_chunk else row_per_slide"/>
+                <div class="carousel-inner w-100 mx-auto"
+                    t-attf-id="#{unique_id}_inner"
+                    aria-label="Carousel"
+                    aria-live="off"
+                >
+                    <t t-foreach="ceil(len(data) / row_per_card)" t-as="data_index">
+                        <div
+                            t-attf-class="carousel-item #{extra_classes} #{'active' if data_index_first else ''}"
+                            t-att-data-rewrap-row-limit="grouped_by_chunk and limit"
+                            t-att-data-rewrap-row-number-of-elements="grouped_by_chunk and number_of_elements"
+                            t-att-data-rewrap-row-number-of-elements-small-devices="grouped_by_chunk and number_of_elements_small_devices"
+                            t-att-data-dynamic-carousel-item="None if grouped_by_chunk else ''"
+                            role="group"
+                            aria-roledescription="slide"
+                        >
+                            <div t-attf-class="s_dynamic_snippet_row row g-3 #{extra_row_class}">
+                                <t
+                                    t-foreach="row_per_card" t-as="row_index"
+                                >
+                                    <div
+                                        t-if="data_index * row_per_card + row_index &lt; len(data)"
+                                        t-attf-class="#{col_class} #{rewrap_col_class}"
+                                        t-att-data-rewrap-col="grouped_by_chunk and rewrap_col_class"
+                                        t-att-data-dynamic-carousel-item="'' if grouped_by_chunk else None"
+                                    >
+                                        <t t-out="data[data_index * row_per_card + row_index]"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website.s_dynamic_snippet_wrapper_carousel_page_scroll">
+        <t t-call="website.s_dynamic_snippet_wrapper_carousel_base"
+            grouped_by_chunk="True"
+            col_class.f="d-flex flex-grow-0 flex-shrink-0"
+            rewrap_col_class.f="col-3"
+            row_per_slide="row_per_slide or 1"
+        />
+    </template>
+
+    <template id="website.s_dynamic_snippet_wrapper_carousel_single_scroll">
+        <t t-call="website.s_dynamic_snippet_wrapper_carousel_base"
+            grouped_by_chunk="None"
+            extra_carousel_class.f="o_carousel_multi_items"
+            extra_row_class.f="h-100 mx-0 mt-0"
+            col_class.f="d-flex flex-grow-1 flex-shrink-0 mt-0 px-0"
+            row_per_slide="row_per_slide or 1"
+        />
+    </template>
+
+    <template id="website.s_dynamic_snippet_wrapper_carousel">
+        <t t-if="scroll_mode == 'single'" t-call="website.s_dynamic_snippet_wrapper_carousel_single_scroll"/>
+        <t t-else="" t-call="website.s_dynamic_snippet_wrapper_carousel_page_scroll"/>
+    </template>
+
     <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
         <t t-call="website.s_dynamic_snippet_template"
-            snippet_name.f="s_dynamic_snippet_carousel">
-                <t t-set="snippet_title" t-valuef="Our latest content"/>
-                <t t-set="snippet_description" t-valuef="Check out what's new in our company !"/>
-            </t>
+            snippet_name.f="s_dynamic_snippet_carousel"
+            snippet_title.translate="Our latest content"
+            snippet_description.translate="Check out what's new in our company !"
+            filter_param="dict(
+                wrapper_template='website.s_dynamic_snippet_wrapper_carousel',
+                wrapper_data=dict(scroll_mode='multi', carousel_interval=5000),
+            )"
+        />
     </template>
 
 <asset id="website.s_dynamic_snippet_carousel_000_scss" name="Dynamic snippet carousel 000 SCSS">
     <bundle>web.assets_frontend</bundle>
     <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.scss</path>
-</asset>
-
-<asset id="website.s_dynamic_snippet_carousel_000_xml" name="Dynamic snippet carousel 000 XML">
-    <bundle>web.assets_frontend</bundle>
-    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.xml</path>
 </asset>
 
 </odoo>

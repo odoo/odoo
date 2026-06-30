@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="website.dynamic_snippet_error">
+        <div class="dynamic_filter_error alert alert-warning fade show d-print-none rounded-0 o_dynamic_snippet_empty">
+            Your Dynamic Snippet will be displayed here... This message is displayed because an error occured when retrieving its content.<br/>
+            <span t-out="error"/>
+        </div>
+    </template>
+
+    <template id="website.dynamic_snippet_incomplete">
+        <div class="missing_option_warning alert alert-info fade show d-print-none rounded-0 o_dynamic_snippet_empty">
+            Your Dynamic Snippet will be displayed here... This message is displayed because you did not provide enough options to retrieve its content.<br/>
+        </div>
+    </template>
+
+    <template id="website.s_dynamic_snippet_wrapper_grid">
+        <!-- Default Layout -->
+        <t t-if="not column_classes">
+            <div
+                t-attf-class="row mb-4 #{extra_classes} #{'o_dynamic_snippet_empty' if not data else ''}"
+                t-att-data-rewrap-row-limit="limit"
+                t-att-data-rewrap-row-number-of-elements="number_of_elements"
+                t-att-data-rewrap-row-number-of-elements-small-devices="number_of_elements_small_devices"
+            >
+                <t t-foreach="data" t-as="data_entry">
+                    <div class="d-flex flex-grow-0 flex-shrink-0 col-3" data-rewrap-col="col-3">
+                        <t t-out="data_entry"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+
+        <!-- Custom Layout -->
+        <t t-else="">
+            <div t-attf-class="#{'' if limit == 1 else 's_dynamic_snippet_row'} row #{extra_classes} #{'o_dynamic_snippet_empty' if not data else ''}">
+                <t t-foreach="data" t-as="data_entry">
+                    <div t-attf-class="#{column_classes}">
+                        <t t-out="data_entry"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
     <template id="website.s_dynamic_snippet_template">
         <t t-set="snippet_title_default">Our latest content</t>
         <t t-set="snippet_description_default">Check out what's new in our company !</t>
         <t t-set="snippet_button_text_default">See All <i class="fa fa-long-arrow-right ms-2" role="img"/></t>
-        <section t-att-data-snippet="snippet_name"
-            t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_loading pt64 pb64"
-            t-att-data-custom-template-data="custom_template_data or '{}'"
-            t-att-data-number-of-records="is_single_record and '1' or ''">
+        <section t-att-data-snippet="snippet_name" t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic pt64 pb64">
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">
                 <div class="row s_nb_column_fixed">
-                    <!-- Dynamic snippet loading effect -->
-                    <section class="s_dynamic_snippet_holder d-none px-4 placeholder-glow">
-                        <div class="row">
-                            <span class="placeholder col-3 rounded"/>
-                            <span class="placeholder col-2 offset-7 rounded"/>
-                            <span class="placeholder mt-3 col-6 rounded"/>
-                        </div>
-                        <div class="row mt-4">
-                            <span class="placeholder col-12 rounded" style="height: 250px;"/>
-                        </div>
-                    </section>
                     <section t-attf-class="{{is_single_record and 'd-none' or 'd-flex'}} {{snippet_heading_extra_classes or 'justify-content-between flex-column flex-md-row'}} s_dynamic_snippet_title oe_unremovable oe_unmovable mb-lg-0 pb-3 pb-md-0 s_col_no_resize">
                         <div t-att-class="snippet_heading_inner_extra_classes">
                             <h2 class="h3" t-out="snippet_title or snippet_title_default"/>
@@ -30,20 +58,43 @@
                             <a t-att-class="snippet_button_classes" t-att-href="main_page_url" t-out="snippet_button_text or snippet_button_text_default"/>
                         </div>
                     </section>
-                    <section t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}">
-                        <div class="css_non_editable_mode_hidden">
-                            <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0">
-                                Your Dynamic Snippet will be displayed here... This message is displayed because you did not provide enough options to retrieve its content.<br/>
-                            </div>
-                        </div>
-                        <div class="dynamic_snippet_template">
-                            <t t-out="0"/>
-                        </div>
+                    <section
+                        t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}"
+                        data-oe-shared-snippet="website.shared_snippet_template_dynamic_snippet_content"
+                        t-att="{
+                            'data-arg-' + key: json.dumps(value)
+                            for key, value in (
+                                dict(wrapper_template='website.s_dynamic_snippet_wrapper_grid') |
+                                (dict(limit=1) if is_single_record else {}) |
+                                (filter_param or {})
+                            ).items()
+                        }"
+                    >
+                        <t t-out="0"/>
                     </section>
                 </div>
             </div>
         </section>
     </template>
+
+    <template id="website.shared_snippet_template_dynamic_snippet_content" groups="base.group_user">
+        <t t-set="filter_res" t-value="env['website.snippet.filter'].sudo().browse(filter_id)"/>
+        <t t-if="not filter_res._validate_template_keys(content_template, wrapper_template)">
+            <t t-call="website.dynamic_snippet_error" error.translate="Invalid Templates"/>
+        </t>
+        <t t-else="">
+            <t t-set="filter_result" t-value="filter_res._prepare_values_or_sample(res_model, res_id, limit, search_domain, search_extra, main_contextual_record)"/>
+            <t t-if="filter_result.incomplete or not content_template" t-call="website.dynamic_snippet_incomplete"/>
+            <t t-elif="filter_result.error" t-call="website.dynamic_snippet_error" error="filter_result.error"/>
+            <t t-else="">
+                <t t-set="rendered_values">
+                    <t t-call="{{content_template}}" t-args="content_data" records="filter_result.values" is_sample="filter_result.is_sample"/>
+                </t>
+                <t t-call="{{wrapper_template}}" t-args="wrapper_data" data="env['website.snippet.filter']._split_children(rendered_values)"/>
+            </t>
+        </t>
+    </template>
+
     <template id="s_dynamic_snippet" name="Dynamic Snippet">
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name.f="s_dynamic_snippet"/>
@@ -52,11 +103,6 @@
 <asset id="website.s_dynamic_snippet_000_scss" name="Dynamic snippet 000 SCSS">
     <bundle>web.assets_frontend</bundle>
     <path>website/static/src/snippets/s_dynamic_snippet/000.scss</path>
-</asset>
-
-<asset id="website.s_dynamic_snippet_000_xml" name="Dynamic snippet 000 XML">
-    <bundle>web.assets_frontend</bundle>
-    <path>website/static/src/snippets/s_dynamic_snippet/000.xml</path>
 </asset>
 
 </odoo>

@@ -1,16 +1,68 @@
-import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getContextualFilterDomain } from "./dynamic_snippet_products_option";
 
 export class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
-    static dependencies = ["dynamicSnippetCarouselOption"];
-    static shared = ["fetchCategories", "getModelNameFilter"];
-    modelNameFilter = "product.product";
+    static shared = ["fetchCategories"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_dynamic_snippet_template_updated_handlers: this.onTemplateUpdated.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        dynamic_filter_search_domain_processors: (
+            domain,
+            { productRibbonIds, productTagIds, productNames, productCategoryId }
+        ) => {
+            if (productRibbonIds?.length) {
+                const ribbonIds = productRibbonIds.map((productRibbon) => productRibbon.id);
+                domain.push(
+                    "|",
+                    ["variant_ribbon_id", "in", ribbonIds],
+                    "&",
+                    ["variant_ribbon_id", "=", false],
+                    ["product_tmpl_id.website_ribbon_id", "in", ribbonIds]
+                );
+            }
+            if (productTagIds?.length) {
+                domain.push(["all_product_tag_ids", "in", productTagIds.map((e) => e.id)]);
+            }
+            if (productNames) {
+                const nameDomain = [];
+                for (const productName of productNames.split(",")) {
+                    // Ignore empty names
+                    if (!productName.length) {
+                        continue;
+                    }
+                    // Search on name, internal reference and barcode.
+                    if (nameDomain.length) {
+                        nameDomain.unshift("|");
+                    }
+                    nameDomain.push(
+                        ...[
+                            "|",
+                            "|",
+                            ["name", "ilike", productName],
+                            ["default_code", "=", productName],
+                            ["barcode", "=", productName],
+                        ]
+                    );
+                }
+                domain.push(...nameDomain);
+            }
+            if (productCategoryId) {
+                domain.push(["public_categ_ids", "child_of", productCategoryId]);
+            }
+            return domain;
+        },
+        dynamic_filter_contextual_domain_processors: (domain, { snippetEl }) => {
+            if (snippetEl.matches(".s_dynamic_snippet_products")) {
+                domain.push(...getContextualFilterDomain(this.editable));
+            }
+            return domain;
+        },
+        model_name_filter_overrides: (snippetEl) => {
+            if (snippetEl.matches(".s_dynamic_snippet_products")) {
+                return "product.product";
+            }
+        },
     };
     setup() {
         this.categories = undefined;
@@ -18,32 +70,6 @@ export class DynamicSnippetProductsOptionPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.categories = undefined;
-    }
-    async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(".s_dynamic_snippet_products")) {
-            for (const [optionName, value] of [
-                ["productCategoryId", "all"],
-                ["showVariants", true],
-            ]) {
-                setDatasetIfUndefined(snippetEl, optionName, value);
-            }
-            await this.dependencies.dynamicSnippetCarouselOption.setOptionsDefaultValues(
-                snippetEl,
-                this.modelNameFilter,
-                getContextualFilterDomain(this.editable)
-            );
-        }
-    }
-    getModelNameFilter() {
-        return this.modelNameFilter;
-    }
-    onTemplateUpdated({ el, template }) {
-        if (el.matches(".s_dynamic_snippet_products")) {
-            this.dependencies.dynamicSnippetCarouselOption.updateTemplateSnippetCarousel(
-                el,
-                template
-            );
-        }
     }
     async fetchCategories() {
         if (!this.categories) {

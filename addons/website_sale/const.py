@@ -332,11 +332,6 @@ SNIPPET_DEFAULTS = {
         "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
         "data_attributes": {
             "snippet": "s_dynamic_snippet_products",
-            "carousel-interval": "5000",
-            "product-category-id": "all",
-            "number-of-elements": "4",
-            "number-of-elements-small-devices": "2",
-            "show-variants": "true",
         },
         "add_classes": [
             "o_wsale_products_opt_design_cards",
@@ -358,12 +353,6 @@ SNIPPET_DEFAULTS = {
         ),
         "data_attributes": {
             "snippet": "s_dynamic_snippet_category_list",
-            "show-parent": "true",
-            "columns": "4",
-            "rounded": "2",
-            "gap": "2",
-            "size": "medium",
-            "alignment": "center",
         },
     },
 }

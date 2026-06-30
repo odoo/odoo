@@ -42,12 +42,10 @@
         ],
         'web.assets_unit_tests_setup': [
             'website_blog/static/src/interactions/**/*.js',
-            'website_blog/static/src/snippets/**/*.js',
         ],
         'web.assets_frontend': [
             'website_blog/static/src/interactions/**/*',
             'website_blog/static/src/scss/website_blog.scss',
-            'website_blog/static/src/snippets/**/*.js',
         ],
         'website.assets_editor': [
             'website_blog/static/src/js/systray_items/*.js',

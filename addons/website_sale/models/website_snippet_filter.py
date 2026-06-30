@@ -4,7 +4,6 @@ from functools import partial
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.http import request
 from odoo.tools import BinaryBytes
 
 
@@ -17,16 +16,34 @@ class WebsiteSnippetFilter(models.Model):
         " cross selling",
     )
 
-    def _prepare_values(self, limit=None, search_domain=None, **kwargs):
-        if (self.model_name or kwargs.get("res_model")) in {
+    def _prepare_values(self, limit=None, search_domain=None, search_extra=None, main_object=None, **kwargs):
+        model_name = self.model_name or kwargs.get("res_model")
+        if model_name in {
             "product.product",
             "product.public.category",
         } and not self.env.website.has_ecommerce_access():
             return []
-        hide_variants = False
-        if search_domain and "hide_variants" in search_domain:
-            hide_variants = True
-            search_domain.remove("hide_variants")
+
+        hide_variants = model_name == "product.product"
+        if search_extra and search_extra.pop("show_variants", False):
+            hide_variants = False
+        if search_extra and search_extra.pop("current_product_category", False):
+            product_category_id = None
+            product_template_id = None
+
+            if main_object and main_object._name == "product.public.category":
+                product_category_id = main_object.id
+            elif main_object and main_object._name == "product.template":
+                product_template_id = main_object.id
+                product_category_id = main_object.public_categ_ids.ids and main_object.public_categ_ids.ids[0]
+
+            if not search_domain:
+                search_domain = []
+            if product_category_id:
+                search_domain.append(("public_categ_ids", "child_of", product_category_id))
+            elif product_template_id:
+                search_domain.append(("public_categ_ids.product_tmpl_ids", "=", product_template_id))
+
         update_limit_cache = False
         product_limit = limit or self.limit
         if hide_variants and self.filter_id.model_id == "product.product":
@@ -39,7 +56,7 @@ class WebsiteSnippetFilter(models.Model):
         res = super(
             WebsiteSnippetFilter,
             self.with_context(hide_variants=hide_variants, product_limit=product_limit),
-        )._prepare_values(limit=limit, search_domain=search_domain, **kwargs)
+        )._prepare_values(limit=limit, search_domain=search_domain, search_extra=search_extra, main_object=main_object, **kwargs)
         if update_limit_cache:
             update_limit_cache(stored_limit)
         return res
@@ -141,14 +158,19 @@ class WebsiteSnippetFilter(models.Model):
 
                     # TODO VFE combination_info is only called to get the price here
                     # factorize and avoid computing the rest
+                    website = self.env.website
+                    info = dict(
+                        pricelist=website._get_and_cache_current_pricelist(),
+                        fiscal_position=website._get_and_cache_current_fiscal_position(),
+                    )
                     if product.is_product_variant:
-                        res_product.update(product._get_combination_info_variant())
+                        res_product.update(product._get_combination_info_variant(**info))
                     elif hide_variants:
-                        res_product.update(product._get_combination_info(only_template=True))
+                        res_product.update(product._get_combination_info(only_template=True, **info))
                         # Re-add product_id since it is set to false and required by some tests
                         res_product["product_id"] = product.product_variant_id.id
                     else:
-                        res_product.update(product._get_combination_info())
+                        res_product.update(product._get_combination_info(**info))
                     res_product["hide_variants"] = hide_variants
 
                     if records.env.context.get("add2cart_rerender"):
@@ -158,14 +180,14 @@ class WebsiteSnippetFilter(models.Model):
         return res_products
 
     @api.model
-    def _prepare_category_list_data(self, parent_id=None):  # noqa: PLR6301
+    def _prepare_category_list_data(self):
         """Return a list of categories to be displayed in the category list snippet.
-        If `parent_id` is provided, return it with its children, otherwise top-level categories.
+        If `parent_id` is provided in the context, return it with its children, otherwise top-level categories.
 
-        :param int parent_id: ID of the parent category, if any.
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
+        parent_id = (self.env.context.get("search_extra") or {}).get("parent_id", None)
         CategorySudo = self.env["product.public.category"].sudo()
         domain = CategorySudo._get_available_category_domain(self.env.website.id)
         if parent_id:
@@ -235,11 +257,11 @@ class WebsiteSnippetFilter(models.Model):
                 products = sold_products.sudo(False).filtered_domain(domain)[:limit]
         return products.with_context(display_default_code=False)
 
-    def _get_products_latest_viewed(self, _website, limit, domain, **_kwargs):
+    def _get_products_latest_viewed(self, website, limit, domain, **_kwargs):
         products = self.env["product.product"]
         visitor = self.env["ir.http"]._get_visitor_from_request()
         if visitor:
-            excluded_products = request.cart.order_line.product_id.ids
+            excluded_products = website._get_and_cache_current_cart().order_line.product_id.ids
             tracked_products = (
                 self
                 .env["website.track"]
@@ -279,8 +301,11 @@ class WebsiteSnippetFilter(models.Model):
         return products
 
     def _get_products_recently_sold_with(
-        self, website, limit, domain, product_template_id, **_kwargs
+        self, website, limit, domain, **_kwargs
     ):
+        product_template_id = None
+        if (main_object := self.env.context.get("main_object")) and main_object._name == "product.template":
+            product_template_id = main_object.id
         products = self.env["product.product"]
         current_template = (
             self
@@ -305,7 +330,7 @@ class WebsiteSnippetFilter(models.Model):
                 )
             )
             if sale_orders:
-                cart_products = request.cart.order_line.product_id
+                cart_products = website._get_and_cache_current_cart().order_line.product_id
                 excluded_products = cart_products.product_tmpl_id.product_variant_ids
                 excluded_products |= current_template.product_variant_ids
                 included_products = sale_orders.order_line.product_id
@@ -322,8 +347,11 @@ class WebsiteSnippetFilter(models.Model):
         return products
 
     def _get_products_accessories(
-        self, _website, limit, domain, product_template_id=None, **_kwargs
+        self, website, limit, domain, **_kwargs
     ):
+        product_template_id = None
+        if (main_object := self.env.context.get("main_object")) and main_object._name == "product.template":
+            product_template_id = main_object.id
         products = self.env["product.product"]
         current_template = (
             self
@@ -332,7 +360,7 @@ class WebsiteSnippetFilter(models.Model):
             .exists()
         )
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = website._get_and_cache_current_cart().order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             included_products = current_template._get_website_accessory_product()
@@ -349,8 +377,11 @@ class WebsiteSnippetFilter(models.Model):
         return products
 
     def _get_products_alternative_products(
-        self, _website, limit, domain, product_template_id=None, **_kwargs
+        self, website, limit, domain, **_kwargs
     ):
+        product_template_id = None
+        if (main_object := self.env.context.get("main_object")) and main_object._name == "product.template":
+            product_template_id = main_object.id
         products = self.env["product.product"]
         current_template = (
             self
@@ -359,7 +390,7 @@ class WebsiteSnippetFilter(models.Model):
             .exists()
         )
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = website._get_and_cache_current_cart().order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             alternative_products = current_template._get_website_alternative_product()

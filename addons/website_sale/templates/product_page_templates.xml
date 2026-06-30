@@ -786,9 +786,7 @@
             <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
                 <section data-snippet="s_dynamic_snippet_products"
                     class="oe_unmovable oe_unremovable s_dynamic_snippet_products o_wsale_alternative_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
-                    data-name="Alternative Products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
-                    data-template-key="website_sale.dynamic_filter_template_product_product_products_item" data-product-category-id="all" data-number-of-elements="4"
-                    data-number-of-elements-small-devices="1" data-number-of-records="16" data-carousel-interval="5000" data-bs-original-title="" title="">
+                    data-name="Alternative Products" style="background-image: none;" data-bs-original-title="" title="">
                     <div class="container">
                         <div class="row s_nb_column_fixed">
                             <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
@@ -798,9 +796,14 @@
                                 </div>
                             </section>
                         </div>
-                        <div class="o_not_editable">
-                            <div class="dynamic_snippet_template"/>
-                        </div>
+                        <div class="o_not_editable s_dynamic_snippet_content"
+                            t-shared-snippet="website.shared_snippet_template_dynamic_snippet_content"
+                            t-att-data-arg-filter_id="json.dumps(product._get_alternative_product_filter())"
+                            data-arg-content_template='"website_sale.dynamic_filter_template_product_product_products_item"'
+                            data-arg-limit="16"
+                            data-arg-wrapper_template='"website.s_dynamic_snippet_wrapper_carousel"'
+                            data-arg-wrapper_data='{ "scroll_mode": "multi", "carousel_interval": 5000 }'
+                        /> 
                     </div>
                 </section>
             </div>

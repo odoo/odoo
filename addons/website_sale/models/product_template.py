@@ -847,6 +847,7 @@ class ProductTemplate(models.Model):
         """
         pricelist = pricelist.with_context(self.env.context)
         currency = website.currency_id.with_context(self.env.context)
+        cart = request.cart if request and hasattr(request, "cart") else lazy(website._get_and_cache_current_cart)
 
         # Pricelist price doesn't have to be converted
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
@@ -946,7 +947,7 @@ class ProductTemplate(models.Model):
             max_quantities = [
                 max_quantity
                 for combo in product_or_template.sudo().combo_ids
-                if (max_quantity := combo._get_max_quantity(website, request.cart)) is not None
+                if (max_quantity := combo._get_max_quantity(website, cart)) is not None
             ]
             if max_quantities:
                 # No uom conversion: combo are not supposed to be sold with other uoms.
@@ -979,7 +980,7 @@ class ProductTemplate(models.Model):
             cart_quantity = 0.0
             if not product_sudo.allow_out_of_stock_order:
                 cart_quantity = product_sudo.uom_id._compute_quantity(
-                    request.cart._get_cart_qty(product_sudo.id), to_unit=uom
+                    cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
             digits = self.env["decimal.precision"].precision_get("Product Unit")
             rounding = 10**-digits

@@ -735,7 +735,7 @@ class Website(models.Model):
             ):
                 return pricelist_sudo.sudo()
 
-        if cart_sudo := request.cart:
+        if cart_sudo := request.cart if request and hasattr(request, "cart") else self.env.website._get_and_cache_current_cart():
             if not self.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()

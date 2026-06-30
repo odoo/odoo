@@ -1,11 +1,13 @@
 .s_dynamic_snippet_category {
     .o_category_container {
         grid-template-columns: repeat(var(--DynamicCategory-columns), 1fr);
-    }
 
-    &:not([data-columns="2"]) .o_category_container {
         @include media-breakpoint-between(md,lg) {
-            grid-template-columns: repeat(calc(var(--DynamicCategory-columns) - 1), 1fr);
+            grid-template-columns: repeat(calc(max(2, var(--DynamicCategory-columns) - 1)), 1fr);
+        }
+
+        @include media-breakpoint-down(sm) {
+            grid-template-columns: repeat(1, 1fr);
         }
     }
 
@@ -28,6 +30,10 @@
     .s_dynamic_category_item, .s_dynamic_category_wrapper_demo {
         border-radius: inherit;
         box-shadow: inherit;
+
+        @include media-breakpoint-down(sm) {
+            --DynamicCategory-max-column-span: 1;
+        }
     }
 
     &.s_dynamic_category_clickable_items {

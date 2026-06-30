@@ -12,8 +12,7 @@ declare module "plugins" {
     import { CardImageOptionShared } from "@website/builder/plugins/options/card_image_option_plugin";
     import { ChartOptionShared } from "@website/builder/plugins/options/chart_option_plugin";
     import { CookiesBarOptionShared } from "@website/builder/plugins/options/cookies_bar_option";
-    import { DynamicSnippetCarouselOptionShared } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
-    import { on_dynamic_snippet_template_updated_handlers, DynamicSnippetOptionShared } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+    import { DynamicSnippetOptionShared, dynamic_filter_contextual_domain_processors, dynamic_filter_search_domain_processors, model_name_filter_overrides } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
     import { footer_templates_providers, FooterOptionShared } from "@website/builder/plugins/options/footer_option_plugin";
     import { gallery_items_providers, reorder_items_processors } from "@website/builder/plugins/options/gallery_element_option_plugin";
     import { GoogleMapsOptionShared } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
@@ -43,7 +42,6 @@ declare module "plugins" {
         chartOptionPlugin: ChartOptionShared;
         CookiesBarOptionPlugin: CookiesBarOptionShared;
         customizeWebsite: CustomizeWebsiteShared;
-        dynamicSnippetCarouselOption: DynamicSnippetCarouselOptionShared;
         dynamicSnippetOption: DynamicSnippetOptionShared;
         edit_interaction: EditInteractionShared;
         footerOption: FooterOptionShared;
@@ -76,7 +74,6 @@ declare module "plugins" {
     export interface WebsiteResourcesList {
         // Handlers
         on_content_manually_updated_handlers: on_content_manually_updated_handlers;
-        on_dynamic_snippet_template_updated_handlers: on_dynamic_snippet_template_updated_handlers;
         on_hover_animation_mode_cleaned_handlers: on_hover_animation_mode_cleaned_handlers;
         on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
         on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
@@ -86,12 +83,17 @@ declare module "plugins" {
         can_have_hover_effect_predicates: can_have_hover_effect_predicates;
 
         // Processors
+        dynamic_filter_contextual_domain_processors: dynamic_filter_contextual_domain_processors;
+        dynamic_filter_search_domain_processors: dynamic_filter_search_domain_processors;
         reorder_items_processors: reorder_items_processors;
 
         // Providers
         footer_templates_providers: footer_templates_providers;
         gallery_items_providers: gallery_items_providers;
         header_templates_providers: header_templates_providers;
+
+        // Overrides
+        model_name_filter_overrides: model_name_filter_overrides;
 
         // Data
         searchbar_option_order_by_items: searchbar_option_order_by_items;

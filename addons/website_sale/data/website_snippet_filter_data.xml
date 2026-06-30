@@ -39,7 +39,7 @@ response = res_products
         <field name="state">code</field>
         <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-response = DynamicFilter._get_products('accessories', product_template_id=request.params.get('productTemplateId'))
+response = DynamicFilter._get_products('accessories')
         </field>
     </record>
     <record id="dynamic_snippet_recently_sold_with_action" model="ir.actions.server">
@@ -48,7 +48,7 @@ response = DynamicFilter._get_products('accessories', product_template_id=reques
         <field name="state">code</field>
         <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-response = DynamicFilter._get_products('recently_sold_with', product_template_id=request.params.get('productTemplateId'))
+response = DynamicFilter._get_products('recently_sold_with')
         </field>
     </record>
     <record id="dynamic_snippet_alternative_products" model="ir.actions.server">
@@ -57,7 +57,7 @@ response = DynamicFilter._get_products('recently_sold_with', product_template_id
         <field name="state">code</field>
         <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-response = DynamicFilter._get_products('alternative_products', product_template_id=request.params.get('productTemplateId'))
+response = DynamicFilter._get_products('alternative_products')
         </field>
     </record>
     <record id="dynamic_snippet_category_list" model="ir.actions.server">
@@ -66,7 +66,7 @@ response = DynamicFilter._get_products('alternative_products', product_template_
         <field name="state">code</field>
         <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-response = DynamicFilter._prepare_category_list_data(parent_id=request.params.get('parentId'))
+response = DynamicFilter._prepare_category_list_data()
         </field>
     </record>
     <!-- Dynamic Filter -->

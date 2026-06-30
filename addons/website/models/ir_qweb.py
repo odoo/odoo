@@ -1,13 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+import json
+import logging
 
 from collections import OrderedDict
 
-from odoo import models
+from lxml import etree
+from odoo import models, _
 from odoo.http import request
+from odoo.addons.base.models.ir_qweb import indent_code
 from odoo.addons.website.tools import add_form_signature
 
-
+_logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
@@ -48,6 +52,37 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _get_preload_attribute_xmlids(self):
+        return super()._get_preload_attribute_xmlids() + ['t-shared-snippet']
+
+    def _directives_eval_order(self):
+        directives = super()._directives_eval_order()
+        att_index = directives.index('att')
+        return [*directives[:att_index], 'shared-snippet', directives[att_index], 'shared-snippet-internal', *directives[att_index + 1:]]
+
+    def _compile_directive_shared_snippet(self, el, compile_context, indent):
+        if bool(list(el) or el.text):
+            _logger.warning("t-shared-snippet does not support inner content")
+            el.text = None
+            el[:] = []
+        callee = el.attrib.pop('t-shared-snippet')
+        assert '.shared_snippet_template_' in callee, _("You can only use template prefixed by shared_snippet_template_ ")
+        el.attrib['data-oe-shared-snippet'] = callee
+        el.attrib['t-shared-snippet-internal'] = callee
+        return []
+
+    def _compile_directive_shared_snippet_internal(self, el, compile_context, indent):
+        callee = el.attrib.pop('t-shared-snippet-internal')
+        el.append(etree.Element('t', {'t-call': callee, 't-args': 'SHARED_SNIPPET_ARGS', 'main_contextual_record': "main_object or record_of_field"}))
+        return [indent_code("values['SHARED_SNIPPET_ARGS'] = self._gather_shared_snippet_args(attrs)", indent)]
+
+    def _gather_shared_snippet_args(self, attrs):
+        args = {}
+        for attr, value in sorted(attrs.items()):
+            if attr.startswith('data-arg-'):
+                args[attr[len('data-arg-'):]] = json.loads(value)
+        return args
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):

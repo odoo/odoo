@@ -47,7 +47,7 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover("Blog Posts", "Blogs", "aaa Blog Test"),
         {
             content: "Check that the blog filter is applied",
-            trigger: `:iframe .s_dynamic_snippet_blog_posts:not([data-filter-by-blog-id="-1"])`,
+            trigger: `:iframe .s_dynamic_snippet_blog_posts .s_dynamic_snippet_content[data-arg-search_domain*="blog_id"]`,
         },
         // A dynamic snippet is always visible in edit mode.
         ...isSnippetVisible(true),

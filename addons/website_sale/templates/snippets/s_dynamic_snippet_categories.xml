@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <template id="website_sale.s_dynamic_snippet_wrapper_category_grid">
+        <t t-set="row_size" t-value="dict(small='10vh', medium='15vh', large='15vh').get(size)"/>
+        <div
+            t-attf-class="o_category_container d-grid gap-{{ gap }} rounded-{{ rounded }}"
+            contenteditable="false"
+            t-attf-style="--DynamicCategory-columns: {{ cols_count }}; grid-auto-rows: minmax({{ row_size }}, auto);"
+        >
+            <t t-foreach="data" t-as="category">
+                <t t-out="category"/>
+            </t>
+        </div>
+    </template>
 
     <template id="website_sale.s_dynamic_snippet_category_list" name="Category List">
+        <t t-set="default_button_text">Explore Now</t>
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name.f="s_dynamic_snippet_category_list"
             snippet_classes.f="oe_website_sale s_dynamic_category_clickable_items
                           s_dynamic_snippet_category s_dynamic_category_no_arrows"
             main_page_url.f="/shop"
             snippet_title.f="Crafting Beautiful Spaces"
-            snippet_description.f="Designing elegant, inviting environments that inspire and delight.">
+            snippet_description.f="Designing elegant, inviting environments that inspire and delight."
+            filter_param="dict(
+                wrapper_template='website_sale.s_dynamic_snippet_wrapper_category_grid',
+                wrapper_data=dict(gap=2, rounded=2, cols_count=4, size='medium'),
+                content_data=dict(size='medium', alignment='center', include_parent=true, col_span_two=true, button_text=default_button_text),
+            )"
+        >
             <t t-call="website_sale.s_dynamic_snippet_category_preview_data"/>
         </t>
     </template>

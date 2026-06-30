@@ -161,7 +161,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
 
         # Visibility for misconfigured snippets.
-        homepage_view_arch_misconfigured = re.sub(r'data-filter-id="\d+"', 'data-filter-id="-1"', homepage_view.arch_db)
+        homepage_view_arch_misconfigured = re.sub(r'data-arg-content_template="[^"]*"', '', homepage_view.arch_db)
         homepage_view.write({'arch': homepage_view_arch_misconfigured})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_misconfigured', login='admin')
 
