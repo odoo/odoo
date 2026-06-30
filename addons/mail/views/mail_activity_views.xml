@@ -439,6 +439,11 @@
                 <field name="date_deadline"/>
                 <field name="summary"/>
                 <field name="activity_type_id" filters="1" invisible="1"/>
+                <templates>
+                    <t t-name="popover-footer">
+                        <button class="btn btn-secondary" type="object" name="action_open_document" string="View"/>
+                    </t>
+                </templates>
             </calendar>
         </field>
     </record>
