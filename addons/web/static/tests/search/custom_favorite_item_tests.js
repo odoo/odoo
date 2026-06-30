@@ -556,4 +556,48 @@ QUnit.module("Search", (hooks) => {
         // await click(document.querySelector(".o_add_favorite button.btn-primary"));
         // form.destroy();
     });
+
+    QUnit.test("save custom favorite filter on enter", async function (assert) {
+        assert.expect(2);
+
+        class TestComponent extends Component {
+            setup() {
+                useSetupAction({
+                    getContext: () => {
+                        return { someKey: "foo" };
+                    },
+                });
+            }
+        }
+        TestComponent.components = { SearchBar };
+        TestComponent.template = xml`<div><SearchBar/></div>`;
+
+        await makeWithSearch({
+            serverData,
+            mockRPC: (_, args) => {
+                if (args.model === "ir.filters" && args.method === "create_or_replace") {
+                    const irFilter = args.args[0];
+                    assert.deepEqual(irFilter.context, { group_by: [], someKey: "foo" });
+                    return 7;
+                }
+            },
+            resModel: "foo",
+            Component: TestComponent,
+            searchMenuTypes: ["favorite"],
+            searchViewId: false,
+        });
+
+        await toggleSearchBarMenu(target);
+        await toggleSaveFavorite(target);
+        const input = target.querySelector(
+            `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`
+        );
+        input.value = "aaa";
+        await triggerEvent(input, null, "input");
+        await triggerEvent(input, null, "keydown", {
+            key: "Enter",
+        });
+
+        assert.deepEqual(getFacetTexts(target), ["aaa"]);
+    });
 });
