@@ -1131,3 +1131,17 @@ class TestExpenses(TestExpenseCommon):
                 {'name': 'file_4.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
             ]
         )
+
+    def test_auto_validation_expense(self):
+        """
+        Ensures that when an expense is submitted with an auto-validation employee,
+        the expense manager stays empty, and the expense is automatically approved.
+        """
+        self.expense_employee.write({
+            'expense_manager_id': False,
+        })
+        expense = self.create_expenses({'employee_id': self.expense_employee.id})
+        expense.action_submit()
+
+        self.assertEqual(expense.manager_id, self.env['res.users'])
+        self.assertEqual(expense.state, 'approved')

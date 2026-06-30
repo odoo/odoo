@@ -489,7 +489,8 @@ class HrExpense(models.Model):
     def _compute_from_employee_id(self):
         for expense in self:
             expense.department_id = expense.employee_id.department_id
-            expense.manager_id = expense._get_default_responsible_for_approval()
+            if not expense.manager_id:
+                expense.manager_id = expense.employee_id.expense_manager_id or self.env['res.users']
 
     @api.depends('quantity', 'price_unit', 'tax_ids')
     def _compute_total_amount_currency(self):
@@ -1007,7 +1008,6 @@ class HrExpense(models.Model):
                 expense.with_context(mail_activity_quick_update=True).activity_schedule(
                     'hr_expense.mail_act_expense_approval',
                     user_id=expense.manager_id.id or
-                    expense.sudo()._get_default_responsible_for_approval().id or
                     self.env.user.id
                 )
                 expenses_submitted_to_review |= expense
@@ -1131,9 +1131,7 @@ class HrExpense(models.Model):
                 raise UserError(_("You do not have the required permission to submit this expense."))
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
-            if not expense.manager_id:
-                expense.sudo().manager_id = expense._get_default_responsible_for_approval()
-        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
+        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id or expense.manager_id == expense.employee_id.user_id)
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
             expenses_autovalidated._do_approve()
@@ -1375,6 +1373,7 @@ class HrExpense(models.Model):
         is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver') or self.env.su
         is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user') or self.env.su
         is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su
+        is_auto_validation = not self.env.user.expense_manager_id or self.env.su
 
         valid_company_ids = set(self.env.companies.ids)
 
@@ -1403,7 +1402,8 @@ class HrExpense(models.Model):
                 )
 
             elif not is_expense_team_approver:
-                reason = _("%(expense_name)s: You are neither a Manager nor a HR Officer", expense_name=expense.name)
+                if not (is_auto_validation and expense_employee.user_id == self.env.user and not expense.manager_id):
+                    reason = _("%(expense_name)s: You are neither a Manager nor a HR Officer", expense_name=expense.name)
 
             elif not is_hr_admin:
                 current_managers = (
@@ -1414,7 +1414,7 @@ class HrExpense(models.Model):
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
                     current_managers |= self.env.user
 
-                if expense_employee.user_id == self.env.user:
+                if expense_employee.user_id == self.env.user and not is_auto_validation:
                     reason = _("%(expense_name)s: It is your own expense", expense_name=expense.name)
 
                 elif self.env.user not in current_managers and not is_approver:
@@ -1445,7 +1445,7 @@ class HrExpense(models.Model):
         for expense in expenses_to_approve:
             expense.write({
                 'approval_state': 'approved',
-                'manager_id': self.env.user.id,
+                'manager_id': expense.manager_id,
                 'approval_date': fields.Date.context_today(expense),
             })
         self.update_activities_and_mails()
@@ -1493,25 +1493,6 @@ class HrExpense(models.Model):
             'manager_id': self.manager_id.id,
             'expense_id': self.id,
         } for price in (price_round_up, price_round_down)]
-
-    def _get_default_responsible_for_approval(self):
-        self.ensure_one()
-        approver_group = 'hr_expense.group_hr_expense_team_approver'
-
-        employee = self.employee_id
-        expense_manager = employee.expense_manager_id - employee.user_id
-        if expense_manager:
-            return expense_manager
-
-        department_manager = employee.department_id.manager_id.user_id - employee.user_id
-        if department_manager and department_manager.has_groups(approver_group):
-            return department_manager
-
-        employee_team_leader = employee.parent_id.user_id
-        if employee_team_leader:
-            return employee_team_leader
-
-        return self.env['res.users']
 
     def _needs_product_price_computation(self):
         # Hook to be overridden.
