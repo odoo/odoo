@@ -160,6 +160,20 @@ class TestImage(TransactionCase):
         with self.assertRaises(UserError, msg="size excessive"):
             tools.image_process(image_excessive, verify_resolution=True)
 
+        # Oversized webp images shouldn't be uploaded without any limit.
+        def make_webp(width, height):
+            wm1, hm1 = width - 1, height - 1
+            dims = bytes((wm1 & 0xFF, (wm1 >> 8) & 0xFF, (wm1 >> 16) & 0xFF,
+                          hm1 & 0xFF, (hm1 >> 8) & 0xFF, (hm1 >> 16) & 0xFF))
+            chunk = b'VP8X' + (10).to_bytes(4, 'little') + b'\x00\x00\x00\x00' + dims
+            body = b'WEBP' + chunk
+            return b'RIFF' + len(body).to_bytes(4, 'little') + body
+
+        res = tools.image_process(make_webp(2000, 2000), verify_resolution=True)
+        self.assertNotEqual(res, False, "webp size ok")
+        with self.assertRaises(UserError, msg="webp size excessive"):
+            tools.image_process(make_webp(8000, 8000), verify_resolution=True)
+
     def test_13_image_process_quality(self):
         """Test the quality parameter of image_process."""
 
