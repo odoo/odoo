@@ -758,8 +758,7 @@ class TestBatchPicking(TransactionCase):
         receipt01.move_ids.quantity = 0.75
         res = Form.from_action(self.env, receipt01.button_validate()).save().process()
         self.assertEqual(receipt01.state, 'done')
-        self.assertIsInstance(res, dict)
-        self.assertEqual(res.get('res_model'), 'stock.allocation.report')
+        self.assertEqual(res, True)
 
         backorder = receipt01.backorder_ids
         self.assertTrue(backorder)
