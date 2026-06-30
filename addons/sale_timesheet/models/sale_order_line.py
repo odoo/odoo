@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import format_duration
 
 
 class SaleOrderLine(models.Model):
@@ -27,7 +26,6 @@ class SaleOrderLine(models.Model):
             unit_label = ''
             if encoding_uom == self.env.ref('uom.product_uom_hour'):
                 is_hour = True
-                unit_label = _('remaining')
             elif encoding_uom == self.env.ref('uom.product_uom_day'):
                 is_day = True
                 unit_label = _('days remaining')
@@ -35,7 +33,16 @@ class SaleOrderLine(models.Model):
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
-                        remaining_time = f' ({format_duration(line.remaining_hours)} {unit_label})'
+                        hours, mins = divmod(round(abs(line.remaining_hours) * 60), 60)
+                        sign = '-' if line.remaining_hours < 0 else ''
+                        kwargs = {'sign': sign, 'hours': hours, 'minutes': mins}
+                        if hours and mins:
+                            time_part = self.env._("%(sign)s%(hours)sh %(minutes)sm", **kwargs)
+                        elif hours:
+                            time_part = self.env._("%(sign)s%(hours)sh", **kwargs)
+                        else:
+                            time_part = self.env._("%(sign)s%(minutes)sm", **kwargs)
+                        remaining_time = f' ({time_part})'
                     elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = f' ({remaining_days:.02f} {unit_label})'
