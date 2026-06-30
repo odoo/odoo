@@ -19,6 +19,7 @@ export class ImageStrategyPlugin extends Plugin {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), ImageStrategyPlugin.id],
         ],
+        style_rules_processors: [[this.provideStyleRules.bind(this), ImageStrategyPlugin.id]],
     };
 
     // fix images padding
@@ -41,6 +42,13 @@ export class ImageStrategyPlugin extends Plugin {
         // height and width attributes are specified through applyLayoutStrategy
         rules.block("height", { when: this.isImg.bind(this) });
         rules.block("width", { when: this.isImg.bind(this) });
+    }
+
+    provideStyleRules(rules) {
+        // TODO EGGMAIL: maybe fine tune and only accept some values
+        rules.allow("width", { when: this.isImg.bind(this) });
+        rules.allow("height", { when: this.isImg.bind(this) });
+        rules.allow("max-width", { when: this.isImg.bind(this) });
     }
 
     isImg({ referenceNode }) {

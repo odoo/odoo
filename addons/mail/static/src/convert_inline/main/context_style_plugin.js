@@ -1,8 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
-import { children } from "@html_editor/utils/dom_traversal";
-import { StyleInfo } from "../core/style_models";
 
 const INHERITED_STYLE_CONTEXT_PROPERTIES = ["font-size", "font-weight", "line-height"];
 const TEXT_ALIGN_ALLOWED_VALUES = new Set(["right", "left", "center", "justify"]);
@@ -78,10 +76,6 @@ export class ContextStylePlugin extends Plugin {
     }
 
     getNonInheritedContextStyleInfo(element) {
-        const containsOnlyInline = children(element).every((node) => !this.isBlock(node));
-        if (!containsOnlyInline) {
-            return new StyleInfo();
-        }
         return this.filterStyleInfo(this.getRawStyleInfo(element), element, this.styleRules);
     }
 }

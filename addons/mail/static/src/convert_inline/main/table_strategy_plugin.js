@@ -287,10 +287,20 @@ export class TableStrategyPlugin extends Plugin {
         const referenceRect = this.getBoundingClientRect(referenceNode);
         const spacingCleanup = [];
         let marginRect = { ...referenceRect };
+        // The marginRect used in the tableReport should always be the second to last
+        // marginRect, as the one just below the row element is already taken into
+        // account by the table computation
+        let storedMarginRect = { ...marginRect };
         if (marginStyleInfo.size > 0) {
             // TODO EGGMAIL: cleanup this code, as it will probably be reused
             // we probably need to check that the margin is really in px in
             // the style
+            // TODO EGGMAIL WORKING HERE: we should not consider this margin left/right if this is the element just
+            // below the cell element, because the table computation already takes it into account
+            // but there is no way at this time to know that, because the table cell does not exist,
+            // probably the correct solution is to not filter out the margin here, but register
+            // only the second to last margin rect, but make sure to update the last margin rect
+            // every time we go up an ancestor
             const computedStyle = this.getComputedStyle(referenceNode);
             const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
             const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
@@ -350,7 +360,7 @@ export class TableStrategyPlugin extends Plugin {
             if (acceptTableStrategyReport) {
                 const report = { ...tableStrategyReport };
                 const facts = { tableStrategyReport: report };
-                report.spacing = { ...report.spacing, marginRect };
+                report.spacing = { ...report.spacing, marginRect: storedMarginRect };
                 const constraintsForDescendants = [];
                 let shouldPropagate = true;
                 if (analysis.facts.acceptTableOuterSpacing) {
@@ -400,26 +410,38 @@ export class TableStrategyPlugin extends Plugin {
                 return { shouldPropagate: false };
             }
             marginRect = referenceRect;
+            storedMarginRect = { ...marginRect };
             tableStrategyReport.spacing.cleanup.push(cleanupSpacing.bind(undefined, referenceNode));
             const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
             if (marginStyleInfo.size > 0) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
-                let right;
+                const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
                 const bottom = parseCssValue(computedStyle.getPropertyValue("margin-bottom"));
-                let left;
-                if (emailNode.parent && !emailNode.parent.analysis.facts.acceptCellNewWidth) {
-                    // Only consider horizontal margin if the parent is not the cell node,
-                    // as margin in that case would already have been handled
-                    right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
-                    left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
-                }
+                const left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
                 marginRect = this.computeRect(referenceRect, {
                     top: -top.number,
-                    right: right?.number ?? 0,
+                    right: right.number,
                     bottom: bottom.number,
-                    left: -(left?.number ?? 0),
+                    left: -left.number,
                 });
+                // const computedStyle = this.getComputedStyle(referenceNode);
+                // const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
+                // let right;
+                // const bottom = parseCssValue(computedStyle.getPropertyValue("margin-bottom"));
+                // let left;
+                // if (emailNode.parent && !emailNode.parent.analysis.facts.acceptCellNewWidth) {
+                //     // Only consider horizontal margin if the parent is not the cell node,
+                //     // as margin in that case would already have been handled
+                //     right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
+                //     left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
+                // }
+                // marginRect = this.computeRect(referenceRect, {
+                //     top: -top.number,
+                //     right: right?.number ?? 0,
+                //     bottom: bottom.number,
+                //     left: -(left?.number ?? 0),
+                // });
             }
             return { shouldPropagate: true };
         });
