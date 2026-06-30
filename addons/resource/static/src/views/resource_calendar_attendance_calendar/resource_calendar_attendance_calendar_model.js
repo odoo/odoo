@@ -9,14 +9,12 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
     /**
      * @override
      */
-    setup(params, { notification }) {
+    setup() {
         super.setup(...arguments);
         if (!useScope().pluginManager.getPluginById(ResourceCalendarPlugin.id)) {
             providePlugins([ResourceCalendarPlugin]);
         }
         this.resourceCalendarPlugin = plugin(ResourceCalendarPlugin);
-        const { fields, activeFields } = this.meta;
-        addFieldDependencies(activeFields, fields, [{ name: "recurrency", type: "boolean" }]);
     }
 
     _combineDate(date, floatTime) {
@@ -41,7 +39,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
                 [this.meta.context.default_calendar_id],
                 serializeDate(data.range.start),
                 serializeDate(data.range.end),
-                [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
+                fieldNames,
                 domain,
             ],
             { context }
