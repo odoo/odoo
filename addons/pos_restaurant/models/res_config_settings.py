@@ -10,6 +10,7 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_default_screen = fields.Selection(related="pos_config_id.default_screen", readonly=False)
     pos_use_course_allocation = fields.Boolean(related='pos_config_id.use_course_allocation', readonly=False)
+    pos_use_show_items_on_course_ticket = fields.Boolean(related='pos_config_id.use_show_items_on_course_ticket', readonly=False)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_module_pos_restaurant(self):
