@@ -115,7 +115,6 @@ patch(ProductPage.prototype, {
         await super._onChangeCombination(...arguments);
         const has_max_combo_quantity = 'max_combo_quantity' in combination
         if (!combination.is_storable && !has_max_combo_quantity) return;
-        if (!combination.product_id) return; // If the product is dynamic.
 
         const addQtyInput = parent.querySelector('input[name="add_qty"]');
         const qty = parseFloat(addQtyInput?.value) || 1;
