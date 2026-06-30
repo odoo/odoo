@@ -3,6 +3,7 @@
 import base64
 import logging
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tests import tagged
@@ -208,11 +209,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             data['frontend_data'] = frontend_data
             data['backend_data'] = backend_data
 
-        # Add function to model
-        order_model = self.env.registry.models['pos.order']
-        order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
-        self.start_pos_tour("test_receipt_data")
-        self.compare_data(data['frontend_data'], data['backend_data'])
+        with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
+            self.start_pos_tour("test_receipt_data")
+            self.compare_data(data['frontend_data'], data['backend_data'])
 
-        logo_image = data['backend_data']['image']['logo']
-        self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
+            logo_image = data['backend_data']['image']['logo']
+            self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
