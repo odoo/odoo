@@ -211,7 +211,7 @@ export class FontTypePlugin extends Plugin {
             { is: "H4", hintText: _t("Heading 4") },
             { is: "H5", hintText: _t("Heading 5") },
             { is: "H6", hintText: _t("Heading 6") },
-            { is: "BLOCKQUOTE", hintText: _t("Quote") },
+            { is: "BLOCKQUOTE", hintText: _t("Quote"), placeholderHost: true },
             { within: "pre", powerbox: false },
         ],
 
@@ -238,11 +238,6 @@ export class FontTypePlugin extends Plugin {
         are_shorthands_available_predicates: (node) => {
             if (closestElement(node, "pre")) {
                 return false;
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "BLOCKQUOTE") {
-                return true;
             }
         },
 
