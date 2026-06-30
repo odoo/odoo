@@ -32,9 +32,8 @@ VariantMixin._onChangeCombinationStock = async function (ev, $parent, combinatio
     } else {
         product_id = $parent.find('.product_id').val();
     }
-    const isMainProduct = combination.product_id &&
-        ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
-        combination.product_id === parseInt(product_id);
+    const isMainProduct = ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
+        (!combination.product_id || combination.product_id === parseInt(product_id));
 
     if (!this.isWebsite || !isMainProduct) {
         return;
