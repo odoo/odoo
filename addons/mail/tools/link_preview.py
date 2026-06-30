@@ -28,9 +28,9 @@ def get_link_preview_from_url(url, request_session=None):
     }
     try:
         if request_session:
-            response = request_session.get(url, timeout=3, headers=headers, allow_redirects=True, stream=True)
+            response = request_session.get(url, timeout=10, headers=headers, allow_redirects=True, stream=True)
         else:
-            response = requests.get(url, timeout=3, headers=headers, allow_redirects=True, stream=True)
+            response = requests.get(url, timeout=10, headers=headers, allow_redirects=True, stream=True)
     except requests.exceptions.RequestException:
         return False
     except LocationParseError:
@@ -59,13 +59,16 @@ def get_link_preview_from_html(url, response):
     any Open Graph title property.
     """
     content = b""
-    for chunk in response.iter_content(chunk_size=8192):
-        content += chunk
-        pos = content.find(b'</head>', -8196 * 2)
-        # Stop reading once all the <head> data is found
-        if pos != -1:
-            content = content[:pos + 7]
-            break
+    try:
+        for chunk in response.iter_content(chunk_size=8192):
+            content += chunk
+            pos = content.find(b'</head>', -8196 * 2)
+            # Stop reading once all the <head> data is found
+            if pos != -1:
+                content = content[:pos + 7]
+                break
+    except requests.exceptions.RequestException:
+        return False
 
     if not content:
         return False
