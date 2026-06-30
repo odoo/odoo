@@ -49,7 +49,7 @@ export class AccountMoveFormNotebook extends Notebook {
         if (this.props.onBeforeTabSwitch) {
             await this.props.onBeforeTabSwitch(page_id);
         }
-        this.state.currentPage = page_id;
+        this.currentPage.set(page_id);
     }
 }
 
