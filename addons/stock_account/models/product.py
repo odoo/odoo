@@ -409,10 +409,11 @@ class ProductProduct(models.Model):
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
+            # scope the opening qty to the current company, like the replayed moves
             if lot:
-                quantity = lot.with_context(to_date=manual_value.date).product_qty
+                quantity = lot.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).product_qty
             else:
-                quantity = product.with_context(to_date=manual_value.date).qty_available
+                quantity = product.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
