@@ -206,6 +206,7 @@ class HrLeave(models.Model):
     can_refuse = fields.Boolean(compute='_compute_can_refuse', export_string_translation=False)
     can_cancel = fields.Boolean(compute='_compute_can_cancel', export_string_translation=False)
     can_back_to_approve = fields.Boolean(compute='_compute_can_back_to_approve', export_string_translation=False)
+    can_reschedule = fields.Boolean(compute='_compute_can_reschedule', export_string_translation=False)
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
     # To display in form view
@@ -674,6 +675,34 @@ class HrLeave(models.Model):
             holiday.date_from = self._to_utc(holiday.request_date_from, hour_from, holiday.employee_id or holiday)
             holiday.date_to = self._to_utc(holiday.request_date_to, hour_to, holiday.employee_id or holiday)
 
+    def reschedule_from_calendar(self, date_from, date_to):
+        """Reschedule a leave from a calendar drag/resize.
+
+        ``date_from``/``date_to`` are the dragged endpoints as naive UTC datetimes,
+        read in the leave's own timezone and mapped onto the request_* fields for its
+        request unit. Doing it server-side keeps the AM/PM split and request date
+        correct when the employee's timezone differs from the editing user's. An
+        already-approved request is reset to "To Approve".
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.tz)
+        start = fields.Datetime.to_datetime(date_from).replace(tzinfo=UTC).astimezone(tz)
+        stop = fields.Datetime.to_datetime(date_to).replace(tzinfo=UTC).astimezone(tz)
+        vals = {
+            'request_date_from': start.date(),
+            'request_date_to': stop.date(),
+        }
+        request_unit = self.work_entry_type_id.request_unit
+        if request_unit == 'hour':
+            vals['request_hour_from'] = start.hour + start.minute / 60
+            vals['request_hour_to'] = stop.hour + stop.minute / 60
+        elif request_unit == 'half_day':
+            vals['request_date_from_period'] = 'am' if start.hour < 12 else 'pm'
+            vals['request_date_to_period'] = 'am' if stop.hour <= 12 else 'pm'
+        if self.state in ('validate', 'validate1') and self.validation_type != 'no_validation':
+            vals['state'] = 'confirm'
+        self.write(vals)
+
     def _get_employee_domain(self):
         domain = [
             ('active', '=', True),
@@ -1023,6 +1052,23 @@ class HrLeave(models.Model):
     def _compute_can_back_to_approve(self):
         for holiday in self:
             holiday.can_back_to_approve = holiday._check_approval_update('confirm', raise_if_not_possible=False)
+
+    @api.depends_context('uid')
+    @api.depends('state', 'employee_id', 'department_id', 'validation_type', 'date_from')
+    def _compute_can_reschedule(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        today = fields.Date.context_today(self)
+        for holiday in self:
+            if holiday.state in ('validate', 'validate1') and holiday.validation_type != 'no_validation':
+                holiday.can_reschedule = holiday._check_approval_update('confirm', raise_if_not_possible=False)
+            elif holiday.state in ('confirm', 'validate', 'validate1'):
+                began_in_past = holiday.date_from and holiday.date_from.date() < today
+                holiday.can_reschedule = (
+                    (is_officer or not began_in_past or holiday.employee_id.leave_manager_id == self.env.user)
+                    and holiday.has_access('write')
+                )
+            else:
+                holiday.can_reschedule = False
 
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_validate(self):

@@ -6,11 +6,16 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export class TimeOffCalendarModel extends CalendarModel {
+    static services = [...CalendarModel.services, "dialog"];
+
     setup(params, services) {
         super.setup(params, services);
 
+        this.dialog = services.dialog;
         this.data.mandatoryDays = {};
         if (this.uiService.isSmall) {
             this.meta.scale = "month";
@@ -77,6 +82,69 @@ export class TimeOffCalendarModel extends CalendarModel {
         return context;
     }
 
+    /**
+     * @override
+     */
+    get canEdit() {
+        return this.meta.canEdit;
+    }
+
+    /**
+     * @override
+     * Reschedule an hr.leave drag/resize via a backend method that reads the endpoints
+     * in the employee's timezone and snaps to the request unit. Rescheduling an approved
+     * request needs re-approval, so confirm first; the backend then resets it to "To
+     * Approve". A backend failure rejects so the renderer reverts the event.
+     */
+    async updateRecord(record, options = {}) {
+        if (this.resModel !== "hr.leave") {
+            return super.updateRecord(record, options);
+        }
+        const rawRecord = this.records[record.id]?.rawRecord;
+        const needsReapproval =
+            rawRecord &&
+            ["validate", "validate1"].includes(rawRecord.state) &&
+            rawRecord.validation_type !== "no_validation";
+        if (!needsReapproval) {
+            return this._rescheduleRecord(record);
+        }
+        return new Promise((resolve, reject) => {
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Confirmation"),
+                body: _t(
+                    "If you modify this request, it will need to be approved again. Do you wish to continue?"
+                ),
+                confirmLabel: _t("Confirm"),
+                cancelLabel: _t("Discard"),
+                confirm: async () => {
+                    try {
+                        await this._rescheduleRecord(record);
+                        resolve();
+                    } catch (error) {
+                        // Re-throw so the renderer reverts the event and the error service shows the message.
+                        reject(error);
+                    }
+                },
+                // Discard: reload so the event snaps back to its original period.
+                cancel: async () => {
+                    await this.load();
+                    resolve();
+                },
+            });
+        });
+    }
+
+    async _rescheduleRecord(record) {
+        const end = record.end?.isValid ? record.end : record.start;
+        await this.orm.call(
+            this.resModel,
+            "reschedule_from_calendar",
+            [[record.id], serializeDateTime(record.start), serializeDateTime(end)],
+            { context: this.meta.context }
+        );
+        await this.load();
+    }
+
     async updateData(data) {
         const prom = super.updateData(data);
         data.mandatoryDays = await this._mandatoryDaysCache.read(data);
@@ -131,6 +199,9 @@ export class TimeOffCalendarModel extends CalendarModel {
                       "work_entry_type_request_unit",
                       "request_date_from_period",
                       "request_date_to_period",
+                      "state",
+                      "validation_type",
+                      "can_reschedule",
                   ]
                 : [];
         return this.orm.searchRead(
