@@ -75,6 +75,7 @@ export class PaymentVivaCom extends PaymentInterface {
             this._show_error(response.error);
             return false;
         }
+        paymentLine.setPaymentStatus("waitingCard");
         return this.waitForPaymentConfirmation(paymentLine);
     }
 
@@ -86,7 +87,6 @@ export class PaymentVivaCom extends PaymentInterface {
         var order = this.pos.getOrder();
         var line = order.getSelectedPaymentline();
         let customerTrns = " ";
-        line.setPaymentStatus("waitingCard");
 
         if (order.partner) {
             customerTrns = order.partner.name + " - " + order.partner.email;
