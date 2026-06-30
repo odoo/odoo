@@ -35,6 +35,7 @@ patch(SnippetViewer.prototype, {
             onWillUnmount(stopPreview);
         }
     },
+
     getSelectedSnippets() {
         const snippets = super.getSelectedSnippets();
         if (!this.isDarkPalette) {
@@ -49,5 +50,29 @@ patch(SnippetViewer.prototype, {
             adaptDarkPaletteContent(contentEl);
             return { ...snippet, content: contentEl };
         });
+    },
+
+    getContent(snippetEl) {
+        let contentEl = snippetEl;
+        if (this.props.snippetModel.snippetsName === "website.snippets") {
+            const rfsEls = snippetEl.querySelectorAll(".o_rfs");
+            if ([...rfsEls].some((rfsEl) => rfsEl.style.fontSize?.startsWith("clamp("))) {
+                // Text toolbar responsive sizes use `clamp()` with `vw`.
+                // Here, `vw` uses the full preview iframe width.
+                // Column previews would otherwise render too large.
+                // Adjust only the clone, keeping dropped content intact.
+                contentEl = snippetEl.cloneNode(true);
+                const snippetPreviewColumnCount = 2;
+                for (const rfsEl of contentEl.querySelectorAll(".o_rfs")) {
+                    if (rfsEl.style.fontSize?.startsWith("clamp(")) {
+                        rfsEl.style.fontSize = rfsEl.style.fontSize.replace(
+                            /([+-]?\d*\.?\d+)vw/g,
+                            (_, value) => `${parseFloat(value) / snippetPreviewColumnCount}vw`
+                        );
+                    }
+                }
+            }
+        }
+        return super.getContent(contentEl);
     },
 });
