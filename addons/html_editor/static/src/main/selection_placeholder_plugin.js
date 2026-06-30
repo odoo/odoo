@@ -38,11 +38,6 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (blocker) => {
-            if (isNotEditableNode(blocker)) {
-                return isBlock(blocker);
-            }
-        },
         region_properties: {
             within: PLACEHOLDER_SELECTOR,
             powerButtons: false,
@@ -69,8 +64,14 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * everywhere we need them, and absent wherever they are not useful.
      */
     updatePlaceholders(root = this.editable) {
-        const isSelectionBlocker = (node) =>
-            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        // A non-editable block is a selection blocker by default; plugins
+        // override this per node via the `selectionBlocker` region property.
+        const isSelectionBlocker = (node) => {
+            const region = this.dependencies.region.getProperty(node, "selectionBlocker");
+            const base = isNotEditableNode(node) ? isBlock(node) : undefined;
+            const defined = [region, base].filter((r) => r !== undefined);
+            return defined.length ? defined.every(Boolean) : false;
+        };
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
                 this.dependencies.region.getProperty(container, "placeholderHost") ??

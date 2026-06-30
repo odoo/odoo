@@ -169,11 +169,6 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (node) => {
-            if (node.nodeName === "TABLE") {
-                return true;
-            }
-        },
         /** Regions */
         region_properties: [
             { within: "TD, TH", powerButtons: false },
@@ -187,7 +182,7 @@ export class TablePlugin extends Plugin {
                 removableWithin: "table",
                 splittable: false,
             },
-            { is: "TABLE", splittable: false, placeholderHost: false },
+            { is: "TABLE", splittable: false, placeholderHost: false, selectionBlocker: true },
             { is: ".o_table td, .o_table th", placeholderHost: true },
         ],
 

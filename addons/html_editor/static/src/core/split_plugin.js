@@ -89,12 +89,8 @@ export class SplitPlugin extends Plugin {
             // them); split and merge being reverse operations, it is unsplittable
             // too.
             { is: (node) => this.dependencies.delete.isUnremovable(node), splittable: false },
+            { is: (node) => this.isUnsplittable(node), selectionBlocker: true },
         ],
-        is_selection_blocker_predicates: (blocker) => {
-            if (this.isUnsplittable(blocker)) {
-                return true;
-            }
-        },
     };
 
     // --------------------------------------------------------------------------
