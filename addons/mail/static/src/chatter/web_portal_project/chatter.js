@@ -58,7 +58,7 @@ export class Chatter extends Component {
                     if (this.env.chatter) {
                         this.env.chatter.fetchThreadData = false;
                     }
-                    this.load(thread, this.requestList);
+                    this.load(thread, this.initialRequestList);
                 }
             },
             { initialRun: false }
@@ -99,6 +99,10 @@ export class Chatter extends Component {
         return this.state.thread.fullComposerCloseRequestList;
     }
 
+    get initialRequestList() {
+        return [...this.requestList, "messages"];
+    }
+
     get requestList() {
         return [];
     }
@@ -118,6 +122,8 @@ export class Chatter extends Component {
         this.thread.set(this.store["mail.thread"].insert(data));
         this.state.thread = this.thread();
         if (threadId === false) {
+            this.thread().isLoaded = true;
+            this.thread().status = "ready";
             if (this.thread().messages.length === 0) {
                 const { effectiveSelf } = this.thread();
                 const authorModelName = effectiveSelf.Model.getName();
@@ -160,7 +166,7 @@ export class Chatter extends Component {
             if (this.env.chatter) {
                 this.env.chatter.fetchThreadData = false;
             }
-            this.load(this.state.thread, this.requestList);
+            this.load(this.state.thread, this.initialRequestList);
         }
     }
 

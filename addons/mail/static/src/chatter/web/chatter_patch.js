@@ -311,7 +311,7 @@ const chatterPatch = {
     },
 
     onActivityChanged(thread) {
-        this.load(thread, [...this.requestList, "messages"]);
+        this.load(thread, this.initialRequestList);
         if (this.webChatterProps.hasParentReloadOnActivityChanged) {
             this.reloadParentView();
         }

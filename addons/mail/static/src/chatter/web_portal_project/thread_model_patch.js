@@ -13,7 +13,7 @@ patch(Thread.prototype, {
         }
         await this.store.fetchStoreData("mail.thread", {
             access_params: this.rpcParams,
-            request_list: requestList,
+            request_list: requestList.filter((r) => r !== "messages"),
             thread_id: this.id,
             thread_model: this.model,
         });

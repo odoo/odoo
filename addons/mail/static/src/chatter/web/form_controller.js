@@ -17,17 +17,11 @@ patch(FormController.prototype, {
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
         }
-        useSubEnv({
-            chatter: {
-                fetchThreadData: true,
-                shouldFetchMessages: true,
-            },
-        });
+        useSubEnv({ chatter: { fetchThreadData: true } });
     },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
         this.env.chatter.fetchThreadData = true;
-        this.env.chatter.shouldFetchMessages = true;
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;
