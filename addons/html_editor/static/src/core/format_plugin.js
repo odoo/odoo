@@ -67,7 +67,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  * @typedef {(() => void)[]} on_format_requested_handlers
  * @typedef {(() => void)[]} on_collapsed_formats_removed_handlers
- * @typedef {((node: Node, formatName: string, applyStyle: boolean) => void)[]} on_format_applied_handlers
+ * @typedef {((node: Node, FormatSpec: FormatSpec, applyStyle: boolean) => void)[]} on_format_applied_handlers
  * @typedef {((root: Node) => void)[]} on_will_merge_adjacent_siblings_handlers
  * @typedef {((root: Node) => void)[]} on_merged_adjacent_siblings_handlers
  *
@@ -76,6 +76,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} can_remove_format_predicates
+ * @typedef {((node: Node, blockNode: Node) => boolean | undefined)[]} is_node_in_same_block_segment_predicates
  *
  * @typedef {(({
  *      node: Node,
@@ -571,15 +572,16 @@ export class FormatPlugin extends Plugin {
                     }
                 }
             } else {
-                const nodesToUnformat = descendants(node).filter((n) => {
-                    if (!isElement(n)) {
-                        return false;
-                    }
-                    const block =
-                        closestElement(n, "LI") ??
-                        closestElement(n, paragraphRelatedElementsSelector);
-                    return block === node;
-                });
+                const nodesToUnformat = descendants(node).filter(
+                    (n) =>
+                        isElement(n) &&
+                        (this.checkPredicates(
+                            "is_node_in_same_block_segment_predicates",
+                            n,
+                            node
+                        ) ??
+                            true)
+                );
                 for (const n of [node, ...nodesToUnformat]) {
                     removeFormat(n, formatSpec, cursor);
                 }
@@ -593,7 +595,7 @@ export class FormatPlugin extends Plugin {
                     formatSpec.addNeutralStyle(node);
                 }
             }
-            this.trigger("on_format_applied_handlers", node, formatName, applyStyle);
+            this.trigger("on_format_applied_handlers", node, formatSpec, applyStyle);
         }
 
         cursor.restore();
