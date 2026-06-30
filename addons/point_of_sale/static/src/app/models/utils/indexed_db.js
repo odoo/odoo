@@ -25,6 +25,7 @@ export default class IndexedDB {
             window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
         if (!indexedDB) {
+            console.error("Your browser does not support IndexedDB. Data will not be saved."); // Must crash on runbot
             logPosMessage(
                 "IndexedDB",
                 "databaseEventListener",
@@ -233,6 +234,7 @@ export default class IndexedDB {
                     [],
                     true
                 );
+                console.error("IndexedDB db is null"); // Must crash on runbot
                 return false;
             }
 
@@ -240,6 +242,7 @@ export default class IndexedDB {
             this.activeTransactions.add(transaction);
             return transaction;
         } catch (e) {
+            console.error("Error creating transaction:", e); // Must crash on runbot
             logPosMessage(
                 "IndexedDB",
                 `getNewTransaction.${e.name}`,
