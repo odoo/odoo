@@ -76,13 +76,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         return false;
     }
 
-    async onClickOpenRecord() {
-        const action = await this.orm.call("calendar.event", "action_open_calendar_event", [
-            this.props.record.id,
-        ]);
-        this.actionService.doAction(action);
-    }
-
     get isEventDeletable() {
         return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
     }

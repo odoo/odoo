@@ -427,8 +427,8 @@
                 />
                 <field name="videocall_location" widget="CopyClipboardURL" text="Join Video Call"
                        options="{'icon': 'fa fa-lg fa-video-camera'}" invisible="not videocall_location"/>
-                <field name="res_model_name" invisible="not res_model_name"
-                       options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
+                <field name="res_model_name" invisible="not res_model_name" widget="calendar_open_event"
+                       options="{'icon': 'fa fa-link'}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
