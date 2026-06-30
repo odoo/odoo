@@ -9,6 +9,10 @@ registry.category("web_tour.tours").add("portal_load_homepage", {
             expectUnloadPage: true,
         },
         {
+            content: "Wait for frontend JavaScript to be ready",
+            trigger: "body[is-ready='true']",
+        },
+        {
             content: "Load my account details",
             trigger: 'input[value="Joel Willis"]',
             run: "click",
