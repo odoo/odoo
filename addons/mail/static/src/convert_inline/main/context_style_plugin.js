@@ -1,8 +1,12 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
+import { children } from "@html_editor/utils/dom_traversal";
+import { StyleInfo } from "../core/style_models";
 
-const STYLE_CONTEXT_PROPERTIES = ["font-size", "font-weight", "line-height"];
+const INHERITED_STYLE_CONTEXT_PROPERTIES = ["font-size", "font-weight", "line-height"];
+const TEXT_ALIGN_ALLOWED_VALUES = new Set(["right", "left", "center", "justify"]);
+const TEXT_ALIGN_FIXABLE_VALUES = new Set(["start", "end"]);
 
 /**
  * This plugin extracts css properties that can sometimes be overridden by
@@ -16,24 +20,53 @@ export class ContextStylePlugin extends Plugin {
     static shared = ["getContextStyleInfo"];
 
     setup() {
-        this.textStyleRules = new Rules();
-        const textRules = this.textStyleRules.forPlugin(ContextStylePlugin.id);
-        for (const propertyName of STYLE_CONTEXT_PROPERTIES) {
-            textRules.allow(propertyName);
+        this.inheritedStyleRules = new Rules();
+        const inheritedRules = this.inheritedStyleRules.forPlugin(ContextStylePlugin.id);
+        for (const propertyName of INHERITED_STYLE_CONTEXT_PROPERTIES) {
+            inheritedRules.allow(propertyName);
         }
+
+        // TODO EGGMAIL: evaluate rules redundancy with filter_content_plugin
+        // and where these context rules should be defined (probably here)
+        this.styleRules = new Rules();
+        const styleRules = this.styleRules.forPlugin(ContextStylePlugin.id);
+        styleRules.allow("text-align", {
+            when: ({ propertyValue }) => TEXT_ALIGN_ALLOWED_VALUES.has(propertyValue),
+        });
+        styleRules.fix("text-align", {
+            when: ({ propertyValue }) => TEXT_ALIGN_FIXABLE_VALUES.has(propertyValue),
+            how: ({ propertyValue }) => {
+                // TODO EGGMAIL: consider RTL
+                let value;
+                if (propertyValue === "start") {
+                    value = "left";
+                } else if (propertyValue === "end") {
+                    value = "right";
+                }
+                if (value) {
+                    return { propertyValue: value };
+                }
+            },
+        });
+    }
+
+    getContextStyleInfo(element) {
+        return this.getInheritedContextStyleInfo(element).merge(
+            this.getNonInheritedContextStyleInfo(element)
+        );
     }
 
     /**
      * Return a style context where non-specified values are set to their
      * computed value.
      */
-    getContextStyleInfo(element) {
+    getInheritedContextStyleInfo(element) {
         const styleInfo = this.filterStyleInfo(
-            this.getRawStyleInfo(this.config.referenceDocument.body),
+            this.getRawStyleInfo(element),
             element,
-            this.textStyleRules
+            this.inheritedStyleRules
         );
-        for (const propertyName of STYLE_CONTEXT_PROPERTIES) {
+        for (const propertyName of INHERITED_STYLE_CONTEXT_PROPERTIES) {
             if (!styleInfo.has(propertyName)) {
                 styleInfo.setProperty(
                     propertyName,
@@ -42,6 +75,14 @@ export class ContextStylePlugin extends Plugin {
             }
         }
         return styleInfo;
+    }
+
+    getNonInheritedContextStyleInfo(element) {
+        const containsOnlyInline = children(element).every((node) => !this.isBlock(node));
+        if (!containsOnlyInline) {
+            return new StyleInfo();
+        }
+        return this.filterStyleInfo(this.getRawStyleInfo(element), element, this.styleRules);
     }
 }
 

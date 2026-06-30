@@ -153,6 +153,7 @@ export class FilterContentPlugin extends Plugin {
         // Avoid text-shadow (poor support)
         // text-decoration is safe but limited (underline mostly)
         rules.allow(/^font(-.*)?$/);
+        // TODO EGGMAIL: text-align values should be fixed to not include "start" or "end" (converted with rtl to left or right)
         rules.allow(/^text-(align|decoration|transform|indent)$/);
         rules.allow("line-height");
         rules.allow("letter-spacing");

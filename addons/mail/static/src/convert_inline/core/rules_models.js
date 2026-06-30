@@ -303,7 +303,9 @@ export class Rules {
             return result === undefined ? undefined : !result;
         };
         if (rule.effect === "fix") {
-            when = (...args) => when(...args) || rule.howResult !== undefined;
+            // For a fix, otherwise applies when the fix "when" returns true, but
+            // there was no applicable fix (howResult is undefined)
+            when = (...args) => rule.howResult === undefined && rule.checkConditions(...args);
         }
         options = { ...options, when, effect: otherwise };
         delete options.otherwise;
