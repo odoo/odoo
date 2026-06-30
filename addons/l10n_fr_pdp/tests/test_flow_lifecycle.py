@@ -1979,3 +1979,24 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
         self.assertIn(invalid_invoice.name, [node.findtext('ID') for node in invoice_nodes])
         self.assertIn(invalid_invoice, rectificative_flow.sent_move_ids)
+
+    def test_force_update_l10n_fr_f10_moves(self):
+        invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2024-12-01',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        self.assertFalse(invoice.l10n_fr_pdp_last_flow_id)
+        self.env['ir.config_parameter'].set_param(
+            f'l10n_fr_pdp.flow10.start.date.{invoice.company_id.id}',
+            '2024-11-01',
+        )
+        self.company._force_update_l10n_fr_f10_moves()
+        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
+        # test _force_update_l10n_fr_f10_moves skips compagnies with l10n_fr_pdp_flow_10_start_date = None
+        self.company.l10n_fr_pdp_flow_10_start_date = False
+        self.company._force_update_l10n_fr_f10_moves()
+        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
