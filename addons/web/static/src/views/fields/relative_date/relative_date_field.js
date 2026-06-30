@@ -10,6 +10,12 @@ import { formatDate } from "../formatters";
 
 const { DateTime } = luxon;
 
+const CONFIGURED_UNITS = [
+    { unit: "weeks",  target: "days",   quantity: 1 },
+    { unit: "months", target: "weeks",  quantity: 1, checkOverlap: true },
+    { unit: "years",  target: "months", quantity: 1 },
+];
+
 export class RelativeDateField extends Component {
     static components = { DateTimeField };
 
@@ -36,20 +42,27 @@ export class RelativeDateField extends Component {
     }
 
     get diffString() {
-        const diffDays = this.diffDays;
-        if (diffDays === null) {
+        if (this.diffDays === null) {
             return "";
-        }
-        if (Math.abs(diffDays) > 99) {
-            return this.formattedValue;
         }
         const { record, name } = this.props;
         const value = record.data[name];
-        const relativeCalendarOptions = {};
-        if (Math.abs(diffDays) <= 30) {
-            relativeCalendarOptions.unit = "days";
+        const today = DateTime.local().startOf("day");
+        const v = value.startOf("day");
+
+        let unit = "years";
+        for (const { unit: checkUnit, target, quantity, checkOverlap } of CONFIGURED_UNITS) {
+            const delta = Math.floor(Math.abs(v.diff(today, checkUnit)[checkUnit]));
+            if (delta <= quantity && (!checkOverlap || (
+                v >= today.minus({ [checkUnit]: quantity }).startOf(checkUnit) &&
+                v <= today.plus({ [checkUnit]: quantity }).endOf(checkUnit)
+            ))) {
+                unit = target;
+                break;
+            }
         }
-        return capitalize(value.toRelativeCalendar(relativeCalendarOptions));
+
+        return capitalize(value.toRelativeCalendar({ unit }));
     }
 
     get formattedValue() {

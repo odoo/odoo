@@ -30,13 +30,21 @@ test("RelativeDateField on a date field in list view", async () => {
         { id: 3, date: "2017-10-07" }, // yesterday
         { id: 4, date: "2017-10-10" }, // + 2 days
         { id: 5, date: "2017-10-05" }, // - 3 days
-        { id: 6, date: "2018-02-08" }, // + 4 months (diff >= 100 days)
-        { id: 7, date: "2017-06-08" }, // - 4 months (diff >= 100 days)
+        { id: 6, date: "2018-02-08" }, // + 4 months
+        { id: 7, date: "2017-06-08" }, // - 4 months
         { id: 8, date: false },
         { id: 9, date: "2017-11-01" }, // + 24 days
         { id: 10, date: "2017-11-08" }, // + 31 days
         { id: 11, date: "2017-09-15" }, // - 23 days
         { id: 12, date: "2017-09-07" }, // - 31 days
+        { id: 13, date: "2017-10-21" }, // + 13 days
+        { id: 14, date: "2017-09-25" }, // - 13 days
+        { id: 15, date: "2018-01-08" }, // + 3 months
+        { id: 16, date: "2017-07-08" }, // - 3 months
+        { id: 17, date: "2018-10-09" }, // + 1 year
+        { id: 18, date: "2016-10-07" }, // - 1 year
+        { id: 19, date: "2020-10-09" }, // + 3 year
+        { id: 20, date: "2014-10-07" }, // - 3 year
     ];
 
     await mountView({
@@ -51,13 +59,21 @@ test("RelativeDateField on a date field in list view", async () => {
     expect(cells[2]).toHaveText("Yesterday");
     expect(cells[3]).toHaveText("In 2 days");
     expect(cells[4]).toHaveText("3 days ago");
-    expect(cells[5]).toHaveText("Feb 8, 2018");
-    expect(cells[6]).toHaveText("Jun 8");
+    expect(cells[5]).toHaveText("In 4 months");
+    expect(cells[6]).toHaveText("4 months ago");
     expect(cells[7]).toHaveText("");
-    expect(cells[8]).toHaveText("In 24 days");
-    expect(cells[9]).toHaveText("Next month");
-    expect(cells[10]).toHaveText("23 days ago");
-    expect(cells[11]).toHaveText("Last month");
+    expect(cells[8]).toHaveText("In 4 weeks");
+    expect(cells[9]).toHaveText("In 5 weeks");
+    expect(cells[10]).toHaveText("3 weeks ago");
+    expect(cells[11]).toHaveText("4 weeks ago");
+    expect(cells[12]).toHaveText("In 13 days");
+    expect(cells[13]).toHaveText("13 days ago");
+    expect(cells[14]).toHaveText("In 3 months");
+    expect(cells[15]).toHaveText("3 months ago");
+    expect(cells[16]).toHaveText("In 12 months");
+    expect(cells[17]).toHaveText("12 months ago");
+    expect(cells[18]).toHaveText("In 3 years");
+    expect(cells[19]).toHaveText("3 years ago");
 
     expect(queryOne(".o_field_widget > div", { root: cells[0] })).toHaveAttribute(
         "title",
@@ -306,8 +322,8 @@ test("RelativeDateField on a datetime field in list view in UTC", async () => {
         { id: 3, datetime: "2017-10-07 18:00:00" }, // yesterday
         { id: 4, datetime: "2017-10-10 22:00:00" }, // + 2 days
         { id: 5, datetime: "2017-10-05 04:00:00" }, // - 3 days
-        { id: 6, datetime: "2018-02-08 04:00:00" }, // + 4 months (diff >= 100 days)
-        { id: 7, datetime: "2017-06-08 04:00:00" }, // - 4 months (diff >= 100 days)
+        { id: 6, datetime: "2018-02-08 04:00:00" }, // + 4 months
+        { id: 7, datetime: "2017-06-08 04:00:00" }, // - 4 months
         { id: 8, datetime: false },
     ];
 
@@ -323,8 +339,8 @@ test("RelativeDateField on a datetime field in list view in UTC", async () => {
         "Yesterday",
         "In 2 days",
         "3 days ago",
-        "Feb 8, 2018",
-        "Jun 8",
+        "In 4 months",
+        "4 months ago",
         "",
     ]);
 
@@ -428,8 +444,8 @@ test("RelativeDateField with custom decoration classes", async () => {
         { id: 3, date: "2017-10-07" }, // yesterday
         { id: 4, date: "2017-10-10" }, // + 2 days
         { id: 5, date: "2017-10-05" }, // - 3 days
-        { id: 6, date: "2018-02-08" }, // + 4 months (diff >= 100 days)
-        { id: 7, date: "2017-06-08" }, // - 4 months (diff >= 100 days)
+        { id: 6, date: "2018-02-08" }, // + 4 months
+        { id: 7, date: "2017-06-08" }, // - 4 months
         { id: 8, date: false },
     ];
 
