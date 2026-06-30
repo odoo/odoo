@@ -185,16 +185,17 @@
 
     <t t-name="mail.Composer.suggestionPartner">
         <t t-set="partner" t-value="option.partner"/>
+        <t t-set="partnerEmail" t-value="partner.displayEmail"/>
         <t t-set="title" t-value="partner.name"/>
-        <t t-if="partner.email" t-set="title" t-value="`${title} (${partner.email})`"/>
+        <t t-if="partnerEmail" t-set="title" t-value="`${title} (${partnerEmail})`"/>
         <DiscussAvatar t-if="partner" record="partner" size="24"/>
-        <strong class="o-mail-Composer-suggestionPartner-name px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-att-class="{'o-has-email': partner.email, 'mw-100': !partner.email}" t-att-title="title">
+        <strong class="o-mail-Composer-suggestionPartner-name px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-att-class="{'o-has-email': partnerEmail, 'mw-100': !partnerEmail}" t-att-title="title">
             <t t-out="partner.name"/>
             <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">
                 "<t t-out="option.thread.getPersonaName(partner)"/>"
             </t>
         </strong>
-        <span t-if="partner.email" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partner.email"/>)</span>
+        <span t-if="partnerEmail" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partnerEmail"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionRole">

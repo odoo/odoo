@@ -334,7 +334,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         label:
                             thread?.getPersonaName(suggestion) ||
                             suggestion.displayName ||
-                            suggestion.email ||
+                            suggestion.displayEmail ||
                             "",
                         partner: suggestion,
                         thread,

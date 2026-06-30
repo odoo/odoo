@@ -207,7 +207,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "res.partner": self._filter_partners_fields(
                             {
                                 "agent_ids": [],
-                                "email": "test_customer@example.com",
+                                "email_normalized": "test_customer@example.com",
                                 "id": self.test_partner.id,
                                 "tz": False,
                                 "user_ids": self.test_user.ids,
@@ -254,7 +254,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "active": True,
                                 "agent_ids": [],
                                 "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
-                                "email": "test_customer@example.com",
+                                "email_normalized": "test_customer@example.com",
                                 "id": self.test_partner.id,
                                 "is_company": False,
                                 "main_user_id": self.test_user.id,

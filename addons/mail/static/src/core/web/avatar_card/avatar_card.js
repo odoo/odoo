@@ -76,7 +76,7 @@ export class AvatarCard extends Component {
     }
 
     get email() {
-        return this.partner?.email;
+        return this.partner?.displayEmail;
     }
 
     get phone() {
