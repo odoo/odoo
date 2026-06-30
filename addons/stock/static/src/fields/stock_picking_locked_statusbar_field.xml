@@ -19,7 +19,8 @@
         <!-- For Mobile view -->
         <xpath expr="//t[@t-out='this.getCurrentLabel()']" position="replace">
             <t t-set="item" t-value="this.currentItem"/>
-            <t t-call="stock.PickingLockedStatusBarField.ItemLabel"/>
+            <t t-if="item" t-call="stock.PickingLockedStatusBarField.ItemLabel"/>
+            <t t-else="" t-out="this.getCurrentLabel()"/>
         </xpath>
     </t>
 </templates>
