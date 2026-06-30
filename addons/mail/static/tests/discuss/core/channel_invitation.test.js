@@ -11,6 +11,8 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -58,8 +60,12 @@ test("can invite users in channel from chat window", async () => {
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channelId]]);
+    const time = deserializeDateTime(date).toLocaleString(luxon.DateTime.TIME_SIMPLE, {
+        locale: user.lang,
+    });
     await contains(
-        ".o-mail-Thread .o-mail-NotificationMessage:text('Mitchell Admin invited TestPartner to the channel1:00 PM')"
+        `.o-mail-Thread .o-mail-NotificationMessage:text('Mitchell Admin invited TestPartner to the channel${time}')`
     );
 });
 
