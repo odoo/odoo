@@ -38,10 +38,23 @@
         </xpath>
     </template>
 
+    <!-- The search bar dropdown is hidden when there is only one search input, as it doesn't make sense to show a dropdown with only one option -->
+    <template id="portal_project_searchbar" inherit_id="portal.portal_searchbar" primary="True">
+        <xpath expr="//form[hasclass('o_portal_search_panel')]//button[hasclass('dropdown-toggle')]" position="attributes">
+            <attribute name="t-att-style">'display: none;' if len(searchbar_inputs) == 1 else ''</attribute>
+        </xpath>
+        <xpath expr="//form[hasclass('o_portal_search_panel')]//div[hasclass('dropdown-menu')]" position="attributes">
+            <attribute name="t-att-style">'display: none;' if len(searchbar_inputs) == 1 else ''</attribute>
+        </xpath>
+        <xpath expr="//form[hasclass('o_portal_search_panel')]//input[@name='search']" position="attributes">
+            <attribute name="t-att-placeholder">'Search Project'</attribute>
+        </xpath>
+    </template>
+
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Projects"/>
+            <t t-call="project.portal_project_searchbar" title.translate="Projects"/>
             <t t-if="not projects">
                 <div class="alert alert-warning" role="alert">
                     There are no projects.
