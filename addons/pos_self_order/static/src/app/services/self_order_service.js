@@ -187,7 +187,7 @@ export class SelfOrder extends Reactive {
                 return;
             }
             const productTemplate = product.product_tmpl_id;
-            if (this.isProductConfigurable(productTemplate)) {
+            if (productTemplate.isConfigurableForSelfOrder) {
                 this.router.navigate("product", { id: productTemplate.id });
                 return;
             }
@@ -390,43 +390,6 @@ export class SelfOrder extends Reactive {
         } catch {
             console.info("Offline mode, cannot update the slot avaibility");
         }
-    }
-
-    showComboSelectionPage(product) {
-        const selectedCombos = [];
-        for (const combo of product.combo_ids) {
-            const { combo_item_ids } = combo;
-            if (
-                combo_item_ids.length > 1 ||
-                combo.qty_max > 1 ||
-                this.isProductConfigurable(combo_item_ids[0]?.product_id)
-            ) {
-                return { show: true, selectedCombos: [] };
-            }
-            selectedCombos.push({
-                combo_item_id: this.models["product.combo.item"].get(combo_item_ids[0].id),
-                qty: 1,
-                configuration: {
-                    attribute_custom_values: [],
-                    attribute_value_ids: [],
-                    price_extra: 0,
-                },
-            });
-        }
-        return { show: false, selectedCombos };
-    }
-
-    isProductConfigurable(product) {
-        if (!product) {
-            return false;
-        }
-        if (!this.kioskMode) {
-            return product.isConfigurable();
-        }
-        return product.attribute_line_ids.some(
-            (a) =>
-                a.product_template_value_ids.length > 1 || a.attribute_id.display_type === "multi"
-        );
     }
 
     async addToCart(
@@ -691,6 +654,13 @@ export class SelfOrder extends Reactive {
 
     get isSelfSnoozed() {
         return this.snoozeTracker.getActiveSnooze("self-ordering");
+    }
+
+    isProductAvailable(product) {
+        return (
+            !product.pos_categ_ids.length ||
+            product.pos_categ_ids.some((categ) => this.isCategoryAvailable(categ.id))
+        );
     }
 
     async initKioskData() {

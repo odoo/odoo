@@ -254,10 +254,7 @@ export class CartPage extends Component {
                   comboToApply.combinations[0]
               )
             : [];
-        const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(
-            comboToApply.product,
-            preselectedCombos
-        );
+        const { show, selectedCombos } = comboToApply.product.showComboSelectionPage();
         if (show) {
             this.router.navigate(
                 "combo_selection",

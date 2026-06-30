@@ -42,8 +42,7 @@ export class ProductPage extends Component {
             showStickyTitle: false,
         });
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        useStickyTitleObserver(
-            this.productNameRef,
+        this.productNameRef = useStickyTitleObserver(
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
     }
@@ -164,10 +163,25 @@ export class ProductPage extends Component {
             this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
         );
 
+        const historyState = history.state || {};
+        if (this.productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
+            return this.router.navigate("optional_product", { id: this.productTemplate.id });
+        }
+
+        // We came from the optional product page to configure this product: account for it
+        // in the snapshot it left behind, so its badge matches what is now in the cart.
+        const qtys = historyState.state?.optionalProductQtys;
+        if (qtys) {
+            qtys[this.productTemplate.id] = (qtys[this.productTemplate.id] || 0) + this.state.qty;
+        }
         this.goBack();
     }
 
     goBack() {
+        if (history.state?.redirectPage) {
+            const { redirectPage, params, state } = history.state;
+            return this.router.navigate(redirectPage, params, state);
+        }
         this.router.navigate("product_list");
     }
 
