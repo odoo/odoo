@@ -3,6 +3,7 @@
 import gc
 import json
 from collections import defaultdict
+from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
 
@@ -130,6 +131,33 @@ class TestWebsocketCaryall(WebsocketCase):
                     "payload": self.env["bus.bus"]._bus_last_id(),
                 },
             )
+
+    def test_subscribe_non_integer_last(self):
+        with patch.object(
+            Websocket,
+            "subscribe",
+            side_effect=Websocket.subscribe,
+            autospec=True,
+        ) as mock:
+            websocket = self.websocket_connect()
+            dispatch_done = Event()
+            orig = Websocket._dispatch_bus_notifications
+
+            def patched(self_ws, *args):
+                orig(self_ws, *args)
+                dispatch_done.set()
+
+            with patch.object(Websocket, "_dispatch_bus_notifications", patched):
+                websocket.send(
+                    json.dumps(
+                        {
+                            "event_name": "subscribe",
+                            "data": {"channels": [], "check_outdated": False, "last": None},
+                        },
+                    ),
+                )
+                dispatch_done.wait(timeout=5)
+            self.assertEqual(mock.call_args[0][2], 0)
 
     def test_subscribe_lower_last_notification_id(self):
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
