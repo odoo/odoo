@@ -197,7 +197,7 @@ class HrEmployeePublic(models.Model):
             SELECT
                 %s
             FROM hr_employee e
-            JOIN hr_version v
+       LEFT JOIN hr_version v
               ON v.id = e.current_version_id
         )""" % (self._table, self._get_fields()))
 
