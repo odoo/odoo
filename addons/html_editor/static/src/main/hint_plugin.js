@@ -17,12 +17,11 @@ import { debounce } from "@web/core/utils/timing";
  *   selectionData: SelectionData,
  *   editable: EditorContext["editable"]
  * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
- * @typedef {{ selector: CSSSelector; text: LazyTranslatedString; }[]} hints
  */
 
 export class HintPlugin extends Plugin {
     static id = "hint";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["history", "selection", "region"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -103,10 +102,9 @@ export class HintPlugin extends Plugin {
         const editableSelection = selectionData.editableSelection;
         this.clearHints();
         if (editableSelection.isCollapsed) {
-            const hints = this.getResource("hints");
             for (const provideTargets of this.getResource("hint_targets_providers")) {
                 for (const target of provideTargets(selectionData, this.editable)) {
-                    const nodeHint = hints.find((h) => target.matches(h.selector))?.text;
+                    const nodeHint = this.dependencies.region.getProperty(target, "hintText");
                     if (target && nodeHint && this.shouldDisplayHint(target)) {
                         this.makeHint(target, nodeHint);
                     }

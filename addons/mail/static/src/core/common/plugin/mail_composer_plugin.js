@@ -35,10 +35,10 @@ export class MailComposerPlugin extends Plugin {
         paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
-        hints: [
+        region_properties: [
             withSequence(1, {
-                selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
-                text: this.config.placeholder,
+                is: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
+                hintText: this.config.placeholder,
             }),
         ],
         hint_targets_providers: (selectionData, editable) => {
