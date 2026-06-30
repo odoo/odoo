@@ -19,24 +19,26 @@ import { range } from "@web/core/utils/numbers";
  * @property {number} [minutesRounding=5]
  */
 
+export const timePickerProps = {
+    cssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+    inputCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+    value: t
+        .or([t.string(), t.instanceOf(Time), t.literal(false), t.literal(null)])
+        .optional("00:00"),
+    onChange: t.function().optional(() => () => {}),
+    onInvalid: t.function().optional(() => () => {}),
+    showSeconds: t.boolean().optional(false),
+    minutesRounding: t.number().optional(5),
+    placeholder: t.string().optional(),
+};
+
 export class TimePicker extends Component {
     static template = "web.TimePicker";
     static components = {
         Dropdown,
         DropdownItem,
     };
-    props = props({
-        cssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
-        inputCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
-        value: t
-            .or([t.string(), t.instanceOf(Time), t.literal(false), t.literal(null)])
-            .optional("00:00"),
-        onChange: t.function().optional(() => () => {}),
-        onInvalid: t.function().optional(() => () => {}),
-        showSeconds: t.boolean().optional(false),
-        minutesRounding: t.number().optional(5),
-        placeholder: t.string().optional(),
-    });
+    props = props(timePickerProps);
 
     setup() {
         this.inputRef = useRef("inputRef");

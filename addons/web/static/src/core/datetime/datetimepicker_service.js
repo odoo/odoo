@@ -36,6 +36,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *  pickerProps?: DateTimePickerProps;
  *  showSeconds?: boolean;
  *  target: HTMLElement | string;
+ *  showResetButton?: boolean;
  * }} DateTimePickerServiceParams
  */
 
@@ -283,7 +284,10 @@ export const datetimePickerService = {
                         for (const manager of dateTimeManagerList) {
                             manager.close();
                         }
-                        popover.open(getPopoverTarget(), { pickerProps });
+                        popover.open(getPopoverTarget(), {
+                            pickerProps,
+                            showResetButton: params.showResetButton,
+                        });
                     }
 
                     focusActiveInput();
