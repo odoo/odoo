@@ -732,7 +732,9 @@ export class TicketScreen extends Component {
     _getEmptyOrder(partner) {
         let emptyOrderForPartner = null;
         let emptyOrder = null;
-        for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
+        for (const order of this.pos.models["pos.order"].filter(
+            (order) => !order.finalized && !this.pos.syncingOrders.has(order.uuid)
+        )) {
             if (order.isEmptyOrder()) {
                 if (order.getPartner() === partner) {
                     emptyOrderForPartner = order;
