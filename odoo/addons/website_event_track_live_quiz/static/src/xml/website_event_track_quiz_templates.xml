@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<t t-inherit="website_event_track_quiz.quiz.validation" t-inherit-mode="extension">
+    <xpath expr="//button[hasclass('o_quiz_js_quiz_reset')]" position="after">
+        <a t-if="widget.nextSuggestion"
+            t-attf-class="btn border o_quiz_js_quiz_next_track #{widget.track.completed ? 'btn-secondary' : 'btn-light'}"
+            t-att-href="widget.nextSuggestion.suggestion.website_url">
+            Next Track
+        </a>
+    </xpath>
+</t>
+
+</odoo>

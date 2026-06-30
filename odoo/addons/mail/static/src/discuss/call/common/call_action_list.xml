@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallActionList">
+        <div class="o-discuss-CallActionList d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
+            <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
+                <t t-if="isOfActiveCall and rtc.state.selfSession">
+                    <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>
+                    <t t-else="" t-set="micText">Mute</t>
+                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-aria-label="micText"
+                        t-att-title="micText"
+                        t-on-click="onClickMicrophone">
+                        <div class="fa-stack">
+                            <i class="fa fa-stack-1x" t-att-class="{
+                                'fa-lg': !isSmall,
+                                'fa-microphone': !rtc.state.selfSession.isMute,
+                                'fa-microphone-slash': rtc.state.selfSession.isMute,
+                                'text-danger': rtc.state.selfSession.isMute,
+                            }"/>
+                        </div>
+                    </button>
+                    <t t-if="rtc.state?.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
+                    <t t-else="" t-set="headphoneText">Deafen</t>
+                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-aria-label="headphoneText"
+                        t-att-title="headphoneText"
+                        t-on-click="onClickDeafen">
+                        <div class="fa-stack">
+                            <i class="fa fa-stack-1x" t-att-class="{
+                                'fa-lg': !isSmall,
+                                'fa-headphones': !rtc.state.selfSession.isDeaf,
+                                'fa-deaf': rtc.state.selfSession.isDeaf,
+                                'text-danger': rtc.state.selfSession.isDeaf,
+                            }"/>
+                        </div>
+                    </button>
+                    <t t-if="rtc.state.sendCamera" t-set="cameraText">Stop camera</t>
+                    <t t-else="" t-set="cameraText">Turn camera on</t>
+                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{
+                            'p-2': isSmall,
+                            'p-3': !isSmall,
+                        }"
+                        t-att-aria-label="cameraText"
+                        t-att-title="cameraText"
+                        t-on-click="() => this.rtc.toggleVideo('camera')">
+                        <div class="fa-stack">
+                            <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendCamera }"/>
+                        </div>
+                    </button>
+                    <Dropdown position="'top-end'" togglerClass="`btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" menuClass="'d-flex flex-column py-0'" title="MORE">
+                        <t t-set-slot="toggler">
+                            <div class="fa-stack">
+                                <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                            </div>
+                        </t>
+                        <t t-set-slot="default">
+                            <DropdownItem t-foreach="moreActions" t-as="action" t-key="action.id" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" title="action.name" onSelected="action.onSelect">
+                                <i t-att-class="action.icon"/>
+                                <span class="mx-2" t-out="action.name"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </t>
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
+                    t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                    aria-label="Reject"
+                    title="Reject"
+                    t-att-disabled="rtc.state.hasPendingRequest"
+                    t-on-click="onClickRejectCall">
+                    <div class="fa-stack">
+                        <i class="fa fa-times fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </div>
+                </button>
+                <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
+                <t t-else="" t-set="callText">Join Call</t>
+                <button class="btn d-flex m-1 border-0 rounded-circle shadow-none"
+                    t-att-aria-label="callText"
+                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-disabled="rtc.state.hasPendingRequest"
+                    t-att-title="callText"
+                    t-on-click="onClickToggleAudioCall">
+                    <div class="fa-stack">
+                        <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

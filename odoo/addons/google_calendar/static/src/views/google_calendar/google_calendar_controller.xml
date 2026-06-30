@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="google_calendar.GoogleCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <FilterPanel position="after">
+            <div id="google_calendar_sync" class="o_calendar_sync" t-if="model.googleCredentialsSet">
+                <button t-if="!model.state.googleIsSync and model.state.googleIsPaused" type="button" id="google_sync_paused" class="o_google_sync_button o_google_sync_paused btn btn-warning" t-on-click="onGoogleSyncUnpause">
+                    <b>
+                        <i id="google_paused" class='fa fa-pause'/>
+                        <span class="mx-1">Google</span>
+                    </b>
+                </button>
+                <button t-elif="!model.state.googleIsSync" type="button" id="google_sync_pending" class="o_google_sync_button o_google_sync_pending btn btn-secondary text-nowrap" t-on-click="onGoogleSyncCalendar">
+                    <b><i class='fa fa-refresh'/> Google</b>
+                </button>
+                <!-- class change on hover -->
+                <button t-else="" type="button" id="google_sync_configured" class="me-1 o_google_sync_button o_google_sync_button_configured btn btn-outline-primary" t-on-click="onStopGoogleSynchronization"
+                    t-on-mouseenter="(ev) => {ev.target.classList.remove('btn-outline-primary');ev.target.classList.add('btn-danger');}"
+                    t-on-mouseleave="(ev) => {ev.target.classList.remove('btn-danger');ev.target.classList.add('btn-outline-primary');}">
+                    <b>
+                        <i id="google_check" class='fa fa-check fa-fw'/>
+                        <i id="google_stop" class='fa fa-times fa-fw'/>
+                        <span class="mx-1">Google</span>
+                    </b>
+                </button>
+            </div>
+        </FilterPanel>
+    </t>
+</templates>

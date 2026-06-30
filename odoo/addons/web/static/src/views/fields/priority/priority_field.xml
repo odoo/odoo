@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PriorityField">
+        <div class="o_priority" role="radiogroup" name="priority" aria-label="Priority">
+            <t t-foreach="options" t-as="value" t-key="value">
+                <t t-if="!value_first">
+                    <t t-if="props.readonly">
+                        <span
+                            class="o_priority_star fa"
+                            role="radio"
+                            t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
+                            tabindex="0"
+                            t-att-data-tooltip="getTooltip(value[1])"
+                            t-att-aria-checked="value_index === index ? 'true' : 'false'"
+                            t-att-aria-label="value[1]"
+                        />
+                    </t>
+                    <t t-else="">
+                        <a
+                            href="#"
+                            class="o_priority_star fa"
+                            role="radio"
+                            t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
+                            tabindex="0"
+                            t-att-data-tooltip="getTooltip(value[1])"
+                            t-att-aria-checked="value_index === index ? 'true' : 'false'"
+                            t-att-aria-label="value[1]"
+                            t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
+                            t-on-mouseenter="() => state.index = value_index"
+                            t-on-mouseleave="() => state.index = -1"
+                        />
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

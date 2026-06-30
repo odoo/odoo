@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="slide_channel_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.inherit.survey</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='members_completed_count_label']" position="replace">
+                <field  name="nbr_certification" invisible="1"/>
+                <span class="o_stat_text" invisible="nbr_certification &gt; 0">Finished</span>
+                <span class="o_stat_text" invisible="nbr_certification == 0">Certified</span>
+            </xpath>
+            <xpath expr="//field[@name='slide_category']" position="after">
+                <field name="survey_id"/>
+            </xpath>
+            <xpath expr="//create[@name='add_slide_lesson']" position="after">
+                <create name="add_slide_certificate" string="Add Certification" groups="survey.group_survey_user" context="{'default_slide_category': 'certification'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_channel_view_kanban" model="ir.ui.view">
+        <field name="name">slide.channel.view.kanban.inherit.survey</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_published']" position="after">
+                <field name="nbr_certification"/>
+            </xpath>
+            <xpath expr="//span[@name='done_members_count_label']" position="replace">
+                <t t-if="record.nbr_certification.raw_value"><span class="text-muted">Certified</span></t>
+                <t t-else=""><span class="text-muted">Finished</span></t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="utm_tag_view_tree" model="ir.ui.view">
+        <field name="name">utm.tag.view.tree</field>
+        <field name="model">utm.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Campaign Tags" editable="top">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_view_utm_tag" model="ir.actions.act_window">
+        <field name="name">Campaign Tags</field>
+        <field name="res_model">utm.tag</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Tag
+            </p><p>
+                Assign tags to your campaigns to organize, filter and track them.
+            </p>
+        </field>
+    </record>
+</odoo>

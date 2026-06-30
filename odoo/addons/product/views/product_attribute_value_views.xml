@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_value_list" model="ir.ui.view">
+        <field name="name">product.attribute.value.list</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree string="Attribute Values">
+                <field name="name"/>
+                <field name="default_extra_price"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

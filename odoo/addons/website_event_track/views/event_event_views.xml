@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.from.inherit.track</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="model">event.event</field>
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_published']" position="before">
+                <button name="%(action_event_track_from_event)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-microphone">
+                    <field name="track_count" string="Tracks" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='website_menu']" position="after">
+                <label for="website_track" string="Showcase Tracks"/>
+                <field name="website_track"/>
+                <label for="website_track_proposal" string="Allow Track Proposals"/>
+                <field name="website_track_proposal"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_view_list" model="ir.ui.view">
+        <field name="name">event.event.view.list.inherit.website.event.track</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="track_count" readonly="1" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

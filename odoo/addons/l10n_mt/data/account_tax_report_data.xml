@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mt"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_tax_base" model="account.report.column">
+                <field name="name">Tax base</field>
+                <field name="expression_label">tax_base</field>
+            </record>
+            <record id="tax_report_tax_amount" model="account.report.column">
+                <field name="name">Tax amount</field>
+                <field name="expression_label">tax_amount</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_title_intra_com" model="account.report.line">
+                <field name="name">Intra-community and Non-EU Trade</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_I_1" model="account.report.line">
+                        <field name="name">Exempt IC Supplies of Goods and Supplies of Services where customer is liable for the tax</field>
+                        <field name="code">mt_I_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.1_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_I_2" model="account.report.line">
+                        <field name="name">Supplies of Goods and Services where place of supply is outside Malta - EU and non EU</field>
+                        <field name="code">mt_I_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.2_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_I_3" model="account.report.line">
+                        <field name="name">IC Acquisition of Goods and Services received from other EU member states</field>
+                        <field name="code">mt_I_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.3_base</field>
+                            </record>
+                            <record id="tax_report_line_I_3_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.3_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_I_4" model="account.report.line">
+                        <field name="name">Goods and Services received where place of supply is Malta other than those reported in "Box 3"</field>
+                        <field name="code">mt_I_4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.4_base</field>
+                            </record>
+                            <record id="tax_report_line_I_4_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.4_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_I_5_subtotal" model="account.report.line">
+                        <field name="name">Subtotal</field>
+                        <field name="code">mt_I_subtotal</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_I_1.tax_base + mt_I_2.tax_base + mt_I_3.tax_base + mt_I_4.tax_base</field>
+                            </record>
+                            <record id="tax_report_line_I_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_I_3.tax_amount + mt_I_4.tax_amount</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_reverse_charge" model="account.report.line">
+                <field name="name">Reverse charge</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_II_1" model="account.report.line">
+                        <field name="name">IC Acquisition of goods for re-sale</field>
+                        <field name="code">mt_II_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1_base</field>
+                            </record>
+                            <record id="tax_report_line_II_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_II_2" model="account.report.line">
+                        <field name="name">Services received from EU member stated where the purchaser is liable for vat</field>
+                        <field name="code">mt_II_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2_base</field>
+                            </record>
+                            <record id="tax_report_line_II_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_II_3" model="account.report.line">
+                        <field name="name">IC Acquisition of Capital Goods</field>
+                        <field name="code">mt_II_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3_base</field>
+                            </record>
+                            <record id="tax_report_line_II_3_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_II_4" model="account.report.line">
+                        <field name="name">Goods and Services received where place of supply is Malta</field>
+                        <field name="code">mt_II_4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4_base</field>
+                            </record>
+                            <record id="tax_report_line_II_4_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_II_5_subtotal" model="account.report.line">
+                        <field name="name">Subtotal</field>
+                        <field name="code">mt_II_subtotal</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_II_1.tax_base + mt_II_2.tax_base + mt_II_3.tax_base + mt_II_4.tax_base</field>
+                            </record>
+                            <record id="tax_report_line_II_5_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_II_1.tax_amount + mt_II_2.tax_amount + mt_II_3.tax_amount + mt_II_4.tax_amount</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_domestic_sup" model="account.report.line">
+                <field name="name">Domestic supplies and exports</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_III_1" model="account.report.line">
+                        <field name="name">Taxable Goods/Services at 18%</field>
+                        <field name="code">mt_III_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1_base</field>
+                            </record>
+                            <record id="tax_report_line_III_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_III_2" model="account.report.line">
+                        <field name="name">Taxable Services at 7%</field>
+                        <field name="code">mt_III_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2_base</field>
+                            </record>
+                            <record id="tax_report_line_III_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_III_3" model="account.report.line">
+                        <field name="name">Taxable Goods/Services at 5%</field>
+                        <field name="code">mt_III_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3_base</field>
+                            </record>
+                            <record id="tax_report_line_III_3_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_III_4" model="account.report.line">
+                        <field name="name">Exempt with Credit/Exports</field>
+                        <field name="code">mt_III_4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.4_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_III_5" model="account.report.line">
+                        <field name="name">Exempt without Credit</field>
+                        <field name="code">mt_III_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.5_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_III_6_subtotal" model="account.report.line">
+                        <field name="name">Subtotal</field>
+                        <field name="code">mt_III_subtotal</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_6_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_III_1.tax_base + mt_III_2.tax_base + mt_III_3.tax_base + mt_III_4.tax_base + mt_III_5.tax_base</field>
+                            </record>
+                            <record id="tax_report_line_III_6_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_III_1.tax_amount + mt_III_2.tax_amount + mt_III_3.tax_amount</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_domestic_imp" model="account.report.line">
+                <field name="name">Domestic purchases and imports</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_IV_1" model="account.report.line">
+                        <field name="name">Taxable Purchases for re-sale at 18%</field>
+                        <field name="code">mt_IV_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.1_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.1_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_2" model="account.report.line">
+                        <field name="name">Taxable Purchases for re-sale at 5%</field>
+                        <field name="code">mt_IV_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.2_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.2_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_3" model="account.report.line">
+                        <field name="name">Exempt Purchases for re-sale</field>
+                        <field name="code">mt_IV_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.3_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_4" model="account.report.line">
+                        <field name="name">Capital Goods</field>
+                        <field name="code">mt_IV_4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.4_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_4_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.4_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_5" model="account.report.line">
+                        <field name="name">Services and overheads at 18%</field>
+                        <field name="code">mt_IV_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.5_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_5_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.5_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_6" model="account.report.line">
+                        <field name="name">Exempt without Credit</field>
+                        <field name="code">mt_IV_6</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_6_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.6_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_6_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.6_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_7" model="account.report.line">
+                        <field name="name">Exempt without Credit</field>
+                        <field name="code">mt_IV_7</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_7_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.7_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_7_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IV.7_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IV_8_subtotal" model="account.report.line">
+                        <field name="name">Subtotal</field>
+                        <field name="code">mt_IV_subtotal</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_8_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_IV_1.tax_base + mt_IV_2.tax_base + mt_IV_3.tax_base + mt_IV_4.tax_base + mt_IV_5.tax_base + mt_IV_6.tax_base + mt_IV_7.tax_base</field>
+                            </record>
+                            <record id="tax_report_line_IV_8_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mt_IV_1.tax_amount + mt_IV_2.tax_amount + mt_IV_4.tax_amount + mt_IV_5.tax_amount + mt_IV_6.tax_amount + mt_IV_7.tax_amount</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_adjustment_1" model="account.report.line">
+                <field name="name">Adjustment in favour of vat department</field>
+                <field name="code">mt_adjustment_1</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_adjustment_1_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_adjustment_2" model="account.report.line">
+                <field name="name">Adjustment in favour of registered person</field>
+                <field name="code">mt_adjustment_2</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_adjustment_2_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_excess_credit" model="account.report.line">
+                <field name="name">Excess Credit</field>
+                <field name="code">mt_excess_credit</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_excess_credit_tag_column1_subexp_1" model="account.report.expression">
+                        <field name="label">BOX17</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">mt_I_subtotal.tax_amount - mt_II_subtotal.tax_amount </field>
+                    </record>
+                    <record id="tax_report_line_excess_credit_tag_column1_subexp_2" model="account.report.expression">
+                        <field name="label">BOX26</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">mt_excess_credit.BOX17 + mt_III_subtotal.tax_amount </field>
+                    </record>
+                    <record id="tax_report_line_excess_credit_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(mt_IV_subtotal.tax_amount - mt_excess_credit.BOX26) + (mt_adjustment_2.tax_base - mt_adjustment_1.tax_base)</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_excess_credit_BF" model="account.report.line">
+                <field name="name">Excess Credit B/F</field>
+                <field name="code">mt_excess_credit_BF</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_excess_credit_BF_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_tax_payable" model="account.report.line">
+                <field name="name">Tax Payable</field>
+                <field name="code">mt_tax_payable</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_tax_payable_tag_column1_subexp_1" model="account.report.expression">
+                        <field name="label">BOX43</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(mt_excess_credit.BOX26 - mt_IV_subtotal.tax_amount) + (mt_adjustment_1.tax_base - mt_adjustment_2.tax_base)</field>
+                    </record>
+                    <record id="tax_report_line_excess_tax_payable_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">mt_tax_payable.BOX43 - mt_excess_credit_BF.tax_base</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

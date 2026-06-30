@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Warehouse -->
+        <record id="view_warehouse_inherit_mrp" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherit MRP</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='resupply_wh_ids']" position="before">
+                    <field name="manufacture_to_resupply"/>
+                    <field name="manufacture_steps" invisible="not manufacture_to_resupply" widget="radio" groups="stock.group_adv_location"/>
+                </xpath>
+                <xpath expr="//field[@name='out_type_id']" position="after">
+                    <field name="manu_type_id" readonly="True"/>
+                </xpath>
+                <xpath expr="//group[@name='group_resupply']" position="attributes">
+                    <attribute name="groups">stock.group_adv_location,stock.group_stock_multi_warehouses</attribute>
+                </xpath>
+                <xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
+                    <field name="sam_loc_id" readonly="True"/>
+                    <field name="pbm_loc_id" readonly="True"/>
+                </xpath>
+                <xpath expr="//field[@name='out_type_id']" position="after">
+                    <field name="sam_type_id" readonly="True"/>
+                    <field name="pbm_type_id" readonly="True"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

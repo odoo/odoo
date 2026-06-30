@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ComboSelection">
+        <div t-if="!props.comboState.selectedProduct" class="self_order_attribute_selection p-3 mt-3">
+            <h2 class="attribute_name mb-5 mb-md-3"><small class="text-muted">Choose your</small> <strong t-esc="props.combo.name" /></h2>
+            <div class="combo-list align-items-center justify-content-start">
+                <div class="combo-list-products o-so-products-row">
+                    <t t-foreach="props.combo.combo_line_ids" t-as="line" t-key="line.id">
+                        <t t-set="isOutOfStock" t-value="!this.selfOrder.productByIds[line.product_id[0]].self_order_available"/>
+
+                        <article
+                            t-attf-for="{{ props.combo.id }}_{{ line.id }}"
+                            t-on-click="() => this.productClicked(line.id)"
+                            class="self_order_product_card d-flex flex-row-reverse flex-md-column align-items-start gap-2 user-select-none"
+                            role="button"
+                            >
+                            <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id[0]]"/>
+
+                            <div
+                                class="ratio ratio-1x1 w-25 w-sm-50 w-md-100"
+                                t-att-class="{
+                                    'd-none d-md-block': !product.has_image
+                                }">
+                                <div class="placeholder-glow">
+                                    <div class="placeholder w-100 h-100 bg-300 rounded"/>
+                                </div>
+                                <img
+                                    class="o_self_order_item_card_image w-100 rounded"
+                                    t-attf-src="/menu/get-image/{{ product.id }}/512?unique={{product.write_date}}"
+                                    alt="Product image"
+                                    loading="lazy"
+                                    onerror="this.remove()"/>
+                            </div>
+                            <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
+                                <span t-esc="product.name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
+                                <div class="d-flex justify-content-between gap-3">
+                                    <span
+                                        t-if="line.combo_price"
+                                        class="badge rounded-pill fs-4"
+                                        t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
+                                        + <t t-out="selfOrder.formatMonetary(line.combo_price)"/>
+                                    </span>
+                                    <span t-if="isOutOfStock" class="badge text-bg-danger rounded-pill fs-4">
+                                        Out of stock
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <t t-else="">
+            <AttributeSelection product="props.comboState.selectedProduct" />
+        </t>
+    </t>
+</templates>

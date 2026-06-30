@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="test_base_automation.test_tracking_template" model="mail.template">
+        <field name="name">Test</field>
+        <field name="subject">Test Template</field>
+        <field name="partner_to">test</field>
+        <field name="body_html" type="html"><p>Hello <t t-out="object.state"></t></p></field>
+        <field name="model_id" ref="test_base_automation.model_test_base_automation_task"/>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.EditableTable">
+        <div class="table selected position-absolute d-flex flex-column align-items-center justify-content-between overflow-hidden" 
+            t-ref="root">
+            <span class="label drag-handle d-flex align-items-center flex-grow-1 d fw-bolder fs-2">
+                <t t-esc="props.table.name" />
+            </span>
+            <t t-if="pos.floorPlanStyle != 'kanban'" t-foreach="handles" t-as="handle" t-key="handle">
+                <span class="table-handle" t-ref="{{handle}}" t-att-style="computeHandleStyle(handle)"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

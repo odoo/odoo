@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Add time to the stage buttons -->
+
+    <t t-name="mail.StatusBarDurationField.Dropdown" t-inherit="web.StatusBarField.Dropdown" t-inherit-mode="primary">
+        <xpath expr="//*[@t-esc='item.label']" position="inside">
+            <span t-esc="item.label" />
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
+                <t t-esc="item.shortTimeInStage" />
+            </span>
+        </xpath>
+        <xpath expr="//*[@t-esc='item.label']" position="attributes">
+            <attribute name="t-esc" />
+        </xpath>
+    </t>
+
+    <t t-name="mail.StatusBarDurationField" t-inherit="web.StatusBarField" t-inherit-mode="primary">
+        <xpath expr="//*[@t-call='web.StatusBarField.Dropdown']" position="attributes">
+            <attribute name="t-call">mail.StatusBarDurationField.Dropdown</attribute>
+        </xpath>
+
+        <xpath expr="//*[@t-esc='item.label']" position="inside">
+            <span t-esc="item.label" />
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
+                <t t-esc="item.shortTimeInStage" />
+            </span>
+        </xpath>
+        <xpath expr="//*[@t-esc='item.label']" position="attributes">
+            <attribute name="t-esc" />
+        </xpath>
+    </t>
+</templates>

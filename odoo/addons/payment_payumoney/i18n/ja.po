@@ -1,0 +1,113 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_payumoney
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_provider__code
+msgid "Code"
+msgstr "コード"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_provider__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "マーチャントキー"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_provider__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "マーチャントソルト"
+
+#. module: payment_payumoney
+#. odoo-python
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "参照に一致する取引が見つかりません%s。"
+
+#. module: payment_payumoney
+#: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_provider__code__payumoney
+#: model:payment.provider,name:payment_payumoney.payment_provider_payumoney
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_provider
+msgid "Payment Provider"
+msgstr "決済プロバイダー"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "決済トランザクション"
+
+#. module: payment_payumoney
+#. odoo-python
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%s)"
+msgstr "参照が欠落しているデータを受信しました(%s)"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_provider__payumoney_merchant_key
+msgid "The key solely used to identify the account with PayU money"
+msgstr "PayU moneyのアカウントを識別するためのみに使用されるキー"
+
+#. module: payment_payumoney
+#. odoo-python
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "The payment encountered an error with code %s"
+msgstr "支払でコード%sのエラーが発生しました。"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "この決済プロバイダーのテクニカルコード。"
+
+#. module: payment_payumoney
+#: model_terms:ir.ui.view,arch_db:payment_payumoney.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Razorpay</strong>."
+msgstr ""
+"このプロバイダーは非推奨です。\n"
+"                    無効にして <strong>Razorpay</strong>に移行することを検討して下さい。"
+
+#. module: payment_payumoney
+#: model_terms:payment.provider,auth_msg:payment_payumoney.payment_provider_payumoney
+msgid "Your payment has been authorized."
+msgstr "お支払いは承認されました。"
+
+#. module: payment_payumoney
+#: model_terms:payment.provider,cancel_msg:payment_payumoney.payment_provider_payumoney
+msgid "Your payment has been cancelled."
+msgstr "お支払いは取消されました。"
+
+#. module: payment_payumoney
+#: model_terms:payment.provider,pending_msg:payment_payumoney.payment_provider_payumoney
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "お支払いは正常に処理されましたが、承認待ちです。"
+
+#. module: payment_payumoney
+#: model_terms:payment.provider,done_msg:payment_payumoney.payment_provider_payumoney
+msgid "Your payment has been successfully processed."
+msgstr "お支払いは正常に処理されました。"

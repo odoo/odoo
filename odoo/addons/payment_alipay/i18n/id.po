@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_payment_method
+msgid "Account"
+msgstr "Akun"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
+#: model:payment.provider,name:payment_alipay.payment_provider_alipay
+msgid "Alipay"
+msgstr "Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "Email Penjual Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
+msgid "Code"
+msgstr "Kode"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "Cross-border"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr "Express Checkout (hanya untuk pedagang Tiongkok)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "MD5 Signature Key"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "ID Partner Pedagang"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_provider
+msgid "Payment Provider"
+msgstr "Penyedia Pembayaran"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaksi Tagihan"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr "Menerima data dengan referensi %(r)s atau txn_id %(t)s yang hilang."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr "Email publik partner Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr ""
+"ID publik partner yang digunakan hanya untuk mengidentifikasi akun dengan "
+"Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Kode teknis penyedia pembayaran ini."
+
+#. module: payment_alipay
+#: model_terms:ir.ui.view,arch_db:payment_alipay.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Asiapay</strong>."
+msgstr ""
+"Penyedia ini sudah didepresiasi.\n"
+"                    Pertimbangkan untuk menonaktifkan penyedia dan mulai gunakan <strong>Asiapay</strong>."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been authorized."
+msgstr "Tagihan Anda telah disahkan."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,cancel_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been cancelled."
+msgstr "Pembayaran Anda telah dibatalkan."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,pending_msg:payment_alipay.payment_provider_alipay
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr ""
+"Pembayaran Anda sudah sukses diproses tapi sedang menunggu persetujuan."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,done_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been successfully processed."
+msgstr "Pembayaran Anda sukses diproses."
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr "menerima status transaksi tidak valid: %s"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewComponentsBlock">
+        <t name="components" t-if="hasComponents">
+            <t t-foreach="data.components" t-as="line" t-key="line.index">
+                <BomOverviewLine
+                    isFolded="state[getIdentifier(line)]"
+                    showOptions="props.showOptions"
+                    data="line"
+                    precision="props.precision"
+                    toggleFolded.bind="onToggleFolded"/>
+
+                <t t-if="!state[getIdentifier(line)] &amp;&amp; hasComponents">
+                    <BomOverviewComponentsBlock
+                        unfoldAll="state.unfoldAll"
+                        showOptions="props.showOptions"
+                        currentWarehouseId="props.currentWarehouseId"
+                        data="line"
+                        precision="props.precision"
+                        changeFolded.bind="props.changeFolded"/>
+                </t>
+            </t>
+        </t>
+        <t name="operations" t-if="showOperations &amp;&amp; !!data.operations &amp;&amp; data.operations.length > 0">
+            <BomOverviewExtraBlock
+                unfoldAll="state.unfoldAll"
+                type="'operations'"
+                showOptions="props.showOptions"
+                data="data"
+                precision="props.precision"
+                changeFolded.bind="props.changeFolded"/>
+        </t>
+        <t name="byproducts" t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0">
+            <BomOverviewExtraBlock
+                unfoldAll="state.unfoldAll"
+                type="'byproducts'"
+                showOptions="props.showOptions"
+                data="data"
+                precision="props.precision"
+                changeFolded.bind="props.changeFolded"/>
+        </t>
+    </t>
+
+</templates>

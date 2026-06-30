@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_paytm" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.paytm</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="paytm_mid" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_tid" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_merchant_key" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="channel_id" groups="base.group_no_one" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_test_mode" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="accept_payment" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="allowed_payment_modes" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

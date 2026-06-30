@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- TODO This demo data is for functional testing and demo but also was used for tests. Test cases should be moved to proper tests -->
+    <!-- TODO also, once written the proper tests, we should remove price and name information from lines because it is overwriten by "_onchange_product_id" method. That methods is called to set taxes and uom from products -->
+    <!-- Invoice to gritti support service, vat 21 -->
+    <record id="demo_invoice_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to Servicios Globales with vat 21, 27 and 10,5 -->
+    <record id="demo_invoice_2" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_cmr"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-05'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with vat cero and 21 -->
+    <record id="demo_invoice_3" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with vat exempt and 21 -->
+    <record id="demo_invoice_4" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.1234, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.5678, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with all type of taxes -->
+    <record id="demo_invoice_5" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to Montana Sur fiscal position changes taxes to exempt -->
+    <record id="demo_invoice_6" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_cerrocastor"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-03'"/>
+        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 4 because it have services) -->
+    <record id="demo_invoice_7" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-03'"/>
+        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to consumidor final -->
+    <record id="demo_invoice_8" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.par_cfa"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC in USD and vat 21 -->
+    <record id="base.USD" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="demo_invoice_10" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 1000.0, 'quantity': 5}),
+        ]"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <!-- Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar -->
+    <record id="demo_invoice_11" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 2'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 3'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 4'}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur -->
+    <record id="demo_invoice_12" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 5.3076, 'quantity': 2, 'name': 'Support Services 2'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 3.5384, 'quantity': 2, 'name': 'Support Services 3'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.6376, 'quantity': 2, 'name': 'Support Services 4'}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error -->
+    <record id="demo_invoice_13" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 260.59, 'quantity': -1, 'name': 'Support Services 2'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 48.72, 'quantity': 1, 'name': 'Support Services 3'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 13.666, 'quantity': 1, 'name': 'Support Services 4'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 11.329, 'quantity': 2, 'name': 'Support Services 5'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 68.9408, 'quantity': 1, 'name': 'Support Services 6'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 4.7881, 'quantity': 2, 'name': 'Support Services 7'}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 12.0625, 'quantity': 2, 'name': 'Support Services 8'}),
+        ]"/>
+    </record>
+
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because only products) -->
+    <record id="demo_invoice_14" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-20'"/>
+        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+        ]"/>
+    </record>
+
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 2 because only service) -->
+    <record id="demo_invoice_15" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-20'"/>
+        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo) -->
+    <record id="demo_invoice_16" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-22'"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with 100% of discount -->
+    <record id="demo_invoice_17" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with 100% of discount and with different VAT aliquots -->
+    <record id="demo_invoice_18" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1, 'discount': 100}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with multiple taxes and perceptions -->
+    <record id="demo_invoice_19" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')]"/>
+    </function>
+
+</odoo>

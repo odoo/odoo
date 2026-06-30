@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_in_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-if="props.data.partner and props.data.company?.country?.code == 'IN'">
+                <div class="pos-receipt-center-align">
+                    <div><t t-esc="props.data.partner.name" /></div>
+                    <t t-if="props.data.partner.phone">
+                        <div>
+                            <span>Phone: </span>
+                            <t t-esc="props.data.partner.phone" />
+                        </div>
+                    </t>
+                    <br />
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
+            <t t-if="line.l10n_in_hsn_code and props.data.headerData.company.country?.code === 'IN'">
+                <div class="pos-receipt-left-padding">
+                    <span>HSN Code: </span>
+                    <t t-esc="line.l10n_in_hsn_code"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

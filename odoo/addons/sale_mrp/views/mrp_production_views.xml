@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="mrp_production_form_view_sale" model="ir.ui.view">
+        <field name="name">mrp.production.inherited.form.sale</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">64</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_mrp_production_childs']" position="before">
+                <button class="oe_stat_button" name="action_view_sale_orders" type="object" icon="fa-dollar" invisible="sale_order_count == 0" groups="sales_team.group_sale_salesman">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="sale_order_count"/></span>
+                        <span class="o_stat_text">Sale</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

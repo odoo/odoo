@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" js_class="mail_composer_form">
+                    <group>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="author_id" invisible="1"/>
+                        <field name="auto_delete" invisible="1"/>
+                        <field name="auto_delete_keep_log" invisible="1"/>
+                        <field name="composition_batch" invisible="1"/>
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="email_layout_xmlid" invisible="1"/>
+                        <field name="force_send" invisible="1"/>
+                        <field name="lang" invisible="1"/>
+                        <field name="mail_server_id" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="model_is_thread" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="record_alias_domain_id" invisible="1"/>
+                        <field name="record_company_id" invisible="1"/>
+                        <field name="record_name" invisible="1"/>
+                        <field name="render_model" invisible="1"/>
+                        <field name="res_domain" invisible="1"/>
+                        <field name="res_domain_user_id" invisible="1"/>
+                        <field name="res_ids" invisible="1"/>
+                        <field name="scheduled_date" invisible="1"/>
+                        <field name="subtype_id" invisible="1"/>
+                        <field name="subtype_is_log" invisible="1"/>
+                        <field name="use_exclusion_list" invisible="1"/>
+                        <!-- visible wizard -->
+                        <field name="email_from"
+                            invisible="composition_mode != 'mass_mail'"/>
+                        <label for="partner_ids" string="Recipients" invisible="composition_mode != 'comment' or subtype_is_log"/>
+                        <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
+                            <span name="document_followers_text" invisible="not model or composition_mode == 'mass_mail'">Followers of the document and</span>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                        </div>
+                        <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
+                    </group>
+                    <field name="can_edit_body" invisible="1"/>
+                    <div invisible="composition_mode == 'mass_mail'">
+                        <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
+                        <group>
+                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                        </group>
+                        <group>
+                            <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
+                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                        </group>
+                    </div>
+                    <notebook invisible="composition_mode != 'mass_mail'">
+                        <page string="Content" name="page_content">
+                            <div>
+                                <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                                </group>
+                                <group>
+                                    <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
+                                        context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                                </group>
+                            </div>
+                        </page>
+                        <page string="Settings" name="page_settings">
+                            <!-- mass mailing -->
+                            <field name="reply_to_force_new" invisible="1"/>
+                            <field name="reply_to_mode" invisible="composition_mode != 'mass_mail'" widget="radio"/>
+                            <group>
+                                <field name="reply_to" string="Reply-to Address" placeholder='e.g: "info@mycompany.odoo.com"'
+                                    invisible="reply_to_mode == 'update' or composition_mode != 'mass_mail'"
+                                    required="reply_to_mode != 'update' and composition_mode == 'mass_mail'"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button string="Send" name="action_send_mail"
+                                type="object" class="btn-primary o_mail_send" data-hotkey="q"
+                                invisible="subtype_is_log"/>
+                        <button string="Log" name="action_send_mail"
+                                type="object" class="btn-primary" data-hotkey="q"
+                                invisible="not subtype_is_log"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                        <button icon="fa-cloud-upload" type="object"
+                                name="open_template_creation_wizard" string="Save Template"
+                                invisible="not can_edit_body"
+                                class="float-end btn-secondary" data-hotkey="w" help="Save as a new template"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_compose_message_view_form_template_save" model="ir.ui.view">
+            <field name="name">mail.compose.message.view.form.template.save</field>
+            <field name="model">mail.compose.message</field>
+            <field name="arch" type="xml">
+                <form string="Templates">
+                    <group>
+                        <field name="subject" placeholder="e.g. &quot;Welcome to MyCompany&quot; or &quot;Nice to meet you, {{ object.name }}&quot;"/>
+                    </group>
+                    <footer>
+                        <button name="create_mail_template" type="object" class="btn btn-primary" string="Save"/>
+                        <button name="cancel_save_template" type="object" class="btn btn-secondary" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
+            <field name="name">Compose Email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="binding_model_id" ref="mail.model_mail_compose_message"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

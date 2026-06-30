@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Snippets & Themes Menu -->
+<template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
+    <xpath expr="//div[hasclass('o_we_website_top_actions')]" position="inside">
+        <div class="email_designer_top_actions">
+            <button class="o_codeview_btn btn btn-primary">
+                <i class="fa fa-code"></i>
+            </button>
+            <button class="o_mobile_preview_btn btn btn-primary">
+                <i class="fa fa-lg fa-mobile"/>
+            </button>
+            <button class="o_fullscreen_btn btn btn-primary">
+                <img class="img-fluid" src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
+            </button>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" tabindex="3" class="o_we_customize_design_btn text-uppercase" accesskey="2">
+            <span>Design</span>
+        </button>
+    </xpath>
+    <xpath expr="//t[@id='default_snippets']" position="replace">
+        <t id="default_snippets">
+            <t t-set="company_id" t-value="res_company"/>
+            <div id="email_designer_themes" class="d-none">
+                <div data-name="basic"
+                     title="Plain Text"
+                     data-nowrap="1"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/basic_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_basic_template"/>
+                </div>
+                <div data-name="empty"
+                     title="Start From Scratch"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/empty_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'
+                     data-hide-from-mobile="true">
+                    <t t-call="mass_mailing.theme_empty_template"/>
+                </div>
+                <div data-name="default"
+                     title="Welcome Message"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/default_thumb"
+                     data-images-info='{"logo": {"format": "png"}, "header_logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_default_template"/>
+                </div>
+            </div>
+            <div id="email_designer_default_headers" class="o_panel">
+                <div class="o_panel_header">Headers</div>
+                <div class="o_panel_body" id="email_designer_header_elements">
+                    <t t-snippet="mass_mailing.s_mail_block_header_social" string="Left Logo" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_header_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_text_social" string="Left Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_header_text_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_logo" string="Centered Logo" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_header_logo.png"/>
+                    <t t-snippet="mass_mailing.s_cover" string="Cover" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cover.svg"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_view" string="View Online" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_header_browser.png"/>
+                </div>
+            </div>
+            <div id="email_designer_default_body" class="o_panel">
+                <div class="o_panel_header">Body</div>
+                <div class="o_panel_body" id="email_designer_body_elements">
+                    <t t-snippet="mass_mailing.s_title" string="Title" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_title.svg"/>
+                    <t t-snippet="mass_mailing.s_text_block" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
+                    <t t-snippet="mass_mailing.s_comparisons" string="Comparisons" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_comparisons.svg"/>
+                    <t t-snippet="mass_mailing.s_color_blocks_2" string="Big Boxes" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_color_blocks_2.svg"/>
+                    <t t-snippet="mass_mailing.s_three_columns" string="Columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_three_columns.svg"/>
+                    <t t-snippet="mass_mailing.s_image_text" string="Image - Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_image_text.svg"/>
+                    <t t-snippet="mass_mailing.s_text_image" string="Text - Image" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_image.svg"/>
+                    <t t-snippet="mass_mailing.s_picture" string="Picture" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
+                    <t t-snippet="mass_mailing.s_features" string="Features" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_features.svg"/>
+                    <t t-snippet="mass_mailing.s_numbers" string="Numbers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_numbers.svg"/>
+                    <t t-snippet="mass_mailing.s_masonry_block" string="Masonry" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_masonry_block.svg"/>
+                    <t t-snippet="mass_mailing.s_media_list" string="Media List" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_media_list.svg"/>
+                    <t t-snippet="mass_mailing.s_showcase" string="Showcase" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_showcase.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_extra" class="o_panel">
+                <div class="o_panel_header">Marketing Content</div>
+                <div class="o_panel_body" id="email_designer_marketing_elements">
+                    <t t-snippet="mass_mailing.s_company_team" string="Team" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_company_team.svg"/>
+                    <t t-snippet="mass_mailing.s_call_to_action" string="Call to Action" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_call_to_action.svg"/>
+                    <t t-snippet="mass_mailing.s_references" string="References" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_references.svg"/>
+                    <t t-snippet="mass_mailing.s_coupon_code" string="Promo Code" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_discount2.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_discount1" string="Discount Offer" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_discount1.png"/>
+                    <t t-snippet="mass_mailing.s_event" string="Event" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_event.svg"/>
+                    <t t-snippet="mass_mailing.s_product_list" string="Items" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_product_list.svg"/>
+                    <t t-snippet="mass_mailing.s_features_grid" string="Features Grid" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_features_grid.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_inner" class="o_panel">
+                <div class="o_panel_header">Inner Content</div>
+                <div class="o_panel_body" id="email_designer_inner_elements">
+                    <t t-snippet="mass_mailing.s_alert" string="Alert" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
+                    <t t-snippet="mass_mailing.s_rating" string="Rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
+                    <t t-snippet="mass_mailing.s_blockquote" string="Blockquote" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_blockquote.svg"/>
+                    <t t-snippet="mass_mailing.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
+                    <t t-snippet="mass_mailing.s_text_highlight" string="Text Highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_footer" class="o_panel">
+                <div class="o_panel_header">Footers</div>
+                <div class="o_panel_body" id="email_designer_footer_elements">
+                    <t t-snippet="mass_mailing.s_mail_block_footer_social" string="Footer Center" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_footer_social_left" string="Footer Left" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social_left.png"/>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='snippet_options']/t" position="attributes">
+        <attribute name="t-call">mass_mailing.snippet_options</attribute>
+    </xpath>
+</template>
+
+<!-- Snippet Templates -->
+<template id="s_mail_block_header_social" name="Left Logo">
+    <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 pt16 pb16">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
+                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;" />
+                    </a>
+                </div>
+                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                    <t t-call="mass_mailing.social_links"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_text_social" name="Left Text">
+    <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 pt16 pb16">
+                    <h1>
+                        <a t-att-href="(company_id.website) or '#'" target="_blank">
+                            My Company
+                        </a>
+                    </h1>
+                </div>
+                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                    <t t-call="mass_mailing.social_links"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_logo" name="Centered Logo">
+    <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3"/>
+                <div class="col-lg-6" style="text-align: center;">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
+                        <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;"/>
+                    </a>
+                </div>
+                <div class="col-lg-3" style="text-align: right;"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_view" name="View Online">
+    <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" style="text-align: center; padding-left: 15px; padding-right: 15px;">
+        <a href="/view">
+            View Online
+        </a>
+    </div>
+</template>
+
+<template id="s_mail_block_discount1" name="Discount Offer">
+    <div class="s_discount1 o_mail_block_discount1 o_mail_snippet_general pt0 pb16">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 pt16">
+                    <h3 style="text-align: center;"><font class="text-o-color-2"><span style="font-weight:bolder;">-20%</span></font></h3>
+                    <p style="text-align: center;">ON YOUR NEXT ORDER!</p>
+                    <div style="text-align: center;">
+                        <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 pt16">
+                    <p>We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_footer_social" name="Footer Center">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg o_mail_footer_social" style="text-align: center;">
+                    <t t-call="mass_mailing.social_links"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg o_mail_footer_links" style="text-align: center;">
+                    <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg">
+                    <p style="text-align: center;">
+                        © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_footer_social_left" name="Footer Left">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg o_mail_footer_description">
+                    <p t-if="res_company">
+                        <strong><t t-esc="res_company.partner_id.name"/></strong>
+                    </p>
+                    <div class="o_mail_footer_links">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                    </div>
+                </div>
+                <div class="col-lg" align="right">
+                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
+                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
+        <span class="fa fa-facebook"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+        <span class="fa fa-linkedin"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+        <span class="fa fa-twitter"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+        <span class="fa fa-instagram"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_tiktok')" style="margin-left:10px" aria-label="TikTok" title="TikTok">
+        <span class="fa fa-tiktok"></span>
+    </a>
+</template>
+
+<!-- Border -->
+<template id="snippet_options_border_line_widgets">
+    <we-row t-att-string="label">
+        <we-input data-name="border_width_opt"
+                t-att-data-apply-to="apply_to"
+                data-select-style="0"
+                t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}width"
+                data-unit="px"
+                t-att-data-extra-class="with_bs_class and 'border'"
+                t-att-data-variable="width_variable"/>
+        <we-select t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}style"
+                data-dependencies="border_width_opt"
+                t-att-data-apply-to="apply_to"
+                t-att-data-variable="style_variable">
+            <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+            <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+            <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+        </we-select>
+        <we-colorpicker data-dependencies="border_width_opt"
+                        t-att-data-apply-to="apply_to"
+                        data-select-style="true"
+                        t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}color"
+                        data-color-prefix="border-"
+                        t-att-data-color="color_variable"/>
+    </we-row>
+</template>
+
+<template id="snippet_options_border_widgets">
+    <t t-call="mass_mailing.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="True"/>
+    </t>
+    <we-input string="Round Corners"
+            t-att-data-apply-to="apply_to"
+            t-att-data-dependencies="not so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
+            data-select-style="0" data-css-property="border-radius"
+            data-unit="px" data-extra-class="rounded"
+            t-att-data-variable="radius_variable"/>
+</template>
+
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
+    <xpath expr="//div[@data-js='BackgroundImage']" position="attributes">
+        <attribute name="data-js">MassMailingBackgroundImage</attribute>
+    </xpath>
+</template>
+
+<!-- Mass Mailing Snippet Options -->
+<template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
+    <!-- =================================================================== -->
+    <!-- Modify generic snippet options                                      -->
+    <!-- =================================================================== -->
+
+    <xpath expr="//t[@t-set='no_animations']" position="attributes">
+        <attribute name="t-value">True</attribute>
+    </xpath>
+
+    <!-- Image styles -->
+    <!-- TODO review to only modify what's really necessary and potentially -->
+    <!-- make the changes in web_editor directly so that website can benefit -->
+    <!-- from it. -->
+    <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
+        <div data-selector="span.fa, i.fa, img">
+            <we-select string="Alignment" data-state-to-first-class="true">
+                <we-button data-select-class="float-start" title="Align Left">Left</we-button>
+                <we-button data-select-class="mx-auto" title="Align Center">Center</we-button>
+                <we-button data-select-class="float-end" title="Align Right">Right</we-button>
+            </we-select>
+
+            <t t-call="mass_mailing.snippet_options_border_line_widgets">
+                <t t-set="label">Border</t>
+                <t t-set="with_bs_class" t-value="True"></t>
+            </t>
+
+            <we-input string="Round Corners"
+            data-select-style="0" data-css-property="border-radius"
+            data-unit="px" data-extra-class="rounded"
+            t-att-data-variable="radius_variable"/>
+
+            <we-row string="Padding ⭤">
+                <we-input data-select-style="" data-unit="px" data-css-property="padding-left"/>
+                <we-input data-select-style="" data-unit="px" data-css-property="padding-right"/>
+            </we-row>
+            <we-row string="Padding ↕">
+                <we-input data-select-style="" data-unit="px" data-css-property="padding-top"/>
+                <we-input data-select-style="" data-unit="px" data-css-property="padding-bottom"/>
+            </we-row>
+        </div>
+    </xpath>
+
+    <!-- Transform is _very_ badly supported in mail clients -->
+    <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" />
+
+    <xpath expr="//div[@data-js='ImageTools']" position="attributes">
+        <attribute name="data-js">MassMailingImageTools</attribute>
+    </xpath>
+
+    <!-- =================================================================== -->
+    <!-- Adding mass_mailing specific snippet options                        -->
+    <!-- =================================================================== -->
+
+    <xpath expr="." position="inside">
+
+    <!-- Border | Columns -->
+    <div data-js="Box"
+         data-selector=".row > div"
+         data-exclude=".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div">
+        <t t-call="mass_mailing.snippet_options_border_widgets"/>
+    </div>
+    <div data-js="layout_column"
+        data-selector=".o_mail_snippet_general"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
+        <we-select string="Columns" data-no-preview="true">
+            <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
+            <we-button data-select-count="1">1</we-button>
+            <we-button data-select-count="2">2</we-button>
+            <we-button data-select-count="3">3</we-button>
+            <we-button data-select-count="4">4</we-button>
+            <we-button data-select-count="5">5</we-button>
+            <we-button data-select-count="6">6</we-button>
+            <we-button data-select-count="custom" data-name="custom_cols_opt">Custom</we-button>
+        </we-select>
+    </div>
+
+    <!-- Move snippets around -->
+    <div data-js="SnippetMove" data-selector=".o_mail_snippet_general">
+        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
+        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
+    </div>
+    <div data-js="SnippetMove"
+         data-selector=".row:not(.s_col_no_resize) > div"
+         data-exclude=".s_showcase .row > div"
+         data-name="move_horizontally_opt">
+        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
+        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
+    </div>
+
+    <div id="so_width" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
+        <we-select string="Width">
+            <we-button data-select-class="w-25">25%</we-button>
+            <we-button data-select-class="w-50">50%</we-button>
+            <we-button data-select-class="w-75">75%</we-button>
+            <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
+        </we-select>
+    </div>
+
+    <div id="so_block_align" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
+        <we-button-group string="Alignment" data-dependencies="!so_width_100">
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
+        </we-button-group>
+    </div>
+
+    <div data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
+        <we-button-group string="Height">
+            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
+            <we-button data-select-class="o_height_400" title="400px">50%</we-button>
+            <we-button data-select-class="o_height_800" title="800px">100%</we-button>
+        </we-button-group>
+    </div>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col>td, .col>th"/>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col_mv, td, th"/>
+
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
+    <div data-js="content"
+        t-att-data-selector="mailing_content_selector"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t>
+    <div id="so_snippet_addition"
+        t-att-data-selector="so_snippet_addition_selector"
+        data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
+
+    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
+    <div id="so_content_addition"
+        t-att-data-selector="so_content_addition_selector"
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
+        data-drop-in=".content, nav"/>
+
+    <div data-js="sizing_y"
+        data-selector=".o_mail_snippet_general, .o_mail_snippet_general .row > div"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="sizing_x"
+        data-selector=".row > div"
+        data-drop-near=".row:not(.s_col_no_resize) > div"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
+        .note-editable .oe_structure > div.o_mail_snippet_general,
+        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc"
+        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2, .s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+
+    <div data-selector=".s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+    <!-- Allow customised padding-x on snippets -->
+    <div data-selector="[class*='col-lg-'], .s_discount2, .s_text_block, .s_media_list, .s_picture, .s_rating">
+        <we-row string="Padding ⭤">
+            <we-input data-select-style="" data-unit="px" data-css-property="padding-left"/>
+            <we-input data-select-style="" data-unit="px" data-css-property="padding-right"/>
+        </we-row>
+    </div>
+
+    <!-- Allow changing background images in Masonry and Cover -->
+    <t t-call="mass_mailing.snippet_options_background_options">
+        <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
+        <t t-set="with_images" t-value="True"/>
+        <t t-set="with_videos" t-value="false"/>
+        <t t-set="with_shapes" t-value="false"/>
+    </t>
+
+    <!-- COLOR | .s_three_columns | .s_comparisons | .s_event  -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
+         data-target=".card-body">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+    <!-- BORDER | .s_three_columns | .s_comparisons | .s_event  -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
+         data-target=".card">
+        <t t-call="mass_mailing.snippet_options_border_widgets">
+            <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        </t>
+    </div>
+    <!-- COLOR, BORDER | .o_mail_block_discount2 -->
+    <div data-js="Box"
+         data-selector=".o_mail_block_discount2"
+         data-target="table">
+        <t t-call="mass_mailing.snippet_options_border_widgets">
+        </t>
+    </div>
+
+    <!--  Vertical Alignment -->
+    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, s_mail_block_event" data-target=".row">
+        <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+            <we-button title="Align Top"
+                       data-select-class="align-items-start"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_top.svg"/>
+            <we-button title="Align Middle"
+                       data-select-class="align-items-center"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_middle.svg"/>
+            <we-button title="Align Bottom"
+                       data-select-class="align-items-end"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_bottom.svg"/>
+            <we-button title="Stretch to Equal Height"
+                       data-select-class="align-items-stretch"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_stretch.svg"/>
+        </we-button-group>
+    </div>
+
+    <!-- DESIGN OPTIONS -->
+    <div data-js="DesignTab" data-selector="design-options" data-no-check="true">
+        <!-- BODY WIDTH -->
+        <we-button-group string="Body Width" data-apply-to=".o_mail_wrapper" data-no-preview="true">
+            <we-button data-select-class="o_mail_small"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_small.svg"
+                        title="Small"/>
+            <we-button data-select-class="o_mail_regular"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_normal.svg"
+                        title="Regular"/>
+            <we-button data-select-class=""
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_full.svg"
+                        title="Full"/>
+        </we-button-group>
+        <we-colorpicker string="Background Color"
+                        data-apply-to=".o_layout, > div:not(.o_layout)"
+                        data-select-style="true"
+                        data-no-transparency="true"
+                        data-css-property="background-color"
+                        data-color-prefix="bg-"/>
+        <!-- HEADING 1 -->
+        <we-row string="Heading 1" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="h1"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="h1"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+        </we-row>
+        <we-row string="" class="o_we_sublevel_1 o_short_title">
+            <we-fontfamilypicker data-selector-text="h1"/>
+            <span>​</span> <!-- Separate the select from the buttons (styling) -->
+            <we-button title="Bold" class="fa fa-fw fa-bold" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="bolder"
+                        data-selector-text="h1"
+                        data-css-property="font-weight"/>
+            <we-button title="Italic" class="fa fa-fw fa-italic" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="italic"
+                        data-selector-text="h1"
+                        data-css-property="font-style"/>
+            <we-button title="Underline" class="fa fa-fw fa-underline" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="underline"
+                        data-selector-text="h1"
+                        data-css-property="text-decoration-line"/>
+        </we-row>
+        <!-- HEADING 2 -->
+        <we-row string="Heading 2" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="h2"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="h2"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+        </we-row>
+        <we-row string="" class="o_we_sublevel_1 o_short_title">
+            <we-fontfamilypicker data-selector-text="h2"/>
+            <span>​</span> <!-- Separate the select from the buttons (styling) -->
+            <we-button title="Bold" class="fa fa-fw fa-bold" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="bolder"
+                        data-selector-text="h2"
+                        data-css-property="font-weight"/>
+            <we-button title="Italic" class="fa fa-fw fa-italic" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="italic"
+                        data-selector-text="h2"
+                        data-css-property="font-style"/>
+            <we-button title="Underline" class="fa fa-fw fa-underline" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="underline"
+                        data-selector-text="h2"
+                        data-css-property="text-decoration-line"/>
+        </we-row>
+        <!-- HEADING 3 -->
+        <we-row string="Heading 3" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="h3"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="h3"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+        </we-row>
+        <we-row string="" class="o_we_sublevel_1 o_short_title">
+            <we-fontfamilypicker data-selector-text="h3"/>
+            <span>​</span> <!-- Separate the select from the buttons (styling) -->
+            <we-button title="Bold" class="fa fa-fw fa-bold" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="bolder"
+                        data-selector-text="h3"
+                        data-css-property="font-weight"/>
+            <we-button title="Italic" class="fa fa-fw fa-italic" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="italic"
+                        data-selector-text="h3"
+                        data-css-property="font-style"/>
+            <we-button title="Underline" class="fa fa-fw fa-underline" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="underline"
+                        data-selector-text="h3"
+                        data-css-property="text-decoration-line"/>
+        </we-row>
+        <!-- TEXT -->
+        <we-row string="Text" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="p, p > *, li, li > *"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="p, p > *, li, li > *"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+        </we-row>
+        <we-row string="" class="o_we_sublevel_1 o_short_title">
+            <we-fontfamilypicker data-selector-text="p, p > *, li, li > *"/>
+            <span>​</span> <!-- Separate the select from the buttons (styling) -->
+            <we-button title="Bold" class="fa fa-fw fa-bold" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="bolder"
+                        data-selector-text="p, p > *, li, li > *"
+                        data-css-property="font-weight"/>
+            <we-button title="Italic" class="fa fa-fw fa-italic" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="italic"
+                        data-selector-text="p, p > *, li, li > *"
+                        data-css-property="font-style"/>
+            <we-button title="Underline" class="fa fa-fw fa-underline" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="underline"
+                        data-selector-text="p, p > *, li, li > *"
+                        data-css-property="text-decoration-line"/>
+        </we-row>
+        <!-- LINKS -->
+        <we-row string="Links" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="a:not(.btn), a.btn.btn-link"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="a:not(.btn), a.btn.btn-link"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+        </we-row>
+        <we-row string="" class="o_we_sublevel_1 o_short_title">
+            <we-fontfamilypicker data-selector-text="a:not(.btn), a.btn.btn-link"/>
+            <span></span> <!--Separate the select from the buttons (styling)-->
+            <we-button title="Bold" class="fa fa-fw fa-bold" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="bolder"
+                        data-selector-text="a:not(.btn), a.btn.btn-link"
+                        data-css-property="font-weight"/>
+            <we-button title="Italic" class="fa fa-fw fa-italic" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="italic"
+                        data-selector-text="a:not(.btn), a.btn.btn-link"
+                        data-css-property="font-style"/>
+            <we-button title="Underline" class="fa fa-fw fa-underline" data-no-preview="true" data-toggle="true"
+                        data-customize-css-property="underline"
+                        data-selector-text="a:not(.btn), a.btn.btn-link"
+                        data-css-property="text-decoration-line"/>
+        </we-row>
+        <!-- PRIMARY BUTTONS -->
+        <we-row string="Primary Buttons" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="background-color"
+                            data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"
+                            data-no-transparency="true"
+                            data-color-prefix="bg-"/>
+        </we-row>
+        <we-select string="Size" class="o_we_sublevel_1" data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary">
+            <we-button data-apply-button-size="btn-sm">Small</we-button>
+            <we-button data-apply-button-size="btn-md">Medium</we-button>
+            <we-button data-apply-button-size="btn-lg">Large</we-button>
+        </we-select>
+        <we-row string="Font Family" class="o_we_sublevel_1">
+            <we-fontfamilypicker data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"/>
+        </we-row>
+        <we-row string="Border" class="o_we_sublevel_1">
+            <we-input data-customize-css-property=""
+                        data-css-property="border-width"
+                        data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"
+                        data-unit="px"/>
+            <we-select data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary" data-css-property="border-style">
+                <we-button title="Solid" data-customize-css-property="solid">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+                </we-button>
+                <we-button title="Dashed" data-customize-css-property="dashed">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+                </we-button>
+                <we-button title="Dotted" data-customize-css-property="dotted">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+                </we-button>
+                <we-button title="Double" data-customize-css-property="double">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                </we-button>
+            </we-select>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="border-color"
+                            data-selector-text="a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary"
+                            data-no-transparency="true"
+                            data-color-prefix="border-"/>
+        </we-row>
+        <!-- SECONDARY BUTTONS -->
+        <we-row string="Secondary Buttons" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                        data-css-property="font-size"
+                        data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"
+                        data-unit="px"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="color"
+                            data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"
+                            data-no-transparency="true"
+                            data-color-prefix="text-"/>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="background-color"
+                            data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"
+                            data-no-transparency="true"
+                            data-color-prefix="bg-"/>
+        </we-row>
+        <we-select string="Size" class="o_we_sublevel_1" data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary">
+            <we-button data-apply-button-size="btn-sm">Small</we-button>
+            <we-button data-apply-button-size="btn-md">Medium</we-button>
+            <we-button data-apply-button-size="btn-lg">Large</we-button>
+        </we-select>
+        <we-row string="Font Family" class="o_we_sublevel_1">
+            <we-fontfamilypicker data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"/>
+        </we-row>
+        <we-row string="Border" class="o_we_sublevel_1">
+            <we-input data-customize-css-property=""
+                        data-css-property="border-width"
+                        data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"
+                        data-unit="px"/>
+            <we-select data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary" data-css-property="border-style">
+                <we-button title="Solid" data-customize-css-property="solid">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+                </we-button>
+                <we-button title="Dashed" data-customize-css-property="dashed">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+                </we-button>
+                <we-button title="Dotted" data-customize-css-property="dotted">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+                </we-button>
+                <we-button title="Double" data-customize-css-property="double">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                </we-button>
+            </we-select>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="border-color"
+                            data-selector-text="a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary"
+                            data-no-transparency="true"
+                            data-color-prefix="border-"/>
+        </we-row>
+        <!-- SEPARATORS -->
+        <we-row string="Separators" class="o_design_tab_title">
+            <we-input data-customize-css-property=""
+                    data-css-property="border-top-width"
+                    data-selector-text="hr"
+                    data-unit="px"/>
+            <we-select data-selector-text="hr" data-css-property="border-top-style">
+                <we-button title="Solid" data-customize-css-property="solid">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+                </we-button>
+                <we-button title="Dashed" data-customize-css-property="dashed">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+                </we-button>
+                <we-button title="Dotted" data-customize-css-property="dotted">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+                </we-button>
+                <we-button title="Double" data-customize-css-property="double">
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                </we-button>
+            </we-select>
+            <we-colorpicker data-customize-css-property=""
+                            data-css-property="border-top-color"
+                            data-selector-text="hr"
+                            data-no-transparency="true"
+                            data-color-prefix="border-"/>
+        </we-row>
+        <we-select string="Width" class="o_we_sublevel_1" data-selector-text="hr" data-css-property="width">
+            <we-button data-customize-css-property="25%">25%</we-button>
+            <we-button data-customize-css-property="50%">50%</we-button>
+            <we-button data-customize-css-property="75%">75%</we-button>
+            <we-button data-customize-css-property="100%">100%</we-button>
+        </we-select>
+    </div>
+
+    </xpath>
+</template>
+
+</odoo>

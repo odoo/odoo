@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.WebsiteDashboardMain">
+    <div class="o_dashboards" t-att-class="{'has_plausible': state.dashboards.plausible_share_url}">
+        <Layout display="display">
+            <t t-set-slot="control-panel-navigation-additional">
+                <div class="btn-group d-none d-md-inline-block float-end" style="margin-right: 20px;">
+                    <t t-foreach="state.websites" t-as="website" t-key="website.id">
+                        <button class="btn btn-secondary js_website" t-att-class="{'active': website.selected}"
+                                t-on-click="() => this.state.website = website.id">
+                            <t t-esc="website.name"/>
+                        </button>
+                    </t>
+                </div>
+            </t>
+            <t t-set-slot="control-panel-create-button">
+                <a role="button" href="/" class="btn btn-primary" title="Go to Website">
+                    Go to Website
+                </a>
+            </t>
+            <div class="container-fluid o_website_dashboard">
+                <div class="o_website_dashboard_content">
+                    <t t-call="website.plausible_content"/>
+                </div>
+            </div>
+        </Layout>
+    </div>
+</t>
+
+<t t-name="website.plausible_content">
+    <div class="row o_dashboard_visits" t-if="state.groups.website_designer">
+        <div t-if="state.dashboards.plausible_share_url" class="col-12">
+            <div class="container">
+                <div class="ratio ratio-1x1">
+                    <iframe t-att-src="state.dashboards.plausible_share_url" class="embed-responsive-item" frameborder="0" loading="lazy"/>
+                </div>
+            </div>
+        </div>
+        <div t-else="" class="col-lg-12 o_box">
+            <div class="o_demo_background">
+                <div class="o_layer">
+                </div>
+                <div class="o_buttons text-center">
+                    <h3>Easily track your visitor with Plausible</h3>
+                    <a class="btn btn-primary" target="_blank"
+                        href="https://www.odoo.com/documentation/17.0/applications/websites/website/reporting/plausible.html">
+                        Connect Plausible
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

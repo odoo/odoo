@@ -1,0 +1,19 @@
+<odoo>
+  <data>
+    <record id="unit_a" model="test.unit">
+      <field name="name">Unit A</field>
+      <field name="state">a</field>
+    </record>
+
+    <record id="box_a" model="test.box">
+      <field name="unit_id" ref="unit_a"/>
+      <field name="field_in_box">A</field>
+    </record>
+
+    <record id="pallet_a" model="test.pallet">
+      <field name="box_id" ref="box_a"/>
+      <field name="field_in_pallet">A</field>
+    </record>
+
+  </data>
+</odoo>

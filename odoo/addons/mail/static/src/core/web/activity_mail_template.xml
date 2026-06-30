@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityMailTemplate">
+        <t t-foreach="props.activity.mail_template_ids" t-as="mailTemplate" t-key="mailTemplate.id">
+            <div class="d-flex align-items-baseline flex-wrap">
+                <div class="text-truncate">
+                    <i class="fa fa-envelope-o" title="Mail" role="img"/>
+                    <span class="o-mail-ActivityMailTemplate-name ms-2" t-esc="mailTemplate.name"/>
+                    <span>:</span>
+                </div>
+                <div class="d-flex align-items-baseline">
+                    <button
+                        class="o-mail-ActivityMailTemplate-preview btn btn-link py-0"
+                        t-att-data-mail-template-id="mailTemplate.id"
+                        t-on-click="(ev) => this.onClickPreview(ev, mailTemplate)"
+                    >
+                        Preview
+                    </button>
+                    <em class="text-500">or</em>
+                    <button
+                        class="o-mail-ActivityMailTemplate-send btn btn-link py-0"
+                        t-att-data-mail-template-id="mailTemplate.id"
+                        t-on-click="(ev) => this.onClickSend(ev, mailTemplate)"
+                    >
+                        Send Now
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

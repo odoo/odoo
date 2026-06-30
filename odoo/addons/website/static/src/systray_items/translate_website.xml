@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateWebsiteSystray">
+    <div class="o_menu_systray_item o_translate_website_container d-none d-md-block">
+        <a href="#" accesskey="t" t-on-click="attemptStartTranslate" class="btn btn-primary d-flex align-items-center h-100 px-0 rounded-0 border-0 fw-normal">
+            <span class="o_nav_entry">
+                <span t-if="websiteContext.translation" class="fa fa-refresh fa-spin me-2"/>
+                Translate
+            </span>
+        </a>
+    </div>
+</t>
+
+</templates>

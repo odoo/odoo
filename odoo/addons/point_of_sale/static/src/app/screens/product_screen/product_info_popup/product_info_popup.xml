@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductInfoPopup">
+            <div class="popup product-info-popup">
+                <div class="modal-header">
+                    <h4 class="modal-title">Product information</h4>
+                    <div class="btn" t-on-click="cancel">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <main class="body modal-body overflow-auto">
+                    <div class="section-product-info-title d-flex flex-column flex-sm-row text-start gap-3 text-info bg-opacity-25 mx-n3 mt-n3 p-3 bg-info">
+                        <div class="d-flex flex-column flex-grow-1 text-start w-100 w-sm-25">
+                            <span t-esc="props.product.display_name" class="global-info-title fs-2 fw-bolder text-truncate"/>
+                            <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
+                        </div>
+                        <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
+                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="product-info-price-with-tax global-info-title fs-2 fw-bolder" />
+                            <span class="fs-3">
+                                <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
+                                    <div class="tax-name-amount"><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
+                                </t>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="section-financials mt-3 mb-4 pb-4 border-bottom text-start">
+                        <h3 class="section-title">Financials</h3>
+                        <div class="section-financials-body d-flex flex-column flex-sm-row">
+                            <table class="table table-borderless mb-0">
+                                <tr>
+                                    <td>Price excl. Tax:</td>
+                                    <td><t t-esc="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
+                                </tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
+                                    <td>Cost:</td>
+                                    <td><t t-esc="costCurrency"/></td>
+                                </tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
+                                    <td>Margin:</td>
+                                    <td><t t-esc="marginCurrency"/> (<t t-esc="marginPercent"/>%) </td>
+                                </tr>
+                            </table>
+                            <table class="table table-borderless">
+                                <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                                    <tr>
+                                        <td t-esc="pricelist.name"/>
+                                        <td t-esc="env.utils.formatCurrency(pricelist.price)"/>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.warehouses.length > 0">
+                        <h3 class="section-title">
+                            Inventory 
+                            <t t-if="pos.pos_session.update_stock_at_closing">(as of opening)</t>
+                        </h3>
+                        <div class="section-inventory-body">
+                            <t t-foreach="productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <div>
+                                        <t t-esc="warehouse.name" class="table-name"/>
+                                        :
+                                    </div>
+                                    <div>
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.available_quantity" class="table-name"/></span>
+                                        <t t-esc="warehouse.uom"/> available,
+                                    </div>
+                                    <div> 
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                        forecasted
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.suppliers.length > 0">
+                        <h3 class="section-title">Replenishment</h3>
+                        <div class="section-supplier-body">
+                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.id">
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <div>
+                                        <span t-esc="supplier.name" class="table-name"/>:
+                                    </div>
+                                    <span class="me-1 fw-bolder">
+                                        <t t-esc="supplier.delay"/> 
+                                        Days
+                                    </span>
+                                    <span t-if="_hasMarginsCostsAccessRights()">
+                                        <t t-esc="env.utils.formatCurrency(supplier.price)"/>
+                                    </span>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="extra mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.variants.length > 0">
+                        <div class="section-variants">
+                            <h3 class="section-title">Attributes</h3>
+                            <div class="section-variants-body">
+                                <t t-foreach="productInfo.variants" t-as="variant" t-key="variant.name">
+                                    <div class="d-flex flex-column align-items-start gap-2 mb-2">
+                                        <div>
+                                            <span t-esc="variant.name" class="table-name"/>:
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
+                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search + ';product_tmpl_id:' + props.product.product_tmpl_id)">
+                                                    <t t-esc="attribute_value.name"/>
+                                                </span>
+                                                <t t-if="attribute_value_index lt variant.values.length - 1"> </t>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-order mt-3 mb-4 pb-4 border-bottom text-start">
+                        <h3 class="section-title">Order</h3>
+                        <div class="section-order-body">
+                            <table class="table table-borderless w-100 w-sm-50 mb-0">
+                                <tr>
+                                    <td>Total Price excl. Tax:</td>
+                                    <td t-esc="orderPriceWithoutTaxCurrency" class="table-value"/>
+                                </tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
+                                    <td>Total Cost:</td>
+                                    <td t-esc="orderCostCurrency" class="table-value"/>
+                                </tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
+                                    <td>Total Margin:</td>
+                                    <td class="table-value"><t t-esc="orderMarginCurrency"/> (<t t-esc="orderMarginPercent"/>%)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+    </t>
+</templates>

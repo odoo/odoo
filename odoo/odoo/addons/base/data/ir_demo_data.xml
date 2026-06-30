@@ -1,0 +1,37 @@
+<odoo>
+    <record model="ir.actions.act_window" id="demo_force_install_action">
+        <field name="name">Load demo data</field>
+        <field name="res_model">ir.demo</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="demo_force_install_form">
+        <field name="name">ir.demo.form</field>
+        <field name="model">ir.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="row container">
+                    <div class="col-12 text-center">
+                      <div class="card text-white bg-danger mb-3 w-75 ml64">
+                        <div class="card-header">
+                                <span class="fa fa-2x fa-warning" t-translation="off">&amp;nbsp;</span>
+                                <span class="text-white text-uppercase">Danger Zone</span>
+                        </div>
+                        <div class="card-body bg-transparent text-center">
+                          <p>Demo data should only be used on test databases!
+                             Once they are loaded, they cannot be removed!</p>
+                          <p>Please confirm that you want to <b>irreversibly</b> make this database a demo database.</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <footer>
+                    <button special="cancel" data-hotkey="x" string="Oops, no!" class="btn-primary"/>
+                    <button name="install_demo" string="Yes, I understand the risks" type="object" class="btn-secondary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

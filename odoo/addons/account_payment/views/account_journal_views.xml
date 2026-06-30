@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.payment</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='inbound_payment_method_line_ids']//field[@name='payment_account_id']" position="after">
+                <field name="code" column_invisible="True"/>
+                <field name="payment_provider_id" options="{'no_open': True, 'no_create': True}" optional="hide" domain="[('code', '=', code)]"/>
+                <field name="payment_provider_state" column_invisible="True"/>
+                <button name="action_open_provider_form"
+                        type="object"
+                        string="SETUP"
+                        class="float-end btn-secondary"
+                        invisible="not payment_provider_id"
+                        groups="base.group_system"/>
+            </xpath>
+            <xpath expr="//field[@name='inbound_payment_method_line_ids']/tree" position="attributes">
+                <attribute name="decoration-muted">payment_provider_state == 'disabled'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

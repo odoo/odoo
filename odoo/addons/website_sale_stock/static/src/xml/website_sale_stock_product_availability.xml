@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="website_sale_stock.product_availability">
+        <t t-if="product_type == 'product' and !prevent_zero_price_sale">
+            <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} mb-1">
+                <div id="out_of_stock_message">
+                    <t t-if='has_out_of_stock_message' t-out='out_of_stock_message'/>
+                    <t t-elif="!allow_out_of_stock_order">
+                        <div class="text-danger fw-bold">
+                            <i class="fa fa-times me-1"/>
+                            Out of Stock
+                        </div>
+                    </t>
+                </div>
+                <div id="stock_notification_div" t-if="!allow_out_of_stock_order">
+                    <div class="btn btn-link px-0" t-if="!has_stock_notification"
+                         id="product_stock_notification_message">
+                        <i class="fa fa-envelope-o me-1"/>
+                        Get notified when back in stock
+                    </div>
+                    <div id="stock_notification_form" class="d-none">
+                        <div class="input-group">
+                            <input class="form-control"
+                                   id="stock_notification_input" name="email"
+                                   type="text" placeholder="youremail@gmail.com" t-att-value="stock_notification_email? stock_notification_email: ''"/>
+                            <input name="product_id" type="hidden" t-att-value="product_id"/>
+                            <div id="product_stock_notification_form_submit_button" class="btn btn-secondary">
+                                <i class="fa fa-paper-plane"/>
+                            </div>
+                            <div id="stock_notification_input_incorrect" class="btn d-none">
+                                <i class="fa fa-times text-danger"/>
+                                Invalid email
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="stock_notification_success_message"
+                         t-att-class="has_stock_notification ? '' : 'd-none'">
+                        <div class="text-muted">
+                            <i class="fa fa-bell"/>
+                            We'll notify you once the product is back in stock.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="threshold_message" t-elif="show_availability and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template} text-warning fw-bold">
+                Only <t t-esc="formatQuantity(free_qty)"/> <t t-esc="uom_name" /> left in stock.
+            </div>
+
+            <div id="already_in_cart_message" t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
+                <t t-if='!free_qty'>
+                    You already added all the available product in your cart.
+                </t>
+                <t t-else=''>
+                    You already added <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

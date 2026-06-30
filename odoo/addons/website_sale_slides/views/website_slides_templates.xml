@@ -1,0 +1,188 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<!-- LESSON -->
+<template id="lesson_content_quiz" inherit_id="website_slides.lesson_content_quiz">
+    <xpath expr="//div[hasclass('o_wslides_js_lesson_quiz')]" position="attributes">
+        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if slide.channel_id.product_id else None</attribute>
+        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+    </xpath>
+</template>
+
+<template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
+        <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
+            <i class="fa fa-download me-1"/>
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+                <t t-set="slide" t-value="aside_slide"/>
+            </t>
+        </li>
+    </xpath>
+</template>
+
+<template name="Buy Course To Access Resources or Interact Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')] //div[@t-else='']" position="before">
+        <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted me-auto border-start ps-3">
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
+        </span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access_comments')]" position="inside">
+        <span t-elif="slide.channel_id.enroll == 'payment'">
+            <t t-call="website_sale_slides.course_buy_course_link"/>
+        </span>
+    </xpath>
+</template>
+
+<!-- Tweak "preview" badge: display Free Preview if payment-based course -->
+<template id="course_slides_list_slide"
+    name="Slide template for a training channel (Sale)"
+    inherit_id="website_slides.course_slides_list_slide">
+    <xpath expr="//a[@t-if='channel.can_upload']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+    <xpath expr="//t[@t-elif='slide.is_preview and not channel.is_member']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+</template>
+
+<!-- FULLSCREEN -->
+<template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
+    <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
+        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if product_info else None</attribute>
+        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+    </xpath>
+</template>
+
+<template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
+        <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
+            <i class="fa fa-download me-1"/>
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
+        </li>
+    </xpath>
+</template>
+
+<!-- COURSE -->
+<template name="Course Main" id="course_main" inherit_id="website_slides.course_main">
+    <xpath expr="//div[@id='home']" position="before">
+        <div t-if="channel.enroll == 'payment' and not channel.product_id.is_published"
+            class="alert alert-info" role="alert" groups="website_slides.group_website_slides_officer">
+            This course cannot be bought because its linked product
+            <a t-attf-href="/web#id=#{channel.product_id.product_tmpl_id.id}&amp;view_type=form&amp;model=#{channel.product_id.product_tmpl_id._name}&amp;action=website_sale.product_template_action_website"
+                class="alert-link" t-out="channel.product_id.name"/>
+            is not published.
+        </div>
+    </xpath>
+</template>
+
+<template name="Course Sidebar (infos, CTA)" id="course_join" inherit_id="website_slides.course_join">
+    <!-- Channel main template: override button to join channel -->
+    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+        <t t-if="(not channel.is_member or channel.can_publish) and channel.enroll == 'payment'">
+            <t t-call="website_sale_slides.course_buy_course_button" />
+        </t>
+    </xpath>
+</template>
+
+<!-- TOOLS -->
+<template name="Buy Course Link" id="course_buy_course_link">
+    <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
+        Join this Course</a><t t-if="for_resources"> to access resources</t>
+</template>
+
+<template name="Buy Course Button" id="course_buy_course_button">
+    <t t-if="product_info and channel.product_id.website_published and not channel.is_member">
+        <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
+            <div class="css_editable_mode_hidden">
+                <!-- real price -->
+                <div t-attf-class="oe_price fw-bold text-nowrap my-2 #{'h4' if len(str(product_info['price'])) > 10 else 'h2'}"
+                     t-esc="product_info['price']"
+                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
+                <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
+                <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency'].name"/>
+                <!-- original discounted price, if any -->
+                <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
+                     t-esc="product_info['list_price']"
+                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
+            </div>
+            <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
+                 t-att-data-precision="str(product_info['currency'].decimal_places)">
+                <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
+            </div>
+        </div>
+        <t t-if="not invite_preview and channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed">
+            <small t-if="len(channel.prerequisite_channel_ids) == 1" class="text-center mb-2">
+                Prerequisite:
+                <a t-attf-href="/slides/{{channel.prerequisite_channel_ids[0].id}}"
+                   t-out="channel.prerequisite_channel_ids[0].name"/>
+            </small>
+            <small t-else="" class="text-center mb-2">
+                There are some
+                <a href="#" class="o_wslides_js_prerequisite_course"
+                   t-att-data-channels="json.dumps([
+                      {'course_id': course.id, 'course_name': course.name}
+                      for course in channel.prerequisite_channel_ids]
+                   )">
+                    prerequisite courses.
+                </a>
+            </small>
+        </t>
+        <t t-if="invite_preview">
+            <a type="button" class="btn btn-primary text-uppercase ms-2"
+                t-att-aria-label="'Sign up' if is_partner_without_user else 'Log in'"
+                t-attf-href="/slides/#{channel.id}/identify?#{keep_query('invite_partner_id', 'invite_hash')}">
+                <t t-if="is_partner_without_user">Sign up</t>
+                <t t-else="">Log in</t>
+            </a>
+        </t>
+        <div t-else="" class="oe_website_sale">
+            <div class="add_to_cart_button">
+                <form action="/shop/cart/update" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
+                    <a id="add_to_cart" role="button" href="#"
+                       class="btn btn-primary d-block js_check_product o_js_add_to_cart a-submit"
+                       data-animation-selector=".o_wslides_course_pict">
+                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                    </a>
+                    <div id="product_option_block"/>
+                </form>
+            </div>
+        </div>
+    </t>
+    <t t-elif="not channel.is_member">
+        <div class="alert my-0 bg-200 text-center">
+            Course Unavailable
+        </div>
+    </t>
+</template>
+
+<template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
+    <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
+        <div class="mb-1">
+            <a role="button" class="post_link btn btn-primary d-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
+                <i class="fa fa-bolt"></i> Buy Now
+            </a>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('add_to_cart_button')]//a[@id='add_to_cart']" position="attributes">
+        <attribute name="class">btn btn-outline-primary d-block js_check_product o_js_add_to_cart a-submit</attribute>
+    </xpath>
+</template>
+
+</data></odoo>

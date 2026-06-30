@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.UserMenu">
+        <Dropdown class="'o_user_menu d-none d-md-block pe-0'" togglerClass="'py-1 py-lg-0'">
+            <t t-set-slot="toggler">
+                <img class="o_avatar o_user_avatar rounded" t-att-src="source" alt="User"/>
+                <small class="oe_topbar_name d-none ms-2 text-start smaller lh-1 text-truncate"  t-att-class="{'d-lg-inline-block' : env.debug}" style="max-width: 200px">
+                    <t t-esc="user.name"/>
+                    <mark class="d-block font-monospace text-truncate">
+                        <i class="fa fa-database oi-small me-1"/><t t-esc="user.db.name"/>
+                    </mark>
+                </small>
+            </t>
+            <t t-foreach="getElements()" t-as="element" t-key="element_index">
+                <t t-if="!element.hide">
+                    <DropdownItem
+                        t-if="element.type == 'item' || element.type == 'switch'"
+                        href="element.href"
+                        dataset="{ menu: element.id }"
+                        onSelected="element.callback"
+                    >
+                        <CheckBox
+                            t-if="element.type == 'switch'"
+                            value="element.isChecked"
+                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
+                            onChange="element.callback"
+                        >
+                            <t t-out="element.description"/>
+                        </CheckBox>
+                        <t t-else="" t-out="element.description"/>
+                    </DropdownItem>
+                    <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

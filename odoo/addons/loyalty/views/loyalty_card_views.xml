@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_card_view_form" model="ir.ui.view">
+        <field name="name">loyalty.card.view.form</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" readonly="1"/>
+                            <field name="expiration_date"/>
+                            <field name="partner_id"/>
+                            <label string="Balance" for="points"/>
+                            <span class="d-inline-block">
+                                <field name="points" class="w-auto oe_inline me-1"/>
+                                <field name="point_name" no_label="1" class="d-inline"/>
+                            </span>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="loyalty_card_view_tree" model="ir.ui.view">
+        <field name="name">loyalty.card.view.tree</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <tree string="Coupons" edit="false" delete="false" js_class="loyalty_card_list_view">
+                <field name="code" readonly="1"/>
+                <field name="create_date" optional="hide"/>
+                <field name="points_display" string="Balance"/>
+                <field name="expiration_date"/>
+                <field name="program_id"/>
+                <field name="partner_id"/>
+                <button name="action_coupon_send" string="Send" type="object" icon="fa-paper-plane-o"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="loyalty_card_view_search" model="ir.ui.view">
+        <field name="name">loyalty.card.view.search</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <field name="program_id"/>
+                <separator/>
+                <filter name="active" string="Active" domain="['&amp;', ('program_id.active', '=', True), '&amp;', ('points', '>', 0), '|', ('expiration_date', '>=', context_today().strftime('%Y-%m-%d 00:00:00')), ('expiration_date', '=', False)]"/>
+                <filter name="inactive" string="Inactive" domain="['|', ('program_id.active', '=', False), '|', ('points', '&lt;=', 0), ('expiration_date', '&lt;', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="loyalty_card_action" model="ir.actions.act_window">
+        <field name="name">Coupons</field>
+        <field name="res_model">loyalty.card</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('program_id', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <h1>No Coupons Found.</h1>
+            <p>There haven't been any coupons generated yet.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('im_livechat.im_livechat_group_manager'))]"/>
+        </record>
+    </data>
+    <data>
+        <record id="im_livechat_channel_rule_demo" model="im_livechat.channel.rule">
+            <field name="regex_url">/im_livechat/</field>
+            <field name="action">auto_popup</field>
+            <field name="auto_popup_timer">3</field>
+            <field name="channel_id" ref="im_livechat_channel_data"/>
+        </record>
+        <record id="im_livechat.im_livechat_group_user" model="res.groups">
+            <field eval="[(4, ref('base.user_demo'))]" name="users"/>
+        </record>
+        <record id="im_livechat_channel_data" model="im_livechat.channel">
+            <field eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]" name="user_ids"/>
+        </record>
+    </data>
+</odoo>

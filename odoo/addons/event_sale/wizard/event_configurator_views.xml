@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_configurator_view_form" model="ir.ui.view">
+        <field name="name">event.configurator.view.form</field>
+        <field name="model">event.event.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="event_configurator_form">
+                <group>
+                    <field
+                        name="event_id"
+                        domain="[
+                            ('event_ticket_ids.product_id','=', product_id),
+                            ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
+                        ]"
+                        required="1"
+                        context="{'name_with_seats_availability': True}"
+                        options="{'no_open': True, 'no_create': True}"
+                    />
+                    <field
+                        name="event_ticket_id"
+                        domain="[('event_id', '=', event_id), ('product_id', '=', product_id)]"
+                        invisible="not event_id"
+                        required="event_id"
+                        context="{'name_with_seats_availability': True}"
+                        options="{'no_open': True, 'no_create': True}"/>
+                    <field name="product_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Ok" class="btn-primary o_event_sale_js_event_configurator_ok" special="save" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_configurator_action" model="ir.actions.act_window">
+        <field name="name">Configure an event</field>
+        <field name="res_model">event.event.configurator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'name_with_seats_availability': True}</field>
+        <field name="view_id" ref="event_configurator_view_form"/>
+    </record>
+</odoo>

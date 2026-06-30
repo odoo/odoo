@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+     <t t-name="pos_loyalty.RewardButton">
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-attf-class="{{hasClaimableRewards() ? 'highlight text-action' : 'disabled'}}" t-on-click="() => this.click()">
+            <i class="fa fa-star me-1"></i>
+            <span> </span>
+            <span>Reward</span>
+        </button>
+    </t>
+
+ </templates>

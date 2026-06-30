@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='emoji-button']" position="attributes">
+            <attribute name="t-att-class">
+                {'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI or (this.picker.state.picker === this.picker.PICKERS.GIF and this.ui.isSmall)}
+            </attribute>
+        </xpath>
+        <xpath expr="//*[@t-ref='emoji-button']" position="after">
+            <button t-if="hasGifPickerButton" class="btn border-0 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.GIF}" aria-label="GIFs" t-on-click="onClickAddGif" t-ref="gif-button"><i class="oi oi-gif-picker"/></button>
+        </xpath>
+    </t>
+</templates>

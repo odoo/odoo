@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_filter_view_search" model="ir.ui.view">
+        <field name="name">mailing.filter.view.search</field>
+        <field name="model">mailing.filter</field>
+        <field name="arch" type="xml">
+           <search string="Mailing Filters">
+                <field name="name"/>
+                <field name="mailing_model_id"/>
+                <filter string="My Filters"
+                        name="filter_saved_by_me"
+                        domain="[('create_uid', '=', uid)]"
+                        help="Filters saved by me"/>
+                <group string="Group By">
+                    <filter name="groupby_recepient_model"
+                            context="{'group_by' : 'mailing_model_id'}"
+                            string="Recipients"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mailing_filter_view_tree" model="ir.ui.view">
+        <field name="name">mailing.filter.view.tree</field>
+        <field name="model">mailing.filter</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing filters" sample="1">
+                <field name="name"/>
+                <field name="create_uid" string="Saved by" widget="many2one_avatar_user"/>
+                <field name="mailing_model_id" string="Recipients"/>
+                <field name="mailing_domain" string="Domain" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_filter_view_form" model="ir.ui.view">
+        <field name="name">mailing.filter.view.form</field>
+        <field name="model">mailing.filter</field>
+        <field name="arch" type="xml">
+            <form string="Mailing filters">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="mailing_model_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="create_uid" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="mailing_model_name" invisible="1"/>
+                        <field name="mailing_domain" string="Domain" widget="domain"
+                               options="{'model': 'mailing_model_name'}"
+                               invisible="not mailing_model_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_filter_action" model="ir.actions.act_window">
+        <field name="name">Favorite Filters</field>
+        <field name="res_model">mailing.filter</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_saved_by_me': 1}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No saved filter yet!
+            </p><p>
+                While designing the mailing, you can define the rules to filter recipients.
+                To save the same criteria for future use, you can add it to the favorite list
+                by clicking on <i class="fa fa-floppy-o text-warning"></i> icon next to "Recipients".
+            </p>
+        </field>
+    </record>
+</odoo>

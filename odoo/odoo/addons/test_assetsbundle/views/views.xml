@@ -1,0 +1,26 @@
+<odoo>
+    <template id="test_assetsbundle.template1" name="test template 1">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle1"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
+    <template id="test_assetsbundle.template2" name="test template 2">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle4" t-js="False"/>
+        <meta/>
+        <t t-call-assets="test_assetsbundle.bundle4" t-css="False"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
+</odoo>

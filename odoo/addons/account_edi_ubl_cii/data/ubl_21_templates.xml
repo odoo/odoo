@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ubl_21_PaymentTermsType" inherit_id="account_edi_ubl_cii.ubl_20_PaymentTermsType">
+        <xpath expr="//*[local-name()='Amount']" position="before">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:PaymentPercent t-out="vals.get('payment_percent')"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='Amount']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:PaymentDueDate t-out="vals.get('payment_due_date')"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_CreditNoteLineType" inherit_id="account_edi_ubl_cii.ubl_20_CreditNoteLineType" primary="True">
+        <xpath expr="//*[local-name()='TaxTotal']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_DebitNoteLineType" inherit_id="account_edi_ubl_cii.ubl_20_DebitNoteLineType" primary="True">
+        <xpath expr="//*[local-name()='TaxTotal']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
+        <xpath expr="//*[local-name()='IssueDate']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:DueDate t-out="vals.get('due_date')"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxCurrencyCode']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:BuyerReference t-out="vals.get('buyer_reference')"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_CreditNoteType" inherit_id="account_edi_ubl_cii.ubl_20_CreditNoteType" primary="True">
+        <xpath expr="//*[local-name()='IssueDate']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:CreditNoteTypeCode
+                    t-att="vals.get('document_type_code_attrs', {})"
+                    t-out="vals.get('document_type_code')"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxCurrencyCode']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:BuyerReference t-out="vals.get('buyer_reference')"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxTotal']" position="before">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:Delivery t-foreach="vals.get('delivery_vals_list', [])" t-as="foreach_vals">
+                    <t t-call="{{DeliveryType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:Delivery>
+                <cac:PaymentMeans t-foreach="vals.get('payment_means_vals_list', [])" t-as="foreach_vals">
+                    <t t-call="{{PaymentMeansType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:PaymentMeans>
+                <cac:PaymentTerms t-foreach="vals.get('payment_terms_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{PaymentTermsType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:PaymentTerms>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_DebitNoteType" inherit_id="account_edi_ubl_cii.ubl_20_DebitNoteType" primary="True">
+        <xpath expr="//*[local-name()='TaxCurrencyCode']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:BuyerReference t-out="vals.get('buyer_reference')"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxTotal']" position="before">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
+                <cac:Delivery t-foreach="vals.get('delivery_vals_list', [])" t-as="foreach_vals">
+                    <t t-call="{{DeliveryType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:Delivery>
+                <cac:PaymentMeans t-foreach="vals.get('payment_means_vals_list', [])" t-as="foreach_vals">
+                    <t t-call="{{PaymentMeansType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:PaymentMeans>
+                <cac:PaymentTerms t-foreach="vals.get('payment_terms_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{PaymentTermsType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:PaymentTerms>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

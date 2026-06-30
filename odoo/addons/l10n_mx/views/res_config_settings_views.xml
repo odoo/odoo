@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.mx</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr=".//block[@id='invoicing_settings']" position="inside">
+                <setting id="electronic_invoices_mx" help="Create your electronic invoices automatically (CFDI format)" invisible="country_code != 'MX'">
+                    <field name="module_l10n_mx_edi" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
