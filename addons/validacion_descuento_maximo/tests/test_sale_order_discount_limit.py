@@ -91,6 +91,21 @@ class TestSaleOrderDiscountLimit(SaleCommon):
 
         self.assertEqual(order.state, 'requires_review')
 
+    def test_approve_discount_requires_supervisor_group(self):
+        order = self._create_order_with_discount(16)
+        order.write({'state': 'requires_review'})
+
+        user_without_group = self.env['res.users'].create({
+            'name': 'Usuario sin grupo',
+            'login': 'usuario_sin_grupo_discount',
+            'email': 'usuario_sin_grupo_discount@example.com',
+            'password': '123456',
+            'groups_id': [(6, 0, [])],
+        })
+
+        with self.assertRaisesRegex(UserError, 'permiso'):
+            order.with_user(user_without_group).action_approve_discount()
+
     def test_custom_discount_limit_allows_higher_discount(self):
         order = self._create_order_with_discount(16, descuento_maximo_permitido=20)
 

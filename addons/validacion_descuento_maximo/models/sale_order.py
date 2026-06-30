@@ -35,9 +35,10 @@ class SaleOrder(models.Model):
         for order in self:
             if order._has_discount_above_limit():
                 order.with_context(skip_discount_limit_validation=True).write({
-                    'state': 'requires_review',
+                'state': 'requires_review',
                 })
-                raise UserError(DISCOUNT_LIMIT_ERROR)
+                return False
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -48,14 +49,33 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        if not self.env.context.get('skip_discount_limit_validation'):
-            self._raise_discount_limit_error()
+
+        if self.env.context.get('skip_discount_limit_validation'):
+            return result
+
+        #evita revalidar si solo cambia estado
+        if set(vals.keys()) == {'state'}:
+            return result
+
+        self._raise_discount_limit_error()
         return result
 
     def action_confirm(self):
-        self._raise_discount_limit_error()
+        if self._raise_discount_limit_error() is False:
+            return True
         return super(SaleOrder, self).action_confirm()
+    
+    def action_approve_discount(self):
+        self.ensure_one()
 
+        if not self.env.user.has_group('validacion_descuento_maximo.group_discount_supervisor'):
+            raise UserError("No tiene permiso para aprobar este descuento.")
+
+        self.with_context(skip_discount_limit_validation=True).write({
+            'state': 'sale'
+        })
+
+        return True
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
