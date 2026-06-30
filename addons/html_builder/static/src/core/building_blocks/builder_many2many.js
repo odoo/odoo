@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, asyncComputed, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { getAllActionsAndOperations, useBuilderComponent, useDomState } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -38,9 +38,6 @@ export class BuilderMany2Many extends Component {
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
-        this.state = proxy({
-            searchModel: undefined,
-        });
         this.domState = useDomState((el) => {
             const getAction = this.env.editor.shared.builderActions.getAction;
             const actionWithGetValue = getAllActions().find(
@@ -55,24 +52,20 @@ export class BuilderMany2Many extends Component {
                 selection: JSON.parse(actionValue || "[]"),
             };
         });
-        onWillStart(async () => {
-            await this.handleProps(this.props);
-        });
-        onWillUpdateProps(async (newProps) => {
-            await this.handleProps(newProps);
-        });
+        this.searchModel = asyncComputed(() => this.getSearchModel(this.props));
     }
-    async handleProps(props) {
+    async getSearchModel(props) {
         if (props.m2oField) {
             const modelData = await this.fields.loadFields(props.model, {
                 fieldNames: [props.m2oField],
             });
-            this.state.searchModel = modelData[props.m2oField].relation;
-            if (!this.state.searchModel) {
+            const searchModel = modelData[props.m2oField].relation;
+            if (!searchModel) {
                 throw new Error(`m2oField ${props.m2oField} is not a relation field`);
             }
+            return searchModel;
         } else {
-            this.state.searchModel = props.model;
+            return props.model;
         }
     }
     callApply(applySpecs) {
