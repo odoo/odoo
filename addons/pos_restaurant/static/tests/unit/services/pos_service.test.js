@@ -1,5 +1,7 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, tick } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import {
     getFilledOrder,
     setupPosEnv,
@@ -20,6 +22,26 @@ describe("restaurant pos_store.js", () => {
         const result = await store.fireCourse(course);
         expect(course.fired).toBe(true);
         expect(result).toBe(true);
+    });
+
+    test("printCourseTicket builds note update payload", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const course = store.addCourse();
+        order.lines[0].course_id = course;
+        course.line_ids = [order.lines[0]];
+
+        let captured = null;
+        store.ticketPrinter.printOrderChanges = async ({ opts }) => {
+            captured = opts.orderChange;
+            return true;
+        };
+
+        await store.printCourseTicket(course);
+
+        expect(captured.noteUpdateTitle).toBe("Course 1 fired");
+        expect(captured.printNoteUpdateData).toBe(false);
+        expect(captured.noteUpdate).toHaveLength(1);
     });
 
     test("setTable", async () => {
@@ -174,6 +196,53 @@ describe("restaurant pos_store.js", () => {
             expect(filledOrder.lines[3].id).toBeOfType("number");
         });
 
+        test("paid state from server is synchronized", async () => {
+            const store = await setupPosEnv();
+            const table = store.models["restaurant.table"].get(2);
+
+            MockServer.env["pos.order"].create({
+                config_id: store.config.id,
+                session_id: store.session.id,
+                table_id: table.id,
+                lines: [
+                    [
+                        0,
+                        0,
+                        {
+                            product_id: 5,
+                            qty: 50,
+                            price_unit: 2.2,
+                        },
+                    ],
+                    [
+                        0,
+                        0,
+                        {
+                            product_id: 6,
+                            qty: 30,
+                            price_unit: 2.2,
+                        },
+                    ],
+                ],
+                state: "draft",
+            });
+
+            await store.deviceSync.readDataFromServer();
+            const syncedOrder = table.getOrder();
+            expect(syncedOrder.state).toBe("draft");
+            expect(syncedOrder.lines).toHaveLength(2);
+
+            MockServer.env["pos.order"].write([syncedOrder.id], {
+                state: "paid",
+            });
+
+            await store.deviceSync.readDataFromServer();
+            const latestSyncedOrder = store.models["pos.order"].getFirst();
+            expect(latestSyncedOrder.state).toBe("paid");
+            expect(latestSyncedOrder.lines[0].qty).toBe(50);
+            expect(latestSyncedOrder.lines[1].qty).toBe(30);
+        });
+
         test("Data from other devices overrides local data", async () => {
             const store = await setupPosEnv();
             const filledOrder = await getFilledOrder(store);
@@ -267,6 +336,18 @@ describe("restaurant pos_store.js", () => {
                 { count: 1, name: "Message" },
             ]);
         });
+
+        test("multi-category product counts only first category", async () => {
+            const store = await setupPosEnv();
+            const order = store.addNewOrder();
+            const multiCategoryProduct = store.models["product.template"].get(19);
+            await store.addLineToOrder({ product_tmpl_id: multiCategoryProduct, qty: 1 }, order);
+
+            const changes = order.preparationChanges.categoryCount;
+
+            expect(changes.some((entry) => entry.name === "Category 1")).toBe(true);
+            expect(changes.some((entry) => entry.name === "Category 2")).toBe(false);
+        });
     });
 
     test("getDefaultSearchDetails", async () => {
@@ -291,7 +372,7 @@ describe("restaurant pos_store.js", () => {
         const store = await setupPosEnv();
         const floor = store.models["restaurant.floor"].get(2);
         store.currentFloor = floor;
-        const found = store.searchOrder("2");
+        const found = store.searchOrder("1");
         expect(found).toBe(true);
         const notFound = store.searchOrder("999");
         expect(notFound).toBe(false);
@@ -357,6 +438,213 @@ describe("restaurant pos_store.js", () => {
         expect(sourceOrder.lines.length).toBe(0);
         expect(order.lines.length).toBe(1);
         expect(order.table_id.id).toBe(tableDst.id);
+    });
+
+    test("transferOrder from floating order to filled table merges lines", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const sourceOrder = store.addNewOrder({ floating_order_name: "Float A" });
+        const destinationOrder = store.addNewOrder({ table_id: table });
+        const product1 = store.models["product.template"].get(5);
+        const product2 = store.models["product.template"].get(6);
+
+        await store.addLineToOrder({ product_tmpl_id: product1, qty: 2 }, sourceOrder);
+        await store.addLineToOrder({ product_tmpl_id: product2, qty: 1 }, destinationOrder);
+
+        await store.transferOrder(sourceOrder.uuid, null, destinationOrder);
+
+        expect(sourceOrder.lines.length).toBe(0);
+        expect(store.models["pos.order"].getBy("uuid", sourceOrder.uuid)).toBeEmpty();
+        expect(destinationOrder.lines.length).toBe(2);
+    });
+
+    test("floating order transfers into another floating order", async () => {
+        const store = await setupPosEnv();
+        const sourceOrder = store.addNewOrder({ floating_order_name: "Cola" });
+        const destinationOrder = store.addNewOrder({ floating_order_name: "Water" });
+        const cola = store.models["product.template"].get(5);
+        const water = store.models["product.template"].get(6);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 3 }, sourceOrder);
+        await store.addLineToOrder({ product_tmpl_id: water, qty: 3 }, destinationOrder);
+
+        await store.transferOrder(sourceOrder.uuid, null, destinationOrder);
+
+        expect(store.models["pos.order"].getBy("uuid", sourceOrder.uuid)).toBeEmpty();
+        expect(destinationOrder.lines.length).toBe(2);
+        expect(destinationOrder.lines[0].qty).toBe(3);
+        expect(destinationOrder.lines[1].qty).toBe(3);
+    });
+
+    test("preSyncAllOrders assigns floating order name to direct sale", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.preSyncAllOrders([order]);
+        expect(Boolean(order.floating_order_name)).toBe(true);
+    });
+
+    test("sync updates quantity, partner, note, line note and pricelist", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const table = store.models["restaurant.table"].get(2);
+        const partner = store.models["res.partner"].get(3);
+        const pricelist = store.models["product.pricelist"].get(2);
+        order.table_id = table;
+
+        await store.syncAllOrders();
+        const line = order.lines[0];
+
+        line.setQuantity(2);
+        expect(order.isDirty()).toBe(true);
+
+        MockServer.env["pos.order"].write([order.id], {
+            partner_id: partner.id,
+            internal_note: '[{"text":"Hello world","colorIndex":0}]',
+            pricelist_id: pricelist.id,
+        });
+        MockServer.env["pos.order.line"].write([line.id], {
+            qty: 3,
+            note: '[{"text":"Demo note","colorIndex":0}]',
+        });
+
+        await store.deviceSync.readDataFromServer();
+
+        expect(order.lines[0].qty).toBe(3);
+        expect(order.partner_id.id).toBe(partner.id);
+        expect(order.internal_note).toBe('[{"text":"Hello world","colorIndex":0}]');
+        expect(order.lines[0].note).toBe('[{"text":"Demo note","colorIndex":0}]');
+        expect(order.pricelist_id.id).toBe(pricelist.id);
+        expect(order.isDirty()).toBe(false);
+    });
+
+    test("cancel order keeps lines on first reject and removes on confirm", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+
+        let attempts = 0;
+        store.beforeDeleteOrder = async () => {
+            attempts++;
+            return attempts > 1;
+        };
+
+        const firstTry = await store.onDeleteOrder(order);
+        expect(firstTry).toBe(false);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).not.toBeEmpty();
+
+        const secondTry = await store.onDeleteOrder(order);
+        expect(secondTry).toBe(true);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
+        expect(table.getOrders().length).toBe(0);
+    });
+
+    test("order has no pending line changes after sending", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+
+        await store.sendOrderInPreparationUpdateLastChange(order);
+        const changes = order.preparationChanges;
+
+        expect(changes.quantity).toBe(0);
+    });
+
+    test("firing first course highlights next", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        const cola = store.models["product.template"].get(5);
+        const water = store.models["product.template"].get(6);
+        const juice = store.models["product.template"].get(11);
+        const date = DateTime.now();
+        order.write_date = date;
+        order.create_date = date;
+
+        const course1 = store.addCourse();
+        const line1 = await store.addLineToOrder(
+            {
+                product_tmpl_id: cola,
+                qty: 3,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+        line1.course_id = course1;
+        course1.line_ids = [line1];
+        const course2 = store.addCourse();
+        const line2 = await store.addLineToOrder(
+            {
+                product_tmpl_id: water,
+                qty: 3,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+        line2.course_id = course2;
+        course2.line_ids = [line2];
+        const course3 = store.addCourse();
+        const line3 = await store.addLineToOrder(
+            {
+                product_tmpl_id: juice,
+                qty: 1,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+        line3.course_id = course3;
+        course3.line_ids = [line3];
+        store.printCourseTicket = async () => true;
+
+        await store.fireCourse(course1);
+        expect(course1.fired).toBe(true);
+        order?.ensureCourseSelection();
+        expect(order.getSelectedCourse().uuid).toBe(course2.uuid);
+        await store.fireCourse(course2);
+        expect(course2.fired).toBe(true);
+        order?.ensureCourseSelection();
+        expect(order.getSelectedCourse().uuid).toBe(course3.uuid);
+    });
+
+    test("combo synchronisation keeps combo links after synced update", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const comboTemplate = store.models["product.template"].get(7);
+        const comboItem1 = store.models["product.combo.item"].get(1);
+        const comboItem2 = store.models["product.combo.item"].get(3);
+
+        const comboParent = await store.addLineToOrder(
+            {
+                product_tmpl_id: comboTemplate,
+                payload: [
+                    [
+                        {
+                            combo_item_id: comboItem1,
+                            qty: 1,
+                        },
+                        {
+                            combo_item_id: comboItem2,
+                            qty: 1,
+                        },
+                    ],
+                    [],
+                ],
+                configure: true,
+            },
+            order
+        );
+
+        await store.syncAllOrders();
+        order.setPartner(store.models["res.partner"].get(3));
+        await store.syncAllOrders({ orders: [order] });
+
+        expect(comboParent.combo_line_ids.length).toBe(2);
+        expect(comboParent.combo_line_ids[0].combo_parent_id).toBe(comboParent);
+        expect(comboParent.combo_line_ids[1].combo_parent_id).toBe(comboParent);
     });
 
     test("mergeOrders merges lines and courses", async () => {
@@ -465,6 +753,310 @@ describe("restaurant pos_store.js", () => {
     test("firstPage", async () => {
         const store = await setupPosEnv();
         expect(store.firstPage.page).toBe("LoginScreen");
+    });
+
+    test("defaultPage uses ProductScreen when default_screen is register", async () => {
+        const store = await setupPosEnv();
+        store.config.default_screen = "register";
+        const order = store.addNewOrder();
+        store.setOrder(order);
+
+        expect(store.defaultPage.page).toBe("ProductScreen");
+        expect(store.defaultPage.params.orderUuid).toBe(order.uuid);
+    });
+
+    test("showDefault navigates to ProductScreen with selected order in register mode", async () => {
+        const store = await setupPosEnv();
+        store.config.default_screen = "register";
+        const order = store.addNewOrder();
+        store.setOrder(order);
+        let destination = null;
+
+        store.navigate = (page, params) => {
+            destination = { page, params };
+        };
+
+        store.showDefault();
+
+        expect(destination.page).toBe("ProductScreen");
+        expect(destination.params.orderUuid).toBe(order.uuid);
+    });
+
+    test("showDefault", async () => {
+        const store = await setupPosEnv();
+        store.config.default_screen = "register";
+        const cola = store.models["product.template"].get(5);
+        const sourceTable = store.models["restaurant.table"].get(2);
+        const destinationTable = store.models["restaurant.table"].get(14);
+        const sourceOrder = store.addNewOrder({ table_id: sourceTable });
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, sourceOrder);
+
+        await store.transferOrder(sourceOrder.uuid, destinationTable);
+        const tableOrder = destinationTable.getOrder();
+        store.setOrder(tableOrder);
+
+        let destination = null;
+        store.navigate = (page, params) => {
+            destination = { page, params };
+        };
+
+        store.showDefault();
+
+        expect(destination.page).toBe("ProductScreen");
+        expect(destination.params.orderUuid).not.toBe(tableOrder.uuid);
+        expect(store.getOrder().uuid).not.toBe(tableOrder.uuid);
+    });
+
+    test("register config opens product screen", async () => {
+        const store = await setupPosEnv();
+        store.config.default_screen = "register";
+        const order = store.addNewOrder();
+        store.setOrder(order);
+
+        const page = store.defaultPage;
+
+        expect(page.page).toBe("ProductScreen");
+        expect(page.params.orderUuid).toBe(order.uuid);
+    });
+
+    test("timing preset sets slot and non-timing preset clears it", async () => {
+        mockDate("2025-06-15 10:00:00");
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const takeawayPreset = store.models["pos.preset"].get(2);
+        const eatInPreset = store.models["pos.preset"].get(1);
+
+        store.openPresetTiming = async (targetOrder) => {
+            targetOrder.preset_time = DateTime.fromSQL("2025-06-15 12:00:00");
+        };
+
+        await store.selectPreset(takeawayPreset, order);
+        expect(order.preset_id.id).toBe(takeawayPreset.id);
+        expect(order.preset_time.toFormat("HH:mm")).toBe("12:00");
+
+        order.preset_time = DateTime.fromSQL("2025-06-16 11:00:00");
+        expect(order.isFutureDate).toBe(true);
+
+        await store.selectPreset(eatInPreset, order);
+        expect(order.preset_id.id).toBe(eatInPreset.id);
+        expect(order.preset_time).toBe(undefined);
+    });
+
+    test("deleting timed table order leaves table empty", async () => {
+        mockDate("2025-06-15 10:00:00");
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+
+        order.preset_id = store.models["pos.preset"].get(2);
+        order.preset_time = DateTime.fromSQL("2025-06-15 12:20:00");
+        store.beforeDeleteOrder = async () => true;
+
+        const deleted = await store.onDeleteOrder(order);
+
+        expect(deleted).toBe(true);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
+        expect(table.getOrders().length).toBe(0);
+    });
+
+    test("deleting future order skips preparation cancellation", async () => {
+        mockDate("2025-02-12 10:00:00");
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+        order.preset_id = store.models["pos.preset"].get(2);
+        order.preset_time = DateTime.fromSQL("2025-02-13 15:00:00");
+
+        await store.syncAllOrders({ orders: [order] });
+        order.last_order_preparation_change = { lines: { test: {} } };
+
+        let sentPreparationCancelled = 0;
+        store.sendOrderInPreparation = async () => {
+            sentPreparationCancelled++;
+            return true;
+        };
+
+        await store.deleteOrders([order]);
+
+        expect(sentPreparationCancelled).toBe(0);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
+    });
+
+    test("findTable falls back to all tables when table is not in current floor", async () => {
+        const store = await setupPosEnv();
+        const floor = store.models["restaurant.floor"].get(3);
+        const tableFromOtherFloor = store.models["restaurant.table"].get(2);
+        store.currentFloor = floor;
+
+        const result = store.findTable(String(tableFromOtherFloor.table_number));
+
+        expect(result.id).toBe(tableFromOtherFloor.id);
+        expect(result.floor_id.id).not.toBe(floor.id);
+    });
+
+    test("ensureGuestCustomerCount sets guest count for preset", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        const preset = store.models["pos.preset"].get(1);
+        preset.use_guest = true;
+        await store.selectPreset(preset, order);
+        order.uiState.guestSetted = false;
+
+        store.setCustomerCount = async (targetOrder) => {
+            targetOrder.setCustomerCount(5);
+            return true;
+        };
+
+        await store.ensureGuestCustomerCount(order);
+
+        expect(order.getCustomerCount()).toBe(5);
+        expect(order.uiState.guestSetted).toBe(true);
+    });
+
+    test("table order validates with default preset", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(4);
+        const order = store.addNewOrder({ table_id: table });
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+
+        const cashMethod = store.models["pos.payment.method"].find(
+            (method) => method.is_cash_count
+        );
+        order.addPaymentline(cashMethod);
+        const validation = new OrderPaymentValidation({
+            pos: store,
+            orderUuid: order.uuid,
+        });
+
+        await validation.validateOrder(true);
+        await tick();
+
+        expect(order.preset_id.id).toBe(store.config.default_preset_id.id);
+        expect(order.state).toBe("paid");
+    });
+
+    test("payment-only order validation skips kitchen send", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const bankMethod = store.models["pos.payment.method"].find(
+            (method) => !method.is_cash_count
+        );
+        order.addPaymentline(bankMethod);
+        order.payment_ids[0].setAmount(10);
+
+        let sendPreparationCalls = 0;
+        store.sendOrderInPreparation = async () => {
+            sendPreparationCalls++;
+            return true;
+        };
+
+        const validation = new OrderPaymentValidation({
+            pos: store,
+            orderUuid: order.uuid,
+        });
+
+        await validation.validateOrder(true);
+        await tick();
+
+        expect(order.state).toBe("paid");
+        expect(sendPreparationCalls).toBe(0);
+    });
+
+    test("removing table order leaves table without active order", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(4);
+        const order = store.addNewOrder({ table_id: table });
+        const product = store.models["product.template"].get(11);
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+        store.router.state.current = "ProductScreen";
+        let destination = null;
+
+        store.navigate = (page) => {
+            destination = page;
+        };
+
+        expect(order.isBooked).toBe(true);
+        store.removeOrder(order);
+        expect(destination).toBe("FloorScreen");
+        expect(table.getOrders().length).toBe(0);
+    });
+
+    test("transfer to another floor keeps order lines", async () => {
+        const store = await setupPosEnv();
+        const sourceTable = store.models["restaurant.table"].get(2);
+        const destinationTable = store.models["restaurant.table"].get(14);
+        const sourceOrder = store.addNewOrder({ table_id: sourceTable });
+        const product = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 5 }, sourceOrder);
+
+        await store.transferOrder(sourceOrder.uuid, destinationTable);
+
+        expect(sourceOrder.table_id.id).toBe(destinationTable.id);
+        expect(sourceOrder.lines).toHaveLength(1);
+        expect(sourceOrder.lines[0].qty).toBe(5);
+    });
+
+    test("each restaurant floor keeps its own table set", async () => {
+        const store = await setupPosEnv();
+        const mainFloor = store.models["restaurant.floor"].get(2);
+        const patioFloor = store.models["restaurant.floor"].get(3);
+
+        expect(mainFloor.table_ids.map((table) => table.table_number)).toEqual([1, 3, 4]);
+        expect(patioFloor.table_ids.map((table) => table.table_number)).toEqual([101, 102, 103]);
+    });
+
+    test("selecting child table opens root table order", async () => {
+        const store = await setupPosEnv();
+        const rootTable = store.models["restaurant.table"].get(2);
+        const childTable = store.models["restaurant.table"].get(3);
+        childTable.parent_id = rootTable;
+        const order = store.addNewOrder({ table_id: rootTable });
+        const product = store.models["product.template"].get(6);
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+        await store.setTableFromUi(childTable);
+
+        expect(store.getOrder().table_id.id).toBe(rootTable.id);
+        expect(store.getOrder().lines).toHaveLength(1);
+        expect(store.getOrder().lines[0].product_id.product_tmpl_id.id).toBe(product.id);
+    });
+
+    test("deleting a temporary floor keeps it removed", async () => {
+        const store = await setupPosEnv();
+        const floorPlan = store.floorPlan;
+        floorPlan.startEditMode();
+
+        const ghostFloor = floorPlan.addFloor("Ghost Floor");
+        expect(floorPlan.floors.some((floor) => floor.name === "Ghost Floor")).toBe(true);
+
+        const removed = await floorPlan.removeFloor(ghostFloor.uuid);
+
+        expect(removed).toBe(true);
+        expect(floorPlan.floors.some((floor) => floor.name === "Ghost Floor")).toBe(false);
+    });
+
+    test("table numbers increment per selected floor", async () => {
+        const store = await setupPosEnv();
+        const floorPlan = store.floorPlan;
+        floorPlan.startEditMode();
+        const mainFloor = floorPlan.floors.find((floor) => floor.name === "Main Floor");
+        const patioFloor = floorPlan.floors.find((floor) => floor.name === "Patio");
+
+        floorPlan.selectFloorByUuid(mainFloor.uuid);
+        const nextMainNumber = mainFloor.getMaxTableNumber() + 1;
+        const newMainTable = floorPlan.addTable("square");
+
+        floorPlan.selectFloorByUuid(patioFloor.uuid);
+        const nextPatioNumber = patioFloor.getMaxTableNumber() + 1;
+        const newPatioTable = floorPlan.addTable("square");
+
+        expect(newMainTable.tableNumber).toBe(nextMainNumber);
+        expect(newPatioTable.tableNumber).toBe(nextPatioNumber);
     });
 
     describe("addCourse", () => {

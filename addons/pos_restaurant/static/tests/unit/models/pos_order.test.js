@@ -62,7 +62,7 @@ describe("pos.order restaurant patches", () => {
         expect(name).toBe("T 1 - 1001");
         child.parent_id = table;
         name = order.getName();
-        expect(name).toBe("T 1 & 2 - 1001");
+        expect(name).toBe("T 1 & 3 - 1001");
     });
 
     test("preparationChanges after split order", async () => {
@@ -315,5 +315,17 @@ describe("pos.order restaurant patches", () => {
         course2.fired = true;
         order.ensureCourseSelection();
         expect(order.getSelectedCourse().uuid).toBe(course1.uuid);
+    });
+
+    test("isTippedAfterPayment", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        order.config_id.set_tip_after_payment = true;
+        order.state = "paid";
+        order.amount_paid = order.priceIncl - 1;
+        expect(order.isTippedAfterPayment).toBe(true);
+
+        order.amount_paid = order.priceIncl;
+        expect(order.isTippedAfterPayment).toBe(false);
     });
 });

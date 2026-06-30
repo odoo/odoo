@@ -64,8 +64,10 @@ patch(ProductScreen.prototype, {
         this.numberBuffer.reset();
     },
     assignOrder() {
-        if (this.state.isValidBuffer) {
-            this.pos.searchOrder(this.state.tableBuffer);
+        const buffer = this.numberBuffer.get() || this.state.tableBuffer;
+        this.checkIsValid(buffer);
+        if (buffer && this.state.isValidBuffer) {
+            this.pos.searchOrder(buffer);
             this.numberBuffer.reset();
             this.pos.numpadMode = "quantity";
         }
