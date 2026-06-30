@@ -64,10 +64,10 @@
         <field name="model">job.match.answer.weight</field>
         <field name="arch" type="xml">
             <list editable="bottom">
-                <field name="question_id" optional="show" readonly="1"/>
                 <field name="answer_id"/>
                 <field name="profile_id"/>
-                <field name="points"/>
+                <field name="is_eliminating"/>
+                <field name="points" readonly="is_eliminating"/>
             </list>
         </field>
     </record>
