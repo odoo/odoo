@@ -162,6 +162,20 @@ class TestPartner(MailCommon):
         )
 
     @users('admin')
+    def test_display_name_show_email(self):
+        partner = self.env['res.partner'].create({'email': '"Pierre" <pierre@odoo.test>', 'name': 'Pierre'})
+        self.assertEqual(
+            partner.with_context(show_email=True).display_name,
+            'Pierre <pierre@odoo.test>',
+            'should show the normalized email instead of the full email value',
+        )
+        self.assertEqual(
+            partner.with_context(formatted_display_name=True, show_email=True).display_name,
+            'Pierre \t --pierre@odoo.test--',
+            'should show the normalized email instead of the full email value',
+        )
+
+    @users('admin')
     def test_find_or_create(self):
         """ Test 'find_or_create' method, calling name_create while parsing
         input to find name and email. """

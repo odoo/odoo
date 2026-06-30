@@ -19,7 +19,8 @@ export class MessageNotificationPopover extends Component {
         const toTitle = _t("To"),
             ccTitle = _t("Cc");
         const data = this.props.message.notification_ids.map((notification) => {
-            const email = notification.mail_email_address || notification.res_partner_id?.email;
+            const email =
+                notification.mail_email_address || notification.res_partner_id?.displayEmail;
             const failure = notification.isFailure && notification.failureMessage;
             const isFollower = notification.isFollowerNotification;
             if (!notification.res_partner_id) {

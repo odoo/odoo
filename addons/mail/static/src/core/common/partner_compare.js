@@ -122,20 +122,22 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.email",
     function email(p1, p2, { searchTerm }) {
+        const email1 = p1.displayEmail;
+        const email2 = p2.displayEmail;
         // no emails to compare: not applicable
-        if (!p1.email && !p2.email) {
+        if (!email1 && !email2) {
             return undefined;
         }
         // prioritize partners with an email over those without
-        if (p1.email && !p2.email) {
+        if (email1 && !email2) {
             return -1;
         }
-        if (!p1.email && p2.email) {
+        if (!email1 && email2) {
             return 1;
         }
         return (
-            compareStartsWithTerm(p1.email, p2.email, searchTerm) ||
-            localeCompare(p1.email, p2.email) ||
+            compareStartsWithTerm(email1, email2, searchTerm) ||
+            localeCompare(email1, email2) ||
             undefined
         );
     },

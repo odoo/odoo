@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 /** @type {DiscussCommand} */
 const discussCommandComponentPatch = {
     get email() {
-        return this.props.channel?.livechatVisitorMember?.persona.email ?? super.email;
+        return this.props.channel?.livechatVisitorMember?.persona.displayEmail ?? super.email;
     },
 };
 patch(DiscussCommand.prototype, discussCommandComponentPatch);

@@ -292,7 +292,7 @@ export function generateMentionElement({ className, id, model, text, readonly })
  * @returns {string}
  */
 export function getPartnerMentionName(partner, thread) {
-    return (thread?.getPersonaName?.(partner) || partner.name || partner.email || "").trim();
+    return (thread?.getPersonaName?.(partner) || partner.name || partner.displayEmail || "").trim();
 }
 
 /**

@@ -27,14 +27,14 @@ export class TranscriptSender extends Component {
     setup() {
         this.isValidEmail = isValidEmail;
         this.state = proxy({
-            email: this.props.thread.channel?.livechatVisitorMember?.persona.email,
+            email: this.props.thread.channel?.livechatVisitorMember?.persona.displayEmail,
             status: this.STATUS.IDLE,
         });
         this.store = useService("mail.store");
         useOnChange(
             () => [this.props.thread],
             (thread) => {
-                this.state.email = thread.channel?.livechatVisitorMember?.persona.email;
+                this.state.email = thread.channel?.livechatVisitorMember?.persona.displayEmail;
                 this.state.status = this.STATUS.IDLE;
             },
             { initialRun: false }

@@ -1707,6 +1707,31 @@ test("Notification Sent", async () => {
     await waitFor(".o-mail-MessageNotificationPopover:text('ToSomeone CcSomeoneInCc'):count(1)");
 });
 
+test("notification popover shows the normalized email of a partner whose email holds a name", async () => {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
+        {},
+        { email: '"Pierre" <pierre@odoo.test>', name: "Pierre" },
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        partner_ids: [partnerId],
+        res_id: threadId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "email",
+        res_partner_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Message-notification:count(1)").click();
+    await waitFor(".o-mail-MessageNotificationPopover:text('ToPierre(pierre@odoo.test)'):count(1)");
+});
+
 test("Check notification popover for incoming messages", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([

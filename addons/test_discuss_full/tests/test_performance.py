@@ -898,7 +898,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                     "agent_ids": [],
                     "avatar_128_access_token": self.partner_root._get_avatar_128_access_token(),
-                    "email": "odoobot@example.com",
+                    "email_normalized": "odoobot@example.com",
                     "id": self.partner_root.id,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
@@ -1199,7 +1199,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 *(self._expected_result_for_persona(user) for user in other_users),
                 {
                     "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
-                    "email": "e.e@example.com",
+                    "email_normalized": "e.e@example.com",
                     "id": partner_0.id,
                     "is_company": False,
                     "main_user_id": user_0.id,
@@ -2652,7 +2652,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
-                "email": "e.e@example.com",
+                "email_normalized": "e.e@example.com",
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -2691,7 +2691,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
             if also_livechat:
                 res["user_livechat_username"] = False
-                res["email"] = user.email
+                res["email_normalized"] = user.email_normalized
             return res
         if user == self.users[2]:
             if only_inviting:
@@ -2708,7 +2708,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
-                "email": "test2@example.com",
+                "email_normalized": "test2@example.com",
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -2725,6 +2725,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "email_normalized": False,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -2741,6 +2742,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "email_normalized": False,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -2757,6 +2759,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "email_normalized": False,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -2773,6 +2776,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "email_normalized": False,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
