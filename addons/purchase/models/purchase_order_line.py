@@ -519,7 +519,6 @@ class PurchaseOrderLine(models.Model):
                     line.date_order or fields.Date.context_today(line),
                     False
                 )
-                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 line.price_unit = line.technical_price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
                     price_unit,
                     line.product_id.supplier_taxes_id,

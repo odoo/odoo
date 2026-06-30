@@ -236,13 +236,13 @@
                                 </div>
                         </group>
                         <div>
-                            <field name="document_tax_mode" class="d-md-none no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'"/>
+                            <field name="document_tax_mode" class="d-md-none" widget="badges_selection" nolabel="True" readonly="state != 'draft'"/>
                         </div>
                     </group>
                     <notebook>
                         <page string="Products" name="products">
                             <div class="position-relative document_tax_mode">
-                                <field name="document_tax_mode" class="overlap_badge_tab d-none d-md-block no-gap-badges" widget="document_tax_mode_selector" nolabel="True"  readonly="state != 'draft'"/>
+                                <field name="document_tax_mode" class="overlap_badge_tab d-none d-md-block" widget="badges_selection" nolabel="True"  readonly="state != 'draft'"/>
                             </div>
                             <field name="tax_country_id" invisible="1"/>
                             <field name="order_line"

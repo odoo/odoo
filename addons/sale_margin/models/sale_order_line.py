@@ -140,7 +140,7 @@ class SaleOrderLine(models.Model):
         :param float price: The price value to assign.
         """
         self.ensure_one()
-        details = self.tax_ids.flatten_taxes_hierarchy().compute_all(price, handle_price_include=False)
+        details = self.tax_ids.flatten_taxes_hierarchy().compute_all(price, handle_price_include=False, document_tax_mode=self.document_tax_mode)
         taxes = [tax["amount"] for tax in details["taxes"] if tax["price_include"]]
         # Round to remove minor precision differences introduced by tax computations
         # (e.g. 100.0004 -> 100).

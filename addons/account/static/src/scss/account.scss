@@ -11,8 +11,20 @@
     justify-content: flex-end;
     pointer-events: none;
 }
-.overlap_badge_tab > * {
+.overlap_badge_tab > div {
     pointer-events: auto;
+    gap: 0px !important;
+}
+.overlap_badge_tab > div > span.active:focus {
+    outline: 0;
+}
+.overlap_badge_tab > div > span:first-child {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+}
+.overlap_badge_tab > div > span:last-child {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
 }
 // Special class for the document tax mode in account_move, sale_order and purchase_order
 // Ensuring the margin rules applied in .o_notebook are not broken by the .overlap_badge_tab
@@ -22,7 +34,4 @@
     --ListRenderer-table-padding-x: var(--Notebook-padding-x);
     margin-top: -16px;
    }
-}
-.no-gap-badges > div {
-    gap: 0px !important;
 }
