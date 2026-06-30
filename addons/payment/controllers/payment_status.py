@@ -40,17 +40,27 @@ class PaymentStatus(http.Controller):
         :rtype: str
         """
         monitored_tx = self._get_monitored_transaction()
-        # The session might have expired, or the transaction never existed.
-        if monitored_tx:
-            notification_access_token = payment_utils.generate_access_token(monitored_tx.id)
-            notification_channel = (
-                f"payment_transaction_channel:{monitored_tx.id},{notification_access_token}"
-            )
-            values = {"tx": monitored_tx, "notification_channel": notification_channel}
-        else:
-            values = {"payment_not_found": True}
+        values = self._get_payment_status_values(monitored_tx)
         template = self.get_payment_status_template_xmlid(monitored_tx)
         return request.render(template, values)
+
+    def _get_payment_status_values(self, tx):
+        """Return the QWeb rendering values for the payment status page.
+
+        Meant to be overridden to add document-specific values to the page.
+
+        :param payment.transaction tx: The monitored transaction, if any.
+        :return: The rendering values.
+        :rtype: dict
+        """
+        # The session might have expired, or the transaction never existed.
+        if not tx:
+            return {"payment_not_found": True}
+        notification_access_token = payment_utils.generate_access_token(tx.id)
+        notification_channel = (
+            f"payment_transaction_channel:{tx.id},{notification_access_token}"
+        )
+        return {"tx": tx, "notification_channel": notification_channel}
 
     def get_payment_status_template_xmlid(self, tx):  # noqa: ARG002
         return "payment.payment_status"

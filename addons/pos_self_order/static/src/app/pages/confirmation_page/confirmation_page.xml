@@ -8,19 +8,34 @@
                 </div>
             </div>
         </div>
-        <div t-else="" class="confirmation-page d-flex justify-content-center align-items-center flex-column h-100 p-3 text-center o_self_background" t-attf-style="background-image:#{this.selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
-            <div class="o_confirmation_block d-flex flex-column align-items-center justify-content-center w-100 h-100">
+        <div t-else="" class="confirmation-page o_pos_status_shell d-flex flex-column align-items-center h-100 p-3 text-center bg-100">
+            <!-- Brand -->
+            <div class="o_pos_status_brand flex-shrink-0">
+                <img t-if="this.selfOrder.config.logo"
+                     t-attf-src="data:image/png;base64,{{this.selfOrder.config.logo}}"
+                     class="o_pos_status_logo object-fit-contain" t-att-alt="this.selfOrder.company.name"/>
+            </div>
+            <!-- Stage -->
+            <div class="o_confirmation_block o_pos_status_stage d-flex flex-column align-items-center justify-content-center flex-grow-1 w-100">
                 <div class="mb-4">
                     <h1 t-if="this.state.payment and this.selfOrder.config.self_ordering_pay_after !== 'each'" class="fw-bold" style="text-wrap: pretty;">
                         Hope you enjoyed your meal!
                     </h1>
-                    <div t-else="" class="confirmation-block d-flex flex-column align-items-center gap-4" style="text-wrap: pretty;">
-                        <t t-call="point_of_sale.ValidationAnimation"/>
+                    <div t-else="" class="confirmation-block d-flex flex-column align-items-center gap-3" style="text-wrap: pretty;">
+                        <div class="o_pos_status_check">
+                            <svg viewBox="0 0 52 52" aria-hidden="true">
+                                <circle class="o_pos_status_check_circle" cx="26" cy="26" r="25"/>
+                                <path class="o_pos_status_check_path" d="M15 27 l7.5 7.5 L38 19"/>
+                            </svg>
+                        </div>
                         <t t-if="this.confirmedOrder.preset_id?.use_timing and this.selfOrder.config.self_ordering_service_mode !== 'table'">
                             <t t-set="slotDate" t-value="this.confirmedOrder.preset_id.slotPrefix(this.confirmedOrder.preset_time) or this.confirmedOrder.preset_id.formatDate(this.confirmedOrder.preset_time)"/>
-                            <h1 class="mb-0">Order for
-                                <t t-if="slotDate"><t t-out="slotDate"/>, </t>
-                                <t t-out="this.orderTimeStr"/>
+                            <h1 class="mb-0 o_pos_sched d-flex flex-column align-items-center gap-1">
+                                <span class="o_pos_sched_for text-muted fs-6 fw-bold">Order for</span>
+                                <span class="o_pos_sched_when fs-1 fw-bold">
+                                    <t t-if="slotDate"><t t-out="slotDate"/>, </t>
+                                    <t t-out="this.orderTimeStr"/>
+                                </span>
                             </h1>
                         </t>
                         <t t-else="">
@@ -28,27 +43,31 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="this.state.payment and this.confirmedOrder.state !== 'paid'"
-                    class="px-4 py-3 m-n1 rounded-bottom rounded-4 border border-light bg-light text-body fw-bold" style="max-width: 95%; text-wrap: pretty;">
-                    Pay
-                    <t t-if="this.selfOrder.config.self_ordering_mode == 'kiosk' and this.selfOrder.models['pos.payment.method'].find((pm) => pm.type === 'cash')">
-                        by cash
+                <!-- Order number — amount due and receipt download fold into this card -->
+                <div class="o_pos_order_box w-100 p-4 pb-2 border border-light rounded-4 bg-white">
+                    <span class="o_pos_order_label m-0 mt-1 smaller text-uppercase text-400 fw-bold">Your order number</span>
+                    <span class="tracking-number d-block mt-1 mb-4 mx-0 lh-1 fw-bolder text-primary" t-out="this.confirmedOrder.tracking_number" />
+                    <t t-if="this.state.payment and this.confirmedOrder.state !== 'paid'">
+                        <hr class="o_pos_order_divider mt-3 mb-2 border mx-n3"/>
+                        <div class="o_pos_order_due d-flex flex-column align-items-center gap-1 py-0">
+                            <span class="o_pos_order_due_label mt-2 fw-bold text-uppercase text-400 mt-2">
+                                <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk' and this.selfOrder.models['pos.payment.method'].find((pm) => pm.type === 'cash')">To pay in cash at the counter</t>
+                                <t t-else="">To pay at the counter</t>
+                            </span>
+                            <span class="o_pos_order_due_amount mb-2 fs-1 fw-bolder lh-1" t-out="this.selfOrder.formatMonetary(this.confirmedOrder.amount_total || 0)"/>
+                        </div>
                     </t>
-                    <t t-else="">
-                        <span class="fw-bolder" t-out="this.selfOrder.formatMonetary(this.confirmedOrder.amount_total || 0)"/>
+                    <t t-if="this.selfOrder.showDownloadButton(this.confirmedOrder) and this.confirmedOrder.uiState.receiptReady">
+                        <hr class="o_pos_order_divider mt-3 mb-2 border mx-n3"/>
+                        <button t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="btn btn-link text-reset fw-bold border-0">
+                            <i class="oi me-2" data-icon="download"/>Download receipt
+                        </button>
                     </t>
-                    at the counter
-                </div>
-                <div class="bg-white w-100 w-md-auto py-4 px-5 rounded-4 border border-light">
-                    <h3 class="d-block text-muted">Your order number</h3>
-                    <span class="tracking-number fw-bold lh-1 text-primary" t-out="this.confirmedOrder.tracking_number" />
                 </div>
             </div>
-            <div class="d-flex flex-column align-items-center w-100 w-md-auto">
-                <span role="button" t-if="this.selfOrder.showDownloadButton(this.confirmedOrder) and this.confirmedOrder.uiState.receiptReady" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="mb-4 text-primary">
-                    Download your receipt here
-                </span>
-                <button class="btn btn-lg btn-primary w-100 w-md-auto" t-on-click="this.backToHome">
+            <!-- Base -->
+            <div class="o_pos_status_base d-flex flex-column flex-shrink-0 align-items-center w-100">
+                <button class="btn btn-lg btn-primary w-100" t-on-click="this.backToHome">
                     <span t-if="!this.confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
                     <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>

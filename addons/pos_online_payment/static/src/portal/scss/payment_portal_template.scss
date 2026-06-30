@@ -19,6 +19,46 @@
             }
         }
     }
+
+    // --- Seamless "confirming payment" shell --------------------------------
+    .o_pos_status_logo {
+        max-height: 60px;
+        max-width: 70vw;
+    }
+
+    .o_pos_status_accent {
+        color: var(--primary);
+    }
+
+    .o_pos_status_skip {
+        --btn-color: var(--primary);
+        --btn-hover-color: var(--primary);
+    }
+
+    .o_pos_progress {
+        height: .375rem;
+    }
+
+    .o_pos_progress_bar {
+        background: var(--primary);
+        animation: o_pos_progress_slide 1.2s ease-in-out infinite;
+    }
+
+    .o_pos_badge_v {
+        font-variant-numeric: tabular-nums;
+    }
+
+    @keyframes o_pos_progress_slide {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(250%); }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        .o_pos_progress_bar {
+            width: 100%;
+            animation: none;
+        }
+    }
 }
 
 .pos_pay_confirmation {
