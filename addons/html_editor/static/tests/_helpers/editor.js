@@ -7,6 +7,7 @@ import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
 import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { processThroughCleanForSave } from "./dispatch";
 import { getContent, getSelection, setContent, setSelection } from "./selection";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -17,6 +18,9 @@ const defaultTestConfig = {
     debouncePowerbuttons: false,
     debounceHints: false,
 };
+
+export const PLUGINS_TO_EXCLUDE = ["contrast"];
+export const TEST_PLUGINS = MAIN_PLUGINS.filter((p) => !PLUGINS_TO_EXCLUDE.includes(p.id));
 
 // A generic base64 image for testing
 export const base64Img =
@@ -99,6 +103,17 @@ class TestEditor extends Component {
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
+    options.config ??= {};
+
+    // Plugin assembly logic:
+    const basePlugins = options.config.basePlugins ?? TEST_PLUGINS;
+    const includePlugins = options.config.includePlugins ?? [];
+    const excludePlugins = options.config.excludePlugins ?? [];
+
+    options.config.Plugins = [...new Set([...basePlugins, ...includePlugins])].filter(
+        (p) => !excludePlugins.includes(p)
+    );
+
     wysiwygProps.config = {
         ...defaultTestConfig,
         ...(options.config || {}),

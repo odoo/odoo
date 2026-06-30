@@ -1,5 +1,5 @@
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
@@ -12,13 +12,11 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
+import { FilePlugin } from "@html_editor/main/media/file_plugin";
 
 const configWithEmbeddedFile = {
-    Plugins: [
-        ...MAIN_PLUGINS.filter((P) => P.id !== "file"),
-        EmbeddedFilePlugin,
-        ...EMBEDDED_COMPONENT_PLUGINS,
-    ],
+    includePlugins: [EmbeddedFilePlugin, ...EMBEDDED_COMPONENT_PLUGINS],
+    excludePlugins: [FilePlugin],
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 
@@ -294,7 +292,7 @@ describe("document tab in media dialog", () => {
     describe("without File nor EmbeddedFile plugin", () => {
         test("Document tab is not available by default", async () => {
             const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "file") },
+                config: { excludePlugins: [FilePlugin] },
             });
             execCommand(editor, "insertMedia");
             await animationFrame();

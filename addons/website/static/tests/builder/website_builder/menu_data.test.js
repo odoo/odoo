@@ -8,7 +8,6 @@ import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { patchWithCleanup, mockService, onRpc, contains } from "@web/../tests/web_test_helpers";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
@@ -34,7 +33,7 @@ describe("NavbarLinkPopover", () => {
             </ul>
             <p>Outside</p>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
         await expectElementCount(".o-we-linkpopover", 0);
@@ -59,7 +58,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
@@ -93,7 +92,7 @@ describe("NavbarLinkPopover", () => {
                 </div>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
@@ -123,7 +122,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
 
@@ -147,7 +146,7 @@ describe("MenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
         patchWithCleanup(MenuDialog.prototype, {
@@ -228,7 +227,7 @@ describe("EditMenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
 
@@ -270,7 +269,7 @@ describe("EditMenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { includePlugins: [MenuDataPlugin, SavePlugin] },
             }
         );
 

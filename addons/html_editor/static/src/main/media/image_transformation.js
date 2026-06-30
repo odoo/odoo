@@ -28,6 +28,7 @@ import { useCrossDocumentListener } from "../../utils/hooks";
 import { Component, onMounted, props, t } from "@odoo/owl";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { removeStyle } from "@html_editor/utils/dom";
 
 const rad = Math.PI / 180;
 const MIN_IMAGE_SIZE = 20;
@@ -270,7 +271,7 @@ export class ImageTransformation extends Component {
                 ? parseFloat(transform.match(/rotate\(([^)]+)deg\)/)[1])
                 : 0;
 
-        this.image.style.transform = "";
+        removeStyle(this.image, "transform");
 
         this.transfo.settings.pos = this.getOffset(this.image);
         this.transfo.settings.width = parseFloat(getComputedStyle(this.image).width);

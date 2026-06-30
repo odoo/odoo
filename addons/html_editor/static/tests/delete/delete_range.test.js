@@ -5,7 +5,7 @@ import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { getContent, setSelection } from "../_helpers/selection";
 
 async function testCoreEditor(testConfig) {
-    return testEditor({ ...testConfig, config: { Plugins: CORE_PLUGINS } });
+    return testEditor({ ...testConfig, config: { basePlugins: CORE_PLUGINS } });
 }
 
 // Tests the deleteRange shared method.

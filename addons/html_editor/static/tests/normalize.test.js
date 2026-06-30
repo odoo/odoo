@@ -20,7 +20,7 @@ test("should remove `style.color` from table and apply it to tds", async () => {
             `),
         contentBeforeEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table style="" class="o_selected_table">
+            <table class="o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td" style="color: red;">ab</td></tr>
                     <tr><td style="color: red;">ab</td></tr>
@@ -41,7 +41,7 @@ test("should remove `style.color` from table and apply it to td without `style.c
             `),
         contentBeforeEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table style="">
+            <table>
                 <tbody>
                     <tr><td style="color: red;">ab</td></tr>
                     <tr><td style="color: green;">ab</td></tr>

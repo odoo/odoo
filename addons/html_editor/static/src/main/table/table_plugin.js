@@ -433,8 +433,7 @@ export class TablePlugin extends Plugin {
                     td.style.color = td.style.color || tableColor;
                     td.style.backgroundColor = td.style.backgroundColor || tableBgColor;
                 }
-                table.style.color = "";
-                table.style.backgroundColor = "";
+                removeStyle(table, "color", "background-color");
             }
         }
         return root;
@@ -598,7 +597,7 @@ export class TablePlugin extends Plugin {
                 let columnIndex = 0;
                 for (const column of newRow.children) {
                     column.style.width = referenceRowWidths[columnIndex];
-                    gridCells[columnIndex].style.width = "";
+                    removeStyle(gridCells[columnIndex], "width");
                     columnIndex++;
                 }
             }
@@ -806,7 +805,7 @@ export class TablePlugin extends Plugin {
                 row.style.height &&
                 Math.abs(parseFloat(row.style.height) - referenceRowHeight) <= 1
             ) {
-                row.style.height = "";
+                removeStyle(row, "height");
             }
         });
     }
@@ -816,7 +815,7 @@ export class TablePlugin extends Plugin {
      */
     resetRowHeight(row) {
         const table = closestElement(row, "table");
-        row.style.height = "";
+        removeStyle(row, "height");
         this.normalizeRowHeight(table);
     }
 
@@ -840,7 +839,7 @@ export class TablePlugin extends Plugin {
                 } else {
                     // Otherwise, reset only the columns that need it
                     columnsToReset.forEach((col) => {
-                        col.style.width = "";
+                        removeStyle(col, "width");
                     });
                 }
             }
@@ -971,7 +970,7 @@ export class TablePlugin extends Plugin {
     resetTableSize(table) {
         table.removeAttribute("style");
         table.querySelectorAll("tr").forEach((row) => {
-            row.style.height = "";
+            removeStyle(row, "height");
         });
         table.querySelector("colgroup")?.remove();
     }

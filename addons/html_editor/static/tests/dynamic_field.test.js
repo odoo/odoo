@@ -8,7 +8,6 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains, defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe.current.tags("desktop");
 
@@ -23,7 +22,7 @@ defineModels([SomeModel]);
 function getEditorOptions() {
     return {
         config: {
-            Plugins: [...MAIN_PLUGINS, ...DYNAMIC_FIELD_PLUGINS],
+            includePlugins: DYNAMIC_FIELD_PLUGINS,
             classList: ["odoo-editor-qweb"],
             dynamicResModel: "some.model",
         },
@@ -147,7 +146,7 @@ test("edit fields and back", async () => {
 test("inserted value from dynamic field should contain the data-oe-t-inline attribute", async () => {
     const { editor } = await setupEditor("<p>test[]</p>", {
         config: {
-            Plugins: [...MAIN_PLUGINS, ...DYNAMIC_FIELD_PLUGINS],
+            includePlugins: DYNAMIC_FIELD_PLUGINS,
             dynamicResModel: "some.model",
         },
     });

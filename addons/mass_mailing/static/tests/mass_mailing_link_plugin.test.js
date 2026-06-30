@@ -3,11 +3,12 @@ import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { click, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MassMailingLinkPlugin } from "../src/editor/plugins/mass_mailing_link_plugin";
+import { LinkPlugin } from "@html_editor/main/link/link_plugin";
 
 const config = {
-    Plugins: [...MAIN_PLUGINS].filter((p) => p.id != "link").concat(MassMailingLinkPlugin),
+    includePlugins: [MassMailingLinkPlugin],
+    excludePlugins: [LinkPlugin],
 };
 
 defineMailModels();

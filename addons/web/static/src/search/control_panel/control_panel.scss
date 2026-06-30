@@ -1,6 +1,10 @@
+:root {
+    --o-control-panel-background-color: #{$o-control-panel-background-color};
+}
+
 .o_control_panel {
     border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
-    background-color: $o-control-panel-background-color;
+    background-color: var(--o-control-panel-background-color);
     @include media-only(screen) {
         .o_control_panel_breadcrumbs {
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};

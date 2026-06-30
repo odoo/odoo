@@ -12,6 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { utils } from "@web/core/ui/ui_service";
+import { removeStyle } from "@html_editor/utils/dom";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData */
@@ -584,7 +585,7 @@ class MobileToolbarOverlay {
     close() {
         const modal = this.editable.closest(".o_modal_full");
         if (modal) {
-            modal.style.paddingBottom = "";
+            removeStyle(modal, "padding-bottom");
         }
         registry.category("main_components").remove(this.overlayId, "MobileToolbar");
         this.isOpen = false;

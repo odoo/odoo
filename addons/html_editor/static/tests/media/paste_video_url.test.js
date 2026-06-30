@@ -11,15 +11,14 @@ import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 
 import {
     EMBEDDED_COMPONENT_PLUGINS,
-    MAIN_PLUGINS,
     NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
 } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 const NO_EMBEDDED_COMPONENTS_CONFIG = {
-    Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS],
+    includePlugins: NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
 };
 const EMBEDDED_COMPONENTS_CONFIG = {
-    Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+    includePlugins: EMBEDDED_COMPONENT_PLUGINS,
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 

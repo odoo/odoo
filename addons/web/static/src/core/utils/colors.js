@@ -68,7 +68,7 @@ export function convertRgbToHsl(r, g, b) {
     hue = 60 * hue;
     return {
         hue: hue < 0 ? hue + 360 : hue,
-        saturation: saturation * 100,
+        saturation: Math.min(100, saturation * 100),
         lightness: lightness * 100,
     };
 }

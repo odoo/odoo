@@ -5,7 +5,6 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { cleanHints } from "../_helpers/dispatch";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { commit } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { waitFor } from "@odoo/hoot-dom";
@@ -394,7 +393,7 @@ describe("collapsed selection", () => {
             `<p class="first">[]?</p><p class="second">!</p>`,
             {
                 config: {
-                    Plugins: [...MAIN_PLUGINS, CustomPlugin],
+                    includePlugins: [CustomPlugin],
                 },
             }
         );
