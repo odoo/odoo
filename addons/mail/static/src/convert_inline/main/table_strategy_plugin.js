@@ -181,34 +181,38 @@ export class TableStrategyPlugin extends Plugin {
         const widthRatio = this.ratioPercentage(referenceRect.width, {
             inputUnit: rowWidth,
         });
-        const rightRatio = this.ratioPercentage(paddingRect.right, {
-            inputUnit: rowWidth,
-        });
-        const leftRatio = this.ratioPercentage(paddingRect.left, {
-            inputUnit: rowWidth,
-        });
+        const rightRatio = this.isZero(paddingRect.right)
+            ? 0
+            : this.ratioPercentage(paddingRect.right, { inputUnit: rowWidth });
+        const leftRatio = this.isZero(paddingRect.left)
+            ? 0
+            : this.ratioPercentage(paddingRect.left, { inputUnit: rowWidth });
         // Padding cells
         const index = parent.children.indexOf(emailNode);
-        parent.spliceChildren(
-            index + 1,
-            0,
-            new EmailNode({
-                layout: new EmptyCellLayout({
-                    style: { width: `${rightRatio}%` },
-                    attributes: { width: `${rightRatio}%` },
-                }),
-            })
-        );
-        parent.spliceChildren(
-            index,
-            0,
-            new EmailNode({
-                layout: new EmptyCellLayout({
-                    style: { width: `${leftRatio}%` },
-                    attributes: { width: `${leftRatio}%` },
-                }),
-            })
-        );
+        if (rightRatio) {
+            parent.spliceChildren(
+                index + 1,
+                0,
+                new EmailNode({
+                    layout: new EmptyCellLayout({
+                        style: { width: `${rightRatio}%` },
+                        attributes: { width: `${rightRatio}%` },
+                    }),
+                })
+            );
+        }
+        if (leftRatio) {
+            parent.spliceChildren(
+                index,
+                0,
+                new EmailNode({
+                    layout: new EmptyCellLayout({
+                        style: { width: `${leftRatio}%` },
+                        attributes: { width: `${leftRatio}%` },
+                    }),
+                })
+            );
+        }
         // New width
         layout.setAttributes({
             style: { width: `${widthRatio}%` },
