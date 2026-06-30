@@ -632,8 +632,12 @@ class _RelationalMulti(_Relational):
         super()._update_cache(records, cache_value, dirty)
 
     def convert_to_cache(self, value, records, validate=True):
-        # cache format: tuple(ids)
-        if isinstance(value, BaseModel):
+        if isinstance(value, tuple):  # (1, 2, 3)
+            if records and not any(records._ids):
+                return tuple(it and NewId(it) for it in value)
+            return value
+
+        elif isinstance(value, BaseModel):  # recordset
             if validate and value._name != self.comodel_name:
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             ids = value._ids
@@ -642,9 +646,18 @@ class _RelationalMulti(_Relational):
                 ids = tuple(it and NewId(it) for it in ids)
             return ids
 
-        elif isinstance(value, (list, tuple)):
+        elif value is False or value is None:
+            return ()
+
+        elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list)):  # [1,2,3]
+            if records and not any(records._ids):
+                return tuple(it and NewId(it) for it in value)
+            return tuple(value)
+
+        elif isinstance(value, list):
             if len(records) > 1:
                 raise ValueError("Wrong value for %s with %d records: %r" % (self, len(records), value))
+            # [(COMMAND.LINK, 100, 0), ...], []
             record = records
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
@@ -682,9 +695,6 @@ class _RelationalMulti(_Relational):
                     ids.add(browse(command).id)
             # return result as a tuple
             return tuple(ids)
-
-        elif not value:
-            return ()
 
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
