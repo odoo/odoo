@@ -6663,12 +6663,12 @@ class AccountMove(models.Model):
                 if not move:
                     continue
                 move._post()
+                self.env['ir.cron']._commit_progress(1)
             except UserError as e:
                 self.env['ir.cron']._rollback_progress()
                 msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
                 move.message_post(body=msg, message_type='comment')
                 move.auto_post = 'no'
-            finally:
                 self.env['ir.cron']._commit_progress(1)
 
     @api.model
