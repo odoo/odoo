@@ -40,6 +40,25 @@ test("Basic evaluation", async () => {
     expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
 });
 
+test("Basic evaluation with ids", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_debit_credit") {
+                expect.step("spreadsheet_fetch_debit_credit");
+                return [{ debit: 42, credit: 16 }];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CREDIT.ID(1, "2022")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT.ID(1, "2022")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE.ID(1, "2022")`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe(16);
+    expect(getCellValue(model, "A2")).toBe(42);
+    expect(getCellValue(model, "A3")).toBe(26);
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
+});
+
 test("evaluation with reference to a month period", async () => {
     const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
@@ -140,6 +159,35 @@ test("formula with invalid date", async () => {
     expect(getEvaluatedCell(model, "A7").message).toBe("1899 is not a valid year.");
 });
 
+test("Evaluation with multiple account ids", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_debit_credit") {
+                expect.step("spreadsheet_fetch_debit_credit");
+                return [{ debit: 142, credit: 26 }];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CREDIT.ID({1,2}, "2022")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT.ID({1,2}, "2022")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE.ID({1,2}, "2022")`);
+
+    // with spaces
+    setCellContent(model, "B1", `=ODOO.CREDIT.ID({1 , 2}, "2022")`);
+    setCellContent(model, "B2", `=ODOO.DEBIT.ID({1 , 2}, "2022")`);
+    setCellContent(model, "B3", `=ODOO.BALANCE.ID({1 , 2}, "2022")`);
+
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe(26);
+    expect(getCellValue(model, "A2")).toBe(142);
+    expect(getCellValue(model, "A3")).toBe(116);
+
+    expect(getCellValue(model, "B1")).toBe(26);
+    expect(getCellValue(model, "B2")).toBe(142);
+    expect(getCellValue(model, "B3")).toBe(116);
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
+});
+
 test("Evaluation with multiple account codes", async () => {
     const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
@@ -206,6 +254,10 @@ test("Server requests", async () => {
     setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022",,,FALSE)`);
     setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
     setCellContent(model, "A10", `=ODOO.BALANCE(33,2021,-2)`);
+
+    setCellContent(model, "A11", `=ODOO.CREDIT.ID(1, "2022")`);
+    setCellContent(model, "A12", `=ODOO.DEBIT.ID(2, "01/2022")`);
+    setCellContent(model, "A13", `=ODOO.BALANCE.ID(3, "Q3/2022")`);
     await waitForDataLoaded(model);
 
     expect.verifySteps([
@@ -260,6 +312,52 @@ test("Server requests", async () => {
         camelToSnakeObject({
             dateRange: parseAccountingDate({ value: "2019" }, locale),
             codes: ["33"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            accountIds: [1],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "01/2022" }, locale),
+            accountIds: [2],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "Q3/2022" }, locale),
+            accountIds: [3],
+            companyId: null,
+            includeUnposted: false,
+        }),
+    ]);
+});
+
+test("Server requests with multiple account ids", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_debit_credit") {
+                expect.step("spreadsheet_fetch_debit_credit");
+                const blobs = args.args[0];
+                for (const blob of blobs) {
+                    expect.step(blob);
+                }
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CREDIT.ID({1,2}, "2022")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT.ID({1,2}, "2022")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE.ID({1,2}, "2022")`);
+    await waitForDataLoaded(model);
+
+    expect.verifySteps([
+        "spreadsheet_fetch_debit_credit",
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            accountIds: [1, 2],
             companyId: null,
             includeUnposted: false,
         }),

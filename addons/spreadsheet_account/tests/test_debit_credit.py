@@ -124,6 +124,42 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             [{"credit": 0.0, "debit": 500.0}],
         )
 
+    def test_single_id(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "account_ids": [self.account_revenue_c1.id],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [{"credit": 0.0, "debit": 500.0}],
+        )
+
+    def test_multiple_ids(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "account_ids": [self.account_revenue_c1.id, self.account_expense_c1.id],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [{"credit": 500, "debit": 500.0}],
+        )
+
     def test_two_codes(self):
         self.assertEqual(
             self.env["account.account"].spreadsheet_fetch_debit_credit(
