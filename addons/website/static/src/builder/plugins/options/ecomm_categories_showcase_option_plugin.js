@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
@@ -25,12 +26,23 @@ export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
         builder_actions: {
             BlockCountAction,
             SpacingToggleAction,
+            AddEcommCategoriesShowcaseBlockAction,
         },
+        clean_for_save_processors: this.cleanForSave.bind(this),
         dropzone_selectors: {
             selector: ".s_ecomm_categories_showcase_block",
             dropNear: ".s_ecomm_categories_showcase_block",
         },
     };
+
+    cleanForSave(rootEl) {
+        for (const snippetEl of rootEl.querySelectorAll(".s_ecomm_categories_showcase")) {
+            const wrapperEl = snippetEl.querySelector(".s_ecomm_categories_showcase_wrapper");
+            if (!wrapperEl || wrapperEl.children.length === 0) {
+                snippetEl.remove();
+            }
+        }
+    }
 
     static _updateBlocksRoundness(editingElement, roundnessClass) {
         const blocks = editingElement.querySelectorAll(".s_ecomm_categories_showcase_block");
@@ -76,10 +88,13 @@ export class BlockCountAction extends BuilderAction {
             blocks = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block");
         }
 
-        // Add blocks if needed
+        // Add blocks if needed. Insert before the edit-mode placeholder so the
+        // first block stays the wrapper's first child (important for the first
+        // block larger option).
+        const alertEl = wrapper.querySelector(".s_ecomm_categories_showcase_empty_alert");
         while (blocks.length < count) {
-            const newBlock = blocks[0].cloneNode(true);
-            wrapper.appendChild(newBlock);
+            const newBlock = renderToElement("website.s_ecomm_categories_showcase.new_block");
+            wrapper.insertBefore(newBlock, alertEl);
             blocks = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block");
         }
     }
@@ -128,6 +143,19 @@ export class SpacingToggleAction extends BuilderAction {
                 EcommCategoriesShowcaseOptionPlugin.NO_ROUNDNESS
             );
         }
+    }
+}
+
+export class AddEcommCategoriesShowcaseBlockAction extends BuilderAction {
+    static id = "addEcommCategoriesShowcaseBlock";
+    static dependencies = ["builderOptions"];
+    apply({ editingElement: el }) {
+        const newBlockEl = renderToElement("website.s_ecomm_categories_showcase.new_block");
+        const wrapperEl = el.querySelector(".s_ecomm_categories_showcase_wrapper");
+        const alertEl = wrapperEl.querySelector(".s_ecomm_categories_showcase_empty_alert");
+        wrapperEl.insertBefore(newBlockEl, alertEl);
+        newBlockEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        this.dependencies.builderOptions.setNextTarget(newBlockEl);
     }
 }
 

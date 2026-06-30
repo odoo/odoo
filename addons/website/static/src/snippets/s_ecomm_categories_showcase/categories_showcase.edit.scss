@@ -6,4 +6,12 @@
             overflow: hidden;
         }
     }
+
+    .s_ecomm_categories_showcase_empty_alert {
+        cursor: pointer;
+    }
+    &:has(.s_ecomm_categories_showcase_block) .s_ecomm_categories_showcase_empty_alert {
+        // Hide the empty alert when there are blocks.
+        display: none;
+    }
 }
