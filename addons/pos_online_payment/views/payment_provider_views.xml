@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    Restrict the payment provider form view to system admins.
+    group_pos_manager has model-level read access on payment.provider (for the
+    online_payment_provider_ids many2many widget), but should never open the
+    provider form, which contains admin-only fields (e.g. stripe_secret_key).
+    -->
+    <record id="payment.payment_provider_form" model="ir.ui.view">
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+</odoo>
