@@ -18,7 +18,7 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLA
 from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups
 from odoo.sql_db import Cursor
-from odoo.tests import Form, tagged, RecordCapturer
+from odoo.tests import Form, tagged, RecordCapturer, Like
 from odoo.tools import mute_logger
 from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 
@@ -99,8 +99,42 @@ class TestEmailParsing(MailCommon):
 
         # Parsing the same email, but with content-type set to "pdf"
         mail_with_aliased_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="pdf")
-        res_alias = self.env['mail.thread'].message_parse(self.from_string(mail_with_aliased_mime))
+        with self.assertLogs('odoo.addons.mail.models.mail_thread') as log_catcher:
+            res_alias = self.env['mail.thread'].message_parse(self.from_string(mail_with_aliased_mime))
+        self.assertEqual(log_catcher.output, [
+                    Like("...Message containing an unexpected Content-Type 'pdf', assuming 'application/octet-stream'..."),
+                ])
         self.assertEqual(res_alias['attachments'][0].content, test_mail_data.PDF_PARSED, "Attachment with aliased Content-Type: pdf must parse without error")
+
+    def test_message_parse_attachment_no_slash_mime(self):
+        """Content-Type with no '/' (e.g. 'base64') must not corrupt binary attachments.
+
+        Some mailers send attachments with a bare token as Content-Type instead of a
+        proper 'type/subtype' pair:
+
+            Content-Type: base64; name="foo.pdf"
+            Content-Transfer-Encoding: base64
+
+        Python's email library normalises any MIME type without a '/' to 'text/plain',
+        which makes get_content() decode the binary payload as UTF-8 text and silently
+        replace invalid byte sequences with U+FFFD — corrupting the file.  The parser
+        must detect this before the text/plain branch runs and treat the part as binary.
+        """
+        for mime_type in ('base64', 'octet', 'data'):
+            with self.subTest(mime_type=mime_type):
+                received_mail = self.from_string(self.format(
+                    test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=mime_type))
+                with self.assertLogs('odoo.addons.mail.models.mail_thread') as log_catcher:
+                    res = self.env['mail.thread'].message_parse(received_mail)
+
+                [attachment] = res['attachments']
+                self.assertEqual(
+                    attachment.content, test_mail_data.PDF_PARSED,
+                    f"Attachment with Content-Type: {mime_type} must not be corrupted",
+                )
+                self.assertEqual(log_catcher.output, [
+                    Like(f"...Message containing an unexpected Content-Type '{mime_type}', assuming 'application/octet-stream'..."),
+                ])
 
     def test_message_parse_bugs(self):
         """ Various corner cases or message parsing """
