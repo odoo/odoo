@@ -22,13 +22,8 @@
             'pos_online_payment/static/src/app/**/*',
             'pos_online_payment/static/src/overrides/pos_overrides/**/*',
         ],
-        'point_of_sale.customer_display_assets_test': [
-            'pos_online_payment/static/tests/tours/customer_display_tour.js',
-            'point_of_sale/static/tests/generic_helpers/dialog_util.js',
-        ],
         'web.assets_tests': [
             'pos_online_payment/static/tests/tours/**/*',
-            ('remove', 'pos_online_payment/static/tests/tours/customer_display_tour.js')
         ],
         'web.assets_unit_tests': [
             'pos_online_payment/static/tests/unit/**/*',
