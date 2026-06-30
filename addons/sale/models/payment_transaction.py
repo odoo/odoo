@@ -203,7 +203,7 @@ class PaymentTransaction(models.Model):
                 # Create a down payment invoice for partially paid orders
                 downpayment_invoices = (
                     confirmed_orders - fully_paid_orders
-                )._generate_downpayment_invoices()
+                ).with_context(downpayment_fixed_amount=tx.amount)._generate_downpayment_invoices()
 
                 # For fully paid orders create a final invoice.
                 fully_paid_orders._force_lines_to_invoice_policy_order()
