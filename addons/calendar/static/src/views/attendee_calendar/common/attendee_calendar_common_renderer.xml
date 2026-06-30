@@ -9,7 +9,7 @@
                         <t t-if="24 > duration and duration > 0.5">
                             <br/><span class="fw-normal mt-1"><t t-out="startTime"/> - <t t-out="endTime"/></span>
                         </t>
-                        <t t-else="">
+                        <t t-elif="isStartInScale">
                             <span class="fw-normal">,</span> <t t-out="startTime"/>
                         </t>
                     </t>

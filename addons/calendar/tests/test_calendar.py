@@ -355,7 +355,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
     def test_meeting_creation_from_partner_form(self):
         """ When going from a partner to the Calendar and adding a meeting, both current user and partner
          should be attendees of the event """
-        calendar_action = self.partner_demo.schedule_meeting()
+        calendar_action = self.partner_demo.action_schedule_meeting()
         event = self.env['calendar.event'].with_context(calendar_action['context']).create({
             'name': 'Super Meeting',
             'start': datetime(2020, 12, 13, 17),
