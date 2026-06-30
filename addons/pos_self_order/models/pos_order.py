@@ -83,6 +83,13 @@ class PosOrder(models.Model):
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
         mail_template.send_mail(self.id, force_send=True, email_values=email_values)
 
+    def _should_send_to_preparation(self):
+        """
+        Determine whether the order should be sent to preparation based
+        on its payment status and the config's payment method configuration.
+        """
+        return not self.config_id.has_valid_self_payment_method() or super()._should_send_to_preparation()
+
     def _send_payment_result(self, payment_result):
         self.ensure_one()
         self.config_id._notify('PAYMENT_STATUS', {
