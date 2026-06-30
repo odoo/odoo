@@ -679,7 +679,9 @@ export function isPhrasingContainer(node) {
     return (
         node &&
         isElement(node) &&
-        (!!node.textContent.trim().length ||
+        ([...node.childNodes].some(
+            (child) => isTextNode(child) && child.textContent.trim().length
+        ) ||
             isParagraphRelatedElement(node) ||
             isListItemElement(node) ||
             node.nodeName === "PRE" ||

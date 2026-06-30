@@ -108,7 +108,7 @@ describe("lastLeaf", () => {
         const [div] = insertTestHtml(
             "<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>"
         );
-        const result = lastLeaf(div, isBlock);
+        const result = lastLeaf(div, { stopTraverseFunction: isBlock });
         expect(result).toBe(div);
     });
 
@@ -118,8 +118,17 @@ describe("lastLeaf", () => {
         );
         const b = div.firstChild.firstChild.childNodes[2];
         const ef = b.firstChild.firstChild.firstChild;
-        const result = lastLeaf(b, isBlock);
+        const result = lastLeaf(b, { stopTraverseFunction: isBlock });
         expect(result).toBe(ef);
+    });
+
+    test("should find the deepest last span", () => {
+        const [div] = insertTestHtml(
+            "<div><p><span>a</span>b<span><span>c</span>d<span><span>e</span></span></span></p></div>"
+        );
+        const deepestLastSpan = div.firstChild.lastChild.lastChild.lastChild;
+        const result = lastLeaf(div, { predicate: (node) => node.nodeName === "SPAN" });
+        expect(result).toBe(deepestLastSpan);
     });
 });
 
@@ -138,7 +147,7 @@ describe("firstLeaf", () => {
         const [div] = insertTestHtml(
             "<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>"
         );
-        const result = firstLeaf(div, isBlock);
+        const result = firstLeaf(div, { stopTraverseFunction: isBlock });
         expect(result).toBe(div);
     });
 
@@ -148,8 +157,17 @@ describe("firstLeaf", () => {
         );
         const b = div.firstChild.firstChild.firstChild;
         const ab = b.firstChild.firstChild.firstChild;
-        const result = firstLeaf(b, isBlock);
+        const result = firstLeaf(b, { stopTraverseFunction: isBlock });
         expect(result).toBe(ab);
+    });
+
+    test("should find the deepest first span", () => {
+        const [div] = insertTestHtml(
+            "<div><p><span>a<span>b</span></span>c<span><span>d</span>e<span><span>f</span></span></span></p></div>"
+        );
+        const deepestFirstSpan = div.firstChild.firstChild;
+        const result = firstLeaf(div, { predicate: (node) => node.nodeName === "SPAN" });
+        expect(result).toBe(deepestFirstSpan);
     });
 });
 

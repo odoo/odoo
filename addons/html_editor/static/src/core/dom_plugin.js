@@ -10,14 +10,12 @@ import {
 import {
     allowsParagraphRelatedElements,
     isEmptyBlock,
-    isListElement,
     isListItemElement,
     isParagraphRelatedElement,
     isSelfClosingElement,
     isEditorTab,
     isPhrasingContent,
     isVisible,
-    getDeepestEditablePosition,
     isEditionBoundary,
     isPhrasingContainer,
     isTextNode,
@@ -25,6 +23,7 @@ import {
     isProtecting,
     isProtected,
     isUnprotecting,
+    isContentEditable,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -37,8 +36,8 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { childNodeIndex, leftPos, nodeSize, rightPos } from "../utils/position";
-import { normalizeCursorPosition, callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { childNodeIndex, leftPos, nodeSize } from "../utils/position";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import {
     baseContainerGlobalSelector,
     createBaseContainer,
@@ -238,35 +237,13 @@ export class DomPlugin extends Plugin {
         // Move the selection after the insertion.
         insertedContent = insertedContent.filter((node) => node.isConnected);
         if (insertedContent.length) {
-            const lastInsertedNode = insertedContent.at(-1);
-            // TODO AGE: distribute this among the relevant plugins.
-            let lastPosition =
-                isParagraphRelatedElement(lastInsertedNode) ||
-                isListItemElement(lastInsertedNode) ||
-                isListElement(lastInsertedNode)
-                    ? rightPos(lastLeaf(lastInsertedNode))
-                    : rightPos(lastInsertedNode);
-            lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
-            if (
-                !this.config.allowInlineAtRoot &&
-                isEditionBoundary(lastPosition[0], this.editable)
-            ) {
-                // Correct the position if it happens to be in the editable root.
-                lastPosition = getDeepestEditablePosition(...lastPosition);
+            const predicate = (child) => isPhrasingContainer(child) && isContentEditable(child);
+            const lastPhrasingContainer = lastLeaf(insertedContent.at(-1), { predicate });
+            if (lastPhrasingContainer) {
+                this.dependencies.selection.setCursorEnd(lastPhrasingContainer);
+            } else {
+                this.dependencies.selection.setSelectionAfter(insertedContent.at(-1));
             }
-            const currentSelection = this.document.getSelection();
-            if (
-                currentSelection.anchorNode === lastPosition[0] &&
-                currentSelection.anchorOffset === lastPosition[1]
-            ) {
-                // Ensure selectionchange.
-                // TODO AGE: can we avoid having to do this?
-                currentSelection.removeAllRanges();
-            }
-            this.dependencies.selection.setSelection(
-                { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
-                { normalize: false }
-            );
         }
 
         return insertedContent;

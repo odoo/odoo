@@ -1138,7 +1138,7 @@ describe("editable descendants", () => {
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
-                                        <p>deep</p>
+                                        <p>deep[]</p>
                                     </div>
                                 </div>
                             </div>
@@ -1146,7 +1146,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
-                <p>[]after</p>
+                <p>after</p>
             `)
         );
         undo(editor);

@@ -3684,7 +3684,7 @@ describe("Odoo editor own html", () => {
             stepFunction: async (editor) => {
                 pasteOdooEditorHtml(editor, '<div class="custom-paste oe_unbreakable">b</div>');
             },
-            contentAfter: '<p>a</p><div class="custom-paste oe_unbreakable">b</div><p>[]b</p>',
+            contentAfter: '<p>a</p><div class="custom-paste oe_unbreakable">b[]</div><p>b</p>',
         });
     });
 
@@ -4742,9 +4742,9 @@ describe("paste table cells into an existing table", () => {
                                 <p>before</p>
                                 <table class="table table-bordered o_table">
                                     <tbody>
-                                        <tr><td><p>x</p></td></tr>
+                                        <tr><td><p>x[]</p></td></tr>
                                     </tbody>
-                                </table>[]
+                                </table>
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>

@@ -30,7 +30,7 @@ import {
 } from "./_helpers/collaboration";
 import { cleanHints } from "./_helpers/dispatch";
 import { unformat } from "./_helpers/format";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import {
     commit,
     deleteBackward,
@@ -728,10 +728,10 @@ describe("data-oe-protected", () => {
                 <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false" data-oe-protected="true">
                     <div contenteditable="true" data-oe-protected="false">
-                        <p>d</p>
+                        <p>d[]</p>
                     </div>
                 </div>
-                <p>[]a</p>
+                <p>a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1019,10 +1019,14 @@ describe("Collaboration with embedded components", () => {
                     <p>deep12</p>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep12", "deep[]12")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
         await animationFrame();
         // After mount:
         editable = unformat(`
@@ -1036,10 +1040,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep12", "deep[]12")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
         deep1.append(e1.document.createTextNode("3"));
         e1.shared.history.commit();
         mergePeersCommits(peerInfos);
@@ -1057,10 +1065,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep1234", "deep[]1234")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
     });
 
     test("editableDescendants for components are collaborative (with different template shapes)", async () => {
@@ -1123,13 +1135,13 @@ describe("Collaboration with embedded components", () => {
                         <div class="switched">
                             <div class="deep">
                                 <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
-                                    <p>deep12</p>
+                                    <p>deep[]12</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p>[]a</p>
+                <p>a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1181,6 +1193,8 @@ describe("Collaboration with embedded components", () => {
         await ensureDistinctHistoryCommit();
         mergePeersCommits(peerInfos);
         await animationFrame();
+        // Move the selection to <p>[]a</p> to delete the embedding backward.
+        setSelection({ anchorNode: e1.editable.lastChild, anchorOffset: 0 });
         deleteBackward(e1);
         mergePeersCommits(peerInfos);
         expect(getContent(e1.editable, { sortAttrs: true })).toBe(`<p>[]a</p>`);
@@ -1277,10 +1291,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep98", "deep[]98")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
     });
 
     describe("Embedded state", () => {

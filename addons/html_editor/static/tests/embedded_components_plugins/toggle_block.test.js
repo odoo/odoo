@@ -1258,8 +1258,8 @@ describe("Insert (paste, drop) inside toggle title", () => {
                     </div>
                 </div>
                 <p data-selection-placeholder=""><br></p>
-                <div class="oe_unbreakable">brol</div>
-                <div class="o-paragraph">[]World</div>
+                <div class="oe_unbreakable">brol[]</div>
+                <div class="o-paragraph">World</div>
             `)
         );
     });
