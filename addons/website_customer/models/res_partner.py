@@ -19,6 +19,31 @@ class ResPartner(models.Model):
     def get_backend_menu_id(self):
         return self.env.ref('contacts.menu_contacts').id
 
+    def _search_get_detail(self, website, order, options):
+        super_detail = super()._search_get_detail(website, order, options)
+
+        if options.get("searchType") != "customers":
+            return super_detail
+
+        industry = options.get("industry")
+        country = options.get("country")
+        tag_id = options.get("tag_id")
+
+        base_domain = [[('website_published', '=', True)], [('assigned_partner_id', '!=', False)]]
+
+        if industry:
+            base_domain.append([('industry_id', '=', self.env["ir.http"]._unslug(industry)[1])])
+        if country:
+            base_domain.append([('country_id', '=', self.env["ir.http"]._unslug(country)[1])])
+        if tag_id:
+            base_domain.append([('website_tag_ids', 'in', self.env["ir.http"]._unslug(tag_id)[1])])
+
+        return {
+            **super_detail,
+            "base_domain": base_domain,
+            "search_fields": ["name", "website_description"],
+            "group_name": self.env._("Customers"),
+        }
 
 class ResPartnerTag(models.Model):
     _name = 'res.partner.tag'

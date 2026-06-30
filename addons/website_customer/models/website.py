@@ -11,3 +11,9 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('References'), self.env['ir.http']._url_for('/customers'), 'website_customer'))
         return suggested_controllers
+    
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['customers']:
+            result.append(self.env['res.partner']._search_get_detail(self, order, options))
+        return result

@@ -8,19 +8,11 @@
                 <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
                     <h1 class="me-auto mb-0 h4">Our references</h1>
                     <div class="o_wcrm_search d-flex w-100 w-lg-25">
-                        <form action="" method="get" class="flex-grow-1">
-                            <div class="input-group" role="search">
-                                <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>
-                                <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
-                                    <i class="oi oi-search"/>
-                                </button>
-                            </div>
-                        </form>
-                        <button class="btn btn-light position-relative ms-2 d-lg-none"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#o_wc_offcanvas">
-                            <i class="fa fa-sliders"/>
-                        </button>
+                        <t t-call="website.website_search_box_input"
+                            search_type.f="customers"
+                            action="keep_partners_url(search=0)"
+                            limit.f="6"
+                        />
                     </div>
                 </section>
                 <!-- Off canvas filters on mobile-->
