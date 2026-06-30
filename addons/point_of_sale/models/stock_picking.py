@@ -97,7 +97,23 @@ class StockPicking(models.Model):
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
         confirmed_moves.picked = True
+        self._set_origin_returned_move_id(confirmed_moves, lines)
         self._link_owner_on_return_picking(lines)
+
+    def _set_origin_returned_move_id(self, moves, lines):
+        # Link the refund move to the original sale move so stock valuation
+        # values it at the original cost, like a backend return does.
+        refunded_orders = lines.order_id.refunded_order_ids
+        if not refunded_orders:
+            return
+        origin_moves_by_product = {}
+        for move in refunded_orders.picking_ids.move_ids.filtered(
+                lambda m: m.state == 'done' and m._is_out()):
+            origin_moves_by_product.setdefault(move.product_id.id, move)
+        for move in moves:
+            origin_move = origin_moves_by_product.get(move.product_id.id)
+            if origin_move:
+                move.origin_returned_move_id = origin_move.id
 
     def _link_owner_on_return_picking(self, lines):
         """This method tries to retrieve the owner of the returned product"""

@@ -268,6 +268,39 @@ class TestPoSStock(TestPoSCommon):
         expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id)])
         self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")
 
+    def test_refund_is_valued_at_original_sale_cost(self):
+        categ = self.env['product.category'].create({
+            'name': 'Refund valuation category',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        product = self.create_product('Refunded product', categ, 30.0, 15.0)
+        self.adjust_inventory([product], [1])
+
+        self.open_new_session()
+        order = self.env['pos.order'].create_from_ui(
+            [self.create_ui_order_data([(product, 1)])])
+        order = self.env['pos.order'].browse(order[0]['id'])
+        sale_move = order.picking_ids.move_ids
+
+        # Cost drifts up between the sale and the refund.
+        self.adjust_inventory([product], [10])
+        product.standard_price = 40.0
+
+        refund = order.refund()
+        refund = self.env['pos.order'].browse(refund['res_id'])
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_pm1.id,
+        }).with_context(**payment_context).check()
+
+        refund_move = refund.picking_ids.move_ids
+        self.assertEqual(refund_move.origin_returned_move_id, sale_move)
+        self.assertEqual(refund_move.stock_valuation_layer_ids.value, 15.0)
+
+        self.pos_session.action_pos_session_validate()
+
     def test_stock_user_without_pos_permissions_can_create_product(self):
         stock_manager = odoo.tests.common.new_test_user(
             self.env, 'temp_stock_manager', 'stock.group_stock_manager',
