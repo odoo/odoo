@@ -689,7 +689,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             values["main_object"] = category
         values["structured_data"] = products.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld()
         values.update(self._get_additional_shop_values(values, **post))
 
@@ -980,7 +980,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
         structured_data = product.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld(is_detail_page=True)
         keep = QueryURL(SHOP_PATH, **request.session.get("attribute_value_params", {}))
 

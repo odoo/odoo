@@ -19,6 +19,16 @@ class WebsiteCheckoutStep(models.Model):
     website_id = fields.Many2one("website", ondelete="cascade")
     show_in_breadcrumb = fields.Boolean(default=True)
 
+    def write(self, vals):
+        cache_outdated = "is_published" in vals and any(
+            step.is_published != vals["is_published"] for step in self
+        )
+        res = super().write(vals)
+        if cache_outdated:
+            # Invalidate next/previous breadcrumb steps
+            self.env.transaction.invalidate_ormcache()
+        return res
+
     @api.model
     def _get_step_by_href(self, href, website, *, additional_domain=None):
         domain = Domain([("step_href", "=", href), ("website_id", "=", website.id)])
