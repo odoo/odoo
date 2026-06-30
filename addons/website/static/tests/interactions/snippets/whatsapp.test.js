@@ -61,7 +61,7 @@ test("Drop Whatsapp snippet and verify redirection to company number", async () 
     await contains(".s_whatsapp_user_message").press("Enter");
 
     // Verify the opened URL
-    expect.verifySteps(["open https://wa.me/1234567890?text=Hello%2C%20I%20need%20help!"]);
+    expect.verifySteps(["open whatsapp://send/?phone=1234567890&text=Hello%2C%20I%20need%20help!&type=phone_number&app_absent=0"]);
 });
 
 test("Drop Whatsapp snippet and verify warning when no number is configured", async () => {
