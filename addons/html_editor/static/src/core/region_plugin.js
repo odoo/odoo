@@ -70,6 +70,8 @@ export class RegionPlugin extends Plugin {
      *   disabled as soon as one declaration says so;
      * - otherwise: the first matching declaration (in resource order) wins — a
      *   prioritized value.
+     * - a mix of both: the booleans win, e.g. `removable: false` overrides
+     *   `removable: "cascade"`.
      *
      * @param {Node} node
      * @param {string} name

@@ -2,13 +2,8 @@ import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { removableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
-import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
-import { isEditable } from "@html_builder/utils/utils";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
-
-/** @typedef {import("plugins").CSSSelector} CSSSelector */
 
 /**
  * @typedef { Object } RemoveShared
@@ -25,33 +20,7 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
  * @typedef {((toRemoveEl: HTMLElement) => void)[]} on_will_remove_handlers
  *
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_node_empty_predicates
- *
- * @typedef {CSSSelector[]} is_unremovable_selectors
  */
-
-const removableNodePredicates = [
-    (node) => {
-        if (!isEditable(node.parentNode)) {
-            return false;
-        }
-    },
-    ...deletePluginPredicates,
-    (node) => {
-        if (isUnremovableQWebElement(node)) {
-            return false;
-        }
-    },
-    (node) => {
-        if (node.parentNode.matches('[data-oe-type="image"]')) {
-            return false;
-        }
-    },
-];
-
-export function isRemovable(el) {
-    // TODO: This way of using preidcates is error-prone. Prefer using `checkPredicates`.
-    return removableNodePredicates.every((p) => p(el) ?? true);
-}
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
@@ -77,22 +46,10 @@ export class RemovePlugin extends Plugin {
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);
         this.overlayTarget = null;
-
-        const unremovableSelectors = [];
-        for (const unremovableSelector of this.getResource("is_unremovable_selectors")) {
-            unremovableSelectors.push(unremovableSelector);
-        }
-        if (unremovableSelectors.length) {
-            removableNodePredicates.push((node) => {
-                if (node.matches(unremovableSelectors.join(", "))) {
-                    return false;
-                }
-            });
-        }
     }
 
     getActiveOverlayButtons(target) {
-        if (!isRemovable(target)) {
+        if (!this.dependencies.builderOptions.isRemovable(target)) {
             this.overlayTarget = null;
             return [];
         }
@@ -119,7 +76,7 @@ export class RemovePlugin extends Plugin {
             !el.parentElement.classList.contains("carousel-item") &&
             (!optionsTargetEls.includes(el) ||
                 optionsTargetEls.some((targetEl) => targetEl.contains(el))) &&
-            isRemovable(el)
+            this.dependencies.builderOptions.isRemovable(el)
         );
     }
 

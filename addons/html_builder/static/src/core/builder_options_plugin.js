@@ -1,8 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
-import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
+import { getElementsWithOption, isEditable, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
@@ -61,6 +60,7 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
  * @property { BuilderOptionsPlugin['isClonable'] } isClonable
+ * @property { BuilderOptionsPlugin['isRemovable'] } isRemovable
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
  * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
@@ -128,7 +128,7 @@ import { omit } from "@web/core/utils/objects";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = ["operation", "domObserver", "history"];
+    static dependencies = ["operation", "domObserver", "history", "delete"];
     static shared = [
         "checkElement",
         "closestWithOption",
@@ -144,6 +144,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getBuilderOptionContext",
         "getBuilderOptions",
         "isClonable",
+        "isRemovable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -425,7 +426,7 @@ export class BuilderOptionsPlugin extends Plugin {
                         : {},
                     hideOverlay: Options.length && Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
-                    isRemovable: isRemovable(element),
+                    isRemovable: this.isRemovable(element),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
                     isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
@@ -605,7 +606,25 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     isClonable(el) {
         // TODO and isDraggable
-        return el.matches(this.clonableSelector) || isRemovable(el);
+        return el.matches(this.clonableSelector) || this.isRemovable(el);
+    }
+
+    /**
+     * Checks if the given element can be removed through the builder.
+     *
+     * `removeElement` fixes up the parent structure itself (e.g. removing the
+     * last column of a row removes the row too), so parts that are only
+     * unremovable on their own (`removable: "cascade"`) can be removed here.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isRemovable(el) {
+        return (
+            isEditable(el.parentNode) &&
+            !el.parentNode.matches('[data-oe-type="image"]') &&
+            !this.dependencies.delete.isUnremovable(el, { withParent: true })
+        );
     }
 
     /**
