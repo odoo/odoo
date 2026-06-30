@@ -2429,14 +2429,6 @@ class MrpProduction(models.Model):
                     'res_id': self.id,
                     'target': 'main',
                 }
-            else:
-                mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_allocation_report)
-                has_lines_to_assign = any(
-                    (m.product_id.is_storable and m.state != 'cancel' and m.picked and not m.move_dest_ids)
-                    for m in mos_to_show.move_finished_ids
-                )
-                if has_lines_to_assign and any(mo.show_allocation for mo in mos_to_show):
-                    another_action = mos_to_show.action_view_allocation_report()
             if report_actions:
                 return {
                     'type': 'ir.actions.client',
