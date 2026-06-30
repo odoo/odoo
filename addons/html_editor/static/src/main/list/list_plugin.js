@@ -184,6 +184,7 @@ export class ListPlugin extends Plugin {
         properties: [
             { predicate: `LI, LI > ${baseContainerGlobalSelector}`, hint: _t("List") },
             { predicate: (node) => closestElement(node, "LI"), powerButtons: false },
+            { predicate: isListItemElement, selectionPlaceholders: true },
         ],
 
         /** Handlers */
@@ -221,11 +222,6 @@ export class ListPlugin extends Plugin {
                         return true;
                     }
                 }
-            }
-        },
-        can_contain_selection_placeholder_predicates: (node) => {
-            if (isListItemElement(node)) {
-                return true;
             }
         },
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
