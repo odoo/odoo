@@ -1522,7 +1522,7 @@ class PosOrder(models.Model):
         Determine whether the order should be sent to preparation based
         on its payment status and the config's payment method configuration.
         """
-        return not self.config_id.has_valid_self_payment_method() or self.state == "paid"
+        return self.state == "paid"
 
     def _send_order(self):
         self.ensure_one()
