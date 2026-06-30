@@ -41,6 +41,9 @@ class CalendarEvent(models.Model):
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
+    microsoft_unsynced_partner_ids = fields.Many2many(
+        'res.partner', string="Attendees not synced with Outlook",
+        compute='_compute_microsoft_unsynced_partner_ids')
 
     @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
     def _compute_microsoft_sync_active(self):
@@ -52,6 +55,21 @@ class CalendarEvent(models.Model):
                 and not event.user_id.sudo().microsoft_synchronization_stopped
             )
             event.microsoft_sync_active = sync_active
+
+    @api.depends(
+        'partner_ids.user_ids.microsoft_calendar_rtoken',
+        'partner_ids.user_ids.microsoft_synchronization_stopped',
+    )
+    def _compute_microsoft_unsynced_partner_ids(self):
+        # Attendees that are Odoo users without an active Outlook synchronization.
+        for event in self:
+            event.microsoft_unsynced_partner_ids = event.partner_ids.filtered(
+                lambda partner: partner.user_ids and not any(
+                    user.sudo().microsoft_calendar_rtoken
+                    and not user.sudo().microsoft_synchronization_stopped
+                    for user in partner.user_ids
+                )
+            )
 
     @api.depends('microsoft_sync_active', 'recurrency')
     def _compute_user_can_edit(self):
