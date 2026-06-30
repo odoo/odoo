@@ -57,7 +57,12 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         let showLine = this.props.model.scale === "week";
         let worklocation = this.props.model.worklocations[parsedDate];
         if (!worklocation) {
-            return {...super.headerTemplateProps(date), showLine, userFilterActive: this.props.model.data.userFilterActive};
+            return {
+                ...super.headerTemplateProps(date),
+                showLine,
+                userFilterActive: this.props.model.data.userFilterActive,
+                hideWorkLocation: false,
+            };
         }
         const multiCalendar = this.props.model.multiCalendar;
         const workLocationSetForCurrentUser =
@@ -84,6 +89,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             worklocation : displayedWorkLocation,
             workLocationSetForCurrentUser,
             multiCalendar,
+            hideWorkLocation: false,
             showLine,
             userFilterActive: this.props.model.data.userFilterActive,
             iconMap: {
