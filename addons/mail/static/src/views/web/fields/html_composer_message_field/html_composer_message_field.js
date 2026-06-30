@@ -1,5 +1,6 @@
 import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { isEmpty } from "@html_editor/utils/dom_info";
+import { HtmlField } from "@html_editor/fields/html_field";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
@@ -69,6 +70,13 @@ export class HtmlComposerMessageField extends HtmlMailField {
             id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
         });
         return config;
+    }
+
+    async getEditorContent() {
+        if (this.props.record.data.subtype_is_log) {
+            return await HtmlField.prototype.getEditorContent.call(this);
+        }
+        return await super.getEditorContent();
     }
 
     getNoSignatureElContent() {
