@@ -1295,6 +1295,105 @@ class TestUpdateEvents(TestCommon):
                 ms_events_to_update[e.ms_organizer_event_id]["dateTime"]
             )
 
+    def test_update_microsoft_recurrence_relinks_orphaned_occurrences_by_timeslot(self):
+        """
+        A whole synced series is shifted in time from Outlook, which recreates its
+        occurrences locally and brings them back with brand-new Outlook ids.
+        """
+        recurrence = self.recurrence
+        master_id = recurrence.ms_organizer_event_id
+        base_event = recurrence.base_event_id
+        occurrences = recurrence.calendar_event_ids.sorted('start')
+
+        # arrange
+        occurrences.with_context(dont_notify=True).write({
+            'microsoft_id': False,
+            'microsoft_recurrence_master_id': False,
+            'need_sync_m': False,
+        })
+        base_event.with_context(dont_notify=True).write({'follow_recurrence': False})
+
+        # arrange: the Outlook instances come back at the same timeslots but with new ids
+        instances = MicrosoftEvent([
+            {
+                'id': f'NEWOCC_{i + 1}',
+                'iCalUId': f'NEWOCCU_{i + 1}',
+                'seriesMasterId': master_id,
+                'type': 'occurrence',
+                'start': {'dateTime': occ.start.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+                'end': {'dateTime': occ.stop.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+                'isAllDay': False,
+            }
+            for i, occ in enumerate(occurrences)
+        ])
+
+        # act
+        recurrence._update_microsoft_recurrence(None, instances)
+
+        # assert: every occurrence recovered its Microsoft link and recurrence master id
+        for occ in recurrence.calendar_event_ids:
+            self.assertTrue(occ.microsoft_id, "the occurrence should be re-linked to its Outlook instance")
+            self.assertEqual(occ.microsoft_recurrence_master_id, master_id)
+        # assert: the base event follows the recurrence again
+        self.assertTrue(base_event.follow_recurrence, "the re-linked base event should follow the recurrence")
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_rrule_of_recurrence_relinks_occurrences_when_ids_reassigned(self, mock_get_events):
+        """
+        The recurrence range of a synced series is extended from Outlook, which changes
+        its rrule and brings the occurrences back with reassigned Outlook ids.
+        """
+        nb_of_events = self.recurrent_events_count + 2
+        recurrence_values = self.recurrent_event_from_outlook_organizer[0]
+        # arrange: extend the recurrence range -> rrule UNTIL changes.
+        events = [{
+            **recurrence_values,
+            'recurrence': {
+                **recurrence_values['recurrence'],
+                'range': {
+                    **recurrence_values['recurrence']['range'],
+                    'endDate': (
+                        self.recurrence_end_date + timedelta(days=self.recurrent_event_interval * 2)
+                    ).strftime("%Y-%m-%d"),
+                },
+            },
+            'lastModifiedDateTime': _modified_date_in_the_future(self.recurrent_base_event),
+        }]
+        # arrange: Outlook returns every occurrence with a brand-new id.
+        events += [
+            {
+                **self.recurrent_event_from_outlook_organizer[1],
+                'id': f'NEWOCC_{i + 1}',
+                'iCalUId': f'NEWOCCU_{i + 1}',
+                'start': {
+                    'dateTime': (
+                        self.start_date + timedelta(days=i * self.recurrent_event_interval)
+                    ).strftime("%Y-%m-%dT%H:%M:%S.0000000"),
+                    'timeZone': 'UTC',
+                },
+                'end': {
+                    'dateTime': (
+                        self.end_date + timedelta(days=i * self.recurrent_event_interval)
+                    ).strftime("%Y-%m-%dT%H:%M:%S.0000000"),
+                    'timeZone': 'UTC',
+                },
+                'lastModifiedDateTime': _modified_date_in_the_future(self.recurrent_base_event),
+            }
+            for i in range(nb_of_events)
+        ]
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert: the recurrence spans the extended range and no occurrence is orphaned
+        recurrence = self.recurrence
+        occurrences = recurrence.calendar_event_ids
+        self.assertEqual(len(occurrences), nb_of_events, "the rrule change should have grown the occurrence set")
+        for occ in occurrences:
+            self.assertTrue(occ.microsoft_id, "occurrence must be re-linked, not orphaned, after the rrule change")
+            self.assertEqual(occ.microsoft_recurrence_master_id, 'REC123')
+
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_forbid_simple_event_become_recurrence_sync_on(self, mock_patch):
         """
