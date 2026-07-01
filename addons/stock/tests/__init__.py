@@ -26,3 +26,4 @@ from . import test_picking_tours
 from . import test_replenish
 from . import test_old_rules
 from . import test_overview_graph
+from . import test_stock_order_point
