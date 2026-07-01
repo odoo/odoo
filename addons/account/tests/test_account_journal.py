@@ -1,5 +1,6 @@
 from ast import literal_eval
 from unittest.mock import patch
+from collections import namedtuple
 
 from odoo.tools import hash_sign
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -583,3 +584,81 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             journal.default_account_id,
             ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory),
         )
+
+    def test_bank_journal_alias_statement_and_lines(self):
+        """ Test that an email to a bank journal alias creates a bank statement,
+            its lines, and correctly links the attachments to the statement.
+        """
+        MailAttachment = namedtuple('MailAttachment', ['fname', 'content'])
+        xml_content = b'<?xml version="1.0" encoding="UTF-8"?><Document>Statement Data</Document>'
+
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.write({'alias_name': 'bank_statements'})
+
+        message_parsed = {
+            'message_id': 'message-id-bank-test-001',
+            'message_type': 'email',
+            'subject': 'Incoming Bank Statement',
+            'email_from': 'bank@trusted-bank.com',
+            'to': f'bank_statements@{self.env.company.name}.com',
+            'body': '<p>Attached is the bank statement.</p>',
+            'attachments': [MailAttachment('bank_statement.xml', xml_content)],
+        }
+
+        def mock_create_document(journal, attachment_ids):
+            statement = self.env['account.bank.statement'].create({
+                'name': 'Bank Statement',
+                'journal_id': journal.id,
+            })
+
+            line1 = self.env['account.bank.statement.line'].create({
+                'statement_id': statement.id,
+                'journal_id': journal.id,
+                'payment_ref': 'Incoming Transfer A',
+                'date': '2026-03-01',
+                'amount': 500.0,
+            })
+            line2 = self.env['account.bank.statement.line'].create({
+                'statement_id': statement.id,
+                'journal_id': journal.id,
+                'payment_ref': 'Incoming Transfer B',
+                'date': '2026-03-02',
+                'amount': 250.0,
+            })
+
+            attachments = self.env['ir.attachment'].browse(attachment_ids)
+            attachments.write({
+                'res_model': 'account.bank.statement',
+                'res_id': statement.id,
+            })
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.bank.statement.line',
+                'domain': [('statement_id', 'in', statement.ids)]
+            }
+
+        with patch.object(type(self.env['account.journal']), 'create_document_from_attachment', mock_create_document):
+            record = bank_journal.message_new(message_parsed, custom_values={'journal_id': bank_journal.id})
+
+        statement = self.env['account.bank.statement'].search([('name', '=', 'Bank Statement')])
+        self.assertEqual(len(statement), 1, "The Bank Statement should be created.")
+        self.assertEqual(statement.journal_id, bank_journal)
+
+        self.assertEqual(len(statement.line_ids), 2, "The statement should contain exactly two lines.")
+        self.assertSetEqual(
+            set(statement.line_ids.mapped('payment_ref')),
+            {'Incoming Transfer A', 'Incoming Transfer B'},
+            "The statement lines must contain the correct payment references."
+        )
+
+        created_attachments = self.env['ir.attachment'].search([('name', '=', 'bank_statement.xml')])
+        self.assertEqual(len(created_attachments), 1, "The attachment should be extracted and saved.")
+        self.assertEqual(created_attachments.res_model, 'account.bank.statement',
+                         "Attachment must be linked to the statement model.")
+        self.assertEqual(created_attachments.res_id, statement.id,
+                         "Attachment must be linked to the correct statement ID.")
+
+        self.assertTrue(record)
+        self.assertEqual(record._name, 'account.bank.statement.line')
+        self.assertEqual(record.statement_id, statement, "The returned line must belong to the created statement.")
