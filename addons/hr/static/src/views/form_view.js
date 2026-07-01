@@ -5,12 +5,15 @@ import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { ContractEndDialog } from "@hr/components/contract_end_dialog/contract_end_dialog";
+import { MultiVersionUpdateConfirmationDialog } from "./form/multi_version_update_confirmation_dialog";
 
 export class EmployeeFormController extends FormController {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
+        this.orm = useService('orm');
         this.pendingNewContract = null;
+        console.log('a');
     }
 
     async onWillSaveRecord(record, changes) {
@@ -20,6 +23,11 @@ export class EmployeeFormController extends FormController {
         const previousContractDateEnd = record._values?.contract_date_end;
         const hasDeparture = record.data.departure_id;
 
+        let ver_ids = await this.orm.read('hr.employee', [record._values.employee_id.id], ['version_ids'])
+        ver_ids = ver_ids[0].version_ids
+        if ( record._values.version_id.id !== ver_ids.at(-1)) {
+            this.dialogService.add(MultiVersionUpdateConfirmationDialog, {});
+        }
         if (
             previousContractDateStart !== contractDateStart 
             || previousContractDateEnd === contractDateEnd
@@ -29,7 +37,6 @@ export class EmployeeFormController extends FormController {
         ) {
             return true;
         }
-
         return new Promise((resolve) => {
             this.dialogService.add(ContractEndDialog, {
                 record: record,

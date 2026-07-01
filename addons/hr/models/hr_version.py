@@ -313,6 +313,12 @@ class HrVersion(models.Model):
                 )
 
     def write(self, vals):
+        modified_field_names = list(vals.keys() - ['last_modified_date', 'last_modified_uid'])
+        old_values = [getattr(self, field) for field in modified_field_names]
+        new_values = [self.env[self.env['ir.model.fields'].search([('model', '=', 'hr.version'), ('name', '=', field)]).relation].browse(vals[field]) if self.env['ir.model.fields'].search([('model', '=', 'hr.version'), ('name', '=', field)]).relation else vals[field] for field in modified_field_names]
+        changes = {modified_field_names[i]: (old_values[i], new_values[i]) for i in range(len(modified_field_names)) if old_values[i] != new_values[i]}
+
+
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:
