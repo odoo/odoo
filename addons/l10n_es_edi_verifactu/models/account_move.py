@@ -74,6 +74,15 @@ class AccountMove(models.Model):
         string="Veri*Factu Refund Reason",
         copy=False,
     )
+    l10n_es_original_invoice_credited = fields.Char(
+        string='Original Invoice Credited',
+        store=True,
+        copy=False,
+    )
+    l10n_es_original_invoice_credited_date = fields.Date(
+        string="Original Invoice Credited Date",
+        copy=False,
+    )
 
     @api.model
     def _l10n_es_edi_verifactu_clave_regimen_selection(self):
@@ -308,6 +317,10 @@ class AccountMove(models.Model):
             'partner': self.commercial_partner_id,
             'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
             'refunded_document': reversed_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'external_credited_invoice': self.l10n_es_original_invoice_credited,
+            'external_credited_invoice_date': self.l10n_es_original_invoice_credited_date,
+            'has_external_credited_reference': bool(
+                self.l10n_es_original_invoice_credited and self.l10n_es_original_invoice_credited_date),
             'substituted_document': substituted_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
             'substituted_document_reversal_document': substituted_move.reversal_move_ids.l10n_es_edi_verifactu_document_ids._get_last('submission'),
             'documents': documents,
