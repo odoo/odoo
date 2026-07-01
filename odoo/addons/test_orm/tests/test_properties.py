@@ -1673,6 +1673,25 @@ class PropertiesCase(TestPropertiesMixin):
                 'string': 'Color Code',
                 'default': 'blue',
                 'value': 'red',
+            },
+            {
+                'name': 'discussion_color_size',
+                'type': 'selection',
+                'string': 'Color Size',
+                'selection': [
+                    ('small', 'Small'),
+                    ('medium', 'Medium'),
+                    ('large', 'Large'),
+                ],
+                'default': 'medium',
+                'value': 'small',
+                'definition_changed': True,
+            },
+            {
+                'name': 'discussion_color_partner_ids',
+                'type': 'many2many',
+                'comodel': 'test_orm.partner',
+                'string': 'Color Partner',
             }],
         })
 
@@ -1688,6 +1707,17 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(email['attributes']['discussion_color_code'], 'red')
         action.with_context(active_id=email.id).run()
         self.assertEqual(email['attributes']['discussion_color_code'], 'green')
+
+        action.update_path = 'attributes.discussion_color_size'
+        action.value = 'large'
+        self.assertEqual(email['attributes']['discussion_color_size'], 'small')
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_size'], 'large')
+
+        action.update_path = 'attributes.discussion_color_partner_ids'
+        action.resource_ref = self.partner_2
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_partner_ids'], self.partner_2)
 
     def test_getitem_property(self):
         # read a property that exist nowhere

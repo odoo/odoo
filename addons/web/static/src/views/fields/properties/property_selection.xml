@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertySelectionField">
+        <div class="o_field_property_selection o_field_widget">
+            <select class="o_input" t-on-change="event => this.onValueChange(event.target.value)"
+                t-att-id="this.props.id" >
+                <option t-att-value="false" />
+                <t t-foreach="this.selectionItems()" t-as="option" t-key="option[0]">
+                    <option
+                        t-att-selected="option[0] === this.selectedValue()"
+                        t-att-value="option[0]"
+                        t-out="option[1]"
+                    />
+                </t>
+            </select>
+        </div>
+    </t>
+</templates>
