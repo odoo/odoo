@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
-    static dependencies = [];
+    static dependencies = ["dropzone"];
     static shared = ["getTemplatePrefix"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -32,6 +32,7 @@ export class MegaMenuOptionPlugin extends Plugin {
         },
     };
 
+
     getTemplatePrefix() {
         return "website.";
     }
@@ -54,7 +55,10 @@ export class MegaMenuOptionPlugin extends Plugin {
                     mega_menu_classes: classes.join(" "),
                 })
             );
+            const selectors = this.dependencies.dropzone.getSelectors(megaMenuEl);
+            this.dependencies.dropzone.activateDropzones(selectors);
         }
+
         await Promise.all(proms);
     }
 }

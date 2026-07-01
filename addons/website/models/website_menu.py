@@ -51,7 +51,7 @@ class WebsiteMenu(models.Model):
         for menu in self:
             if menu.is_mega_menu:
                 if not menu.mega_menu_content:
-                    menu.mega_menu_content = (menu.website_id or self.env.website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_dropzone')
+                    menu.mega_menu_content = (menu.website_id or self.env.website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
             else:
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False

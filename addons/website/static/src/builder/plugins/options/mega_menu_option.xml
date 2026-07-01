@@ -6,14 +6,6 @@
     <BuilderRow label.translate="Template">
         <BuilderSelect id="'mega_menu_template_opt'" action="'selectTemplate'">
             <BuilderSelectItem
-                title.translate="Dropzone Menu"
-                actionParam="{
-                    view: `${templatePrefix}s_mega_menu_dropzone`,
-                    templateClass: 's_mega_menu_dropzone',
-                }">
-                <Image class="'w-75 m-auto'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem
                 title.translate="Multi Menus"
                 actionParam="{
                     view: `${templatePrefix}s_mega_menu_multi_menus`,
@@ -84,6 +76,14 @@
                     templateClass: 's_mega_menu_cards',
                 }">
                 <Image class="'w-75 m-auto'" style="'margin-block: -0.25em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Dropzone Menu"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_dropzone`,
+                    templateClass: 's_mega_menu_dropzone',
+                }">
+                <Image class="'w-75 m-auto'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg'"/>
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
