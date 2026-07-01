@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-30 09:33+0000\n"
+"PO-Revision-Date: 2026-06-09 15:30+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/de/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -380,7 +380,7 @@ msgstr "(object._get_report_base_filename())"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
 msgid "+ Add Section"
-msgstr ""
+msgstr "+ Abschnitt hinzufügen"
 
 #. module: account
 #. odoo-python
@@ -2464,6 +2464,8 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
+"In diesem Land gibt es bereits eine Steuerposition mit ausländischer USt-"
+"IdNr."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3710,7 +3712,7 @@ msgstr "Alle nicht abgestimmten Kontoauszugszeilen vor dem ausgewählten Datum."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Ausländische USt-IdNr. erlauben"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4185,7 +4187,7 @@ msgstr "Gilt nur, wenn das Lieferland übereinstimmt."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "Nur anwenden, wenn der Partner eine USt-IdNr. hat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4193,6 +4195,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"Steuer- & Kontenzuordnung auf Rechnungen automatisch anwenden, wenn die "
+"Übereinstimmungskriterien (USt-IdNr./Land) erfüllt sind."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -5165,6 +5169,11 @@ msgid ""
 "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
 "adjustments without affecting local statutory accounts."
 msgstr ""
+"Standardmäßig werden alle Journalbuchungen im gesetzlichen Hauptbuch (nach "
+"den lokalen Rechnungslegungsvorschriften) verbucht. \n"
+"Durch die Angabe eines Hauptbuchs können Sie IFRS-, Steuer- oder "
+"konzerninterne Anpassungen isolieren, ohne die lokalen gesetzlichen Konten "
+"zu beeinflussen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -6223,7 +6232,7 @@ msgstr "Kosten für Büromöbel, Einrichtungsgegenstände und Geschäftsmaterial
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Umsatzkosten"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -6287,7 +6296,7 @@ msgstr "Gegenbuchungen"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "Länder, für die das Unternehmen eine USt-IdNr. hat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -6383,7 +6392,7 @@ msgstr "Eine E-Mail-Vorlage erstellen"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create a bill manually"
-msgstr ""
+msgstr "Rechnung manuell erstellen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -6522,7 +6531,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create manually"
-msgstr ""
+msgstr "Manuell erstellen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9462,7 +9471,7 @@ msgstr "Ausländische USt-IdNr."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "Länder mit ausländischer USt-IdNr."
 
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
@@ -12863,7 +12872,7 @@ msgstr "Monatlich"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
 msgid "More precision on Product Prices"
-msgstr ""
+msgstr "Höhere Genauigkeit bei den Produktpreisen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -17145,7 +17154,7 @@ msgstr "Unveränderlichkeitsfunktionen anzeigen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "Lieferantenrechnung anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -17957,7 +17966,7 @@ msgstr "USt-IdNr."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "USt-IdNr. erforderlich"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
@@ -18783,6 +18792,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Das Land der ausländischen USt-IdNr. konnte nicht ermittelt werden. Bitte "
+"weisen Sie den Steuerpositionen ein Land zu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19774,6 +19785,9 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"Dieser Vorgang kann nicht rückgängig gemacht werden: Das Haben/Soll kann von "
+"diesem Bildschirm aus nicht mehr geändert werden.  -  Dieser Vorgang wirkt "
+"sich nur auf Ihr aktuelles Unternehmen aus."
 
 #. module: account
 #. odoo-python
@@ -19870,6 +19884,8 @@ msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Diese Buchung wurde bereits geprüft. Sie benötigen die Rolle "
+"„Buchhaltungsmanager“, um sie zu ändern."
 
 #. module: account
 #. odoo-python
@@ -19889,6 +19905,8 @@ msgstr "Der Eintrag wurde dupliziert aus %s"
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Diese Buchung wurde geprüft. Sie benötigen die Rolle „Buchhalter“, um sie zu "
+"ändern."
 
 #. module: account
 #. odoo-python
@@ -21789,6 +21807,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Sie können in Ihrem Steuerland keine Steuerposition mit einer ausländischen "
+"USt-IdNr. erstellen, ohne ihr ein Bundesland zuzuweisen."
 
 #. module: account
 #. odoo-python
@@ -22451,7 +22471,7 @@ msgstr "und werden nicht automatisch gebucht."
 #. odoo-javascript
 #: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "werden in der Vorschau nicht angezeigt"
 
 #. module: account
 #. odoo-javascript
@@ -22562,7 +22582,7 @@ msgstr "z. B. Bankgebühren"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 msgid "e.g. CONSO, IFRS, ..."
-msgstr ""
+msgstr "z. B. CONSO, IFRS …"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -22674,7 +22694,7 @@ msgstr "in_invoice"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "Rechnung(en)"
 
 #. module: account
 #. odoo-python
@@ -22852,7 +22872,7 @@ msgstr ", um die Steuern für dieses Land zu erstellen."
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "unsere Beispielrechnung ausprobieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
