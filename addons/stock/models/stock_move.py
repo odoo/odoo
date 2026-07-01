@@ -763,7 +763,10 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     @api.model_create_multi
     def create(self, vals_list):
+        lot_ids = []
         for vals in vals_list:
+            if vals.get('lot_ids'):
+                lot_ids.extend(self._fields['lot_ids'].convert_to_cache(vals['lot_ids'], self))
             if vals.get('move_line_ids') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
@@ -771,7 +774,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                 vals['state'] = 'done'
             if vals.get('state') == 'done':
                 vals['picked'] = True
-        res = super().create(vals_list)
+        if self.env.context.get('default_is_scrap') and lot_ids:
+            res = super(StockMove, self.with_context(scrap_creation_lot_ids=lot_ids)).create(vals_list)
+        else:
+            res = super().create(vals_list)
         res._update_orderpoints()
         res._set_references()
         return res
@@ -2420,7 +2426,14 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         # First reserve on quants
         if self.uom_id.compare(_move_qty(qty), 0.0) > 0:
-            quants = self.env['stock.quant']._get_reserve_quantity(self.product_id, self.location_id, total_qty)
+            scrap_creation_lot_ids = self.env.context.get('scrap_creation_lot_ids')
+            if scrap_creation_lot_ids:
+                lot_ids = self.env['stock.lot'].search([('id', 'in', scrap_creation_lot_ids)])
+                quants = []
+                for lot_id in lot_ids:
+                    quants += self.env['stock.quant']._get_reserve_quantity(self.product_id, self.location_id, total_qty, lot_id=lot_id)
+            else:
+                quants = self.env['stock.quant']._get_reserve_quantity(self.product_id, self.location_id, total_qty)
             for quant, avail_qty in quants:
                 if quant.id in consumed_quant:
                     continue
