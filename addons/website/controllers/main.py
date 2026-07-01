@@ -706,9 +706,13 @@ class Website(Home):
             if color
         )
         root_variables += self._get_configurator_preview_color_combination_text_variables(final_html, palette)
+        # Chrome may show thin gaps between sections in scaled iframes. The
+        # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
+            '.o_we_shape{top:-2px;bottom:-2px;}'
+            'section{margin-top:-2px;}'
             '</style>'
         )
 
