@@ -285,7 +285,9 @@ export class CalendarController extends Component {
 
     getQuickCreateFormViewProps(record) {
         const rawRecord = this.model.buildRawRecord(record);
-        const context = this.model.makeContextDefaults(rawRecord);
+        const context = this.model.makeContextDefaults(rawRecord, {
+            implicitEnd: !record.end?.isValid,
+        });
         return {
             resModel: this.model.resModel,
             viewId: this.model.quickCreateFormViewId,
@@ -358,7 +360,9 @@ export class CalendarController extends Component {
     }
     editRecordInCreation(record) {
         const rawRecord = this.model.buildRawRecord(record);
-        const context = this.model.makeContextDefaults(rawRecord);
+        const context = this.model.makeContextDefaults(rawRecord, {
+            implicitEnd: !record.end?.isValid,
+        });
         return this.editRecord(record, context);
     }
 
