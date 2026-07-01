@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resource_calendar_form_view_inherit_hr" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_calendar_form" />
+        <field name="model">resource.calendar</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">resource_calendar_form</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from odoo.tools import format_time
 from odoo.tools.date_utils import float_to_time
 from odoo.tools.misc import format_duration
@@ -20,7 +21,7 @@ class ResourceCalendarAttendance(models.Model):
     @api.depends('calendar_id.company_id')
     def _compute_allowed_work_entry_type_ids(self):
         for attendance in self:
-            country = attendance.calendar_id.company_id.country_id or self.env.company.country_id
+            country = attendance.calendar_id.company_id.sudo().country_id
             if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
@@ -48,6 +49,20 @@ class ResourceCalendarAttendance(models.Model):
     @classmethod
     def _to_dict_fields(cls):
         return super()._to_dict_fields() + ['work_entry_type_id']
+
+    @api.constrains('work_entry_type_id')
+    def _check_work_entry_type_id(self):
+        for attendance in self:
+            if not attendance.calendar_id.company_id and attendance.work_entry_type_id.country_id:
+                raise ValidationError(self.env._("A working schedule not linked to a company cannot have a country defined on one of its work entry types."))
+
+            if attendance.calendar_id.company_id and any(country_id and country_id != attendance.calendar_id.company_id.country_id for country_id in attendance.work_entry_type_id.mapped('country_id')):
+                raise ValidationError(self.env._("The country of the work entry types linked to the attendances must be the same as the company's country."))
+
+    def _copy_attendance_vals(self):
+        res = super()._copy_attendance_vals()
+        res['work_entry_type_id'] = self.work_entry_type_id.id
+        return res
 
     def _is_work_period(self):
         self.ensure_one()
