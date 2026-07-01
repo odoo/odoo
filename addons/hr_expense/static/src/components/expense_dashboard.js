@@ -12,17 +12,10 @@ export class ExpenseDashboard extends Component {
         this.orm = useService('orm');
         this.actionService = useService("action");
 
-        this.state = proxy({
-            expenses: {}
-        });
+        this.state = proxy({ expenses: {} });
 
-        onWillStart(async () => {
-            await this.fetchExpenseDashboardData();
-        });
-
-        onWillUpdateProps(async () => {
-            await this.fetchExpenseDashboardData();
-        });
+        onWillStart(async () => { await this.fetchExpenseDashboardData(); });
+        onWillUpdateProps(async () => { await this.fetchExpenseDashboardData(); });
     }
 
     renderMonetaryField(value, currency_id) {
@@ -31,11 +24,17 @@ export class ExpenseDashboard extends Component {
 
     async fetchExpenseDashboardData() {
         const domain = this.env.searchModel?.domain ?? [];
-        const expense_states = await this.orm.call(
-            "hr.expense",
-            'get_expense_dashboard',
-            [domain],
-        );
+        const expense_states = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (freshData, hasChanged) => {
+                    if (hasChanged) {
+                        this.state.expenses = freshData;
+                    }
+                },
+            })
+            .call("hr.expense", 'get_expense_dashboard', [domain]);
 
         this.state.expenses = expense_states;
     }
