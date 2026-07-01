@@ -215,12 +215,8 @@ class CalendarAttendee(models.Model):
         # batch sending at the end
         if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
-            notified_events = self.env['calendar.event']
-            bodies = {}
             for event, attendees in notified_attendees_per_event.items():
-                notified_events |= event
-                bodies.update({event.id: Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees)})
-            notified_events._message_log_batch(bodies=bodies)
+                event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
 
     @api.model
     def _generate_notified_attendees_html_list(self, attendees):
