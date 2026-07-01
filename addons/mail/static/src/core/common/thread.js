@@ -565,18 +565,21 @@ export class Thread extends Component {
         this.props.thread.isFocusedByThread = false;
     }
 
-    async onParentMessageClick(parentMessage) {
-        if (!parentMessage) {
+    /**
+     * @type {ReturnType<typeof import("@mail/core/common/message_in_reply").onParentMessageClickType>["type"]}
+     */
+    async onParentMessageClick(ev, { parentAtRender }) {
+        if (!parentAtRender) {
             return;
         }
-        const targetThread = parentMessage.thread;
+        const targetThread = parentAtRender.thread;
         if (!targetThread) {
             return;
         }
         if (targetThread.eq(this.props.thread)) {
-            this.env.messageHighlight?.highlightMessage(parentMessage, targetThread);
+            this.env.messageHighlight?.highlightMessage(parentAtRender, targetThread);
         } else {
-            targetThread.highlightMessage = parentMessage;
+            targetThread.highlightMessage = parentAtRender;
             await targetThread.open({ focus: true });
         }
     }

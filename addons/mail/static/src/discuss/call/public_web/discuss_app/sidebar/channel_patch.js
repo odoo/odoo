@@ -10,16 +10,16 @@ patch(DiscussSidebarChannel.prototype, {
     get attClass() {
         return {
             ...super.attClass,
-            "o-ongoingCall": this.channel.hasRtcSessionActive,
+            "o-ongoingCall": this.channel().hasRtcSessionActive,
         };
     },
     get attClassContainer() {
         return {
             ...super.attClassContainer,
-            "o-selfInCall": this.store.rtc.selfSession?.in(this.channel.rtc_session_ids),
+            "o-selfInCall": this.store.rtc.selfSession?.in(this.channel().rtc_session_ids),
         };
     },
     get bordered() {
-        return super.bordered || this.channel.hasRtcSessionActive;
+        return super.bordered || this.channel().hasRtcSessionActive;
     },
 });

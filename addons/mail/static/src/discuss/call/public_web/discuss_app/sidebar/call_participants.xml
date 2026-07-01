@@ -17,10 +17,10 @@
     <t t-name="mail.DiscussSidebarCallParticipants.main">
         <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-custom-ref="root" t-att-class="{
             'justify-content-center': this.compact,
-            'ps-3 pe-2': this.props.compact === undefined and !this.compact,
-            'px-2': this.props.compact === false,
-            'rounded-3': this.props.compact === undefined,
-            'opacity-75': this.props.channel.notEq(this.rtc.channel) and this.compact,
+            'ps-3 pe-2': this.compactProp() === undefined and !this.compact,
+            'px-2': this.compactProp() === false,
+            'rounded-3': this.compactProp() === undefined,
+            'opacity-75': this.channel().notEq(this.rtc.channel) and this.compact,
         }">
             <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="this.toggleFn(this.expanded)">
                 <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.expanded(), 'oi-chevron-down': this.expanded()}" t-att-title="this.title"/>

@@ -7,7 +7,8 @@
                 'o-green': this.message().parent_id.bubbleColor === 'green',
                 'o-orange': this.message().parent_id.bubbleColor === 'orange',
             }">
-                <span class="d-inline-flex align-items-center" t-att-class="{ 'cursor-pointer': this.onClick }" t-on-click="() => this.onClick?.(this.message().parent_id)">
+                <t t-set="parentAtRender" t-value="this.message().parent_id"/>
+                <span class="d-inline-flex align-items-center" t-att-class="{ 'cursor-pointer': this.onClick }" t-on-click="(ev) => this.onClick?.(ev, { parentAtRender })">
                     <t t-if="!this.message().parent_id.isEmpty">
                         <img class="o-mail-MessageInReply-avatar me-2 rounded object-fit-cover" t-att-src="this.authorAvatarUrl" t-att-title="this.message().parent_id.authorName" alt="Avatar"/>
                         <span class="o-mail-MessageInReply-content o_line_clamp smaller">

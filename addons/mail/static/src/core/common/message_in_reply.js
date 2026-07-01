@@ -5,6 +5,13 @@ import { Component, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
+/** @param {import("models").Store} store */
+export const onParentMessageClickType = (store) =>
+    t.function([
+        t.instanceOf(MouseEvent),
+        t.object({ parentAtRender: t.instanceOf(store["mail.message"].Class) }),
+    ]);
+
 export class MessageInReply extends Component {
     static template = "mail.MessageInReply";
 
@@ -13,10 +20,7 @@ export class MessageInReply extends Component {
         this.store = useService("mail.store");
         this.class = propComputed("class", t.string().optional(""));
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
-        this.onClick = props.static(
-            "onClick",
-            t.function([t.instanceOf(this.store["mail.message"].Class)]).optional()
-        );
+        this.onClick = props.static("onClick", onParentMessageClickType(this.store).optional());
     }
 
     get authorAvatarUrl() {

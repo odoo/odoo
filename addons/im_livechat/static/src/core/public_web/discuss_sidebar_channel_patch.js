@@ -11,7 +11,7 @@ const discussSidebarChannelPatch = {
         super.setup(...arguments);
         this.helpState = proxy({ text: "" });
         useDynamicInterval(() => {
-            const dt = this.channel.livechat_looking_for_help_since_dt;
+            const dt = this.channel().livechat_looking_for_help_since_dt;
             if (!dt) {
                 return;
             }

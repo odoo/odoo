@@ -7,6 +7,13 @@ import { props, types } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
+/** @param {import("models").Store} store */
+export const onViewMeetingType = (store) =>
+    types.function([
+        types.instanceOf(MouseEvent),
+        types.object({ eventAtRender: types.instanceOf(store["calendar.event"].Class) }),
+    ]);
+
 export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopoverItem {
     static components = {
         ...ActivityListPopoverItem.components,
@@ -21,7 +28,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
         this.onClickDone = this.onClickDone.bind(this);
         this.calendarProps = props({
             onRemoveActivityItem: types.function([types.number()]),
-            onViewMeeting: types.function([types.instanceOf(this.store["calendar.event"].Class)]),
+            onViewMeeting: onViewMeetingType(this.store),
         });
         this.action = useService("action");
         this.orm = useService("orm");

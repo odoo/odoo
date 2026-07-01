@@ -1,8 +1,9 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
+import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -16,43 +17,46 @@ export class ChannelMember extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            member: types.instanceOf(this.store["discuss.channel.member"].Class),
-        });
-        this.actions = useChannelMemberActions({ member: () => this.props.member });
+        this.member = propComputed(
+            "member",
+            t.instanceOf(this.store["discuss.channel.member"].Class)
+        );
+        this.actions = useChannelMemberActions({ member: this.member });
         this.showingActions = useDropdownState();
     }
 
-    /** @return {import("models").ChannelMember} */
-    get member() {
-        return this.props.member;
-    }
-
-    get isClickable() {
-        return this.canOpenChat;
+    /** @param {import("models").ChannelMember} member */
+    isClickable(member) {
+        return this.canOpenChat(member);
     }
 
     get attClass() {
         return {
-            "cursor-pointer": this.isClickable,
-            "o-offline": this.member.imStatusUI === "offline",
+            "cursor-pointer": this.isClickable(this.member()),
+            "o-offline": this.member().imStatusUI === "offline",
         };
     }
 
-    get canOpenChat() {
+    /** @param {import("models").ChannelMember} member */
+    canOpenChat(member) {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (this.member.partner_id?.main_user_id) {
+        if (member.partner_id?.main_user_id) {
             return true;
         }
         return false;
     }
 
-    onClickAvatar(ev) {
-        if (!this.isClickable) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {Object} param1
+     * @param {import("models").ChannelMember} param1.memberAtRender
+     */
+    onClickAvatar(ev, { memberAtRender }) {
+        if (!this.isClickable(memberAtRender)) {
             return;
         }
-        this.store.openChat({ partnerId: this.member.partner_id.id });
+        this.store.openChat({ partnerId: memberAtRender.partner_id.id });
     }
 }
