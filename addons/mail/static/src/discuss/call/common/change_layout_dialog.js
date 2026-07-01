@@ -1,6 +1,6 @@
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, t, useEffect } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -33,6 +33,11 @@ export class ChangeLayoutDialog extends Component {
             close: t.function([]).optional(),
         });
         this.rtc = useService("discuss.rtc");
+        useEffect(() => {
+            if (!this.props.channel.isSelfInCall) {
+                this.props.close?.();
+            }
+        });
     }
 
     /** @returns {LayoutOption[]} selectable layout options, in display order. */
