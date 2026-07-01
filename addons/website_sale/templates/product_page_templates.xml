@@ -26,16 +26,18 @@
         <t t-call="website.layout" additional_title="product.name">
             <div id="wrap" class="o_wsale_product_page" t-att-data-has-available-uoms="has_available_uoms">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="Drag blocks here to add them on all products"/>
-                <section id="product_detail"
-                         t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
-                            if combination_info['has_discounted_price'] else ''}
-                            {{website._get_product_page_container() == 'regular' and 'o_wsale_container_lg container-lg' or (website._get_product_page_container() == 'fluid' and 'o_wsale_container_fluid container-fluid' or false)}}
-                            o_wsale_product_page_opt_image_width_{{website.product_page_image_width}}
-                            o_wsale_product_page_opt_image_ratio_{{website.product_page_image_ratio}}
-                            o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
-                            o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
-                         "
-                         t-att-data-view-track="view_track and '1' or '0'"
+                <section
+                    id="product_detail"
+                    data-anchor="true"
+                    t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
+                       if combination_info['has_discounted_price'] else ''}
+                       {{website._get_product_page_container() == 'regular' and 'o_wsale_container_lg container-lg' or (website._get_product_page_container() == 'fluid' and 'o_wsale_container_fluid container-fluid' or false)}}
+                       o_wsale_product_page_opt_image_width_{{website.product_page_image_width}}
+                       o_wsale_product_page_opt_image_ratio_{{website.product_page_image_ratio}}
+                       o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
+                       o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
+                    "
+                    t-att-data-view-track="view_track and '1' or '0'"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
                         <div class="d-flex align-items-center flex-grow-1">
@@ -849,13 +851,17 @@
     >
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating border-top" data-anchor='true'>
-                <section id="o_product_page_reviews" class="container pt48 pb48" data-anchor='true'>
-                    <a class="o_product_page_reviews_title d-flex justify-content-between text-reset text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
-                        <h2 class="fs-4 mb-0">Customer Reviews</h2>
-                        <i class="oi align-self-center"/>
-                    </a>
-                    <div id="o_product_page_reviews_content" class="collapse mt-3">
-                        <t t-call="portal.message_thread"
+                <section
+                    id="o_product_page_reviews"
+                    class="container pt48 pb48"
+                    data-anchor='true'
+                >
+                    <div class="o_product_page_reviews_title mb-4">
+                        <h3>Reviews</h3>
+                    </div>
+                    <div id="o_product_page_reviews_content">
+                        <t
+                            t-call="portal.message_thread"
                             object="product"
                             display_rating="True"
                             hide_header="True"

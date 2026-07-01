@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Composer-coreMain')]" position="before">
-            <div t-if="this.env.displayRating and !this.message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
+            <div t-if="this.displayRating and !this.message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
                 <div class="o-mail-Composer-stars enabled cursor-pointer" t-on-mouseleave="this.onMouseLeaveStar">
                     <t t-set="index" t-value="0" />
                     <t t-foreach="Array(this.visibleRatingValue)" t-as="num" t-key="num_index">

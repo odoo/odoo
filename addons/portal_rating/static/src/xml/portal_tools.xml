@@ -15,54 +15,80 @@
                 <i class="fa fa-star-half-o" role="img"></i>
             </t>
             <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
-                <i class="fa fa-star text-black-25" role="img"></i>
+                <i class="fa fa-star-o text-black-25" role="img"></i>
             </t>
         </div>
     </t>
 
     <t t-name="portal_rating.rating_card">
-        <div class="row o_website_rating_card_container justify-content-center text-body">
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="rating_stats.total">
-                <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
-                <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
-                    <span class="h1"><t t-out="Math.round(rating_stats.avg * 100) / 100"/></span>
-                    <t t-call="portal_rating.rating_stars_static" val="rating_stats.avg || 0"/>
-                    <span class="fa fa-comments" />
-                    <span class="px-1"> <t t-out="rating_stats.total"/> </span>
-                    comments
+        <div class="o_website_rating_card_container sticky-top">
+            <t t-set="total_rating_stats" t-value="rating_stats ? rating_stats.total : 0"/>
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="display-3 fw-bold lh-1">
+                        <t t-out="rating_stats ? rating_stats.avg.toFixed(1) : 0"/>
+                    </div>
+                    <div>
+                        <div class="fs-3">
+                            <t
+                                t-call="portal_rating.rating_stars_static"
+                                val="rating_stats ? rating_stats.avg : 0"
+                                inline_mode="true"
+                            />
+                        </div>
+                        <span class="text-muted">
+                            <t t-out="total_rating_stats"/>
+                            <t t-if="total_rating_stats == 1"> review</t>
+                            <t t-else=""> reviews</t>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-7'}" t-if="rating_stats.total">
-                <hr t-if="two_columns" class="o-discuss-separator flex-grow-1"/>
-                <p t-if="!two_columns"><strong>Details</strong></p>
-                <table t-attf-class="o_website_rating_table">
-                    <t t-set="percents" t-value="rating_stats['percent']"/>
+                <div class="o_website_rating_table d-flex flex-column gap-1 w-100">
+                    <t t-set="percents" t-value="rating_stats ? rating_stats['percent'] : {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}"/>
                     <t t-foreach="Object.keys(percents).sort((a, b) => b - a)" t-as="percent" t-key="percent_index">
                         <t t-set="row_selected" t-value="Math.floor(percent) == selected_rating"/>
-                        <tr t-attf-class="o_website_rating_table_row #{row_selected ? 'o_website_rating_table_row_selected' : (selected_rating ? 'opacity-50' : '')}"
-                            t-att-data-star="percent" t-on-click="() => this.onClickStarDomain(percent)">
-                            <td class="o_website_rating_table_star_num text-nowrap" t-att-data-star="percent">
-                                <t t-out="percent"/> stars
-                            </td>
-                            <td class="o_website_rating_table_progress">
-                                <div class="progress rounded-2">
+                        <div class="o_website_rating_table_row d-flex align-items-center gap-2 w-100"
+                            t-att-class="{ 'cursor-pointer' : percents[percent] }"
+                            t-att-data-star="percent"
+                            t-on-click="() => percents[percent] and (row_selected and this.onClickStarDomainReset() or this.onClickStarDomain(percent))"
+                            t-att-title="Math.round(percents[percent]) + '%'">
+                            <span class="o_website_rating_table_percent text-nowrap text-end"
+                                t-att-class="{ 'opacity-50': !row_selected and selected_rating }">
+                                <t t-out="Math.floor(percent)"/>&#9733;
+                            </span>
+                            <div class="o_website_rating_table_progress flex-grow-1 py-2"
+                                t-att-class="{ 'opacity-50': !row_selected and selected_rating }">
+                                <div class="progress rounded">
                                     <div class="progress-bar o_rating_progressbar" role="progressbar" t-att-aria-valuenow="percents[percent]" aria-valuemin="0" aria-valuemax="100" t-att-style="'width:' + percents[percent] + '%;'" aria-label="Progress bar">
                                     </div>
                                 </div>
-                            </td>
-                            <td class="o_website_rating_table_percent">
-                                <strong><t t-out="Math.round(percents[percent] * 100) / 100"/>%</strong>
-                            </td>
-                            <td class="o_website_rating_table_reset">
-                                <button t-attf-class="btn btn-link o_website_rating_selection_reset #{row_selected and 'visible' or 'invisible'}"
-                                        t-att-data-star="percent" t-on-click.stop="() => this.onClickStarDomainReset()">
-                                    <i class="fa fa-times d-block" role="img" aria-label="Remove Selection"/>
-                                </button>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     </t>
-                </table>
+                </div>
             </div>
+        </div>
+    </t>
+
+    <t t-name="portal_rating.actions">
+        <button
+            t-if="this.props.composer"
+            class="btn btn-primary"
+            t-on-click="() => this.state.showReviewComposer = true"
+        >
+            Write a review
+        </button>
+        <div
+            t-elif="this.inFrontendPortalChatter"
+            class="alert alert-light d-flex align-items-center gap-2 mb-1 py-2"
+        >
+            <a
+                class="btn btn-primary btn-sm"
+                t-att-href="this.loginRedirectUrl"
+            >
+                Log in
+            </a>
+            <span>To post a review</span>
         </div>
     </t>
 

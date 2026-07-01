@@ -1,16 +1,28 @@
 import { Message } from "@mail/core/common/message_model";
+
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Message} */
-const messagePatch = {
-    async remove({ removeFromThread = false } = {}) {
-        const data = await super.remove(...arguments);
-        if (this.thread && removeFromThread) {
-            this.thread.messages.forEach((message) => {
-                message.rating_stats = this.thread.rating_stats;
-            });
+patch(Message.prototype, {
+    get bubbleColor() {
+        if (this.thread?.ratingChatter) {
+            return undefined;
         }
-        return data;
+        return super.bubbleColor;
     },
-};
-patch(Message.prototype, messagePatch);
+
+    shouldHideFromMessageListOnDelete(_env) {
+        if (this.thread?.ratingChatter && this.rating_value != null) {
+            return true;
+        }
+        return super.shouldHideFromMessageListOnDelete(...arguments);
+    },
+
+    async remove() {
+        if (this.thread?.ratingChatter && this.rating_value != null) {
+            const data = await super.remove({ removeFromThread: false });
+            await this.thread._reloadReviews?.();
+            return data;
+        }
+        return super.remove(...arguments);
+    },
+});

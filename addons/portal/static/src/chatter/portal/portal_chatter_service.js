@@ -26,9 +26,8 @@ export class PortalChatterService {
         return shadow;
     }
 
-    async initialize(env) {
-        const chatterEl = document.querySelector(".o_portal_chatter");
-        const props = {
+    getProps(chatterEl) {
+        return {
             resId: parseInt(chatterEl.getAttribute("data-res_id")),
             resModel: chatterEl.getAttribute("data-res_model"),
             composer: Boolean(
@@ -38,14 +37,19 @@ export class PortalChatterService {
             twoColumns: chatterEl.getAttribute("data-two_columns") === "true" ? true : false,
             displayRating: chatterEl.getAttribute("data-display_rating") === "True" ? true : false,
         };
-        const rootEl = chatterEl.querySelector("#chatterRoot");
+    }
+
+    async initialize(env) {
+        const chatterEl = document.querySelector(".o_portal_chatter");
+        const props = this.getProps(chatterEl);
+        const root = chatterEl.querySelector("#chatterRoot");
         if (props.twoColumns) {
-            rootEl.classList.add("p-0");
+            root.classList.add("p-0");
         }
-        this.createShadow(rootEl).then((shadow) => {
+        this.createShadow(root).then((shadow) => {
             this.root = this.app.createRoot(PortalChatter, {
                 env: Object.assign(Object.create(env), {
-                    rootId: rootEl.getAttribute("id"),
+                    rootId: root.getAttribute("id"),
                 }),
                 props,
             });

@@ -9,7 +9,8 @@ patch(Message.prototype, {
         }
         return result;
     },
+
     shouldHideFromMessageListOnDelete(env) {
-        return env.inFrontendPortalChatter || super.shouldHideFromMessageListOnDelete(...arguments);
+        return env?.inFrontendPortalChatter || super.shouldHideFromMessageListOnDelete(...arguments);
     },
 });

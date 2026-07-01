@@ -712,6 +712,14 @@ export class Thread extends Component {
         );
     }
 
+    get showLoadMore() {
+        return true;
+    }
+
+    get loadMoreClass() {
+        return { "btn-link": true, "opacity-0": !this.state.mountedAndLoaded };
+    }
+
     get isInErrorState() {
         return this.props.thread.hasLoadingFailed;
     }
