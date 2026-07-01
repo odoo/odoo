@@ -10,3 +10,4 @@ from . import test_sale_project
 from . import test_so_line_milestones
 from . import test_sale_project_dashboard
 from . import test_sale_project_multicompany_access
+from . import test_project_update
