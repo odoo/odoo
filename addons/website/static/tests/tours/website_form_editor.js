@@ -80,6 +80,29 @@ const selectButtonByData = function (text, data) {
         },
     ];
 };
+
+const selectConditionField = function (data) {
+    return [
+        {
+            trigger: ".o_customize_tab #hidden_condition_opt:not(:empty)",
+        },
+        {
+            content: "Open condition field selector",
+            trigger: ".o_customize_tab #hidden_condition_opt",
+            run: "click",
+        },
+        {
+            content: "Select condition field",
+            trigger: `.o_popover ${data}`,
+            run: "click",
+        },
+    ];
+};
+
+const checkFieldCount = (x) => ({
+    trigger: `:iframe section.s_website_form:has(.s_website_form_field:count(${x}))`,
+});
+
 const addField = function (
     name,
     type,
@@ -93,9 +116,6 @@ const addField = function (
         : `[data-action-id='existingField'][data-action-value='${name}']`;
     const ret = [
         {
-            trigger: ":iframe .s_website_form_field",
-        },
-        {
             content: "Select form",
             trigger: ":iframe section.s_website_form",
             run: "click",
@@ -105,14 +125,31 @@ const addField = function (
             trigger: "[data-container-title=Form] button:contains('+ Field')",
             run: "click",
         },
-        ...selectButtonByData("Text", data),
+        {
+            trigger: `:iframe section.s_website_form .s_website_form_field:last:contains(Custom Text)`,
+        },
+        {
+            trigger: `.o_customize_tab [data-action-id='setLabelText'] input:value('Custom Text')`,
+        },
+        {
+            content: "Open field type selector",
+            trigger: "[data-container-title='Field'] button:contains('Text')",
+            run: "click",
+        },
+        {
+            content: "Select field type",
+            trigger: `.o_popover ${data}`,
+            run: "click",
+        },
         {
             content: "Wait for field to load",
-            trigger: `:iframe .s_website_form_field[data-type="${name}"],:iframe .s_website_form_input[name="${name}"]`, //custom or existing field
+            trigger: isCustom //custom or existing field
+                ? `:iframe .s_website_form_field:last[data-type="${name}"]`
+                : `:iframe .s_website_form_input:last[name="${name}"]`,
         },
         ...changeOptionInPopover("Field", "Visibility Rule", display.visibility),
     ];
-    let testText = ":iframe .s_website_form_field";
+    let testText = ":iframe .s_website_form_field:last";
     if (display.condition) {
         ret.push({
             content: "Set the visibility condition",
@@ -181,7 +218,6 @@ const compareIds = ({ content, firstElSelector, secondElSelector, errorMessage }
 registerWebsitePreviewTour(
     "website_form_editor_tour",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -234,21 +270,16 @@ registerWebsitePreviewTour(
         {
             content: "Form has a model name",
             trigger: ':iframe section.s_website_form form[data-model_name="mail.mail"]',
-            run: "click",
         },
         {
             content: "Set the offset and width of the Phone Number field",
             trigger: ':iframe input[name="phone"]',
-            run: function () {
+            run() {
                 const fieldEl = this.anchor.closest(".s_website_form_field");
                 fieldEl.classList.add("offset-lg-3");
                 fieldEl.classList.add("col-lg-9");
+                this.anchor.click();
             },
-        },
-        {
-            content: "Edit the Phone Number field",
-            trigger: ':iframe input[name="phone"]',
-            run: "click",
         },
         ...unfoldOptionsGroup("Form"),
         {
@@ -258,15 +289,25 @@ registerWebsitePreviewTour(
             run: "click",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
+        checkFieldCount(8),
         ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        checkFieldCount(9),
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
-        ...selectButtonByData("Your Name", "[data-action-value='Conditional Visibility Check 1']"),
+        ...selectConditionField("[data-action-value='Conditional Visibility Check 1']"),
         ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        checkFieldCount(10),
         ...selectFieldByLabel("Conditional Visibility Check 1"),
+        {
+            trigger:
+                ".o_customize_tab div[data-action-id='setLabelText'] input:value(Conditional Visibility Check 1)",
+        },
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
+            trigger: ".o_customize_tab #hidden_condition_opt:not(:empty)",
+        },
+        {
             content: "Open list of the visibility selector of Conditional Visibility Check 1",
-            trigger: ".o_customize_tab button:contains('Your Name')",
+            trigger: ".o_customize_tab #hidden_condition_opt",
             run: "click",
         },
         {
@@ -276,9 +317,11 @@ registerWebsitePreviewTour(
                 ".o_popover div:not(:has([data-action-value='Conditional Visibility Check 2']))",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
+        checkFieldCount(11),
         ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
+        checkFieldCount(12),
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
-        ...selectButtonByData("Your Name", "[data-action-value='Conditional Visibility Check 3']"),
+        ...selectConditionField("[data-action-value='Conditional Visibility Check 3']"),
         {
             content:
                 "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
@@ -291,7 +334,9 @@ registerWebsitePreviewTour(
             trigger: ".o_customize_tab [data-label='Visibility Rule'] button:contains('None')",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
+        checkFieldCount(13),
         ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
+        checkFieldCount(14),
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
             content:
@@ -301,8 +346,11 @@ registerWebsitePreviewTour(
             run: "edit Conditional Visibility Check 5 && click body",
         },
         {
+            trigger: ".o_customize_tab #hidden_condition_opt:not(:empty)",
+        },
+        {
             content: "Open list of the visibility selector of Conditional Visibility Check 1",
-            trigger: ".o_customize_tab button:contains('Your Name')",
+            trigger: ".o_customize_tab #hidden_condition_opt",
             run: "click",
         },
         {
@@ -315,6 +363,7 @@ registerWebsitePreviewTour(
             visibility: CONDITIONALVISIBILITY,
             condition: "odoo",
         }),
+        checkFieldCount(15),
         {
             content: "Ensure that the description has correctly been added on the field",
             trigger:
@@ -324,9 +373,11 @@ registerWebsitePreviewTour(
         ...addCustomField("char", "text", "dependent", false, {
             visibility: CONDITIONALVISIBILITY,
         }),
+        checkFieldCount(16),
         ...addCustomField("selection", "radio", "dependency", false),
+        checkFieldCount(17),
         ...selectFieldByLabel("dependent"),
-        ...selectButtonByData("Your Name", "[data-action-value='dependency']"),
+        ...selectConditionField("[data-action-value='dependency']"),
         ...selectFieldByLabel("dependency"),
         ...selectButtonByData("Radio Buttons", "[data-action-value='char']"),
         ...selectFieldByLabel("dependent"),
@@ -341,12 +392,13 @@ registerWebsitePreviewTour(
         },
 
         ...addExistingField("date", "text", "Test Date", true),
-
+        checkFieldCount(18),
         ...addExistingField("body_html", "textarea", "Your Message", true),
-
+        checkFieldCount(19),
         ...addExistingField("recipient_ids", "checkbox"),
-
+        checkFieldCount(20),
         ...addCustomField("one2many", "checkbox", "Products", true),
+        checkFieldCount(21),
         {
             content: "Change Option 1 label",
             trigger: ".o_we_table_wrapper table input[name='display_name']:eq(0)",
@@ -395,7 +447,7 @@ registerWebsitePreviewTour(
         },
         // Check conditional visibility for the relational fields
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
-        ...selectButtonByData("Your Name", "[data-action-value='recipient_ids']"),
+        ...selectConditionField("[data-action-value='recipient_ids']"),
         ...selectButtonByText("Is equal to", "Is not equal to"),
         {
             content: "Click on option to change the partner for visiblity condition",
@@ -426,6 +478,7 @@ registerWebsitePreviewTour(
         },
         ...clickOnEditAndWaitEditMode(),
         ...addCustomField("selection", "radio", "Service", true),
+        checkFieldCount(22),
         {
             content: "Change Option 1 label",
             trigger: ".o_we_table_wrapper table input[name='display_name']:eq(0)",
@@ -467,7 +520,7 @@ registerWebsitePreviewTour(
         },
 
         ...addCustomField("many2one", "select", "State", true),
-
+        checkFieldCount(23),
         // Customize custom selection field
         {
             content: "Change Option 1 Label",
@@ -543,6 +596,7 @@ registerWebsitePreviewTour(
         },
 
         ...addExistingField("attachment_ids", "file", "Invoice Scan"),
+        checkFieldCount(24),
         {
             content: "Insure the history step of the editor is not checking for unbreakable",
             trigger: ":iframe #wrapwrap",
@@ -604,15 +658,24 @@ registerWebsitePreviewTour(
         // being set, and the 2nd one is autopopulated. As a result, both
         // should be visible by default.
         ...addCustomField("char", "text", "field A", false, { visibility: CONDITIONALVISIBILITY }),
+        checkFieldCount(25),
         ...addCustomField("char", "text", "field B", false),
+        checkFieldCount(26),
         ...selectFieldByLabel("field A"),
-        ...selectButtonByData("Your Name", "[data-action-value='field B']"),
+        {
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('field A')`,
+        },
+        ...selectConditionField("[data-action-value='field B']"),
         ...selectButtonByText("Is equal to", "Is set"),
         ...selectFieldByLabel("field B"),
         {
+            content: "Wait for field B sidebar to be active",
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('field B')`,
+        },
+        {
             content: "Insert default value",
             trigger: "[data-label='Default Value'] input",
-            run: "edit prefilled",
+            run: "edit prefilled && press Tab",
         },
         ...clickOnSave(),
         {
@@ -661,13 +724,14 @@ registerWebsitePreviewTour(
             run: "click",
         },
         ...addCustomField("char", "text", "field C", false),
+        checkFieldCount(27),
         ...selectFieldByLabel("field B"),
-        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
-            content: "Verify that the default comparator should be set",
-            trigger: ".o_customize_tab #hidden_condition_opt:not(:empty)",
+            content: "Wait for field B sidebar to be active",
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('field B')`,
         },
-        ...selectButtonByData("Your Name", "[data-action-value='field C']"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
+        ...selectConditionField("[data-action-value='field C']"),
         ...selectButtonByText("Is equal to", "Is set"),
         ...selectFieldByLabel("field C"),
         ...clickOnSave(),
@@ -739,6 +803,7 @@ registerWebsitePreviewTour(
         },
         ...clickOnEditAndWaitEditMode(),
         ...addCustomField("char", "text", "Philippe of Belgium", false),
+        checkFieldCount(28),
         {
             content: "Select the 'Subject' field",
             trigger:
@@ -751,7 +816,7 @@ registerWebsitePreviewTour(
                 '.options-container-header span[title=\'The field "subject" is mandatory for the action "Send an E-mail".\'] > button.fa-trash[disabled]',
         },
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
-        ...selectButtonByData("Your Name", "[data-action-value='Philippe of Belgium']"),
+        ...selectConditionField("[data-action-value='Philippe of Belgium']"),
         ...selectButtonByText("Is equal to", "Is set"),
         {
             content: "Set a default value to the 'Subject' field",
@@ -764,8 +829,11 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
             run: "click",
         },
+        {
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('Your Message')`,
+        },
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
-        ...selectButtonByData("Your Name", "[data-action-value='Philippe of Belgium']"),
+        ...selectConditionField("[data-action-value='Philippe of Belgium']"),
         ...selectButtonByText("Is equal to", "Is set"),
 
         ...clickOnSave(),
@@ -793,6 +861,9 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
             run: "click",
         },
+        {
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('Subject')`,
+        },
         ...changeOptionInPopover("Field", "Visibility Rule", "None"),
         {
             content: "Empty the default value of the 'Subject' field",
@@ -804,6 +875,9 @@ registerWebsitePreviewTour(
             trigger:
                 ':iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
             run: "click",
+        },
+        {
+            trigger: `.o_customize_tab div[data-action-id='setLabelText'] input:value('Your Message')`,
         },
         ...changeOptionInPopover("Field", "Visibility Rule", "None"),
         // This step is to ensure select fields are properly cleaned before
@@ -827,9 +901,11 @@ registerWebsitePreviewTour(
         // Test a field visibility when it's tied to another Date [Time] field
         // being set.
         ...addCustomField("char", "text", "field D", false, { visibility: CONDITIONALVISIBILITY }),
+        checkFieldCount(29),
         ...addCustomField("date", "text", "field E", false),
+        checkFieldCount(30),
         ...selectFieldByLabel("field D"),
-        ...selectButtonByData("Your Name", "[data-action-value='field E']"),
+        ...selectConditionField("[data-action-value='field E']"),
         {
             content: "Open the comparator select",
             trigger: "#hidden_condition_time_comparators_opt",
