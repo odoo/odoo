@@ -107,13 +107,16 @@ export class HybridFluidStrategyPlugin extends Plugin {
 
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
         const div = this.config.referenceDocument.createElement("DIV");
-        if (
-            analysis.facts.isMainTable ||
-            !isAllowedContent(referenceNode, [div]) ||
-            (!this.detectHybridFluidLayout(referenceNode) &&
-                !this.detectResponsiveElement(referenceNode))
-        ) {
+        if (analysis.facts.isMainTable || !isAllowedContent(referenceNode, [div])) {
             return;
+        }
+        const isHybridFluidLayout = this.detectHybridFluidLayout(referenceNode);
+        const isResponsiveElement =
+            !isHybridFluidLayout && this.detectResponsiveElement(referenceNode);
+        if (!isHybridFluidLayout && !isResponsiveElement) {
+            return;
+        } else if (isResponsiveElement) {
+            analysis.facts.isResponsiveElement;
         }
         Object.assign(analysis.parsingFacts, {
             canMerge: false,
@@ -140,6 +143,11 @@ export class HybridFluidStrategyPlugin extends Plugin {
         let verticalAlign;
         if (firstRowMeasure) {
             verticalAlign = firstRowMeasure.verticalAlign;
+        }
+        if (!verticalAlign && emailNode.analysis.facts.isResponsiveElement) {
+            // force the responsive element to use hybridBuilders (which don't
+            // have the tableStrategyReport, as it is not needed)
+            verticalAlign = "top";
         }
         return this.fillTableContainer(emailNode, rowMeasures, {
             builders: verticalAlign ? this.hybridBuilders : this.tableBuilders,
