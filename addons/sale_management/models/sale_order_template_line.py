@@ -41,8 +41,53 @@ class SaleOrderTemplateLine(models.Model):
         check_company=True,
         domain=lambda self: self._product_id_domain(),
     )
+    product_template_id = fields.Many2one(
+        string="Product Template",
+        comodel_name="product.template",
+        compute="_compute_product_template_id",
+        readonly=False,
+        search="_search_product_template_id",
+        domain=lambda self: self._fields["product_id"]._description_domain(self.env),
+    )
 
-    name = fields.Text(string="Description", translate=True)
+    product_template_attribute_value_ids = fields.Many2many(
+        related="product_id.product_template_attribute_value_ids", depends=["product_id"]
+    )
+    product_custom_attribute_value_ids = fields.One2many(
+        comodel_name="product.attribute.custom.value",
+        inverse_name="sale_order_template_line_id",
+        string="Custom Values",
+        compute="_compute_custom_attribute_values",
+        store=True,
+        readonly=False,
+        precompute=True,
+        copy=True,
+    )
+    product_no_variant_attribute_value_ids = fields.Many2many(
+        comodel_name="product.template.attribute.value",
+        string="Extra Values",
+        compute="_compute_no_variant_attribute_values",
+        store=True,
+        readonly=False,
+        precompute=True,
+        ondelete="restrict",
+    )
+    is_configurable_product = fields.Boolean(
+        string="Is the product configurable?",
+        related="product_template_id.has_configurable_attributes",
+        depends=["product_template_id"],
+    )
+    currency_id = fields.Many2one(
+        string="Currency", related="sale_order_template_id.company_id.currency_id"
+    )
+    name = fields.Text(
+        string="Description",
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+        precompute=True,
+        translate=True,
+    )
 
     allowed_uom_ids = fields.Many2many("uom.uom", compute="_compute_allowed_uom_ids")
     product_uom_id = fields.Many2one(
@@ -85,6 +130,87 @@ class SaleOrderTemplateLine(models.Model):
     )
 
     # === COMPUTE METHODS ===#
+
+    @api.depends("product_id")
+    def _compute_product_template_id(self):
+        for line in self:
+            line.product_template_id = line.product_id.product_tmpl_id
+
+    def _search_product_template_id(self, operator, value):
+        return [("product_id.product_tmpl_id", operator, value)]
+
+    @api.depends(
+        "product_id", "product_no_variant_attribute_value_ids", "product_custom_attribute_value_ids"
+    )
+    def _compute_name(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            line.name = (
+                line.product_id.description_sale or ""
+            ) + line._get_sale_order_line_multiline_description_variants()
+
+    def _get_sale_order_line_multiline_description_variants(self):
+        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin.filtered(
+            lambda ptav: ptav.display_type == "multi" or ptav.attribute_line_id.value_count > 1
+        )
+        if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
+            return ""
+        name = ""
+        custom_ptavs = (
+            self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
+        )
+        multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
+        for ptav in no_variant_ptavs - multi_ptavs - custom_ptavs:
+            name += "\n" + ptav.display_name
+        for pta, ptavs in multi_ptavs.grouped("attribute_id").items():
+            name += "\n" + self.env._(
+                "%(attribute)s: %(values)s",
+                attribute=pta.name,
+                values=", ".join(ptav.name for ptav in ptavs),
+            )
+        sorted_custom_ptav = (
+            self.product_custom_attribute_value_ids
+            .custom_product_template_attribute_value_id.sorted()
+        )
+        for patv in sorted_custom_ptav:
+            pacv = self.product_custom_attribute_value_ids.filtered(
+                lambda pcav: pcav.custom_product_template_attribute_value_id == patv
+            )
+            name += "\n" + pacv.display_name
+        return name
+
+    @api.depends("product_id")
+    def _compute_custom_attribute_values(self):
+        for line in self:
+            if not line.product_id:
+                line.product_custom_attribute_value_ids = False
+                continue
+            if not line.product_custom_attribute_value_ids:
+                continue
+            valid_values = (
+                line.product_id.product_tmpl_id
+                .valid_product_template_attribute_line_ids.product_template_value_ids
+            )
+            for pacv in line.product_custom_attribute_value_ids:
+                if pacv.custom_product_template_attribute_value_id not in valid_values:
+                    line.product_custom_attribute_value_ids -= pacv
+
+    @api.depends("product_id")
+    def _compute_no_variant_attribute_values(self):
+        for line in self:
+            if not line.product_id:
+                line.product_no_variant_attribute_value_ids = False
+                continue
+            if not line.product_no_variant_attribute_value_ids:
+                continue
+            valid_values = (
+                line.product_id.product_tmpl_id
+                .valid_product_template_attribute_line_ids.product_template_value_ids
+            )
+            for ptav in line.product_no_variant_attribute_value_ids:
+                if ptav._origin not in valid_values:
+                    line.product_no_variant_attribute_value_ids -= ptav
 
     @api.depends("product_id")
     def _compute_allowed_uom_ids(self):
@@ -178,6 +304,18 @@ class SaleOrderTemplateLine(models.Model):
             "product_uom_qty": self.product_uom_qty,
             "product_uom_id": self.product_uom_id.id,
             "sequence": self.sequence,
+            "product_no_variant_attribute_value_ids": [
+                Command.set(self.product_no_variant_attribute_value_ids.ids)
+            ],
+            "product_custom_attribute_value_ids": [
+                Command.create({
+                    "custom_product_template_attribute_value_id": (
+                        pacv.custom_product_template_attribute_value_id.id
+                    ),
+                    "custom_value": pacv.custom_value,
+                })
+                for pacv in self.product_custom_attribute_value_ids
+            ],
         }
         if self.name:
             vals["name"] = self.name

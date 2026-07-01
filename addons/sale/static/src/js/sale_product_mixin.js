@@ -9,7 +9,7 @@ import { ProductCombo } from "./models/product_combo";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 import { getLinkedSaleOrderLines, serializeComboItem, getSelectedCustomPtav } from "./sale_utils";
 
-async function applyProduct(record, product) {
+export async function applyProduct(record, product) {
     // handle custom values & no variants
     const customAttributesCommands = [
         x2ManyCommands.set([]), // Command.clear isn't supported in static_list/_applyCommands
@@ -137,16 +137,17 @@ export const saleProductMixin = () => ({
             customPtavs = await this._getCustomPtavs(saleOrderLine);
         }
 
+        const orderLines = this._getOrderLines();
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
             productUOMId: saleOrderLine.product_uom_id.id,
-            companyId: saleOrderRecord.data.company_id.id,
-            pricelistId: saleOrderRecord.data.pricelist_id.id,
+            companyId: saleOrderRecord.data.company_id?.id,
+            pricelistId: saleOrderRecord.data.pricelist_id?.id,
             currencyId: saleOrderLine.currency_id.id,
-            soDate: serializeDateTime(saleOrderRecord.data.date_order),
+            soDate: this._getSoDate(),
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
@@ -158,10 +159,10 @@ export const saleProductMixin = () => ({
 
                 for (const [i, product] of optionalProducts.entries()) {
                     const index =
-                        saleOrderRecord.data.order_line.records.indexOf(this.props.record)
+                        orderLines.records.indexOf(this.props.record)
                         + selectedComboItems.length
                         + i;
-                    const line = await saleOrderRecord.data.order_line.addNewRecordAtIndex(index, {
+                    const line = await orderLines.addNewRecordAtIndex(index, {
                         mode: 'readonly',
                     });
                     const productData = this._prepareNewLineData(line, product);
@@ -175,7 +176,7 @@ export const saleProductMixin = () => ({
                 if (!selectedComboItems.length) {
                     // Don't delete the main product if it's a combo product as it has been added
                     // from combo configurator
-                    saleOrderRecord.data.order_line.delete(this.props.record);
+                    orderLines.delete(this.props.record);
                 }
             },
             ...this._getAdditionalDialogProps(),
@@ -276,6 +277,22 @@ export const saleProductMixin = () => ({
     },
 
     /**
+     * Hook to return the order lines list for the current record.
+     * Override to use a different lines field (e.g. in quotation templates).
+     */
+    _getOrderLines() {
+        return this.props.record.model.root.data.order_line;
+    },
+
+    /**
+     * Hook to return the SO date for the configurator dialog.
+     * Override to use a different date source (e.g. today() in quotation templates).
+     */
+    _getSoDate() {
+        return serializeDateTime(this.props.record.model.root.data.date_order);
+    },
+
+    /**
      * Hook to append extra data in newly created optional product lines.
      */
     _prepareNewLineData(_line, product) {
@@ -332,7 +349,7 @@ export const saleProductMixin = () => ({
         return customPtavs.map(customPtav => ({
             id: customPtav.custom_product_template_attribute_value_id &&
                 customPtav.custom_product_template_attribute_value_id.id,
-            value: customPtav.custom_value,
+            value: customPtav.custom_value || "",
         }));
     },
 });

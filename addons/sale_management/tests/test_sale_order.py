@@ -357,6 +357,9 @@ class TestSaleOrder(SaleManagementCommon):
         ]
         # Remove product description to ease comparing before/after translations
         self.product_1.description_sale = None
+        self.quotation_template_no_discount.sale_order_template_line_ids.filtered(
+            lambda line: line.product_id == self.product_1
+        ).name = False
 
         # Commence activation of Dutch vernacular
         self.env["res.lang"]._activate_lang("nl_NL")
