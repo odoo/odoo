@@ -86,6 +86,7 @@ import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { ResCountry } from "./mock_server/mock_models/res_country";
 import { ResFake } from "./mock_server/mock_models/res_fake";
+import { ResGroups } from "./mock_server/mock_models/res_groups";
 import { ResLang } from "./mock_server/mock_models/res_lang";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResRole } from "./mock_server/mock_models/res_role";
@@ -162,6 +163,7 @@ export const mailModels = {
     MailThread,
     ResCountry,
     ResFake,
+    ResGroups,
     ResLang,
     ResPartner,
     ResRole,

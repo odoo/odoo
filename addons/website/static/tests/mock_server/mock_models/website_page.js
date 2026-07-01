@@ -5,4 +5,5 @@ export class WebsitePage extends models.Model {
     _description = "Page";
 
     name = fields.Char();
+    url = fields.Char();
 }

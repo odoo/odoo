@@ -16,9 +16,10 @@ defineCrmLivechatModels();
 test("Can open lead from internal link", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
-        group_ids: pyEnv["res.groups"]
-            .search_read([["id", "=", serverState.groupLivechatId]])
-            .map(({ id }) => id),
+        group_ids: [
+            Command.link(serverState.groupLivechatId),
+            Command.link(serverState.groupSalesTeamId),
+        ],
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({

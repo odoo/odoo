@@ -5,6 +5,8 @@ export class WebsitePage extends Record {
 
     /** @type {string} */
     name;
+    /** @type {string} */
+    url;
 }
 
 WebsitePage.register();
