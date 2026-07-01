@@ -6,6 +6,7 @@ import {
     props,
     proxy,
     signal,
+    t,
     useEffect,
     useListener,
 } from "@odoo/owl";
@@ -22,17 +23,15 @@ export class CallDebrief extends Component {
     static template = "mail.CallDebrief";
     static components = { CallDebriefTimeline, CallDebriefMediaControls };
 
-    static props = {
-        ...standardFieldProps,
-        // The name of the field on the record that stores the call's start datetime.
-        callStartDateField: { type: String },
-        // The name of the field on the record that stores the call's end datetime.
-        callEndDateField: { type: String },
-    };
-
-    props = props();
-
     setup() {
+        super.setup();
+        this.props = props({
+            ...standardFieldProps,
+            // The name of the field on the record that stores the call's start datetime.
+            callStartDateField: t.string(),
+            // The name of the field on the record that stores the call's end datetime.
+            callEndDateField: t.string(),
+        });
         this.callDurationSeconds = 0;
         this.playbackRates = [0.25, 0.5, 0.75, 0.9, 1, 1.25, 1.5, 1.75, 2, 3];
         this.skipNextTimeUpdate = false;
@@ -74,18 +73,84 @@ export class CallDebrief extends Component {
 
         useHotkey("k", () => this.togglePlay(), { global: true });
         useHotkey("space", () => this.togglePlay(), { global: true });
-        useHotkey("j", () => { this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward"); }, { global: true, allowRepeat: true });
-        useHotkey("l", () => { this.seekRelative(5), this.showMediaControlsFeedback("skip-forward"); }, { global: true, allowRepeat: true });
-        useHotkey("arrowleft", () => { this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward"); }, { global: true, allowRepeat: true });
-        useHotkey("arrowright", () => { this.seekRelative(5), this.showMediaControlsFeedback("skip-forward"); }, { global: true, allowRepeat: true });
-        useHotkey("m", () => { this.toggleMute(); this.showMediaControlsFeedback("mute"); }, { global: true });
+        useHotkey(
+            "j",
+            () => {
+                this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward");
+            },
+            { global: true, allowRepeat: true }
+        );
+        useHotkey(
+            "l",
+            () => {
+                this.seekRelative(5), this.showMediaControlsFeedback("skip-forward");
+            },
+            { global: true, allowRepeat: true }
+        );
+        useHotkey(
+            "arrowleft",
+            () => {
+                this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward");
+            },
+            { global: true, allowRepeat: true }
+        );
+        useHotkey(
+            "arrowright",
+            () => {
+                this.seekRelative(5), this.showMediaControlsFeedback("skip-forward");
+            },
+            { global: true, allowRepeat: true }
+        );
+        useHotkey(
+            "m",
+            () => {
+                this.toggleMute();
+                this.showMediaControlsFeedback("mute");
+            },
+            { global: true }
+        );
         // Supports AZERTY keyboard layouts
-        useHotkey("shift+.", () => { this.adjustPlaybackRate(1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
-        useHotkey("shift+?", () => { this.adjustPlaybackRate(-1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
+        useHotkey(
+            "shift+.",
+            () => {
+                this.adjustPlaybackRate(1);
+                this.showMediaControlsFeedback("playback-speed");
+            },
+            { global: true }
+        );
+        useHotkey(
+            "shift+?",
+            () => {
+                this.adjustPlaybackRate(-1);
+                this.showMediaControlsFeedback("playback-speed");
+            },
+            { global: true }
+        );
         // Supports QWERTY keyboard layouts
-        useHotkey("shift+>", () => { this.adjustPlaybackRate(1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
-        useHotkey("shift+<", () => { this.adjustPlaybackRate(-1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
-        useHotkey("f", () => { this.toggleFullscreen(); this.showMediaControlsFeedback("fullscreen"); }, { global: true });
+        useHotkey(
+            "shift+>",
+            () => {
+                this.adjustPlaybackRate(1);
+                this.showMediaControlsFeedback("playback-speed");
+            },
+            { global: true }
+        );
+        useHotkey(
+            "shift+<",
+            () => {
+                this.adjustPlaybackRate(-1);
+                this.showMediaControlsFeedback("playback-speed");
+            },
+            { global: true }
+        );
+        useHotkey(
+            "f",
+            () => {
+                this.toggleFullscreen();
+                this.showMediaControlsFeedback("fullscreen");
+            },
+            { global: true }
+        );
         useListener(document, "fullscreenchange", () => {
             this.state.isFullscreen = !!document.fullscreenElement;
         });
@@ -393,7 +458,7 @@ export class CallDebrief extends Component {
 
     /**
      * Handles the end of the current media segment.
-     * Transitions to the next segment if possible otherwise pauses. 
+     * Transitions to the next segment if possible otherwise pauses.
      */
     onMediaEnded() {
         if (this.isSwitchingSegment) {
@@ -466,7 +531,11 @@ export class CallDebrief extends Component {
         el.classList.remove("o-CallDebrief-hotkeyFeedback");
         void el.offsetWidth; // Force reflow to restart animation
         el.classList.add("o-CallDebrief-hotkeyFeedback");
-        el.addEventListener("animationend", () => el.classList.remove("o-CallDebrief-hotkeyFeedback"), { once: true });
+        el.addEventListener(
+            "animationend",
+            () => el.classList.remove("o-CallDebrief-hotkeyFeedback"),
+            { once: true }
+        );
     }
 
     togglePlay() {

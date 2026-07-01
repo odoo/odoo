@@ -1,23 +1,22 @@
-import { Component, onWillUnmount, props, signal, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, props, signal, t, proxy } from "@odoo/owl";
 import { formatDuration } from "@mail/views/fields/call_debrief/call_debrief_utils";
 
 export class CallDebriefTimeline extends Component {
     static template = "mail.CallDebriefTimeline";
-    static props = {
-        // Total length of the call in seconds.
-        totalDuration: { type: Number },
-        // Array of media segment objects { id, startSec, endSec, duration, ... }
-        mediaSegments: { type: Array, optional: true },
-        media: { type: Object, optional: true },
-        // Callback function called when the user clicks/drags to seek: ({ timestamp }) => void
-        onSeek: { type: Function },
-        // The current playback position in global call seconds.
-        currentTime: { type: Number, optional: true },
-    };
-
-    props = props();
 
     setup() {
+        super.setup();
+        this.props = props({
+            // Total length of the call in seconds.
+            totalDuration: t.number(),
+            // Array of media segment objects { id, startSec, endSec, duration, ... }
+            mediaSegments: t.array().optional(),
+            media: t.object().optional(),
+            // Callback function called when the user clicks/drags to seek: ({ timestamp }) => void
+            onSeek: t.function(),
+            // The current playback position in global call seconds.
+            currentTime: t.number().optional(),
+        });
         this.timeline = signal(null);
         this.timestamp = signal(null);
         this.isDragging = false;
@@ -143,7 +142,7 @@ export class CallDebriefTimeline extends Component {
     }
 
     onLeaveMove(ev) {
-        setTimeout(() => this.state.hasHoverPosition = false, 200);
+        setTimeout(() => (this.state.hasHoverPosition = false), 200);
     }
 
     get displayedTimestamp() {
