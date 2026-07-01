@@ -2,7 +2,7 @@
 
 from freezegun import freeze_time
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 from odoo.tools.float_utils import float_compare
@@ -1007,23 +1007,35 @@ class TestLoyalty(TestSaleCouponCommon):
 
     def test_ewallet_applied_ewallet_topup_in_order(self):
         self.ewallet.points = 10
-
+        eWallet_topUp = Command.create({
+            'product_id': self.env.ref('loyalty.ewallet_product_50').id,
+            'product_uom_qty': 1,
+            'price_unit': 50,
+        })
         order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'points_cost': 100,
                 'product_uom_qty': 1,
-            }), Command.create({
-                'product_id': self.env.ref('loyalty.ewallet_product_50').id,
-                'product_uom_qty': 1,
-            })],
+            }),
+                eWallet_topUp
+            ],
         })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
         order.action_confirm()
 
         self.assertEqual(self.ewallet.points, 50)
+
+        # Case 2: eWallet top-up should be excluded from the discountable amount when paying with an eWallet
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [eWallet_topUp],
+        })
+        order._update_programs_and_rewards()
+        with self.assertRaisesRegex(UserError, "There is nothing to discount"):
+            self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
 
     def test_discount_reward_claimable_only_once(self):
         """
@@ -1211,3 +1223,18 @@ class TestLoyalty(TestSaleCouponCommon):
         sale_order._update_programs_and_rewards()
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertFalse(claimable_rewards.get(self.ewallet))
+
+    def test_ewallet_topup_infinite_money_glitch(self):
+        self.ewallet.points = 100
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.env.ref('loyalty.ewallet_product_50').id,
+                    'product_uom_qty': 1,
+                    'price_unit': 50,
+                })
+            ],
+        })
+        order._update_programs_and_rewards()
