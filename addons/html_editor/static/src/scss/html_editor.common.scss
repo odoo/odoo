@@ -653,7 +653,7 @@ pre {
             // Links
             $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
             $-link-hover-color: darken($-link-color, 15%);
-            a:not(.btn), .btn-link {
+            a:not(.btn):not(.o_cc), .btn-link:not(.o_cc) {
                 color: auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link');
 
                 &:hover {
