@@ -21,6 +21,14 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
         this.notification = this.bindService("notification");
     },
 
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.data('widget', this);
+        return this._super.apply(this, arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //-------------------------------------------------------------------------
@@ -55,6 +63,15 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 var reminderText = self.reminderOn ? _t('Favorite On') : _t('Set Favorite');
                 self.$('.o_wetrack_js_reminder_text').text(reminderText);
                 self._updateDisplay();
+                // sync all other widgets on the page for the same track
+                var trackId = $trackLink.data('trackId');
+                $('.o_wetrack_js_reminder').not(self.$el).each(function () {
+                    var otherWidget = $(this).data('widget');
+                    if (otherWidget && otherWidget.$el.find('i').data('trackId') === trackId) {
+                        otherWidget.reminderOn = reminderOnValue;
+                        otherWidget._updateDisplay();
+                    }
+                });
                 var message = self.reminderOn ? _t('Talk added to your Favorites') : _t('Talk removed from your Favorites');
                 self.notification.add(message, {
                     type: 'info',
