@@ -12,6 +12,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { formatList } from "@web/core/l10n/utils";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -38,6 +39,7 @@ export class DiscussChannel extends models.ServerModel {
         compute: "_compute_channel_name_member_ids",
     });
     channel_type = fields.Generic({ default: "channel" });
+    display_name = fields.Char({ compute: "_compute_display_name", string: "Display Name" });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });
@@ -51,6 +53,32 @@ export class DiscussChannel extends models.ServerModel {
             const members = channel.channel_member_ids ?? [];
             members.sort();
             channel.channel_name_member_ids = members.slice(0, 3);
+        }
+    }
+
+    _compute_display_name() {
+        for (const channel of this) {
+            if (channel.name) {
+                channel.display_name = channel.name;
+            } else {
+                const members = channel.channel_member_ids ?? [];
+                const parts = channel.channel_name_member_ids
+                    .map((m) => {
+                        const [member] = this.env["discuss.channel.member"].browse(m) || [];
+                        if (!member) {
+                            return false;
+                        }
+                        const [partner] = this.env["res.partner"].browse(member.partner_id) || [];
+                        const [guest] = this.env["mail.guest"].browse(member.guest_id) || [];
+                        return partner ? partner.name : guest ? guest.name : null;
+                    })
+                    .filter(Boolean);
+                if (members.length > 3) {
+                    const remaining = members.length - 3;
+                    parts.push(remaining === 1 ? "1 other" : `${remaining} others`);
+                }
+                channel.display_name = formatList(parts);
+            }
         }
     }
 
@@ -532,14 +560,6 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         this.write([channel.id], { name });
-        this.message_post(
-            channel.id,
-            makeKwArgs({
-                body: `<div data-oe-type="channel_rename" class="o_mail_notification">${name}</div>`,
-                message_type: "notification",
-                subtype_xmlid: "mail.mt_comment",
-            })
-        );
     }
 
     /**
@@ -950,6 +970,20 @@ export class DiscussChannel extends models.ServerModel {
             const basicInfo = this._channel_basic_info(channel.id);
             const previousBasicInfo = basicInfoByChannelId[channel.id];
             const changes = [];
+            if (
+                "name" in values &&
+                ["channel", "group"].includes(channel.channel_type) &&
+                (channel.name || false) !== (previousBasicInfo.name || false)
+            ) {
+                this.message_post(
+                    channel.id,
+                    makeKwArgs({
+                        body: `<div data-oe-type="channel_rename" class="o_mail_notification">${channel.display_name}</div>`,
+                        message_type: "notification",
+                        subtype_xmlid: "mail.mt_comment",
+                    })
+                );
+            }
             for (const key of Object.keys(basicInfo)) {
                 if (basicInfo[key] !== previousBasicInfo[key]) {
                     changes.push([key, basicInfo[key]]);
