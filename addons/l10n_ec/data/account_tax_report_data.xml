@@ -33,6 +33,7 @@
                             </record>
                             <record id="tax_report_line_104_411" model="account.report.line">
                                 <field name="name">Net value(411)</field>
+                                <field name="code">c411</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_411_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -43,6 +44,7 @@
                             </record>
                             <record id="tax_report_line_104_421" model="account.report.line">
                                 <field name="name">Tax generated(421)</field>
+                                <field name="code">c421</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_421_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -58,6 +60,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_402" model="account.report.line">
                                 <field name="name">Gross value(402)</field>
+                                <field name="code">c402</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_402_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -68,6 +71,7 @@
                             </record>
                             <record id="tax_report_line_104_412" model="account.report.line">
                                 <field name="name">Net value(412)</field>
+                                <field name="code">c412</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_412_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -78,6 +82,7 @@
                             </record>
                             <record id="tax_report_line_104_422" model="account.report.line">
                                 <field name="name">Tax generated(422)</field>
+                                <field name="code">c422</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_422_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -129,6 +134,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_423" model="account.report.line">
                                 <field name="name">Tax generated(423)</field>
+                                <field name="code">c423</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_423_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -144,6 +150,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_424" model="account.report.line">
                                 <field name="name">Tax generated(424)</field>
+                                <field name="code">c424</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_424_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -159,6 +166,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_403" model="account.report.line">
                                 <field name="name">Gross value(403)</field>
+                                <field name="code">c403</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_403_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -169,6 +177,7 @@
                             </record>
                             <record id="tax_report_line_104_413" model="account.report.line">
                                 <field name="name">Net value(413)</field>
+                                <field name="code">c413</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_413_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -184,6 +193,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_404" model="account.report.line">
                                 <field name="name">Gross value(404)</field>
+                                <field name="code">c404</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_404_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -194,6 +204,7 @@
                             </record>
                             <record id="tax_report_line_104_414" model="account.report.line">
                                 <field name="name">Net value(414)</field>
+                                <field name="code">c414</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_414_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -220,6 +231,7 @@
                             </record>
                             <record id="tax_report_line_104_415" model="account.report.line">
                                 <field name="name">Net value(415)</field>
+                                <field name="code">c415</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_415_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -289,6 +301,7 @@
                         <field name="children_ids">
                             <record id="tax_report_line_104_408" model="account.report.line">
                                 <field name="name">Gross value(408)</field>
+                                <field name="code">c408</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_408_tag" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -318,8 +331,8 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_409_tag" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">409 (Reporte 104)</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c401.balance + c402.balance + c403.balance + c404.balance + c405.balance + c406.balance + c407.balance + c408.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -328,8 +341,8 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_419_tag" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">419 (Reporte 104)</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c411.balance + c412.balance + c413.balance + c414.balance + c415.balance + c416.balance + c417.balance + c418.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -338,8 +351,8 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_line_104_429_tag" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">429 (Reporte 104)</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c421.balance + c422.balance + c423.balance + c424.balance</field>
                                     </record>
                                 </field>
                             </record>
