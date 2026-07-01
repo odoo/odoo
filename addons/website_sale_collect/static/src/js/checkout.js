@@ -77,12 +77,38 @@ publicWidget.registry.WebsiteSaleCheckout.include({
     // #=== DELIVERY FLOW ===#
 
     /**
+     * Reload the page after selecting an in-store delivery method to refresh all cart values.
+     *
+     * @override method from `@website_sale/js/checkout`
+     */
+    async _selectDeliveryMethod(ev) {
+        await this._super.apply(this, arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
+    },
+
+    /**
+     * Reload the page after selecting an in-store pickup location to refresh all cart values.
+     *
+     * @override method from `@website_sale/js/checkout`
+     */
+    async _onPickupLocationConfirmed() {
+        await this._super.apply(this, arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
+    },
+
+    /**
      * Display a warning if any when selecting an in_store delivery method.
      *
      * @override method from `@website_sale/js/checkout`
      */
     async _showPickupLocation(radio) {
-        this._super.apply(this, arguments);
+        await this._super.apply(this, arguments);
         if (radio.dataset.deliveryType === 'in_store') {
             const dmContainer = this._getDeliveryMethodContainer(radio);
             const warning = dmContainer.querySelector('[name="unavailable_products_warning"]');
