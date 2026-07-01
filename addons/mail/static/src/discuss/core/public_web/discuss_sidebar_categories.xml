@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
         <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
-            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-lg fa-fw fa-search"/></button>
+            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-fw fa-search"/></button>
             <t t-set-slot="content">
                 <div class="p-2" t-ref="search-floating">
                     <span class="text-muted user-select-none">Find or start a conversation</span>
@@ -43,14 +43,14 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory.main">
-        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'm-2 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-1 me-2 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'mx-2 mt-1 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-1 me-2 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start opacity-100-hover" t-att-class="{ 'align-items-baseline opacity-75 o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact opacity-50 gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller" t-att-class="{
                         'oi oi-chevron-down opacity-75': category.open,
                         'oi oi-chevron-right opacity-50': !category.open,
                     }"/>
-                    <span class="rounded p-1" t-att-class="{ 'opacity-50': !category.open }"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin fs-3"/><i t-else="" class="fa-fw fa-lg fs-3" t-att-class="category.icon ?? 'fa fa-user'"/></span>
+                    <span class="rounded p-1" t-att-class="{ 'opacity-50': !category.open }"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin fs-5"/><i t-else="" class="fa-fw fs-5" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
