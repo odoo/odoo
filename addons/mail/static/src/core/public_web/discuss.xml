@@ -10,7 +10,7 @@
                 <t t-if="thread">
                     <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
                         <img class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-                        <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
+                        <FileUploader t-if="thread.isActive and !thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
                                 <a href="#" class="position-absolute z-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
                                     <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
@@ -30,7 +30,7 @@
                         </div>
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadName fw-bolder flex-shrink-1 text-dark py-0 fs-4'"
-                            enabled="thread.is_editable or thread.channel_type === 'chat'"
+                            enabled="thread.isActive and (thread.is_editable or thread.channel_type === 'chat')"
                             onValidate.bind="renameThread"
                             value="thread.displayName"
                         />
@@ -39,9 +39,9 @@
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
                                 className="'o-mail-Discuss-threadDescription flex-shrink-1 text-muted small pt-1'"
-                                enabled="thread.is_editable"
+                                enabled="thread.isActive and thread.is_editable"
                                 onValidate.bind="updateThreadDescription"
-                                placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                                placeholder="thread.isActive and thread.is_editable ? autogrowDescriptionPlaceholder : ''"
                                 value="thread.description or ''"
                             />
                         </t>
@@ -94,7 +94,7 @@
                         <t t-if="thread">
                             <div class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1">
                                 <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
-                                <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                                <Composer t-if="thread.isActive and (thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread))" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
                             </div>
                             <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-Discuss-panelContainer h-100 border-start border-secondary flex-shrink-0">
                                 <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>

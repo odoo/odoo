@@ -216,10 +216,10 @@ class Channel(models.Model):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         if current_guest:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
+            channels = current_guest.sudo().with_context(active_test=False).channel_ids
         elif current_partner:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
+            channels = current_partner.sudo().with_context(active_test=False).channel_ids
         else:
             channels = self.env["discuss.channel"]
         return [('id', "in" if is_in else "not in", channels.ids)]
@@ -336,6 +336,22 @@ class Channel(models.Model):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('discuss_channel_member_seen_message_id_idx',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX discuss_channel_member_seen_message_id_idx ON discuss_channel_member (channel_id,partner_id,seen_message_id)')
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def action_archive(self):
+        if to_archive := self.sub_channel_ids.filtered("active"):
+            to_archive.action_archive()
+        return super().action_archive()
+
+    def action_unarchive(self):
+        if to_unarchive := self.with_context(active_test=False).sub_channel_ids.filtered(
+            lambda sc: not sc.active
+        ):
+            to_unarchive.action_unarchive()
+        return super().action_unarchive()
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
@@ -860,6 +876,25 @@ class Channel(models.Model):
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
+    @api.model
+    def _find_channels(self, ids=None, domain=False, limit=None, order=None):
+        """
+        Get channels including archived ones.
+        :param ids: single ID or list of IDs
+        :param list domain: search domain
+        :param int limit: number of records to return
+        :param str order: sort string
+        :return: discuss.channel recordset
+        """
+        channel_domain = []
+        if ids:
+            channel_domain = [("id", "in", [ids] if isinstance(ids, int) else ids)]
+        if domain:
+            channel_domain = expression.AND([channel_domain, domain])
+        if not channel_domain:
+            return self.env["discuss.channel"]
+        return self.with_context(active_test=False).search(channel_domain, limit=limit, order=order)
+
     def _find_or_create_member_for_self(self):
         self.ensure_one()
         domain = [("channel_id", "=", self.id), ("is_self", "=", True)]
@@ -920,6 +955,7 @@ class Channel(models.Model):
         self.ensure_one()
         data = self._read_format(
             [
+                "active",
                 "allow_public_upload",
                 "channel_type",
                 "create_uid",

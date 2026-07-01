@@ -168,7 +168,7 @@ test("load messages from opening chat window from messaging menu", async () => {
 
 test("chat window: basic rendering", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
@@ -194,6 +194,20 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-dropdown-item", { text: "Notification Settings" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
+    await click("[title='Open Actions Menu']");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-ChatWindow-command", { count: 3 });
+    await contains("[title='Open Actions Menu']");
+    await contains("[title='Fold']");
+    await contains("[title*='Close Chat Window']");
+    await click("[title='Open Actions Menu']");
+    await contains(".o-mail-ChatWindow-command", { count: 9 });
+    await contains(".o-dropdown-item", { text: "Attachments" });
+    await contains(".o-dropdown-item", { text: "Pinned Messages" });
+    await contains(".o-dropdown-item", { text: "Members" });
+    await contains(".o-dropdown-item", { text: "Threads" });
+    await contains(".o-dropdown-item", { text: "Search Messages" });
+    await contains(".o-dropdown-item", { text: "Open in Discuss" });
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {

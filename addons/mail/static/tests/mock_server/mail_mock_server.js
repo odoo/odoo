@@ -155,6 +155,8 @@ async function mail_attachment_delete(request) {
 registerRoute("/discuss/channel/attachments", load_attachments);
 /** @type {RouteCallback} */
 async function load_attachments(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
 
@@ -163,6 +165,10 @@ async function load_attachments(request) {
         limit = 30,
         older_attachment_id = null,
     } = await parseRequestParams(request);
+    const channel = DiscussChannel._find_channels(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const attachmentIds = IrAttachment.filter(
         ({ id, res_id, res_model }) =>
             res_id === channel_id &&
@@ -284,7 +290,7 @@ async function discuss_channel_info(request) {
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id } = await parseRequestParams(request);
-    const channel = DiscussChannel.search([["id", "=", channel_id]]);
+    const channel = DiscussChannel._find_channels(channel_id);
     if (!channel.length) {
         return;
     }
@@ -298,12 +304,18 @@ async function discuss_channel_members(request) {
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id, known_member_ids } = await parseRequestParams(request);
-    return DiscussChannel._load_more_members([channel_id], known_member_ids);
+    const channel = DiscussChannel._find_channels(channel_id);
+    if (!channel.length) {
+        return;
+    }
+    return channel._load_more_members([channel_id], known_member_ids);
 }
 
 registerRoute("/discuss/channel/messages", discuss_channel_messages);
 /** @type {RouteCallback} */
 async function discuss_channel_messages(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
@@ -315,6 +327,10 @@ async function discuss_channel_messages(request) {
         limit = 30,
         search_term,
     } = await parseRequestParams(request);
+    const channel = DiscussChannel._find_channels(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const domain = [
         ["res_id", "=", channel_id],
         ["model", "=", "discuss.channel"],
@@ -354,11 +370,17 @@ async function discuss_channel_sub_channel_fetch(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
     const { parent_channel_id, before, limit } = await parseRequestParams(request);
+    const channel = DiscussChannel._find_channels(parent_channel_id);
+    if (!channel.length) {
+        return;
+    }
     const domain = [["parent_channel_id", "=", parent_channel_id]];
     if (before) {
         domain.push(["id", "<", before]);
     }
-    const subChannels = DiscussChannel.search(domain, makeKwArgs({ limit, order: "id DESC" }));
+    const subChannels = DiscussChannel._find_channels(
+        makeKwArgs({ domain, limit, order: "id DESC" })
+    );
     const store = new mailDataHelpers.Store(subChannels);
     const lastMessageIds = [];
     for (const channel of subChannels) {
@@ -435,10 +457,16 @@ async function channel_ping(request) {}
 registerRoute("/discuss/channel/pinned_messages", discuss_channel_pins);
 /** @type {RouteCallback} */
 async function discuss_channel_pins(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
     const { channel_id } = await parseRequestParams(request);
+    const channel = DiscussChannel._find_channels(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const messageIds = MailMessage.search([
         ["model", "=", "discuss.channel"],
         ["res_id", "=", channel_id],
