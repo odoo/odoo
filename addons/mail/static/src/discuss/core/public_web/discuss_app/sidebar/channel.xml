@@ -29,6 +29,7 @@
             t-att-class="attClass"
             t-on-click="(ev) => this.openChannel(ev, channel)"
             t-ref="root"
+            data-available-offline=""
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': store.discuss.isSidebarCompact, 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : channel.displayName">
                 <div class="bg-inherit position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" style="width:26px;height:26px;" name="threadAvatar" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">

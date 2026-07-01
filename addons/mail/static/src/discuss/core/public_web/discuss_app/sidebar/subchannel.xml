@@ -33,7 +33,9 @@
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt,
                 'opacity-50': channel.self_member_id?.mute_until_dt,
-            }">
+            }"
+                data-available-offline=""
+            >
                 <span class="text-truncate" t-esc="channel.displayName" t-att-class="{
                     'fw-bolder': channel.self_member_id?.message_unread_counter > 0,
                     'opacity-75 opacity-100-hover': !(channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt),

@@ -54,6 +54,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(action: Action) => string} [icon]
  * @property {boolean|(action: Action) => boolean} [inlineName=false]
  * @property {boolean|(action: Action) => boolean} [isActive]
+ * @property {boolean|(action: Action) => boolean} [isAvailableOffline=false]
  * @property {string|(action: Action) => string} [name]
  * @property {string|(action: Action) => string} [nameClass]
  * @property {(action: Action, ev: Event) => void} [onSelected]
@@ -438,6 +439,19 @@ export class Action {
             (typeof this.definition.isActive === "function"
                 ? this.definition.isActive.call(this, this.params)
                 : this.definition.isActive)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _isAvailableOffline(action) {}
+    /** If set the action will be selectable while working offline. */
+    get isAvailableOffline() {
+        return (
+            this._isAvailableOffline(this.params) ??
+            (typeof this.definition.isAvailableOffline === "function"
+                ? this.definition.isAvailableOffline.call(this, this.params)
+                : this.definition.isAvailableOffline) ??
+            false
         );
     }
 

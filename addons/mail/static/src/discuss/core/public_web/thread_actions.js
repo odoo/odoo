@@ -21,6 +21,7 @@ registerThreadAction("show-threads", {
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-comments-o",
+    isAvailableOffline: true,
     name: _t("Threads"),
     setup({ owner, store }) {
         if (owner.env.inDiscussApp && !store.env.isSmall) {
