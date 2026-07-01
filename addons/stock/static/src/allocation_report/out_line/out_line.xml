@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="col-2 px-0">
-                <button t-if="this.props.reservedQuantity()"
+                <button t-if="this.props.allocatedQuantity()"
                         class="btn btn-secondary fa fa-print"
                         t-on-click.prevent="() => this.onPrintLabels()"/>
                 <button t-else="" class="btn btn-secondary opacity-0"/>
@@ -108,7 +108,7 @@
             <span t-if="this.date()" t-out="this.displayDate(this.date())"/>
         </td>
         <td>
-            <button t-attf-class="btn btn-secondary {{this.props.reservedQuantity() ? '' : 'opacity-0 pe-none'}}"
+            <button t-attf-class="btn btn-secondary {{this.props.allocatedQuantity() ? '' : 'opacity-0 pe-none'}}"
                     t-on-click.prevent="() => this.onPrintLabels()">
                 Print Labels
             </button>
