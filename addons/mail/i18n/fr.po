@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-04-23 11:52+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/mail/"
@@ -166,6 +166,18 @@ msgid "%(count)s Messages"
 msgstr "%(count)s messages"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_role.py:0
+msgid "%(count)s Server Action(s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_role.py:0
+msgid "%(count)s unassigned activity(ies)"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/mail_poll_model.js:0
 msgid "%(count)s votes"
@@ -281,12 +293,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/mail_composer_bcc_list_popover.js:0
-msgid "%(name)s <%(email)s>"
-msgstr "%(name)s <%(email)s>"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name)s is presenting"
 msgstr "%(name)s présente"
@@ -309,31 +315,16 @@ msgstr "%(name_1)s, %(name_2)s et %(count)s autres présentent"
 msgid ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
 "someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people%"
-"(new_line)s%(bold_start)s#channel%(bold_end)s to link a channel%(new_line)s%"
-"(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
+"(new_line)s%(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
 "(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
-"%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s pour mentionner "
-"quelqu'un%(new_line)s%(bold_start)s@role%(bold_end)s pour notifier plusieurs "
-"personnes%(new_line)s%(bold_start)s#channel%(bold_end)s pour lier un canal%"
-"(new_line)s%(bold_start)s/command%(bold_end)s pour exécuter une commande%"
-"(new_line)s%(bold_start)s::shortcut%(bold_end)s pour insérer une réponse "
-"prédéfinie%(new_line)s%(bold_start)s:emoji:%(bold_end)s pour insérer un emoji"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "%(numberOfDays)sd"
 msgstr "%(numberOfDays)sj"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid ""
-"%(open_tag_1)swith%(close_tag_1)s %(open_tag_2)s%(company_name)s%"
-"(close_tag_2)s"
-msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -364,6 +355,13 @@ msgstr "%(user)s a changé le nom de la discussion en %(name)s"
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr "%(user)s a supprimé le fil de discussion \"%(thread_name)s\""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#: code:addons/mail/tests/discuss/test_discuss_channel.py:0
+msgid "%(user)s has invited you to this channel"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -682,6 +680,12 @@ msgstr ""
 "title=\"à\"/>"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"fa fa-calendar\" title=\"Due date\"/>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-check\"/> Done"
 msgstr "<i class=\"fa fa-check\"/> Effectué"
@@ -701,6 +705,13 @@ msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 msgstr "<i class=\"fa fa-globe\" aria-label=\"URL document\"/>"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"fa fa-hourglass-end\" role=\"img\" title=\"To Assign\" aria-"
+"label=\"To Assign\" style=\"font-size: 12px;\"/>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
@@ -711,6 +722,44 @@ msgstr "<i class=\"fa fa-sign-in\" role=\"img\"/> Rejoindre"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
 msgstr "<i class=\"fa fa-sign-out\" role=\"img\"/> Quitter"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"fa fa-sticky-note pt-1\" title=\"Note\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"fa fa-tag\" title=\"Summary\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"fa fa-user mb-2\" title=\"Assigned to\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"fa fa-users mb-2\" role=\"img\" title=\"Role\" aria-"
+"label=\"Role\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"fa fa-users\" role=\"img\" title=\"Role\" aria-label=\"Role\" "
+"style=\"font-size: 12px;\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "<i class=\"oi oi-odoo\" title=\"Link to\"/>"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -728,13 +777,9 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
 "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
-"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
-"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+"notify someone with <i>'@'</i>. Start your message with <i>'/'</i> to get "
+"the list of possible commands.</p>"
 msgstr ""
-"<p><b>Ecrivez un message</b> aux membres du canal ici.</p> <p>Vous pouvez "
-"notifier quelqu'un en utilisant<i> '@' </i>ou liez un autre canal avec "
-"<i>'#'</i>. Commencez votre message avec <i>'/'</i> pour avoir la liste des "
-"commandes possibles. </p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1095,6 +1140,11 @@ msgid "Accept with camera"
 msgstr "Accepter avec caméra"
 
 #. module: mail
+#: model:ir.model,name:mail.model_ir_access
+msgid "Access"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Access Denied"
@@ -1155,6 +1205,7 @@ msgstr "Nom de l'action"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_needaction
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_needaction
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction
@@ -1204,11 +1255,13 @@ msgstr "Activé par défaut lors de l'abonnement."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__active
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:mail.field_ir_access__active
 #: model:ir.model.fields,field_description:mail.field_mail_activity__active
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__active
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__active
 #: model:ir.model.fields,field_description:mail.field_mail_template__active
+#: model:ir.model.fields,field_description:mail.field_res_role__active
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Active"
 msgstr "Actif"
@@ -1257,6 +1310,11 @@ msgid "Activities must be assigned if not attached to a document."
 msgstr ""
 "Les activités doivent être assignées si elles ne sont pas attachées à un "
 "document."
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_activity_action_to_assign
+msgid "Activities to Assign"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1315,14 +1373,15 @@ msgid "Activity Plans"
 msgstr "Plans d'activité"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_role.py:0
+msgid "Activity Plans: %(plans)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__activity_schedule_id
 msgid "Activity Schedule"
 msgstr "Planning activités"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid "Activity Settings"
-msgstr "Paramètres d'activité"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_state
@@ -1371,6 +1430,12 @@ msgid "Activity Types"
 msgstr "Types d'activités"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_role.py:0
+msgid "Activity Types: %(types)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan_template
 msgid "Activity plan template"
 msgstr "Modèle de plan d'activité"
@@ -1395,8 +1460,8 @@ msgstr "Assistant de planification des activités"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
-msgid "Activity type"
-msgstr "Type d'activité"
+msgid "Activity type:"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1422,6 +1487,11 @@ msgid "Add Attachment"
 msgstr "Ajouter une pièce jointe"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Add Cc recipients..."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Add Context Action"
 msgstr "Ajouter une action contextuelle"
@@ -1444,6 +1514,18 @@ msgstr "Ajouter des émojis"
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_list_edit_form
 msgid "Add Followers"
 msgstr "Ajouter des abonnés"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
+msgid "Add Others"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
+msgid "Add People"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1553,6 +1635,11 @@ msgstr ""
 "pour deux personnes seulement."
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_cc_ids
+msgid "Additional Cc contacts"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
 msgid "Additional Contacts"
 msgstr "Contacts supplémentaires"
@@ -1651,6 +1738,7 @@ msgstr "Après la date du plan"
 #: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__res_users__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__warning
@@ -1892,6 +1980,8 @@ msgstr "S'applique à"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_role_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Archived"
@@ -1946,6 +2036,12 @@ msgstr "Êtes-vous sûr de vouloir épingler ce message dans %(conversation)s ?"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Are you sure you want to remove %(member_name)s from the call?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid ""
 "Are you sure you want to remove %(member_name)s from the members of '%"
 "(channel_name)s'?"
@@ -1984,9 +2080,27 @@ msgid "Are you sure you want to unpin this message?"
 msgstr "Êtes-vous sûr de vouloir le retirer des messages épinglés ?"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_call_artifact_artifact_has_possessor
+msgid "Artifact must be linked to a call source."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_call_history__artifact_ids
+msgid "Artifacts"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
 msgstr "Demander au lancement"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+#: code:addons/mail/static/src/core/web/activity_assign_popover.xml:0
+#: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
+msgid "Assign"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2006,19 +2120,30 @@ msgid "Assign to me"
 msgstr "M'assigner"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_role_id
+msgid "Assigned Role"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Assigned To"
 msgstr "Assigné à"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Assigned to"
 msgstr "Assigné à"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "Assigned to:"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
@@ -2058,6 +2183,7 @@ msgstr "Pièce jointe"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_attachment_count
@@ -2159,6 +2285,12 @@ msgid "Authorized Groups"
 msgstr "Groupes autorisés"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.js:0
+msgid "Auto (dynamic)"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,field_description:mail.field_mail_template__auto_delete
 msgid "Auto Delete"
@@ -2212,6 +2344,7 @@ msgstr "Disponible partout"
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
+#: code:addons/mail/static/src/core/web/activity_assign_popover.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_preview.xml:0
@@ -2418,6 +2551,12 @@ msgstr "Favoris"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/fields/mail_boolean_toggle_label/boolean_toggle_label_field.js:0
+msgid "Boolean Label"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_formatted
@@ -2566,6 +2705,17 @@ msgid "Call"
 msgstr "Appeler"
 
 #. module: mail
+#: model:ir.model,name:mail.model_mail_call_artifact
+msgid "Call Artifact"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Call Debrief"
+msgstr ""
+
+#. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_call_history_action
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__call_history_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__call_history_ids
@@ -2591,6 +2741,12 @@ msgstr "L’historique des appels doit comporter une date de début"
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
 msgstr "L’appel a duré %(duration)s."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "CallDebrief widget needs start and end datetime from the parent record."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2911,16 +3067,62 @@ msgid "Category"
 msgstr "Catégorie"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/composer_patch.xml:0
+#: code:addons/mail/static/src/core/common/message_notification_popover.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_cc
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Cc"
 msgstr "Cc"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_cc_ids
+#: model:ir.model.fields,field_description:mail.field_mail_template__partner_cc
+msgid "Cc (Partners)"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_cc_allowed
+msgid "Cc Usage Allowed"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/composer_patch.xml:0
+msgid "Cc recipients"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/composer_patch.xml:0
+msgid "Cc:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Change Layout"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_res_users_my_fullpage
 msgid "Change My Preferences"
 msgstr "Modifier mes préférences"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
+msgid "Change Picture"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.xml:0
+msgid "Change layout"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -3024,7 +3226,6 @@ msgstr "Nom du canal"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
 #: model:ir.actions.act_window,name:mail.discuss_channel_action
@@ -3078,7 +3279,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Chats"
 msgstr "Chats"
 
@@ -3100,6 +3300,11 @@ msgstr "Choisir un contact..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
+msgid "Choose a role..."
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template..."
 msgstr "Choisir un modèle..."
 
@@ -3115,6 +3320,7 @@ msgid "Choose another value or change it on the other document."
 msgstr "Choisissez une autre valeur ou modifiez-la dans l'autre document."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_role_id
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
 msgstr ""
@@ -3160,6 +3366,7 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 #: code:addons/mail/static/src/core/common/poll_votes_panel.xml:0
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
+#: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Close"
@@ -3241,16 +3448,25 @@ msgstr "Copie carbone séparée par des virgules des adresses des destinataires"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "Comma-separated ids of recipient partners"
-msgstr "Identifiants des partenaires destinataires, séparés par des virgules"
+msgid "Comma-separated ids of Cc recipient partners"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "Comma-separated ids of To recipient partners"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__partner_cc
+msgid ""
+"Comma-separated ids of recipient Cc partners (placeholders may be used here)"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
+"Comma-separated ids of recipient To partners (placeholders may be used here)"
 msgstr ""
-"Identifiants des partenaires bénéficiaires séparés par des virgules (les "
-"placeholders sont acceptés)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
@@ -3556,14 +3772,20 @@ msgstr "Copier le lien d'invitation"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Link"
-msgstr "Copier le lien"
+msgid "Copy Message Link"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Text"
 msgstr "Copier le texte"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
+msgid "Copy link"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3574,6 +3796,12 @@ msgid ""
 msgstr ""
 "Impossible de contacter le serveur de messagerie, veuillez vérifier la "
 "configuration de votre serveur d’e-mails sortants."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Could not load call recordings"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3682,12 +3910,6 @@ msgid "Create new %(document)s by sending an email to %(email_link)s"
 msgstr "Créer un nouveau %(document)s en envoyant un e-mail à %(email_link)s"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.xml:0
-msgid "Created"
-msgstr "Créé"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Created By"
 msgstr "Créé par"
@@ -3710,6 +3932,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_uid
@@ -3738,6 +3961,12 @@ msgid "Created by"
 msgstr "Créé par"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "Created by:"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__create_date
 #: model:ir.model.fields,field_description:mail.field_discuss_category__create_date
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__create_date
@@ -3756,6 +3985,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_date
@@ -3780,6 +4010,12 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__create_date
 msgid "Created on"
 msgstr "Créé le"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "Created on:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4016,11 +4252,6 @@ msgid "Default Recipients"
 msgstr "Destinataires par défaut"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-msgid "Default Subject"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
 msgstr "Résumé par défaut"
@@ -4029,11 +4260,6 @@ msgstr "Résumé par défaut"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
 msgstr "Résumé par défaut :"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid "Default Type"
-msgstr "Type par défaut"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -4049,8 +4275,8 @@ msgstr "Valeurs par défaut"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Default deadline for the activities..."
-msgstr "Délai par défaut pour les activités..."
+msgid "Default deadline for the activities"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -4075,11 +4301,6 @@ msgstr ""
 "- partenaire (utilisant l'ID d'un partenaire ou le champ partner_id)\n"
 "OU\n"
 "- e-mail (utilisant le champ email_from ou e-mail)"
-
-#. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
-msgid "Default user"
-msgstr "Utilisateur par défaut"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -4272,6 +4493,7 @@ msgstr "Désactiver le flou d’arrière-plan"
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
 #: code:addons/mail/static/src/core/common/message_pin_dialog.xml:0
+#: code:addons/mail/static/src/core/web/activity_assign_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
@@ -4300,6 +4522,8 @@ msgid "Disconnected from the call by the server"
 msgstr "Déconnecté de l'appel par le serveur"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.main_menu_discuss
@@ -4307,6 +4531,11 @@ msgstr "Déconnecté de l'appel par le serveur"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Discuss"
 msgstr "Discussion"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__discuss_call_history_id
+msgid "Discuss Call History"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
@@ -4332,6 +4561,7 @@ msgstr "Annuler"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
+#: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
 msgid "Dismiss warning"
 msgstr "Ignorer l’avertissement"
 
@@ -4349,6 +4579,7 @@ msgstr "Ignorer l’avertissement"
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__display_name
 #: model:ir.model.fields,field_description:mail.field_discuss_voice_metadata__display_name
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_access__display_name
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__display_name
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__display_name
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__display_name
@@ -4376,6 +4607,7 @@ msgstr "Ignorer l’avertissement"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__display_name
@@ -4500,6 +4732,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
 msgstr "Document"
@@ -4532,6 +4765,7 @@ msgid "Document: \""
 msgstr "Document: \""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_ir_access__domain
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Domain"
 msgstr "Domaine"
@@ -4546,6 +4780,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__done
@@ -4576,6 +4811,8 @@ msgstr "Finaliser et planifier la suite"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+#: code:addons/mail/static/src/views/web/attachment/ir_attachment_download.js:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Download"
 msgstr "Télécharger"
@@ -4607,7 +4844,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__date_deadline
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Due Date"
 msgstr "Date d'échéance"
 
@@ -4630,10 +4866,16 @@ msgid "Due in %s days"
 msgstr "Venant à échéance dans %s jours"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Due on"
 msgstr "Dû le"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "Due on:"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -4970,6 +5212,17 @@ msgid "Enable background blur"
 msgstr "Activer le flou d'arrière-plan"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__end_ms
+msgid "End (ms)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "End Date Field"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
 msgid "End Dt"
 msgstr "Date de fin"
@@ -4984,6 +5237,17 @@ msgstr "Message de fin"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "End Poll"
 msgstr "Clôturer le sondage"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "End of Media"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_call_artifact_start_before_end
+msgid "End time must be after the start time."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__ended_poll_ids
@@ -5063,6 +5327,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__res_users__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__danger
@@ -5136,6 +5401,12 @@ msgstr "Quitter le mode plein écran"
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Picture in Picture"
 msgstr "Quitter le mode image dans l’image"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Exit fullscreen (F)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5285,11 +5556,6 @@ msgid "Feedback"
 msgstr "Discussion"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
-msgid "Feedback:"
-msgstr "Feedback :"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Récupérer maintenant"
@@ -5379,6 +5645,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
@@ -5397,6 +5664,7 @@ msgstr "Abonnés"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
@@ -5440,7 +5708,7 @@ msgstr "Assistant de modification des suiveurs"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/chatter/web/composer_patch.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Followers only"
@@ -5639,6 +5907,12 @@ msgstr "Plein écran"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Fullscreen (F)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Future"
@@ -5725,6 +5999,13 @@ msgstr "Retour au vote"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Go to conversation"
 msgstr "Aller à la conversation"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
+msgid ""
+"Go to your computer's settings to unmute your mic and increase its level"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
@@ -5860,6 +6141,7 @@ msgstr "Comporte des mentions"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__has_message
+#: model:ir.model.fields,field_description:mail.field_ir_access__has_message
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__has_message
 #: model:ir.model.fields,field_description:mail.field_ir_cron__has_message
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__has_message
@@ -5966,12 +6248,6 @@ msgid "Hide camera preview"
 msgstr "Masquer l’aperçu de la caméra"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call.xml:0
-msgid "Hide sidebar"
-msgstr "Masquer la barre latérale"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__hidden
 msgid "Hide the subtype in the follower options"
 msgstr "Masquer le sous-type dans les options des abonnés"
@@ -6059,6 +6335,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__id
 #: model:ir.model.fields,field_description:mail.field_discuss_voice_metadata__id
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:mail.field_ir_access__id
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__id
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__id
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__id
@@ -6086,6 +6363,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__id
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__id
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__id
@@ -6207,6 +6485,7 @@ msgstr "Si SSL requis"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_needaction
+#: model:ir.model.fields,help:mail.field_ir_access__message_needaction
 #: model:ir.model.fields,help:mail.field_ir_actions_server__message_needaction
 #: model:ir.model.fields,help:mail.field_ir_cron__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
@@ -6222,6 +6501,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error
+#: model:ir.model.fields,help:mail.field_ir_access__message_has_error
 #: model:ir.model.fields,help:mail.field_ir_actions_server__message_has_error
 #: model:ir.model.fields,help:mail.field_ir_cron__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error
@@ -6606,6 +6886,12 @@ msgid "Invalid"
 msgstr "Invalide"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Invalid call timing: end date is before start date."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
@@ -6756,7 +7042,6 @@ msgstr "Inviter \"%s\""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Invite People"
 msgstr "Inviter des gens"
@@ -6803,6 +7088,12 @@ msgid "Invited Member"
 msgstr "Membre invité"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+msgid "Invited by"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Inviting by email is not allowed for this channel type (%s)."
@@ -6833,6 +7124,7 @@ msgstr "Est éditeur"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -6966,7 +7258,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Join"
 msgstr "Rejoindre"
@@ -6974,6 +7265,7 @@ msgstr "Rejoindre"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join Call"
 msgstr "Rejoindre l'appel"
 
@@ -6987,15 +7279,15 @@ msgstr "Rejoindre le canal"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-msgid "Join Video Call"
-msgstr "Rejoindre l'appel vidéo"
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+msgid "Join Conversation"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Join call"
-msgstr "Rejoindre l’appel"
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Join Video Call"
+msgstr "Rejoindre l'appel vidéo"
 
 #. module: mail
 #. odoo-javascript
@@ -7008,6 +7300,12 @@ msgstr "Rejoindre l’appel"
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call with Camera"
 msgstr "Rejoindre l’appel avec caméra"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+msgid "Joining as"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7163,6 +7461,7 @@ msgstr "Mis à jour le"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_uid
@@ -7208,6 +7507,7 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_date
@@ -7343,11 +7643,6 @@ msgid "Linked Message"
 msgstr "Message lié"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
-msgid "Linked to"
-msgstr "Lié à"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
@@ -7431,6 +7726,10 @@ msgstr "Enregistrer maintenant"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Log a note"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
@@ -7459,6 +7758,11 @@ msgstr "Note"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Log step:"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_users__login
+msgid "Login"
 msgstr ""
 
 #. module: mail
@@ -7718,7 +8022,6 @@ msgstr "Marquer comme lu"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -7771,6 +8074,23 @@ msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
 msgstr "Modèle de massmail : '%(name)s' (ID : %(record_id)s)"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__media_id
+msgid "Media Attachment"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Media Error"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_call_artifact.py:0
+msgid "Media artifacts overlap."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
@@ -7780,6 +8100,8 @@ msgstr ""
 "configuré correctement."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 #: model:mail.activity.type,summary:mail.mail_activity_data_meeting
 msgid "Meeting"
@@ -7788,8 +8110,8 @@ msgstr "Réunion"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Meeting - %(date)s"
-msgstr "Réunion - %(date)s"
+msgid "Meeting, %(date)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7893,6 +8215,7 @@ msgstr "Message %(thread name)s…"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_has_error
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_has_error
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
@@ -8068,6 +8391,7 @@ msgstr "ID du message"
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__message_ids
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_ids
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_ids
@@ -8133,6 +8457,12 @@ msgid "Microphone"
 msgstr "Microphone"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
+msgid "Microphone muted by system"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
 msgstr "E-mail manquant"
@@ -8170,6 +8500,7 @@ msgstr ""
 #: model:ir.model,name:mail.model_ir_model
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__model_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__model_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_model
@@ -8237,9 +8568,16 @@ msgstr "Plus d'actions"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "Couper le son"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Mute (M)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8252,6 +8590,12 @@ msgstr "Mettre la conversation en sourdine"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
 msgid "Mute notifications until"
 msgstr "Couper le son des notifications jusqu'au"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
+msgid "Muted for you"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -8272,6 +8616,11 @@ msgstr "Échéance de mon activité"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "My Channels"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+msgid "My Requests"
 msgstr ""
 
 #. module: mail
@@ -8304,6 +8653,11 @@ msgstr "Mes modèles"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Name"
 msgstr "Nom"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template_preview__recipient_cc_names
+msgid "Names of the Cc recipients"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__recipient_names
@@ -8382,11 +8736,6 @@ msgid "Next Activities"
 msgstr "Activités suivantes"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid "Next Activity"
-msgstr "Activité suivante"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
@@ -8423,6 +8772,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Week"
 msgstr "Semaine prochaine"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Next activity"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8561,9 +8915,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "No one else is here."
-msgstr "Il n'y a personne d'autre ici."
+#: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
+msgid "No microphone permissions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8591,11 +8945,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"No responsible specified for %(activity_type_name)s: %(activity_summary)s.%"
-"(error_detail)s"
+"No responsible or role specified for %(activity_type_name)s: %"
+"(activity_summary)s.%(error_detail)s"
 msgstr ""
-"Aucun responsable indiqué pour %(activity_type_name)s : %(activity_summary)s."
-"%(error_detail)s"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
@@ -8707,6 +9059,7 @@ msgstr "Vous n'êtes pas intéressé ?"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__note
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__note
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__mail_post_method__note
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Note"
 msgstr "Note"
 
@@ -8818,7 +9171,6 @@ msgstr "Notification : Notifier les messages planifiés"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: model:ir.actions.act_window,name:mail.mail_notification_action
 #: model:ir.actions.client,name:mail.discuss_notification_settings_action
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
@@ -8864,8 +9216,14 @@ msgstr "Ne pas notifier les suiveurs"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
-msgid "Notify everyone"
-msgstr "Notifier tout le monde"
+msgid "Notify all members of this conversation"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/store_service.js:0
+msgid "Notify all members of this conversation who are online"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
@@ -8894,6 +9252,7 @@ msgstr "Nombre de votes"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -8927,6 +9286,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_ir_access__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error_counter
@@ -8942,6 +9302,7 @@ msgstr "Nombre d'erreurs"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_ir_access__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_ir_actions_server__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_ir_cron__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -8957,6 +9318,7 @@ msgstr "Nombre de messages nécessitant une action"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_ir_access__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_ir_actions_server__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_ir_cron__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -9012,6 +9374,12 @@ msgid "Offline since"
 msgstr "Hors ligne depuis"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_call_artifact__end_ms
+#: model:ir.model.fields,help:mail.field_mail_call_artifact__start_ms
+msgid "Offset from the start of the call in milliseconds"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "On"
@@ -9039,12 +9407,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_indicator.xml:0
-msgid "Ongoing call"
-msgstr "Appel en cours"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.js:0
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
@@ -9058,6 +9420,12 @@ msgstr "En ligne"
 #. odoo-python
 #: code:addons/mail/controllers/attachment.py:0
 msgid "Only PDF and videos files can have thumbnail."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_access__active
+msgid ""
+"Only active accesses are taken into account when checking access rights."
 msgstr ""
 
 #. module: mail
@@ -9109,6 +9477,12 @@ msgid "Only custom models can be modified."
 msgstr "Seuls les modèles personnalisés peuvent être modifiés."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/attachment/ir_attachment_download.js:0
+msgid "Only files will be downloaded."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
 msgid "Only internal user can receive notifications in Odoo"
 msgstr "Seul un utilisateur interne peut recevoir des notifications dans Odoo"
@@ -9157,12 +9531,23 @@ msgstr ""
 "sur le modèle 'discuss.channel'"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_ir_attachment_mail_call_artifact_uniq
+msgid "Only one attachment per call artifact is allowed."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/controllers/discuss/channel.py:0
 msgid "Only the channel owner or DB admins can modify member roles."
 msgstr ""
 "Seul le propriétaire du canal ou les administrateurs de la base de données "
 "peuvent modifier les rôles des membres."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/attachment/ir_attachment_download.js:0
+msgid "Only the selected files will be downloaded."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -9252,6 +9637,7 @@ msgid "Open preview in a separate window."
 msgstr "Ouvrir l'aperçu dans une fenêtre séparée."
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_ir_access__operation
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__operation
 msgid "Operation"
 msgstr "Opération"
@@ -9353,13 +9739,12 @@ msgid "Original message was deleted"
 msgstr "Le message original a été supprimé"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
-msgid "Original note:"
-msgstr "Note originale :"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
+msgid "Other Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 msgid "Other activities"
 msgstr "Autres activités"
@@ -9502,6 +9887,7 @@ msgstr "Serveur de messagerie sortant"
 #: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__res_users__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__overdue
@@ -9673,6 +10059,12 @@ msgid "Pause"
 msgstr "Pause"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Pause (K)"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__payload
 msgid "Payload"
 msgstr "Charge utile"
@@ -9733,6 +10125,7 @@ msgstr "Image dans l’image"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/message_actions_patch.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Pin"
 msgstr "Épingler"
 
@@ -9749,6 +10142,8 @@ msgid "Pin this message?"
 msgstr "Épingler ce message ?"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_mail__pinned_at
 #: model:ir.model.fields,field_description:mail.field_mail_message__pinned_at
 msgid "Pinned"
@@ -9858,6 +10253,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__res_users__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__planned
@@ -9891,6 +10287,24 @@ msgstr "Planification"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_player.xml:0
 msgid "Play"
 msgstr "Play"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Play (K)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Playback Error"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.xml:0
+msgid "Playback speed"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10064,6 +10478,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
+"Posting a message should receive copy carbon partners as a list of IDs "
+"(received %(pids)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
@@ -10149,6 +10571,12 @@ msgid "Preview"
 msgstr "Aperçu"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.xml:0
+msgid "Prioritize tiles with video"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__priority
 msgid "Priority"
 msgstr "Priorité"
@@ -10224,12 +10652,6 @@ msgstr ""
 "Le Push-to-Talk fonctionne uniquement lorsque cet onglet est actif. Pour "
 "l'utiliser en dehors de cet onglet, nous vous recommandons d'installer notre "
 "%(anchor_start)sextension%(anchor_end)s."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
-msgid "Push-to-talk"
-msgstr "Push-to-Talk"
 
 #. module: mail
 #. odoo-javascript
@@ -10377,6 +10799,11 @@ msgid "Recipient"
 msgstr "Destinataire"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__recipient_cc_names
+msgid "Recipient Cc Names"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__recipient_names
 msgid "Recipient Names"
 msgstr "Noms des destinataires"
@@ -10387,13 +10814,33 @@ msgid "Recipient email address"
 msgstr "Adresse e-mail du destinataire"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
-#: model:ir.model.fields,field_description:mail.field_mail_message__partner_ids
-#: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__partner_ids
-#: model:ir.model.fields,field_description:mail.field_mail_template_preview__partner_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Destinataires"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__partner_cc_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__partner_cc_ids
+#: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__partner_cc_ids
+msgid "Recipients (Cc)"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__partner_ids
+msgid "Recipients (To)"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__partner_cc_ids
+msgid "Recipients Cc"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__partner_ids
+msgid "Recipients To"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
@@ -10495,6 +10942,7 @@ msgstr "Champ de relation"
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_followers_edit__operation__remove
 msgid "Remove"
 msgstr "Supprimer"
@@ -10560,6 +11008,12 @@ msgstr "Retirer des favoris"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Remove from Favorites"
 msgstr "Retirer des favoris"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+msgid "Remove from call"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10710,6 +11164,16 @@ msgstr ""
 "notifier tous les utilisateurs associés."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Requested By"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Requested On"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__res_access
 msgid "Res Access"
 msgstr ""
@@ -10776,11 +11240,19 @@ msgid "Reset initial position"
 msgstr "Réinitialiser la position initiale"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity_assign_popover.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_role_id
+#: model:ir.model.fields,field_description:mail.field_ir_cron__activity_role_id
+msgid "Responsible Role"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
@@ -10851,6 +11323,18 @@ msgid "Ringing session"
 msgstr "Session d'appel"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+#: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
+#: code:addons/mail/static/src/views/web/activity/activity_cell.xml:0
+#: model:ir.model.fields,field_description:mail.field_mail_activity__role_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__role_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_role_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__role_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_role_id
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__role
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_tree
@@ -10858,8 +11342,21 @@ msgid "Role"
 msgstr "Rôle"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_cell.xml:0
+msgid "Role Assigned"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "Role:"
+msgstr ""
+
+#. module: mail
 #: model:ir.actions.act_window,name:mail.res_role_action
 #: model:ir.ui.menu,name:mail.menu_roles
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Roles"
 msgstr "Rôles"
 
@@ -10889,6 +11386,12 @@ msgstr "URL du serveur SFU"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_key
 msgid "SFU Server key"
 msgstr "Clé du serveur SFU"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.xml:0
+msgid "SHIFT+, SHIFT+."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -11075,6 +11578,12 @@ msgstr "Script"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
+msgid "Search"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Search %(threadName)s"
 msgstr "Rechercher %(threadName)s"
@@ -11132,12 +11641,6 @@ msgstr "Rechercher des conversations"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search for a GIF"
 msgstr "Rechercher un gif"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/mention_list.js:0
-msgid "Search for a channel..."
-msgstr "Rechercher un canal..."
 
 #. module: mail
 #. odoo-javascript
@@ -11271,6 +11774,12 @@ msgstr "Sélectionnez un enregistrement"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "Sélectionner un utilisateur..."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/list/mail_activity_list_reschedule.xml:0
+msgid "Select date"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11728,12 +12237,6 @@ msgstr "Afficher l’aperçu de la caméra"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call.xml:0
-msgid "Show sidebar"
-msgstr "Afficher la barre latérale"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
 msgid "Show trimmed content"
 msgstr "Afficher le contenu réduit"
@@ -11750,6 +12253,12 @@ msgstr ""
 msgid ""
 "Showing the first %(search_limit)s results. Narrow your search to see more "
 "choices."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.js:0
+msgid "Sidebar"
 msgstr ""
 
 #. module: mail
@@ -11806,7 +12315,13 @@ msgid "Specific Followers"
 msgstr "Abonnés spécifiques"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__role
+msgid "Specific Role"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Specific User"
 msgstr "Utilisateur spécifique"
 
@@ -11843,6 +12358,17 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.js:0
+msgid "Spotlight"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_call_artifact__start_ms
+msgid "Start (ms)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start Call"
 msgstr "Démarrer appel"
@@ -11851,6 +12377,12 @@ msgstr "Démarrer appel"
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
 msgstr "Message de démarrage d’appel"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief.js:0
+msgid "Start Date Field"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_dt
@@ -11987,13 +12519,6 @@ msgstr "Arrêter le partage d'écran"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
-msgid "Stop camera"
-msgstr "Arrêter la caméra"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.xml:0
 msgid "Stop presenting"
 msgstr "Arrêter la présentation"
@@ -12035,6 +12560,11 @@ msgstr "Sujet"
 #: model:ir.model.fields,help:mail.field_mail_template__subject
 msgid "Subject (placeholders may be used here)"
 msgstr "Sujet (des placeholders peuvent être utilisées ici)"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject_placeholder
+msgid "Subject Placeholder"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12100,6 +12630,8 @@ msgstr "Activité suivante suggérée"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Summary"
 msgstr "Résumé"
@@ -12536,6 +13068,11 @@ msgid ""
 msgstr ""
 "Le nom de l'alias, par exemple 'carrières' pour récupérer les e-mails de "
 "<carrières@example.odoo.com>"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_access__domain
+msgid "The operations will only be allowed for records in this domain"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -12976,6 +13513,12 @@ msgid "Thumbnail"
 msgstr "Vignette"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/change_layout_dialog.js:0
+msgid "Tiled"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
 msgid "Timezone"
@@ -12992,6 +13535,8 @@ msgid "Title"
 msgstr "Titre"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_notification_popover.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -13010,6 +13555,14 @@ msgstr "À (e-mails)"
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
 msgstr "À (partenaires)"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity_menu.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+msgid "To Assign"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13096,6 +13649,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__res_users__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__today
@@ -13221,6 +13775,13 @@ msgstr "Déclencher"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "Try again"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
+msgid "Turn camera off"
 msgstr ""
 
 #. module: mail
@@ -13400,11 +13961,6 @@ msgid "Unassign from me"
 msgstr "Me désassigner"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Unassigned"
-msgstr "Non assigné"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
 msgstr "Activités non assignées"
@@ -13485,9 +14041,16 @@ msgstr "Erreur inconnue : %(error)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr "Réactiver le son"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.js:0
+msgid "Unmute (M)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13527,6 +14090,7 @@ msgstr "Mailing sans nom"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/core/public_web/message_actions_patch.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Unpin"
 msgstr "Désépingler"
 
@@ -13587,6 +14151,12 @@ msgid "Untitled"
 msgstr "Sans titre"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Update Followers"
 msgstr "Mettre à jour les suiveurs"
@@ -13595,18 +14165,6 @@ msgstr "Mettre à jour les suiveurs"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Update Mail Layout"
 msgstr "Mettre à jour la mise en page de l'e-mail"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
-msgid "Update Notifications"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
-msgid "Upload Avatar"
-msgstr "Charger l'avatar"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
@@ -13829,17 +14387,31 @@ msgstr ""
 "'user_notification' : généré pour un destinataire spécifique"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_users__login
+msgid "Used to log into the system"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
 msgstr "Utilisé pour commander des sous-types."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+#: code:addons/mail/static/src/core/web/activity_assign_popover.xml:0
 #: model:ir.model,name:mail.model_res_users
 #: model:ir.model.fields,field_description:mail.field_mail_poll_vote__user_id
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "User"
 msgstr "Utilisateur"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+msgid "User Avatar"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
@@ -14129,7 +14701,6 @@ msgstr "Voir la conversation avec %(channel_name)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "View hidden conversations"
 msgstr "Afficher les conversations masquées"
@@ -14348,11 +14919,16 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
-msgid ""
-"When selecting \"Default user\" assignment, you must specify a responsible."
+msgid "When selecting \"Role\" assignment, you must specify an assigned role."
 msgstr ""
-"Lorsque vous sélectionnez l'attribution \"Utilisateur par défaut\", vous "
-"devez préciser un responsable."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_plan_template.py:0
+msgid ""
+"When selecting \"Specific User\" assignment, you must specify a responsible "
+"user."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -14398,6 +14974,11 @@ msgid "Whether to display all the recipients or only the important ones."
 msgstr ""
 "Que ce soit pour afficher tous les destinataires ou seulement les plus "
 "importants."
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_access__operation
+msgid "Which operation(s) this access applies to, a subset of 'crud'."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -14606,9 +15187,21 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/web/attachment/ir_attachment_download.js:0
+msgid "You can only download %s files at a time."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
 msgstr "Vous pouvez toujours désactiver votre %s à tout moment."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -14620,13 +15213,20 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
+#: code:addons/mail/models/mail_message_subtype.py:0
 msgid ""
-"You cannot delete those groups, as the Whole Company group is required by "
-"other modules."
+"You cannot delete %(subtype_names)s as they are required in various apps."
 msgstr ""
-"Impossible de supprimer ces groupes, car le groupe \"Toute la société\" est "
-"nécessaire pour d'autres modules."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_role.py:0
+msgid ""
+"You cannot delete these roles because they are still in use in:\n"
+"- %(blocking_list)s\n"
+"\n"
+"Please archive the role(s) instead, or reassign these items."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -14637,6 +15237,14 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas modifier le modèle cible de %(activities_names)s car ils "
 "sont requis dans diverses applications."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_message_subtype.py:0
+msgid ""
+"You cannot modify %(subtype_names)s as their configuration are required in "
+"various apps."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -14717,12 +15325,6 @@ msgid "You have been assigned to the"
 msgstr "Vous avez été assigné à"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_core_public_web_service.js:0
-msgid "You have been invited to #%s"
-msgstr "Vous avez été invité à #%s"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "You may not create a message using another user's mail server."
@@ -14792,6 +15394,12 @@ msgid "Your"
 msgstr "Votre"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
+msgid "Your Meeting is Ready"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid ""
@@ -14836,6 +15444,12 @@ msgstr "Votre navigateur ne prend pas en charge webRTC."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Your call is in another window."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/attachment/ir_attachment_download.js:0
+msgid "Your download will start soon."
 msgstr ""
 
 #. module: mail
@@ -14924,8 +15538,6 @@ msgstr ""
 "                Veuillez réessayer plus tard."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
 msgstr "par"
@@ -15025,7 +15637,6 @@ msgstr "document"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.js:0
-#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "terminée"
 
@@ -15118,8 +15729,6 @@ msgstr "Par ex. Contact"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "e.g. Discuss Proposal"
 msgstr "par ex. Discuter de la proposition"
 
@@ -15158,7 +15767,8 @@ msgid "e.g. Schedule a meeting"
 msgstr "par ex. Planifier une réunion"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#. odoo-python
+#: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "e.g. Welcome to MyCompany!"
 msgstr "par ex. Bienvenue chez MyCompany !"
 
@@ -15206,6 +15816,12 @@ msgstr "e-mails à"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "for"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.xml:0
+msgid "for @"
 msgstr ""
 
 #. module: mail
@@ -15319,8 +15935,10 @@ msgid "months"
 msgstr "mois"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "more"
 msgstr "plus"
 
@@ -15378,6 +15996,12 @@ msgstr "ou"
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "or press %(send_keybind)s"
 msgstr "ou appuyez sur %(send_keybind)s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
+msgid "or share this permanent link with others you want in the meeting:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15520,6 +16144,12 @@ msgid "wrote"
 msgstr "a écrit"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/fields/call_debrief/call_debrief_media_controls.xml:0
+msgid "x"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "you"
@@ -15538,52 +16168,7 @@ msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” dans “%(channel_name)s”"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/activity.js:0
-msgid "“%s”"
-msgstr "\"%s\""
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
-
-#~ msgid "Edit Subscription of %(name)s"
-#~ msgstr "Modifier l'abonnement de %(name)s"
-
-#~ msgid "Edit subscription"
-#~ msgstr "Modifier abonnement"
-
-#~ msgid "The duration of voice messages is limited to 1 minute."
-#~ msgstr "La durée des messages vocaux est limitée à 1 minute."
-
-#~ msgid "The subscription preferences were successfully applied."
-#~ msgstr "Les préférences d'abonnement ont été appliquées avec succès."
-
-#~ msgid "Auto-focus speaker"
-#~ msgstr "Mise au point automatique sur l’intervenant"
-
-#~ msgid "Blur video background"
-#~ msgstr "Arrière-plan de la vidéo flouté"
-
-#~ msgid "Clear Search"
-#~ msgstr "Effacer la recherche"
-
-#~ msgid "Log RTC events"
-#~ msgstr "Consigner les événements RTC"
-
-#~ msgid "Search Sub Channels"
-#~ msgstr "Recherche de sous-canaux"
-
-#~ msgid "Search in progress"
-#~ msgstr "Recherche en cours"
-
-#~ msgid "Show video participants only"
-#~ msgstr "Afficher les participants à la vidéo uniquement"
-
-#~ msgid "The conversation is empty."
-#~ msgstr "La conversation est vide."
-
-#~ msgid "Search button"
-#~ msgstr "Bouton de recherche"

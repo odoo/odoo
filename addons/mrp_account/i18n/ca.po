@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2026-03-14 12:58+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -104,11 +104,6 @@ msgid "Account Move Line"
 msgstr "Línia de moviment del compte"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Acme Corp."
-msgstr "Acme Corp."
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Compte analític"
@@ -177,6 +172,11 @@ msgid ""
 msgstr ""
 "Calcular el preu del producte utilitzant productes i operacions de la "
 "factura de materials relacionats, només per a productes manufacturats."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-javascript
@@ -314,11 +314,6 @@ msgid "Label"
 msgstr "Etiqueta"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Laptop"
-msgstr "Portàtil"
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
 msgid "Last Updated by"
@@ -428,9 +423,9 @@ msgid "Production Account"
 msgstr "Compte de producció"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
-msgstr "REF123"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
+msgid "Rate"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -519,11 +514,6 @@ msgstr "Crèdit total"
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
 msgstr "Total deure"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Units"
-msgstr "Unitats"
 
 #. module: mrp_account
 #. odoo-python

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-04-13 19:33+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/web/ko/"
@@ -492,7 +492,7 @@ msgstr "즐겨찾기할 필터의 이름이 필요합니다."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "A name for your new action is required."
 msgstr "새 작업의 이름은 필수 입력 사항입니다."
 
@@ -639,6 +639,12 @@ msgstr "개발자 모드 활성화하기(에셋 포함)"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Activate the developer mode (with tests assets)"
 msgstr "개발자 모드 활성화하기(테스트 에셋 포함)"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Active"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -859,7 +865,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "An action with the same name already exists."
 msgstr "같은 이름의 작업이 이미 존재합니다."
 
@@ -910,6 +916,7 @@ msgstr "물병자리"
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Archive"
@@ -930,6 +937,7 @@ msgstr "선택한 모든 레코드를 보관하시겠습니까?"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 msgid "Are you sure that you want to archive this record?"
 msgstr "이 레코드를 보관 하시겠습니까?"
@@ -942,7 +950,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Are you sure that you want to remove this embedded action?"
 msgstr "이 임베디드 작업을 제거하시겠습니까?"
 
@@ -1030,6 +1038,7 @@ msgstr "첨부"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: model:ir.model,name:web.model_ir_attachment
 msgid "Attachment"
 msgstr "첨부 파일"
 
@@ -1366,6 +1375,12 @@ msgstr "염소자리"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
+msgid "Card: no action for type: %(type)s"
 msgstr ""
 
 #. module: web
@@ -1708,8 +1723,6 @@ msgid "Confirm"
 msgstr "승인"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.check_identity
 msgid "Confirm access"
 msgstr ""
@@ -1875,6 +1888,12 @@ msgstr "수량 한도"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "Count LoC"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Count lines of code (%s billable)"
 msgstr ""
 
@@ -1979,13 +1998,7 @@ msgstr "통화 필드"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
-msgid "Custom"
-msgstr "사용자 지정"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom %s"
 msgstr "사용자 지정 %s"
 
@@ -1996,7 +2009,7 @@ msgstr "사용자 지정 색상"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom Embedded Action"
 msgstr "사용자 지정 임베디드 동작"
 
@@ -2228,7 +2241,7 @@ msgstr "확대된 이미지의 모양을 밀리초 단위의 값으로 지연"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tags_list/avatar_tag.xml:0
 #: code:addons/web/static/src/core/tags_list/badge_tag.js:0
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
@@ -2258,7 +2271,7 @@ msgstr "속성 필드 삭제"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Delete item"
 msgstr "아이템 삭제"
 
@@ -2291,6 +2304,12 @@ msgstr "내림차순"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Developer Tools"
 msgstr "개발자 도구"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Dial Field"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2389,6 +2408,7 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
@@ -2763,6 +2783,8 @@ msgid "Enter your email"
 msgstr "이메일 입력"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Enter your password"
 msgstr "비밀번호 입력"
@@ -3126,6 +3148,12 @@ msgstr ""
 "언어 설정에 따라 서식 값을 지정합니다 - 예. 천 단위 구분 기호, 반올림 등."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Formatted Field"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
 msgstr "프레임"
@@ -3262,12 +3290,6 @@ msgid "Handle"
 msgstr "핸들"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Having problems ?"
-msgstr ""
-
-#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "모든 보고서의 상단에 표시되는 머리말 문구입니다."
@@ -3394,12 +3416,6 @@ msgstr "애플리케이션을 받는 방법"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Hue"
-msgstr "색조"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "I want to update data (import-compatible export)"
 msgstr ""
@@ -3408,6 +3424,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_attachment__id
 #: model:ir.model.fields,field_description:web.field_ir_http__id
 #: model:ir.model.fields,field_description:web.field_ir_model__id
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
@@ -3968,12 +3985,6 @@ msgstr "칸반 예시"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record.js:0
-msgid "Kanban: no action for type: %(type)s"
-msgstr "칸반: 유형: %(type)s에 대한 작업 없음"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Label"
 msgstr "라벨"
@@ -4258,7 +4269,7 @@ msgstr "주요 활동"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Make this embedded action available to other users"
 msgstr "다른 사용자가 이 임베디드 작업을 사용할 수 있도록 설정"
 
@@ -4513,12 +4524,6 @@ msgstr "모드"
 #: model:ir.model,name:web.model_ir_model
 msgid "Model"
 msgstr "모델"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Model Record Rules"
-msgstr "모델 레코드 규칙"
 
 #. module: web
 #. odoo-javascript
@@ -5257,12 +5262,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Opacity"
-msgstr "불투명"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Open"
@@ -5850,12 +5849,6 @@ msgstr "기록"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Record Rules"
-msgstr "레코드 규칙"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
 msgstr "레코드 메모리"
@@ -6058,12 +6051,6 @@ msgstr "필수 항목:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Reset"
-msgstr "초기화"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/offline_action_helper.xml:0
 msgid "Reset Filters"
 msgstr ""
@@ -6188,19 +6175,7 @@ msgstr "토"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Saturation and brightness color picker."
-msgstr "채도 및 밝기 색상 선택기."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.js:0
-msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-msgstr "채도: %(saturationLvl)s%. 밝기: %(brightnessLvl)s%"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
@@ -6232,7 +6207,7 @@ msgstr "속성 저장"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Save View"
 msgstr "보기 저장"
 
@@ -6622,7 +6597,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Shared"
 msgstr "공유됨"
 
@@ -6695,12 +6670,6 @@ msgstr "서명"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Signed in as"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
 msgstr "하루"
@@ -6726,12 +6695,6 @@ msgstr "작게"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Smileys & Emotion"
 msgstr "스마일 및 감정 표시"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
-msgid "Solid"
-msgstr "고체"
 
 #. module: web
 #. odoo-javascript
@@ -7231,7 +7194,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "This embedded action is global and will be removed for everyone."
 msgstr "이 임베디드 작업은 전체적으로 적용되며 모든 사용자에게 제거됩니다."
 
@@ -7288,6 +7251,12 @@ msgstr "목"
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Time"
 msgstr "시간"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7429,6 +7398,12 @@ msgstr "여행 및 장소"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Triton"
 msgstr "트리톤"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Trouble signing in?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7757,18 +7732,6 @@ msgstr "이 보기를 열 때 기본적으로 이 필터를 사용합니다."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid ""
-"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
-"keys to adapt the saturation. Press the Control or Command key at the same "
-"time to have finer control."
-msgstr ""
-"위아래 화살표 키를 이용하여 밝기를 조절하고, 좌우 화살표 키를 사용하여 채도"
-"를 조절할 수 있습니다. Ctrl 키와 Command 키를 동시에 누르면 더욱 정교하게 조"
-"정할 수 있습니다."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Use your password"
 msgstr ""
@@ -7876,6 +7839,12 @@ msgstr "회사별로 다르게 설정됩니다."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Verify your identity"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 msgid "Video"
 msgstr "동영상"
@@ -7964,7 +7933,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
@@ -15445,12 +15414,6 @@ msgstr "히어로"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "heroine"
 msgstr "히로인"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "hex"
-msgstr "헥사"
 
 #. module: web
 #. odoo-javascript
@@ -27311,30 +27274,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "Autosave"
-#~ msgstr "자동 저장"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr "이 옵션을 선택하면 필드가 수정될 때 기록이 즉시 저장됩니다."
-
-#~ msgid "Invalid data"
-#~ msgstr "잘못된 데이터"
-
-#~ msgid "No settings found"
-#~ msgstr "설정 없음"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "원형 차트는 양수와 음수를 혼합할 수 없습니다. 긍정적인 결과만 표시하도록 "
-#~ "도메인을 변경하십시오."
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "다른 키워드로 검색해 보세요"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

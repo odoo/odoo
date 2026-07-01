@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-30 00:50+0000\n"
 "PO-Revision-Date: 2026-04-14 09:06+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -216,7 +216,7 @@ msgstr "Si è verificato un errore durante il recupero dell'URL immesso."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Angle"
 msgstr ""
 
@@ -325,6 +325,12 @@ msgstr "Banner avviso"
 #: model:ir.model,name:html_editor.model_base
 msgid "Base"
 msgstr "Base"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Basic Block"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -455,6 +461,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "Chiudi"
@@ -480,7 +487,7 @@ msgstr "Vista codice"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Colors"
 msgstr ""
 
@@ -510,7 +517,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Conic"
 msgstr ""
 
@@ -604,7 +611,8 @@ msgstr "Ritaglia immagine"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/custom/color_picker_custom_tab.js:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 #: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Custom"
 msgstr "Personalizzata"
@@ -630,7 +638,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 msgid "Define a custom gradient"
 msgstr "Imposta una sfumatura personalizzata"
 
@@ -727,6 +735,12 @@ msgstr "Modifica campo"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed %s Video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Embed Image"
 msgstr "Incorpora immagine"
@@ -736,6 +750,12 @@ msgstr "Incorpora immagine"
 #: code:addons/html_editor/static/src/main/youtube_plugin.js:0
 msgid "Embed Youtube Video"
 msgstr "Incorpora video Youtube"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed the %s video in the document."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -769,25 +789,25 @@ msgstr "Espandi barra strumenti"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest corner"
 msgstr "Estendi all'angolo più vicino"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest side"
 msgstr "Estendi al lato più vicino"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest corner"
 msgstr "Estendi all'angolo più lontano"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest side"
 msgstr "Estendi al lato più lontano"
 
@@ -841,7 +861,13 @@ msgstr "Formatta"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Google Drive"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.js:0
 msgid "Gradient"
 msgstr "Sfumatura"
 
@@ -983,6 +1009,12 @@ msgstr "Subtest convertitore editor html"
 #: model:ir.model,name:html_editor.model_html_editor_converter_test
 msgid "Html Editor Converter Test"
 msgstr "Test convertitore editor html"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Hue"
+msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__id
@@ -1163,9 +1195,15 @@ msgstr "Inserisci a destra"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Insert your email signature"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
-msgid "Insert your signature"
-msgstr "Inserisci la tua firma"
+msgid "Insert your handwritten signature"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1216,7 +1254,7 @@ msgstr "Allinea a sinistra"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Linear"
 msgstr ""
 
@@ -1270,6 +1308,12 @@ msgstr "Disconnettiti"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Loom"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Loop"
 msgstr "Ciclo continuo"
@@ -1277,8 +1321,8 @@ msgstr "Ciclo continuo"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
-msgid "MM:SS"
-msgstr "MM:SS"
+msgid "M:SS"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1319,6 +1363,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "File mancante"
@@ -1441,6 +1486,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
+#: code:addons/html_editor/static/src/main/table/table_border_style_selector.xml:0
 msgid "None"
 msgstr ""
 
@@ -1500,6 +1546,7 @@ msgstr "Ops, sembra che l'AI non sia disponibile!"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid ""
 "Oops, the file %s could not be found. Please replace this file box by a new "
@@ -1507,6 +1554,12 @@ msgid ""
 msgstr ""
 "Ops, non è stato possibile trovare il file %s. Sostituisci il box del file "
 "con un altro e carica di nuovo il file."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Opacity"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1545,13 +1598,19 @@ msgstr "Incolla come URL"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Pick a color from the screen"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position X"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position Y"
 msgstr ""
 
@@ -1667,7 +1726,7 @@ msgstr "Campo qweb testo"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Radial"
 msgstr ""
 
@@ -1692,8 +1751,8 @@ msgstr "Rimuovi (CANCELLA) immagine"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
-msgid "Remove Format"
-msgstr "Elimina formato"
+msgid "Remove Format (Ctrl + Space)"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1710,13 +1769,12 @@ msgstr "Rimuovi colonne"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Repeating"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "Replace"
 msgstr "Sostituisci"
@@ -1744,6 +1802,12 @@ msgstr "Sostituisci icona"
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Replace media"
 msgstr "Sostituisci contenuto"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/color_picker.xml:0
+msgid "Reset"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1845,6 +1909,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/mobile_table_picker.xml:0
 msgid "Row count"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Saturation and brightness color picker."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.js:0
+msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
 msgstr ""
 
 #. module: html_editor
@@ -1970,12 +2046,13 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
 msgid "Signature"
 msgstr "Firma"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Size"
 msgstr ""
 
@@ -1991,6 +2068,12 @@ msgstr "Piccola"
 #: code:addons/html_editor/static/src/main/font/font_type_plugin.js:0
 msgid "Small section heading"
 msgstr "Intestazione sezione media"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/solid/color_picker_solid_tab.js:0
+msgid "Solid"
+msgstr ""
 
 #. module: html_editor
 #. odoo-python
@@ -2072,6 +2155,24 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border color"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border style"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border width"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
 msgid "Table of Contents"
@@ -2138,12 +2239,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url does not reference any supported video"
 msgstr "L'URL fornito non fa riferimento ad alcun video supportato"
-
-#. module: html_editor
-#. odoo-python
-#: code:addons/html_editor/tools.py:0
-msgid "The provided url is invalid"
-msgstr "L'url fornito non è valido"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2297,7 +2392,13 @@ msgstr "Trasforma in riga"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Twitch"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Type"
 msgstr ""
 
@@ -2381,6 +2482,15 @@ msgstr "Il formato dell'immagine caricata non è supportato. Prova con: %s"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid ""
+"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
+"keys to adapt the saturation. Press the Control or Command key at the same "
+"time to have finer control."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Vertical"
 msgstr "Verticale"
@@ -2406,7 +2516,7 @@ msgstr "Lettore video"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/custom_media_dialog.js:0
-#: code:addons/html_editor/static/src/main/media/video_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
 msgid "Videos"
 msgstr "Videos"
 
@@ -2565,7 +2675,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "deg"
 msgstr "grado"
 
@@ -2584,7 +2694,7 @@ msgstr "documento"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
-msgid "dynamic placeholder"
+msgid "dynamic"
 msgstr ""
 
 #. module: html_editor
@@ -2601,6 +2711,12 @@ msgstr "file"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "hex"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "line"
 msgstr "riga"
@@ -2609,6 +2725,18 @@ msgstr "riga"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "or"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "personalize"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "placeholder"
 msgstr ""
 
 #. module: html_editor
@@ -2633,47 +2761,3 @@ msgstr "gestione messaggio websocket"
 #: code:addons/html_editor/static/src/main/table/table_picker.xml:0
 msgid "x"
 msgstr "x"
-
-#~ msgid ""
-#~ "'Alt tag' specifies an alternate text for an image, if the image cannot "
-#~ "be displayed (slow connection, missing image, screen reader ...)."
-#~ msgstr ""
-#~ "Il tag \"alt\" indica un testo alternativo per l'immagine se non può "
-#~ "essere visualizzata (connessione lenta, immagine mancante, lettore a "
-#~ "schermo...)."
-
-#~ msgid "'Title tag' is shown as a tooltip when you hover the picture."
-#~ msgstr ""
-#~ "Il tag \"title\" viene mostrato come suggerimento quando il mouse viene "
-#~ "posizionato sull'immagine."
-
-#~ msgid "Click again to reset transformation"
-#~ msgstr "Fai clic di nuovo per resettare la trasformazione"
-
-#~ msgid "Description"
-#~ msgstr "Descrizione"
-
-#~ msgid "Edit media description"
-#~ msgstr "Modifica descrizione di media"
-
-#~ msgid "Set shape: Circle"
-#~ msgstr "Imposta forma: cerchio"
-
-#~ msgid "Set shape: Rounded"
-#~ msgstr "Configura forma: arrotondata"
-
-#~ msgid "Set shape: Shadow"
-#~ msgstr "Configura forma: ombra"
-
-#~ msgid "Set shape: Thumbnail"
-#~ msgstr "Configura forma: miniatura"
-
-#~ msgid "Tooltip"
-#~ msgstr "Suggerimento"
-
-#~ msgid "Transform the picture (click twice to reset transformation)"
-#~ msgstr ""
-#~ "Trasforma l'immagine (fai doppio clic per resettare la trasformazione)"
-
-#~ msgid "Select font style"
-#~ msgstr "Seleziona stile carattere"

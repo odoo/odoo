@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -79,12 +79,6 @@ msgstr ""
 "'%(so_line_name)s' vaqt jadvali bilan bog‘liq sotuv buyurtmasi moddasining "
 "tahliliy taqsimotida '%(missing_plan_names)s' tahliliy reja(lar) talab "
 "qilinadi."
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-#, fuzzy
-msgid "- Timesheet product"
-msgstr "- Vaqt jadvali mahsuloti"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -226,7 +220,12 @@ msgstr "<span class=\"text-muted small\">Javob berish vaqti</span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
-"reported as</span>"
+"reported as </span>"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
+msgid "<span>Sales Order Item: </span>"
 msgstr ""
 
 #. module: sale_timesheet
@@ -555,6 +554,12 @@ msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__display_timesheet_portal_link
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_timesheet_portal_link
+msgid "Display Timesheet Portal Link"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 #, fuzzy
 msgid "Draft"
@@ -749,6 +754,7 @@ msgstr "Interyer dizayni"
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_account_move
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, fuzzy
 msgid "Invoice"
@@ -1042,6 +1048,11 @@ msgstr ""
 "tasdiqlangan) ish vaqti jadvallari farqlanmagan holda hisob-kitob qilinadi."
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "Order"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__30_other_costs
 msgid "Other Costs"
 msgstr ""
@@ -1206,12 +1217,6 @@ msgid "Revenues (Milestones)"
 msgstr "Oshxonani yig‘ish (bosqichlar)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
-msgid "Revenues (Time & Material)"
-msgstr ""
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 #, fuzzy
 msgid ""
@@ -1225,12 +1230,6 @@ msgstr ""
 #, fuzzy
 msgid "Roofing"
 msgstr "Tom yopish"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-#, fuzzy
-msgid "S0001"
-msgstr "S0001"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
@@ -1260,6 +1259,7 @@ msgstr "Sotish buyurtmasi"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, fuzzy
 msgid "Sales Order Item"
@@ -1272,7 +1272,7 @@ msgid "Sales Order Line"
 msgstr "Sotish buyurtmasi qatori"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_card_inherit_sale_timesheet_so_button
 #, fuzzy
 msgid "Sales Orders"
 msgstr "Sotish buyurtmalari"
@@ -1501,6 +1501,7 @@ msgid "Threshold"
 msgstr "Chegara"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 #, fuzzy
 msgid "Time Billing"
@@ -1585,6 +1586,7 @@ msgstr "Vaqt jadvalining umumiy davomiyligi"
 #: model:ir.actions.report,name:sale_timesheet.timesheet_report_account_move
 #: model:ir.actions.report,name:sale_timesheet.timesheet_report_sale_order
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__sale_order_line__qty_delivered_method__timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, fuzzy
@@ -1627,12 +1629,6 @@ msgstr "Vaqt jadvallari davri"
 #, fuzzy
 msgid "Timesheets by Billing Type"
 msgstr "Hisob-kitob turi bo‘yicha vaqt jadvallari"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-#, fuzzy
-msgid "Timesheets for the"
-msgstr "Uchun vaqt jadvallari"
 
 #. module: sale_timesheet
 #. odoo-python

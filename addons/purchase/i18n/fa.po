@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-01-15 20:34+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -53,6 +53,20 @@ msgstr "تعداد صورتحساب فروشندگان"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
 msgstr "تعداد سطرها"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "%(added_lines_count)s PO lines added to the bill."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid ""
+"%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
+"unmatched remaining."
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -89,6 +103,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "-&gt;"
 msgstr "-&gt;"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "0 bill lines matched with this PO."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -291,17 +311,7 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
-msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
 msgstr ""
 
 #. module: purchase
@@ -366,12 +376,6 @@ msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">مجموع</strong>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
 msgstr "<strong>مقدار</strong>"
@@ -406,6 +410,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
 msgstr "<strong>تاریخ مورد انتظار</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -836,9 +846,20 @@ msgid "Bill Lines"
 msgstr "سطرهای صورت"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
+msgid "Bill Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Bill Matching"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Bill Qty"
 msgstr ""
 
 #. module: purchase
@@ -880,6 +901,7 @@ msgstr "صورت وضعیت"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Bills"
 msgstr "صورتحساب"
 
@@ -1029,6 +1051,11 @@ msgid "Connect your software"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 msgid "Contact"
 msgstr "مخاطب"
@@ -1099,7 +1126,10 @@ msgid "Customer Portal URL"
 msgstr "آدرس پرتال مشتری"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__date
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Date"
 msgstr ""
 
@@ -1185,9 +1215,19 @@ msgstr ""
 "تاریخی را نشان می دهد که طی آن پیشنهاد باید تایید و به سفارش خرید تبدیل شود."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__description
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Description"
 msgstr "توصیف"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid ""
+"Difference between demand and quantity but not affected by invoice policy"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1209,6 +1249,11 @@ msgstr "تخفیف:"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
 msgid "Display Auto Complete Field"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
+msgid "Display Matching Tag"
 msgstr ""
 
 #. module: purchase
@@ -1242,6 +1287,12 @@ msgstr "نوع نمایش"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
 msgstr "حساب تحلیلی توزیعی"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
+msgid "Document Tax Mode"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1491,8 +1542,15 @@ msgstr "در سفارش"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm"
 msgstr "اینکوترمز"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
+msgid "Incoterm Location"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -1509,6 +1567,8 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_users__purchase_incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -1708,6 +1768,29 @@ msgstr "تعداد دریافت شده دستی"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Match"
 msgstr "همخوانی"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Matched"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
+msgid "Matched Invoices Count"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Matching"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "Matching Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -1927,6 +2010,11 @@ msgid "Not Acknowledged"
 msgstr "تایید نشده است"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid "Not Invoiced Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
 msgstr ""
@@ -2073,6 +2161,13 @@ msgid "Ordered Quantity:"
 msgstr "مقدار سفارش داده شده"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid ""
+"Ordered quantity not invoiced. This may or may not include quantities that "
+"won't be invoiced, depending on the product's Control Policy."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Orders"
@@ -2092,6 +2187,16 @@ msgstr ""
 #. module: purchase
 #: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+msgid "PO Matching"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "PO Qty"
 msgstr ""
 
 #. module: purchase
@@ -2156,7 +2261,7 @@ msgid "Preview the reminder email by sending it to yourself."
 msgstr "پیش نمایش ایمیل یادآوری با ارسال آن برای خودتان."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Price"
 msgstr "قیمت"
 
@@ -2181,6 +2286,7 @@ msgstr "اولویت"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -2192,11 +2298,6 @@ msgstr "محصول"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
 msgstr "دسته محصول"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
-msgid "Product Description"
-msgstr "شرح محصول"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2216,6 +2317,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
+msgid "Product Uom Qty To Invoice"
 msgstr ""
 
 #. module: purchase
@@ -2315,9 +2421,20 @@ msgid "Purchase Line and Vendor Bill line matching view"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
+msgid "Purchase Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
+msgid "Purchase Matching Issue Msg"
 msgstr ""
 
 #. module: purchase
@@ -2343,6 +2460,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchase Order"
 msgstr "سفارش خرید"
 
@@ -2371,11 +2489,13 @@ msgstr "تعداد سفارش خرید"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 msgid "Purchase Order Line"
 msgstr "سطر سفارش خرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
 msgstr "سطرهای سفارش خرید"
@@ -2492,22 +2612,17 @@ msgid "Purchased"
 msgstr "خریداری شده"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
+"orders not received, or partially received"
 msgstr ""
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
@@ -2548,19 +2663,30 @@ msgid "Qty Received"
 msgstr "تعداد دریافت شده"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid "Qty not invoiced"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "Qty to Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
 msgstr "تعداد برای صورتحساب شدن"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Qty to invoice"
 msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
 msgstr "تعداد"
@@ -2610,6 +2736,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
 msgstr "درخواست های پیش فاکتور و خریدها"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
+msgid "Rate"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -2682,6 +2813,7 @@ msgid "Reference"
 msgstr "مرجع‌"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
 msgstr ""
@@ -3054,6 +3186,16 @@ msgid "Tax Country"
 msgstr "مالیات کشور"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
+msgid "Tax Excl."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
+msgid "Tax Incl."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
 msgstr "مالیات کل"
@@ -3253,6 +3395,12 @@ msgid "To Approve"
 msgstr "برای موافقت"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "To Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
 msgstr "مقدار برای فاکتور"
@@ -3295,6 +3443,7 @@ msgstr "تعداد کل"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Total Untaxed"
 msgstr "کل بدون مالیات"
 
@@ -3360,7 +3509,9 @@ msgstr "عدد"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Unit Price"
 msgstr "قیمت واحد"
@@ -3393,6 +3544,16 @@ msgid "Unlock"
 msgstr "باز کردن قفل"
 
 #. module: purchase
+#: model:ir.actions.server,name:purchase.action_unmatch_lines
+msgid "Unmatch"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Unmatched"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
@@ -3414,6 +3575,12 @@ msgstr "مبلغ بدون مالیات"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "جمع کل بدون مالیات"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "Update"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -3455,8 +3622,10 @@ msgstr "ورودی گرید گونه"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3479,6 +3648,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "صورتهای فروشنده"
@@ -3489,12 +3659,25 @@ msgid "Vendor Country"
 msgstr "کشور فروشنده"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
+msgid "Vendor Incoterm"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
+msgid "Vendor Incoterm Location"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
 msgstr "لیستهای قیمت فروشنده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 msgid "Vendor Reference"
 msgstr "مرجع فروشنده"
 
@@ -3570,16 +3753,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Warnings"
 msgstr "هشدارها"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
-msgid "Website Messages"
-msgstr "پیام های وب سایت"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -3676,15 +3849,14 @@ msgid "e.g. This vendor is on vacation until the end of August."
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
-msgid "or create new"
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "id"
 msgstr ""
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/account_invoice.py:0
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "partner_id"
+#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+msgid "or create new"
 msgstr ""
 
 #. module: purchase
@@ -3744,6 +3916,3 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-
-#~ msgid "Communication history"
-#~ msgstr "تاریخچه ارتباطات"

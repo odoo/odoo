@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-10-30 17:06+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -48,7 +48,7 @@ msgid "Display Name"
 msgstr "Mostrar nombre"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Email"
 msgstr "Correo electrónico"
 
@@ -56,11 +56,6 @@ msgstr "Correo electrónico"
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Generate your webhook"
 msgstr "Genere su webhook"
-
-#. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
-msgid "How to configure your paypal account?"
-msgstr "¿Cómo configurar su cuenta de PayPal?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
@@ -106,6 +101,11 @@ msgid "PayPal Client Secret"
 msgstr "Secreto de cliente de PayPal"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "PayPal Email"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
 msgstr "Tipo de transacción de PayPal"
@@ -130,6 +130,11 @@ msgstr "Transacción de pago"
 #: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Error al procesar el pago"
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_paypal
+msgid "Paypal"
+msgstr ""
 
 #. module: payment_paypal
 #. odoo-python

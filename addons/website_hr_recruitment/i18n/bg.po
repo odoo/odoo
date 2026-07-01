@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2025-11-10 13:20+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -63,7 +63,7 @@ msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
@@ -348,8 +348,14 @@ msgstr "Открийте нашите продукти."
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__display_name
 msgid "Display Name"
 msgstr "Име за показване"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
+msgid "Drag blocks here to add them on all jobs"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -447,6 +453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__id
 msgid "ID"
 msgstr "ID"
 
@@ -462,7 +469,7 @@ msgid "Industries Filter"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "Insert a Job Description..."
 msgstr ""
 
@@ -533,7 +540,7 @@ msgstr "Водене на целия цикъл на продажбите"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "LinkedIn Profile"
 msgstr ""
 
@@ -575,6 +582,14 @@ msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
 "Без загуба на време в корпоративни процеси, реални отговорности и автономност"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/website_published_multi_mixin.py:0
+msgid ""
+"No website found for the company. Please create a website for this company "
+"to be able to open the job offer on the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -629,25 +644,13 @@ msgstr "Бонус"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Phone Number"
 msgstr "Телефонен номер"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Refused Application"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -751,7 +754,7 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Short Introduction"
 msgstr ""
 
@@ -785,22 +788,6 @@ msgstr "Силни аналитични умения"
 #. module: website_hr_recruitment
 #: model:website.page,name:website_hr_recruitment.thankyou
 msgid "Thank you (Recruitment)"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following ongoing applications share an email address, phone number and/"
-"or linkedin profile with this application:"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following recently refused applications share an email address, phone "
-"number and/or linkedin profile with this application:"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -896,6 +883,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_published_multi_mixin
+msgid "Website Published Mixin"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Форма за набиране на персонал в уебсайта"
@@ -952,13 +944,13 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Email"
 msgstr "Вашият имейл"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Name"
 msgstr "Вашето име"
 
@@ -997,16 +989,16 @@ msgid "job URL"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open position"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open positions"
 msgstr "отворени позиции"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "scheduled"
 msgstr ""

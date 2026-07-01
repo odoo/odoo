@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-04-23 11:52+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -580,11 +580,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                所有产品都无法预留。 单击“检查可用性”按钮以尝"
-"试预留产品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1088,6 +1085,12 @@ msgid "Add a Product"
 msgstr "添加产品"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1223,6 +1226,11 @@ msgid "All Children Package"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Products"
 msgstr "所有产品"
@@ -1252,6 +1260,13 @@ msgid "All returned moves"
 msgstr "全部退回移动"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+#: model:ir.actions.client,name:stock.allocation_report_action
+msgid "Allocation Report"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
@@ -1267,6 +1282,11 @@ msgstr "允许新产品"
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
 msgstr "允许混合产品"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__allocated_location_id
+msgid "Allow to define the location where allocated products should be sent."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1295,11 +1315,6 @@ msgstr "允许的单位"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
 msgid "Always"
 msgstr "总是"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "Andrwep"
-msgstr "Andrwep"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1448,15 +1463,7 @@ msgstr "提问"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
-msgid "Assign"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
-#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
-#: code:addons/stock/static/src/xml/report_stock_reception.xml:0
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "Assign All"
 msgstr "全部指定"
 
@@ -1581,6 +1588,7 @@ msgstr "自动并不增加步骤"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1733,6 +1741,11 @@ msgstr "散装内容"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
 msgstr "散货重量"
+
+#. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
@@ -1927,12 +1940,6 @@ msgid ""
 msgstr "用于分隔集合条形码（即包含多种条形码编码的条形码）中所含数据的字符"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "检查可用量"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -1940,7 +1947,7 @@ msgstr "若想在此操作中生成装运标签，请选中此复选框。"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/wizard/stock_label_type.py:0
 msgid "Choose Labels Layout"
 msgstr "选择标签布局"
@@ -1988,12 +1995,6 @@ msgstr "选择您的日期"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
 msgstr "清除"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "单击或按Enter键添加说明"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
@@ -2045,88 +2046,6 @@ msgid "Compute shipping costs"
 msgstr "用来计算运输成本"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "计算运输成本并用DHL装运"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "计算运输成本并用Easypost装运"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "计算运费并使用 Envia.com 发货"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "计算运输成本并用FedEX装运"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "计算运费并使用 Sendcloud 发货"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "使用 Shiprocket 计算运输成本并发货"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "计算运输成本，并通过 Starshipit 送货"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "计算运输成本并用UPS装运"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "计算运输成本并用USPS装运"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "计算运输成本并用bpost装运"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "判断何时产品移动会被预留"
@@ -2142,6 +2061,11 @@ msgstr "配置设置"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "配置"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2602,51 +2526,6 @@ msgid "Cyclic Counting"
 msgstr "循环盘点"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_DATE"
-msgstr "演示日期"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr "演示源显示名称"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_PARTNER_NAME"
-msgstr "演示伙伴名称"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_PRODUCT_DISPLAY_NAME"
-msgstr "产品展示名称"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_QUANTITY"
-msgstr "DEMO_QUANTITY"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr "演示源显示名称"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "DEMO_UOM"
-msgstr "DEMO_UOM"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL 快递连接器"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2654,6 +2533,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__date
@@ -2794,11 +2674,6 @@ msgstr "默认名称"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "默认 OBTRETU 条形码"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "默认返回名称"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3036,16 +2911,6 @@ msgid "Demand in Product UoM"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "演示地址和名称"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "Demo Display Name"
-msgstr "演示显示名称"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3271,11 +3136,6 @@ msgid "Discard and manually resolve the conflict"
 msgstr "取消并手动解决冲突"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_fleet
-msgid "Dispatch Management System"
-msgstr "配送管理系统"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
 msgstr "显示分配序列号"
@@ -3311,12 +3171,12 @@ msgstr "在送货单上显示批次和序列号"
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__display_name
-#: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_product__display_name
@@ -3358,7 +3218,6 @@ msgstr "在送货单上显示批次和序列号"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_uom_uom__display_name
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -3384,7 +3243,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "您确定要报废吗"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "文档"
@@ -3448,11 +3306,6 @@ msgstr "Dymo"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost 连接器"
 
 #. module: stock
 #. odoo-python
@@ -3535,11 +3388,6 @@ msgid "Enter a description"
 msgstr "输入描述"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com 连接器"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
 msgid ""
 "Estimate the sales volume for the period based on past period or order the "
@@ -3593,13 +3441,6 @@ msgid "Expected"
 msgstr "预计"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "Expected Delivery:"
-msgstr "预计交付时间"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
 msgid "Expiration Dates"
 msgstr "到期日期"
@@ -3630,15 +3471,14 @@ msgid "February"
 msgstr "二月"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedEx 连接器"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "筛选的位置"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3663,6 +3503,12 @@ msgid "First Serial Number"
 msgstr "首个序号"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_follower_ids
 msgid "Followers"
@@ -3679,6 +3525,12 @@ msgstr "关注者（合作伙伴）"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font Awesome图标，例如：fa-tasks"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+msgid "For"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3896,6 +3748,12 @@ msgstr "生成批次号码"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "生成序列号码"
@@ -3903,8 +3761,8 @@ msgstr "生成序列号码"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "生成序列号/批次号"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4045,12 +3903,12 @@ msgstr "该作业类型的调拨中的产品应如何预留。"
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__id
-#: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock.field_res_partner__id
 #: model:ir.model.fields,field_description:stock.field_res_users__id
+#: model:ir.model.fields,field_description:stock.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_product__id
@@ -4253,12 +4111,11 @@ msgid ""
 msgstr "如果勾选该复选框，Odoo 将在验证拣货时自动打印退货单。"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_allocation_report
 msgid ""
-"If this checkbox is ticked, Odoo will automatically show the reception "
+"If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
-"如果勾选此复选框，Odoo将在验证时自动显示接收报表（如果有要分配的库存移动）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4343,20 +4200,16 @@ msgstr "导入"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "导入批次"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "导入序列号"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "导入序列号/批次"
 
 #. module: stock
 #. odoo-python
@@ -5208,6 +5061,11 @@ msgid "Location Type"
 msgstr "位置类型"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__allocated_location_id
+msgid "Location for allocation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
 msgid "Location used in the computation of the forecast."
 msgstr ""
@@ -5837,12 +5695,6 @@ msgid "No"
 msgstr "否"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/report/report_stock_reception.py:0
-msgid "No %s selected or a delivery order selected"
-msgstr "未选择%s  或已选择交货单"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
 msgstr "没有欠单"
@@ -5862,10 +5714,16 @@ msgstr "没有存货。此分析让你概览不同产品的目前库存水平。
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+#: code:addons/stock/static/src/allocation_report/product_line/product_line.xml:0
 msgid "No allocation need found."
 msgstr "无需预留库存"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -5951,6 +5809,7 @@ msgstr "没有调拨。 让我们创建一个！"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "None"
 msgstr ""
 
@@ -5983,12 +5842,6 @@ msgstr "备注"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
 msgstr "备注"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "没有产品需要检查可用量。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -6105,15 +5958,19 @@ msgid "One per unit"
 msgstr "每单元一个"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Open"
 msgstr "开启"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
-#: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Category"
 msgstr ""
@@ -6148,6 +6005,12 @@ msgstr "退回的作业类型"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "作业类型"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/report/stock_allocation_report.py:0
+msgid "Operation not found"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -6263,6 +6126,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 msgid "Orderpoint"
 msgstr "订货点"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Organize deliveries by dock, assign drivers and vehicles, and print "
+"consignment notes."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -6857,13 +6727,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "请为公司%s创建一个仓库。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"请将此文件放在退货包裹内。<br/>\n"
-"                                您的包裹必须寄往此地址："
 
 #. module: stock
 #. odoo-javascript
@@ -6908,8 +6774,8 @@ msgstr "单价"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
-#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Print"
 msgstr "打印"
@@ -6926,15 +6792,8 @@ msgstr "使用GS1编码格式打印批号和序列号"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
-msgid "Print Label"
-msgstr "打印标签"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
-#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
-#: code:addons/stock/static/src/xml/report_stock_reception.xml:0
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+#: code:addons/stock/static/src/allocation_report/out_line/out_line.xml:0
 msgid "Print Labels"
 msgstr "标签打印"
 
@@ -7388,6 +7247,7 @@ msgstr "未包装数量"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_qty
@@ -7567,7 +7427,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "不可对消耗产品或服务进行数量统计。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "退回"
 
@@ -7584,11 +7444,6 @@ msgstr "评分"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
 msgstr "就绪"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid "Reason"
-msgstr "原因"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
@@ -7661,9 +7516,6 @@ msgid "Received Qty"
 msgstr "已接收数量"
 
 #. module: stock
-#: model:ir.actions.client,name:stock.stock_reception_action
-#: model:ir.actions.report,name:stock.stock_reception_report_action
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_reception_report
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report"
 msgstr "库存接收报表"
@@ -7941,6 +7793,8 @@ msgstr "保留方式"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -7973,6 +7827,13 @@ msgstr "是否预留包装"
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
 msgstr "预留部分包装"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+#: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
+msgid "Reserved"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -8448,11 +8309,6 @@ msgid "Send email"
 msgstr "发送邮件"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloud 连接器"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8630,11 +8486,6 @@ msgid "Shipping"
 msgstr "送货"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "物流对接"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8662,11 +8513,6 @@ msgid "Shipping: Send by Email"
 msgstr "发货：通过电子邮件发送"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocket 连接器"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
 msgid "Short Name"
 msgstr "简称"
@@ -8683,6 +8529,7 @@ msgstr "是否触发补货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_allocation_report
 msgid "Show Allocation"
 msgstr "显示分配"
 
@@ -8744,11 +8591,6 @@ msgstr "显示数量更新按钮"
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
 msgid "Show Quant"
 msgstr "显示数量"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
-msgid "Show Reception Report at Validation"
-msgstr "在验证时显示接待报表"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
@@ -8937,11 +8779,6 @@ msgid "Starred"
 msgstr "星标消息"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipit 连接"
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
 msgid "Start transferring goods to see references"
 msgstr ""
@@ -8989,6 +8826,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.digest_digest_view_form
 msgid "Stock"
 msgstr "库存"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_allocation_report
+msgid "Stock Allocation Report"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
@@ -9086,11 +8928,6 @@ msgstr "库存数量重新定位"
 #: model:ir.model,name:stock.model_report_stock_quantity
 msgid "Stock Quantity Report"
 msgstr "库存数量报表"
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_report_reception
-msgid "Stock Reception Report"
-msgstr "库存接收报表"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9342,9 +9179,9 @@ msgstr "技术信息"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
-msgstr "用于计算是否应显示按钮“检查可用性”的技术字段。"
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9662,6 +9499,12 @@ msgid "There are no inventory adjustments to revert."
 msgstr "没有库存调整可以还原"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "还没有产品移动"
@@ -9858,9 +9701,11 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/report/report_stock_reception.py:0
-msgid "This report cannot be used for done and not done %s at the same time"
-msgstr "报表不能同时存在已完成和未完成%s"
+#: code:addons/stock/report/stock_allocation_report.py:0
+msgid ""
+"This report cannot be used for done and not done %(doc_type)s at the same "
+"time"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10171,6 +10016,11 @@ msgid "Transfer"
 msgstr "调拨"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "调拨到"
@@ -10235,9 +10085,9 @@ msgid "Transit Locations"
 msgstr "中转位置"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Transport management: organize packs in your fleet, or carriers."
-msgstr "运输管理：安排您的车队或外部承运商运送包裹。"
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_fleet
+msgid "Transport Management"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10274,28 +10124,18 @@ msgid "Type"
 msgstr "类型"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
+#: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
+msgid "Type of Operation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "记录中异常活动的类型。"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPS 连接器"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPS 连接器"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
-msgid "Unassign"
-msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10435,11 +10275,6 @@ msgid ""
 msgstr "每当打印批次和序列号的条形码时，请使用 GS1 命名法 datamatrix。"
 
 #. module: stock
-#: model:res.groups,name:stock.group_reception_report
-msgid "Use Reception Report"
-msgstr "使用接收报表"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
 msgstr "使用您自己的路线"
@@ -10526,9 +10361,10 @@ msgid "View Location"
 msgstr "视图位置"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "View and allocate received quantities"
-msgstr "查看并分配已收货数量"
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/product_line/product_line.xml:0
+msgid "View more"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -10730,18 +10566,6 @@ msgstr "警告"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "库存警报"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11291,6 +11115,11 @@ msgstr ""
 "祝您用餐愉快！"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11345,11 +11174,6 @@ msgstr "]<br/>分钟:"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpost 连接器"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11552,6 +11376,12 @@ msgid ""
 msgstr "仓库在下一次采购（如有）时考虑路线选择。"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/report/stock_allocation_report.py:0
+msgid "transfers"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "units"
@@ -11567,24 +11397,3 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "${object.company_id.name} 交货单 (Ref ${object.name or 'n/a' })"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "演示批次/序号"
-
-#~ msgid "Demo Product"
-#~ msgstr "演示产品"
-
-#~ msgid "Final Location"
-#~ msgstr "最终位置"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "该操作将产品带到中间位置。但是，此操作是针对最终位置的操作链的一部分。"
-
-#~ msgid "On hand:"
-#~ msgstr "在手："
-
-#~ msgid "Real Quantity"
-#~ msgstr "实际数量"

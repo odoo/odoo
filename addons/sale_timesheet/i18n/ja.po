@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-05-06 06:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -86,11 +86,6 @@ msgid ""
 msgstr ""
 "'%(missing_plan_names)s' 分析プラン、タイムシートにリンクした販売オーダ項目 "
 "'%(so_line_name)s' の分析分配上で必要。"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-msgid "- Timesheet product"
-msgstr "- タイムシートプロダクト"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -219,10 +214,13 @@ msgstr "<span class=\"text-muted small\">回答までの時間</span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
-"reported as</span>"
+"reported as </span>"
 msgstr ""
-"<span class=\"text-muted\">販売オーダ項目がないタイムシートは、次のように報告"
-"されます</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
+msgid "<span>Sales Order Item: </span>"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -525,6 +523,12 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__display_timesheet_portal_link
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_timesheet_portal_link
+msgid "Display Timesheet Portal Link"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Draft"
 msgstr "ドラフト"
@@ -697,6 +701,7 @@ msgstr "インテリアデザイン"
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_account_move
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Invoice"
 msgstr "請求書"
@@ -949,6 +954,11 @@ msgstr ""
 "場合は検証済の)すべてのタイムシートが区別なく請求されます。"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
+msgid "Order"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__30_other_costs
 msgid "Other Costs"
 msgstr "他の原価"
@@ -1092,12 +1102,6 @@ msgid "Revenues (Milestones)"
 msgstr "収益(マイルストン)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
-msgid "Revenues (Time & Material)"
-msgstr "収益(時間・材料費)"
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
@@ -1109,11 +1113,6 @@ msgstr ""
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
 msgid "Roofing"
 msgstr "屋根工事"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-msgid "S0001"
-msgstr "S0001"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
@@ -1141,6 +1140,7 @@ msgstr "販売オーダ"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order Item"
 msgstr "販売オーダ項目"
@@ -1151,7 +1151,7 @@ msgid "Sales Order Line"
 msgstr "販売オーダ明細"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_card_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
 msgstr "販売オーダ"
 
@@ -1346,6 +1346,7 @@ msgid "Threshold"
 msgstr "しきい値"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Time Billing"
 msgstr "時間請求"
@@ -1419,6 +1420,7 @@ msgstr "タイムシートの合計時間"
 #: model:ir.actions.report,name:sale_timesheet.timesheet_report_account_move
 #: model:ir.actions.report,name:sale_timesheet.timesheet_report_sale_order
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__sale_order_line__qty_delivered_method__timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheets"
@@ -1455,11 +1457,6 @@ msgstr "タイムシート期間"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
 msgstr "請求タイプ別タイムシート"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
-msgid "Timesheets for the"
-msgstr "以下用のタイムシート"
 
 #. module: sale_timesheet
 #. odoo-python
