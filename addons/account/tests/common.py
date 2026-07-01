@@ -911,17 +911,17 @@ class AccountTestInvoicingCommon(ProductCommon):
         """
         cls.ensure_installed('sale')
 
-        if amount_type == 'fixed':
-            create_values = {
-                'advance_payment_method': 'fixed',
-                'fixed_amount': amount,
-            }
-        elif amount_type == 'percent':
+        if amount_type in ('percent', 'percentage'):
             create_values = {
                 'advance_payment_method': 'fixed',
                 'amount': amount,
             }
-        else:
+        elif amount_type == 'fixed':
+            create_values = {
+                'advance_payment_method': 'fixed',
+                'fixed_amount': amount,
+            }
+        else:  # amount_type == 'delivered'
             create_values = {
                 'advance_payment_method': 'delivered',
             }
