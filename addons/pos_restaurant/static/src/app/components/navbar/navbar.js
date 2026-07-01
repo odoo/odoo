@@ -15,7 +15,7 @@ patch(Navbar.prototype, {
         this.pos.floorPlanStyle = mode;
     },
     get showEditPlanButton() {
-        return true;
+        return this.pos.employeeIsAdmin;
     },
     makeButtonBounce() {
         this.pos.shouldSetTable = true;
