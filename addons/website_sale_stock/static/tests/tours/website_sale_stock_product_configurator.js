@@ -24,6 +24,7 @@ registry
                 trigger: `.modal button[name=sale_quantity_button_plus]:disabled`,
             },
             // Assert that the "Out of stock" variant of the optional product can't be sold.
+            configuratorTourUtils.selectAttribute("Optional product", "Stock", "Out of stock"),
             ...stockConfiguratorTourUtils.assertOptionalProductOutOfStock(
                 "Optional product (Out of stock)"
             ),
