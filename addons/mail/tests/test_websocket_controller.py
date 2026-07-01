@@ -3,16 +3,17 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWebsocketController(HttpCaseWithUserDemo):
+class TestWebsocketController(HttpCase):
     def test_im_status_offline_on_websocket_closed(self):
-        self.authenticate("demo", "demo")
-        self.env["mail.presence"]._update_presence(self.user_demo)
+        test_user = mail_new_test_user(self.env, login="test_user", password="test_user")
+        self.authenticate(test_user.login, test_user.password)
+        self.env["mail.presence"]._update_presence(test_user)
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].search([]).unlink()
         self.make_jsonrpc_request("/websocket/on_closed", {})
@@ -20,16 +21,16 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         presence_notif, self_notif = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
             {
-                "channels": [f"odoo-presence-res.users_{self.user_demo.id}"],
+                "channels": [f"odoo-presence-res.users_{test_user.id}"],
                 "last": 0,
                 "is_first_poll": True,
             },
         )["notifications"]
         self.assertEqual(presence_notif["message"]["type"], "mail.record/insert")
-        self.assertEqual(presence_notif["message"]["payload"]["res.users"][0]["id"], self.user_demo.id)
+        self.assertEqual(presence_notif["message"]["payload"]["res.users"][0]["id"], test_user.id)
         self.assertEqual(presence_notif["message"]["payload"]["res.users"][0]["im_status"], "offline")
         self.assertEqual(self_notif["message"]["type"], "mail.record/insert")
-        self.assertEqual(self_notif["message"]["payload"]["res.users"][0]["id"], self.user_demo.id)
+        self.assertEqual(self_notif["message"]["payload"]["res.users"][0]["id"], test_user.id)
         self.assertEqual(self_notif["message"]["payload"]["res.users"][0]["presence_status"], "offline")
 
     @freeze_time("2026-03-03", as_kwarg='clock')

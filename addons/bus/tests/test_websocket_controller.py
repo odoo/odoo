@@ -3,13 +3,11 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import JsonRpcException, tagged
-
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import HttpCase, JsonRpcException, new_test_user, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWebsocketController(HttpCaseWithUserDemo):
+class TestWebsocketController(HttpCase):
     def test_websocket_peek(self):
         self.env['bus.bus']._sendone('channel_A', 'channel_a_notification', None)
         self.env.cr.precommit.run()  # Trigger bus record creation.
@@ -54,7 +52,8 @@ class TestWebsocketController(HttpCaseWithUserDemo):
             })
 
     def test_websocket_peek_session_expired_logout(self):
-        self.authenticate('demo', 'demo')
+        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        self.authenticate(test_user.login, test_user.password)
         # first rpc should be fine
         self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],

@@ -162,7 +162,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertEqual(self.env['mail.activity'].search_count([('summary', '=', 'TestNew')]), 1)
 
     def test_action_next_activity_from_x2m_user(self):
-        self.test_partner.user_ids = self.user_demo | self.user_admin
+        self.test_partner.user_ids = self.user_employee | self.user_admin
         self.action.write({
             'state': 'next_activity',
             'activity_user_type': 'generic',
@@ -178,7 +178,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             self.env['mail.activity'].search([('res_model', '=', 'res.partner'), ('res_id', '=', self.test_partner.id)]),
             [{
                 'summary': 'TestNew',
-                'user_id': self.user_demo.id,  # the first user found
+                'user_id': self.user_employee.id,  # the first user found
             }],
         )
 
@@ -206,7 +206,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             action_form.activity_note = 'Hello world'
             action_form.activity_date_deadline_range = 3
             action_form.activity_date_deadline_range_type = 'weeks'
-            action_form.activity_user_id = self.user_demo
+            action_form.activity_user_id = self.user_employee
             action_form.activity_type_id = email_activity_type
             self.assertEqual(action_form.activity_summary, 'Email', 'activity_summary should be changed to "Email"')
             self.assertEqual(action_form.activity_note, '<p>Default note for email</p>', 'activity_note should be changed to default note of email activity')
@@ -214,7 +214,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             self.assertEqual(action_form.activity_date_deadline_range_type, 'weeks')
             self.assertEqual(action_form.activity_type_id, email_activity_type)
             self.assertEqual(action_form.activity_user_type, 'specific')
-            self.assertEqual(action_form.activity_user_id, self.user_demo)
+            self.assertEqual(action_form.activity_user_id, self.user_employee)
 
             action_form.activity_user_type = 'generic'
             self.assertFalse(action_form.activity_user_id)

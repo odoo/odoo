@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import JsonRpcException
+from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools import mute_logger
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
-class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserPortal):
     def test_download_transcript(self):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
@@ -17,7 +17,8 @@ class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo, HttpC
         self.assertEqual(res.headers["Content-Type"], "application/pdf")
 
     def test_download_transcript_non_member(self):
-        self.authenticate("demo", "demo")
+        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        self.authenticate(test_user.login, test_user.password)
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {"channel_id": self.livechat_channel.id},

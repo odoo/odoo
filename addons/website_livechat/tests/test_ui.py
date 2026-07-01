@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests, _
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests import HttpCase
 
 
-class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
+class TestLivechatUI(HttpCase, TestLivechatCommon):
     def setUp(self):
         super().setUp()
         self.visitor_tour = self.env['website.visitor'].create({
