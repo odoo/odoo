@@ -18,7 +18,8 @@ class ProductReplenishMixin(models.AbstractModel):
     def _compute_allowed_route_ids(self):
         domain = self._get_allowed_route_domain()
         route_ids = self.env['stock.route'].search(domain)
-        self.allowed_route_ids = route_ids
+        categ_route_ids = self.product_id.route_from_categ_ids
+        self.allowed_route_ids = route_ids | categ_route_ids
 
     # TODO: remove dynamic domain
     # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
