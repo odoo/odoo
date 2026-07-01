@@ -11,4 +11,14 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
     </record>
 
+    <record id="product_product_fees" model="product.product">
+        <field name="name">Fees</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="default_code">FEE</field>
+        <field name="description">Fees paid to fees receipts issuers</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
 </odoo>
