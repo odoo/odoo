@@ -35,8 +35,14 @@ function _createRecording(pyEnv, { start = 0, type = "audio" } = {}) {
     });
 }
 
+let lastCallDebriefInstance = null;
+
 function _setupCallDebriefPatch() {
     patchWithCleanup(CallDebrief.prototype, {
+        setup() {
+            super.setup();
+            lastCallDebriefInstance = this;
+        },
         async _loadData(props) {
             await super._loadData(props);
             if (!this.state.mediaSegments) {
@@ -171,4 +177,39 @@ test("CallDebrief: timeline-media synchronization", async () => {
     expect(Math.abs(finalTotalSeconds - 66) <= 1).toBe(true, {
         message: "Timestamp should be close to 66s (01:06), but was " + finalTimestampText,
     });
+});
+
+test("CallDebrief: ignores late ended events from unmounted media elements", async () => {
+    _setupCallDebriefPatch();
+    const pyEnv = await startServer();
+
+    // Create 2 segments of 60s each with a 40s gap.
+    // The large gap is crucial: when Segment 1 ends, the player will pause
+    // and set currentSegment to undefined rather than immediately playing Segment 2.
+    const art1 = _createRecording(pyEnv, { start: 0, type: "audio" });
+    const art2 = _createRecording(pyEnv, { start: 100, type: "audio" });
+
+    const discussCallHistoryId = pyEnv["discuss.call.history"].create({
+        start_date: "2023-01-01 10:00:00",
+        end_date: "2023-01-01 10:02:40",
+        artifact_ids: [art1, art2],
+    });
+
+    await start();
+    await _openDebriefView(pyEnv, discussCallHistoryId);
+
+    // Simulate segment 1 reaching its end while playing
+    const audio = queryOne("audio");
+    expect(audio).not.toBe(null);
+    audio.dispatchEvent(new Event("ended"));
+    await animationFrame();
+
+    // The audio element should now be unmounted since we are in a gap zone.
+    expect("audio").toHaveCount(0);
+    expect(lastCallDebriefInstance.state.currentSegment).toBe(undefined);
+
+    // Simulate late "ended" event from previous interactions
+    expect(() => {
+        audio.dispatchEvent(new Event("ended"));
+    }).not.toThrow();
 });
