@@ -360,3 +360,24 @@ class TestEditableQuant(TransactionCase):
         self.assertEqual(group1['inventory_quantity_auto_apply'], 100)
         group2 = next(filter(lambda g: g['product_id'][0] == self.product2.id, groups))
         self.assertEqual(group2['inventory_quantity_auto_apply'], 50)
+
+    def test_revert_inventory_package_quant(self):
+        """
+        Test Reverting an inventory move line restores the package quant
+        quantity with no negative quants.
+        """
+        package = self.env['stock.quant.package'].create({})
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': self.stock.id,
+            'inventory_quantity': 1,
+            'package_id': package.id,
+        })
+        quant.action_apply_inventory()
+        quant.inventory_quantity = 0
+        quant.action_apply_inventory()
+        domain = quant.action_view_stock_moves()['domain'] + [('is_inventory', '=', True)]
+        self.env['stock.move.line'].search(domain, limit=1).action_revert_inventory()
+        self.assertRecordValues(package.quant_ids, [{"quantity": 1}])
+        self.env['stock.move.line'].search(domain, limit=1, order='id asc').action_revert_inventory()
+        self.assertFalse(package.quant_ids, 'Reverting creation adjustment should remove the product from the package.')

@@ -1007,7 +1007,7 @@ class StockMoveLine(models.Model):
                 'location_dest_id': self.location_id.id,
                 'company_id': self.company_id.id or self.env.company.id,
                 'lot_id': self.lot_id.id,
-                'package_id': self.package_id.id,
+                'package_id': self.result_package_id.id,
                 'result_package_id': self.package_id.id,
                 'owner_id': self.owner_id.id,
             })]
