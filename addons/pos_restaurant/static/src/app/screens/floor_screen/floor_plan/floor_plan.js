@@ -53,7 +53,7 @@ export class FloorPlan extends FloorPlanBase {
             this.scrollFloorId = selectedFloor.id; // Track the previous floor when this method is called again (to save its position)
             const scrollPosition = this.floorPlanStore.getFloorScrollPositions(selectedFloor.id);
             if (scrollPosition) {
-                this.containerRef.el?.scrollTo(scrollPosition);
+                this.containerRef()?.scrollTo(scrollPosition);
             } else {
                 // Scroll to first visible table
                 const firstTable = selectedFloor.getFirstVisibleTable();
@@ -65,10 +65,10 @@ export class FloorPlan extends FloorPlanBase {
     }
 
     saveScrollPosition() {
-        if (!this.scrollFloorId || !this.containerRef.el) {
+        if (!this.scrollFloorId || !this.containerRef()) {
             return;
         }
-        const scrollContainerEl = this.containerRef.el;
+        const scrollContainerEl = this.containerRef();
         this.floorPlanStore.storeFloorScrollPosition(this.scrollFloorId, {
             left: scrollContainerEl.scrollLeft,
             top: scrollContainerEl.scrollTop,
@@ -104,7 +104,7 @@ export class FloorPlan extends FloorPlanBase {
         let canvasWidth = size.width;
         let canvasHeight = size.height;
 
-        const scrollContainer = this.containerRef.el;
+        const scrollContainer = this.containerRef();
 
         // Add some padding if overflow
         if (canvasWidth > scrollContainer.clientWidth) {
@@ -121,7 +121,7 @@ export class FloorPlan extends FloorPlanBase {
         this.state.canvasWidth = canvasWidth;
         this.state.canvasHeight = canvasHeight;
         // Assign the size and style here to be able to scroll correctly
-        this.canvasRef.el.style = this.getCanvasStyles();
+        this.canvasRef().style = this.getCanvasStyles();
     }
 
     getContainerStyle() {
@@ -258,7 +258,7 @@ export class FloorPlan extends FloorPlanBase {
 
             onWillStartDrag: ({ addClass, element, x, y }) => {
                 addClass(element, "shadow");
-                addClass(this.canvasRef.el, "o_fp_table_linking");
+                addClass(this.canvasRef(), "o_fp_table_linking");
 
                 dndContext = {};
                 const uuid = this.getTableUuidFromDOMEl(element);
@@ -267,7 +267,7 @@ export class FloorPlan extends FloorPlanBase {
                 dndContext.tableGeo = table.getGeometry();
 
                 // Calculate offset from cursor to table's logical position
-                const canvasRect = this.canvasRef.el.getBoundingClientRect();
+                const canvasRect = this.canvasRef().getBoundingClientRect();
                 const tablePos = table.linkedPosition;
                 dndContext.dragOffset = {
                     x: x - canvasRect.left - tablePos.left,
@@ -277,7 +277,7 @@ export class FloorPlan extends FloorPlanBase {
 
             onDrag: ({ element, x, y, addClass }) => {
                 const { table, dragOffset, targetTable } = dndContext;
-                const canvasRect = this.canvasRef.el.getBoundingClientRect();
+                const canvasRect = this.canvasRef().getBoundingClientRect();
                 const newLeft = x - canvasRect.left - dragOffset.x;
                 const newTop = y - canvasRect.top - dragOffset.y;
 

@@ -1,8 +1,8 @@
 /* global Carousel */
 
-import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { session } from "@web/session";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Hook to automatically cycle through carousel media (images and videos).
@@ -10,13 +10,14 @@ import { session } from "@web/session";
  * - Videos play from the beginning and switch to the next slide
  *   after their full duration.
  *
- * @param {string} refName
+ * @param {() => HTMLElement | null} carouselRef - Owl 3 signal ref to the carousel element
  * @param {number} [timeIntervalSec=5]
  */
-export function useCarousel(refName, timeIntervalSec = 5) {
-    const carouselRef = useRef(refName);
+export function useCarousel(carouselRef, timeIntervalSec = 5) {
     let carousel;
     let timeoutId;
+
+    const getEl = () => resolveRefEl(carouselRef);
 
     const _clearTimeout = () => {
         if (timeoutId) {
@@ -51,13 +52,14 @@ export function useCarousel(refName, timeIntervalSec = 5) {
     };
 
     onMounted(() => {
-        carousel = new Carousel(carouselRef.el);
-        carouselRef.el.addEventListener("slid.bs.carousel", scheduleNextSlide);
+        const el = getEl();
+        carousel = new Carousel(el);
+        el.addEventListener("slid.bs.carousel", scheduleNextSlide);
         setTimeout(scheduleNextSlide, 100);
     });
 
     onWillUnmount(() => {
         _clearTimeout();
-        carouselRef.el?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
+        getEl()?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
     });
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.FeedbackScreen">
-        <div t-custom-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
+        <div class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
             <FeedbackPaymentSummary formattedAmount="this.env.utils.formatCurrency(this.currentOrder.totalDue)" loading="this.loading()"/>
             <div t-if="!this.ui.isSmall" class="desktop-format w-75 d-flex gap-3 flex-row align-items-center justify-content-around p-2">
                 <button t-if="this.pos.canEditPayment(this.currentOrder)" t-att-disabled="this.loading()" class="button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3 edit-order-payment" t-on-click.stop="() => this.clickEditPayment()"><i class="fa fa-chevron-left" role="img" aria-label="Back"></i> Back</button>

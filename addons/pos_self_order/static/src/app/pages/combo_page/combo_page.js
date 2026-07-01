@@ -1,5 +1,5 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, proxy, props, t, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelectionHelper } from "@pos_self_order/app/components/attribute_selection/attribute_selection_helper";
@@ -21,6 +21,9 @@ export class ComboPage extends Component {
         ProductNameWidget,
     };
 
+    productNameRef = signal(null);
+    scrollContainerRef = signal(null);
+
     setup() {
         this.router = useService("router");
         if (!this.props.productTemplate) {
@@ -41,11 +44,9 @@ export class ComboPage extends Component {
         });
         this.onAttributeSelection = this.onAttributeSelection.bind(this);
 
-        this.productNameRef = useRef("productName");
-        this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         useStickyTitleObserver(
-            "productName",
+            this.productNameRef,
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
 
@@ -523,7 +524,7 @@ export class ComboPage extends Component {
         setTimeout(() => {
             const el = window.document.getElementById("k-combo-scroll-target");
             if (el) {
-                this.scrollContainerRef.el?.scrollTo({ top: el.offsetTop - 20 });
+                this.scrollContainerRef()?.scrollTo({ top: el.offsetTop - 20 });
             }
         }, 1);
     }

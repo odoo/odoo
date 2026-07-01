@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Component, onWillStart, proxy, props } from "@odoo/owl";
+import { Component, onWillStart, proxy, props, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -7,6 +7,8 @@ export class PosPaymentProviderCards extends Component {
     static template = "point_of_sale.PosPaymentProviderCards";
     static components = {};
     props = props(standardWidgetProps);
+
+    cardsContainerRef = signal(null);
 
     setup() {
         super.setup();

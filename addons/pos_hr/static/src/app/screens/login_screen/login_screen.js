@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { onWillUnmount, proxy, useListener } from "@odoo/owl";
+import { onWillUnmount, proxy, signal, useListener } from "@odoo/owl";
 
 patch(LoginScreen.prototype, {
     setup() {
@@ -19,7 +19,8 @@ patch(LoginScreen.prototype, {
                 exclusive: true,
             });
 
-            useAutofocus();
+            this.autofocusRef = signal(null);
+            useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
                     await this.selectCashier(this.state.pin, true);

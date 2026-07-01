@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, proxy, props, t } from "@odoo/owl";
+import { Component, onMounted, proxy, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -21,6 +21,8 @@ export class SelectLotPopup extends Component {
         isLotNameUsed: t.function().optional(),
     });
 
+    rootRef = signal(null);
+
     setup() {
         this._id = 0;
         this.state = proxy({
@@ -32,7 +34,7 @@ export class SelectLotPopup extends Component {
                     id: item.id,
                 })),
         });
-        useAutoFocusToLast();
+        useAutoFocusToLast(this.rootRef);
         this.notification = useService("notification");
         this.inputRef = useChildRef();
         onMounted(() => {

@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillPatch, proxy, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillPatch, proxy, props, signal, t } from "@odoo/owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { computeRotationHandlePosition } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/utils";
 import { FloorElement } from "@pos_restaurant/app/services/floor_plan/elements";
@@ -14,17 +13,18 @@ export class Handles extends Component {
         onStartRotate: t.function().optional(),
         onEdit: t.function().optional(),
         floorElement: t.or([t.instanceOf(FloorElement), t.literal(null)]).optional(),
-        canvasRef: t.object(),
+        canvasRef: t.function(),
         actions: t.function().optional(),
         actionMenuPosition: t.string().optional(),
     });
 
+    rootRef = signal(null);
+
     get el() {
-        return this.root.el;
+        return this.rootRef();
     }
 
     setup() {
-        this.root = useRef("handles");
         this.startResize = this.startResize.bind(this);
 
         this.state = proxy({
@@ -77,7 +77,7 @@ export class Handles extends Component {
         this.setStyle(floorElement);
         this.state.rotationHandlePosition = computeRotationHandlePosition(
             floorElement,
-            canvasRef.el,
+            canvasRef(),
             this.props.actionMenuPosition
         );
     }

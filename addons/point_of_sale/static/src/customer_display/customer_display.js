@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, whenReady } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
@@ -13,6 +12,8 @@ export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
     static components = { OdooLogo, MainComponentsContainer, BadgeTag, FeedbackPaymentSummary };
 
+    scrollableRef = signal(null);
+
     setup() {
         this.session = session;
         this.dialog = useService("dialog");
@@ -20,13 +21,12 @@ export class CustomerDisplay extends Component {
         this.uiService = useService("ui");
         this.time = useTime();
 
-        this.scrollableRef = useRef("scrollable");
         onMounted(() => this.scrollSelectedIntoView());
         onPatched(() => this.scrollSelectedIntoView());
     }
 
     scrollSelectedIntoView() {
-        this.scrollableRef.el
+        this.scrollableRef()
             ?.querySelector(".orderline.selected")
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }

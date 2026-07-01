@@ -1,4 +1,4 @@
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, props, t, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { AttributeSelectionHelper } from "./attribute_selection_helper";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
@@ -11,6 +11,8 @@ export class AttributeSelection extends Component {
         onSelection: t.function().optional(),
         isCombo: t.boolean().optional(),
     });
+
+    customValueInputRef = signal(null);
 
     setup() {
         this.selfOrder = useSelfOrder();

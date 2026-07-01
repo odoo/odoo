@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
@@ -8,10 +7,11 @@ import { SIZES } from "@web/core/ui/ui_service";
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
 
+    scrollContainerRef = signal(null);
+
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         this.ui = useService("ui");
         this.SIZES = SIZES;

@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy, useListener, props, t } from "@odoo/owl";
+import { Component, proxy, signal, useListener, props, t } from "@odoo/owl";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
@@ -10,8 +9,10 @@ export class ProductInfoPopup extends Component {
         close: t.function(),
     });
 
+    scrollContainerRef = signal(null);
+
     setup() {
-        this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
+        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         useListener(window, "click", this.props.close);
         this.state = proxy({
             qty: 1,

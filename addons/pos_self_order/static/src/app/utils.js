@@ -1,3 +1,5 @@
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+
 export const formatProductName = (product) => {
     const attributes = product.product_template_attribute_value_ids?.map((v) => v.name).join(",");
     return attributes ? `${product.name} (${attributes})` : product.name;
@@ -8,7 +10,7 @@ export const shouldShowMissingDetails = (product, selectedValues, scrollContaine
         return false;
     }
 
-    const scrollContainerEl = scrollContainerRef?.el;
+    const scrollContainerEl = resolveRefEl(scrollContainerRef);
     if (!scrollContainerEl) {
         return false;
     }

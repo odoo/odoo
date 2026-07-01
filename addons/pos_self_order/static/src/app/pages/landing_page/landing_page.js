@@ -1,4 +1,4 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
@@ -6,6 +6,8 @@ import { useCarousel } from "@pos_self_order/app/utils/carousel_hook";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
+
+    carouselRef = signal(null);
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -25,7 +27,7 @@ export class LandingPage extends Component {
         });
 
         if (this.selfOrder.config._self_ordering_image_home_ids.length > 1) {
-            useCarousel("carousel", 5);
+            useCarousel(this.carouselRef, 5);
         }
     }
 

@@ -21,7 +21,7 @@ export class EditFloorProperties extends Component {
     static components = { Handles };
     props = props({
         floor: t.instanceOf(Floor).optional(),
-        canvasRef: t.object().optional(),
+        canvasRef: t.function().optional(),
         onSizeUpdated: t.function(),
     });
 
@@ -41,7 +41,7 @@ export class EditFloorProperties extends Component {
     }
 
     handleWindowResize() {
-        const canvasEl = this.props.canvasRef.el;
+        const canvasEl = this.props.canvasRef?.();
         if (canvasEl) {
             this.state.resolution = canvasEl.offsetWidth + " x " + canvasEl.offsetHeight + " px";
         } else {

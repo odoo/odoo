@@ -1,17 +1,18 @@
 import { onMounted, onPatched, proxy, signal, useListener } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useRef } from "@web/owl2/utils";
 
 /**
- * Assumes t-ref="root" in the root element of the component that uses this hook.
+ * Focuses the last input inside the given root element.
+ *
+ * @param {() => HTMLElement | null} rootRef an Owl 3 signal ref to the root
+ *  element containing the inputs.
  */
-export function useAutoFocusToLast() {
-    const root = useRef("root");
+export function useAutoFocusToLast(rootRef) {
     let target = null;
     function autofocus() {
         const prevTarget = target;
-        const allInputs = root.el.querySelectorAll("input");
+        const allInputs = rootRef().querySelectorAll("input");
         target = allInputs[allInputs.length - 1];
         if (target && target !== prevTarget) {
             target.focus();

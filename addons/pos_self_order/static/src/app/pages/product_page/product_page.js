@@ -1,5 +1,5 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, proxy, props, t, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
@@ -17,6 +17,9 @@ export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
     static components = { AttributeSelection };
     props = props({ productTemplate: t.instanceOf(ProductTemplate) });
+
+    productNameRef = signal(null);
+    scrollContainerRef = signal(null);
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -38,11 +41,9 @@ export class ProductPage extends Component {
             bottomShadowOpacity: 0,
             showStickyTitle: false,
         });
-        this.productNameRef = useRef("productName");
-        this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         useStickyTitleObserver(
-            "productName",
+            this.productNameRef,
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
     }

@@ -1,5 +1,5 @@
 import { useAutofocus } from "@web/core/utils/hooks";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, props, t, signal } from "@odoo/owl";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 export class TipCell extends Component {
@@ -8,10 +8,12 @@ export class TipCell extends Component {
         order: t.instanceOf(PosOrder),
     });
 
+    autofocusRef = signal(null);
+
     setup() {
         this.state = proxy({ isEditing: false });
         this.orderUiState = this.props.order.uiState.TipScreen;
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
     }
     get tipAmountStr() {
         return this.env.utils.formatCurrency(

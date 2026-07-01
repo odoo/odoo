@@ -13,7 +13,7 @@
                     </div>
                     <button class="btn btn-close" t-on-click="this.props.close"/>
                 </div>
-                <div t-custom-ref="category-list" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
+                <div t-ref="this.categoryListRef" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
                     <t t-foreach="this.categories" t-as="category" t-key="category.id">
                         <t t-set="dateInfo" t-value="this.getCategoryInfo(category)"/>
                         <button class="preset_date_buttons btn py-3 text-center text-nowrap"

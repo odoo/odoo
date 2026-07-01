@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, useListener, props, t } from "@odoo/owl";
+import { Component, proxy, signal, useListener, props, t } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -33,9 +33,11 @@ export class SearchBar extends Component {
         onFilterSelected: t.function(),
     });
 
+    autofocusRef = signal(null);
+
     setup() {
         this.ui = useService("ui");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
         useListener(window, "click", this._hideOptions.bind(this));
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
         this.searchFieldsList = [...this.props.config.searchFields.keys()];
