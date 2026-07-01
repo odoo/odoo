@@ -248,6 +248,12 @@ class Website(models.Model):
 
     prevent_sale = fields.Boolean(string="Hide Add To Cart")
 
+    website_sale_unpublish_out_of_stock = fields.Boolean(
+        string="Unpublish Out-of-Stock Products",
+        help="Automatically unpublish products when all variants go out of stock, and republish"
+        " when stock is restored.",
+    )
+
     prevent_sale_for = fields.Selection(
         string="Prevent Sale For",
         selection=[
@@ -1147,6 +1153,28 @@ class Website(models.Model):
             for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
 
+    def write(self, vals):
+        websites_to_sync = self.env["website"]
+        if vals.get("website_sale_unpublish_out_of_stock"):
+            websites_to_sync = self.filtered(lambda w: not w.website_sale_unpublish_out_of_stock)
+        res = super().write(vals)
+        for website in websites_to_sync:
+            products_to_check = (
+                self
+                .env["product.template"]
+                .sudo()
+                .search([
+                    "|",
+                    ("is_published", "=", True),
+                    ("auto_unpublished_date", "!=", False),
+                    "|",
+                    ("website_id", "=", website.id),
+                    ("website_id", "=", False),
+                ])
+            )
+            products_to_check._sync_website_published_state()
+        return res
+
     def _get_product_available_qty(self, product, **_kwargs):
         """Give the available quantity of a given product.
 
@@ -1159,8 +1187,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]
