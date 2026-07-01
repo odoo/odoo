@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     addNewRule,
@@ -116,7 +116,6 @@ test("filter by a date field using period works", async () => {
         context: { search_default_date_field: 1 },
     });
     await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
 
     // default filter should be activated with the global default period 'this_month'
     expect(searchBar.env.searchModel.domain).toEqual([
@@ -239,6 +238,7 @@ test("filter by a date field using period works", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([]);
     expect(getFacetTexts()).toEqual([]);
 
+    await toggleMenuItem("Date");
     await toggleMenuItemOption("Date", "2017");
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -324,7 +324,6 @@ test("filter by a date field using period works even in January", async () => {
     expect(getFacetTexts()).toEqual(["Date: December 2016"]);
 
     await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "December")).toBe(true);
     expect(isOptionSelected("Date", "2016")).toBe(true);
@@ -470,7 +469,6 @@ test("filter with multiple values in default_period date attribute set as search
         context: { search_default_date_field: true },
     });
     await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "2019")).toBe(true);
     expect(isOptionSelected("Date", "2018")).toBe(true);
@@ -493,7 +491,6 @@ test("date filter with custom option set as default_period", async () => {
         context: { search_default_date_field: true },
     });
     await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "Now")).toBe(true);
     expect(searchBarMenu.env.searchModel.domain).toEqual([["date_field", "=", "2019-07-31"]]);
@@ -509,7 +506,6 @@ test("date filter with default_period in the context", async () => {
         context: { search_default_date_field: "year-1,month-1" },
     });
     await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "June")).toBe(true);
     expect(isOptionSelected("Date", "2018")).toBe(true);
@@ -532,7 +528,6 @@ for (const contextValue of ["True", "1"]) {
             context: { search_default_date_field: contextValue },
         });
         await toggleSearchBarMenu();
-        await toggleMenuItem("Date");
         expect(isItemSelected("Date")).toBe(true);
         expect(isOptionSelected("Date", "Now")).toBe(true);
         expect(searchBarMenu.env.searchModel.domain).toEqual([["date_field", "=", "2019-07-31"]]);
@@ -1447,4 +1442,75 @@ test("lazy many2one filter with multiple domains", async () => {
         message:
             "domain on filter is combined with the option, field domain is applied to the option search",
     });
+});
+
+test("an active relative filter keeps its accordion state when reopening the menu", async () => {
+    // This feature is well tested with default filter in other test, here we test only user interactions
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field"/>
+                <separator/>
+                <filter string="Birthday" name="birthday" date="birthday"/>
+            </search>
+        `,
+    });
+    const dateRoot = () => queryOne`.o_menu_item:text(Date)`.parentElement;
+    const dateOptions = () => queryAllTexts(".o_item_option", { root: dateRoot() });
+    const birthdayOptions = () =>
+        queryAll(".o_item_option", { root: queryOne`.o_menu_item:text(Birthday)`.parentElement });
+
+    // Nothing is active yet: both date accordions are collapsed on open.
+    await toggleSearchBarMenu();
+    expect(dateOptions()).toHaveLength(0);
+    expect(birthdayOptions()).toHaveLength(0);
+
+    // Unfold "Date" and activate a relative option.
+    await toggleMenuItem("Date");
+    await toggleMenuItemOption("Date", "This Week");
+    expect(isOptionSelected("Date", "This Week")).toBe(true);
+
+    // Close and reopen the whole menu. Because a relative option is active, the
+    // "Date" accordion should comes back unfolded, while "Birthday" stays collapsed.
+    await toggleSearchBarMenu(); // close
+    await toggleSearchBarMenu(); // reopen
+    expect(isOptionSelected("Date", "This Week")).toBe(true);
+    expect(dateOptions().slice(0, 5)).toEqual([
+        "Today",
+        "This Week",
+        "This Month",
+        "This Quarter",
+        "This Year",
+    ]);
+    expect(birthdayOptions()).toHaveLength(0);
+
+    // A manual collapse only lasts for the current menu session and does not
+    // deactivate the filter (the facet stays).
+    await toggleMenuItem("Date"); // collapse
+    expect(dateOptions()).toHaveLength(0);
+    expect(getFacetTexts()).toEqual(["Date: This Week"]);
+
+    // Reopening re-mounts the accordions and forgets that manual collapse, so
+    // the still-active relative filter unfolds "Date" again on its own.
+    await toggleSearchBarMenu(); // close
+    await toggleSearchBarMenu(); // reopen
+    expect(dateOptions().slice(0, 5)).toEqual([
+        "Today",
+        "This Week",
+        "This Month",
+        "This Quarter",
+        "This Year",
+    ]);
+    expect(isOptionSelected("Date", "This Week")).toBe(true);
+
+    // Deactivate the filter
+    await toggleMenuItemOption("Date", "This Week");
+    await toggleSearchBarMenu(); // close
+    await toggleSearchBarMenu(); // reopen
+    expect(dateOptions()).toHaveLength(0); // Should not open with deactivated filter
+    expect(birthdayOptions()).toHaveLength(0);
 });
