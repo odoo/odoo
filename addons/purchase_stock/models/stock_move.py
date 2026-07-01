@@ -163,21 +163,57 @@ class StockMove(models.Model):
             # Since aml.date are Date, we don't need the extra precision here.
             at_date = Date.to_date(at_date)
 
-        aml_quantity = 0
-        value = 0
-        aml_ids = set()
+        is_return = bool(
+            self.is_out
+            and self.origin_returned_move_id
+            and self._is_purchase_return()
+        )
+
+        return_qty_on_line = 0
+        for move in self.purchase_line_id.move_ids:
+            if move.product_id != self.product_id:
+                continue
+            if move.state == 'cancel':
+                continue
+            if at_date and Date.to_date(move.date) > at_date:
+                continue
+            if (move.is_out
+                    and move.origin_returned_move_id
+                    and move._is_purchase_return()):
+                return_qty_on_line += move._get_valued_qty()
+
+        bill_qty = bill_value = 0
+        refund_qty = refund_value = 0
+        bill_aml_ids = set()
+        refund_aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
             if at_date and aml.date > at_date:
                 continue
             if aml.move_id.state != 'posted':
                 continue
-            aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += self._get_quantity_from_bill(aml, quantity)
-                value += self._get_value_from_bill(aml)
+                bill_aml_ids.add(aml.id)
+                bill_qty += self._get_quantity_from_bill(aml, quantity)
+                bill_value += self._get_value_from_bill(aml)
             elif aml.move_type == 'in_refund':
-                aml_quantity -= self._get_quantity_from_bill(aml, quantity)
-                value -= self._get_value_from_bill(aml)
+                refund_aml_ids.add(aml.id)
+                refund_qty += self._get_quantity_from_bill(aml, quantity)
+                refund_value += self._get_value_from_bill(aml)
+
+        refund_for_returns_qty = min(refund_qty, return_qty_on_line)
+        refund_unit_value = refund_value / refund_qty if refund_qty else 0
+        refund_for_returns_value = refund_unit_value * refund_for_returns_qty
+        leftover_refund_qty = refund_qty - refund_for_returns_qty
+        leftover_refund_value = refund_value - refund_for_returns_value
+
+        if is_return:
+            aml_quantity = refund_for_returns_qty
+            value = refund_for_returns_value
+            aml_ids = refund_aml_ids if refund_for_returns_qty else set()
+        else:
+            aml_quantity = bill_qty - leftover_refund_qty
+            value = bill_value - leftover_refund_value
+            aml_ids = bill_aml_ids | (refund_aml_ids if leftover_refund_qty else set())
 
         if aml_quantity <= 0:
             return valuation_data
@@ -190,10 +226,16 @@ class StockMove(models.Model):
                 continue
             if move.date > self.date or (move.date == self.date and move.id > self.id):
                 continue
-            if move.is_in or move.is_dropship:
+            move_is_return = bool(
+                move.is_out
+                and move.origin_returned_move_id
+                and move._is_purchase_return()
+            )
+            if is_return:
+                if move_is_return:
+                    other_candidates_qty += move._get_valued_qty()
+            elif (move.is_in or move.is_dropship) and not move_is_return:
                 other_candidates_qty += move._get_valued_qty()
-            elif move.is_out:
-                other_candidates_qty -= -move._get_valued_qty()
 
         if self.product_uom.compare(aml_quantity, other_candidates_qty) <= 0:
             return valuation_data
