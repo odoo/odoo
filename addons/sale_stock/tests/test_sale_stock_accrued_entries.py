@@ -611,3 +611,44 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': account_variation.id, 'debit': 229.41, 'credit': 0},
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 229.41},
         ])
+
+    def test_accrued_order_from_sale_order_with_draft_invoice(self):
+        product_category = self.env['product.category'].create({
+            'name': 'Test Category',
+            'property_account_income_categ_id': self.account_revenue.id,
+            'property_account_expense_categ_id': self.account_expense.id,
+            'property_valuation': 'real_time',
+        })
+        anglo_saxon_product = self.env['product.product'].create({
+            'name': "Saxy Product",
+            'categ_id': product_category.id,
+            'invoice_policy': 'order',
+            'is_storable': True,
+            'uom_id': self.uom_unit.id,
+        })
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': anglo_saxon_product.id,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices()
+
+        sale_order.order_line.invalidate_recordset(['qty_invoiced'])
+        wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+
+        res = wizard.create_entries()
+        self.assertRecordValues(self.env['account.move'].search(res['domain']).line_ids, [
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 0.0},
+        ])
