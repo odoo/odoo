@@ -2521,6 +2521,8 @@ span.list-inline-item.o_add_language:last-child {
 .o_scroll_button {
     @include o-position-absolute(auto, 0, 0, 0);
     display: flex;
+    outline: none;
+    box-shadow: none;
     // Need to update button size based on icon size.
     @for $i from 1 through 5 {
         &:has(i.oi-#{$i}x) {
@@ -2535,10 +2537,10 @@ span.list-inline-item.o_add_language:last-child {
     &, &:hover {
         text-decoration: none;
     }
-    &:focus {
-        outline: none;
-    }
 
+    &:focus-visible {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color) 50%, transparent), 0 0 0 6px color-mix(in srgb, var(--background-color) 50%, transparent);
+    }
 }
 
 .anim-heartbeat {
