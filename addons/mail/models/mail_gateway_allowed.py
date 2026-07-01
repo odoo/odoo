@@ -40,8 +40,8 @@ class MailGatewayAllowed(models.Model):
                 Add addresses to the Allowed List
             </p><p>
                 To protect you from spam and reply loops, Odoo automatically blocks emails
-                coming to your gateway past a threshold of <b>%i</b> emails every <b>%i</b>
+                coming to your gateway past a threshold of <b>%(threshold)i</b> emails every <b>%(minutes)i</b>
                 minutes. If there are some addresses from which you need to receive very frequent
                 updates, you can however add them below and Odoo will let them go through.
             </p>
-        ''', LOOP_THRESHOLD, LOOP_MINUTES)
+        ''', threshold=LOOP_THRESHOLD, minutes=LOOP_MINUTES)
