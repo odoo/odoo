@@ -1217,8 +1217,7 @@ class PosOrder(models.Model):
 
         if draft_orders:
             draft_orders.write({'state': 'cancel'})
-            for config in draft_orders.mapped('config_id'):
-                config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+            draft_orders._notify_update_to_all_pos_devices()
 
         return {
             'pos.order': self._load_pos_data_read(draft_orders, self.config_id)
@@ -1283,8 +1282,7 @@ class PosOrder(models.Model):
 
         for order in pos_order_ids:
             order._ensure_access_token()
-            if not self.env.context.get('preparation'):
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('device_identifier', 0))
+            order._notify_update_to_all_pos_devices()
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config)
@@ -1408,7 +1406,7 @@ class PosOrder(models.Model):
                 refund_line._onchange_amount_line_all()
             refund_order._compute_prices()
             refund_orders |= refund_order
-            refund_order.config_id.notify_synchronisation(current_session.id, 0)
+            refund_order._notify_update_to_all_pos_devices()
         refund_orders._compute_prices()
         return refund_orders
 
@@ -1531,8 +1529,26 @@ class PosOrder(models.Model):
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
     def _send_order(self):
+        # TODO: remove in master replaced by _notify_update_to_all_pos_devices
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
+
+    def _notify_update_to_all_pos_devices(self):
+        """
+        This method is used to notify all the PoS devices that an order
+        has been updated. It is called when an order is created or
+        updated, and it sends a notification to all the devices that are
+        currently connected to the PoS system.
+        => Preparation display
+        => Self Order
+        => Point of Sale
+        """
+        for config in self.config_id:
+            config.notify_synchronisation(
+                config.current_session_id.id,
+                self.env.context.get('device_identifier', 0),
+            )
+        return True
 
     def _prepare_pos_log(self, body):
         return body
