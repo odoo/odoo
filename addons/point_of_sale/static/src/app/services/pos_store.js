@@ -1613,6 +1613,7 @@ export class PosStore extends WithLazyGetterTrap {
                         "Offline mode active, order will be synced later",
                         CONSOLE_COLOR
                     );
+                    order._dirty = true;
                 } else {
                     errorOccurred = true;
                 }
