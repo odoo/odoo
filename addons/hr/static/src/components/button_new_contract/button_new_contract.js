@@ -58,6 +58,7 @@ export class ButtonNewContractWidget extends Component {
                 version_id: version_id,
             },
         });
+        await window.location.reload();
     }
 }
 
