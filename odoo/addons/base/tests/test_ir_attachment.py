@@ -220,8 +220,12 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         store_path = os.path.join(self.filestore, a1.store_fname)
         self.assertTrue(os.path.isfile(store_path), 'file exists')
         a1.unlink()
-        self.Attachment._gc_file_store_unsafe()
-        self.assertFalse(os.path.isfile(store_path), 'file removed')
+        with self.registry_test_mode(), self.registry.cursor() as cr:
+            env = self.Attachment.env(cr=cr)
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=500)
+            self.assertTrue(os.path.isfile(store_path), 'file still exists')
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=0)
+            self.assertFalse(os.path.isfile(store_path), 'file removed')
 
     def test_13_rollback(self):
         # the data needs to be unique so that no other attachment link
@@ -231,8 +235,10 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             a1 = self.env['ir.attachment'].create({'name': 'a1', 'raw': unique_blob})
             store_path = os.path.join(self.filestore, a1.store_fname)
             self.assertTrue(os.path.isfile(store_path), 'file exists')
-        self.env['ir.attachment']._gc_file_store_unsafe()
-        self.assertFalse(os.path.isfile(store_path), 'file removed')
+        with self.registry_test_mode(), self.registry.cursor() as cr:
+            env = self.Attachment.env(cr=cr)
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=0)
+            self.assertFalse(os.path.isfile(store_path), 'file removed')
 
     def test_14_invalid_mimetype_with_correct_file_extension_no_post_processing(self):
         # test with fake svg with png mimetype
@@ -255,6 +261,29 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 [('id', 'in', main_partner.ids)], ['image_128']
             )
             self.assertEqual(patch_file_read.call_count, 0)
+
+    def test_16_upload_file(self):
+        # Only try the attachment creation without the indexation
+        with (
+            patch(
+                "odoo.addons.base.models.ir_attachment.IrAttachment._index",
+                new=lambda *args, **kwargs: None,
+            ),
+            file_open('base/i18n/base.pot', 'rb') as f,
+        ):
+            # create the file
+            a = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+            self.assertTrue(a.raw.size, "No bytes written")
+            # create the file again
+            f.seek(0)
+            a = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+            self.assertTrue(a.raw.size, "No bytes written")
 
     def test_16_from_file_takes_little_memory(self):
         # The biggest file we reliably have is "i18n/base.pot" which is
@@ -491,9 +520,8 @@ class TestPermissions(TransactionCaseWithUserDemo):
     def test_write_error(self):
         # try to write a file in a place where we have no access
         # /proc is not writeable, check if we have an error raised
-        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: ('dummy_test', '/proc/dummy_test'))
-        with self.assertRaises(OSError):
-            self.env['ir.attachment']._file_write(b'test', 'test')
+        with patch.object(IrAttachment, '_full_path', lambda self, path: '/proc/dummy_test'), self.assertRaises(OSError):
+            self.env['ir.attachment']._file_write('test', io.BytesIO(b'test'))
 
     def test_write_create_url_binary_attachment(self):
         with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
