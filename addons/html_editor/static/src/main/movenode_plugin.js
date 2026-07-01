@@ -246,9 +246,9 @@ export class MoveNodePlugin extends Plugin {
         }
         return elems;
     }
-    getDroppableElements(draggableNode) {
+    getDroppableElements(draggableNodes) {
         return this.getMovableElements().filter(
-            (node) => !closestElement(node.parentElement, (n) => n === draggableNode)
+            (node) => !closestElement(node.parentElement, (n) => draggableNodes.includes(n))
         );
     }
     setMovableElement(movableElement) {
@@ -332,24 +332,57 @@ export class MoveNodePlugin extends Plugin {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
             // TODO: This should be made more generic, one hook for the entire
             // editable with each element handled.
+            let movableElements = [movableElement];
             this.smoothScrollOnDrag = useNativeDraggable(simpleDraggableHook, {
                 ref: { el: this.widgetContainer },
                 elements: ".oe-sidewidget-move",
-                onDragStart: () => this.startDropzones(movableElement, containerRect),
-                onDragEnd: () => this._stopDropzones(movableElement),
+                onDragStart: () => this.startDropzones(movableElements, containerRect),
+                onDragEnd: () => this._stopDropzones(movableElements),
                 helper: () => {
-                    const container =
-                        movableElement.tagName === "LI"
-                            ? movableElement.parentElement.cloneNode(false)
-                            : this.dependencies.localOverlay.createElement("div");
-                    if (container.tagName === "OL") {
-                        const originalIndex = childNodeIndex(movableElement) + 1;
-                        container.setAttribute("start", originalIndex);
+                    const selection = this.dependencies.selection.getEditableSelection();
+                    const targetedBlocks = this.getMovableElements().filter(
+                        (el) =>
+                            selection.commonAncestorContainer.contains(el) &&
+                            selection.intersectsNode(el)
+                    );
+                    if (targetedBlocks.includes(movableElement)) {
+                        movableElements = targetedBlocks.filter(
+                            // Exclude nested movable elements
+                            (el, _, arr) =>
+                                !closestElement(el.parentElement, (n) => arr.includes(n))
+                        );
                     }
-                    container.append(movableElement.cloneNode(true));
-                    const style = getComputedStyle(movableElement);
-                    container.style.height = style.height;
-                    container.style.width = style.width;
+                    const container = this.dependencies.localOverlay.createElement("div");
+                    let totalHeight = 0;
+                    // Group consecutive LI elements under their parent list
+                    const processedLists = new Set();
+                    for (const el of movableElements) {
+                        if (el.tagName === "LI") {
+                            const parentList = el.parentElement;
+                            if (processedLists.has(parentList)) {
+                                continue;
+                            }
+                            processedLists.add(parentList);
+                            const selectedItems = movableElements.filter(
+                                (e) => e.tagName === "LI" && e.parentElement === parentList
+                            );
+                            const listClone = parentList.cloneNode(false);
+                            if (parentList.tagName === "OL") {
+                                const firstSelectedIndex = childNodeIndex(selectedItems[0]) + 1;
+                                listClone.setAttribute("start", firstSelectedIndex);
+                            }
+                            for (const item of selectedItems) {
+                                listClone.append(item.cloneNode(true));
+                                totalHeight += item.getBoundingClientRect().height;
+                            }
+                            container.append(listClone);
+                        } else {
+                            container.append(el.cloneNode(true));
+                            totalHeight += el.getBoundingClientRect().height;
+                        }
+                    }
+                    container.style.height = `${totalHeight}px`;
+                    container.style.maxWidth = `${this.editable.offsetWidth}px`;
                     container.style.paddingLeft = "25px";
                     container.style.opacity = "0.4";
                     this.dragHelperContainer.append(container);
@@ -364,9 +397,9 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
     }
-    startDropzones(movableElement, containerRect, directions = ["north", "south"]) {
+    startDropzones(movableElements, containerRect, directions = ["north", "south"]) {
         this.removeMoveWidget();
-        const elements = this.getDroppableElements(movableElement);
+        const elements = this.getDroppableElements(movableElements);
 
         this.dropzonesContainer.replaceChildren();
         this.editable.classList.add("oe-editor-dragging");
@@ -467,7 +500,7 @@ export class MoveNodePlugin extends Plugin {
             this.dropzoneHintContainer.append(dropzoneHintBox);
         }
     }
-    _stopDropzones(movableElement) {
+    _stopDropzones(movableElements) {
         this.editable.classList.remove("oe-editor-dragging");
         this.dropzonesContainer.replaceChildren();
         this.dropzoneHintContainer.replaceChildren();
@@ -476,42 +509,51 @@ export class MoveNodePlugin extends Plugin {
             const cursors = this.dependencies.selection.preserveSelection();
             const [position, focusElelement] = this._currentDropHintElementPosition;
             this._currentDropHintElementPosition = undefined;
-            const previousParent = movableElement.parentElement;
+            const previousParents = new Set();
 
             const isFocusInsideList = ["UL", "OL"].includes(focusElelement?.parentElement?.tagName);
-            if (movableElement.tagName === "LI" && !isFocusInsideList) {
-                // If LI is moved outside a list, wrap it in UL/OL (previous parent)
-                const wrapperList = previousParent.cloneNode(false);
-                wrapperList.appendChild(movableElement);
-                movableElement = wrapperList;
-            } else if (movableElement.tagName !== "LI" && isFocusInsideList) {
-                // If non-LI element is moved into a list, wrap it in a LI
-                const wrapperLI = this.document.createElement("LI");
-                wrapperLI.appendChild(movableElement);
-                movableElement = wrapperLI;
-            }
-            if (position === "top") {
-                focusElelement.before(movableElement);
-            } else if (position === "bottom") {
-                focusElelement.after(movableElement);
-            }
-            if (previousParent.innerHTML.trim() === "") {
-                if (["UL", "OL"].includes(previousParent.tagName)) {
-                    previousParent.remove();
-                } else {
-                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    previousParent.append(baseContainer);
+            for (const i in movableElements) {
+                if (movableElements[i].tagName === "LI") {
+                    // If LI is moved outside a list, wrap it in UL/OL (previous parent)
+                    const previousParent = movableElements[i].parentElement;
+                    previousParents.add(previousParent);
+                    if (!isFocusInsideList) {
+                        const wrapperList = previousParent.cloneNode(false);
+                        wrapperList.appendChild(movableElements[i]);
+                        movableElements[i] = wrapperList;
+                    }
+                } else if (movableElements[i].tagName !== "LI" && isFocusInsideList) {
+                    // If non-LI element is moved into a list, wrap it in a LI
+                    const wrapperLI = this.document.createElement("LI");
+                    wrapperLI.appendChild(movableElements[i]);
+                    movableElements[i] = wrapperLI;
                 }
             }
-            // Preserve the selection if it was inside the moved element,
-            // otherwise place the caret at the start of the moved element.
-            const isSelectionInsideMovedNode =
-                movableElement.contains(cursors.anchor.node) &&
-                movableElement.contains(cursors.focus.node);
-            if (isSelectionInsideMovedNode) {
+            if (position === "top") {
+                focusElelement.before(...movableElements);
+            } else if (position === "bottom") {
+                focusElelement.after(...movableElements);
+            }
+            for (const previousParent of previousParents) {
+                if (previousParent.innerHTML.trim() === "") {
+                    if (["UL", "OL"].includes(previousParent.tagName)) {
+                        previousParent.remove();
+                    } else {
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        previousParent.append(baseContainer);
+                    }
+                }
+            }
+            // Preserve the selection if it was inside the moved elements,
+            // otherwise place the caret at the start of the first moved
+            // element.
+            const isSelectionInsideMovedNodes =
+                movableElements.some((el) => el.contains(cursors.anchor.node)) &&
+                movableElements.some((el) => el.contains(cursors.focus.node));
+            if (isSelectionInsideMovedNodes) {
                 cursors.restore();
             } else {
-                const selectionPosition = getDeepestPosition(movableElement, 0);
+                const selectionPosition = getDeepestPosition(movableElements[0], 0);
                 this.dependencies.selection.setSelection({
                     anchorNode: selectionPosition[0],
                     anchorOffset: selectionPosition[1],
