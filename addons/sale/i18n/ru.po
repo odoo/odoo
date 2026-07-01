@@ -4,16 +4,16 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-01-16 05:56+0000\n"
+"PO-Revision-Date: 2026-06-20 13:23+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/sale/"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
+#, fuzzy
 msgid ""
 "\n"
 "            If your customer runs on Odoo 18 or higher, customer data and "
@@ -37,6 +38,13 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            Если ваш клиент использует Odoo 18 или более позднюю версию, "
+"данные клиента и позиции заказа на продажу\n"
+"            будут созданы автоматически. Любой другой PDF-файл, содержащий "
+"вложенный файл\n"
+"            UBL-RequestForQuotation, также будет работать.\n"
+"        "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -824,8 +832,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr ""
+msgstr "<span id=\"o_sale_portal_use_amount_total\">Оплачивая,</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -839,8 +848,9 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>1.00 Units</span>"
-msgstr ""
+msgstr "<span>1,00 ед.</span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -893,8 +903,9 @@ msgstr "<strong class=\"d-block mt-3\">Адрес доставки</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Контакт</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -913,8 +924,9 @@ msgstr "<strong>Замечание о Финансовой Позиции:</stro
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "Инкотермс"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -987,8 +999,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Складируемый товар — это товар, для которого вы управляете запасами."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1129,8 +1142,9 @@ msgstr "Добавление нескольких вариантов в зака
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Add to order"
-msgstr ""
+msgstr "Добавить к заказу"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1144,8 +1158,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Допустимая ед. изм."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1231,8 +1246,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитический Счёт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1353,14 +1369,16 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Availability"
-msgstr ""
+msgstr "Наличие"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Available"
-msgstr ""
+msgstr "Доступно"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -1391,11 +1409,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__delivery_status
+#, fuzzy
 msgid ""
 "Blue: Not Delivered/Started\n"
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Синий: Не доставлено / Не начато\n"
+"            Оранжевый: Частично доставлено\n"
+"            Зеленый: Полностью доставлено"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1463,8 +1485,9 @@ msgstr "Отменить"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Cancel Order"
-msgstr ""
+msgstr "Отменить заказ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1542,8 +1565,9 @@ msgstr "Категории"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1572,14 +1596,16 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
+#, fuzzy
 msgid "Click to configure"
-msgstr ""
+msgstr "Нажмите, чтобы настроить"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Нажмите, чтобы определить цель по выставлению счетов"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1600,13 +1626,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
+#, fuzzy
 msgid "Collapse Composition"
-msgstr ""
+msgstr "Свернуть состав"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_prices
+#, fuzzy
 msgid "Collapse Prices"
-msgstr ""
+msgstr "Свернуть цены"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
@@ -1621,8 +1649,9 @@ msgstr "Элемент комбо"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Combo Product"
-msgstr ""
+msgstr "Комбо-товар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1668,15 +1697,19 @@ msgstr "Настроить"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Настройка методов доставки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Настройте методы доставки или работайте с поставщиками услуг доставки, "
+"используя существующие интеграции."
 
 #. module: sale
 #. odoo-javascript
@@ -1693,8 +1726,9 @@ msgstr "Подтвердить"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
+#, fuzzy
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Подтверждение заказов"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1708,13 +1742,15 @@ msgstr "Сообщение для подтверждения"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect"
-msgstr ""
+msgstr "Подключить"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Подключить Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1830,10 +1866,13 @@ msgstr "Создать по заказу"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
+#, fuzzy
 msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"Создать один счет для всех заказов одного клиента с одинаковыми адресами "
+"выставления счета и доставки."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1938,8 +1977,9 @@ msgstr "Состояние клиента"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_tag_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Customer Tags"
-msgstr ""
+msgstr "Метки клиентов"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
@@ -2063,8 +2103,9 @@ msgstr "Дата доставки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Delivery Date:"
-msgstr ""
+msgstr "Дата доставки:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2078,14 +2119,16 @@ msgstr "Доставка Количество"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
+#, fuzzy
 msgid "Delivery Status"
-msgstr ""
+msgstr "Статус доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+#, fuzzy
 msgid "Delivery Time"
-msgstr ""
+msgstr "Время доставки"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2103,10 +2146,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
+#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Срок поставки, в днях. Это обещанное клиенту количество дней между "
+"подтверждением заказа на продажу и доставкой."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2253,8 +2299,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
+#, fuzzy
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Виджет отображения количества"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2458,13 +2505,15 @@ msgstr "Дата окончания срока:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "Истекший"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
+#, fuzzy
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "Дополнительные данные по налогам"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__extra_total_fields
@@ -2484,8 +2533,9 @@ msgstr "Дополнительная строка с %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "Финансовый счёт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2494,11 +2544,15 @@ msgstr "Финансовое положение"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Фискальные позиции используются для адаптации налогов и счетов для "
+"конкретных клиентов или заказов на продажу/счетов-фактур. Значение по "
+"умолчанию берётся от клиента."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2540,8 +2594,9 @@ msgstr "Запрещенные значения в строке заказа н�
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Прогнозируемый остаток"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2562,8 +2617,9 @@ msgstr "Полная сумма <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
+#, fuzzy
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Полная комплектация"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2647,8 +2703,9 @@ msgstr "Содержит архивированные товары"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
+#, fuzzy
 msgid "Has Authorized Transactions"
-msgstr ""
+msgstr "Есть авторизованные транзакции"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
@@ -2787,8 +2844,9 @@ msgstr "Шаблон импорта для продуктов"
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
+#, fuzzy
 msgid "Import a request for quotation from a customer"
-msgstr ""
+msgstr "Импортировать запрос котировки от клиента"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2805,43 +2863,53 @@ msgstr "В приказе"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Included"
-msgstr ""
+msgstr "Включено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
+#, fuzzy
 msgid "Incoterm"
-msgstr ""
+msgstr "Инкотермс"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
+#, fuzzy
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Инкотерм Местонахождение"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Incoterm:"
-msgstr ""
+msgstr "Инкотерм:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
+#, fuzzy
 msgid "Internal warning for the partner or the products as set by the user."
 msgstr ""
+"Внутреннее предупреждение для партнера или товаров, установленное "
+"пользователем."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,help:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,help:sale.field_sale_order__incoterm
+#, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Международные коммерческие термины (Инкотермс) — это серия заранее "
+"определённых коммерческих условий, используемых в международных сделках."
 
 #. module: sale
 #. odoo-python
@@ -2864,8 +2932,9 @@ msgstr "Недопустимые данные подписи."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Счет"
 
 #. module: sale
 #. odoo-python
@@ -2896,13 +2965,15 @@ msgstr ""
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
+#, fuzzy
 msgid "Invoice Paid"
-msgstr ""
+msgstr "Счет оплачен"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
+#, fuzzy
 msgid "Invoice Posted"
-msgstr ""
+msgstr "Счет проведен"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -3324,14 +3395,16 @@ msgstr "Администратор Митчелл"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Move Down"
-msgstr ""
+msgstr "Переместить вниз"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Move Up"
-msgstr ""
+msgstr "Переместить вверх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
@@ -3432,8 +3505,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
+#, fuzzy
 msgid "Not Delivered"
-msgstr ""
+msgstr "Не доставлено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3493,14 +3567,16 @@ msgstr "Odoo"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
+#, fuzzy
 msgid "Office chairs can harm your floor: protect it"
-msgstr ""
+msgstr "Офисные кресла могут повредить ваш пол: защитите его"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "На"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3757,18 +3833,21 @@ msgstr "Упаковка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#, fuzzy
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Строка родительского раздела"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
+#, fuzzy
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Частично выполнено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3869,8 +3948,9 @@ msgstr "URL доступа к порталу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
+#, fuzzy
 msgid "Prepayment Amount"
-msgstr ""
+msgstr "Сумма предоплаты"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
@@ -4068,8 +4148,9 @@ msgstr "Количество"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_available_today
+#, fuzzy
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Кол-во доступное сегодня"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
@@ -4144,8 +4225,9 @@ msgstr "Предложение цен #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Коммерческое предложение/заказ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4272,8 +4354,9 @@ msgstr "Пересчитайте все цены на основе этого п
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "Справка"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4293,8 +4376,9 @@ msgstr "Отклонить предложение"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #. module: sale
 #. odoo-javascript
@@ -4407,8 +4491,9 @@ msgstr "Информация о продаже"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+#, fuzzy
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "Текст предупр. в строке"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4452,8 +4537,9 @@ msgstr "Количество заказов на продажу"
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
+#, fuzzy
 msgid "Sale Warning"
-msgstr ""
+msgstr "Предупреждение о распродаже"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4561,8 +4647,9 @@ msgstr "Позиция заказа на продажу"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
+#, fuzzy
 msgid "Sales Order Line Warning"
-msgstr ""
+msgstr "Предупреждение в строке заказа на продажу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
@@ -4702,8 +4789,9 @@ msgstr "Название раздела (например, продукты, у�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Section Summary"
-msgstr ""
+msgstr "Итог по разделу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4723,8 +4811,10 @@ msgstr "Выбранные позиции‑комбо"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Продавайте и закупайте товары в различных единицах измерения или упаковках"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4774,8 +4864,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Services"
-msgstr ""
+msgstr "Услуги"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
@@ -4823,8 +4914,9 @@ msgstr "Адрес доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
+#, fuzzy
 msgid "Shopee Sync"
-msgstr ""
+msgstr "Синхронизация Shopee"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_ship_button
@@ -4880,8 +4972,9 @@ msgstr "Подписано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "So, are you sure you want to cancel these"
-msgstr ""
+msgstr "Итак, вы уверены, что хотите отменить эти"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4941,8 +5034,9 @@ msgstr "Начать работу в Odoo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
+#, fuzzy
 msgid "Started"
-msgstr ""
+msgstr "Начато"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4980,13 +5074,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#, fuzzy
 msgid "Subsection"
-msgstr ""
+msgstr "Подраздел"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Subsection Name"
-msgstr ""
+msgstr "Название подраздела"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -5185,14 +5281,16 @@ msgstr "Маркер доступа недействителен."
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The amount is lower than the prepayment amount."
-msgstr ""
+msgstr "Сумма меньше суммы предоплаты."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The amount must be greater than the prepayment amount."
-msgstr ""
+msgstr "Сумма должна быть больше суммы предоплаты."
 
 #. module: sale
 #. odoo-python
@@ -5345,8 +5443,9 @@ msgstr "Продукт (%(product)s) имеет несовместимые зн�
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Срок действия заказа на продажу истек."
 
 #. module: sale
 #. odoo-python
@@ -5533,8 +5632,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Сегодня"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5581,8 +5681,9 @@ msgstr "Итого: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "Track Inventory"
-msgstr ""
+msgstr "Отслеживать на складе"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5670,8 +5771,9 @@ msgstr "Цена за единицу:"
 #. module: sale
 #: model:ir.ui.menu,name:sale.uom_uom_menu_list
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Ед. изм. и упаковки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5717,8 +5819,9 @@ msgstr "Обновить цены"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
+#, fuzzy
 msgid "Upload Request For Quotation"
-msgstr ""
+msgstr "Загрузить запрос котировки"
 
 #. module: sale
 #. odoo-python
@@ -5792,8 +5895,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Установленные здесь значения специфичны для компании."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5812,8 +5916,9 @@ msgstr "Подробнее"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "View Other Providers"
-msgstr ""
+msgstr "Другие провайдеры"
 
 #. module: sale
 #. odoo-python
@@ -5828,8 +5933,9 @@ msgstr "Виртуальный"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
+#, fuzzy
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Виртуальный доступный на дату"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5862,13 +5968,15 @@ msgstr "Предупреждение о смене компании вашей �
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+#, fuzzy
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "Предупреждение в заказах на продажу"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#, fuzzy
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "Предупреждение о заказах на продажу и счетах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5996,8 +6104,9 @@ msgstr "Ваша справка:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Ваш браузер не поддерживает iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6059,13 +6168,17 @@ msgstr "дней"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#, fuzzy
 msgid "e.g. This customer has reported recurring issues with previous orders."
 msgstr ""
+"Например: «Этот клиент неоднократно сообщал о проблемах с предыдущими "
+"заказами»."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+#, fuzzy
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "Например: «Этот товар имеет дефект»."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6080,8 +6193,9 @@ msgstr "для данного Заказа на продажу."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "items?"
-msgstr ""
+msgstr "позиций?"
 
 #. module: sale
 #. odoo-javascript
@@ -6123,8 +6237,9 @@ msgstr "с"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "you confirm acceptance on behalf of"
-msgstr ""
+msgstr "вы подтверждаете принятие от имени"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed

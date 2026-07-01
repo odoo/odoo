@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-08 09:01+0000\n"
+"PO-Revision-Date: 2026-06-06 15:42+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/stock/"
 "nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -142,7 +142,7 @@ msgstr ""
 "gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten beschikbaar zijn\": alle "
 "producten zijn gereserveerd.\n"
-" * Gereed: de overdracht is verwerkt.\n"
+" * Voltooid: de overdracht is verwerkt.\n"
 " * Geannuleerd: de overdracht is geannuleerd."
 
 #. module: stock
@@ -396,7 +396,7 @@ msgstr ""
 "* In afwachting : De voorraadbeweging is bevestigd maar het product kan niet "
 "worden gereserveerd.\n"
 "* Beschikbaar: Het product van de voorraadbeweging is gereserveerd.\n"
-"* Gereed: Het product is overgedragen en de overdracht is bevestigd."
+"* Voltooid: Het product is overgedragen en de overdracht is bevestigd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -485,7 +485,7 @@ msgstr "1 week"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7
 msgid "2 x 7"
-msgstr ""
+msgstr "2 x 7"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -506,7 +506,7 @@ msgstr "4 x 12 - Eén per eenheid"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7
 msgid "4 x 7"
-msgstr ""
+msgstr "4 x 7"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -607,6 +607,53 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            Je bestelling is opgehaald.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Je bestelling is verzonden.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Je trackingreferentie is\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        In de bijlage kun je de leveringsorder terugvinden voor meer details."
+"<br/><br/>\n"
+"        Bedankt,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1028,6 +1075,11 @@ msgid ""
 "Concerned package(s):\n"
 "%(package_names)s"
 msgstr ""
+"Een pakket kan niet meerdere keren binnen één verplaatsing worden verplaatst "
+"of over meerdere locaties worden verdeeld.\n"
+"\n"
+"Betrokken pakket(ten):\n"
+"%(package_names)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1489,6 +1541,8 @@ msgid ""
 "Are you sure you want to proceed this transfer with moves that have no "
 "demand?"
 msgstr ""
+"Weet je zeker dat je deze transfer wilt doorzetten met verplaatsingen waar "
+"geen vraag naar is?"
 
 #. module: stock
 #. odoo-python
@@ -2620,7 +2674,7 @@ msgstr "Klanten"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Customizable Desk"
-msgstr "Verstelbaar bureau"
+msgstr "Personaliseerbaar bureau"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2822,7 +2876,7 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definieer een minimumvoorraadregel zodat Odoo automatisch offerteaanvragen "
-"of bevestigde productieorders aanmakt om je voorraad te herbevoorraden."
+"of bevestigde productieorders aanmaakt om je voorraad te herbevoorraden."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3210,7 +3264,7 @@ msgstr "Gedetailleerde bewerkingen"
 #: model:ir.actions.act_window,name:stock.stock_quant_action
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Detailed Stock"
-msgstr ""
+msgstr "Gedetailleerde voorraad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3336,7 +3390,7 @@ msgstr "Partij & serienummers weergeven op leveringsbonnen"
 #: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -3372,7 +3426,7 @@ msgstr "Documentatie"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -4907,7 +4961,7 @@ msgstr "Huidige regels behouden"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Keep lines"
-msgstr ""
+msgstr "Regels behouden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -7169,7 +7223,7 @@ msgstr "Productcategorie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
 msgid "Product Display Name"
-msgstr "Weergavenaam van product"
+msgstr "Schermnaam van product"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
@@ -7889,7 +7943,7 @@ msgstr "Verwijderen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Remove lines"
-msgstr ""
+msgstr "Regels verwijderen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -8585,8 +8639,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Verzend een automatische bevestiging per e-mail wanneer leveringen gereed "
-"zijn"
+"Verzend een automatische bevestiging per e-mail wanneer leveringsorders "
+"voltooid zijn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -8892,7 +8946,7 @@ msgstr "Toon hoeveelheid"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
 msgid "Show Return Picking Type"
-msgstr ""
+msgstr "Retourpickingtype weergeven"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
@@ -8927,7 +8981,7 @@ msgstr "Toon kavelnaam"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_return
 msgid "Show return button"
-msgstr ""
+msgstr "Retourknop weergeven"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -8994,7 +9048,7 @@ msgstr "Gesnoozed"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Some moves have zero demand quantity."
-msgstr ""
+msgstr "Sommige verplaatsingen hebben een vraaghoeveelheid van nul."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -9500,7 +9554,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Template for Inventory Adjustments"
-msgstr ""
+msgstr "Sjabloon voor voorraadaanpassingen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11085,9 +11139,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Wanneer een levering nog niet gereed is geeft je dit de mogelijkheid om de "
-"initiële aanvraag te wijzigen. Wanneer een levering gereed is geeft je dit "
-"de mogelijkheid om de geregistreerde hoeveelheid te wijzigen."
+"Wanneer een levering nog niet voltooid is, kun je de initiële aanvraag te "
+"wijzigen. Wanneer een levering voltooid is, kun je de geregistreerde "
+"hoeveelheid wijzigen."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
@@ -11357,7 +11411,7 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"Je kunt een voorraadverplaatsing die is ingesteld op 'Gereed' niet "
+"Je kunt een voorraadverplaatsing die is ingesteld op 'Voltooid' niet "
 "annuleren. Maak een terugkeer om de zetten die plaatsvonden terug te draaien."
 
 #. module: stock
@@ -11381,7 +11435,7 @@ msgstr ""
 msgid "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
 "Je kunt de maateenheid niet wijzigen voor een voorraadverplaatsing die is "
-"ingesteld op 'Gereed'."
+"ingesteld op 'Voltooid'."
 
 #. module: stock
 #. odoo-python
@@ -11449,8 +11503,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Je kunt een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren' "
-"niet splitsen."
+"Je kunt een voorraadverplaatsing die ingesteld is op 'Voltooid' of "
+"'Annuleren' niet splitsen."
 
 #. module: stock
 #. odoo-python
@@ -11467,8 +11521,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
-"Het is niet mogelijk om van een voorraadverplaatsing de reservering ongedaan "
-"te maken welke in de 'Gereed' fase is."
+"Je kunt de reservering van een voorraadverplaatsing in de fase 'voltooid' "
+"niet ongedaan maken."
 
 #. module: stock
 #. odoo-python
@@ -11650,14 +11704,14 @@ msgstr "ZPL-labels - Eén per eenheid"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_zero_demand_confirmation
 msgid "Zero Demand Confirmation"
-msgstr ""
+msgstr "Bevestiging Geen vraag"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Zero Demand Warning"
-msgstr ""
+msgstr "Waarschuwing Geen vraag"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

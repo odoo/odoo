@@ -13,21 +13,22 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-01-16 05:52+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-s19-1/sale/"
+"PO-Revision-Date: 2026-06-13 12:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -45,8 +46,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
+#, fuzzy
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# Pārdošanas pasūtījumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -55,8 +57,9 @@ msgstr "Rindu #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
+#, fuzzy
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# Pārdošanas pasūtījumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
@@ -66,14 +69,16 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, fuzzy
 msgid "%s has been created"
-msgstr ""
+msgstr "%s ir izveidots"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -87,10 +92,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
+#, fuzzy
 msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in (\"draft\", \"sent\") and \"Piedāvājumu - %s\" % "
+"(object.name)) or \"Pasūtījumu - %s\" % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -102,9 +110,10 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>Nosūtiet piedāvājumu</b> sev un pārbaudiet, ko saņems klients."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -706,23 +715,29 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
 msgstr ""
+"<i class=\"fa fa-comment\"/> Sazinieties ar mums, lai saņemtu jaunu "
+"piedāvājumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Atsauksme"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizēts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Apmaksāts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -731,31 +746,39 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Termiņš iztecējis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Maksājuma gaidīšana"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Atcelts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Slēgts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -764,25 +787,31 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Atcelt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Jūsu kontakts</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Jūsu ieguvums</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Klienta pasūtījums #</span>\n"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -794,14 +823,16 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
+#, fuzzy
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ Mēnesis</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pārdots</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -841,14 +872,16 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Summa</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Atl.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
@@ -873,8 +906,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Piegādes adrese</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -883,8 +917,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>Piegādes datums</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -903,18 +938,21 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Paraksts</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Paldies!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Piedāvājuma derīguma termiņš beidzies!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -928,13 +966,17 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
+#, fuzzy
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Apstiprinātam pasūtījumam nepieciešams apstiprināšanas datums."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Piezīme, kuras saturs parasti attiecas uz iepriekš minēto sadaļu vai "
+"produktu."
 
 #. module: sale
 #. odoo-python
@@ -952,16 +994,21 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "A section title"
-msgstr ""
+msgstr "Sadaļas nosaukums"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
+#, fuzzy
 msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"Standarta rēķins tiek izrakstīts ar visām rēķina izrakstīšanai sagatavotajām "
+"pasūtījuma rindiņām saskaņā ar rēķinu izrakstīšanas politiku (pamatojoties "
+"uz pasūtīto vai piegādāto daudzumu)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
@@ -975,8 +1022,9 @@ msgstr "A warning can be set on a product or a customer (Sale)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Pieņemt & amp; Maksāt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1004,8 +1052,9 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry_sale_order_line
+#, fuzzy
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Uzkrāto ieņēmumu ieraksts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1031,8 +1080,9 @@ msgstr "Aktivitātes izņēmuma noformējums"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_plans_ids
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitāšu plāni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1060,14 +1110,16 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "Activity type"
-msgstr ""
+msgstr "Aktivitātes veids"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Add"
-msgstr ""
+msgstr "Pievienot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1087,19 +1139,22 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#, fuzzy
 msgid "Add one"
-msgstr ""
+msgstr "Pievienot vienu"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
+#, fuzzy
 msgid "Add optional products"
-msgstr ""
+msgstr "Pievienot papildu produktus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Vairāku variantu pievienošana pasūtījumam no režģa"
 
 #. module: sale
 #. odoo-javascript
@@ -1151,27 +1206,31 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
+#, fuzzy
 msgid "Already Paid"
-msgstr ""
+msgstr "Jau samaksāts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
+#, fuzzy
 msgid "Already invoiced"
-msgstr ""
+msgstr "Jau izrakstīts rēķins"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
+#, fuzzy
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon Sync"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Amount"
-msgstr ""
+msgstr "Summa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1180,31 +1239,40 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "Amount:"
-msgstr ""
+msgstr "Summa:"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
+"Pasūtījuma pieprādrošana ir palielināt pārdošanas apjomu, ja piegādātie "
+"daudzumi pārsniedz sākotnēji norādītos\n"
+"            pasūtītajiem daudzumiem, un rēķinu izrakstīšanas politika ir "
+"balstīta uz pasūtītajiem daudzumiem."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analītiskais Konts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
+#, fuzzy
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analītiskais sadalījums"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
+#, fuzzy
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analītiskā no izdevumiem"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1213,8 +1281,9 @@ msgstr "Analytic Line"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
+#, fuzzy
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Analītiskā plāna piemērojamība"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -1228,15 +1297,20 @@ msgstr "Analītiskās rindas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
+#, fuzzy
 msgid "Apply"
-msgstr ""
+msgstr "Pielietot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Piemērot manuālas atlaides pārdošanas pasūtījuma pozīcijām vai parādīt "
+"atlaides, kas aprēķinātas no cenrāžiem (iespēja aktivizējama cenrāža "
+"konfigurācijā)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1245,17 +1319,24 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Vai esat pārliecināts, ka vēlaties anulēt autorizēto darījumu? Šo darbību "
+"nevar atsaukt."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Piemēram, ja pārdodat iepriekš apmaksātas pakalpojumu stundas, Odoo iesaka\n"
+"            pārdot papildu stundas, kad visas pasūtītās stundas ir "
+"izlietotas."
 
 #. module: sale
 #. odoo-python
@@ -1283,8 +1364,9 @@ msgstr "Pielikumu skaits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
+#, fuzzy
 msgid "Attribute Values"
-msgstr ""
+msgstr "Atribūtu vērtības"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
@@ -1306,14 +1388,16 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Availability"
-msgstr ""
+msgstr "Pieejamība"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Available"
-msgstr ""
+msgstr "Pieejams"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -1322,18 +1406,21 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Bekona burgeris"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
+#, fuzzy
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Pamatojoties uz klienta ID"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
+#, fuzzy
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Pamatojoties uz dokumenta atsauci"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1359,12 +1446,17 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift "
 "Card, Loyalty. Specific conditions can be set (products, customers, minimum "
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Palieliniet pārdošanas apjomu, izmantojot vairāku veidu programmas: Kuponi, "
+"akcijas, dāvanu kartes, lojalitātes programmas. Var iestatīt īpašus "
+"nosacījumus (produkti, klienti, minimālā pirkuma summa, periods). Atlīdzības "
+"var būt atlaides (% or summa) vai bezmaksas produkti."
 
 #. module: sale
 #. odoo-javascript
@@ -1409,18 +1501,21 @@ msgstr "Atcelt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Cancel Order"
-msgstr ""
+msgstr "Atcelt pasūtījumu"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
+#, fuzzy
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Atcelt vairākus piedāvājumus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Atcelt piedāvājumus"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1444,6 +1539,7 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Cannot create an invoice. No items are available to invoice.\n"
 "\n"
@@ -1458,46 +1554,70 @@ msgid ""
 "   • For services (and other products), change the 'Invoicing Policy' to "
 "'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Nevar izveidot rēķinu. Rēķina izrakstīšanai nav pieejami nekādi priekšmeti.\n"
+"\n"
+"Lai atrisinātu šo problēmu, lūdzu, pārliecinieties, ka:\n"
+"   - Pirms mēģinājuma izrakstīt rēķinu, produkti ir piegādāti.\n"
+"   - produkta rēķinu izrakstīšanas politika ir konfigurēta pareizi.\n"
+"\n"
+"Ja vēlaties rēķinu izrakstīt, pamatojoties uz pasūtītajiem daudzumiem:\n"
+"   - Attiecībā uz patērējamiem vai uzglabājamiem produktiem atveriet "
+"produktu, atveriet cilni \"Vispārīga informācija\" un mainiet \"Rēķinu "
+"izrakstīšanas politiku\" no \"Piegādātie daudzumi\" uz \"Pasūtītie "
+"daudzumi\".\n"
+"   - Pakalpojumiem (un citiem produktiem) mainiet \"Rēķinu izrakstīšanas "
+"politiku\" uz \"Priekšapmaksa/fiksēta cena\".\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Saistīt darījumus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Catalog"
-msgstr ""
+msgstr "Katalogs"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "Kategorijas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
+#, fuzzy
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Krēslu grīdas aizsardzība"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Changing the company of an existing quotation might need some manual "
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Lai mainītu esošā piedāvājuma uzņēmumu, var būt nepieciešami daži manuāli "
+"pielāgojumi līniju detaļās. Jūs varētu apsvērt iespēju atjaunināt cenas."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
+"Noklikšķiniet šeit, lai pievienotu dažus produktus vai pakalpojumus savam "
+"piedāvājumam."
 
 #. module: sale
 #. odoo-javascript
@@ -1508,8 +1628,9 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Noklikšķiniet, lai definētu rēķina izrakstīšanas mērķi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1540,8 +1661,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
+#, fuzzy
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombinētās izvēles"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
@@ -1556,8 +1678,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
+#, fuzzy
 msgid "Commissions"
-msgstr ""
+msgstr "Komisijas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1578,8 +1701,9 @@ msgstr "Uzņēmums"
 
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
+#, fuzzy
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Uzņēmuma dokumentu izkārtojums"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1593,8 +1717,9 @@ msgstr "Uzstādījumi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurēt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1611,8 +1736,9 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
+#, fuzzy
 msgid "Configure your product"
-msgstr ""
+msgstr "Konfigurēt Jūsu preci"
 
 #. module: sale
 #. odoo-javascript
@@ -1633,18 +1759,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
+#, fuzzy
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Apstiprinājuma ziņojums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect"
-msgstr ""
+msgstr "Savienot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Savienot Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1658,13 +1787,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connectors"
-msgstr ""
+msgstr "Savienotāji"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
+#, fuzzy
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Konsolidēti rēķini"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_currency_id
@@ -1678,18 +1809,21 @@ msgstr "Kontakts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Copy"
-msgstr ""
+msgstr "Kopēt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
+#, fuzzy
 msgid "Country code"
-msgstr ""
+msgstr "Valsts kods"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
+#, fuzzy
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kuponi & Lojalitāte"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1709,13 +1843,15 @@ msgstr "Izveidot rēķinu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Create Invoices"
-msgstr ""
+msgstr "Rēķinu izveide"
 
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Izveidot klientu"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -1737,8 +1873,11 @@ msgstr "Izveidot jaunu produktu"
 #: model_terms:ir.actions.act_window,help:sale.action_orders
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#, fuzzy
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr ""
+"Izveidojiet jaunu cenu piedāvājumu, kas ir pirmais solis, lai veiktu jaunu "
+"pārdošanu!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1791,10 +1930,13 @@ msgstr "Izveides datums"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__date_order
+#, fuzzy
 msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Projekta/nosūtīto rīkojumu izveides datums,\n"
+"Apstiprināto rīkojumu apstiprināšanas datums."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1814,8 +1956,9 @@ msgstr "Valūtas kurss"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
+#, fuzzy
 msgid "Custom Values"
-msgstr ""
+msgstr "Pielāgotās vērtības"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1829,13 +1972,15 @@ msgstr "Klients"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Customer Country"
-msgstr ""
+msgstr "Klienta valsts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
+#, fuzzy
 msgid "Customer Entity"
-msgstr ""
+msgstr "Klientu vienība"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1851,8 +1996,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
+#, fuzzy
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Klienta portāla URL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1861,8 +2007,9 @@ msgstr "Klienta Kods"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
+#, fuzzy
 msgid "Customer State"
-msgstr ""
+msgstr "Klienta valsts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_tag_ids
@@ -1872,8 +2019,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
+#, fuzzy
 msgid "Customer ZIP"
-msgstr ""
+msgstr "Klienta ZIP"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1897,21 +2045,26 @@ msgstr "Datums:"
 #: model:ir.model.fields,help:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,help:sale.field_res_config_settings__quotation_validity_days
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Dienas starp kotācijas priekšlikumu un termiņa beigām. 0 dienas nozīmē, ka "
+"automātiskā termiņa beigas ir atspējotas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
+#, fuzzy
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Atskaitiet priekšapmaksu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
+#, fuzzy
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Noklusējuma kotācijas derīguma termiņš"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
@@ -1936,14 +2089,16 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
+#, fuzzy
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Noklusējuma produkts, ko izmanto atlaidēm"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Delete"
-msgstr ""
+msgstr "Izdzēst"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_deliver_sold_quantity
@@ -1959,8 +2114,9 @@ msgstr "Piegādāts"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Piegādātais daudzums: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1994,8 +2150,9 @@ msgstr "Piegādes metodes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
+#, fuzzy
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Piegāde Daudzums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
@@ -2010,12 +2167,17 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
+#, fuzzy
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Piegādes termiņš, ko varat apsolīt klientam, rēķinot no minimālā pasūtījuma "
+"līniju izpildes termiņa, ja runa ir par servisa produktiem. Piegādes "
+"gadījumā tiks ņemta vērā pasūtījuma piegādes politika, lai izmantotu "
+"minimālo vai maksimālo pasūtījuma rindu izpildes termiņu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
@@ -2041,8 +2203,9 @@ msgstr "Apraksts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Disc.%"
-msgstr ""
+msgstr "Atl.%"
 
 #. module: sale
 #. odoo-javascript
@@ -2058,8 +2221,9 @@ msgstr "Atmest"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discount"
-msgstr ""
+msgstr "Atlaide"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -2090,23 +2254,27 @@ msgstr "Atlaides lielums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
+#, fuzzy
 msgid "Discount Product"
-msgstr ""
+msgstr "Atlaides prece"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
+#, fuzzy
 msgid "Discount Type"
-msgstr ""
+msgstr "Atlaides veids"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
+#, fuzzy
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Atlaižu vednis"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
+#, fuzzy
 msgid "Discount on lines"
-msgstr ""
+msgstr "Atlaide rindās"
 
 #. module: sale
 #. odoo-python
@@ -2116,19 +2284,22 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discount:"
-msgstr ""
+msgstr "Atlaide:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discounts"
-msgstr ""
+msgstr "Discounts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
+#, fuzzy
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Rādīt rēķina projekta brīdinājumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
@@ -2180,8 +2351,9 @@ msgstr "Attēlošanas Tips"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+#, fuzzy
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Izplatīšanas analītiskais konts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__document_tax_mode
@@ -2191,8 +2363,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
@@ -2227,8 +2400,9 @@ msgstr "Avansa maksājuma daudzums (Fiksēts)"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Pirmā iemaksa: %(date)s (projekts)"
 
 #. module: sale
 #. odoo-python
@@ -2254,8 +2428,9 @@ msgstr "Avansa maksājums (procentuāli)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
+#, fuzzy
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Pirmā iemaksa <br/>"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
@@ -2265,8 +2440,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, fuzzy
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Priekšapmaksas rēķins"
 
 #. module: sale
 #. odoo-python
@@ -2298,8 +2474,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Neapstiprināti Rēķini"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2321,18 +2498,21 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_mixin.js:0
+#, fuzzy
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Konfigurācijas rediģēšana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
+#, fuzzy
 msgid "Email Template"
-msgstr ""
+msgstr "E-pasta veidne"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
+#, fuzzy
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "Klientam tiek nosūtīts e-pasta vēstule, tiklīdz rēķins ir pieejams."
 
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
@@ -2362,18 +2542,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
+#, fuzzy
 msgid "Expiration"
-msgstr ""
+msgstr "Derīguma beigas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Derīguma termiņš:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "Iztecējis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
@@ -2387,19 +2570,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
+#, fuzzy
 msgid "Extra Values"
-msgstr ""
+msgstr "Papildus vērtības"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Extra line with %s"
-msgstr ""
+msgstr "Papildus rinda ar %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "Finanšu konts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2408,21 +2594,27 @@ msgstr "Nodokļu Profils"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Fiskālās pozīcijas tiek izmantotas, lai pielāgotu nodokļus un kontus "
+"konkrētiem klientiem vai pārdošanas pasūtījumiem/rēķiniem. Noklusējuma "
+"vērtība nāk no klienta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
+#, fuzzy
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Fiksēta Summa"
 
 #. module: sale
 #: model:portal.entry,description:sale.portal_your_orders
+#, fuzzy
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Sekojiet, skatiet vai apmaksājiet Jūsu pasūtījumus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2448,8 +2640,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
+#, fuzzy
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Aizliegtās vērtības neaprēķināmā pārdošanas rīkojuma rindā"
 
 #. module: sale
 #. odoo-javascript
@@ -2470,8 +2663,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
+#, fuzzy
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Pilna summa <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
@@ -2499,13 +2693,16 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
+#, fuzzy
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Izveidot pārdošanas maksājumu saiti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
+"Automātiska rēķina ģenerēšana, kad ir apstiprināts tiešsaistes maksājums"
 
 #. module: sale
 #. odoo-python
@@ -2520,8 +2717,9 @@ msgstr "Get warnings in orders for products or customers"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
+#, fuzzy
 msgid "Global Discount"
-msgstr ""
+msgstr "Vispārēja atlaide"
 
 #. module: sale
 #. odoo-javascript
@@ -2538,8 +2736,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Piešķirt atlaides pārdošanas pasūtījumu līnijām"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2548,8 +2747,9 @@ msgstr "Bruto Svars"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
+#, fuzzy
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Aktīva cenu lapa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
@@ -2563,8 +2763,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
+#, fuzzy
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Apstiprināts pasūtījums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2578,8 +2779,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
+#, fuzzy
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Vai cenrādis ir mainījies"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2588,8 +2790,9 @@ msgstr "Ir avansa maksājumi"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
+#, fuzzy
 msgid "Hidden"
-msgstr ""
+msgstr "Slēpts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
@@ -2650,10 +2853,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
+#, fuzzy
 msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Ja iestatīts, SO izrakstīs rēķinu šajā žurnālā; pretējā gadījumā tiek "
+"izmantots pārdošanas žurnāls ar zemāko kārtas numuru."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2666,8 +2872,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
+#, fuzzy
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "Ja mainīsiet cenrādi, tas ietekmēs tikai no jauna pievienotās rindas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2676,8 +2883,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Importēt Amazon pasūtījumus un sinhronizēt piegādes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2706,8 +2914,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
+#, fuzzy
 msgid "In the Order"
-msgstr ""
+msgstr "Pasūtījumā"
 
 #. module: sale
 #. odoo-javascript
@@ -2719,15 +2928,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
+#, fuzzy
 msgid "Incoterm"
-msgstr ""
+msgstr "Inkoterms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
+#, fuzzy
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Incoterm Atrašanās vieta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2745,34 +2956,41 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,help:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,help:sale.field_sale_order__incoterm
+#, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Starptautiskie tirdzniecības noteikumi ir iepriekš definētu komercterminu "
+"virkne, ko izmanto starptautiskos darījumos."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Nederīga atlaides summa"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Invalid order."
-msgstr ""
+msgstr "Nepareizs pasūtījums"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Invalid signature data."
-msgstr ""
+msgstr "Nepareizi paraksta dati"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Rēķins"
 
 #. module: sale
 #. odoo-python
@@ -2787,8 +3005,9 @@ msgstr "Rēķina Adrese"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
+#, fuzzy
 msgid "Invoice Count"
-msgstr ""
+msgstr "Rēķina skaits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2826,8 +3045,11 @@ msgstr "Rēķina Statuss"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
+"Izrakstīt rēķinu pēc piegādes, balstoties uz piegādāto, nevis pasūtīto "
+"apjomu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
@@ -2859,8 +3081,9 @@ msgstr "Rēķins izrakstīts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_invoiced
+#, fuzzy
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Apmaksai Piestādītais Apjoms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -2875,8 +3098,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "Izrakstītais daudzums\\: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2910,8 +3134,9 @@ msgstr "Rēķini"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Rēķina adrese"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2930,8 +3155,9 @@ msgstr "Invoicing Target"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Rēķina izrakstīšanas un piegādes adrese"
 
 #. module: sale
 #. odoo-python
@@ -2977,8 +3203,9 @@ msgstr "Ir avansa maksājums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
+#, fuzzy
 msgid "Is expense"
-msgstr ""
+msgstr "Ir izmaksa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_configurable_product
@@ -2987,8 +3214,11 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
+#, fuzzy
 msgid "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Ir patiess, ja pārdošanas rīkojuma rinda nāk no izmaksas vai piegādātāja "
+"pavadzīmēm"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2998,10 +3228,13 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Aizliegts mainīt šādus laukus bloķētā secībā:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
@@ -3020,8 +3253,9 @@ msgstr "Kontējums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Last Invoices"
-msgstr ""
+msgstr "Pēdējie rēķini"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3048,8 +3282,9 @@ msgstr "Pēdējās aktivitātes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
+#, fuzzy
 msgid "Lead Time"
-msgstr ""
+msgstr "Piegādes laiks"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3064,8 +3299,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
+#, fuzzy
 msgid "Linked Order Line"
-msgstr ""
+msgstr "Saistītā pasūtījuma līnija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
@@ -3085,8 +3321,9 @@ msgstr "Lock"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
+#, fuzzy
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Slēgt apsitprinātus piedāvājumus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
@@ -3095,25 +3332,31 @@ msgstr "Locked"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
+#, fuzzy
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Bloķētos rīkojumus nevar mainīt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Padariet savu piedāvājumu pievilcīgu, pievienojot tam galvenes lapas, "
+"produktu aprakstus un pēdējās lapas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
-msgstr ""
+msgstr "Akciju, kuponu, lojalitātes karšu, dāvanu karšu un e-maka pārvaldība"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Pārvaldiet pārdošanu un komandu mērķus, un komisijas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_order_mandatory_product
@@ -3127,8 +3370,9 @@ msgstr "Manuālā"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
+#, fuzzy
 msgid "Manual Payment"
-msgstr ""
+msgstr "Manuāls maksājums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoicing_closed
@@ -3204,13 +3448,15 @@ msgstr "Ziņojumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
+#, fuzzy
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Piegādātā daudzuma atjaunināšanas metode"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
+#, fuzzy
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Trūkst obligāto lauku uzskaites pārdošanas rīkojuma rindā."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3236,8 +3482,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Manas aktivitātes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -3251,8 +3498,9 @@ msgstr "My Orders"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "My Quotations"
-msgstr ""
+msgstr "Mani piedavājumi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -3298,13 +3546,15 @@ msgstr "Numurs"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Pielikums netika iesniegts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Šim maksājumam nav papildu prasību"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3313,13 +3563,15 @@ msgstr "Pēc apstiprināšanas vairs nav pasūtījumu rediģēšanas iespēju"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Nav pasūtījumu, kas gaida rēķina izveidi"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nav atrasti pasūtījumi, lai palielinātu pārdošanas apjomu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3374,8 +3626,9 @@ msgstr "Kļūdu skaits"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -3384,8 +3637,9 @@ msgstr "Ziņojumu, kas satur piegādes kļūdu, skaits"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
@@ -3400,8 +3654,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
+#, fuzzy
 msgid "On All Order Lines"
-msgstr ""
+msgstr "Visās pasūtījuma līnijās"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
@@ -3426,68 +3681,85 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#, fuzzy
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Kad klients ir apstiprinājis cenu piedāvājumu, tas kļūst par pārdošanas "
+"pasūtījumu.<br> Jūs varēsiet izveidot rēķinu un iekasēt maksājumu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
+#, fuzzy
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Kad piedāvājums ir apstiprināts, tas kļūst par pārdošanas pasūtījumu.<br> "
+"Jūs varēsiet izveidot rēķinu un iekasēt maksājumu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+#, fuzzy
 msgid "Online Payment"
-msgstr ""
+msgstr "Tiešsaistes maksājums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#, fuzzy
 msgid "Online Signature"
-msgstr ""
+msgstr "Parakstīšanās tiešsaistē"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
+#, fuzzy
 msgid "Online payment"
-msgstr ""
+msgstr "Tiešsaistes maksājums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
+#, fuzzy
 msgid "Online signature"
-msgstr ""
+msgstr "Tiešsaistes paraksts"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
+#, fuzzy
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Tiek ņemti vērā tikai apstiprināti avansa maksājumi."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "Tikai iesāktie pasūtījumi var tikt atzīmēti kā nosūtīti pa tiešo"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
+#, fuzzy
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Vienā pārdošanas pasūtījuma rindā ir atļauta tikai viena Pielāgotā vērtība "
+"katram atribūtam."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Option for: %s"
-msgstr ""
+msgstr "Variants: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
+#, fuzzy
 msgid "Optional Products"
-msgstr ""
+msgstr "Izvēles produkti"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
@@ -3513,8 +3785,9 @@ msgstr "Pasūtījums #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
+#, fuzzy
 msgid "Order Count"
-msgstr ""
+msgstr "Pasūtījuma skaits"
 
 #. module: sale
 #. odoo-python
@@ -3532,13 +3805,15 @@ msgstr "Pasūtījuma Datums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Order Date:"
-msgstr ""
+msgstr "Pasūtījuma datums:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Pasūtījuma datums: pēdējās 365 dienas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
@@ -3577,16 +3852,20 @@ msgstr "Order signed by %s"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Pasūtītais daudzums: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
+#, fuzzy
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Pasūtītais daudzums: Rēķinā norādītais daudzums, ko pasūtījis klients.\n"
+"Piegādātais daudzums: Rēķinā norādītais klientam piegādātais daudzums."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3610,13 +3889,15 @@ msgstr "Orders to Invoice"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
+#, fuzzy
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Pasūtījumi piepārdošanai"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oskars Morgans"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3626,8 +3907,9 @@ msgstr "Other Info"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "PDF piedāvājuma veidotājs"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3652,13 +3934,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
+#, fuzzy
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Partnera kredīta brīdinājums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3672,18 +3956,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
+#, fuzzy
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "Maksāt ar citu maksājuma veidu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
+#, fuzzy
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Payment"
-msgstr ""
+msgstr "Maksājums"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -3703,8 +3990,9 @@ msgstr "Maksājumu sniedzējs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
+#, fuzzy
 msgid "Payment Ref."
-msgstr ""
+msgstr "Maksājuma ref."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3723,8 +4011,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Payment terms"
-msgstr ""
+msgstr "Maksājuma nosacījumi"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
@@ -3739,8 +4028,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
+#, fuzzy
 msgid "Percentage"
-msgstr ""
+msgstr "Procentuālā attiecība"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3749,8 +4039,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
+#, fuzzy
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portāla pieejas URL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
@@ -3761,15 +4052,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#, fuzzy
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Priekšapmaksas procentuālā daļa"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Prepayment percentage must be a valid percentage."
 msgstr ""
+"Priekšapmaksas procentuālajai daļai jābūt derīgai procentuālajai daļai."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3778,8 +4072,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Preview"
-msgstr ""
+msgstr "Priekšskatīt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__previously_bought_by_customer
@@ -3798,8 +4093,9 @@ msgstr "Price Reduce Tax excl"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
+#, fuzzy
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Cenas samazinājums iesk. nodokļus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3809,13 +4105,15 @@ msgstr "Cenrādis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
+#, fuzzy
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Cenu lapas pozīcija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist_item
+#, fuzzy
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Cenrāža noteikums"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3860,8 +4158,9 @@ msgstr "Produkts"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
+#, fuzzy
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Preces atribūta pielāgota vērtība"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3870,8 +4169,9 @@ msgstr "Produktu katalogs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
+#, fuzzy
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Produktu katalogs Produkts ir pārdošanas kārtībā"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
@@ -3882,16 +4182,18 @@ msgstr "Produkta Kategorija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
+#, fuzzy
 msgid "Product Document"
-msgstr ""
+msgstr "Preces dokuments"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/product/product.xml:0
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
+#, fuzzy
 msgid "Product Image"
-msgstr ""
+msgstr "Produkta attēls"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
@@ -3905,8 +4207,9 @@ msgstr "Produkta Tips"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
+#, fuzzy
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Produkts Uom Tikai nolasāms"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3919,14 +4222,16 @@ msgstr "Produkta Veids"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "Produktu cenas ir pārrēķinātas saskaņā ar cenrādi %s."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "Produktu cenas ir pārrēķinātas."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3943,8 +4248,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Akcijas, lojalitātes un dāvanu kartes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3978,8 +4284,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
+#, fuzzy
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Daudzums piegādei"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -4004,8 +4311,9 @@ msgstr "Daudzums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
+#, fuzzy
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Daudzums izrakstīšanai"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4029,13 +4337,15 @@ msgstr "Piedāvājums #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Piedāvājums / Pasūtījums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
+#, fuzzy
 msgid "Quotation Count"
-msgstr ""
+msgstr "Piedāvājuma skaits"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4053,8 +4363,10 @@ msgstr "Piedāvājums nosūtīts"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/res_config_settings.py:0
+#, fuzzy
 msgid "Quotation Validity is required and must be greater or equal to 0."
 msgstr ""
+"Piedāvājuma derīgums ir obligāts, un tam jābūt lielākam vai vienādam ar 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
@@ -4077,8 +4389,9 @@ msgstr "Cenu piedāvājums nosūtīts"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Klients apskatījis piedāvājumu %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -4097,8 +4410,9 @@ msgstr "Piedāvājumi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Piedāvājumi un pasūtījumi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -4112,8 +4426,9 @@ msgstr "Piedāvājumi un realizācija"
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_quotations_to_review
+#, fuzzy
 msgid "Quotations to review"
-msgstr ""
+msgstr "Piedāvājumi, kas jāpārskata"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_rate
@@ -4122,8 +4437,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
+#, fuzzy
 msgid "Ratings"
-msgstr ""
+msgstr "Reitingi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
@@ -4134,8 +4450,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_reinvoice_policy
+#, fuzzy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Redzama atkārtotu rēķinu izrakstīšanas politika"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4149,19 +4466,23 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Pārrēķināt visas cenas, pamatojoties uz šo cenrādi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "Atsauksme"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
+#, fuzzy
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Reference uz dokumentu, kas ģenerēja šo pārdošanas pasūtījuma pieprasījumu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -4170,20 +4491,23 @@ msgstr "Parasts rēķins"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Atsaukt šo piedāvājumu"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "Noņemt"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#, fuzzy
 msgid "Remove one"
-msgstr ""
+msgstr "Noņemt vienu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4192,8 +4516,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
+#, fuzzy
 msgid "Report Action"
-msgstr ""
+msgstr "Pārskata darbība"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4202,13 +4527,17 @@ msgstr "Atskaites"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
+#, fuzzy
 msgid "Request a online payment from the customer to confirm the order."
 msgstr ""
+"Pieprasiet klientam veikt tiešsaistes maksājumu, lai apstiprinātu pasūtījumu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
+#, fuzzy
 msgid "Request a online signature from the customer to confirm the order."
 msgstr ""
+"Pieprasiet no klienta parakstu tiešsaistē, lai apstiprinātu pasūtījumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4227,8 +4556,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Pieprasītais datums ir pārāk agrs."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -4237,8 +4567,9 @@ msgstr "Atbildīgie lietotāji"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
+#, fuzzy
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr ""
+msgstr "Tekošā mēneša rezultāti (apmaksātie rēķini bez nodokļiem)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4248,8 +4579,9 @@ msgstr "Ieņēmumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
+#, fuzzy
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Ieņēmumi no kampaņas"
 
 #. module: sale
 #: model:portal.entry,description:sale.portal_quotations_to_review
@@ -4263,14 +4595,16 @@ msgstr "SMS piegādes kļūda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Sale"
-msgstr ""
+msgstr "Pārdošana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on_sale
@@ -4279,8 +4613,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Sale Information"
-msgstr ""
+msgstr "Pārdošanas informācija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
@@ -4301,30 +4636,35 @@ msgstr "Tirdzniecības Pasūtījums"
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
+#, fuzzy
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma skaits"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
+#, fuzzy
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma plāni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
+#, fuzzy
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma brīdinājums"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_partner.py:0
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Sale Orders"
-msgstr ""
+msgstr "Pārdošanas pasūtījumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
+#, fuzzy
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Pārdošanas pasūtījumu skaits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
@@ -4335,18 +4675,21 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Pārdošanas brīdinājumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
+#, fuzzy
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Pārdošanas izvēlētā maksājuma metode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
+#, fuzzy
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Pārdošanas rīkojumu atcelšana"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
@@ -4379,8 +4722,9 @@ msgstr "Pārdošanu Analīze"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
+#, fuzzy
 msgid "Sales Analysis By Customers"
-msgstr ""
+msgstr "Pārdošanas analīze pa klientiem"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4389,8 +4733,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
+#, fuzzy
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Pārdošanas analīze, ko veic pārdevēji"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4426,8 +4771,9 @@ msgstr "Klienta pasūtījums apstiprināts"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
+#, fuzzy
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma pozīcija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4463,8 +4809,9 @@ msgstr "Sales Order Lines related to a Sales Order of mine"
 #. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
+#, fuzzy
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Pārdošanas pasūtījums(i)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4506,21 +4853,27 @@ msgstr "Sales Teams"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+#, fuzzy
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Pārdošanas pasūtījuma vienība, kurai tiks pievienots pavadītais laiks, lai "
+"par to klientam varētu izrakstīt rēķinu. Noņemiet pārdošanas pasūtījuma "
+"pozīciju, lai par laika uzskaites ierakstu nevarētu izrakstīt rēķinu."
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
+#, fuzzy
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Pārdošana: Pasūtījums apstiprināts"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Pārdošana: Maksājums veikts"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
@@ -4529,8 +4882,9 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
+#, fuzzy
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Pārdošana: Nosūtīt piedāvājumu"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_pending_emails_cron_ir_actions_server
@@ -4549,8 +4903,9 @@ msgstr "Pārdevējs"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
+#, fuzzy
 msgid "Salespersons"
-msgstr ""
+msgstr "Pārdevēji"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4571,8 +4926,9 @@ msgstr "Sadaļa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Sadaļas nosaukums (piem., Produkti, Pakalpojumi)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4588,8 +4944,9 @@ msgstr "Security Token"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Izvēlieties vai izvedojiet jaunu produktu uzreiz."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
@@ -4603,15 +4960,17 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Pārdod produktu variantus izmantojot atribūtus (izmērs, krāsa, utml.)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Send"
-msgstr ""
+msgstr "Nosūtīt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4625,15 +4984,19 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
+#, fuzzy
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Sūtīt klientiem piedāvājuma apstiprinājumu"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
 msgstr ""
+"Nosūtīts klientiem, kad ir saņemts maksājums, bet pasūtījums netiek "
+"apstiprināts uzreiz"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4648,8 +5011,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Services"
-msgstr ""
+msgstr "Apkopes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
@@ -4692,8 +5056,9 @@ msgstr "Piegāde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Shipping Address"
-msgstr ""
+msgstr "Piegādes adrese"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
@@ -4722,13 +5087,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Parakstīt &amp; Maksāt"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
+#, fuzzy
 msgid "Sign online"
-msgstr ""
+msgstr "Parakstīt tiešsaistē"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -4743,13 +5110,15 @@ msgstr "Signature is missing."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
+#, fuzzy
 msgid "Signed By"
-msgstr ""
+msgstr "Parakstījis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
+#, fuzzy
 msgid "Signed On"
-msgstr ""
+msgstr "Parakstīts uz"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4761,8 +5130,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
 msgid "Sold"
-msgstr ""
+msgstr "Pārdots"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -4837,15 +5207,19 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
+#, fuzzy
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
+"Stripe Connect nav pieejams Jūsu valstī, lūdzu, izmantojiet citu maksājumu "
+"sniedzēju."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
@@ -4869,13 +5243,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Sum of Total"
-msgstr ""
+msgstr "Gala summa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Summa bez nodokļa"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_paid
@@ -4886,8 +5262,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
+#, fuzzy
 msgid "System Parameter"
-msgstr ""
+msgstr "Sistēmas parametrs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4897,19 +5274,22 @@ msgstr "Birkas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Tax 15%"
-msgstr ""
+msgstr "15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
+#, fuzzy
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Nodokļu aprēķina noapaļojuma metode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_country_id
+#, fuzzy
 msgid "Tax Country"
-msgstr ""
+msgstr "Nodokļa valsts"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__document_tax_mode__tax_excluded
@@ -4919,8 +5299,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Tax ID"
-msgstr ""
+msgstr "Tax ID"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__document_tax_mode__tax_included
@@ -4930,18 +5311,21 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Tax Total"
-msgstr ""
+msgstr "Nodokļi kopā"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
+#, fuzzy
 msgid "Tax Totals"
-msgstr ""
+msgstr "Nodokļi kopā"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
+#, fuzzy
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Nodokļu aprēķina noapaļošanas metode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4964,10 +5348,13 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Pastāstiet mums, kāpēc atsakāties no šī piedāvājuma, jo tas palīdzēs mums "
+"uzlabot mūsu pakalpojumus."
 
 #. module: sale
 #. odoo-python
@@ -4977,19 +5364,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
+#, fuzzy
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Noteikumu & nosacījumu formāts"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Noteikumu & nosacījumi: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Nosacījumi &amp; noteikumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -5037,8 +5427,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Pieejas žetons nav derīgs"
 
 #. module: sale
 #. odoo-python
@@ -5063,19 +5454,24 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Piegādes datums ir agrāks par gaidīto. Iespējams, ka piegādes datumu "
+"nevarēsiet ievērot."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
+#, fuzzy
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Fiksētā summa, par kuru rēķins jāizsniedz avansā."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid ""
 "The following products cannot be restricted to the company %(company)s "
 "because they have already been used in quotations or sales orders in another "
@@ -5084,6 +5480,12 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
+"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %(company)s, jo tie "
+"jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā "
+"uzņēmumā:\n"
+"%(used_products)s\n"
+"Varat arhivēt šos produktus un no jauna izveidot tos ar sava uzņēmuma "
+"ierobežojumu vai atstāt tos kā koplietošanas produktus."
 
 #. module: sale
 #. odoo-python
@@ -5096,6 +5498,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
 #: model:ir.model.fields,help:sale.field_res_config_settings__sale_automatic_invoice
+#, fuzzy
 msgid ""
 "The invoice is generated automatically and available in the customer portal "
 "when the transaction is confirmed by the payment provider.\n"
@@ -5104,6 +5507,12 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
+"Rēķins tiek ģenerēts automātiski un ir pieejams klientu portālā, kad "
+"maksājumu pakalpojumu sniedzējs ir apstiprinājis darījumu.\n"
+"Rēķins tiek atzīmēts kā apmaksāts, un maksājums tiek reģistrēts maksājumu "
+"pakalpojumu sniedzēja konfigurācijā noteiktajā maksājumu žurnālā.\n"
+"Šo režīmu ieteicams izmantot, ja galīgo rēķinu izsniedzat pie pasūtījuma, "
+"nevis pēc piegādes."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5116,8 +5525,11 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Jaunajā rēķinā tiks atskaitīti rēķinu projekti, kas saistīti ar šo "
+"pārdošanas pasūtījumu."
 
 #. module: sale
 #. odoo-python
@@ -5129,41 +5541,51 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "The order is not in a state requiring customer payment."
 msgstr ""
+"Pasūtījums nav tādā stāvoklī, lai klients par to varētu veikt maksājumu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Pasūtījumā nav nepieciešams klienta paraksts."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Pasūtītais daudzums ir atjaunināts."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
+#, fuzzy
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Šī pārdošanas rīkojuma maksājuma paziņojums."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Maksājums jāveic rūpīgi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
+#, fuzzy
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Procentuālā daļa no summas, par kuru jāizsniedz rēķins avansā."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#, fuzzy
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Procentuālā daļa no summas, kas jāsamaksā, lai apstiprinātu cenu "
+"piedāvājumus."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -5197,13 +5619,15 @@ msgstr "There are currently no quotations for your account."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Pašlaik jūsu kontā nav pārdošanas pasūtījumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "There are existing"
-msgstr ""
+msgstr "Ir esošās"
 
 #. module: sale
 #. odoo-python
@@ -5233,33 +5657,46 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
 #: model:ir.model.fields,help:sale.field_sale_order__campaign_id
+#, fuzzy
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts, "
 "e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Šis nosaukus palīdz jums sekot līdzi dažādiem kampaņas pasākumiem, piemēram, "
+"Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
+#, fuzzy
 msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Tas ir klientam solītais piegādes datums. Ja tas ir iestatīts, piegādes "
+"pasūtījums tiks ieplānots, pamatojoties uz šo datumu, nevis uz produkta "
+"piegādes laiku."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
+#, fuzzy
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Tas ir piegādes veids, piemēram, pastkarte, e-pasta vēstule vai baneru "
+"reklāma"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
 #: model:ir.model.fields,help:sale.field_account_move__source_id
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
+#, fuzzy
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Tas ir saites avots, piemēram, meklētājprogramma, cits domēns vai e-pasta "
+"saraksta nosaukums"
 
 #. module: sale
 #. odoo-javascript
@@ -5270,8 +5707,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Ar šo maksājumu tiks apstiprināts piedāvājums."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5323,9 +5761,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
+"Tādējādi tiks atjaunināta visu produktu vienības cena, pamatojoties uz jauno "
+"cenrādi."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -5341,21 +5782,27 @@ msgstr "Piestādīt Rēķinu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#, fuzzy
 msgid "To Upsell"
-msgstr ""
+msgstr "Piepārdošana"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "To send invitations in B2B mode, open a contact or select several ones in "
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Lai nosūtītu ielūgumus B2B režīmā, atveriet kontaktu vai atlasiet vairākus "
+"kontaktus saraksta skatā un nolaižamajā izvēlnē *Darbība* noklikšķiniet uz "
+"opcijas \"Portāla piekļuves pārvaldība\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Šodien"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5380,13 +5827,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
+#, fuzzy
 msgid "Total Tax"
-msgstr ""
+msgstr "Nodokļi kopā"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Kopā bez PVN"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5402,8 +5851,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "Track Inventory"
-msgstr ""
+msgstr "Krājumu izsekošana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5433,8 +5883,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
+#, fuzzy
 msgid "Type Name"
-msgstr ""
+msgstr "Rakstīt vārdu"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -5443,18 +5894,21 @@ msgstr "Reģistrētās izņēmuma aktivitātes veids."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Ierakstiet, lai atrastu klientu..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Ierakstiet, lai atrastu produktu..."
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
+#, fuzzy
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM kampaņa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move__utm_reference
@@ -5472,8 +5926,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#, fuzzy
 msgid "Unit"
-msgstr ""
+msgstr "Vienība"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5511,19 +5966,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
+#, fuzzy
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Piestādītā summa bez nodokļa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
+#, fuzzy
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Summa bez nodokļa, kas jāizraksta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
+#, fuzzy
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Piestādītā summa bez nodokļa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -5532,8 +5990,9 @@ msgstr "Untaxed Total"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Update Prices"
-msgstr ""
+msgstr "Atjaunot cenas"
 
 #. module: sale
 #. odoo-javascript
@@ -5544,8 +6003,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Upsell %(order)s klientam %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5574,8 +6034,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
+#, fuzzy
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Izmanto pārdevēji, nosūtot piedāvājumus vai proformu iespējamajiem klientiem"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5604,23 +6066,27 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Šeit iestatītās vērtības ir specifiskas uzņēmumam."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Izvēle varianta režģim"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "View Alternatives"
-msgstr ""
+msgstr "Skatīt alternatīvas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "Skatīt vairāk"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5630,8 +6096,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "View Quotation"
-msgstr ""
+msgstr "Skatīt piedāvājumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
@@ -5645,8 +6112,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Void Transaction"
-msgstr ""
+msgstr "Anulēt darījumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -5669,8 +6137,9 @@ msgstr "Brīdinājums"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Brīdinājums par jūsu piedāvājuma uzņēmuma maiņu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
@@ -5690,31 +6159,42 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Nosūtītu cenu piedāvājumu vai apstiprinātu pārdošanas pasūtījumu nevar "
+"dzēst. Vispirms tas ir jāatceļ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Varat atlasīt visus pasūtījumus un izrakstīt tiem rēķinus partijās,<br>\n"
+"            vai atzīmēt katru pasūtījumu un izrakstīt rēķinu pa vienam."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
+#, fuzzy
 msgid ""
 "You can set here the communication type that will appear on sales orders.The "
 "communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Šeit varat iestatīt saziņas veidu, kas tiks parādīts pārdošanas "
+"pasūtījumos.Saziņa tiks sniegta klientam, kad viņš izvēlēsies maksājuma "
+"veidu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "Bloķētu pasūtījumu nevar atcelt. Lūdzu, vispirms to atbloķējiet."
 
 #. module: sale
 #. odoo-python
@@ -5726,18 +6206,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Jūs nevarat mainīt produkta veidu, jo tas jau tiek izmantots pārdošanas "
+"pasūtījumos."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Pārdošanas rīkojuma rindas veidu mainīt nevar. Tā vietā ir jāizdzēš "
+"pašreizējā rinda un jāizveido jauna atbilstoša tipa rinda."
 
 #. module: sale
 #. odoo-python
@@ -5759,10 +6245,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, fuzzy
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Noklusējuma piedāvājuma derīguma vērtībai nevar iestatīt negatīvu skaitli. "
+"Atstājiet tukšu (vai 0), lai atspējotu automātisko derīguma termiņu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5771,21 +6260,27 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
+#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama "
+"prece vai pakalpojums."
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid "Your Orders"
-msgstr ""
+msgstr "Jūsu pasūtījumi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Your Reference:"
-msgstr ""
+msgstr "Jūsu reference:"
 
 #. module: sale
 #. odoo-javascript
@@ -5795,28 +6290,35 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your feedback..."
-msgstr ""
+msgstr "Jūsu atbilde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Jūsu pasūtījums ir apstiprināts."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Jūsu pasūtījums ir parakstīts, taču nepieciešama apmaksa, lai pasūtījums "
+"tiktu apstiprināts."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Jūsu pasūtījums ir parakstīts."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Jūsu pasūtījums ir stadijā, kad to nevar atcelt."
 
 #. module: sale
 #. odoo-python
@@ -5836,8 +6338,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#, fuzzy
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "automātiksa rēķina izrakstīšana: nosūtīt gatavu rēķinu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5869,8 +6372,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "for this Sale Order."
-msgstr ""
+msgstr "šim pārdošanas pasūtījumam."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5892,8 +6396,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "sale order"
-msgstr ""
+msgstr "pārdošanas pasūtījums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5907,13 +6412,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "units"
-msgstr ""
+msgstr "vienības"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "with"
-msgstr ""
+msgstr "ar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -5922,11 +6429,15 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

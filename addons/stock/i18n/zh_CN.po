@@ -14,29 +14,29 @@
 # Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-23 11:52+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 11:28+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/stock/zh_Hans/>\n"
+"projects/odoo-s19-3/stock/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid "\t--Empty--"
-msgstr ""
+msgstr "\t--空--"
 
 #. module: stock
 #. odoo-python
@@ -269,7 +269,7 @@ msgstr "%s（副本）"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "%s [reverted]"
-msgstr "%s[恢复]"
+msgstr "%s[撤销]"
 
 #. module: stock
 #. odoo-python
@@ -389,6 +389,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__location_usage
 #: model:ir.model.fields,help:stock.field_stock_move_line__location_dest_usage
 #: model:ir.model.fields,help:stock.field_stock_move_line__location_usage
+#, fuzzy
 msgid ""
 "* Vendor: Virtual location representing the source location for products "
 "coming from your vendors\n"
@@ -405,6 +406,13 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* 供应商：代表来自供应商的产品来源位置的虚拟位置\n"
+"* 虚拟：通过聚合子位置为仓库创建层次结构的虚拟位置，不能直接存放产品\n"
+"* 内部：仓库内的实体位置\n"
+"* 客户：代表发送给客户的产品目的地的虚拟位置\n"
+"* 库存损失：作为库存调整操作（实物盘点）对应位置的虚拟位置\n"
+"* 生产：生产操作的虚拟对应位置，即消耗组件并生产成品的位置\n"
+"* 中转：应用于公司间或仓库间操作的对应位置"
 
 #. module: stock
 #. odoo-python
@@ -434,8 +442,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "/day"
-msgstr ""
+msgstr "/天"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -574,6 +583,52 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        您好<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
+"       <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\"> \n"
+"            您的订单已备妥。\n"
+"       </t>\n"
+"        <t t-else=\"\"> \n"
+"            很高兴通知您，您的订单已发货。\n"
+"       </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\"> \n"
+"            您的物流单号是\n"
+"           <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\"> \n"
+"               <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\"> \n"
+"                   <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/> <a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t> \n"
+"               </t>\n"
+"                <t t-else=\"\"> \n"
+"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/> .\n"
+"               </t>\n"
+"            </t> \n"
+"           <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/> .\n"
+"           </t>\n"
+"            </strong> \n"
+"       </t>\n"
+"        <br/> <br/> \n"
+"        请查阅附件中的配送单以获取更多详情。<br/><br/>\n"
+"        谢谢，\n"
+"       <t t-if=\"user.signature\">\n"
+"            <br/> \n"
+"           <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -600,13 +655,14 @@ msgstr "<span class=\"col-6\">等待中</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
+#, fuzzy
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">未分配包装的产品</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">未分配包装</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -680,8 +736,9 @@ msgstr "<span class=\"o_stat_text\">出：</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">套餐</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -696,8 +753,9 @@ msgstr "<span class=\"o_stat_text\">路线</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">报废</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -800,8 +858,9 @@ msgstr "<strong>联系人</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>客户</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -815,8 +874,9 @@ msgstr "<strong>送货地址：</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>收货地址</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -976,9 +1036,10 @@ msgstr "一个条形码只能分配给一种包裹类型！"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid ""
 "A package can't have one of its contained packages as destination container."
-msgstr ""
+msgstr "包装的目标容器不能是其内含的包装。"
 
 #. module: stock
 #. odoo-python
@@ -1054,8 +1115,9 @@ msgstr "活动异常标示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "活动计划"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1223,7 +1285,7 @@ msgstr "所有类别"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr ""
+msgstr "所有子包装"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
@@ -1352,8 +1414,9 @@ msgstr "任意类别"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
+#, fuzzy
 msgid "Anyone"
-msgstr ""
+msgstr "任何人"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1479,8 +1542,9 @@ msgstr "指派给"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
+#, fuzzy
 msgid "Assigned Contained Packages"
-msgstr ""
+msgstr "已分配的内含包装"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1629,8 +1693,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "Average Stock:"
-msgstr ""
+msgstr "平均库存："
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1817,10 +1882,13 @@ msgstr "找不到通用路线 %s."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
+"无法将在其他位置 (%(old_location)s) 存有包装的容器移动到不同位置 (%"
+"(new_location)s)。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2106,13 +2174,15 @@ msgstr "确认"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "确认订单"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "确认邮件"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2152,13 +2222,15 @@ msgstr "联系人"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_ids
+#, fuzzy
 msgid "Contained Packages"
-msgstr ""
+msgstr "内含包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__contained_quant_ids
+#, fuzzy
 msgid "Contained Quant"
-msgstr ""
+msgstr "内含库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
@@ -2248,8 +2320,9 @@ msgstr "对应位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__counting_date
+#, fuzzy
 msgid "Counting Date"
-msgstr ""
+msgstr "盘点日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_country_id
@@ -2528,8 +2601,9 @@ msgstr "循环盘点"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "Daily Demand:"
-msgstr ""
+msgstr "每日需求量："
 
 #. module: stock
 #. odoo-javascript
@@ -2562,8 +2636,9 @@ msgstr "补货需要完成的日期。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
+#, fuzzy
 msgid "Date at which the resulting moves will be dated."
-msgstr ""
+msgstr "生成的库存移动将以此日期为准。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -3006,13 +3081,15 @@ msgstr "目的地地址 "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_id
+#, fuzzy
 msgid "Destination Container"
-msgstr ""
+msgstr "目标容器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_name
+#, fuzzy
 msgid "Destination Container Name"
-msgstr ""
+msgstr "目标容器名称"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3058,8 +3135,9 @@ msgstr "目的地包裹"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_dest_name
+#, fuzzy
 msgid "Destination Package Name"
-msgstr ""
+msgstr "目标包装名称"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3114,8 +3192,9 @@ msgstr "差异"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "摘要"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3287,9 +3366,10 @@ msgstr "由于收货安排在未来，您可能会出现库存过多的情况。
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procurement_values
+#, fuzzy
 msgid ""
 "Dummy field to store procurement values to propagate them to later steps"
-msgstr ""
+msgstr "用于存储采购值以传递到后续步骤的临时字段"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3304,8 +3384,9 @@ msgstr "Dymo"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+#, fuzzy
 msgid "Earliest Possible Arrival"
-msgstr ""
+msgstr "最早可能到货时间"
 
 #. module: stock
 #. odoo-python
@@ -3329,15 +3410,17 @@ msgstr "实际日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__effective_route_id
+#, fuzzy
 msgid "Effective Route"
-msgstr ""
+msgstr "有效路线"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__effective_route_id
+#, fuzzy
 msgid ""
 "Either the route set directly or the one computed to be used by this "
 "replenishment"
-msgstr ""
+msgstr "直接设置的路线或为此补货计算出的路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3420,14 +3503,16 @@ msgstr "异常:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "交换"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "预计"
 
 #. module: stock
 #. odoo-python
@@ -3703,8 +3788,9 @@ msgstr "完整的位置名称"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__complete_name
+#, fuzzy
 msgid "Full Package Name"
-msgstr ""
+msgstr "完整包装名称"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3811,13 +3897,15 @@ msgstr "硬件"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__has_quants
+#, fuzzy
 msgid "Has Contents"
-msgstr ""
+msgstr "有内容"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_lines_without_result_package
+#, fuzzy
 msgid "Has Lines Without Result Package"
-msgstr ""
+msgstr "有未分配结果包装的明细行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4050,8 +4138,9 @@ msgstr "如果相同的序列号已被记录于系统库存中"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_request_count__show_expected_quantity
+#, fuzzy
 msgid "If the user can see the expected quantity or not"
-msgstr ""
+msgstr "用户是否可以看到预期数量"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -4169,17 +4258,19 @@ msgstr "如果这个运输被拆分，该字段连接到包括了已经处理的
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
+#, fuzzy
 msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
-msgstr ""
+msgstr "勾选后，扫码应用将直接显示待移动的包装，而非其内含的产品"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
+#, fuzzy
 msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
-msgstr ""
+msgstr "勾选后，您可以在装箱时选择使用哪种包装或包装类型"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4214,8 +4305,9 @@ msgstr "导入序列号"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
+#, fuzzy
 msgid "In %s day(s)"
-msgstr ""
+msgstr "%s 天内"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4516,8 +4608,9 @@ msgstr "库存调整原因"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
+#, fuzzy
 msgid "Inventory Request"
-msgstr ""
+msgstr "盘点申请"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -4538,8 +4631,9 @@ msgstr "某日库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+#, fuzzy
 msgid "Is Date Editable"
-msgstr ""
+msgstr "日期是否可编辑"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
@@ -4571,8 +4665,9 @@ msgstr "是部分包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+#, fuzzy
 msgid "Is Scheduled Date Editable"
-msgstr ""
+msgstr "计划日期是否可编辑"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_scrap
@@ -4592,8 +4687,9 @@ msgstr "已签署"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_entire_pack
+#, fuzzy
 msgid "Is added through entire package"
-msgstr ""
+msgstr "是否通过整包添加"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -4634,8 +4730,9 @@ msgstr "指定货物是部分转移，还是全部转移"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__json_popover
+#, fuzzy
 msgid "JSON data for popover widget"
-msgstr ""
+msgstr "弹出控件的 JSON 数据"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -4665,8 +4762,9 @@ msgstr "JSON格式弹窗"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_graph
+#, fuzzy
 msgid "Json Replenishment Graph"
-msgstr ""
+msgstr "补货图表 JSON 数据"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
@@ -4924,13 +5022,15 @@ msgstr "拣货的最新产品供应状况"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
+#, fuzzy
 msgid "Lead Days"
-msgstr ""
+msgstr "提前天数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_horizon_date
+#, fuzzy
 msgid "Lead Horizon Date"
-msgstr ""
+msgstr "提前期水平日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
@@ -4947,8 +5047,9 @@ msgstr "前置时间信息"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "Lead Time:"
-msgstr ""
+msgstr "前置时间："
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5194,8 +5295,9 @@ msgstr "批次/序列号 搬迁"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "批号/序列号"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5255,8 +5357,9 @@ msgstr "MTO规则"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
+#, fuzzy
 msgid "Main Packages"
-msgstr ""
+msgstr "主包装"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5477,13 +5580,15 @@ msgstr "移动明细行数"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+#, fuzzy
 msgid "Move a Pack"
-msgstr ""
+msgstr "移动包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
+#, fuzzy
 msgid "Move lines"
-msgstr ""
+msgstr "移动明细"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5516,8 +5621,9 @@ msgstr "多步路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid "Multiple"
-msgstr ""
+msgstr "倍数"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5532,8 +5638,9 @@ msgstr "一个产品有多种能力规则。"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid "Multiple destinations"
-msgstr ""
+msgstr "多个目的地"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5702,8 +5809,9 @@ msgstr "没有欠单"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_package_m2m.js:0
+#, fuzzy
 msgid "No Package"
-msgstr ""
+msgstr "无包装"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_quant_action
@@ -5810,8 +5918,9 @@ msgstr "没有调拨。 让我们创建一个！"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5907,6 +6016,7 @@ msgstr "十月"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -5915,6 +6025,11 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"ERP 默认打开 PDF 预览。如果您（仅限企业用户）想立即打印，请执行以下操作\n"
+"                                        在与条码操作员位于同一本地网络的计算"
+"机上安装 IoT 应用程序，并配置报告的路由。\n"
+"                                        条码作业员的计算机上安装物联网应用程"
+"序，并配置报告的路由."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5972,8 +6087,9 @@ msgstr "开启"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
+#, fuzzy
 msgid "Operation Category"
-msgstr ""
+msgstr "操作类别"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
@@ -6112,14 +6228,16 @@ msgstr "已订购"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "Ordering Frequency:"
-msgstr ""
+msgstr "订货频率："
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "Ordering Frequency: On demand"
-msgstr ""
+msgstr "订购频率：按需"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
@@ -6142,18 +6260,21 @@ msgstr "原始"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_orig_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list_editable
+#, fuzzy
 msgid "Origin Container"
-msgstr ""
+msgstr "来源容器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_orig_name
+#, fuzzy
 msgid "Origin Container Name"
-msgstr ""
+msgstr "来源容器名称"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__location_id
+#, fuzzy
 msgid "Origin Location"
-msgstr ""
+msgstr "来源位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -6162,8 +6283,9 @@ msgstr "原始移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__origin_package_ids
+#, fuzzy
 msgid "Origin Package"
-msgstr ""
+msgstr "来源包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
@@ -6208,8 +6330,9 @@ msgstr "出库类型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__outermost_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__outermost_dest_id
+#, fuzzy
 msgid "Outermost Destination Container"
-msgstr ""
+msgstr "最外层目标容器"
 
 #. module: stock
 #. odoo-javascript
@@ -6379,8 +6502,9 @@ msgstr "包裹内容"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_history_id
+#, fuzzy
 msgid "Package History"
-msgstr ""
+msgstr "包装历史"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -6401,8 +6525,9 @@ msgstr "包裹名称"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__dest_complete_name
+#, fuzzy
 msgid "Package Name At Destination"
-msgstr ""
+msgstr "目的地包装名称"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__name
@@ -6439,8 +6564,9 @@ msgstr "软件包类型 演示"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package_type.py:0
+#, fuzzy
 msgid "Package Type Sequence %(code)s"
-msgstr ""
+msgstr "包装类型序列 %(code)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -6493,15 +6619,18 @@ msgstr "包裹"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
 msgstr ""
+"包装 %(duplicate_names)s 在同一容器 %(container_name)s 中被移动到不同位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
+#, fuzzy
 msgid "Packages Count"
-msgstr ""
+msgstr "包装数量"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -6612,7 +6741,7 @@ msgstr "合作伙伴特定指示"
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
 msgid "Pay now"
-msgstr ""
+msgstr "立即支付"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
@@ -6685,8 +6814,9 @@ msgstr "拣货作业"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "拣货策略"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -6734,8 +6864,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "前置作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6750,8 +6881,9 @@ msgstr "首选路线"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "序号的前缀"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -6841,8 +6973,9 @@ msgstr "补货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__procurement_values
+#, fuzzy
 msgid "Procurement Values"
-msgstr ""
+msgstr "采购值"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
@@ -7133,8 +7266,9 @@ msgstr "推"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_put_in_pack
+#, fuzzy
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "装箱向导"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_put_in_pack_wizard
@@ -7566,8 +7700,9 @@ msgstr "参考序列"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_reference
+#, fuzzy
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "库存文件之间的参照"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
@@ -7744,8 +7879,9 @@ msgstr "补货报表搜索"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
+#, fuzzy
 msgid "Replenishment Uom Id Placeholder"
-msgstr ""
+msgstr "补货单位占位符"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -7795,8 +7931,9 @@ msgstr "保留方式"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "预留"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -7927,8 +8064,9 @@ msgstr "退货类型"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_type__package_use__reusable
+#, fuzzy
 msgid "Reusable Box (totes)"
-msgstr ""
+msgstr "可重复使用的箱子（手提箱）"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__package_use
@@ -7946,8 +8084,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "还原"
 
 #. module: stock
 #. odoo-python
@@ -7974,8 +8113,9 @@ msgstr "路线公司"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id_placeholder
+#, fuzzy
 msgid "Route Id Placeholder"
-msgstr ""
+msgstr "路线占位符"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -8112,8 +8252,9 @@ msgstr "示例数据"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #. module: stock
 #. odoo-python
@@ -8137,8 +8278,9 @@ msgstr "安排的日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__inventory_date
+#, fuzzy
 msgid "Scheduled at"
-msgstr ""
+msgstr "计划时间"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -8213,8 +8355,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "已报废"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -8240,8 +8383,9 @@ msgstr "搜索补货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_search_view
+#, fuzzy
 msgid "Search Reference"
-msgstr ""
+msgstr "搜索引用"
 
 #. module: stock
 #. odoo-python
@@ -8255,8 +8399,9 @@ msgstr "不支持无值搜索。"
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
 #: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
+#, fuzzy
 msgid "Select Packages to Move"
-msgstr ""
+msgstr "选择要移动的包装"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -8265,8 +8410,9 @@ msgstr "选择路线"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
+#, fuzzy
 msgid "Select a Package Type"
-msgstr ""
+msgstr "选择包装类型"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -8294,9 +8440,10 @@ msgstr "销售和购买不同计量单位或包装的产品"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
-msgstr ""
+msgstr "发货单完成时自动发送确认短信"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8406,8 +8553,9 @@ msgstr "序号/批次号码序列"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__set_package_type
+#, fuzzy
 msgid "Set Package Type"
-msgstr ""
+msgstr "设置包装类型"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8547,8 +8695,9 @@ msgstr "显示作业详情"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__show_expected_quantity
+#, fuzzy
 msgid "Show Expected Quantity"
-msgstr ""
+msgstr "显示预期数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_forecasted_qty_status_button
@@ -8599,8 +8748,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
+#, fuzzy
 msgid "Show Supply Warning"
-msgstr ""
+msgstr "显示供应警告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -8780,8 +8930,9 @@ msgstr "星标消息"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
+#, fuzzy
 msgid "Start transferring goods to see references"
-msgstr ""
+msgstr "开始转移货物以查看引用"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8840,8 +8991,9 @@ msgstr "库存条形码数据库"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_confirmation_type
+#, fuzzy
 msgid "Stock Confirmation Type"
-msgstr ""
+msgstr "库存确认类型"
 
 #. module: stock
 #. odoo-javascript
@@ -8905,8 +9057,9 @@ msgstr "包裹目的地"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_history
+#, fuzzy
 msgid "Stock Package History"
-msgstr ""
+msgstr "库存包装历史"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -8931,8 +9084,9 @@ msgstr "库存数量报表"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
+#, fuzzy
 msgid "Stock Reference"
-msgstr ""
+msgstr "库存引用"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_forecasted_product_product
@@ -8963,30 +9117,35 @@ msgstr "库存规则报表"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_text_confirmation
+#, fuzzy
 msgid "Stock Text Confirmation"
-msgstr ""
+msgstr "库存文本确认"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
+#, fuzzy
 msgid "Stock Text Validation type"
-msgstr ""
+msgstr "库存文本验证类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_text_confirmation
+#, fuzzy
 msgid "Stock Text Validation with stock move"
-msgstr ""
+msgstr "库存移动的文本验证"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "待预留库存："
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
+#, fuzzy
 msgid "Stock level to reach when replenishing."
-msgstr ""
+msgstr "补货时要达到的库存水平。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -9191,8 +9350,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Text Confirmation"
-msgstr ""
+msgstr "文本确认"
 
 #. module: stock
 #. odoo-python
@@ -9333,8 +9493,9 @@ msgstr "位置的库存频率（天数）必须是非负数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
+#, fuzzy
 msgid "The minimum Stock level that will trigger a replenishment."
-msgstr ""
+msgstr "触发补货的最低库存水平。"
 
 #. module: stock
 #. odoo-python
@@ -9663,8 +9824,9 @@ msgstr "此说明添加到收货订单中(例如：产品在仓库的存储位�
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid "This package is currently set to be sent in %(location_names_list)s."
-msgstr ""
+msgstr "此包装当前设置发往 %(location_names_list)s。"
 
 #. module: stock
 #. odoo-python
@@ -9696,8 +9858,9 @@ msgstr "如果此产品有部分属于另一家公司，则不能更改产品的
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
+#, fuzzy
 msgid "This record already exists"
-msgstr ""
+msgstr "此记录已存在"
 
 #. module: stock
 #. odoo-python
@@ -9741,8 +9904,9 @@ msgstr "时间范围"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+#, fuzzy
 msgid "Time to replenish:"
-msgstr ""
+msgstr "补货时间："
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -9994,7 +10158,7 @@ msgstr "通过创建可存储的产品来跟踪您的库存数量。"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Tracked Stock"
-msgstr ""
+msgstr "已追踪库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
@@ -10039,7 +10203,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_history_ids
 msgid "Transfered Packages"
-msgstr ""
+msgstr "已转移包装"
 
 #. module: stock
 #. odoo-python
@@ -10071,13 +10235,15 @@ msgstr "调拨允许您将产品从一个位置调拨到另外一个位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__picking_ids
+#, fuzzy
 msgid "Transfers in which the Package is set as Destination Package"
-msgstr ""
+msgstr "将该包装设置为目标包装的调拨"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
+#, fuzzy
 msgid "Transit"
-msgstr ""
+msgstr "中转"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -10109,7 +10275,7 @@ msgstr "如果没有库存，触发另一个规则"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
 msgid "Trigger replenishment suggestions for this location when required"
-msgstr ""
+msgstr "需要时为此位置触发补货建议"
 
 #. module: stock
 #. odoo-javascript
@@ -10313,8 +10479,9 @@ msgstr "验证"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "验证库存"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10374,8 +10541,9 @@ msgstr "虚拟"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#, fuzzy
 msgid "Virtual Locations"
-msgstr ""
+msgstr "虚拟位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -10505,8 +10673,9 @@ msgstr "仓库的路线"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "仓库:"
 
 #. module: stock
 #. odoo-javascript
@@ -10693,8 +10862,9 @@ msgstr "当勾选此项时，如果此规则创建的调拨被取消，下一个
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "何时开始送货"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -10917,8 +11087,9 @@ msgstr "不能更改已取消的库存移动，应创建新行。"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "You cannot change the Scheduled Date on a cancelled transfer."
-msgstr ""
+msgstr "您无法更改已取消调拨的计划日期。"
 
 #. module: stock
 #. odoo-python
@@ -11046,8 +11217,9 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, fuzzy
 msgid "You need a transfer to add these packages to."
-msgstr ""
+msgstr "您需要一个调拨单来添加这些包装。"
 
 #. module: stock
 #. odoo-python
@@ -11121,10 +11293,11 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
+#, fuzzy
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
 "Materials)."
-msgstr ""
+msgstr "您的产品缺少补货方式（路线、供应商或物料清单）。"
 
 #. module: stock
 #. odoo-python
@@ -11183,8 +11356,9 @@ msgstr "closest"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "day(s)"
-msgstr ""
+msgstr "天"
 
 #. module: stock
 #. odoo-javascript
@@ -11205,8 +11379,9 @@ msgstr "收货前几天"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
+#, fuzzy
 msgid "e.g. Aisle 1"
-msgstr ""
+msgstr "例如：货道 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -11256,8 +11431,9 @@ msgstr "例如：SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
+#, fuzzy
 msgid "e.g. Shelf 1"
-msgstr ""
+msgstr "例如：货架 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -11272,8 +11448,9 @@ msgstr "例如：两步接收"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "expected on"
-msgstr ""
+msgstr "预计到货"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11325,8 +11502,9 @@ msgstr "的"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "计划于"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11389,8 +11567,9 @@ msgstr "单位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
