@@ -52,7 +52,7 @@ class HrAttendance(models.Model):
     overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
                                                   ('approved', "Approved"),
                                                   ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
-    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', tracking=True, store=True, readonly=True)
+    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', inverse='_inverse_validated_overtime_hours', tracking=True, store=True, readonly=False)
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
@@ -123,6 +123,20 @@ class HrAttendance(models.Model):
     def _compute_validated_overtime_hours(self):
         for attendance in self:
             attendance.validated_overtime_hours = sum(attendance.linked_overtime_ids.filtered_domain([('status', '=', 'approved')]).mapped('manual_duration'))
+
+    def _inverse_validated_overtime_hours(self):
+        for attendance in self:
+            overtime_lines = attendance.linked_overtime_ids.filtered_domain([('status', '!=', 'refused')])
+            if not overtime_lines:
+                continue
+
+            manual_duration = sum(overtime_lines.mapped('manual_duration'))
+            if manual_duration:
+                ratio = attendance.validated_overtime_hours / manual_duration
+                for overtime_line in overtime_lines:
+                    overtime_line.manual_duration *= ratio
+            else:
+                overtime_lines[0].manual_duration = attendance.validated_overtime_hours
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_linked_overtime_ids(self):
