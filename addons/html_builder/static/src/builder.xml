@@ -39,7 +39,7 @@
                 </li>
             </ul>
         </div>
-        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
+        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1" t-att-class="{ 'o-is-faded': !!this.state.nextTab }" t-on-transitionend="this.onTabTransitionEnd">
             <t t-if="this.state.activeTab === 'blocks'">
                 <BlockTab snippetsName="this.props.snippetsName" newInstalledModule="this.props.newInstalledModule"/>
             </t>
@@ -47,7 +47,7 @@
                 <CustomizeTab currentOptionsContainers="this.state.currentOptionsContainers"/>
             </t>
             <t t-if="this.state.activeTab === 'theme'">
-                <t t-component="this.ThemeTab" colorPresetToShow="this.colorPresetToShow" shadowSizeToShow="this.shadowSizeToShow"/>
+                <t t-component="this.ThemeTab" t-props="this.themeTabProps"/>
             </t>
         </div>
         <div class="o_we_lower_panel mt-auto flex-grow-0 flex-shrink-0">

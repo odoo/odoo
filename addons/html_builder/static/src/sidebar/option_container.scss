@@ -38,6 +38,27 @@
     }
 }
 
+.o_theme_tab:has(.o-options-container-highlight) {
+    .options-container:not(.o-options-container-highlight) {
+        position: relative;
+        &::before {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+            z-index: 10;
+            opacity: 0;
+            animation: options-container-highlight-grey 2s ease;
+            background-color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+    }
+}
+
+@keyframes options-container-highlight-grey {
+    25%, 75% {
+       opacity: 1;
+    }
+}
+
 .o_we_img_animate {
     padding-top: 10px;
 
