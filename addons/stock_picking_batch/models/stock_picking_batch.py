@@ -416,7 +416,13 @@ class StockPickingBatch(models.Model):
     @api.model
     def _prepare_name(self, picking_type, sequence_code, company_id):
         sequence = self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/'
-        sequence_prefix, sequence_number = sequence.rsplit('/', 1)
+        split = sequence.rsplit('/', 1)
+        if len(split) != 2:
+            raise UserError(_(
+                "The sequence '%(sequence)s' is misconfigured. Its prefix must end with a '/' separator.",
+                sequence=sequence_code,
+            ))
+        sequence_prefix, sequence_number = split
         return f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
 
     def _sanity_check(self):
