@@ -16,7 +16,7 @@ patch(ThreadAction.prototype, {
         ];
         if (
             channel?.channel_type === "livechat" &&
-            store.self_user?.share !== false &&
+            channel?.self_member_id?.livechat_member_type === "visitor" &&
             !visitorActions.includes(action.id)
         ) {
             return false;
