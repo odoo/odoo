@@ -5,11 +5,19 @@
         <!-- Compute the ranked results once, only for job-matching surveys. -->
         <xpath expr="//h1[hasclass('o_survey_main_title')]" position="before">
             <t t-if="survey.is_job_match" t-set="job_match_results" t-value="answer._get_job_match_results()"/>
+            <t t-if="survey.is_job_match" t-set="job_match_result_message" t-value="answer._get_job_match_result_message()"/>
         </xpath>
 
         <!-- Show the best match card with a "match meter" and a link to the posting. -->
         <xpath expr="//h1[hasclass('o_survey_main_title')]" position="after">
-            <t t-if="survey.is_job_match and job_match_results">
+            <!-- A chosen answer with its own dedicated message ends the game here. -->
+            <t t-if="survey.is_job_match and job_match_result_message">
+                <div class="o_survey_job_match_result_message my-4">
+                    <div t-out="job_match_result_message"/>
+                </div>
+            </t>
+
+            <t t-if="survey.is_job_match and not job_match_result_message and job_match_results">
                 <t t-set="best" t-value="job_match_results[0]"/>
                 <div class="o_survey_job_match my-4">
                     <p class="text-muted mb-2">Your best match is</p>
@@ -59,7 +67,7 @@
             </t>
 
             <!-- No-match screen: every profile eliminated by a hard requirement. -->
-            <t t-if="survey.is_job_match and answer.job_match_all_eliminated">
+            <t t-if="survey.is_job_match and not job_match_result_message and answer.job_match_all_eliminated">
                 <div class="o_survey_job_match_no_match my-4">
                     <div t-field="survey.job_match_no_match_message" class="mb-3"/>
                     <a t-if="survey.job_match_jobs_url"

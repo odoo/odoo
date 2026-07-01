@@ -27,6 +27,21 @@ class SurveyUserInput(models.Model):
             user_input.job_match_all_eliminated = bool(
                 user_input.survey_id.is_job_match and profiles_configured and not results)
 
+    def _get_job_match_result_message(self):
+        """ Custom result message set on a chosen answer, if any.
+
+        Lets a specific answer end the game on its own dedicated page (e.g. the
+        student-job answer that redirects to internships) rather than showing a
+        job match. Returns the first such message, or ``False``.
+        """
+        self.ensure_one()
+        if not self.survey_id.is_job_match:
+            return False
+        chosen_answers = self.user_input_line_ids.filtered(
+            lambda line: line.answer_type == 'suggestion' and line.suggested_answer_id
+        ).suggested_answer_id
+        return chosen_answers.filtered('job_match_result_message')[:1].job_match_result_message or False
+
     def _get_job_match_results(self):
         """ Compute the score per job profile for this submission.
 
