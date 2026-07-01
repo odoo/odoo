@@ -128,8 +128,6 @@ class PurchaseRequisition(models.Model):
     def action_confirm(self):
         self.ensure_one()
         product_lines = self.line_ids.filtered(lambda line: not line.display_type)
-        if not product_lines:
-            raise UserError(_("You cannot confirm agreement '%(agreement)s' because it does not contain any product lines.", agreement=self.name))
         if self.requisition_type == 'blanket_order':
             for requisition_line in product_lines:
                 if requisition_line.price_unit <= 0.0:
