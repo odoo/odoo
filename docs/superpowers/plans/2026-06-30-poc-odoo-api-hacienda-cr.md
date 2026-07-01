@@ -730,9 +730,14 @@ Agregar dentro de la clase `AccountMove`:
                 clave_res['clave'], clave_res['consecutivo'], detalles)
             xml = client.gen_xml_fe(genxml_params)
         except CrlibreApiError as exc:
+            # NOTA (ajuste en ejecución): NO se lanza UserError aquí, porque el raise
+            # provoca rollback y perdería el estado 'error' (contradice spec §5:
+            # "nunca se rompe la transacción"). Se persiste el estado y se devuelve
+            # una notificación no bloqueante vía _l10n_cr_fe_notify(...).
             self.l10n_cr_fe_state = 'error'
             self.message_post(body="Error al generar el comprobante FE: %s" % exc)
-            raise UserError("No se pudo generar el comprobante: %s" % exc)
+            return self._l10n_cr_fe_notify(
+                "Error al generar el comprobante", str(exc), 'danger')
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
