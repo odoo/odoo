@@ -562,7 +562,12 @@ class ResourceCalendar(models.Model):
             if resource and resource._is_flexible():
                 leaves = self._leave_intervals_batch(start_dt, end_dt, resource, domain, tz=tz)
                 if res_leaves := leaves.get(resource.id, []):
-                    result[resource.id] = [(i[0], i[1]) for i in res_leaves]
+                    result[resource.id] = [
+                        (tz.localize(datetime.combine(i[0].date(), time.min)).astimezone(utc),
+                         tz.localize(datetime.combine(i[1].date(), time.max)).astimezone(utc))
+                        for i in res_leaves
+                        if (i[1] - i[0]).total_seconds() / 3600 >= resource.calendar_id.hours_per_day
+                    ]
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
