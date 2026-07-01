@@ -1156,20 +1156,33 @@ class ProductTemplate(models.Model):
                 ('location_dest_usage', 'in', ('internal', 'transit')),
         ])
         move_lines_to_match = self.env['stock.move.line'].search_fetch(domain=move_line_domain, field_names=('product_id', 'location_id', 'quantity_product_uom'))
+        existing_quants = self.env['stock.quant'].search_fetch([('product_id', 'in', self.product_variant_ids.ids), ('location_id.usage', 'in', ['internal', 'transit'])], field_names=('product_id', 'location_id', 'quantity'))
+        quants_ledger = defaultdict(lambda: self.env['stock.quant'])
+        for quant in existing_quants:
+            quants_ledger[quant.product_id, quant.location_id] |= quant
         inventory_ledger = defaultdict(float)
         for move_line in move_lines_to_match:
             if move_line.location_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_id] -= move_line.quantity_product_uom
             if move_line.location_dest_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_dest_id] += move_line.quantity_product_uom
-        quants_to_reset = self.env['stock.quant'].create([
-            {
-                'product_id': product.id,
-                'location_id': location.id,
-                'quantity': quantity,
-                'inventory_quantity': 0.0,
-            } for (product, location), quantity in inventory_ledger.items() if not product.uom_id.is_zero(quantity)
-        ])
+        quants_to_reset = self.env['stock.quant']
+        for (product, location), quantity in inventory_ledger.items():
+            if product.uom_id.is_zero(quantity):
+                continue
+
+            existing_product_quants = quants_ledger.get((product, location))
+            if existing_product_quants:
+                existing_product_quants.inventory_quantity = 0.0
+                quants_to_reset |= existing_product_quants
+                quantity -= sum(existing_product_quants.mapped('quantity'))
+            if not product.uom_id.is_zero(quantity):
+                quants_to_reset |= self.env['stock.quant'].create({
+                    'product_id': product.id,
+                    'location_id': location.id,
+                    'quantity': quantity,
+                    'inventory_quantity': 0.0,
+                })
         quants_to_reset._apply_inventory()
 
     def copy(self, default=None):
