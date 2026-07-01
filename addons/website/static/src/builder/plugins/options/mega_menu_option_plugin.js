@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
  * @typedef { Object } MegaMenuOptionShared
@@ -7,15 +8,20 @@ import { registry } from "@web/core/registry";
 
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
-    static dependencies = ["dropzone"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selectors: {
-            selector: ".o_mega_menu .nav > .nav-link",
-            dropIn: ".o_mega_menu nav",
-            dropNear: ".o_mega_menu .nav-link",
-        },
+        dropzone_selectors: [
+            {
+                selector: ".o_mega_menu .nav > .nav-link",
+                dropIn: ".o_mega_menu nav",
+                dropNear: ".o_mega_menu .nav-link",
+            },
+            {
+                selector: ".o_mega_menu .row",
+                dropNear: ".o_mega_menu .row",
+            },
+        ],
         on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selectors: ".o_mega_menu > section",
