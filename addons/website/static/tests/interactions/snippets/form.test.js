@@ -11,7 +11,7 @@ import {
     setInputFiles,
     edit,
 } from "@odoo/hoot-dom";
-import { advanceTime, runAllTimers } from "@odoo/hoot-mock";
+import { advanceTime, mockDate, runAllTimers } from "@odoo/hoot-mock";
 
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -919,4 +919,36 @@ test("validates file input against allowed filetypes", async () => {
     await runAllTimers();
     await click("a.s_website_form_send");
     checkField(fileEl, true, false);
+});
+
+test("validates a date against today resolved when the form is mounted", async () => {
+    mockDate("2025-11-14 12:00:00");
+    onRpc("/website/form/mail.mail", async () => ({}));
+    await startInteractions(/* html */ `
+        <div id="wrapwrap">
+            <section class="s_website_form">
+                <form action="/website/form/" method="post" data-model_name="mail.mail">
+                    <div class="s_website_form_field s_website_form_custom"
+                            data-type="date" data-requirement-comparator="after"
+                            data-requirement-condition="today">
+                        <div class="s_website_form_date input-group date">
+                            <input class="form-control datetimepicker-input s_website_form_input"
+                                type="text" name="date"/>
+                        </div>
+                    </div>
+                    <div class="s_website_form_submit">
+                        <span id="s_website_form_result"></span>
+                        <a href="#" role="button" class="s_website_form_send">Submit</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    const dateInputEl = queryOne("input[name='date']");
+
+    await fillAndSubmitForm(dateInputEl, "11/14/2025");
+    checkField(dateInputEl, true, true);
+
+    await fillAndSubmitForm(dateInputEl, "11/15/2025");
+    checkField(dateInputEl, true, false);
 });

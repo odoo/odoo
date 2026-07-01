@@ -2,6 +2,7 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
 import { animationFrame, edit } from "@odoo/hoot-dom";
+import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -776,6 +777,44 @@ test("Label falls back to default value (data-translated-name) when removed", as
     expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
         "Default value"
     );
+});
+
+test("set today as a relative date requirement", async () => {
+    mockDate("2025-11-14 12:00:00");
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(`
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field s_website_form_custom"
+                        data-type="date" data-requirement-comparator="after"
+                        data-requirement-condition="1735689600">
+                    <label class="s_website_form_label" for="date">
+                        <span class="s_website_form_label_content">Date</span>
+                    </label>
+                    <div class="s_website_form_date input-group date">
+                        <input class="form-control datetimepicker-input s_website_form_input"
+                            type="text" name="date" id="date"/>
+                    </div>
+                </div>
+            </form>
+        </section>
+    `);
+
+    await contains(":iframe input[name='date']").click();
+    const conditionInput = ".hb-row[data-label='Date'] input";
+    const todayButton = "[data-action-id='toggleTodayRequirement']";
+
+    await contains(todayButton).click();
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-requirement-condition", "today");
+    expect(conditionInput).not.toBeEnabled();
+    expect(conditionInput).toHaveValue("11/14/2025");
+
+    await contains(todayButton).click();
+    expect(":iframe .s_website_form_field").toHaveAttribute(
+        "data-requirement-condition",
+        "1735689600"
+    );
+    expect(conditionInput).toBeEnabled();
 });
 
 test("multiple conditional visibility value for 'contains'", async () => {

@@ -40,6 +40,7 @@ export class BuilderDateTimePicker extends Component {
         type: t.selection(["date", "datetime"]).optional("datetime"),
         format: t.string().optional(),
         acceptEmptyDate: t.boolean().optional(true),
+        disabled: t.boolean().optional(false),
     });
     static components = {
         BuilderComponent,
@@ -110,6 +111,9 @@ export class BuilderDateTimePicker extends Component {
      * @returns {DateTime} the current value of the datetime picker
      */
     getCurrentValueDateTime() {
+        if (this.domState.value === "today") {
+            return DateTime.now();
+        }
         return this.domState.value ? DateTime.fromSeconds(parseInt(this.domState.value)) : false;
     }
 
@@ -118,6 +122,9 @@ export class BuilderDateTimePicker extends Component {
      * @returns {String} a formatted date string
      */
     formatRawValue(rawValue) {
+        if (rawValue === "today") {
+            rawValue = DateTime.now().toUnixInteger().toString();
+        }
         return rawValue
             ? this.formatDateTime(DateTime.fromSeconds(parseInt(rawValue)), { format: this.format })
             : "";
@@ -128,6 +135,9 @@ export class BuilderDateTimePicker extends Component {
      * @returns {String} number of seconds
      */
     parseDisplayValue(displayValue) {
+        if (displayValue === "today") {
+            return "today";
+        }
         if (displayValue === "" && this.props.acceptEmptyDate) {
             return undefined;
         }
@@ -161,6 +171,8 @@ export class BuilderDateTimePicker extends Component {
     }
 
     onFocus() {
-        this.dateTimePicker.open();
+        if (!this.props.disabled) {
+            this.dateTimePicker.open();
+        }
     }
 }

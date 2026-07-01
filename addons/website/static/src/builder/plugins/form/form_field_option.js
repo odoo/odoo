@@ -15,6 +15,8 @@ import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
 
+export const RANGE_COMPARATORS = ["between", "!between"];
+
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
     static dependencies = ["websiteFormOption"];
@@ -33,6 +35,7 @@ export class FormFieldOption extends BaseOptionComponent {
             dependencyEl: null,
             valueList: null,
         });
+        this.previousRequirementCondition = {};
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
@@ -193,6 +196,24 @@ export class FormFieldOption extends BaseOptionComponent {
     get isMultipleTextConditionForRequirementOptionVisible() {
         const el = this.env.getEditingElement();
         return el.dataset.requirementComparator && this.isTextField;
+    }
+    /**
+     * Determines the visibility of the "today" toggle button and the end
+     * date input.
+     *
+     * @returns {boolean}
+     */
+    get isRangeComparator() {
+        return RANGE_COMPARATORS.includes(this.domState.elDataset.requirementComparator);
+    }
+    /**
+     * Label of the date requirement condition (start) row, depending on the
+     * selected comparator.
+     *
+     * @returns {string}
+     */
+    get dateRequirementConditionLabel() {
+        return this.isRangeComparator ? _t("Start date") : _t("Date");
     }
     /**
      * Determines the visibility of the character limit checkbox used for
