@@ -107,7 +107,9 @@ test("Focus should not be stolen when a new livechat open", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "general" });
     await contains(".o-mail-ChatWindow", { text: "general" });
-    await contains(".o-mail-Composer-input[placeholder='Message #general…']:focus");
+    await contains(
+        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus"
+    );
     withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -121,7 +123,9 @@ test("Focus should not be stolen when a new livechat open", async () => {
     );
     await contains(".o-mail-ChatWindow", { text: "Visitor 12" });
     await animationFrame();
-    await contains(".o-mail-Composer-input[placeholder='Message #general…']:focus");
+    await contains(
+        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus"
+    );
 });
 
 test("do not ask confirmation if other operators are present", async () => {

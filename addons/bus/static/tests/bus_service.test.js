@@ -167,6 +167,7 @@ test("channel management from multiple tabs", async () => {
 });
 
 test("re-subscribe on reconnect", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     onWebsocketEvent("subscribe", (data) =>
         expect.step(`subscribe - [${data.channels.toString()}]`)
     );

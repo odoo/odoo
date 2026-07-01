@@ -3,7 +3,8 @@ import {
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
-import { click, contains, insertText, start } from "@mail/../tests/mail_test_helpers";
+import { click, contains, start } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -22,7 +23,7 @@ test("Visitor cannot use @ mentions in livechat", async () => {
             return delimiters;
         },
     });
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await expect.waitForSteps(["::,:,/"]);
     await contains(".o-mail-Composer-suggestion", { count: 0 });
 });

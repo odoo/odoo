@@ -302,6 +302,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/tests/web_test_helpers.js',
             'bus/static/tests/bus_test_helpers.js',
             'mail/static/tests/mail_test_helpers.js',
+            'mail/static/tests/mail_test_helpers_composer.js',
             'mail/static/tests/mail_test_helpers_contains.js',
             'bus/static/tests/mock_server/**/*',
             'mail/static/tests/mock_server/**/*',

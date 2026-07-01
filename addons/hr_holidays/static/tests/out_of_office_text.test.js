@@ -7,9 +7,9 @@ import {
     openFormView,
     contains,
     openDiscuss,
-    insertText,
     hover,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
@@ -63,7 +63,7 @@ test("Show 'back on' in mention list", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-NavigableList-item span", { text: "Back on Apr 11" });
 });
 

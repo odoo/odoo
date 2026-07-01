@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("discuss_mention_suggestions_group_restricted_channel.js", {
     steps: () => [
         { trigger: ".o-mail-DiscussContent-threadName[title='R&D Channel']" },
-        { trigger: ".o-mail-Composer-input", run: "edit @" },
+        { trigger: ".o-mail-Composer-html", run: "editor @" },
         { trigger: ".o-mail-Composer-suggestion:count(3)" },
         {
             content: "Suggest channel member not in R&D group",

@@ -12,8 +12,8 @@ registry.category("web_tour.tours").add("portal_rating_tour", {
             trigger: `#chatterRoot:shadow .o-mail-Chatter-top:not(:has(${ratingCardSelector}))`,
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run: "edit Excellent service!",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-html",
+            run: "editor Excellent service!",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",

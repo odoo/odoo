@@ -165,10 +165,10 @@ test("LinkPopover opens in full composer", async () => {
     await openFormView("res.partner", serverState.partnerId);
     await mailClick("button", { text: "Log note" });
     await mailClick("button[title='Open Full Composer']");
-    await waitFor(".odoo-editor-editable");
+    await waitFor(".modal .odoo-editor-editable");
     htmlEditor.editable.focus();
     await insertText(htmlEditor, "test");
-    const node = queryOne(".odoo-editor-editable div");
+    const node = queryOne(".modal .odoo-editor-editable div");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
     await mailClick(".o-we-toolbar .fa-link");
     await waitFor(".o-we-linkpopover");

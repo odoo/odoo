@@ -8,6 +8,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, setInputFiles, test } from "@odoo/hoot";
 import { press, rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
@@ -26,7 +27,7 @@ test("Messages are received cross-tab", async () => {
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-Thread:contains('Welcome to #General!')`); // wait for loaded and focus in input
     await contains(`${env2.selector} .o-mail-Thread:contains('Welcome to #General!')`); // wait for loaded and focus in input
-    await insertText(`${env1.selector} .o-mail-Composer-input`, "Hello World!");
+    await insertTextInComposer(`${env1.selector} .o-mail-Composer`, "Hello World!");
     await press("Enter");
     await contains(`${env1.selector} .o-mail-Message-content:text('Hello World!')`);
     await contains(`${env2.selector} .o-mail-Message-content:text('Hello World!')`);

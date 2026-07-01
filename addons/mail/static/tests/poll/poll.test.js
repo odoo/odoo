@@ -16,6 +16,7 @@ test("can add emojis to a poll option", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html:focus");
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Start a Poll')");
     await contains(".modal-header:text('Create a poll')");

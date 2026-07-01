@@ -140,13 +140,6 @@ export class Composer extends Record {
     /** @param {import("models").Message} message */
     insertReplyFromNote(message) {
         this.mentionedPartners.add(message.author);
-        if (!this.store.env.services["mail.composer"].htmlEnabled) {
-            const mentionText = `@${message.authorName} `;
-            if (!this.composerText.includes(mentionText)) {
-                this.insertText(mentionText, 0, { moveCursorToEnd: true });
-            }
-            return;
-        }
         const composerBody = createDocumentFragmentFromContent(this.composerHtml).body;
         if (
             composerBody.querySelector(

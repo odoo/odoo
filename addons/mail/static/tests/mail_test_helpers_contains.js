@@ -859,7 +859,7 @@ class Contains {
         const res = baseRes.filter((el, currentIndex) => {
             let condition =
                 (this.options.textContent === undefined ||
-                    el.textContent.trim() === this.options.textContent) &&
+                    el.textContent === this.options.textContent) &&
                 (this.options.value === undefined || el.value === this.options.value) &&
                 (this.options.scroll === undefined ||
                     (this.options.scroll === "bottom"

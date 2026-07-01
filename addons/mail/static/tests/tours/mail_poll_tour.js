@@ -33,11 +33,11 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: ".o-mail-Message-moreMenu [name='reply-to']", run: "click" },
         {
             trigger:
-                ".o-mail-Composer:contains('Replying to Ernest Employee') .o-mail-Composer-input",
-            run: "edit Reply to the poll",
+                ".o-mail-Composer:contains('Replying to Ernest Employee') .o-mail-Composer-html",
+            run: "editor Reply to the poll",
         },
         {
-            trigger: ".o-mail-Composer:has(button[title='Send']:enabled) .o-mail-Composer-input",
+            trigger: ".o-mail-Composer:has(button[title='Send']:enabled) .o-mail-Composer-html",
             run: "press Enter",
         },
         {

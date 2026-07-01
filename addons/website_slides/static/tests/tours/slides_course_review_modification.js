@@ -139,8 +139,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Second review is edited in message composer",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Second review is edited in message composer",
         },
         {
             trigger:
@@ -228,8 +228,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Fill the message body",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Fill the message body",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
@@ -249,8 +249,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
@@ -287,8 +287,8 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Admin edited this review.",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Admin edited this review.",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:text(save)",
@@ -354,8 +354,8 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         },
         { trigger: "a[href='#discuss'].active:text(Comments (4))" },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run: "edit Test comment",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-html",
+            run: "editor Test comment",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",

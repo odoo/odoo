@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
         ...postMessage("Hello, I need help!"),
         waitForMessage("Hello, I need help!"),
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-html:enabled",
             run: function () {
                 window.location.reload();
             },

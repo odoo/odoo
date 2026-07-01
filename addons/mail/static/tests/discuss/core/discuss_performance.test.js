@@ -3,7 +3,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     observeRenders,
     openDiscuss,
     prepareObserveRenders,
@@ -11,6 +10,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
@@ -58,7 +58,7 @@ test("posting new message should only render relevant part", async () => {
     const stopObserve1 = observeRenders();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 10 });
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     const result1 = stopObserve1();
     // LessThan because renders could be batched
     expect(result1.get(Message)).toBeLessThan(11); // 10: all messages initially

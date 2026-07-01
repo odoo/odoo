@@ -2,7 +2,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     onRpcBefore,
     openDiscuss,
     scroll,
@@ -10,6 +9,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -78,12 +78,12 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-EmojiPicker", { count: 0 });
     await contains(".o-mail-Composer");
     // Escape on suggestion prompt does not stop replying
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestionList .o-open");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer");
-    await click(".o-mail-Composer-input").catch(() => {});
+    await click(".o-mail-Composer-html").catch(() => {});
     await contains(".o-mail-Composer.o-focused");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer", { count: 0 });
@@ -117,8 +117,8 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await contains(".o-mail-Message");
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
-    await contains(".o-mail-Composer [placeholder='Log an internal note…']");
-    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer [o-we-hint-text='Log an internal note…']");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await click(".o-mail-Composer button[title='Log']");
     await contains(".o-mail-Composer", { count: 0 });
     await expect.waitForSteps(["/mail/message/post"]);
@@ -153,9 +153,9 @@ test('"reply to" composer should send message if message replied to is not a not
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(
-        ".o-mail-Composer [placeholder='Send a message to all followers and selected contacts…']"
+        ".o-mail-Composer [o-we-hint-text='Send a message to all followers and selected contacts…']"
     );
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });
     await expect.waitForSteps(["/mail/message/post"]);

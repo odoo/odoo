@@ -114,6 +114,7 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains('General')");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-html:focus");
     await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
     await click(".o-dropdown-item:contains('Send GIF')");
     await contains(".o-discuss-GifPicker");
