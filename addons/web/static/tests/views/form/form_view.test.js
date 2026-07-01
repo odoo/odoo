@@ -29,6 +29,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     proxy,
+    signal,
     useEffect,
     xml,
 } from "@odoo/owl";
@@ -61,7 +62,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { render, useRef } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
@@ -5315,13 +5316,13 @@ test(`discard changes on a new (dirty) form view`, async () => {
 test(`discard has to wait for changes in each field`, async () => {
     const def = Promise.withResolvers();
     class CustomField extends Component {
-        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
+        static template = xml`<input t-ref="this.input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
             ...standardFieldProps,
         };
+        input = signal(null);
 
         setup() {
-            this.input = useRef("input");
             useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
                 detail.proms.push(this.updateValue())
             );
@@ -5332,7 +5333,7 @@ test(`discard has to wait for changes in each field`, async () => {
         }
 
         async updateValue() {
-            const value = this.input.el.value;
+            const value = this.input().value;
             await def?.promise;
             await this.props.record.update({ [this.props.name]: `update value: ${value}` });
         }

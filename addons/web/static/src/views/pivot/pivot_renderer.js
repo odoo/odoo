@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -49,13 +48,14 @@ export class PivotRenderer extends Component {
     };
     static props = ["model", "buttonTemplate"];
 
+    tableRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.uiService = useService("ui");
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;
-        this.tableRef = useRef("table");
 
         this.dropdown = {
             state: new DropdownState({
@@ -239,16 +239,16 @@ export class PivotRenderer extends Component {
         if (ev.currentTarget.tagName === "TH") {
             index += 1; // row groupbys column
         }
-        this.tableRef.el
-            .querySelectorAll("td:nth-child(" + (index + 1) + ")")
+        this.tableRef()
+            ?.querySelectorAll("td:nth-child(" + (index + 1) + ")")
             .forEach((elt) => elt.classList.add("o_cell_hover"));
     }
     /**
      * Remove the hover on the columns.
      */
     onMouseLeave() {
-        this.tableRef.el
-            .querySelectorAll(".o_cell_hover")
+        this.tableRef()
+            ?.querySelectorAll(".o_cell_hover")
             .forEach((elt) => elt.classList.remove("o_cell_hover"));
     }
 

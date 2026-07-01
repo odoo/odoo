@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -8,7 +7,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, onMounted, onPatched, props, t, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, signal, t, useListener } from "@odoo/owl";
 
 export const charFieldProps = {
     ...standardFieldProps,
@@ -25,9 +24,9 @@ export class CharField extends Component {
         TranslationButton,
     };
     props = props(charFieldProps);
+    input = signal(null);
 
     setup() {
-        this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
@@ -39,6 +38,7 @@ export class CharField extends Component {
             onPatched(updateModel);
         }
         useInputField({
+            ref: this.input,
             getValue: () => this.props.record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
@@ -72,8 +72,8 @@ export class CharField extends Component {
     }
 
     onBlur() {
-        if (this.input.el) {
-            this.selectionStart = this.input.el.selectionStart;
+        if (this.input()) {
+            this.selectionStart = this.input().selectionStart;
         }
     }
 
@@ -85,20 +85,20 @@ export class CharField extends Component {
 
     async onDynamicPlaceholderValidate(chain, defaultValue) {
         if (chain) {
-            this.input.el.focus();
+            this.input().focus();
             const dynamicPlaceholder = ` {{object.${chain}${
                 defaultValue?.length ? ` ||| ${defaultValue}` : ""
             }}}`;
-            this.input.el.setRangeText(
+            this.input().setRangeText(
                 dynamicPlaceholder,
                 this.selectionStart,
                 this.selectionStart,
                 "end"
             );
             // trigger events to make the field dirty
-            this.input.el.dispatchEvent(new InputEvent("input"));
-            this.input.el.dispatchEvent(new KeyboardEvent("keydown"));
-            this.input.el.focus();
+            this.input().dispatchEvent(new InputEvent("input"));
+            this.input().dispatchEvent(new KeyboardEvent("keydown"));
+            this.input().focus();
         }
     }
 }

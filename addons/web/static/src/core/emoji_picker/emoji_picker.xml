@@ -54,7 +54,7 @@
             <div
                 class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary"
                 t-att-class="{ 'opacity-0': !this.emojiNavbarRepr() }"
-                t-custom-ref="navbar"
+                t-ref="this.navbarRef"
             >
                 <t t-set="currentNavbarPanel" t-value="this.getCurrentNavbarPanel(_recentEmojis)" />
                 <t t-if="currentNavbarPanel">
@@ -152,7 +152,7 @@
         class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1"
         t-att-placeholder="this.placeholder"
         t-model="this.searchTerm"
-        t-custom-ref="autofocus"
+        t-ref="this.autofocusRef"
         t-att-tabindex="this.isMobileOS ? -1 : 0"
         t-on-input="() => this.activeEmojiIndex.set(0)"
     />

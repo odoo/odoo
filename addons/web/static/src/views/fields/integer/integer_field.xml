@@ -4,9 +4,9 @@
     <t t-name="web.IntegerField">
         <span t-if="this.props.readonly" t-out="this.formattedValue" />
         <input 
-            t-else="" 
-            t-custom-ref="numpadDecimal" 
-            t-on-focusin="this.onFocusIn" 
+            t-else=""
+            t-ref="this.numpadDecimalRef"
+            t-on-focusin="this.onFocusIn"
             t-on-focusout="this.onFocusOut" 
             t-att-id="this.props.id" 
             t-att-min="this.props.min"

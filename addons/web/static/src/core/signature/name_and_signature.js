@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 /* global SignaturePad */
 
 import { loadJS } from "@web/core/assets";
@@ -27,6 +26,8 @@ export class NameAndSignature extends Component {
         onSignatureChange: t.function().optional(() => () => {}),
     });
 
+    signNameInputRef = signal.ref(HTMLInputElement);
+
     setup() {
         this.htmlId = htmlId++;
         this.defaultName = this.props.signature.name || "";
@@ -40,9 +41,8 @@ export class NameAndSignature extends Component {
             showFontList: false,
         });
 
-        this.signNameInputRef = useRef("signNameInput");
         this.signInputLoad = signal.ref(HTMLInputElement);
-        useAutofocus({ refName: "signNameInput" });
+        useAutofocus({ ref: this.signNameInputRef });
         useEffect(() => {
             const el = this.signInputLoad();
             if (el) {
@@ -109,8 +109,8 @@ export class NameAndSignature extends Component {
 
     focusName() {
         // Don't focus on mobile
-        if (!isMobileOS() && this.signNameInputRef.el) {
-            this.signNameInputRef.el.focus();
+        if (!isMobileOS() && this.signNameInputRef()) {
+            this.signNameInputRef().focus();
         }
     }
 

@@ -9,7 +9,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
@@ -105,10 +105,11 @@ test("useCommand hook when the activeElement change", async () => {
     }
 
     class OtherComponent extends Component {
-        static template = xml`<div t-custom-ref="active"><div tabindex="1">visible</div></div>`;
+        static template = xml`<div t-ref="this.activeRef"><div tabindex="1">visible</div></div>`;
         static props = ["*"];
+        activeRef = signal(null);
         setup() {
-            useActiveElement("active");
+            useActiveElement(this.activeRef);
             useCommand("I'm taking the throne", () => {});
         }
     }
@@ -182,10 +183,11 @@ test("global command with hotkey", async () => {
     expect.verifySteps([hotkey]);
 
     class MyComponent extends Component {
-        static template = xml`<div t-custom-ref="active"><button>visible</button></div>`;
+        static template = xml`<div t-ref="this.activeRef"><button>visible</button></div>`;
         static props = ["*"];
+        activeRef = signal(null);
         setup() {
-            useActiveElement("active");
+            useActiveElement(this.activeRef);
         }
     }
     await mountWithCleanup(MyComponent);

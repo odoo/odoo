@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.BaseBadgesField">
-        <div class="d-flex flex-wrap gap-1" t-custom-ref="badgesContainer">
+        <div class="d-flex flex-wrap gap-1" t-ref="this.badgesContainerRef">
             <t t-if="this.props.readonly">
                 <span t-out="this.string" t-att-raw-value="this.value" class="o_selection_badge pe-none btn btn-sm btn-secondary mb-1" t-att-class="this.getBadgeClassNames()" />
             </t>

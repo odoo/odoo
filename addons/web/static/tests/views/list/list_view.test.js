@@ -28,7 +28,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onWillStart, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, signal, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -85,7 +85,7 @@ import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { onRendered, useRef } from "@web/owl2/utils";
+import { onRendered } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -12423,13 +12423,13 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     const def = Promise.withResolvers();
 
     class CustomField extends Component {
-        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
+        static template = xml`<input t-ref="this.input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
         static props = {
             ...standardFieldProps,
         };
+        input = signal(null);
 
         setup() {
-            this.input = useRef("input");
             useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
                 detail.proms.push(this.updateValue())
             );
@@ -12443,7 +12443,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
             if (!this.isDirty) {
                 return;
             }
-            const value = this.input.el.value;
+            const value = this.input().value;
             await def?.promise;
             await this.props.record.update({ [this.props.name]: `update value: ${value}` });
         }

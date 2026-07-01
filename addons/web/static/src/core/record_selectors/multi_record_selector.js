@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -21,9 +21,11 @@ export class MultiRecordSelector extends Component {
     static components = { AvatarTag, BadgeTag, RecordAutocomplete };
     static template = "web.MultiRecordSelector";
 
+    multiRecordSelectorRef = signal(null);
+
     setup() {
         this.nameService = useService("name");
-        useTagNavigation("multiRecordSelector", {
+        useTagNavigation(this.multiRecordSelectorRef, {
             delete: (index) => this.deleteTag(index),
         });
         onWillStart(() => this.computeDerivedParams());

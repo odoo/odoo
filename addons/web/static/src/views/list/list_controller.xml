@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListView">
-        <div t-att-class="this.className" t-custom-ref="root">
+        <div t-att-class="this.className" t-ref="this.rootRef">
             <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.display">
                 <t t-set-slot="control-panel-buttons">
                     <t t-call="{{ this.props.buttonTemplate }}"/>

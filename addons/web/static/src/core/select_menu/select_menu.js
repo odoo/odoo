@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -93,6 +93,12 @@ export class SelectMenu extends Component {
         distanceBeforeReload: 500,
     };
 
+    choicesRef = signal(null);
+    inputRefs = {
+        toggler: signal(null),
+        menu: signal(null),
+    };
+
     setup() {
         this.selectMenuId = selectMenuId++;
         this.state = proxy({
@@ -101,13 +107,7 @@ export class SelectMenu extends Component {
             isFocused: false,
         });
 
-        this.inputRefs = {
-            toggler: useRef("inputRefToggler"),
-            menu: useRef("inputRefMenu"),
-        };
-
         this.menuRef = useChildRef();
-        this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
         this.debouncedOnInput = useDebounced(() => {
             if (!this.dropdownState.isOpen) {
@@ -191,8 +191,9 @@ export class SelectMenu extends Component {
 
     updateInputValue(value = null) {
         for (const ref of Object.values(this.inputRefs)) {
-            if (ref.el) {
-                ref.el.value = value || this.pendingValue || this.selectedChoice?.label || "";
+            const el = ref();
+            if (el) {
+                el.value = value || this.pendingValue || this.selectedChoice?.label || "";
             }
         }
     }
@@ -307,9 +308,9 @@ export class SelectMenu extends Component {
                 document.activeElement.blur();
             }
             if (this.displayInputInDropdown && !this.isBottomSheet) {
-                this.inputRefs.menu.el?.focus();
+                this.inputRefs.menu()?.focus();
             }
-            this.choicesRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
+            this.choicesRef()?.addEventListener("scroll", (ev) => this.onScroll(ev));
             const selectedElement = this.menuRef.el?.querySelectorAll(".selected")[0];
             if (selectedElement) {
                 scrollTo(selectedElement);

@@ -1,5 +1,4 @@
-import { Component } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, signal } from "@odoo/owl";
 
 export class AvatarTag extends Component {
     static template = "web.AvatarTag";
@@ -8,15 +7,12 @@ export class AvatarTag extends Component {
         imageUrl: { type: String },
         onAvatarClick: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
-        ref: { type: Object, optional: true },
         slots: { optional: true },
         text: { type: String, optional: true },
         tooltip: { type: String, optional: true },
     };
 
-    setup() {
-        useForwardRefToParent("ref");
-    }
+    ref = signal.ref();
 
     /**
      * @param {MouseEvent} ev

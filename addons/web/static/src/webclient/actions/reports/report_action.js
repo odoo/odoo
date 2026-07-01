@@ -1,11 +1,11 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 /**
  * Most of the time reports are printed as pdfs.
@@ -22,6 +22,9 @@ export class ReportAction extends Component {
     static components = { Layout };
     static template = "web.ReportAction";
     static props = ["*"];
+
+    iframeRef = signal(null);
+
     setup() {
         useSubEnv({
             config: {
@@ -34,8 +37,7 @@ export class ReportAction extends Component {
         this.action = useService("action");
         this.title = this.props.display_name || this.props.name;
         this.reportUrl = this.props.report_url;
-        this.iframe = useRef("iframe");
-        useEnrichWithActionLinks(this.iframe);
+        useEnrichWithActionLinks(this.iframeRef);
     }
 
     onIframeLoaded(ev) {

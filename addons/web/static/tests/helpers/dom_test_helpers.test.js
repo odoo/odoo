@@ -1,11 +1,10 @@
 import { expect, onError, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { contains, isSmall, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDraggable } from "@web/core/utils/draggable";
-import { useRef } from "@web/owl2/utils";
 
 test("contains: all actions", async () => {
     class Container extends Component {
@@ -114,15 +113,16 @@ test("only one drag sequence is allowed at a time", async () => {
             static components = {};
             static props = {};
             static template = xml`
-                <ul t-custom-ref="list">
+                <ul t-ref="this.listRef">
                     <li>First item</li>
                     <li>Second item</li>
                 </ul>
             `;
+            listRef = signal(null);
 
             setup() {
                 useDraggable({
-                    ref: useRef("list"),
+                    ref: this.listRef,
                     elements: "li",
                     onDragStart() {
                         expect.step("dragstart");

@@ -18,7 +18,7 @@
             >
                 <input
                     type="text"
-                    t-custom-ref="inputRef"
+                    t-ref="this.inputRef"
                     class="o_time_picker_input form-control px-0"
                     t-att-class="this.inputCssClass"
                     t-model.proxy="this.state.inputValue"
@@ -44,7 +44,7 @@
             <input
                 t-if="this.uiService.isSmall"
                 type="time"
-                t-custom-ref="inputRef"
+                t-ref="this.inputRef"
                 class="o_time_picker_input form-control px-0"
                 t-att-class="this.inputCssClass"
                 t-model.proxy="this.state.inputValue"

@@ -1,4 +1,4 @@
-import { useComponent, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -40,12 +40,12 @@ import {
     effect,
     onError,
     onMounted,
-    onPatched,
     onWillDestroy,
     onWillUnmount,
     plugin,
     props,
     proxy,
+    signal,
     t,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -160,6 +160,8 @@ export class FormController extends Component {
 
     props = props(formControllerProps);
 
+    rootRef = signal.ref();
+
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.actionService = useService("action");
@@ -266,7 +268,6 @@ export class FormController extends Component {
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
         }
 
-        this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
@@ -316,33 +317,23 @@ export class FormController extends Component {
 
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
-            const focusPrimaryButton = () => {
-                if (
-                    !this.model.root.isInEdition &&
-                    !this.rootRef.el
-                        .querySelector(".o_content")
-                        .contains(document.activeElement)
-                ) {
-                    const elementToFocus = this.rootRef.el.querySelector(
-                        ".o_content button.btn-primary"
-                    );
-                    if (elementToFocus) {
-                        elementToFocus.focus();
+            useLayoutEffect(
+                (isInEdition) => {
+                    const rootEl = this.rootRef();
+                    if (
+                        !isInEdition &&
+                        !rootEl.querySelector(".o_content").contains(document.activeElement)
+                    ) {
+                        const elementToFocus = rootEl.querySelector(
+                            ".o_content button.btn-primary"
+                        );
+                        if (elementToFocus) {
+                            elementToFocus.focus();
+                        }
                     }
-                }
-            };
-            let lastIsInEdition;
-            onMounted(() => {
-                lastIsInEdition = this.model.root.isInEdition;
-                focusPrimaryButton();
-            });
-            onPatched(() => {
-                const isInEdition = this.model.root.isInEdition;
-                if (isInEdition !== lastIsInEdition) {
-                    lastIsInEdition = isInEdition;
-                    focusPrimaryButton();
-                }
-            });
+                },
+                () => [this.model.root.isInEdition]
+            );
         }
 
         if (this.env.inDialog) {

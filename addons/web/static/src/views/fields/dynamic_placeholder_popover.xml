@@ -31,7 +31,7 @@
                             class="o_input"
                             t-att-value="this.state.defaultValue"
                             t-on-input="(ev) => this.setDefaultValue(ev.target.value)"
-                            t-custom-ref="autofocus"/>
+                            t-ref="this.autofocusRef"/>
                     </div>
                 </div>
                 <div class="o_model_field_selector_popover_footer border-top py-1 my-2 px-2">

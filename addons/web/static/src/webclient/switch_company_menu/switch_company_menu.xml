@@ -43,7 +43,7 @@
                 <input
                     t-on-input="this.onSearch"
                     t-att-value="this.state.searchFilter"
-                    t-custom-ref="inputRef"
+                    t-ref="this.searchInputRef"
                     type="text"
                     class="o_input flex-grow-1 border-0 o-navigable"
                     placeholder="Search..."

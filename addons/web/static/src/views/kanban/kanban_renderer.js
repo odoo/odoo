@@ -1,14 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillDestroy,
-    onWillUnmount,
-    props,
-    proxy,
-    t,
-} from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onPatched, onWillDestroy, props, proxy, signal, t } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -79,6 +70,8 @@ export class KanbanRenderer extends Component {
     };
     props = props(kanbanRendererProps);
 
+    rootRef = signal.ref();
+
     setup() {
         this.dialogClose = [];
         /**
@@ -103,7 +96,6 @@ export class KanbanRenderer extends Component {
         // Sortable
         let dataRecordId;
         let dataGroupId;
-        this.rootRef = useRef("root");
         if (this.canUseSortable) {
             useSortable({
                 enable: () => this.canResequenceRecords,
@@ -178,7 +170,7 @@ export class KanbanRenderer extends Component {
                 if (model.useSampleModel || !model.hasData()) {
                     return;
                 }
-                const firstCard = this.rootRef.el.querySelector(".o_kanban_record");
+                const firstCard = this.rootRef().querySelector(".o_kanban_record");
                 if (firstCard) {
                     // Focus first kanban card
                     firstCard.focus();
@@ -201,7 +193,7 @@ export class KanbanRenderer extends Component {
                 }
             },
             {
-                area: () => this.rootRef.el,
+                area: () => this.rootRef(),
                 isAvailable: (target) => {
                     if (this.props.quickCreateState?.isOpen) {
                         return false;
@@ -218,16 +210,16 @@ export class KanbanRenderer extends Component {
         );
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
-            area: () => this.rootRef.el,
+            area: () => this.rootRef(),
             isAvailable: () => !this.props.quickCreateState?.groupId,
         });
 
         useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
-            area: () => this.rootRef.el,
+            area: () => this.rootRef(),
             isAvailable: () => !this.props.quickCreateState?.groupId,
         });
 
-        const arrowsOptions = { area: () => this.rootRef.el, allowRepeat: true };
+        const arrowsOptions = { area: () => this.rootRef(), allowRepeat: true };
         if (this.env.searchModel) {
             useHotkey(
                 "ArrowUp",
@@ -250,16 +242,19 @@ export class KanbanRenderer extends Component {
         const handleAltKeyUp = () => {
             this.state.selectionAvailable = false;
         };
-        onMounted(() => {
-            window.addEventListener("keydown", handleAltKeyDown);
-            window.addEventListener("keyup", handleAltKeyUp);
-            window.addEventListener("blur", handleAltKeyUp);
-        });
-        onWillUnmount(() => {
-            window.removeEventListener("keydown", handleAltKeyDown);
-            window.removeEventListener("keyup", handleAltKeyUp);
-            window.removeEventListener("blur", handleAltKeyUp);
-        });
+        useLayoutEffect(
+            () => {
+                window.addEventListener("keydown", handleAltKeyDown);
+                window.addEventListener("keyup", handleAltKeyUp);
+                window.addEventListener("blur", handleAltKeyUp);
+                return () => {
+                    window.removeEventListener("keydown", handleAltKeyDown);
+                    window.removeEventListener("keyup", handleAltKeyUp);
+                    window.removeEventListener("blur", handleAltKeyUp);
+                };
+            },
+            () => []
+        );
 
         // After a group is unfolded through onGroupClick, we want to scroll towards
         // the next group if it exists and is folded, and to the unfolded group
@@ -278,7 +273,7 @@ export class KanbanRenderer extends Component {
                 ) {
                     groupIdToFocus = groups[lastOpenedGroupIndex + 1].group.id;
                 }
-                const groupEl = this.rootRef.el.querySelector(
+                const groupEl = this.rootRef().querySelector(
                     `.o_kanban_group[data-id="${groupIdToFocus}"]`
                 );
                 if (groupEl) {

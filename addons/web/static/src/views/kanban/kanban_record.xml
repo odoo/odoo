@@ -3,7 +3,7 @@
 
     <t t-name="web.KanbanRecord" t-inherit="web.CardRenderer">
         <xpath expr="article" position="attributes">
-            <attribute name="t-custom-ref">root</attribute>
+            <attribute name="t-ref">this.rootRef</attribute>
             <attribute name="t-custom-click">this.onGlobalClick</attribute>
             <attribute name="t-on-touchstart">this.onTouchStart</attribute>
             <attribute name="t-on-touchmove">this.onTouchMoveOrCancel</attribute>

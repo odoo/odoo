@@ -5,6 +5,7 @@ import {
     onWillDestroy,
     onWillStart,
     proxy,
+    signal,
     useListener,
     useScope,
 } from "@odoo/owl";
@@ -18,7 +19,6 @@ import { highlightText } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { useRef } from "@web/owl2/utils";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
 const DEFAULT_EMPTY_MESSAGE = _t("No result found");
@@ -102,6 +102,10 @@ export class CommandPalette extends Component {
 
     scope = useScope();
 
+    root = signal(null);
+    listboxRef = signal(null);
+    inputRef = signal(null);
+
     setup() {
         if (this.props.bus) {
             const setConfig = ({ detail }) => this.setCommandPaletteConfig(detail);
@@ -116,7 +120,7 @@ export class CommandPalette extends Component {
         this.DefaultCommandItem = DefaultCommandItem;
         this.uiService = useService("ui");
         this.activeElement = this.uiService.activeElement;
-        this.inputRef = useAutofocus();
+        useAutofocus({ ref: this.inputRef });
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
         useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
@@ -142,9 +146,6 @@ export class CommandPalette extends Component {
          *          selectedCommand: CommandItem }}
          */
         this.state = proxy({});
-
-        this.root = useRef("root");
-        this.listboxRef = useRef("listbox");
 
         onWillStart(() => this.setCommandPaletteConfig(this.props.config));
     }
@@ -264,8 +265,8 @@ export class CommandPalette extends Component {
         }
         this.selectCommand(nextIndex);
 
-        const command = this.listboxRef.el.querySelector(`#o_command_${nextIndex}`);
-        scrollTo(command, { scrollable: this.listboxRef.el });
+        const command = this.listboxRef().querySelector(`#o_command_${nextIndex}`);
+        scrollTo(command, { scrollable: this.listboxRef() });
     }
 
     onCommandClicked(event, index) {
@@ -321,8 +322,8 @@ export class CommandPalette extends Component {
         } finally {
             this.state.isLoading = false;
         }
-        if (this.inputRef.el) {
-            this.inputRef.el.focus();
+        if (this.inputRef()) {
+            this.inputRef().focus();
         }
     }
 
@@ -355,7 +356,7 @@ export class CommandPalette extends Component {
      * Close the palette on outside click.
      */
     onWindowMouseDown(ev) {
-        if (!this.root.el.contains(ev.target)) {
+        if (!this.root().contains(ev.target)) {
             this.props.close();
         }
     }

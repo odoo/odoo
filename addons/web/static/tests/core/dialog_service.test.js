@@ -3,7 +3,7 @@ import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom"
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -100,10 +100,11 @@ test("multiple dialogs can become the UI active element", async () => {
 test.tags("desktop");
 test("a popover with an autofocus child can become the UI active element", async () => {
     class TestPopover extends Component {
-        static template = xml`<input type="text" t-custom-ref="autofocus" />`;
+        static template = xml`<input type="text" t-ref="this.autofocusRef" />`;
         static props = ["*"];
+        autofocusRef = signal(null);
         setup() {
-            useAutofocus();
+            useAutofocus({ ref: this.autofocusRef });
         }
     }
     class CustomDialog extends Component {

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import {
     getBorderWhite,
@@ -16,7 +15,15 @@ import { loadBundle } from "@web/core/assets";
 import { renderToMarkup } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillUnmount, onWillStart, markup, onMounted, onPatched } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    onWillStart,
+    markup,
+    onMounted,
+    onPatched,
+    signal,
+} from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -119,13 +126,13 @@ export class GraphRenderer extends Component {
     static template = "web.GraphRenderer";
     static components = { Dropdown, DropdownItem, ReportViewMeasures, Widget };
     static props = ["class?", "model", "buttonTemplate"];
+    rootRef = signal(null);
+    canvasRef = signal(null);
+    containerRef = signal(null);
 
     setup() {
         this.model = this.props.model;
 
-        this.rootRef = useRef("root");
-        this.canvasRef = useRef("canvas");
-        this.containerRef = useRef("container");
         this.actionService = useService("action");
         this.uiService = useService("ui");
 
@@ -187,16 +194,16 @@ export class GraphRenderer extends Component {
     customTooltip(data, metaData, context) {
         const tooltipModel = context.tooltip;
         const { measure, measures, disableLinking, mode } = metaData;
-        this.containerRef.el.style.cursor = "";
+        this.containerRef().style.cursor = "";
         this.removeTooltips();
         if (tooltipModel.opacity === 0 || tooltipModel.dataPoints.length === 0) {
             return;
         }
         if (!disableLinking && mode !== "line") {
-            this.containerRef.el.style.cursor = "pointer";
+            this.containerRef().style.cursor = "pointer";
         }
         const chartAreaTop = this.chart.chartArea.top;
-        const viewContentTop = this.containerRef.el.getBoundingClientRect().top;
+        const viewContentTop = this.containerRef().getBoundingClientRect().top;
         const content = renderToMarkup("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
@@ -205,7 +212,7 @@ export class GraphRenderer extends Component {
         });
         const template = createElementWithContent("template", content);
         const tooltip = template.content.firstChild;
-        this.containerRef.el.prepend(tooltip);
+        this.containerRef().prepend(tooltip);
 
         let top;
         const tooltipHeight = tooltip.clientHeight;
@@ -734,7 +741,7 @@ export class GraphRenderer extends Component {
      */
     onLegendHover(ev, legendItem) {
         ev = ev.native;
-        this.canvasRef.el.style.cursor = "pointer";
+        this.canvasRef().style.cursor = "pointer";
         /**
          * The string legendItem.text is an initial segment of legendItem.fullText.
          * If the two coincide, no need to generate a tooltip. If a tooltip
@@ -745,14 +752,14 @@ export class GraphRenderer extends Component {
         if (this.legendTooltip || text === fullText) {
             return;
         }
-        const viewContentTop = this.canvasRef.el.getBoundingClientRect().top;
+        const viewContentTop = this.canvasRef().getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
             className: "o_tooltip_legend popover p-3 pe-none position-absolute",
             innerText: fullText,
         });
         legendTooltip.style.top = `${ev.clientY - viewContentTop}px`;
         legendTooltip.style.maxWidth = getMaxWidth(this.chart.chartArea);
-        this.containerRef.el.appendChild(legendTooltip);
+        this.containerRef().appendChild(legendTooltip);
         this.fixTooltipLeftPosition(legendTooltip, ev.clientX);
         this.legendTooltip = legendTooltip;
     }
@@ -762,7 +769,7 @@ export class GraphRenderer extends Component {
      * corresponding legend item, the tooltip is removed.
      */
     onLegendLeave() {
-        this.canvasRef.el.style.cursor = "";
+        this.canvasRef().style.cursor = "";
         this.removeLegendTooltip();
     }
 
@@ -844,9 +851,9 @@ export class GraphRenderer extends Component {
         if (this.chart) {
             this.chart.destroy();
         }
-        if (this.canvasRef.el) {
+        if (this.canvasRef()) {
             const config = this.getChartConfig();
-            this.chart = new Chart(this.canvasRef.el, config);
+            this.chart = new Chart(this.canvasRef(), config);
         }
     }
 

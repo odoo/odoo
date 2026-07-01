@@ -24,7 +24,6 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { useRef } from "@web/owl2/utils";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
@@ -129,10 +128,11 @@ test("[accesskey] attrs replaced by [data-hotkey]", async () => {
 
 test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-ref="this.bouhRef"><button>a</button></p>`;
         static props = ["*"];
+        bouhRef = signal(null);
         setup() {
-            useActiveElement("bouh");
+            useActiveElement(this.bouhRef);
         }
     }
     class MyComponent extends Component {
@@ -600,10 +600,11 @@ test("registrations and elements belong to the correct UI owner", async () => {
     }
 
     class MyComponent2 extends Component {
-        static template = xml`<div t-custom-ref="active"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
+        static template = xml`<div t-ref="this.activeRef"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
+        activeRef = signal(null);
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
-            useActiveElement("active");
+            useActiveElement(this.activeRef);
         }
         onClick() {
             expect.step("MyComponent2 [data-hotkey]");
@@ -834,11 +835,11 @@ test("operating area can be restricted", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-custom-ref="area">two</div>
+            <div class="two" tabindex="0" t-ref="this.areaRef">two</div>
         `;
         static props = ["*"];
+        areaRef = signal(null);
         setup() {
-            const areaRef = useRef("area");
             useHotkey(
                 "space",
                 ({ area }) => {
@@ -846,7 +847,7 @@ test("operating area can be restricted", async () => {
                     expect(area).toBe(queryOne(".two"));
                 },
                 {
-                    area: () => areaRef.el,
+                    area: () => this.areaRef(),
                 }
             );
         }
@@ -864,10 +865,11 @@ test("operating area can be restricted", async () => {
 test("operating area and UI active element", async () => {
     expect.assertions(5);
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-ref="this.bouhRef"><button>a</button></p>`;
         static props = ["*"];
+        bouhRef = signal(null);
         setup() {
-            useActiveElement("bouh");
+            useActiveElement(this.bouhRef);
         }
     }
     class C extends Component {
@@ -876,13 +878,13 @@ test("operating area and UI active element", async () => {
             <main>
                 <UIOwnershipTakerComponent t-if="this.state.foo" />
                 <div class="one" tabindex="0">one</div>
-                <div class="two" tabindex="0" t-custom-ref="area">two</div>
+                <div class="two" tabindex="0" t-ref="this.areaRef">two</div>
             </main>
         `;
         static props = ["*"];
+        areaRef = signal(null);
         setup() {
             this.state = proxy({ foo: false });
-            const areaRef = useRef("area");
             useHotkey(
                 "space",
                 ({ area }) => {
@@ -890,7 +892,7 @@ test("operating area and UI active element", async () => {
                     expect(area).toBe(queryOne(".two"));
                 },
                 {
-                    area: () => areaRef.el,
+                    area: () => this.areaRef(),
                 }
             );
             useHotkey(
@@ -900,7 +902,7 @@ test("operating area and UI active element", async () => {
                     expect(area).toBe(queryOne(".two"));
                 },
                 {
-                    area: () => areaRef.el,
+                    area: () => this.areaRef(),
                     global: true,
                 }
             );
@@ -959,17 +961,17 @@ test("operation area with validating option", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-custom-ref="area">two</div>
+            <div class="two" tabindex="0" t-ref="this.areaRef">two</div>
         `;
         static props = ["*"];
+        areaRef = signal(null);
         setup() {
-            const areaRef = useRef("area");
             useHotkey(
                 "space",
                 () => {
                     expect.step("RGNTDJÛ!");
                 },
-                { area: () => areaRef.el, isAvailable: () => isAvailable }
+                { area: () => this.areaRef(), isAvailable: () => isAvailable }
             );
         }
     }
@@ -1000,12 +1002,12 @@ test("operation area with validating option", async () => {
 
 test("mixing hotkeys with and without operation area", async () => {
     class A extends Component {
-        static template = xml`<div class="root" tabindex="0" t-custom-ref="area">root</div>`;
+        static template = xml`<div class="root" tabindex="0" t-ref="this.areaRef">root</div>`;
         static props = ["*"];
+        areaRef = signal(null);
         setup() {
-            const areaRef = useRef("area");
             useHotkey("space", () => expect.step("withoutArea"));
-            useHotkey("space", () => expect.step("withArea"), { area: () => areaRef.el });
+            useHotkey("space", () => expect.step("withArea"), { area: () => this.areaRef() });
         }
     }
     await mountWithCleanup(A);

@@ -1,6 +1,7 @@
 import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { download } from "@web/core/network/download";
@@ -102,9 +103,12 @@ export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
     // Transitional: Owl 3 native refs are signals (call to get the element);
-    // legacy refs expose `.el`. Resolve the element in this single place so both keep working.
-    const getContainerEl = () =>
-        typeof containerRef === "function" ? containerRef() : containerRef?.el;
+    // legacy refs expose `.el`. Resolve through resolveRefEl so both keep working
+    // AND the read is untracked: getContainerEl() is called in the layout-effect
+    // deps (run during the render phase via onWillRender), so a raw signal read
+    // would subscribe the component to the ref signal and cause a spurious
+    // re-render when the ref is set on mount (a second render on initial mount).
+    const getContainerEl = () => resolveRefEl(containerRef);
     useLayoutEffect(
         (containerEl) => {
             if (!containerEl) {

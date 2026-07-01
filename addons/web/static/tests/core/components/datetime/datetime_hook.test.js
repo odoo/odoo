@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
@@ -18,11 +18,13 @@ const mountInput = async (setup) => {
 
 class Root extends Component {
     static components = { DateTimeInput };
-    static template = xml`<input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>`;
+    static template = xml`<input type="text" class="datetime_hook_input" t-ref="this.startDateRef"/>`;
     static props = ["*"];
 
+    startDateRef = signal(null);
+
     setup() {
-        this.props.setup();
+        this.props.setup(this.startDateRef);
     }
 }
 
@@ -32,8 +34,8 @@ test("reactivity: update inert object", async () => {
         type: "date",
     };
 
-    await mountInput(() => {
-        useDateTimePicker({ pickerProps });
+    await mountInput((startDateRef) => {
+        useDateTimePicker({ inputRefs: [startDateRef], pickerProps });
     });
 
     expect(".datetime_hook_input").toHaveValue("");
@@ -50,11 +52,12 @@ test("reactivity: useState & update getter object", async () => {
         type: "date",
     });
 
-    await mountInput(() => {
+    await mountInput((startDateRef) => {
         const state = proxy(pickerProps);
         state.value; // artificially subscribe to value
 
         useDateTimePicker({
+            inputRefs: [startDateRef],
             get pickerProps() {
                 return pickerProps;
             },
@@ -80,8 +83,11 @@ test("getter-only undefined props do not prevent service defaults", async () => 
         get: () => undefined,
     });
 
-    await mountInput(() => {
-        pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
+    await mountInput((startDateRef) => {
+        pickerProps = useDateTimePicker({
+            inputRefs: [startDateRef],
+            pickerProps: defaultPickerProps,
+        }).state;
     });
 
     expect(pickerProps.onReset).toBeOfType("function");
@@ -94,8 +100,11 @@ test("reactivity: update reactive object returned by the hook", async () => {
         type: "date",
     };
 
-    await mountInput(() => {
-        pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
+    await mountInput((startDateRef) => {
+        pickerProps = useDateTimePicker({
+            inputRefs: [startDateRef],
+            pickerProps: defaultPickerProps,
+        }).state;
     });
 
     expect(".datetime_hook_input").toHaveValue("");
@@ -114,8 +123,11 @@ test("returned value is updated when input has changed", async () => {
         type: "date",
     };
 
-    await mountInput(() => {
-        pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
+    await mountInput((startDateRef) => {
+        pickerProps = useDateTimePicker({
+            inputRefs: [startDateRef],
+            pickerProps: defaultPickerProps,
+        }).state;
     });
 
     expect(".datetime_hook_input").toHaveValue("");
@@ -136,8 +148,9 @@ test("value is not updated if it did not change", async () => {
         type: "date",
     };
 
-    await mountInput(() => {
+    await mountInput((startDateRef) => {
         pickerProps = useDateTimePicker({
+            inputRefs: [startDateRef],
             pickerProps: defaultPickerProps,
             onApply: (value) => {
                 expect.step(getShortDate(value));
@@ -169,12 +182,15 @@ test("close popover when owner component is unmounted", async () => {
         static props = [];
         static template = xml`
             <div>
-                <input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>
+                <input type="text" class="datetime_hook_input" t-ref="this.startDateRef"/>
             </div>
         `;
 
+        startDateRef = signal(null);
+
         setup() {
             useDateTimePicker({
+                inputRefs: [this.startDateRef],
                 createPopover: usePopover,
                 pickerProps: {
                     value: [false, false],

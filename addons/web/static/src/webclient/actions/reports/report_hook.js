@@ -1,4 +1,5 @@
 import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Hook used to enrich html and provide automatic links to action.
@@ -6,13 +7,16 @@ import { useComponent, useLayoutEffect } from "@web/owl2/utils";
  * Each element with those attrs will become a link to the specified resource.
  * Works with Iframes.
  *
- * @param {owl reference} ref Owl ref to the element to enrich
+ * @param {() => (HTMLElement | null)} ref Signal ref to the element to enrich
  * @param {string} [selector] Selector to apply to the element resolved by the ref.
  */
 export function useEnrichWithActionLinks(ref, selector = null) {
     const comp = useComponent();
     useLayoutEffect(
         (element) => {
+            if (!element) {
+                return;
+            }
             // If we get an iframe, we need to wait until everything is loaded
             if (element.matches("iframe")) {
                 element.onload = () => enrich(comp, element, selector, true);
@@ -20,7 +24,7 @@ export function useEnrichWithActionLinks(ref, selector = null) {
                 enrich(comp, element, selector);
             }
         },
-        () => [ref.el]
+        () => [resolveRefEl(ref)]
     );
 }
 

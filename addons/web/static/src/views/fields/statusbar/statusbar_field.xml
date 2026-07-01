@@ -13,10 +13,10 @@
     </t>
 
     <t t-name="web.StatusBarField">
-        <div class="o_statusbar_status" t-custom-ref="root" role="radiogroup" aria-label="Statusbar">
+        <div class="o_statusbar_status" t-ref="this.rootRef" role="radiogroup" aria-label="Statusbar">
             <Dropdown position="'bottom-end'">
                 <button
-                    t-custom-ref="after"
+                    t-ref="this.afterRef"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
                     t-att-disabled="this.props.isDisabled"
@@ -48,7 +48,7 @@
             </t>
             <Dropdown position="'bottom-start'">
                 <button
-                    t-custom-ref="before"
+                    t-ref="this.beforeRef"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
                     t-att-disabled="this.props.isDisabled"
@@ -64,8 +64,8 @@
                 <t t-set="allItems" t-value="this.getAllItems()" />
                 <t t-set="selectedIndex" t-value="allItems.findIndex((item) => item.isSelected)" />
                 <button
-                    t-custom-ref="dropdown" 
-                    type="button" 
+                    t-ref="this.dropdownRef"
+                    type="button"
                     class="btn btn-secondary dropdown-toggle"
                     t-att-class="{'o_arrow_button': this.uiService.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
                     t-att-disabled="this.props.isDisabled"

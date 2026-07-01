@@ -2,8 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { useChildRef } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class EmailField extends Component {
     static template = "web.EmailField";
@@ -12,9 +11,13 @@ export class EmailField extends Component {
         placeholder: { type: String, optional: true },
     };
 
+    inputRef = signal(null);
+
     setup() {
-        this.input = useChildRef();
-        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
+        useInputField({
+            ref: this.inputRef,
+            getValue: () => this.props.record.data[this.props.name] || "",
+        });
     }
 }
 

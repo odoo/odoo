@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillStart, markRaw, props, status, t, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillStart, markRaw, props, signal, status, t, proxy } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
 import { Reactive } from "../utils/reactive";
@@ -78,8 +78,9 @@ export class CodeEditor extends Component {
         editorState: t.instanceOf(CodeEditorState).optional(),
     });
 
+    editorRef = signal(null);
+
     setup() {
-        this.editorRef = useRef("editorRef");
         this.state = proxy({
             activeMode: undefined,
         });
@@ -166,7 +167,7 @@ export class CodeEditor extends Component {
                     aceEditor.destroy();
                 };
             },
-            () => [this.editorRef.el]
+            () => [this.editorRef()]
         );
 
         useLayoutEffect(

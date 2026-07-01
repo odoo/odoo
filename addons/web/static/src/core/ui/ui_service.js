@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { BlockUI } from "./block_ui";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
@@ -23,14 +24,18 @@ export function getFirstAndLastTabableElements(el) {
  * The caller component could pass a `t-ref` value of its template
  * to delegate the UI active element to another element than itself.
  *
- * @param {string} refName
+ * Accepts either a legacy ref name (string, resolved through the compat
+ * `useRef`) or an Owl 3 native signal/ref (a callable or `.el` object),
+ * which is used as-is. The element is resolved via `resolveRefEl`.
+ *
+ * @param {string | (() => HTMLElement | null) | { el?: HTMLElement }} refOrName
  */
-export function useActiveElement(refName) {
-    if (!refName) {
+export function useActiveElement(refOrName) {
+    if (!refOrName) {
         throw new Error("refName not given to useActiveElement");
     }
     const uiService = useService("ui");
-    const ref = useRef(refName);
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
 
     function trapFocus(e) {
         const hotkey = getActiveHotkey(e);
@@ -109,7 +114,7 @@ export function useActiveElement(refName) {
                 };
             }
         },
-        () => [ref.el]
+        () => [resolveRefEl(ref)]
     );
 }
 

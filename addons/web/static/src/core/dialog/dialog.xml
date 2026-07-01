@@ -7,7 +7,7 @@
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: this.props.technical, o_modal_full: this.isFullscreen, o_inactive_modal: !this.data.isActive }"
                 t-attf-class="o_modal_design_{{ this.design }} {{ !this.props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
-                t-custom-ref="modalRef"
+                t-ref="this.modalRef"
                 >
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ this.size }}">
                     <div class="modal-content" t-att-class="this.props.contentClass" t-att-style="this.contentStyle">

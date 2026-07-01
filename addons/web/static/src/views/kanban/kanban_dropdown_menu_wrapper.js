@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
 export class KanbanDropdownMenuWrapper extends Component {
@@ -8,11 +7,12 @@ export class KanbanDropdownMenuWrapper extends Component {
         slots: Object,
     };
 
+    rootRef = signal(null);
+
     setup() {
         this.dropdownControl = useDropdownCloser();
-        this.rootRef = useRef("rootRef");
         const applyNavigable = () => {
-            const dropdownEls = this.rootRef.el.querySelectorAll(".dropdown-item");
+            const dropdownEls = this.rootRef().querySelectorAll(".dropdown-item");
             dropdownEls.forEach((el) => el.classList.add("o-navigable"));
         };
         onMounted(applyNavigable);

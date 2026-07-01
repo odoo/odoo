@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onMounted, onPatched, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
@@ -15,6 +14,9 @@ export class PropertyDefinitionSelection extends Component {
         onDefaultOptionChange: { type: Function, optional: true }, // we select a default value
     };
 
+    propertyDefinitionSelectionRef = signal(null);
+    addButtonRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
 
@@ -24,9 +26,6 @@ export class PropertyDefinitionSelection extends Component {
         this.state = proxy({
             newOption: null,
         });
-
-        this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
-        this.addButtonRef = useRef("addButton");
 
         onMounted(() => this._focusNewOption());
         onPatched(() => this._focusNewOption());
@@ -52,7 +51,7 @@ export class PropertyDefinitionSelection extends Component {
         if (!this.state.newOption) {
             return;
         }
-        const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
+        const inputs = this.propertyDefinitionSelectionRef().querySelectorAll(
             ".o_field_property_selection_option input"
         );
         if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
@@ -161,7 +160,7 @@ export class PropertyDefinitionSelection extends Component {
             return;
         }
 
-        if (event.relatedTarget === this.addButtonRef.el) {
+        if (event.relatedTarget === this.addButtonRef()) {
             // lost the focus because we click on the add button
             // if the value is empty, just ignore and cancel the event
             event.stopPropagation();
@@ -264,7 +263,7 @@ export class PropertyDefinitionSelection extends Component {
         const activeEl = document.activeElement;
         if (
             activeEl &&
-            this.propertyDefinitionSelectionRef.el.contains(activeEl) &&
+            this.propertyDefinitionSelectionRef().contains(activeEl) &&
             activeEl.tagName === "INPUT"
         ) {
             const optionName = activeEl

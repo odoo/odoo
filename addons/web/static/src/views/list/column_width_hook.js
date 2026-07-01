@@ -1,5 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
@@ -395,6 +396,7 @@ function getHorizontalPadding(el) {
 
 export function useMagicColumnWidths(tableRef, getState) {
     const renderer = useComponent();
+    const getTableEl = () => resolveRefEl(tableRef);
     let columnWidths = null;
     let allowedWidth = 0;
     let hasAlwaysBeenEmpty = true;
@@ -410,7 +412,7 @@ export function useMagicColumnWidths(tableRef, getState) {
      * render + patch which would occur on the next frame and cause flickering.
      */
     function forceColumnWidths() {
-        const table = tableRef.el;
+        const table = getTableEl();
         const headers = [...table.querySelectorAll("thead th")];
         const state = getState();
 
@@ -461,9 +463,9 @@ export function useMagicColumnWidths(tableRef, getState) {
     function unsetWidths() {
         columnWidths = null;
         // Unset widths that might have been set on the table by resizing a column
-        tableRef.el.style.width = null;
+        getTableEl().style.width = null;
         if (parentWidthFixed) {
-            tableRef.el.parentElement.style.width = null;
+            getTableEl().parentElement.style.width = null;
         }
     }
 
@@ -475,7 +477,7 @@ export function useMagicColumnWidths(tableRef, getState) {
      */
     function onStartResize(ev) {
         _resizing = true;
-        const table = tableRef.el;
+        const table = getTableEl();
         const th = ev.target.closest("th");
         table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
@@ -584,15 +586,15 @@ export function useMagicColumnWidths(tableRef, getState) {
             { immediate: true, trailing: true }
         );
         const resizeObserver = new ResizeObserver(() => {
-            const newParentWidth = tableRef.el.parentNode.clientWidth;
+            const newParentWidth = getTableEl().parentNode.clientWidth;
             if (newParentWidth !== parentWidth) {
                 parentWidth = newParentWidth;
                 debouncedForceColumnWidths();
             }
         });
         onMounted(() => {
-            parentWidth = tableRef.el.parentNode.clientWidth;
-            resizeObserver.observe(tableRef.el.parentNode);
+            parentWidth = getTableEl().parentNode.clientWidth;
+            resizeObserver.observe(getTableEl().parentNode);
         });
         onWillUnmount(() => resizeObserver.disconnect());
     }

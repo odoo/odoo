@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 // import { omit } from "../utils/objects";
 import { dateTimePickerProps } from "./datetime_picker";
 import { useDateTimePicker } from "./datetime_picker_hook";
@@ -31,10 +31,13 @@ export class DateTimeInput extends Component {
     pickerProps = props(dateTimePickerProps);
     static template = "web.DateTimeInput";
 
+    startDateRef = signal(null);
+
     setup() {
         // const getPickerProps = () => omit(this.props, ...Object.keys(dateTimeInputOwnProps));
         const pickerProps = this.pickerProps;
         useDateTimePicker({
+            inputRefs: [this.startDateRef],
             format: this.props.format,
             showSeconds: this.props.rounding <= 0,
             get pickerProps() {

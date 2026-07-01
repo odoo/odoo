@@ -1,4 +1,4 @@
-import { onWillRender, render, useExternalListener, useRef } from "@web/owl2/utils";
+import { onWillRender, render, useExternalListener } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -150,7 +150,7 @@ export class ListRenderer extends Component {
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
-        this.tableRef = useRef("table");
+        this.tableRef = signal(null);
         this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;
 
@@ -234,11 +234,11 @@ export class ListRenderer extends Component {
                 this.currencyRates = await getCurrencyRates();
             }
         });
-        this.groupInputRef = useRef("groupInput");
-        useAutofocus({ refName: "groupInput" });
+        this.groupInputRef = signal(null);
+        useAutofocus({ ref: this.groupInputRef });
         let dataRowId;
         let dataGroupId;
-        this.rootRef = useRef("root");
+        this.rootRef = signal(null);
         this.resequencePromise = Promise.resolve();
         useSortable({
             enable: () => this.canResequenceRows,
@@ -265,10 +265,10 @@ export class ListRenderer extends Component {
                     return;
                 }
 
-                const nextTh = this.tableRef.el.querySelector("thead th");
+                const nextTh = this.tableRef().querySelector("thead th");
                 const toFocus = getElementToFocus(nextTh);
                 this.focus(toFocus);
-                this.tableRef.el.querySelector("tbody").classList.add("o_keyboard_navigation");
+                this.tableRef().querySelector("tbody").classList.add("o_keyboard_navigation");
             });
         }
 
@@ -583,7 +583,7 @@ export class ListRenderer extends Component {
                         (!f.optional || this.optionalActiveFields[f.name])
                 );
                 if (hasEditable) {
-                    const cell = this.tableRef.el.querySelector(
+                    const cell = this.tableRef().querySelector(
                         `.o_selected_row td[data-column-id='${column.id}']`
                     );
                     let toFocus;
@@ -608,7 +608,7 @@ export class ListRenderer extends Component {
             // in findNextFocusableOnRow test is done by using classList
             // refactor
             if (!this.isCellReadonly(column, this.editedRecord())) {
-                const cell = this.tableRef.el.querySelector(
+                const cell = this.tableRef().querySelector(
                     `.o_selected_row td[data-column-id='${column.id}']`
                 );
                 if (cell) {
@@ -1424,7 +1424,7 @@ export class ListRenderer extends Component {
             if (record.isInEdition && this.editedRecord() === record) {
                 const cellName =
                     column.type === "column_group" ? column.fields[0].name : column.name;
-                const cell = this.tableRef.el.querySelector(
+                const cell = this.tableRef().querySelector(
                     `.o_selected_row td[name='${cellName}']`
                 );
                 const focusTarget = clickedSubFieldName
@@ -1552,7 +1552,7 @@ export class ListRenderer extends Component {
                     const nextIsGroup = futureRow.classList.contains("o_group_header");
                     const rowTypeSwitched = cellIsInGroupRow !== nextIsGroup;
                     const isGroupToGroup = cellIsInGroupRow && nextIsGroup;
-                    const headerRow = this.tableRef.el.querySelector("thead tr");
+                    const headerRow = this.tableRef().querySelector("thead tr");
                     if (rowTypeSwitched || isGroupToGroup) {
                         targetIndex = this.lastKnownIndex || 0;
                     } else {
@@ -1628,7 +1628,7 @@ export class ListRenderer extends Component {
 
         if (handled) {
             this.lastCreatingAction = false;
-            for (const tbody of this.tableRef.el.getElementsByTagName("tbody")) {
+            for (const tbody of this.tableRef().getElementsByTagName("tbody")) {
                 tbody.classList.add("o_keyboard_navigation");
             }
             ev.preventDefault();
@@ -1653,7 +1653,7 @@ export class ListRenderer extends Component {
 
     addNewGroup() {
         this.state.showGroupInput = false;
-        const value = this.groupInputRef.el.value;
+        const value = this.groupInputRef().value;
         if (value) {
             this.props.list.createGroup(value);
         }
@@ -1996,7 +1996,7 @@ export class ListRenderer extends Component {
             case "escape": {
                 // TODO this seems bad: refactor this
                 list.leaveEditMode({ discard: true });
-                const firstAddButton = this.tableRef.el.querySelector(
+                const firstAddButton = this.tableRef().querySelector(
                     ".o_field_x2many_list_row_add button"
                 );
 
@@ -2327,13 +2327,13 @@ export class ListRenderer extends Component {
             return; // there's no row or group in edition
         }
 
-        this.tableRef.el.querySelector("tbody").classList.remove("o_keyboard_navigation");
+        this.tableRef().querySelector("tbody").classList.remove("o_keyboard_navigation");
 
         const target = ev.target;
-        if (this.state.showGroupInput && this.groupInputRef.el !== target) {
+        if (this.state.showGroupInput && this.groupInputRef() !== target) {
             this.state.showGroupInput = false;
         }
-        if (this.tableRef.el.contains(target) && target.closest(".o_data_row")) {
+        if (this.tableRef().contains(target) && target.closest(".o_data_row")) {
             // ignore clicks inside the table that are originating from a record row
             // as they are handled directly by the renderer.
             return;
@@ -2362,7 +2362,7 @@ export class ListRenderer extends Component {
             return;
         }
         // Overlay
-        if (this.rootRef.el.closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
+        if (this.rootRef().closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
             return;
         }
         // Specific data attribute to explicitly ignore clicks
@@ -2476,7 +2476,7 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStart({ element }) {
-        const table = this.tableRef.el;
+        const table = this.tableRef();
         const headers = [...table.querySelectorAll("thead th")];
         const cells = [...element.querySelectorAll("td")];
         let headerIndex = 0;

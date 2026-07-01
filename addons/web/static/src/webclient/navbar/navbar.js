@@ -1,4 +1,4 @@
-import { render, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { render, useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, plugin, proxy, useListener } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, plugin, proxy, signal, useListener } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const systrayRegistry = registry.category("systray");
@@ -30,6 +30,9 @@ export class NavBar extends Component {
         Transition,
     };
     static props = {};
+    root = signal(null);
+    appSubMenus = signal(null);
+    menuApps = signal(null);
 
     setup() {
         this.currentAppSectionsExtra = [];
@@ -37,8 +40,6 @@ export class NavBar extends Component {
         this.menuService = useService("menu");
         this.offlinePlugin = plugin(OfflinePlugin);
         this.pwa = useService("pwa");
-        this.root = useRef("root");
-        this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());
         useListener(window, "resize", debouncedAdapt);
@@ -134,7 +135,7 @@ export class NavBar extends Component {
      *     By the end of this method another render may occur depending on the adaptation result.
      */
     async adapt() {
-        if (!this.root.el) {
+        if (!this.root()) {
             /** @todo do we still need this check? */
             // currently, the promise returned by 'render' is resolved at the end of
             // the rendering even if the component has been destroyed meanwhile, so we
@@ -144,7 +145,7 @@ export class NavBar extends Component {
 
         // ------- Initialize -------
         // Get the sectionsMenu
-        const sectionsMenu = this.appSubMenus.el;
+        const sectionsMenu = this.appSubMenus();
         if (!sectionsMenu) {
             // No need to continue adaptations if there is no sections menu.
             return;

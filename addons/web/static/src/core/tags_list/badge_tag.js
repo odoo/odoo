@@ -1,14 +1,13 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 import { _t } from "@web/core/l10n/translation";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export const badgeTagProps = {
     cssClass: t.or([t.string(), t.object()]).optional(),
     onClick: t.function().optional(),
     onDelete: t.function().optional(),
     crossTooltip: t.string().optional(_t("Delete")),
-    ref: t.any().optional(),
+    ref: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
     slots: t.any().optional(),
     text: t.string().optional(),
     tooltip: t.string().optional(),
@@ -30,9 +29,5 @@ export class BadgeTag extends Component {
             { "cursor-pointer": this.props.onClick },
             this.props.cssClass
         );
-    }
-
-    setup() {
-        useForwardRefToParent("ref");
     }
 }

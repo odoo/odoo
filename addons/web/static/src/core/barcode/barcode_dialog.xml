@@ -4,7 +4,7 @@
         <Dialog title.translate="Barcode Scanner" fullscreen="true" footer="false" contentClass="'o-barcode-modal'">
             <BarcodeVideoScanner t-if="this.state.barcodeScannerSupported"
                                  t-props="this.props" onError.bind="this.onError" onResult.bind="this.onResult"/>
-            <div t-else="" t-custom-ref="videoPreview"
+            <div t-else=""
                  class="h-100 d-flex flex-column justify-content-center align-items-center gap-1">
                 <i class="fa fa-2x fa-camera text-muted"></i>
                 <strong>Unable to access camera</strong>

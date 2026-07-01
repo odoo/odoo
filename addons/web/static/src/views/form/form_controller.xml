@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormView">
-        <div t-att-class="this.className" t-custom-ref="root">
+        <div t-att-class="this.className" t-ref="this.rootRef">
             <div class="o_form_view_container">
                 <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.display">
                     <t t-set-slot="control-panel-buttons">

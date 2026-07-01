@@ -1,12 +1,14 @@
 import { registry } from "../registry";
 import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation } from "@web/core/utils/timing";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { proxy } from "@odoo/owl";
 
 /**
  * @typedef SortableServiceHookParams
  * @extends SortableParams
- * @property {{el: HTMLElement} | ReturnType<typeof import("@odoo/owl").useRef>} [ref] container of sortable
+ * @property {{el: HTMLElement} | (() => HTMLElement) | ReturnType<typeof import("@odoo/owl").useRef>} [ref]
+ *  container of sortable. Accepts a legacy `.el` ref or an Owl 3 signal ref.
  * @property {string | Symbol} [sortableId] identifier when multiple sortable on the same container
  */
 
@@ -23,7 +25,7 @@ export const sortableService = {
              * @param {SortableServiceHookParams} hookParams
              */
             create: (hookParams) => {
-                const element = hookParams.ref.el;
+                const element = resolveRefEl(hookParams.ref);
                 const sortableId = hookParams.sortableId ?? DEFAULT_SORTABLE_ID;
                 if (boundElements.has(element)) {
                     const boundElement = boundElements.get(element);

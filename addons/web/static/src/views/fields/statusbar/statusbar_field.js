@@ -1,5 +1,5 @@
-import { onWillRender, render, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useListener } from "@odoo/owl";
+import { onWillRender, render, useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal, useListener } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -60,13 +60,14 @@ export class StatusBarField extends Component {
         context: { type: Object, optional: true },
     };
 
+    beforeRef = signal(null);
+    rootRef = signal(null);
+    afterRef = signal(null);
+    dropdownRef = signal(null);
+
     setup() {
         // Properties
         this.items = {};
-        this.beforeRef = useRef("before");
-        this.rootRef = useRef("root");
-        this.afterRef = useRef("after");
-        this.dropdownRef = useRef("dropdown");
         this.uiService = useService("ui");
 
         // Resize listeners
@@ -208,7 +209,7 @@ export class StatusBarField extends Component {
     adjustVisibleItems() {
         // Get all visible buttons
         const itemEls = [
-            ...this.rootRef.el.querySelectorAll(".o_arrow_button:not(.dropdown-toggle)"),
+            ...this.rootRef().querySelectorAll(".o_arrow_button:not(.dropdown-toggle)"),
         ];
         const selectedIndex = itemEls.findIndex((el) =>
             el.classList.contains("o_arrow_button_current")
@@ -218,12 +219,12 @@ export class StatusBarField extends Component {
 
         // Reset hidden elements
         show(...itemEls);
-        hide(this.dropdownRef.el, this.beforeRef.el);
+        hide(this.dropdownRef(), this.beforeRef());
         if (this.items.folded.length) {
-            show(this.afterRef.el);
+            show(this.afterRef());
             itemEls.forEach((el) => el.classList.remove("o_first"));
         } else {
-            hide(this.afterRef.el);
+            hide(this.afterRef());
             itemEls[0]?.classList.add("o_first");
         }
 
@@ -234,33 +235,33 @@ export class StatusBarField extends Component {
 
         if (this.uiService.isSmall && this.items.inline.length) {
             // Small screen case: only a single dropdown
-            show(this.dropdownRef.el);
-            hide(this.beforeRef.el, this.afterRef.el, ...itemEls);
+            show(this.dropdownRef());
+            hide(this.beforeRef(), this.afterRef(), ...itemEls);
             return;
         }
 
         while (this.areItemsWrapping()) {
             if (itemsBefore.length) {
                 // Case 1: elements before can be hidden
-                show(this.beforeRef.el);
+                show(this.beforeRef());
                 hide(itemsBefore.shift());
                 this.items.before.push(itemsToAssign.shift());
             } else if (itemsAfter.length) {
                 // Case 2: elements before are hidden, elements after can be hidden
-                show(this.afterRef.el);
+                show(this.afterRef());
                 hide(itemsAfter.pop());
                 this.items.after.unshift(itemsToAssign.pop());
             } else {
                 // Last resort: no elements can be hidden => fallback to single dropdown
-                show(this.dropdownRef.el);
-                hide(this.beforeRef.el, this.afterRef.el, ...itemEls);
+                show(this.dropdownRef());
+                hide(this.beforeRef(), this.afterRef(), ...itemEls);
                 break;
             }
         }
     }
 
     areItemsWrapping() {
-        const root = this.rootRef.el;
+        const root = this.rootRef();
         const firstItem = root.querySelector(":scope > :not(.d-none)");
         if (!firstItem) {
             return false;

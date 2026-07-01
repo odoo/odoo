@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup, sortableDrag } from "@web/../tests/web_test_helpers";
 
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
@@ -22,7 +21,7 @@ test("Parameters error handling", async () => {
         class NestedSortable extends Component {
             static props = ["*"];
             static template = xml`
-                    <div t-custom-ref="root">
+                    <div t-ref="this.rootRef">
                         <ul class="sortable_list">
                             <li t-foreach="[1,2,3]" t-as="i" t-key="i" class="item">
                                 <span t-out="i"/>
@@ -35,9 +34,10 @@ test("Parameters error handling", async () => {
                         </ul>
                     </div>
                 `;
+            rootRef = signal(null);
 
             setup() {
-                setupList();
+                setupList(this);
             }
         }
 
@@ -60,9 +60,9 @@ test("Parameters error handling", async () => {
     });
 
     // Correct params
-    await mountNestedSortableAndAssert(() => {
+    await mountNestedSortableAndAssert((comp) => {
         useNestedSortable({
-            ref: useRef("root"),
+            ref: comp.rootRef,
         });
     });
     await mountNestedSortableAndAssert(() => {
@@ -73,9 +73,9 @@ test("Parameters error handling", async () => {
             enable: false,
         });
     });
-    await mountNestedSortableAndAssert(() => {
+    await mountNestedSortableAndAssert((comp) => {
         useNestedSortable({
-            ref: useRef("root"),
+            ref: comp.rootRef,
             groups: ".list",
             connectGroups: true,
             nest: true,
@@ -91,7 +91,7 @@ test("Sorting in a single group without nesting", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item" t-att-id="i">
                             <span t-out="i"/>
@@ -105,9 +105,10 @@ test("Sorting in a single group without nesting", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".sortable_list > li",
                 touchDelay: 0,
                 onDragStart({ element, group }) {
@@ -171,7 +172,7 @@ test("Sorting in groups without nesting", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <section t-foreach="[1,2,3]" t-as="l" t-key="l" t-att-id="l" class="pb-1">
                         <ul class="sortable_list">
                             <li t-foreach="[1,2]" t-as="i" t-key="i" t-attf-class="item #{l}.#{i}" t-attf-id="#{l}.#{i}">
@@ -187,9 +188,10 @@ test("Sorting in groups without nesting", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".sortable_list > li",
                 groups: "section",
                 connectGroups: true,
@@ -262,7 +264,7 @@ test("Sorting with nesting - move right", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li t-foreach="[1,2,3]" t-as="i" t-key="i" class="item" t-att-id="i">
                             <span t-out="i"/>
@@ -276,9 +278,10 @@ test("Sorting with nesting - move right", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 onDragStart({ element }) {
@@ -360,7 +363,7 @@ test("Sorting with nesting - move left", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -382,9 +385,10 @@ test("Sorting with nesting - move left", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 nestInterval: 20,
@@ -453,7 +457,7 @@ test("Sorting with nesting - move root down", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li class="item" id="dragged">
                             <span>dragged</span>
@@ -473,9 +477,10 @@ test("Sorting with nesting - move root down", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 touchDelay: 0,
@@ -540,7 +545,7 @@ test("Sorting with nesting - move child down", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -560,9 +565,10 @@ test("Sorting with nesting - move child down", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 touchDelay: 0,
@@ -624,7 +630,7 @@ test("Sorting with nesting - move root up", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -644,9 +650,10 @@ test("Sorting with nesting - move root up", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 onDragStart({ element }) {
@@ -709,7 +716,7 @@ test("Sorting with nesting - move child up", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root">
+                <div t-ref="this.rootRef">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -726,9 +733,10 @@ test("Sorting with nesting - move child up", async () => {
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 onDragStart({ element }) {
@@ -792,17 +800,18 @@ test("Dynamically disable NestedSortable feature", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-custom-ref="root" class="root">
+                <div t-ref="this.rootRef" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>
             `;
 
+        rootRef = signal(null);
         setup() {
             this.state = proxy(state);
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 enable: () => this.state.enableNestedSortable,
                 onDragStart() {
@@ -835,16 +844,17 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                    <div t-custom-ref="root" class="root">
+                    <div t-ref="this.rootRef" class="root">
                         <ul class="list">
                             <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                         </ul>
                     </div>
                 `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDragStart() {
                     expect.step("Initiation of the drag sequence");
@@ -882,7 +892,7 @@ test("shouldn't drag above max level", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li class="item" id="parent">
                         <span>parent</span>
@@ -899,9 +909,10 @@ test("shouldn't drag above max level", async () => {
             </div>
         `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 nest: true,
                 maxLevels: 2,
@@ -938,7 +949,7 @@ test("shouldn't drag outside a nest level", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li class="item" id="A">
                         <span>A</span>
@@ -966,9 +977,10 @@ test("shouldn't drag outside a nest level", async () => {
             </div>
         `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDragStart() {
                     expect.step("start");
@@ -1031,7 +1043,7 @@ test("shouldn't drag when not allowed", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li class="item" id="target">
                         <span>item</span>
@@ -1043,10 +1055,11 @@ test("shouldn't drag when not allowed", async () => {
             </div>
         `;
 
+        rootRef = signal(null);
         setup() {
             let firstAllowedCheck = true;
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 isAllowed() {
                     expect.step("allowed_check");
@@ -1089,7 +1102,7 @@ test("placeholder and drag element have same size", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li class="item target" id="target">
                         <span>parent</span>
@@ -1101,9 +1114,10 @@ test("placeholder and drag element have same size", async () => {
             </div>
         `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 useElementSize: true,
                 touchDelay: 0,
@@ -1131,7 +1145,7 @@ test("Ignore specified elements", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
                         <span class="ignored" t-out="i" />
@@ -1141,9 +1155,10 @@ test("Ignore specified elements", async () => {
             </div>
         `;
 
+        rootRef = signal(null);
         setup() {
             useNestedSortable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 ignore: ".ignored",
                 onDragStart() {

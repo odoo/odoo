@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.OverlayContainer">
-        <div class="o-overlay-container" t-custom-ref="root">
+        <div class="o-overlay-container" t-ref="this.root">
             <t t-foreach="this.sortedOverlays" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler t-if="this.isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">
                     <OverlayItem env="overlay.env" component="overlay.component" props="overlay.props"/>
@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="web.OverlayContainer.Item">
-        <div t-custom-ref="rootRef" class="o-overlay-item">
+        <div t-ref="this.rootRef" class="o-overlay-item">
             <t t-component="this.props.component" t-props="this.props.props" />
         </div>
     </t>

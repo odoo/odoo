@@ -1,4 +1,4 @@
-import { Component, onWillPatch, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, plugin, props, proxy, signal, t } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -9,7 +9,7 @@ import { omit } from "@web/core/utils/objects";
 import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { onWillRender, render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -58,13 +58,14 @@ export class ListController extends Component {
         selectRecord: t.function().optional(() => () => {}),
     });
 
+    rootRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.uiService = useService("ui");
         this.orm = useService("orm");
         this.offlinePlugin = plugin(OfflinePlugin);
-        this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
         this.activeActions = this.archInfo.activeActions;
@@ -113,7 +114,7 @@ export class ListController extends Component {
             beforeLeave: this.beforeLeave.bind(this),
             beforeUnload: this.beforeUnload.bind(this),
             getLocalState: () => {
-                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                const renderer = this.rootRef().querySelector(".o_list_renderer");
                 return {
                     modelState: this.model.exportState(),
                     rendererScrollPositions: {
@@ -141,7 +142,7 @@ export class ListController extends Component {
                 } else {
                     const { rendererScrollPositions } = this.props.state || {};
                     if (rendererScrollPositions) {
-                        const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                        const renderer = this.rootRef().querySelector(".o_list_renderer");
                         renderer.scrollLeft = rendererScrollPositions.left;
                         renderer.scrollTop = rendererScrollPositions.top;
                     }
@@ -393,17 +394,17 @@ export class ListController extends Component {
     }
 
     async onClickCreate() {
-        return executeButtonCallback(this.rootRef.el, () => this.createRecord());
+        return executeButtonCallback(this.rootRef(), () => this.createRecord());
     }
 
     async onClickDiscard() {
-        return executeButtonCallback(this.rootRef.el, () =>
+        return executeButtonCallback(this.rootRef(), () =>
             this.model.root.leaveEditMode({ discard: true })
         );
     }
 
     async onClickSave() {
-        return executeButtonCallback(this.rootRef.el, async () => {
+        return executeButtonCallback(this.rootRef(), async () => {
             const saved = await this.editedRecord.save();
             if (saved) {
                 await this.model.root.leaveEditMode();
@@ -429,11 +430,11 @@ export class ListController extends Component {
     }
 
     onPageChange() {
-        if (this.rootRef && this.rootRef.el) {
+        if (this.rootRef()) {
             if (this.uiService.isSmall) {
-                this.rootRef.el.scrollTop = 0;
+                this.rootRef().scrollTop = 0;
             } else {
-                this.rootRef.el.querySelector(".o_content .o_list_renderer").scrollTop = 0;
+                this.rootRef().querySelector(".o_content .o_list_renderer").scrollTop = 0;
             }
         }
     }

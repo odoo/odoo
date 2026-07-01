@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 /**
  * BottomSheet
  *
  * @class
  */
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -29,6 +28,11 @@ export class BottomSheet extends Component {
         ref: t.function().optional(),
     });
 
+    containerRef = signal(null);
+    scrollRailRef = signal(null);
+    sheetRef = signal(null);
+    sheetBodyRef = signal(null);
+
     setup() {
         this.maxHeightPercent = 90;
 
@@ -48,13 +52,9 @@ export class BottomSheet extends Component {
         };
 
         // Popover Ref Requirement
-        useForwardRefToParent("ref");
-
-        // References
-        this.containerRef = useRef("container");
-        this.scrollRailRef = useRef("scrollRail");
-        this.sheetRef = useRef("sheet");
-        this.sheetBodyRef = useRef("ref");
+        // The body element is forwarded to the parent (the popover/bottom_sheet
+        // service caller) through the `ref` prop.
+        useForwardRefToParent(this.sheetBodyRef, "ref");
 
         // Create throttled version for onScroll
         this.throttledOnScroll = useThrottleForAnimation(this.onScroll.bind(this));
@@ -80,10 +80,10 @@ export class BottomSheet extends Component {
                 browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
 
             this.prefersReducedMotion =
-                isReduced || getComputedStyle(this.containerRef.el).animationName === "none";
+                isReduced || getComputedStyle(this.containerRef()).animationName === "none";
 
             this.initializeSheet();
-            compensateScrollbar(this.scrollRailRef.el, true, true, "padding-right");
+            compensateScrollbar(this.scrollRailRef(), true, true, "padding-right");
         });
     }
 
@@ -92,7 +92,7 @@ export class BottomSheet extends Component {
      * Sets up measurements, snap points, and event handlers
      */
     initializeSheet() {
-        if (!this.containerRef.el || !this.scrollRailRef.el || !this.sheetRef.el) {
+        if (!this.containerRef() || !this.scrollRailRef() || !this.sheetRef()) {
             return;
         }
 
@@ -114,14 +114,14 @@ export class BottomSheet extends Component {
         if (this.prefersReducedMotion) {
             this.state.isSnappingEnabled = true;
         } else {
-            this.sheetRef.el?.addEventListener(
+            this.sheetRef()?.addEventListener(
                 "animationend",
                 () => (this.state.isSnappingEnabled = true),
                 {
                     once: true,
                 }
             );
-            this.sheetRef.el?.addEventListener(
+            this.sheetRef()?.addEventListener(
                 "animationcancel",
                 () => (this.state.isSnappingEnabled = true),
                 {
@@ -144,7 +144,7 @@ export class BottomSheet extends Component {
         this.applyDimensions();
 
         // // Update scroll position
-        const scrollTop = this.scrollRailRef.el.scrollTop;
+        const scrollTop = this.scrollRailRef().scrollTop;
 
         // Update progress value
         this.updateProgressValue(scrollTop);
@@ -161,7 +161,7 @@ export class BottomSheet extends Component {
         const maxHeightPx = (this.maxHeightPercent / 100) * viewportHeight;
 
         // Reset any previously set constraints to measure natural height
-        const sheet = this.sheetRef.el;
+        const sheet = this.sheetRef();
         sheet.style.removeProperty("min-height");
         sheet.style.removeProperty("height");
 
@@ -183,7 +183,7 @@ export class BottomSheet extends Component {
      * Sets CSS variables and styles based on measurements and snap points
      */
     applyDimensions() {
-        const rail = this.scrollRailRef.el;
+        const rail = this.scrollRailRef();
 
         // Convert heights to dvh percentages for CSS variables
         const heightPercent = Math.min(
@@ -202,8 +202,8 @@ export class BottomSheet extends Component {
      * Configures initial scroll position and overflow behavior
      */
     positionSheet() {
-        const scrollRail = this.scrollRailRef.el;
-        const bodyContent = this.sheetBodyRef.el;
+        const scrollRail = this.scrollRailRef();
+        const bodyContent = this.sheetBodyRef();
 
         const scrollValue = this.measurements.maxHeight;
 
@@ -221,7 +221,7 @@ export class BottomSheet extends Component {
      * Sets up event handlers for scroll and touch events
      */
     setupEventHandlers() {
-        const scrollRail = this.scrollRailRef.el;
+        const scrollRail = this.scrollRailRef();
 
         // Add scroll event listener
         scrollRail.addEventListener("scroll", this.throttledOnScroll);
@@ -232,11 +232,11 @@ export class BottomSheet extends Component {
      * Updates progress, handles position snapping, and triggers dismissal
      */
     onScroll() {
-        if (!this.scrollRailRef.el) {
+        if (!this.scrollRailRef()) {
             return;
         }
 
-        const scrollTop = this.scrollRailRef.el.scrollTop;
+        const scrollTop = this.scrollRailRef().scrollTop;
 
         // Update progress value for visual effects
         this.updateProgressValue(scrollTop);
@@ -273,10 +273,10 @@ export class BottomSheet extends Component {
         if (this.prefersReducedMotion) {
             this.props.close?.();
         } else {
-            this.sheetRef.el?.addEventListener("animationend", () => this.props.close?.(), {
+            this.sheetRef()?.addEventListener("animationend", () => this.props.close?.(), {
                 once: true,
             });
-            this.sheetRef.el?.addEventListener("animationcancel", () => this.props.close?.(), {
+            this.sheetRef()?.addEventListener("animationcancel", () => this.props.close?.(), {
                 once: true,
             });
         }

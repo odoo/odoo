@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, plugin, props, status, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, plugin, props, signal, status, proxy, t } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
@@ -221,12 +221,13 @@ export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
     props = props(many2XAutocompleteProps);
+    autocompleteContainerRef = signal(null);
     setup() {
         this.orm = useService("orm");
         this.offlinePlugin = plugin(OfflinePlugin);
         this.uiService = useService("ui");
 
-        this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
+        useForwardRefToParent(this.autocompleteContainerRef, "autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
         this.keepLast = new KeepLast();
@@ -245,7 +246,8 @@ export class Many2XAutocomplete extends Component {
                 },
                 fieldString,
                 onClose: () => {
-                    const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
+                    const autoCompleteInput =
+                        this.autocompleteContainerRef().querySelector("input");
 
                     // There are two cases:
                     // 1. Value is the same as the input: it means the autocomplete has re-rendered with the right value
@@ -562,7 +564,7 @@ export class Many2XAutocomplete extends Component {
     }
 
     async onBarcodeSearch() {
-        const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
+        const autoCompleteInput = this.autocompleteContainerRef().querySelector("input");
         return this.onSearchMore(autoCompleteInput.value);
     }
 

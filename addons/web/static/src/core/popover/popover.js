@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, props, signal, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
@@ -147,14 +146,19 @@ export class Popover extends Component {
     props = props(popoverProps);
     static animationTime = 200;
 
+    popoverRef = signal(null);
+
     setup() {
         if (this.props.setActiveElement) {
-            useActiveElement("ref");
+            useActiveElement(this.popoverRef);
         }
 
-        useForwardRefToParent("ref");
-        this.popoverRef = useRef("ref");
-        this.position = usePosition("ref", () => this.props.target, this.positioningOptions);
+        useForwardRefToParent(this.popoverRef, "ref");
+        this.position = usePosition(
+            this.popoverRef,
+            () => this.props.target,
+            this.positioningOptions
+        );
 
         const resizeObserver = new ResizeObserver(() => {
             if (!this.props.fixedPosition && (!this.props.animation || this.animationDone)) {
@@ -163,8 +167,8 @@ export class Popover extends Component {
         });
 
         onMounted(() => {
-            POPOVERS.set(this.props.target, this.popoverRef.el);
-            resizeObserver.observe(this.popoverRef.el);
+            POPOVERS.set(this.props.target, this.popoverRef());
+            resizeObserver.observe(this.popoverRef());
         });
         onWillDestroy(() => POPOVERS.delete(this.props.target));
 
@@ -211,7 +215,7 @@ export class Popover extends Component {
             bottom: ["translateY(5%)", "translateY(0)"],
             left: ["translateX(-5%)", "translateX(0)"],
         }[direction];
-        return this.popoverRef.el.animate(
+        return this.popoverRef().animate(
             { opacity: [0, 1], transform },
             this.constructor.animationTime
         );
@@ -220,7 +224,7 @@ export class Popover extends Component {
     isInside(target) {
         return (
             this.props.target?.contains(target) ||
-            this.popoverRef?.el?.contains(target) ||
+            this.popoverRef()?.contains(target) ||
             this.env[OVERLAY_SYMBOL]?.contains(target)
         );
     }
@@ -260,7 +264,7 @@ export class Popover extends Component {
     }
 
     updateArrow(direction, variant, variantOffset) {
-        const { el } = this.popoverRef;
+        const el = this.popoverRef();
 
         // Reverse the direction if RTL as bootstrap expects it that way
         [direction, variant] = reverseForRTL(direction, variant);

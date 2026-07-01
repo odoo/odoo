@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -29,11 +28,11 @@ test("action can be prevented", async () => {
     let executeInHandler;
 
     class MyComponent extends Component {
-        static template = xml`<div t-custom-ref="root" t-on-click="this.onClick" class="myComponent">Some text</div>`;
+        static template = xml`<div t-ref="this.rootRef" t-on-click="this.onClick" class="myComponent">Some text</div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
-            const rootRef = useRef("root");
-            useViewButtons(rootRef, {
+            useViewButtons(this.rootRef, {
                 beforeExecuteAction: () => {
                     expect.step("beforeExecuteAction in hook");
                     return executeInHook;
@@ -90,7 +89,7 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
     class MyComponent extends Component {
         static components = { Dropdown, DropdownItem, ViewButton };
         static template = xml`
-            <div t-custom-ref="root" class="myComponent">
+            <div t-ref="this.rootRef" class="myComponent">
                 <Dropdown>
                     <button>dropdown</button>
                     <DropdownItem>
@@ -100,9 +99,9 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
             </div>
         `;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
-            const rootRef = useRef("root");
-            useViewButtons(rootRef);
+            useViewButtons(this.rootRef);
         }
     }
 
@@ -123,11 +122,11 @@ test("execute action in new window", async () => {
     });
 
     class MyComponent extends Component {
-        static template = xml`<div t-custom-ref="root" t-on-click="this.onClick" class="myComponent">Some text</div>`;
+        static template = xml`<div t-ref="this.rootRef" t-on-click="this.onClick" class="myComponent">Some text</div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
-            const rootRef = useRef("root");
-            useViewButtons(rootRef);
+            useViewButtons(this.rootRef);
         }
 
         onClick() {
@@ -155,13 +154,13 @@ test("execute action in new window - 2", async () => {
     class MyComponent extends Component {
         static components = { ViewButton };
         static template = xml`
-                <div t-custom-ref="root" class="myComponent">
+                <div t-ref="this.rootRef" class="myComponent">
                     <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
                 </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
-            const rootRef = useRef("root");
-            useViewButtons(rootRef);
+            useViewButtons(this.rootRef);
         }
     }
 
@@ -174,13 +173,13 @@ test("default label for button special cancel", async () => {
     class MyComponent extends Component {
         static components = { ViewButton };
         static template = xml`
-                <div t-custom-ref="root" class="myComponent">
+                <div t-ref="this.rootRef" class="myComponent">
                     <ViewButton tag="'button'" clickParams="{ special:'cancel' }"/>
                 </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
-            const rootRef = useRef("root");
-            useViewButtons(rootRef);
+            useViewButtons(this.rootRef);
         }
     }
 

@@ -1,11 +1,10 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onMounted, onPatched, onWillStart, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, props, signal, t } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
@@ -17,9 +16,10 @@ export class GaugeField extends Component {
         title: t.string().optional(),
     });
 
+    canvasRef = signal(null);
+
     setup() {
         this.chart = null;
-        this.canvasRef = useRef("canvas");
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
@@ -100,7 +100,7 @@ export class GaugeField extends Component {
                 aspectRatio: 2,
             },
         };
-        this.chart = new Chart(this.canvasRef.el, config);
+        this.chart = new Chart(this.canvasRef(), config);
     }
 }
 

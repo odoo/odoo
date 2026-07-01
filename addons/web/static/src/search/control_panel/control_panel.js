@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -10,7 +10,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, plugin, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, plugin, props, proxy, signal, t } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
@@ -33,6 +33,8 @@ export class ControlPanel extends Component {
         display: t.object().optional(DEFAULT_DISPLAY),
     });
 
+    root = signal(null);
+
     setup() {
         this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
@@ -43,7 +45,6 @@ export class ControlPanel extends Component {
             : undefined;
         this.breadcrumbs = proxy(this.env.config.breadcrumbs);
 
-        this.root = useRef("root");
         this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
 
         const { viewSwitcherEntries, viewType } = this.env.config;
@@ -62,7 +63,7 @@ export class ControlPanel extends Component {
                 },
                 {
                     bypassEditableProtection: true,
-                    withOverlay: () => this.root.el.querySelector("nav.o_cp_switch_buttons"),
+                    withOverlay: () => this.root().querySelector("nav.o_cp_switch_buttons"),
                 }
             );
         }
@@ -77,7 +78,7 @@ export class ControlPanel extends Component {
             const scrollingEl = this.getScrollingElement();
             this.scrollingElementResizeObserver.observe(scrollingEl);
             scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
-            this.root.el.style.top = "0px";
+            this.root().style.top = "0px";
             this.scrollingElementHeight = scrollingEl.scrollHeight;
             return () => {
                 this.scrollingElementResizeObserver.unobserve(scrollingEl);
@@ -109,7 +110,7 @@ export class ControlPanel extends Component {
     });
 
     getScrollingElement() {
-        return this.root.el.parentElement;
+        return this.root().parentElement;
     }
 
     get display() {
@@ -130,18 +131,18 @@ export class ControlPanel extends Component {
         const delta = Math.round(scrollTop - this.oldScrollTop);
 
         if (scrollTop > this.initialScrollTop) {
-            this.root.el.classList.add(STICKY_CLASS);
+            this.root().classList.add(STICKY_CLASS);
             if (delta <= 0) {
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
             } else {
                 this.lastScrollTop = Math.max(
-                    -this.root.el.offsetHeight,
-                    -this.root.el.offsetTop - delta
+                    -this.root().offsetHeight,
+                    -this.root().offsetTop - delta
                 );
             }
-            this.root.el.style.top = `${this.lastScrollTop}px`;
+            this.root().style.top = `${this.lastScrollTop}px`;
         } else {
-            this.root.el.classList.remove(STICKY_CLASS);
+            this.root().classList.remove(STICKY_CLASS);
             this.lastScrollTop = 0;
         }
         this.oldScrollTop = scrollTop;

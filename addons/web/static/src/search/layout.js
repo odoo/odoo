@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
@@ -22,9 +21,9 @@ export class Layout extends Component {
         display: t.object().optional({}),
         slots: t.object().optional(),
     });
+    contentRef = signal(null);
     setup() {
         this.components = extractLayoutComponents(this.env.config);
-        this.contentRef = useRef("content");
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };

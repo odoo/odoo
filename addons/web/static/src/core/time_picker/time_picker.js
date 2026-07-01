@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -38,8 +37,9 @@ export class TimePicker extends Component {
         placeholder: t.string().optional(),
     });
 
+    inputRef = signal(null);
+
     setup() {
-        this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
         this.dropdownState = useDropdownState();
         this.uiService = useService("ui");
@@ -90,7 +90,7 @@ export class TimePicker extends Component {
                     bypassEditableProtection: true,
                     callback: (navigator) => {
                         if (!this.isNavigating) {
-                            const value = parseTime(this.inputRef.el.value, this.props.showSeconds);
+                            const value = parseTime(this.inputRef().value, this.props.showSeconds);
                             if (value) {
                                 this.setValue(value);
                                 this.close();
@@ -214,7 +214,7 @@ export class TimePicker extends Component {
     onInput(event) {
         this.ensureOpen();
 
-        const value = parseTime(this.inputRef.el.value, this.props.showSeconds);
+        const value = parseTime(this.inputRef().value, this.props.showSeconds);
         this.state.isValid = value !== null;
 
         if (!this.navigator) {
@@ -234,7 +234,7 @@ export class TimePicker extends Component {
     }
 
     onChange() {
-        const value = parseTime(this.inputRef.el.value, this.props.showSeconds);
+        const value = parseTime(this.inputRef().value, this.props.showSeconds);
         this.state.isValid = value !== null;
         if (this.state.isValid) {
             this.setValue(value);
@@ -255,7 +255,7 @@ export class TimePicker extends Component {
         if (!this.dropdownState.isOpen) {
             this.isNavigating = false;
             this.dropdownState.open();
-            this.inputRef.el.select();
+            this.inputRef().select();
         }
     }
 

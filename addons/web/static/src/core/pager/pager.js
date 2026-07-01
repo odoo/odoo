@@ -1,4 +1,4 @@
-import { Component, EventBus, props, proxy, t, useEffect, useListener } from "@odoo/owl";
+import { Component, EventBus, props, proxy, signal, t, useEffect, useListener } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 
@@ -30,12 +30,14 @@ export class Pager extends Component {
         updateTotal: t.function().optional(),
     });
 
+    inputRef = signal(null);
+
     setup() {
         this.state = proxy({
             isEditing: false,
             isDisabled: false,
         });
-        this.inputRef = useAutofocus();
+        useAutofocus({ ref: this.inputRef });
         this.uiService = useService("ui");
         useListener(document, "mousedown", this.onClickAway.bind(this), { capture: true });
         let firstMount = true;
@@ -156,7 +158,7 @@ export class Pager extends Component {
      * @param {MouseEvent} ev
      */
     onClickAway(ev) {
-        if (ev.target !== this.inputRef.el) {
+        if (ev.target !== this.inputRef()) {
             this.state.isEditing = false;
         }
     }
@@ -191,8 +193,8 @@ export class Pager extends Component {
     }
     onValueClick() {
         if (this.props.isEditable && !this.state.isEditing && !this.state.isDisabled) {
-            if (this.inputRef.el) {
-                this.inputRef.el.focus();
+            if (this.inputRef()) {
+                this.inputRef().focus();
             }
             this.state.isEditing = true;
         }

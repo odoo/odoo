@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 export class PasswordField extends Component {
     static template = "web.PasswordField";
@@ -12,9 +12,12 @@ export class PasswordField extends Component {
         placeholder: { type: String, optional: true },
     };
 
+    inputRef = signal(null);
+
     setup() {
         this.state = proxy({ isRevealed: false });
         useInputField({
+            ref: this.inputRef,
             getValue: () => this.props.record.data[this.props.name] || "",
         });
     }

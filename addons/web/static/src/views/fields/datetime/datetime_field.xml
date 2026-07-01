@@ -11,7 +11,7 @@
             <t t-elif="this.isRange(this.values) or this.isRequired(this.startDateField) or !this.isEmpty(this.startDateField) or this.startDateField === this.props.name">
                 <t t-if="this.picker.activeInput !== this.startDateField and this.values[0]">
                     <button
-                        t-custom-ref="start-date"
+                        t-ref="this.startDateRef"
                         t-att-data-tooltip="this.getFormattedValue(0, true)"
                         t-att-id="showSeparator ? this.props.endDateField and this.props.id : this.props.id"
                         t-on-focus="() => this.picker.activeInput = this.startDateField"
@@ -24,7 +24,7 @@
                 </t>
                 <t t-else="">
                     <input
-                        t-custom-ref="start-date"
+                        t-ref="this.startDateRef"
                         type="text"
                         t-att-id="showSeparator ? this.props.endDateField and this.props.id : this.props.id"
                         t-att-class="'o_input cursor-pointer user-select-none' + (this.props.warnFuture and this.isDateInTheFuture(0) ? 'text-danger' : '')"
@@ -53,7 +53,7 @@
                 <t t-elif="this.isRange(this.values) or this.isRequired(this.endDateField) or !this.isEmpty(this.endDateField) or (this.isEmpty(this.startDateField) and this.endDateField === this.props.name)">
                     <t t-if="this.picker.activeInput !== this.endDateField and this.values[1]">
                         <button
-                            t-custom-ref="end-date"
+                            t-ref="this.endDateRef"
                             t-att-data-tooltip="this.getFormattedValue(1, true)"
                             t-on-focus="() => this.picker.activeInput = this.endDateField"
                             t-on-pointerdown="() => this.openPickerOnNextPatch = true"
@@ -66,7 +66,7 @@
                     </t>
                     <t t-else="">
                         <input
-                            t-custom-ref="end-date"
+                            t-ref="this.endDateRef"
                             type="text"
                             t-att-id="this.props.startDateField and this.props.id"
                             t-att-class="'o_input cursor-pointer user-select-none' + (this.props.warnFuture and this.isDateInTheFuture(1) ? 'text-danger' : '')"

@@ -6,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parsers";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export const floatTimeFieldProps = {
@@ -19,11 +19,12 @@ export const floatTimeFieldProps = {
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
     props = props(floatTimeFieldProps);
+    numpadDecimalRef = signal(null);
 
     setup() {
         this.inputFloatTimeRef = useInputField({
             getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+            ref: this.numpadDecimalRef,
             parse: (v) => parseFloatTime(v, this.props.unit),
         });
 
@@ -33,7 +34,7 @@ export class FloatTimeField extends Component {
         this.resultPopover = usePopover(DurationPopover, {
             position: "bottom",
         });
-        useNumpadDecimal();
+        useNumpadDecimal(this.numpadDecimalRef);
     }
 
     get formatOptions() {
@@ -53,7 +54,7 @@ export class FloatTimeField extends Component {
             if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
                 this.resultPopover.close();
             } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
-                this.resultPopover.open(this.inputFloatTimeRef.el, {
+                this.resultPopover.open(this.inputFloatTimeRef(), {
                     state: this.state,
                 });
             }
@@ -63,10 +64,10 @@ export class FloatTimeField extends Component {
     }
 
     openPopover() {
-        const duration = this.parseOrClosePopover(this.inputFloatTimeRef.el.value);
+        const duration = this.parseOrClosePopover(this.inputFloatTimeRef().value);
         if (duration || duration === 0) {
             this.state.formattedResult = formatFloatTime(duration, this.formatOptions);
-            this.resultPopover.open(this.inputFloatTimeRef.el, {
+            this.resultPopover.open(this.inputFloatTimeRef(), {
                 state: this.state,
             });
         }

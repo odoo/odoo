@@ -1,5 +1,5 @@
-import { provideEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
-import { Component, onWillDestroy } from "@odoo/owl";
+import { provideEnv, useChildSubEnv } from "@web/owl2/utils";
+import { Component, onWillDestroy, signal } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
 
@@ -15,9 +15,9 @@ class OverlayItem extends Component {
         env: { type: Object, optional: true },
     };
 
-    setup() {
-        this.rootRef = useRef("rootRef");
+    rootRef = signal(null);
 
+    setup() {
         OVERLAY_ITEMS.push(this);
         onWillDestroy(() => {
             const index = OVERLAY_ITEMS.indexOf(this);
@@ -41,8 +41,8 @@ class OverlayItem extends Component {
 
     contains(target) {
         return (
-            this.rootRef.el?.contains(target) ||
-            this.subOverlays.some((oi) => oi.rootRef.el?.contains(target))
+            this.rootRef()?.contains(target) ||
+            this.subOverlays.some((oi) => oi.rootRef()?.contains(target))
         );
     }
 }
@@ -52,9 +52,7 @@ export class OverlayContainer extends Component {
     static components = { ErrorHandler, OverlayItem };
     static props = { overlays: Object };
 
-    setup() {
-        this.root = useRef("root");
-    }
+    root = signal(null);
 
     get sortedOverlays() {
         return sortBy(Object.values(this.props.overlays), (overlay) => overlay.sequence);

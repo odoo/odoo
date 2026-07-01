@@ -4,7 +4,7 @@
     <t t-name="web.EmbeddedActionsPanel">
         <t t-if="!this.uiService.isSmall">
             <Transition visible="this.props.state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
-                <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className" t-custom-ref="root">
+                <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className" t-ref="this.root">
                     <t t-foreach="this.props.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
                         <t t-if="this.isEmbeddedActionVisible(action)">
                             <button class="btn btn-secondary o_draggable"
@@ -47,7 +47,7 @@
                 <AccordionItem class="'o_save_current_view'" description.translate="Save View">
                     <div class="px-2 py-2">
                         <input type="text"
-                            t-custom-ref="newActionNameRef"
+                            t-ref="this.newActionNameRef"
                             class="o_input mb-2"
                             t-model.proxy.trim="this.props.state.embeddedInfos.newActionName"
                         />

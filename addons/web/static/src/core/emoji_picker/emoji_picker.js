@@ -1,5 +1,4 @@
 import { markEventHandled } from "@web/core/utils/misc";
-import { useRef } from "@web/owl2/utils";
 import {
     Component,
     computed,
@@ -87,6 +86,8 @@ export class EmojiPicker extends Component {
     activeEmojiIndex = signal(0, { type: t.number() });
 
     gridRef = signal(null, { type: t.ref() });
+    navbarRef = signal(null, { type: t.ref() });
+    autofocusRef = signal(null, { type: t.ref() });
     emojiNavbarRepr = signal(null, { type: t.or([t.array(), t.literal(null)]) });
 
     recentEmojis = computed(() => {
@@ -109,12 +110,11 @@ export class EmojiPicker extends Component {
     });
 
     setup() {
-        this.navbarRef = useRef("navbar");
         this.ui = useService("ui");
         this.isMobileOS = isMobileOS();
         this.frequentEmojiService = useService("frequent_emoji");
         const loadEmoji = useLoadEmoji();
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
         onWillStart(async () => {
             await loadEmoji();
             this.recentCategory = {
@@ -134,7 +134,7 @@ export class EmojiPicker extends Component {
                 return;
             }
             this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
-            this.navbarResizeObserver.observe(this.navbarRef.el);
+            this.navbarResizeObserver.observe(this.navbarRef());
             this.adaptNavbar();
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
@@ -196,17 +196,17 @@ export class EmojiPicker extends Component {
     }
 
     adaptNavbar() {
-        if (!this.navbarRef.el) {
+        if (!this.navbarRef()) {
             return;
         }
-        const computedStyle = getComputedStyle(this.navbarRef.el);
+        const computedStyle = getComputedStyle(this.navbarRef());
         const availableWidth =
-            this.navbarRef.el.getBoundingClientRect().width -
+            this.navbarRef().getBoundingClientRect().width -
             parseInt(computedStyle.paddingLeft) -
             parseInt(computedStyle.marginLeft) -
             parseInt(computedStyle.paddingLeft) -
             parseInt(computedStyle.marginLeft);
-        const itemWidth = this.navbarRef.el.querySelector(".o-Emoji").getBoundingClientRect().width;
+        const itemWidth = this.navbarRef().querySelector(".o-Emoji").getBoundingClientRect().width;
         const gapWidth = parseInt(computedStyle.gap);
         const maxAvailableNavbarItemAmountAtOnce = Math.floor(
             availableWidth / (itemWidth + gapWidth)
@@ -604,20 +604,21 @@ class PickerMobileInDialog extends PickerMobile {
     static props = [...PICKER_PROPS, "onClose?"];
     static template = xml`
         <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
-            <div class="h-100" t-custom-ref="root">
+            <div class="h-100" t-ref="this.root">
                 <t t-component="this.props.PickerComponent" t-props="this.pickerProps"/>
             </div>
         </Dialog>
     `;
 
+    root = signal(null);
+
     setup() {
         super.setup();
-        this.root = useRef("root");
         useListener(
             window,
             "click",
             (ev) => {
-                if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
+                if (ev.target !== this.root() && !this.root().contains(ev.target)) {
                     this.props.close?.();
                 }
             },

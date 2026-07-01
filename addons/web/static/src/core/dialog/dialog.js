@@ -2,7 +2,7 @@ import { useChildSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, signal, t, useListener } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -62,11 +62,12 @@ export class Dialog extends Component {
     // overridden.
     static props = dialogProps;
     props = props(this.constructor.props);
+    modalRef = signal(null);
 
     setup() {
         this.uiService = useService("ui");
-        this.modalRef = useForwardRefToParent("modalRef");
-        useActiveElement("modalRef");
+        useForwardRefToParent(this.modalRef, "modalRef");
+        useActiveElement(this.modalRef);
         this.data = proxy(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
         useHotkey(

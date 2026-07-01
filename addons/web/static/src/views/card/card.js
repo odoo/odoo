@@ -5,11 +5,11 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { CardRenderer } from "./card_renderer";
 import { CARD_ATTRIBUTE, CardArchParser } from "./card_arch_parser";
 
-import { Component, signal, useRef, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 
 export class Card extends Component {
     static template = xml`
-        <div class="o_card" t-att-class="this.props.className" t-custom-ref="root">
+        <div class="o_card" t-att-class="this.props.className" t-ref="this.rootRef">
             <Record t-props="this.recordProps" t-slot-scope="data" t-key="this.key()">
                 <CardRenderer record="data.record" t-props="this.rendererProps"/>
             </Record>
@@ -32,6 +32,8 @@ export class Card extends Component {
     static defaultProps = {};
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
 
+    rootRef = signal(null);
+
     setup() {
         const resModel = this.props.resModel;
         const relatedModels = { [resModel]: { fields: this.props.fields } };
@@ -41,9 +43,8 @@ export class Card extends Component {
         this.activeFields = activeFields;
         this.fields = fields;
 
-        const rootRef = useRef("root");
         this.key = signal(1);
-        useViewButtons(rootRef, {
+        useViewButtons(this.rootRef, {
             reload: () => {
                 this.key.set(this.key + 1);
             },

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import {
     expect,
     manuallyDispatchProgrammaticEvent,
@@ -9,7 +8,7 @@ import {
 } from "@odoo/hoot";
 import { queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useDraggable } from "@web/core/utils/draggable";
@@ -20,14 +19,15 @@ test("Parameters error handling", async () => {
     const mountList = async (setupList) => {
         class List extends Component {
             static template = xml`
-                <div t-custom-ref="root" class="root">
+                <div t-ref="this.rootRef" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
             static props = ["*"];
+            rootRef = signal(null);
             setup() {
-                setupList();
+                setupList(this);
             }
         }
         await mountWithCleanup(List);
@@ -48,9 +48,9 @@ test("Parameters error handling", async () => {
     });
 
     // Correct params
-    await mountList(() => {
+    await mountList((comp) => {
         useDraggable({
-            ref: useRef("root"),
+            ref: comp.rootRef,
         });
     });
     await mountList(() => {
@@ -60,9 +60,9 @@ test("Parameters error handling", async () => {
             enable: false,
         });
     });
-    await mountList(() => {
+    await mountList((comp) => {
         useDraggable({
-            ref: useRef("root"),
+            ref: comp.rootRef,
             elements: ".item",
         });
     });
@@ -73,15 +73,16 @@ test("Simple dragging in single group", async () => {
 
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDragStart({ element }) {
                     expect.step("start");
@@ -121,16 +122,17 @@ test("Dynamically disable draggable feature", async () => {
     const state = proxy({ enableDrag: true });
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             this.state = proxy(state);
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 enable: () => this.state.enableDrag,
                 onDragStart() {
@@ -165,7 +167,7 @@ test("Ignore specified elements", async () => {
 
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
                         <span class="ignored" t-out="i" />
@@ -174,9 +176,10 @@ test("Ignore specified elements", async () => {
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 ignore: ".ignored",
                 onDragStart() {
@@ -212,7 +215,7 @@ test("Ignore specific elements in a nested draggable", async () => {
     class List extends Component {
         static components = { List };
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[0, 1]" t-as="i" t-key="i"
                         t-attf-class="item parent #{ i % 2 ? 'ignored' : 'not-ignored' }">
@@ -227,9 +230,10 @@ test("Ignore specific elements in a nested draggable", async () => {
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 preventDrag: (el) => el.classList.contains("ignored"),
                 onDragStart() {
@@ -273,15 +277,16 @@ test("Dragging element with touch event", async () => {
     mockTouch(true);
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDragStart({ element }) {
                     expect.step("start");
@@ -314,15 +319,16 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
     mockTouch(true);
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 delay: 1000,
                 elements: ".item",
                 onDragStart() {
@@ -352,17 +358,18 @@ test.tags("desktop");
 test("Elements are confined within their container and keep their initial width and height", async () => {
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root" style="width: 800px; height: 600px;">
+            <div t-ref="this.rootRef" class="root" style="width: 800px; height: 600px;">
                 <ul class="list list-unstyled m-0 d-flex flex-column">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
             </div>
         `;
         static props = ["*"];
+        rootRef = signal(null);
 
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
             });
         }
@@ -424,13 +431,14 @@ test("Focusing is not lost after clicking", async () => {
 
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <input type="checkbox" class="item">Something</input>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
             });
         }
@@ -445,17 +453,18 @@ test("Focusing is not lost after clicking", async () => {
 test("allowDisconnected option", async () => {
     class List extends Component {
         static template = xml`
-            <div t-custom-ref="root" class="root">
+            <div t-ref="this.rootRef" class="root">
                 <button class="handle" t-if="this.state.hasHandle">Handle</button>
                 <ul class="list list-unstyled m-0 d-flex flex-column">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
             </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             this.state = proxy({ hasHandle: true });
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".handle",
                 allowDisconnected: true,
                 onDragStart: () => {
@@ -481,14 +490,15 @@ test("allowDisconnected option", async () => {
 test("draggable in iframe", async () => {
     class List extends Component {
         static template = xml`
-        <div t-custom-ref="root" class="root">
+        <div t-ref="this.rootRef" class="root">
             <iframe class="mydroppable" t-att-srcdoc="this.srcdoc" />
         </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
                 iframeSelector: ".mydroppable",
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDrop: ({ element, getRect }) => {
                     const rect = getRect(element);
@@ -544,7 +554,7 @@ test("dragging element in iframe offset", async () => {
     const IDENTITY_MATRIX = new DOMMatrixReadOnly();
     class List extends Component {
         static template = xml`
-        <div t-custom-ref="root" class="root">
+        <div t-ref="this.rootRef" class="root">
             <div class="p" />
             <div style="width: 50px;height:500px;"/>
             <div class="d-flex flex-row">
@@ -553,10 +563,11 @@ test("dragging element in iframe offset", async () => {
             </div>
         </div>`;
         static props = ["*"];
+        rootRef = signal(null);
         setup() {
             useDraggable({
                 iframeSelector: ".mydroppable",
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
                 onDrag: (ctx) => {
                     expect.step("drag");
@@ -609,16 +620,17 @@ test("dragging element in iframe offset", async () => {
 test("Dragging cancels previous drag sequences", async () => {
     class List extends Component {
         static template = xml`
-                <div t-custom-ref="root" class="root">
+                <div t-ref="this.rootRef" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
         static props = ["*"];
+        rootRef = signal(null);
 
         setup() {
             useDraggable({
-                ref: useRef("root"),
+                ref: this.rootRef,
                 elements: ".item",
             });
         }

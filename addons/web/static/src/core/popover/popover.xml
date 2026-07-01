@@ -3,7 +3,7 @@
 
     <t t-name="web.Popover">
         <div
-            t-custom-ref="ref"
+            t-ref="this.popoverRef"
             t-att-class="this.defaultClassObj"
             t-attf-style="--animation-time: {{ this.constructor.animationTime }}ms"
             t-att-role="this.props.role"

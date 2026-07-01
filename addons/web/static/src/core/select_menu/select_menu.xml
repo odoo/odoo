@@ -10,7 +10,7 @@
         <input
             type="text"
             t-attf-class="o_input {{inputClass}}"
-            t-custom-ref="{{inputRefName}}"
+            t-ref="inputRef"
             t-on-input="this.handleInputDebounced"
             t-on-focus="this.onInputFocus"
             t-on-blur="this.onInputBlur"
@@ -40,7 +40,7 @@
                 >
                 <t t-if="this.displayInputInToggler">
                     <t t-set="inputClass" t-value="'o_select_menu_toggler ' + (!this.displayInputInDropdown ? 'o_select_menu_input ' : '') + this.props.togglerClass"/>
-                    <t t-set="inputRefName" t-value="'inputRefToggler'"/>
+                    <t t-set="inputRef" t-value="this.inputRefs.toggler"/>
                     <div class="w-100 d-flex flex-column">
                         <t t-if="this.props.multiSelect">
                             <div t-if="this.props.value.length" class="d-flex flex-wrap mb-1">
@@ -70,11 +70,11 @@
                     <div class="o_select_menu_searchbox d-empty-none ps-2" t-att-data-id="this.selectMenuId">
                         <t t-if="this.displayInputInDropdown">
                             <t t-set="inputClass" t-value="'o_select_menu_input dropdown-item'"/>
-                            <t t-set="inputRefName" t-value="'inputRefMenu'"/>
+                            <t t-set="inputRef" t-value="this.inputRefs.menu"/>
                             <t t-call="web.SelectMenu.search" />
                         </t>
                     </div>
-                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-custom-ref="choicesRef">
+                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-ref="this.choicesRef">
                         <t t-if="this.state.choices.length === 0">
                             <p class="text-muted fst-italic mx-4 my-1">No results</p>
                         </t>

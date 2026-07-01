@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -20,7 +19,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 export const DEFAULT_TAG_LIMIT = 8;
@@ -66,6 +65,9 @@ export class Many2ManyTagsField extends Component {
     };
     props = props(many2ManyTagsFieldProps);
 
+    many2ManyTagsFieldRef = signal(null);
+    autoCompleteRef = signal(null);
+
     setup() {
         this.state = proxy({ expanded: false });
         this.orm = useService("orm");
@@ -75,11 +77,10 @@ export class Many2ManyTagsField extends Component {
         });
         this.dialog = useService("dialog");
         this.dialogClose = [];
-        useTagNavigation("many2ManyTagsField", {
+        useTagNavigation(this.many2ManyTagsFieldRef, {
             isEnabled: () => !this.props.readonly,
             delete: (index) => this.deleteTagByIndex(index),
         });
-        this.autoCompleteRef = useRef("autoComplete");
         this.mutex = new Mutex();
 
         const { saveRecord, removeRecord } = useX2ManyCrud(

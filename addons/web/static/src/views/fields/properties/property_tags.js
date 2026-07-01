@@ -8,7 +8,7 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";
 
 class PropertyTagsColorListPopover extends Component {
@@ -49,10 +49,12 @@ export class PropertyTags extends Component {
         // argument to update the current selected value)
         onTagsChange: { type: Function, optional: true },
     };
+    propertyTagsRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.popover = usePopover(this.constructor.components.Popover);
-        useTagNavigation("propertyTags", {
+        useTagNavigation(this.propertyTagsRef, {
             delete: (index) => this.deleteTagByIndex(index),
         });
     }
@@ -100,7 +102,7 @@ export class PropertyTags extends Component {
                 text: tagLabel,
                 color: tagColorIndex || 0,
                 onClick: (event) => this.onTagClick(event, tagId, tagColorIndex),
-                onDelete: canDeleteTag ? (() => this.onTagDelete(tagId)) : undefined,
+                onDelete: canDeleteTag ? () => this.onTagDelete(tagId) : undefined,
             };
         });
     }

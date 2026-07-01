@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
@@ -37,13 +36,14 @@ export class FileViewer extends Component {
         modal: t.any().optional(true),
     });
 
+    autofocusRef = signal(null);
     iframeViewerPdfRef = signal(null);
+    imageRef = signal(null);
+    imageToolbarRef = signal(null);
+    zoomerRef = signal(null);
 
     setup() {
-        useAutofocus();
-        this.imageRef = useRef("image");
-        this.imageToolbarRef = useRef("imageToolbar");
-        this.zoomerRef = useRef("zoomer");
+        useAutofocus({ ref: this.autofocusRef });
         this.hasTouch = hasTouch();
 
         this.isDragging = false;
@@ -290,14 +290,14 @@ export class FileViewer extends Component {
 
     updateZoomerStyle() {
         const isImageRotated = this.state.angle % 180 !== 0;
-        const { offsetWidth, offsetHeight } = this.imageRef.el;
+        const { offsetWidth, offsetHeight } = this.imageRef();
         const imageWidth = (isImageRotated ? offsetHeight : offsetWidth) * this.state.scale;
         const imageHeight = (isImageRotated ? offsetWidth : offsetHeight) * this.state.scale;
-        const diffX = imageWidth - this.zoomerRef.el.offsetWidth + IMAGE_BUFFER_PADDING;
+        const diffX = imageWidth - this.zoomerRef().offsetWidth + IMAGE_BUFFER_PADDING;
         const diffY =
             imageHeight -
-            this.zoomerRef.el.offsetHeight +
-            2 * this.imageToolbarRef.el.clientHeight +
+            this.zoomerRef().offsetHeight +
+            2 * this.imageToolbarRef().clientHeight +
             IMAGE_BUFFER_PADDING;
         let tx = diffX > 0 ? this.translate.x + this.translate.dx : 0;
         let ty = diffY > 0 ? this.translate.y + this.translate.dy : 0;
@@ -317,7 +317,7 @@ export class FileViewer extends Component {
         if (ty === 0) {
             this.translate.y = 0;
         }
-        this.zoomerRef.el.style = "transform: " + `translate(${tx}px, ${ty}px)`;
+        this.zoomerRef().style = "transform: " + `translate(${tx}px, ${ty}px)`;
     }
 
     get imageStyle() {

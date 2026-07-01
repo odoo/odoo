@@ -1,10 +1,10 @@
-import { useChildSubEnv, useRef } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
@@ -191,6 +191,8 @@ export class SwitchCompanyMenu extends Component {
     static props = {};
     static CompanySelector = CompanySelector;
 
+    searchInputRef = signal(null);
+
     setup() {
         this.dropdown = useDropdownState();
         this.user = user;
@@ -201,7 +203,6 @@ export class SwitchCompanyMenu extends Component {
         );
         useChildSubEnv({ companySelector: this.companySelector });
 
-        this.searchInputRef = useRef("inputRef");
         this.state = proxy({});
         this.resetState();
 
@@ -320,8 +321,8 @@ export class SwitchCompanyMenu extends Component {
 
     handleDropdownChange(isOpen) {
         if (isOpen) {
-            if (this.searchInputRef.el) {
-                this.searchInputRef.el.focus();
+            if (this.searchInputRef()) {
+                this.searchInputRef().focus();
             }
 
             if (this.containerRef.el) {

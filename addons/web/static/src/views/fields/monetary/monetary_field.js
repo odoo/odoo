@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
@@ -8,7 +7,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
 
 export const monetaryFieldProps = {
@@ -24,14 +23,17 @@ export class MonetaryField extends Component {
     static template = "web.MonetaryField";
     props = props(monetaryFieldProps);
 
+    numpadDecimalRef = signal(null);
+
     setup() {
         this.inputRef = useInputField(this.inputOptions);
         this.state = proxy({ value: undefined });
         this.nbsp = nbsp;
-        useNumpadDecimal();
-        useLayoutEffect(() => {
-            if (this.inputRef?.el) {
-                this.state.value = this.inputRef.el.value;
+        useNumpadDecimal(this.numpadDecimalRef);
+        useEffect(() => {
+            const el = this.inputRef();
+            if (el) {
+                this.state.value = el.value;
             }
         });
     }
@@ -39,7 +41,7 @@ export class MonetaryField extends Component {
     get inputOptions() {
         return {
             getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+            ref: this.numpadDecimalRef,
             parse: (v) => parseMonetary(v, { allowOperation: true }),
         };
     }

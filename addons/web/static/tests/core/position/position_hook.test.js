@@ -10,14 +10,13 @@ import {
     scroll,
     test,
 } from "@odoo/hoot";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, signal, xml } from "@odoo/owl";
 import {
     defineParams,
     defineStyle,
     destroyApp,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { useRef } from "@web/owl2/utils";
 
 import { usePosition } from "@web/core/position/position_hook";
 
@@ -31,30 +30,34 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
     class TestComp extends Component {
         static template = xml`
             <div id="scroll-container" style="overflow: auto; height: 450px">
-                <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px">
-                    <div id="target" t-custom-ref="target" style="background-color: royalblue; width: 50px; height: 50px"/>
-                    <div id="popper" t-custom-ref="popper" style="background-color: maroon; height: 100px; width: 100px">
-                        <div id="popper-content" t-custom-ref="content" style="background-color: seagreen; height: 50px; width: 50px"/>
+                <div id="container" t-ref="this.containerRef" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px">
+                    <div id="target" t-ref="this.targetRef" style="background-color: royalblue; width: 50px; height: 50px"/>
+                    <div id="popper" t-ref="this.popperRef" style="background-color: maroon; height: 100px; width: 100px">
+                        <div id="popper-content" t-ref="this.contentRef" style="background-color: seagreen; height: 50px; width: 50px"/>
                     </div>
                 </div>
             </div>
         `;
         static props = ["*"];
+        containerRef = signal(null);
+        targetRef = signal(null);
+        popperRef = signal(null);
+        contentRef = signal(null);
         setup() {
             if (!target) {
-                target = useRef("target");
+                target = this.targetRef;
             }
-            const container = useRef("container");
-            const popper = useRef("popper");
-            const content = useRef("content");
+            const container = this.containerRef;
+            const popper = this.popperRef;
+            const content = this.contentRef;
             onMounted(() => {
-                Object.assign(container.el.style, styles.container);
-                Object.assign(popper.el.style, styles.popper);
-                Object.assign(content.el.style, styles.content);
+                Object.assign(container().style, styles.container);
+                Object.assign(popper().style, styles.popper);
+                Object.assign(content().style, styles.content);
             });
-            usePosition("popper", () => target?.el || target, {
+            usePosition(this.popperRef, () => target(), {
                 ...popperOptions,
-                container: () => popperOptions?.container || container.el,
+                container: () => popperOptions?.container || container(),
             });
         }
     }
@@ -195,12 +198,13 @@ test("popper is an inner element", async () => {
     class TestComp extends Component {
         static template = xml`
             <div id="not-popper">
-                <div id="popper" t-custom-ref="popper"/>
+                <div id="popper" t-ref="this.popperRef"/>
             </div>
         `;
         static props = ["*"];
+        popperRef = signal(null);
         setup() {
-            usePosition("popper", () => getFixture(), {
+            usePosition(this.popperRef, () => getFixture(), {
                 onPositioned: (el) => {
                     expect(queryOne("#not-popper")).not.toBe(el);
                     expect(queryOne("#popper")).toBe(el);
@@ -284,18 +288,19 @@ test("does not reposition when scroll is in an unrelated container", async () =>
         static template = xml`
             <div style="display: flex">
                 <div id="target-scroll-container" style="overflow: auto; height: 200px; width: 200px">
-                    <div id="target" t-custom-ref="target" style="width: 50px; height: 50px; margin-top: 500px"/>
+                    <div id="target" t-ref="this.targetRef" style="width: 50px; height: 50px; margin-top: 500px"/>
                 </div>
                 <div id="unrelated-scroll-container" style="overflow: auto; height: 200px; width: 200px">
                     <div style="height: 1000px"/>
                 </div>
-                <div id="popper" t-custom-ref="popper" style="width: 100px; height: 100px"/>
+                <div id="popper" t-ref="this.popperRef" style="width: 100px; height: 100px"/>
             </div>
         `;
         static props = ["*"];
+        targetRef = signal(null);
+        popperRef = signal(null);
         setup() {
-            const target = useRef("target");
-            usePosition("popper", () => target.el, {
+            usePosition(this.popperRef, () => this.targetRef(), {
                 onPositioned: () => {
                     expect.step("onPositioned called");
                 },
@@ -369,13 +374,14 @@ test("is positioned relative to its containing block", async () => {
 function getPopperComponent(popperOptions, target) {
     class PopperComp extends Component {
         static template = xml`
-            <div id="popper" t-custom-ref="popper" style="background-color: plum; height: 100px; width: 100px">
+            <div id="popper" t-ref="this.popperRef" style="background-color: plum; height: 100px; width: 100px">
                 <div id="popper-content" style="background-color: coral; height: 50px; width: 50px"/>
             </div>
         `;
         static props = ["*"];
+        popperRef = signal(null);
         setup() {
-            usePosition("popper", () => target?.el || target, {
+            usePosition(this.popperRef, () => target, {
                 ...popperOptions,
                 container: () => popperOptions?.container,
             });
@@ -686,9 +692,10 @@ test("iframe: default container is the popper owner's document", async () => {
     // Mount the popper component and check its position
     class Popper extends Component {
         static props = ["*"];
-        static template = xml`<div id="popper" t-custom-ref="popper" />`;
+        static template = xml`<div id="popper" t-ref="this.popperRef" />`;
+        popperRef = signal(null);
         setup() {
-            usePosition("popper", () => target, {
+            usePosition(this.popperRef, () => target, {
                 position: "top-start",
                 onPositioned: (_, { direction, variant }) => {
                     expect(`${direction}-${variant}`).toBe("top-start");
@@ -708,28 +715,31 @@ test("popper as child of another", async () => {
     class Child extends Component {
         static template = /* xml */ xml`
             <div id="child">
-                <div class="target" t-custom-ref="ref" style="background-color: peachpuff; height: 100px; width: 10px"/>
-                <div class="popper" t-custom-ref="popper" style="background-color: olive; height: 100px; width: 10px"/>
+                <div class="target" t-ref="this.childTargetRef" style="background-color: peachpuff; height: 100px; width: 10px"/>
+                <div class="popper" t-ref="this.popperRef" style="background-color: olive; height: 100px; width: 10px"/>
             </div>
         `;
         static props = ["*"];
+        childTargetRef = signal(null);
+        popperRef = signal(null);
         setup() {
-            const ref = useRef("ref");
-            usePosition("popper", () => ref.el, { position: "left" });
+            usePosition(this.popperRef, () => this.childTargetRef(), { position: "left" });
         }
     }
     class Parent extends Component {
         static components = { Child };
         static template = /* xml */ xml`
-            <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
-                <div id="target" t-custom-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
-                <div id="popper" t-custom-ref="popper"><Child/></div>
+            <div id="container" t-ref="this.containerRef" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
+                <div id="target" t-ref="this.targetRef" style="background-color: tomato; width: 200px; height: 600px"/>
+                <div id="popper" t-ref="this.popperRef"><Child/></div>
             </div>
         `;
         static props = ["*"];
+        containerRef = signal(null);
+        targetRef = signal(null);
+        popperRef = signal(null);
         setup() {
-            const target = useRef("target");
-            usePosition("popper", () => target.el);
+            usePosition(this.popperRef, () => this.targetRef());
         }
     }
 
@@ -760,15 +770,17 @@ test("batch update call", async () => {
     let position = null;
     class TestComponent extends Component {
         static template = xml`
-            <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
-                <div id="target" t-custom-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
-                <div id="popper" t-custom-ref="popper" style="background-color: olive; height: 50px; width: 50px"/>
+            <div id="container" t-ref="this.containerRef" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
+                <div id="target" t-ref="this.targetRef" style="background-color: tomato; width: 200px; height: 600px"/>
+                <div id="popper" t-ref="this.popperRef" style="background-color: olive; height: 50px; width: 50px"/>
             </div>
         `;
         static props = ["*"];
+        containerRef = signal(null);
+        targetRef = signal(null);
+        popperRef = signal(null);
         setup() {
-            const target = useRef("target");
-            position = usePosition("popper", () => target.el, {
+            position = usePosition(this.popperRef, () => this.targetRef(), {
                 onPositioned: () => {
                     expect.step("positioned");
                 },
@@ -790,12 +802,13 @@ test("not positioned if target not connected", async () => {
     const target = document.createElement("div");
     class TestComponent extends Component {
         static template = xml`
-            <div t-custom-ref="container"><div t-custom-ref="popper"/></div>
+            <div t-ref="this.container"><div t-ref="this.popperRef"/></div>
         `;
         static props = ["*"];
+        container = signal(null);
+        popperRef = signal(null);
         setup() {
-            this.container = useRef("container");
-            this.position = usePosition("popper", () => target, {
+            this.position = usePosition(this.popperRef, () => target, {
                 onPositioned: () => {
                     expect.step("positioned");
                 },
@@ -806,12 +819,12 @@ test("not positioned if target not connected", async () => {
     const comp = await mountWithCleanup(TestComponent);
     expect.verifySteps([]);
 
-    comp.container.el.appendChild(target);
+    comp.container().appendChild(target);
     comp.position.unlock();
     await animationFrame();
     expect.verifySteps(["positioned"]);
 
-    comp.container.el.removeChild(target);
+    comp.container().removeChild(target);
     comp.position.unlock();
     await animationFrame();
     expect.verifySteps([]);
@@ -821,26 +834,29 @@ function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {
     return async () => {
         class TestComp extends Component {
             static template = xml`
-                <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
-                    <div id="target" t-custom-ref="target" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
-                    <div id="popper" t-custom-ref="popper" t-att-style="this.popperStyle">
+                <div id="container" t-ref="this.containerRef" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
+                    <div id="target" t-ref="this.targetRef" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
+                    <div id="popper" t-ref="this.popperRef" t-att-style="this.popperStyle">
                         <div id="popper-content" style="background-color: seagreen; height: 500px; width: 50px;"/>
                     </div>
                 </div>
             `;
             static props = ["*"];
+            containerRef = signal(null);
+            targetRef = signal(null);
+            popperRef = signal(null);
             setup() {
-                const target = useRef("target");
-                const container = useRef("container");
-                usePosition("popper", () => target.el, {
+                const target = this.targetRef;
+                const container = this.containerRef;
+                usePosition(this.popperRef, () => target(), {
                     position,
-                    container: () => container.el,
+                    container: () => container(),
                     onPositioned(el) {
                         expect.step("onPositioned");
                         onPositioned({
-                            c: container.el.getBoundingClientRect(),
+                            c: container().getBoundingClientRect(),
                             p: el.getBoundingClientRect(),
-                            t: target.el.getBoundingClientRect(),
+                            t: target().getBoundingClientRect(),
                         });
                     },
                     shrink: true,

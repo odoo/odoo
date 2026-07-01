@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -23,8 +23,10 @@ export class BaseBadgesField extends Component {
         DropdownItem,
     };
 
+    badgesContainerRef = signal(null);
+
     setup() {
-        useNavigation("badgesContainer", {
+        useNavigation(this.badgesContainerRef, {
             hotkeys: {
                 arrowright: (navigator) => navigator.next(),
                 arrowleft: (navigator) => navigator.previous(),

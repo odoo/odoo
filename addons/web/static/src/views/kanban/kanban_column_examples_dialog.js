@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
@@ -38,8 +37,9 @@ export class KanbanColumnExamplesDialog extends Component {
     static components = { Dialog, Notebook };
     static props = ["*"];
 
+    navList = signal(null);
+
     setup() {
-        this.navList = useRef("navList");
         this.pages = [];
         this.activePage = null;
         this.props.examples.forEach((eg) => {

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { DateTimeField, dateField, dateRangeField, dateTimeField } from "./datetime_field";
@@ -6,8 +5,7 @@ import { DateTimeField, dateField, dateRangeField, dateTimeField } from "./datet
 export class ListDateTimeField extends DateTimeField {
     setup() {
         super.setup();
-        const startDateRef = useRef("start-date");
-        useAutoresize(startDateRef, { ignoreIfEmpty: true });
+        useAutoresize(this.startDateRef, { ignoreIfEmpty: true });
     }
 }
 

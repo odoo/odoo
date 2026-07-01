@@ -1,11 +1,10 @@
 import { browser } from "@web/core/browser/browser";
-import { props, t } from "@odoo/owl";
+import { props, signal, t } from "@odoo/owl";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { useRef } from "@web/owl2/utils";
 import {
     CardRenderer,
     getFormattedRecord,
@@ -73,6 +72,8 @@ export class KanbanRecord extends CardRenderer {
     };
     props = props(kanbanRecordProps);
 
+    rootRef = signal(null);
+
     static MENU_ATTRIBUTE = MENU_ATTRIBUTE;
     static CANCEL_GLOBAL_CLICK = CANCEL_GLOBAL_CLICK;
     static PROGRESS_COLOR_PREFIX = "oe_kanban_card_";
@@ -86,8 +87,6 @@ export class KanbanRecord extends CardRenderer {
         this.longTouchTimer = null;
         this.touchStartMs = 0;
         this.showMenu = this.constructor.MENU_ATTRIBUTE in this.templates;
-
-        this.rootRef = useRef("root");
     }
 
     get renderingContext() {
@@ -230,7 +229,7 @@ export class KanbanRecord extends CardRenderer {
         if (this.props.getSelection().length > 0 || ev.altKey) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.rootRef.el.focus();
+            this.rootRef().focus();
             this.props.toggleSelection(this.props.record, ev.shiftKey);
             return;
         }

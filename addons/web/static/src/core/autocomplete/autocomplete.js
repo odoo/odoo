@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, signal, t, useListener } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -42,6 +41,10 @@ export class AutoComplete extends Component {
     static template = "web.AutoComplete";
     props = props(autoCompleteProps);
 
+    listRef = signal(null);
+    root = signal(null);
+    inputRef = signal(null);
+
     get timeout() {
         return this.props.inputDebounceDelay;
     }
@@ -60,18 +63,16 @@ export class AutoComplete extends Component {
             value: this.props.value,
         });
 
-        this.inputRef = useForwardRefToParent("input");
-        this.listRef = useRef("sourcesList");
+        useForwardRefToParent(this.inputRef, "input");
         if (this.props.autofocus) {
-            useAutofocus({ refName: "input" });
+            useAutofocus({ ref: this.inputRef });
         }
-        this.root = useRef("root");
 
         this.debouncedProcessInput = useDebounced(async () => {
             const currentPromise = this.pendingPromise;
             this.pendingPromise = null;
             this.props.onInput({
-                inputValue: this.inputRef.el.value,
+                inputValue: this.inputRef().value,
             });
             try {
                 await this.open(true);
@@ -97,21 +98,21 @@ export class AutoComplete extends Component {
                 this.forceValFromProp = false;
                 if (!this.inEdition) {
                     this.state.value = nextProps.value;
-                    this.inputRef.el.value = nextProps.value;
+                    this.inputRef().value = nextProps.value;
                 }
             }
         });
 
         // position and size
         if (this.props.dropdown) {
-            usePosition("sourcesList", () => this.targetDropdown, this.dropdownOptions);
+            usePosition(this.listRef, () => this.targetDropdown, this.dropdownOptions);
         } else {
             this.open(false);
         }
     }
 
     get targetDropdown() {
-        return this.inputRef.el;
+        return this.inputRef();
     }
 
     get activeSourceOptionId() {
@@ -170,9 +171,9 @@ export class AutoComplete extends Component {
     }
 
     cancel() {
-        if (this.inputRef.el.value.length) {
+        if (this.inputRef().value.length) {
             if (this.props.autoSelect) {
-                this.inputRef.el.value = this.props.value;
+                this.inputRef().value = this.props.value;
                 this.props.onCancel();
             }
         }
@@ -189,7 +190,7 @@ export class AutoComplete extends Component {
 
             const options = this.loadOptions(
                 pSource.options,
-                useInput ? this.inputRef.el.value.trim() : ""
+                useInput ? this.inputRef().value.trim() : ""
             );
             if (options instanceof Promise) {
                 source.isLoading = true;
@@ -251,7 +252,7 @@ export class AutoComplete extends Component {
         }
 
         if (this.props.resetOnSelect) {
-            this.inputRef.el.value = "";
+            this.inputRef().value = "";
         }
         this.isOptionSelected = true;
         this.forceValFromProp = true;
@@ -325,14 +326,14 @@ export class AutoComplete extends Component {
             }
         }
         this.props.onBlur({
-            inputValue: this.inputRef.el.value,
+            inputValue: this.inputRef().value,
         });
         this.inEdition = false;
         this.isOptionSelected = false;
     }
     onInputClick() {
         if (!this.isOpened && this.props.searchOnInputClick) {
-            this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
+            this.open(this.inputRef().value.trim() !== this.props.value.trim());
         } else {
             this.close();
         }
@@ -342,7 +343,7 @@ export class AutoComplete extends Component {
             ev.stopImmediatePropagation();
         }
         this.props.onChange({
-            inputValue: this.inputRef.el.value,
+            inputValue: this.inputRef().value,
             isOptionSelected: this.ignoreBlur,
         });
     }
@@ -354,7 +355,7 @@ export class AutoComplete extends Component {
     }
 
     onInputFocus(ev) {
-        this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
+        this.inputRef().setSelectionRange(0, this.inputRef().value.length);
         this.props.onFocus(ev);
     }
 
@@ -420,7 +421,7 @@ export class AutoComplete extends Component {
                 break;
             case "arrowleft":
             case "arrowright":
-                if (!this.isOpened || this.inputRef.el.value.length) {
+                if (!this.isOpened || this.inputRef().value.length) {
                     return;
                 }
                 this.cancel();
@@ -452,7 +453,7 @@ export class AutoComplete extends Component {
     }
     onOptionClick(option) {
         this.selectOption(option);
-        this.inputRef.el.focus();
+        this.inputRef().focus();
     }
     onOptionPointerDown(option, ev) {
         this.ignoreBlur = true;
@@ -462,7 +463,7 @@ export class AutoComplete extends Component {
     }
 
     externalClose(ev) {
-        if (this.isOpened && !this.root.el.contains(ev.target)) {
+        if (this.isOpened && !this.root().contains(ev.target)) {
             this.cancel();
         }
     }
@@ -471,8 +472,8 @@ export class AutoComplete extends Component {
         if (!this.activeSourceOptionId) {
             return;
         }
-        if (isScrollableY(this.listRef.el)) {
-            const element = this.listRef.el.querySelector(`#${this.activeSourceOptionId}`);
+        if (isScrollableY(this.listRef())) {
+            const element = this.listRef().querySelector(`#${this.activeSourceOptionId}`);
             if (element) {
                 scrollTo(element);
             }

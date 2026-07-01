@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -10,7 +9,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, signal } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
@@ -93,14 +92,15 @@ export class ExportDataDialog extends Component {
         root: { type: Object },
     };
 
+    draggableRef = signal(null);
+    exportListRef = signal(null);
+    searchRef = signal(null);
+
     setup() {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.uiService = useService("ui");
-        this.draggableRef = useRef("draggable");
-        this.exportListRef = useRef("exportList");
-        this.searchRef = useRef("search");
 
         this.knownFields = {};
         this.expandedFields = {};
@@ -170,7 +170,7 @@ export class ExportDataDialog extends Component {
     }
 
     get fieldsAvailable() {
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (this.searchRef() && this.searchRef().value) {
             return this.state.search.length && Object.values(this.state.search);
         }
         return Object.values(this.knownFields);
@@ -181,7 +181,7 @@ export class ExportDataDialog extends Component {
     }
 
     get rootFields() {
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (this.searchRef() && this.searchRef().value) {
             const rootFromSearchResults = this.fieldsAvailable.map((f) => {
                 if (f.parent) {
                     const parentEl = this.knownFields[f.parent.id];
@@ -197,11 +197,11 @@ export class ExportDataDialog extends Component {
     filterSubfields(subfields) {
         let subfieldsFromSearchResults = [];
         let searchResults;
-        if (this.searchRef.el && this.searchRef.el.value) {
-            searchResults = this.lookup(this.searchRef.el.value);
+        if (this.searchRef() && this.searchRef().value) {
+            searchResults = this.lookup(this.searchRef().value);
         }
         const fieldsAvailable = Object.values(searchResults || this.knownFields);
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (this.searchRef() && this.searchRef().value) {
             subfieldsFromSearchResults = fieldsAvailable
                 .filter((f) => f.parent && this.knownFields[f.parent.id].parent)
                 .map((f) => f.parent);
@@ -223,8 +223,8 @@ export class ExportDataDialog extends Component {
         await this.loadFields();
         await this.setDefaultExportList();
         this.state.search = [];
-        if (this.searchRef.el) {
-            this.searchRef.el.value = "";
+        if (this.searchRef()) {
+            this.searchRef().value = "";
         }
         if (this.state.templateId) {
             this.loadExportList(this.state.templateId);
@@ -307,7 +307,7 @@ export class ExportDataDialog extends Component {
     }
 
     async onSaveExportTemplate() {
-        const name = this.exportListRef.el.value;
+        const name = this.exportListRef().value;
         if (!name) {
             return this.notification.add(_t("Please enter save field list name"), {
                 type: "danger",

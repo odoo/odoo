@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, props, toRaw, proxy, t } from "@odoo/owl";
+import { Component, props, toRaw, proxy, signal, t } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -109,10 +108,9 @@ export class Many2One extends Component {
     static template = "web.Many2One";
     static components = { Many2XAutocomplete };
     props = props(many2OneProps);
+    rootRef = signal(null);
 
     setup() {
-        this.rootRef = useRef("root");
-
         this.action = useService("action");
         this.notification = useService("notification");
         this.orm = useService("orm");
@@ -205,7 +203,7 @@ export class Many2One extends Component {
     }
 
     get input() {
-        return this.rootRef.el?.querySelector("input");
+        return this.rootRef()?.querySelector("input");
     }
 
     get linkHref() {
@@ -219,7 +217,9 @@ export class Many2One extends Component {
     }
 
     onExtraLinesClick() {
-        this.rootRef.el?.querySelector(this.props.readonly ? ".o_form_uri" : "input").click();
+        this.rootRef()
+            ?.querySelector(this.props.readonly ? ".o_form_uri" : "input")
+            .click();
     }
 
     async openBarcodeScanner() {

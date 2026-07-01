@@ -12,8 +12,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
-import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, proxy, signal, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -275,11 +274,11 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-custom-ref="shadow-root-ref" id="${shadowRootId}" />`;
+        static template = xml`<div class="shadow-root" t-ref="this.shadowRootRef" id="${shadowRootId}" />`;
+        shadowRootRef = signal(null);
         setup() {
-            const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {
-                const shadowBody = shadowRootRef.el.attachShadow({ mode: "open" });
+                const shadowBody = this.shadowRootRef().attachShadow({ mode: "open" });
                 mountWithCleanup(DropdownInShadowDom, { env: this.env, target: shadowBody });
             });
         }

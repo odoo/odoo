@@ -1,6 +1,6 @@
 import { useAutofocus } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
 
@@ -30,8 +30,10 @@ export class DynamicPlaceholderPopover extends Component {
     };
     static props = ["resModel", "validate", "close"];
 
+    autofocusRef = signal(null);
+
     setup() {
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
         this.state = proxy({
             path: "",
             isPathSelected: false,
@@ -68,7 +70,7 @@ export class DynamicPlaceholderPopover extends Component {
     setPath(path, fieldInfo) {
         this.state.path = path;
         this.state.fieldName = fieldInfo?.string;
-        this.fieldType = fieldInfo?.type
+        this.fieldType = fieldInfo?.type;
     }
     setDefaultValue(value) {
         this.state.defaultValue = value;

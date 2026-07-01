@@ -7,7 +7,7 @@ import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { formatDate } from "@web/views/fields/formatters";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class ListConfirmationDialog extends Component {
@@ -33,8 +33,10 @@ export class ListConfirmationDialog extends Component {
         changes: t.object(),
     });
 
+    autofocusRef = signal(null);
+
     setup() {
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
     }
 
     get dateTip() {

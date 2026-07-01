@@ -40,11 +40,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
+                    <input type="text" t-ref="this.autofocusRef" t-att-value="this.state.text" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus();
+                useAutofocus({ ref: this.autofocusRef });
 
                 this.state = proxy(state);
             }
@@ -67,11 +68,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="number" t-custom-ref="autofocus" t-att-value="this.state.counter" />
+                    <input type="number" t-ref="this.autofocusRef" t-att-value="this.state.counter" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus();
+                useAutofocus({ ref: this.autofocusRef });
 
                 this.state = proxy(state);
             }
@@ -94,11 +96,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input t-if="this.state.showInput" type="text" t-custom-ref="autofocus" />
+                    <input t-if="this.state.showInput" type="text" t-ref="this.autofocusRef" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus();
+                useAutofocus({ ref: this.autofocusRef });
 
                 this.state = proxy(state);
             }
@@ -127,13 +130,14 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-custom-ref="autofocus" />
+                    <input type="text" t-ref="this.autofocusRef" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                const inputRef = useAutofocus();
+                const inputRef = useAutofocus({ ref: this.autofocusRef });
                 onMounted(() => {
-                    expect(inputRef.el).toBeInstanceOf(HTMLInputElement);
+                    expect(inputRef()).toBeInstanceOf(HTMLInputElement);
                 });
             }
         }
@@ -146,11 +150,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-custom-ref="autofocus" />
+                    <input type="text" t-ref="this.autofocusRef" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus({ mobile: true });
+                useAutofocus({ ref: this.autofocusRef, mobile: true });
             }
         }
 
@@ -175,13 +180,15 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-custom-ref="first" />
-                    <input t-if="this.state.showSecond" type="text" t-custom-ref="second" />
+                    <input type="text" t-ref="this.firstRef" />
+                    <input t-if="this.state.showSecond" type="text" t-ref="this.secondRef" />
                 </span>
             `;
+            firstRef = signal(null);
+            secondRef = signal(null);
             setup() {
-                useAutofocus({ refName: "second" });
-                useAutofocus({ refName: "first" }); // test requires this at second position
+                useAutofocus({ ref: this.secondRef });
+                useAutofocus({ ref: this.firstRef }); // test requires this at second position
 
                 this.state = proxy(state);
             }
@@ -209,11 +216,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" value="input content" t-custom-ref="autofocus" />
+                    <input type="text" value="input content" t-ref="this.autofocusRef" />
                 </span>
             `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus({ selectAll: true });
+                useAutofocus({ ref: this.autofocusRef, selectAll: true });
             }
         }
 
@@ -234,11 +242,12 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                     <div>
-                        <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
+                        <input type="text" t-ref="this.autofocusRef" t-att-value="this.state.text" />
                     </div>
                 `;
+            autofocusRef = signal(null);
             setup() {
-                useAutofocus();
+                useAutofocus({ ref: this.autofocusRef });
 
                 this.state = proxy(state);
             }
@@ -421,9 +430,10 @@ describe("useSpellCheck", () => {
     test("ref is on the textarea", async () => {
         // To understand correctly the test, refer to the MDN documentation of spellcheck.
         class MyComponent extends Component {
-            static template = xml`<div><textarea t-custom-ref="spellcheck" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-ref="this.spellcheckRef" class="textArea"/></div>`;
+            spellcheckRef = signal(null);
             setup() {
-                useSpellCheck();
+                useSpellCheck({ ref: this.spellcheckRef });
             }
         }
 
@@ -451,9 +461,10 @@ describe("useSpellCheck", () => {
 
     test("use a different refName", async () => {
         class MyComponent extends Component {
-            static template = xml`<div><textarea t-custom-ref="myreference" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-ref="this.myReferenceRef" class="textArea"/></div>`;
+            myReferenceRef = signal(null);
             setup() {
-                useSpellCheck({ refName: "myreference" });
+                useSpellCheck({ ref: this.myReferenceRef });
             }
         }
 
@@ -477,12 +488,13 @@ describe("useSpellCheck", () => {
     test("ref is on the root element and two editable elements", async () => {
         class MyComponent extends Component {
             static template = xml`
-                <div t-custom-ref="spellcheck">
+                <div t-ref="this.spellcheckRef">
                     <textarea class="textArea"/>
                     <div contenteditable="true" class="editableDiv"/>
                 </div>`;
+            spellcheckRef = signal(null);
             setup() {
-                useSpellCheck();
+                useSpellCheck({ ref: this.spellcheckRef });
             }
         }
 
@@ -529,12 +541,13 @@ describe("useSpellCheck", () => {
     test("ref is on the root element and one element has disabled the spellcheck", async () => {
         class MyComponent extends Component {
             static template = xml`
-                <div t-custom-ref="spellcheck">
+                <div t-ref="this.spellcheckRef">
                     <textarea class="textArea"/>
                     <div contenteditable="true" spellcheck="false" class="editableDiv"/>
                 </div>`;
+            spellcheckRef = signal(null);
             setup() {
-                useSpellCheck();
+                useSpellCheck({ ref: this.spellcheckRef });
             }
         }
 
@@ -581,9 +594,10 @@ describe("useSpellCheck", () => {
     test("ref is on an element with contenteditable attribute", async () => {
         class MyComponent extends Component {
             static template = xml`
-                <div t-custom-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
+                <div t-ref="this.spellcheckRef"  contenteditable="true" class="editableDiv" />`;
+            spellcheckRef = signal(null);
             setup() {
-                useSpellCheck();
+                useSpellCheck({ ref: this.spellcheckRef });
             }
         }
 
@@ -603,9 +617,10 @@ describe("useChildRef and useForwardRefToParent", () => {
         let parentRef;
 
         class Child extends Component {
-            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-ref="this.someRef" class="my_span">Hello</span>`;
+            someRef = signal(null);
             setup() {
-                childRef = useForwardRefToParent("someRef");
+                childRef = useForwardRefToParent(this.someRef, "someRef");
             }
         }
 
@@ -619,15 +634,16 @@ describe("useChildRef and useForwardRefToParent", () => {
         }
 
         await mountWithCleanup(Parent);
-        expect(childRef.el).toBe(queryOne(".my_span"));
+        expect(childRef()).toBe(queryOne(".my_span"));
         expect(parentRef.el).toBe(queryOne(".my_span"));
     });
 
     test("in a conditional child", async () => {
         class Child extends Component {
-            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-ref="this.someRef" class="my_span">Hello</span>`;
+            someRef = signal(null);
             setup() {
-                useForwardRefToParent("someRef");
+                useForwardRefToParent(this.someRef, "someRef");
             }
         }
 

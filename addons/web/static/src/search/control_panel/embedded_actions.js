@@ -1,4 +1,4 @@
-import { Component, proxy, props, t, useRef, useLayoutEffect, useEnv } from "@odoo/owl";
+import { Component, proxy, props, t, signal, useLayoutEffect, useEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -199,7 +199,7 @@ export class EmbeddedActionsState {
                 type: "danger",
             });
             ev.stopPropagation();
-            return newActionNameRef.el.focus();
+            return newActionNameRef()?.focus();
         }
         const duplicateName = embeddedActions.some(({ name }) => name === newActionName);
         if (duplicateName) {
@@ -207,7 +207,7 @@ export class EmbeddedActionsState {
                 type: "danger",
             });
             ev.stopPropagation();
-            return newActionNameRef.el.focus();
+            return newActionNameRef()?.focus();
         }
 
         const userId = newActionIsShared ? false : user.userId;
@@ -394,10 +394,12 @@ export class EmbeddedActionsPanel extends Component {
     };
     props = props({ state: t.object() });
 
+    root = signal(null);
+    newActionNameRef = signal(null);
+
     setup() {
         this.uiService = useService("ui");
 
-        this.root = useRef("root");
         useSortable({
             enable: true,
             ref: this.root,
@@ -409,7 +411,6 @@ export class EmbeddedActionsPanel extends Component {
             onDrop: (params) => this.props.state.sortEmbeddedActionDrop(params),
         });
 
-        this.newActionNameRef = useRef("newActionNameRef");
         // Delay opening embedded actions dropdown to avoid flicker
         useLayoutEffect(
             (el, showEmbedded) => {
@@ -423,7 +424,7 @@ export class EmbeddedActionsPanel extends Component {
                 }, 100);
                 return () => clearTimeout(timer);
             },
-            () => [this.root.el, this.props.state.embeddedInfos.showEmbedded]
+            () => [this.root(), this.props.state.embeddedInfos.showEmbedded]
         );
     }
 
