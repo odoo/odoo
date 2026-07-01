@@ -644,7 +644,7 @@ class EventTrack(models.Model):
 
             date_tz = track.event_id.date_tz
             reminder_dates = track._get_track_calendar_reminder_dates()
-            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=UTC)
+            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=ZoneInfo('UTC'))
             cal_track.add('dtstart').value = reminder_dates['date_begin'].astimezone(ZoneInfo(date_tz))
             cal_track.add('dtend').value = reminder_dates['date_end'].astimezone(ZoneInfo(date_tz))
             cal_track.add('summary').value = track.name
