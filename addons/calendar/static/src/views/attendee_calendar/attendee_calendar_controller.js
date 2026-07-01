@@ -110,19 +110,4 @@ export class AttendeeCalendarController extends CalendarController {
                 .then(this.model.load.bind(this.model));
         }
     }
-
-    configureCalendarProviderSync(providerName) {
-        this.actionService.doAction({
-            name: _t("Connect your Calendar"),
-            type: "ir.actions.act_window",
-            res_model: "calendar.provider.config",
-            views: [[false, "form"]],
-            view_mode: "form",
-            target: "new",
-            context: {
-                default_external_calendar_provider: providerName,
-                dialog_size: "medium",
-            },
-        });
-    }
 }
