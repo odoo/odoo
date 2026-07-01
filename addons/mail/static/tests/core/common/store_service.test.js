@@ -65,11 +65,14 @@ test("store.insert different PY model having same JS model", async () => {
         "mail.thread": [
             { id: 1, model: "discuss.channel" },
             { id: 3, name: "R&D", model: "discuss.channel" },
+            { id: 4, name: "John", model: "res.partner" },
+            { id: 5, name: "Alice", model: "res.partner" },
+            { id: 6, name: "Jane", model: "res.partner" },
         ],
     };
 
     store.insert(data);
-    expect(store["mail.thread"].records).toHaveLength(6); // 3 mailboxes + 3 channels
+    expect(store["mail.thread"].records).toHaveLength(6); // 3 partners + 3 channels
     expect(Boolean(store["mail.thread"].get({ id: 1, model: "discuss.channel" }))).toBe(true);
     expect(Boolean(store["mail.thread"].get({ id: 2, model: "discuss.channel" }))).toBe(true);
     expect(Boolean(store["mail.thread"].get({ id: 3, model: "discuss.channel" }))).toBe(true);

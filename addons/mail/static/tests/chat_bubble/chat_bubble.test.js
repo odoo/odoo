@@ -11,6 +11,7 @@ import {
     listenStoreFetch,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     setupChatHub,
     start,
     startServer,
@@ -46,8 +47,8 @@ test("No duplicated chat bubbles", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     // Make bubble of "John" chat
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button:text('New Message')");
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
     await contains(".o_command_name", { count: 2 });
     await contains(".o_command:eq(0):text(John)");
     await contains(".o_command:eq(1):text(Mitchell Admin)");
@@ -63,8 +64,8 @@ test("No duplicated chat bubbles", async () => {
     await click("button[title='Fold']");
     await contains(".o-mail-ChatBubble[name='John']");
     // Make bubble of "John" chat again
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button:text('New Message')");
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
     await contains(".o_command_name", { count: 2 });
     await insertText(".o_command_palette_search input[placeholder='Search conversations']", "John");
     await contains(".o_command_name", { count: 2 });
@@ -75,7 +76,7 @@ test("No duplicated chat bubbles", async () => {
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John'))");
     await click(".o-mail-ChatWindow-header [title='Fold']");
     // Make again from click messaging menu item
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John'))");
@@ -250,7 +251,7 @@ test("Chat bubble preview works on author as email address", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem");
     await click(".o-mail-ChatWindow [title='Fold']");
     await hover(".o-mail-ChatBubble");
@@ -329,14 +330,14 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");
     await click(".o-mail-ChatWindow-header [title='Fold']");
-    // Can open hidden chat from messaging menu
-    await click("i[aria-label='Messages']");
+    // Can open hidden channels from messaging menu
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem-name:text('2')");
     await contains(".o-mail-ChatHub-hiddenItem", { count: 0 });
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");
     await click(".o-mail-ChatWindow-header [title='Fold']");
-    // Can close chat from hidden menu.
+    // Can close channels from hidden menu.
     await hover(".o-mail-ChatHub-hiddenBtn");
     await hover(".o-mail-ChatHub-hiddenItem");
     await click(".o-mail-ChatHub-hiddenClose");
@@ -582,7 +583,7 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click("button[title='Chat Options']");
     await click(".o-dropdown-item:text('Hide all conversations')");
     await contains(".o-mail-ChatHub-compact");
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
     await click(".o-mail-NotificationItem-name:text('John')");
     await waitStoreFetch("/discuss/channel/messages"); // ensure messages are loaded before doing message post
     await contains(".o-mail-ChatWindow:text('John')");

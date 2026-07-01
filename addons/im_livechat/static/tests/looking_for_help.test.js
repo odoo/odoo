@@ -1,26 +1,26 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
-import { LFH_UNSUBSCRIBE_DELAY } from "@im_livechat/core/public_web/discuss_app/discuss_app_model_patch";
-
-import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
-
-import { advanceTime, describe, expect, test } from "@odoo/hoot";
-import { tick, waitFor } from "@odoo/hoot-dom";
 
 import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-} from "@web/../tests/web_test_helpers";
+    click,
+    contains,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { tick, waitFor } from "@odoo/hoot-dom";
+
+import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 defineLivechatModels();
 describe.current.tags("desktop");
 
-test("Show looking for help in the sidebar while active or still seeking help", async () => {
+test("Show looking for help in the sidebar", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
         group_ids: pyEnv["res.groups"]
@@ -43,86 +43,29 @@ test("Show looking for help in the sidebar while active or still seeking help", 
         livechat_member_type: "visitor",
     });
     await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
+    await openDiscuss("tab:livechat");
+    await click("button:text('Help Needed')");
+    await contains(".o-mail-MessagingMenuItem:has(:text(bob))");
     await waitForChannels(["im_livechat.looking_for_help"]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
     });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
+    await contains(".o-mail-MessagingMenuItem:has(:text(bob))", { count: 0 });
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "need_help",
     });
-    await click(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "bob" });
+    await click(".o-mail-NotificationItem:has(:text(bob))");
+    await contains(".o-mail-NotificationItem.o-active:has(:text(bob))");
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
     });
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
-    await waitForChannels([`discuss.channel_${bobChannelId}`]);
-    await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await click(".o-mail-Mailbox[data-mailbox-id=inbox]");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
-    await waitForChannels([`discuss.channel_${bobChannelId}`], { operation: "delete" });
-});
-
-test("Enable/disable looking for help when category is opened/folded", async () => {
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
-        group_ids: pyEnv["res.groups"]
-            .search_read([["id", "=", serverState.groupLivechatId]])
-            .map(({ id }) => id),
-    });
-    localStorage.setItem(
-        "DiscussAppCategory,im_livechat.category_need_help:is_open",
-        JSON.stringify({
-            value: false,
-        })
-    );
-    await start();
-    patchWithCleanup(getService("bus_service"), {
-        addChannel: (channelName) => {
-            if (channelName === "im_livechat.looking_for_help") {
-                expect.step(`addChannel - ${channelName}`);
-            }
-        },
-        deleteChannel: (channelName) => {
-            if (channelName === "im_livechat.looking_for_help") {
-                expect.step(`deleteChannel - ${channelName}`);
-            }
-        },
-    });
-    onRpc("/mail/store", async (req) => {
-        const { params } = await req.json();
-        if (params.fetch_params.includes("/im_livechat/looking_for_help")) {
-            expect.step("fetch looking_for_help");
-        }
-    });
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
-    await expect.waitForSteps([]);
-    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
-    await expect.waitForSteps([
-        "addChannel - im_livechat.looking_for_help",
-        "fetch looking_for_help",
-    ]);
-    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
-    await expect.waitForSteps([]);
-    await advanceTime(LFH_UNSUBSCRIBE_DELAY + 1000);
-    await expect.waitForSteps(["deleteChannel - im_livechat.looking_for_help"]);
-    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
-    await expect.waitForSteps([
-        "addChannel - im_livechat.looking_for_help",
-        "fetch looking_for_help",
-    ]);
+    await click("button:text('Help Needed')");
+    await contains(".o-mail-MessagingMenuItem:has(:text(bob))");
 });
 
 test("Show join button when help is required and self is not a member", async () => {
@@ -143,7 +86,6 @@ test("Show join button when help is required and self is not a member", async ()
     });
     await start();
     await openDiscuss(channel);
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "In progress" });
@@ -177,7 +119,6 @@ test("Show notification when joining a channel that already received help", asyn
     await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
     await click("[title='Chat Actions']");
-    await contains(".o-dropdown-item:text('Hide')");
 });
 
 test("Hide 'help already received' notification when channel is not visible", async () => {
@@ -211,8 +152,7 @@ test("Hide 'help already received' notification when channel is not visible", as
     const { promise, resolve: resolveJoinChannel } = Promise.withResolvers();
     joinChannelPromise = promise;
     await click("button[name='join-channel']");
-    await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await openFormView("res.partner", serverState.partner_id);
     resolveJoinChannel();
     await tick();
     expect.waitForSteps([]);
@@ -253,12 +193,11 @@ test("Expertise matching hint is shown in the sidebar when chat is looking for h
         { channel_id: janeChannelId, partner_id: janePartnerId, livechat_member_type: "visitor" },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("tab:livechat");
+    await click("button:text('Help needed')");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text(bob)) [title='Relevant to your expertise']");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text(jane))");
     await waitFor(
-        ".o-mail-DiscussSidebarChannel:text(bob):has([title='Relevant to your expertise'])"
-    );
-    await waitFor(".o-mail-DiscussSidebarChannel:text(jane)");
-    await waitFor(
-        ".o-mail-DiscussSidebarChannel:text(jane):not(:has([title='Relevant to your expertise']))"
+        ".o-mail-MessagingMenuItem:has(:text(jane)):not(:has([title='Relevant to your expertise']))"
     );
 });

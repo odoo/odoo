@@ -4,6 +4,7 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     patchUiSize,
     setupChatHub,
     start,
@@ -36,7 +37,7 @@ test("can fold livechat chat windows in mobile", async () => {
         channel_type: "livechat",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("livechat");
     await click(".o-mail-NotificationItem", { text: "Visitor" });
     await click(".o-mail-ChatWindow-header [title*='Fold']", {
         parent: [".o-mail-ChatWindow", { text: "Visitor" }],
@@ -76,14 +77,14 @@ test("closing a chat window with no message from admin side unpins it", async ()
         livechat_end_dt: serializeDate(today()),
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "Partner 2" });
+    await openMessagingMenu("livechat");
+    await click(".o-mail-NotificationItem:has(:text('Partner 2'))");
     await click(".o-mail-ChatWindow-header [title*='Close Chat Window']", {
         parent: [".o-mail-ChatWindow", { text: "Partner 2" }],
     });
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Partner 1" });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Partner 2" });
+    await openDiscuss("tab:livechat");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Partner 1'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Partner 2'))", { count: 0 });
 });
 
 test.tags("desktop", "focus required");
@@ -104,7 +105,7 @@ test("Focus should not be stolen when a new livechat open", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem", { text: "general" });
     await contains(".o-mail-ChatWindow", { text: "general" });
     await contains(".o-mail-Composer-input[placeholder='Message #general…']:focus");
@@ -189,7 +190,7 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-DiscussSidebar-item:contains('Visitor 11') .badge", { text: "1" });
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Live Chats')) .badge:text(1)");
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-ChatWindow-header:contains('Visitor 11')");
 });

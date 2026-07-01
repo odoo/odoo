@@ -120,49 +120,6 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
-    /**
-     * @param {number[]} ids
-     * @param {import("@mail/../tests/mock_server/store").Store} store
-     **/
-    _init_messaging(ids, store) {
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = this.env["res.users"];
-
-        const [user] = ResUsers.browse(ids);
-        const channels = DiscussChannel._get_channels_as_member();
-        const members = DiscussChannelMember._filter([
-            ["channel_id", "in", channels.map((channel) => channel.id)],
-            ["partner_id", "=", user.partner_id],
-        ]);
-        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
-        store.add_global_values({
-            inbox: {
-                counter: ResPartner._get_needaction_count(user.partner_id),
-                counter_bus_id: bus_last_id,
-                id: "inbox",
-                model: "mail.box",
-            },
-            bookmarkBox: {
-                counter: MailMessage._filter([["bookmarked_partner_ids", "in", [user.partner_id]]])
-                    .length,
-                counter_bus_id: bus_last_id,
-                id: "bookmark",
-                model: "mail.box",
-            },
-            init_unread_channel_ids: members
-                .filter((member) => member.message_unread_counter)
-                .map((member) => member.channel_id),
-        });
-    }
-
     _get_activity_groups() {
         /** @type {import("mock_models").MailActivity} */
         const MailActivity = this.env["mail.activity"];

@@ -4,8 +4,10 @@ import {
     defineMailModels,
     insertText,
     openFormView,
+    openMessagingMenu,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
@@ -31,9 +33,10 @@ test("following internal link from chatter does not open chat window", async () 
     // Assert 0 chat windows not sufficient because not enough time for potential chat window opening.
     // Let's open another chat window to give some time and assert only manually open chat window opens.
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button:text('New Message')");
-    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "abc");
+    await openMessagingMenu();
+    await triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input[placeholder='Search for a command...'", "@");
+    await insertText(".o_command_palette_search input[placeholder='Search conversations'", "abc");
     await click("a:has(:text('Create Channel'))");
     await click("button:text(Create Channel)");
     await contains(".o-mail-ChatWindow-header:text('abc')");

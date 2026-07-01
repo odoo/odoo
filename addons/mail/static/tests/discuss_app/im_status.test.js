@@ -1,8 +1,8 @@
 import {
-    click,
     contains,
     defineMailModels,
     openDiscuss,
+    openMessagingMenu,
     sendPresenceUpdate,
     start,
     startServer,
@@ -89,7 +89,7 @@ test("show im status in messaging menu preview of chat", async () => {
         channel_type: "chat",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
     await contains(".o-mail-NotificationItem:has(.o-mail-NotificationItem-name:text('Demo'))", {
         contains: ["i[aria-label='User is online']"],
     });

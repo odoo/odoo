@@ -181,7 +181,8 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
     const env = await start();
     const store = env.services["mail.store"];
     await openDiscuss(channelId);
-    await click("button[title='New Meeting']");
+    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
+    await click("button:text('Meeting')");
     await contains(".o-mail-Meeting");
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='change-layout']");

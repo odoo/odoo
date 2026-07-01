@@ -7,6 +7,7 @@ import {
     insertText,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     patchUiSize,
     scroll,
     start,
@@ -112,7 +113,7 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem:contains('General')");
     await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
     await click(".o-dropdown-item:contains('Send GIF')");

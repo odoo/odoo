@@ -3,7 +3,11 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
     steps: () => [
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(MyTestChannel)",
+            trigger: ".o-mail-MessagingMenu-tab:has(:text('Channels'))",
+            run: "click",
+        },
+        {
+            trigger: ".o-mail-NotificationItem:has(:text('MyTestChannel'))",
             run: "click",
         },
         {

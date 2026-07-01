@@ -141,15 +141,15 @@ test("Partners invited most frequently by the current user come first", async ()
         ],
     });
     await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await openDiscuss("tab:livechat");
+    await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
     await click("button:enabled", { text: "Invite" });
     await contains(".o-discuss-ChannelMember", { text: "John" });
-    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
+    await click(".o-mail-NotificationItem:has(:text('Visitor #2'))");
     await contains(".o-mail-DiscussContent-threadName:value('Visitor #2')");
     await click("button[title='Add People']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
@@ -223,8 +223,8 @@ test("Operator invite shows livechat_username", async () => {
         ],
     });
     await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await openDiscuss("tab:livechat");
+    await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");

@@ -24,7 +24,8 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-MessagingMenu-tabContent .o-mail-NotificationItem:eq(0)",
+            trigger:
+                ".o-mail-Discuss:has(.o-mail-MessagingMenu-tab:has(:text('Channels')).active) .o-mail-NotificationItem:eq(0)",
             content: markup(_t("<p>Click a channel to open the discussion.</p>")),
             tooltipPosition: "bottom",
             run: "click",
