@@ -31,6 +31,13 @@ export class BinaryField extends Component {
         this.notification = useService("notification");
     }
 
+    get trueFileNameField() {
+        return (
+            this.props.fileNameField || 
+            this.props.record.fields[this.props.name].filename_field
+        );
+    }
+
     get fileName() {
         let value = this.props.record.data[this.props.name];
         value =
@@ -39,17 +46,19 @@ export class BinaryField extends Component {
                     ? false
                     : value
                 : false;
-        return (this.props.record.data[this.props.fileNameField] || value || "").slice(
+        
+        const fnField = this.trueFileNameField;
+        return (this.props.record.data[fnField] || value || "").slice(
             0,
             toBase64Length(MAX_FILENAME_SIZE_BYTES)
         );
     }
 
     update({ data, name }) {
-        const { fileNameField, record } = this.props;
+        const fnField = this.trueFileNameField;
         const changes = { [this.props.name]: data || false };
-        if (fileNameField in record.fields && record.data[fileNameField] !== name) {
-            changes[fileNameField] = name || "";
+        if (fnField in this.props.record.fields && this.props.record.data[fnField] !== name) {
+            changes[fnField] = name || "";
         }
         return this.props.record.update(changes);
     }
@@ -59,7 +68,7 @@ export class BinaryField extends Component {
             model: this.props.record.resModel,
             id: this.props.record.resId,
             field: this.props.name,
-            filename_field: this.fileName,
+            filename_field: this.trueFileNameField,
             filename: this.fileName || "",
             download: true,
             data: isBinarySize(this.props.record.data[this.props.name])

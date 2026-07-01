@@ -320,7 +320,7 @@
                                             <field name="work_permit_expiration_date" invisible="not permit_no"/>
                                         </div>
                                         <field name="work_permit_name" invisible="1"/>
-                                        <field name="has_work_permit" widget="binary" filename="work_permit_name" string="Document"/>
+                                        <field name="has_work_permit" widget="binary" string="Document"/>
                                     </group>
                                     <group string="Emergency Contact">
                                         <field name="emergency_contact" string="Contact Name"/>
@@ -359,8 +359,8 @@
                                     <group string="Documents" name="hr_document_group">
                                         <field name="id_card_name" invisible="1"/>
                                         <field name="driving_license_name" invisible="1"/>
-                                        <field name="id_card" filename="id_card_name"/>
-                                        <field name="driving_license" filename="driving_license_name"/>
+                                        <field name="id_card"/>
+                                        <field name="driving_license"/>
                                     </group>
                                 </group>
                             </page>

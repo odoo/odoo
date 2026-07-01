@@ -30,9 +30,11 @@ class Binary(Field[BinaryValue]):
         or in a column of the model's table (default: ``True``).
     """
     type = 'binary'
+    write_sequence = 5
 
     prefetch = False                    # not prefetched by default
     attachment = True                   # whether value is stored in attachment
+    filename_field = None
 
     @functools.cached_property
     def column_type(self):
@@ -45,6 +47,7 @@ class Binary(Field[BinaryValue]):
         return attrs
 
     _description_attachment = property(attrgetter('attachment'))
+    _description_filename_field = property(attrgetter('filename_field'))
 
     def _description_groupable(self, env):
         return False
@@ -149,7 +152,7 @@ class Binary(Field[BinaryValue]):
         env = record_values[0][0].env
         env['ir.attachment'].sudo().create([
             {
-                'name': self.name,
+                'name': (self.filename_field and record[self.filename_field]) or self.name,
                 'res_model': self.model_name,
                 'res_field': self.name,
                 'res_id': record.id,
@@ -192,12 +195,19 @@ class Binary(Field[BinaryValue]):
             if value:
                 # update the existing attachments
                 atts.write({'raw': value})
+
+                if self.filename_field:
+                    for att in atts:
+                        new_name = records.browse(att.res_id)[self.filename_field]
+                        if new_name and new_name != att.name:
+                            att.write({'name': new_name})
+
                 atts_records = records.browse(atts.mapped('res_id'))
                 # create the missing attachments
                 missing = (real_records - atts_records)
                 if missing:
                     atts.create([{
-                            'name': self.name,
+                            'name': (self.filename_field and record[self.filename_field]) or self.name,
                             'res_model': record._name,
                             'res_field': self.name,
                             'res_id': record.id,
