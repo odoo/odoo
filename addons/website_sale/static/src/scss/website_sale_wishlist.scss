@@ -29,6 +29,8 @@
 }
 
 #o_comparelist_table {
+    box-shadow: inset calc(var(--border-width) * -1) calc(var(--border-width) * -1) 0 0px var(--o-border-color);
+
     &.o_wsale_products_opt_layout_catalog,
     &.o_wsale_products_opt_layout_list {
         --o-wsale-products-grid-gap: var(--o-wsale-wishlist-grid-gap, 16px);
@@ -203,11 +205,11 @@
 .wishlist-section {
     &:where(:has(.o_wsale_products_opt_design_grid)) {
         .o_wsale_products_opt_design_grid {
-            border-left: $border-width solid $border-color;
+            border-left: var(--border-width) solid var(--border-color);
         }
         .o_wishlist_products_header {
             padding: 0 $container-padding-x * 0.5;
-            border: $border-width solid $border-color;
+            border: var(--border-width) solid var(--border-color);
             border-top: 0;
         }
     }
@@ -265,7 +267,7 @@
                     &:before {
                         @include o-position-absolute(0, auto, 0);
                         transform: translateX(calc(var(--_line-gap) * -1));
-                        border-left: $border-width solid $border-color;
+                        border-left: var(--border-width) solid var(--border-color);
                         content: "";
                     }
                 }

@@ -24,7 +24,12 @@
         <t t-set="is_50_pc" t-value="website.product_page_image_width == '50_pc'"/>
 
         <t t-call="website.layout" additional_title="product.name">
-            <div id="wrap" class="o_wsale_product_page" t-att-data-has-available-uoms="has_available_uoms">
+            <div
+                id="wrap"
+                t-attf-class="o_wsale_product_page {{website.shop_border_color and 'o_wsale_custom_border_color'}} {{website.shop_border_width and 'o_wsale_custom_border_width'}}"
+                t-attf-style="{{website.shop_border_color and '--o-wsale-border-color:' + website.shop_border_color + ';' or ''}} {{website.shop_border_width and '--o-wsale-border-width:' + website.shop_border_width + ';' or ''}}"
+                t-att-data-has-available-uoms="has_available_uoms"
+            >
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="Drag blocks here to add them on all products"/>
                 <section id="product_detail"
                          t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
@@ -831,7 +836,7 @@
         inherit_id="website_sale.product"
         name="Image Zoom On Click"
     >
-        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+        <xpath expr='//div[contains(@t-attf-class, "o_wsale_product_page")]' position='attributes'>
             <attribute name="data-ecom-zoom-click">1</attribute>
             <attribute name="t-att-data-image-ratio">website.product_page_image_ratio</attribute>
             <attribute name="t-att-data-image-ratio-mobile">website.product_page_image_ratio_mobile</attribute>
@@ -1368,7 +1373,7 @@
         <xpath expr="//div[@id='product_full_description']" position="after">
             <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-if="attrib_categories">
-                <section class="pt32 pb32" id="product_full_spec">
+                <section class="pt32 pb32 border-top" id="product_full_spec">
                     <div class="container">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2 class="m-0 h3">Specifications</h2>

@@ -10,12 +10,15 @@ export class ProductsListPageOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetShopContainerAction,
+            SetBorderColor,
+            SetBorderWidth,
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
         },
     };
 }
+
 export class SetShopContainerAction extends PreviewableWebsiteConfigAction {
     static id = "setShopContainer";
 
@@ -68,6 +71,60 @@ export class SetDefaultSortAction extends BuilderAction {
     }
     apply({ value }) {
         return rpc("/shop/config/website", { shop_default_sort: value });
+    }
+}
+
+export class SetBorderColor extends PreviewableWebsiteConfigAction {
+    static id = "setBorderColor";
+
+    async apply({ editingElement: shopContainerEl, isPreviewing, params, value }) {
+        // The reset button applies an empty value: treat it as a removal so the
+        // marker class doesn't linger with an empty --o-wsale-border-color (which
+        // would resolve --border-color: var(--o-wsale-border-color) to nothing).
+        if (!value) {
+            this.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        } else {
+            await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
+            shopContainerEl.style.setProperty("--o-wsale-border-color", value);
+        }
+
+        if (!isPreviewing) {
+            await rpc("/shop/config/website", { 'shop_border_color': value });
+        }
+    }
+
+    clean({ editingElement: shopContainerEl, isPreviewing, params }) {
+        super.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        shopContainerEl.style.removeProperty("--o-wsale-border-color");
+    }
+
+    // so the picker shows the currently-applied color when re-opened
+    getValue({ editingElement: shopContainerEl }) {
+        return shopContainerEl.style.getPropertyValue("--o-wsale-border-color");
+    }
+}
+
+export class SetBorderWidth extends PreviewableWebsiteConfigAction {
+    static id = "setBorderWidth";
+
+    async apply({ editingElement: shopContainerEl, isPreviewing, params, value }) {
+        await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
+        shopContainerEl.style.setProperty("--o-wsale-border-width", value);
+
+        if (!isPreviewing) {
+            await rpc("/shop/config/website", { 'shop_border_width': value });
+        }
+    }
+
+    clean({ editingElement: shopContainerEl, isPreviewing, params }) {
+        super.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        shopContainerEl.style.removeProperty("--o-wsale-border-width");
+    }
+
+    // so the input shows the currently-applied width when re-opened;
+    // return undefined (not "") when unset so the input's `default` applies
+    getValue({ editingElement: shopContainerEl }) {
+        return shopContainerEl.style.getPropertyValue("--o-wsale-border-width") || undefined;
     }
 }
 

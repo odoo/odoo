@@ -7,7 +7,10 @@ import { ProductRow } from '../product_row/product_row';
 export class ProductComparisonBottomBar extends Component {
     static template = 'website_sale.ProductComparisonBottomBar';
     static components = { ProductRow };
-    static props = {};
+    static props = {
+        borderColor: { type: String, optional: true },
+        borderWidth: { type: String, optional: true },
+    };
 
     setup() {
         super.setup();

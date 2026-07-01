@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website_sale.ProductComparisonBottomBar">
-        <div class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none">
+        <div
+            class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none"
+            t-attf-class="{{this.props.borderColor and 'o_wsale_custom_border_color'}} {{this.props.borderWidth and 'o_wsale_custom_border_width'}}"
+            t-attf-style="{{ this.props.borderColor ? '--o-wsale-border-color:' + this.props.borderColor + ';' : '' }}{{ this.props.borderWidth ? '--o-wsale-border-width:' + this.props.borderWidth + ';' : '' }}"
+        >
             <div
                 t-if="this.state.products.size"
                 class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto"

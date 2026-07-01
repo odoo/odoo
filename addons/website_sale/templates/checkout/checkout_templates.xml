@@ -180,7 +180,11 @@
                 t-set="show_mobile_cart_summary"
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
-            <div id="wrap" class="d-flex flex-column flex-grow-1">
+            <div
+                id="wrap"
+                t-attf-class="d-flex flex-column flex-grow-1 {{website.shop_border_color and 'o_wsale_custom_border_color'}} {{website.shop_border_width and 'o_wsale_custom_border_width'}}"
+                t-attf-style="{{website.shop_border_color and '--o-wsale-border-color:' + website.shop_border_color + ';' or ''}} {{website.shop_border_width and '--o-wsale-border-width:' + website.shop_border_width + ';' or ''}}"
+            >
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
                         <div t-if="show_wizard_checkout" class="col-12">
