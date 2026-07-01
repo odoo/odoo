@@ -7,7 +7,7 @@
                 <button t-if="!this.ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
-                Create 
+                Create
                 </button>
                 <h4 class="modal-title fs-4">Choose Customer</h4>
                 <Input tModel="[this.state, 'query']"
@@ -19,24 +19,12 @@
                     autofocus="true"
                     debounceMillis="300" /> <!-- 200~300ms is industry standard for Software UI debounce -->
             </t>
-            <t t-set="initialPartners" t-value="this.getPartners(this.state.initialPartners)"/>
-            <t t-set="loadedPartners" t-value="this.getPartners(this.state.loadedPartners)"/>
-            <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
+            <t t-set="partners" t-value="this.getPartners(Array.from(this.state.partners.values()))"/>
+            <t t-set="nbrPartners" t-value="partners.length"/>
             <div class="h-100" t-att-class="{'d-flex justify-content-center align-items-center text-center': !nbrPartners}">
                 <table t-if="nbrPartners" class="table table-hover">
                     <tbody class="h-100">
-                        <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
-                            <PartnerLine
-                                close="this.props.close"
-                                partner="partner"
-                                isSelected="this.props.partner?.id === partner.id"
-                                isBalanceDisplayed="this.isBalanceDisplayed"
-                                onClickEdit.bind="(p) => this.editPartner(p)"
-                                onClickUnselect.bind="() => this.clickPartner()"
-                                onClickOrders.bind="(p) => this.goToOrders(p)"
-                                onClickPartner.bind="this.clickPartner"/>
-                        </t>
-                        <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
+                        <t t-foreach="partners" t-as="partner" t-key="partner.id">
                             <PartnerLine
                                 close="this.props.close"
                                 partner="partner"
@@ -61,7 +49,7 @@
                     <button t-if="this.ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg flex-fill" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
-                    New 
+                    New
                     </button>
                     <button class="btn btn-secondary btn-lg lh-lg flex-fill" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
                 </div>
