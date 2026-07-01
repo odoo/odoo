@@ -880,9 +880,7 @@ class SaleOrder(models.Model):
         ]
         for order in orders_to_compute:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if order.state != "sale":
-                order.invoice_status = "no"
-            elif any(invoice_status == "to invoice" for invoice_status in line_invoice_status):
+            if any(invoice_status == "to invoice" for invoice_status in line_invoice_status):
                 if any(invoice_status == "no" for invoice_status in line_invoice_status):
                     # If only discount/delivery/promotion lines can be invoiced, the SO should not
                     # be invoiceable.
