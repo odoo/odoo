@@ -368,14 +368,41 @@ class ProductProduct(models.Model):
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
+        lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
+        lots_by_product_dict = {}
+        if lot_valuated_products_ids:
+            domain = [
+                ('product_id', 'in', list(lot_valuated_products_ids)),
+                ('product_qty', '>', 0),
+            ]
+            lots_by_product = self.env['stock.lot']._read_group(
+                domain,
+                groupby=['product_id'],
+                aggregates=['id:recordset'],
+            )
+            lots_by_product_dict = {product.id: lots for product, lots in lots_by_product}
         for product in self:
-            moves, remaining_qty = product._run_fifo_get_stack()
-            moves = self.env['stock.move'].concat(*moves)
-            if not moves:
-                continue
-            qty_by_move = {m: m.quantity for m in moves[1:]}
-            qty_by_move[moves[0]] = remaining_qty
-            moves_qty_by_product[product] = qty_by_move
+            if product.lot_valuated:
+                qty_by_move = defaultdict(float)
+                lots = lots_by_product_dict.get(product.id, self.env['stock.lot'])
+                for lot in lots:
+                    moves, remaining_qty = product._run_fifo_get_stack(lot=lot)
+                    moves = self.env['stock.move'].concat(*moves)
+                    if not moves:
+                        continue
+                    for m in moves[1:]:
+                        qty_by_move[m] += m._get_valued_qty(lot=lot)
+                    qty_by_move[moves[0]] += remaining_qty
+                if qty_by_move:
+                    moves_qty_by_product[product] = dict(qty_by_move)
+            else:
+                moves, remaining_qty = product._run_fifo_get_stack()
+                moves = self.env['stock.move'].concat(*moves)
+                if not moves:
+                    continue
+                qty_by_move = {m: m.quantity for m in moves[1:]}
+                qty_by_move[moves[0]] = remaining_qty
+                moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
     def _run_standard_batch(self, at_date=None, lot=None):
