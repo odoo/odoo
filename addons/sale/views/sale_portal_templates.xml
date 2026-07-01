@@ -967,9 +967,9 @@
                                         <td
                                             t-if="display_taxes"
                                             name="td_section_group_taxes"
-                                            t-attf-class="d-none d-md-table-cell text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
+                                            t-attf-class="d-none d-md-table-cell text-end {{ 'text-nowrap' if len(section_line['tax_names']) &lt; 10 else '' }}"
                                         >
-                                            <span t-out="', '.join(section_line['tax_labels'])">
+                                            <span t-out="', '.join(section_line['tax_names'])">
                                                 Tax 15%
                                             </span>
                                         </td>

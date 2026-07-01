@@ -1585,6 +1585,7 @@ class SaleOrderLine(models.Model):
         if display_taxes:
             res = [
                 {
+                    'tax_names': [tax.name for tax in taxes if tax.name],
                     'tax_labels': [tax.tax_label for tax in taxes if tax.tax_label],
                     'price_subtotal': sum(lines.mapped('price_subtotal')),
                     'price_total': sum(lines.mapped('price_total')),
@@ -1593,11 +1594,13 @@ class SaleOrderLine(models.Model):
             ]
         else:
             res = [{
+                'tax_names': [],
                 'tax_labels': [],
                 'price_subtotal': sum(billable_lines.mapped('price_subtotal')),
                 'price_total': sum(billable_lines.mapped('price_total')),
             }]
         return res or [{
+            'tax_names': [],
             'tax_labels': [],
             'price_subtotal': 0.0,
             'price_total': 0.0,
