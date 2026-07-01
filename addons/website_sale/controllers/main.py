@@ -1391,8 +1391,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
+            fpos_before = order_sudo.fiscal_position_id
             with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
+            if order_sudo.fiscal_position_id != fpos_before:
+                # Update tax_ids on the lines so the order reflects the new
+                # fiscal position. We do not call _recompute_taxes here because
+                # it also resets unit prices (via the pricelist), and the
+                # customer already accepted the displayed unit prices.
+                order_sudo.order_line.filtered(
+                    lambda l: not l.display_type
+                )._compute_tax_ids()
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with

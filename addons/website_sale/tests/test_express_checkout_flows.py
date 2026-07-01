@@ -2,6 +2,7 @@
 
 from unittest.mock import Mock, patch
 
+from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
@@ -141,6 +142,108 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.assertPartnerShippingValues(
             new_partner,
             self.express_checkout_billing_values,
+        )
+
+    def test_express_checkout_public_user_recomputes_taxes_on_fpos_change(self):
+        """Test that finalizing an anonymous cart via express checkout recomputes
+        the line taxes when the fiscal position changes with the new partner.
+
+        Express checkout assigns ``partner_id`` directly (bypassing
+        ``_update_address``), so the fiscal position recomputes via its stored
+        compute but the line ``tax_ids`` would otherwise be stranded with the
+        previous mapping (e.g. a geoip-derived "Extra-Community" position).
+        """
+        company = self.env.company
+        country = self.country_be
+        tax_group = self.env['account.tax.group'].search(
+            [('company_id', '=', company.id), ('country_id', '=', country.id)], limit=1,
+        ) or self.env['account.tax.group'].create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+            'country_id': country.id,
+        })
+
+        # Domestic tax is tax-included to match the common B2C setup: in this
+        # configuration the displayed unit price already covers the domestic
+        # tax, so switching from a 0% mapping back to the domestic tax keeps
+        # the order total stable.
+        domestic_tax = self.env['account.tax'].create({
+            'name': 'Test Domestic Sale 21%',
+            'amount': 21.0,
+            'type_tax_use': 'sale',
+            'country_id': country.id,
+            'company_id': company.id,
+            'tax_group_id': tax_group.id,
+            'price_include_override': 'tax_included',
+        })
+        ec_tax = self.env['account.tax'].create({
+            'name': 'Test EC Sale 0%',
+            'amount': 0.0,
+            'type_tax_use': 'sale',
+            'country_id': country.id,
+            'company_id': company.id,
+            'tax_group_id': tax_group.id,
+            'original_tax_ids': [Command.set([domestic_tax.id])],
+        })
+        # Fiscal position simulating a geoip-derived "Extra-Community" mapping
+        # that turns the domestic tax into the EC tax.
+        fpos_geoip = self.env['account.fiscal.position'].create({
+            'name': 'Test Extra-Community',
+            'company_id': company.id,
+            'tax_ids': [Command.set([ec_tax.id])],
+        })
+
+        self.product.taxes_id = [Command.set([domestic_tax.id])]
+        self.sale_order.write({
+            'partner_id': self.public_partner.id,
+            'fiscal_position_id': fpos_geoip.id,
+            'order_line': [
+                Command.clear(),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                    'tax_ids': [Command.set([ec_tax.id])],
+                }),
+            ],
+        })
+
+        line = self.sale_order.order_line
+        self.assertEqual(
+            line.tax_ids, ec_tax,
+            "Setup: cart line should carry the EC tax (via geoip fpos mapping).",
+        )
+        amount_total_before = self.sale_order.amount_total
+
+        session = self.authenticate(None, None)
+        session['sale_order_id'] = self.sale_order.id
+        root.session_store.save(session)
+
+        self.make_jsonrpc_request(
+            urls.urljoin(
+                self.base_url(), WebsiteSale._express_checkout_route,
+            ), params={
+                'billing_address': dict(self.express_checkout_billing_values),
+            },
+        )
+
+        self.sale_order.invalidate_recordset()
+        self.assertNotEqual(
+            self.sale_order.partner_id, self.public_partner,
+            "Express checkout should have replaced the public partner.",
+        )
+        self.assertNotEqual(
+            self.sale_order.fiscal_position_id, fpos_geoip,
+            "Fiscal position should change with the new partner.",
+        )
+        self.assertEqual(
+            line.tax_ids, domestic_tax,
+            "Line tax must be recomputed to the domestic tax once the "
+            "geoip fiscal position no longer applies.",
+        )
+        self.assertEqual(
+            self.sale_order.amount_total, amount_total_before,
+            "The order total must stay stable: the customer has already "
+            "accepted the displayed amount in the express payment sheet.",
         )
 
     def test_express_checkout_registered_user(self):
