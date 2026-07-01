@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import weUtils from "@web_editor/js/common/utils";
 import animations from "@website/js/content/snippets.animation";
 export const extraMenuUpdateCallbacks = [];
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
@@ -659,11 +660,10 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (uiUtils.getSize() >= SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
-            this.$dropdownMenus.css('top', 'unset');
         } else {
             this.$dropdownMenus.css('margin-top', '');
-            this.$dropdownMenus.css('top', '');
         }
+        this.$dropdownMenus.css('top', '');
     },
     /**
      * Hides all opened dropdowns.
@@ -767,6 +767,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
     events: {
         "mousedown .o_mega_menu_toggle": "_onMegaMenuClick",
         "mouseenter .o_mega_menu_toggle": "_onMegaMenuHover",
+        "show.bs.dropdown .o_mega_menu_toggle": "_onMegaMenuShow",
         "mousedown .o_extra_menu_items": "_onExtraMenuClick",
         "keyup .o_mega_menu_toggle": "_onMegaMenuClick",
         "keyup .o_extra_menu_items": "_onExtraMenuClick",
@@ -801,6 +802,9 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             }
             megaMenuToggleEl.parentElement.querySelector(".o_mega_menu")?.remove();
         });
+        this.useMenuContainerPosition = ["sales_one", "sales_four"].includes(
+            weUtils.getCSSVariableValue("header-template").replaceAll("'", "")
+        );
 
         return this._super(...arguments);
     },
@@ -874,6 +878,39 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             return;
         }
         this._moveMegaMenu(megaMenuToggleEl);
+
+        const megaMenuRelativeEl = megaMenuToggleEl.closest(
+            this.useMenuContainerPosition ? ".o_main_nav .container" : ".navbar"
+        );
+        const megaMenuRelativeRect = megaMenuRelativeEl.getBoundingClientRect();
+
+        // Position the invisible hover bridge between the toggle and the mega
+        // menu to prevent the mega menu from closing unintentionally.
+        const toggleRect = megaMenuToggleEl.getBoundingClientRect();
+        megaMenuToggleEl.style.setProperty(
+            "--o-mega-menu-bridge-height",
+            `${Math.round(megaMenuRelativeRect.bottom - toggleRect.bottom)}px`
+        );
+        megaMenuToggleEl.style.setProperty(
+            "--o-mega-menu-bridge-top",
+            `${Math.round(toggleRect.bottom - megaMenuRelativeRect.top)}px`
+        );
+    },
+    /**
+     * Called when a mega menu dropdown is about to be shown.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMegaMenuShow(ev) {
+        const megaMenuToggleEl = ev.currentTarget;
+        if (megaMenuToggleEl.closest(".o_header_mobile") || !this.useMenuContainerPosition) {
+            return;
+        }
+        const megaMenuRelativeEl = megaMenuToggleEl.closest(".o_main_nav .container");
+        const megaMenuRelativeRect = megaMenuRelativeEl.getBoundingClientRect();
+        const megaMenuEl = megaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
+        megaMenuEl.style.top = `${megaMenuRelativeRect.bottom}px`;
     },
     /**
      * Called when the extra menu (+) dropdown is clicked/key pressed.
