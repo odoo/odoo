@@ -337,7 +337,7 @@ export function useRefListener(ref, ...listener) {
             el?.addEventListener(...listener);
             return () => el?.removeEventListener(...listener);
         },
-        () => [ref.el]
+        () => [resolveRefEl(ref)]
     );
 }
 

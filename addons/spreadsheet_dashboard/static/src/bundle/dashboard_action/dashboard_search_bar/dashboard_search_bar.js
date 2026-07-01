@@ -1,4 +1,4 @@
-import { Component, status, proxy } from "@odoo/owl";
+import { Component, signal, status, proxy } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
@@ -26,6 +26,8 @@ export class DashboardSearchBar extends Component {
     };
     static props = { model: Object, toggler: Object };
 
+    inputRef = signal(null);
+
     setup() {
         this.nameService = useService("name");
         this.uiService = useService("ui");
@@ -35,10 +37,10 @@ export class DashboardSearchBar extends Component {
         this.loader = useService("spreadsheet_dashboard_loader");
         this.searchModel = this.loader.getDashboard(this.loader.activeDashboardId).searchModel;
 
-        this.inputRef = useAutofocus("autofocus");
+        useAutofocus({ ref: this.inputRef });
 
         this.popoverWillCloseOnClickAway = (target) => {
-            const inputEl = this.inputRef.el;
+            const inputEl = this.inputRef();
             return !(inputEl && (inputEl === target || inputEl.contains(target)));
         };
 
@@ -90,7 +92,7 @@ export class DashboardSearchBar extends Component {
     }
 
     onSearchClick() {
-        const query = this.inputRef?.el.value;
+        const query = this.inputRef()?.value;
         if (query.trim()) {
             this.inputDropdownState.open();
             this.computeState({ query, expanded: [], subItems: [] });
@@ -164,8 +166,8 @@ export class DashboardSearchBar extends Component {
         this.state.query = query;
         this.subItems = subItems;
 
-        if (this.inputRef.el) {
-            this.inputRef.el.value = query;
+        if (this.inputRef()) {
+            this.inputRef().value = query;
         }
 
         this.items.length = 0;
@@ -333,7 +335,7 @@ export class DashboardSearchBar extends Component {
         this.state.subItemsLimits = {};
         this.computeState({ expanded: [], query: "", subItems: [] });
         if (options.focus && !this.uiService.isSmall) {
-            this.inputRef.el.focus();
+            this.inputRef().focus();
         }
     }
 

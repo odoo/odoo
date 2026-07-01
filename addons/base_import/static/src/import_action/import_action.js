@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
 import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { FileInput } from "@web/core/file_input/file_input";
 import { _t } from "@web/core/l10n/translation";
@@ -29,6 +28,8 @@ export class ImportAction extends Component {
     static path = "import";
     static displayName = _t("Import");
 
+    rootRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.notification = useService("notification");
@@ -52,7 +53,7 @@ export class ImportAction extends Component {
         });
 
         this.uploadFiles = useFileUploader();
-        useDropzone(useRef("root"), async (event) => {
+        useDropzone(this.rootRef, async (event) => {
             const { files } = event.dataTransfer;
             if (files.length === 0) {
                 this.notification.add(

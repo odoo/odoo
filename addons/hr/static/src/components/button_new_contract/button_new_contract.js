@@ -3,7 +3,7 @@ import { serializeDate } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class ButtonNewContractWidget extends Component {
     static template = "hr.ButtonNewContract";
@@ -11,13 +11,15 @@ export class ButtonNewContractWidget extends Component {
         ...standardWidgetProps,
     };
 
+    datetimePickerTargetRef = signal(null);
+
     /** @override **/
     setup() {
         super.setup();
         this.orm = useService("orm");
 
         this.dateTimePicker = useDateTimePicker({
-            target: `datetime-picker-target-new-contract`,
+            target: this.datetimePickerTargetRef,
             onApply: (date) => {
                 if (date) {
                     this.tryAndCreateContract(serializeDate(date));

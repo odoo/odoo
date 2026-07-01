@@ -1,10 +1,9 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
-import { onWillStart, Component } from "@odoo/owl";
+import { onWillStart, Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useRef } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
@@ -18,11 +17,12 @@ export class AccountMoveSendAttachmentsSelector extends Component {
     static components = { Dropdown, DropdownItem, FileUploader };
     static props = { ...standardFieldProps };
 
+    fileUploadTriggerRef = signal(null);
+
     setup() {
         this.orm = useService("orm");
         this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
-        this.fileUploadTriggerRef = useRef("fileUploadTrigger");
 
         onWillStart(async () => {
             const moveAttachments = await this.orm.searchRead(
@@ -83,7 +83,7 @@ export class AccountMoveSendAttachmentsSelector extends Component {
 
     triggerFileUpload(condition = true) {
         if (condition) {
-            this.fileUploadTriggerRef.el.click();
+            this.fileUploadTriggerRef()?.click();
         }
     }
 }

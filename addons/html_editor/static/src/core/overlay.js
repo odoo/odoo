@@ -1,17 +1,11 @@
-<<<<<<< HEAD
-import { Component, onWillDestroy, props, proxy, t, xml } from "@odoo/owl";
-=======
 import { useExternalListener, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, props, t, xml, proxy, signal } from "@odoo/owl";
->>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
+import { Component, onWillDestroy, props, proxy, signal, t, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
-import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
-import { useCrossDocumentListener } from "../utils/hooks";
 
 export class EditorOverlay extends Component {
     static template = xml`

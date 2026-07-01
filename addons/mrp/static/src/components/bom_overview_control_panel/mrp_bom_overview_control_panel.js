@@ -1,11 +1,10 @@
-import { useRef } from "@web/owl2/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Component, onMounted, props, t } from "@odoo/owl";
+import { Component, onMounted, props, signal, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
@@ -36,13 +35,14 @@ export class BomOverviewControlPanel extends Component {
         allFolded: t.boolean(),
     });
 
+    quantity = signal(null);
+
     setup() {
         this.action = useService("action");
         this.controlPanelDisplay = {};
-        if(this.props.showOptions.mode == "forecast") {
-            this.quantity = useRef("quantity");
+        if (this.props.showOptions.mode == "forecast") {
             onMounted(() => {
-                this.quantity.el.focus();
+                this.quantity()?.focus();
             });
         }
     }
@@ -50,7 +50,9 @@ export class BomOverviewControlPanel extends Component {
     //---- Handlers ----
 
     updateQuantity(ev) {
-        const newVal = isNaN(ev.target.value) ? 1 : parseFloat(parseFloat(ev.target.value).toFixed(this.precision));
+        const newVal = isNaN(ev.target.value)
+            ? 1
+            : parseFloat(parseFloat(ev.target.value).toFixed(this.precision));
         this.props.changeBomQuantity(newVal);
     }
 
@@ -67,7 +69,7 @@ export class BomOverviewControlPanel extends Component {
 
     getDomain() {
         const keys = Object.keys(this.props.variants);
-        return [['id', 'in', keys]];
+        return [["id", "in", keys]];
     }
 
     async manufactureFromBoM() {
@@ -95,11 +97,11 @@ export class BomOverviewControlPanel extends Component {
     }
 
     get warehousesItems() {
-        return this.props.warehouses.map(wh => ({
+        return this.props.warehouses.map((wh) => ({
             id: wh.id,
             label: wh.name,
             class: { selected: wh.name === this.props.currentWarehouse?.name },
-            onSelected: () => this.props.changeWarehouse(wh.id)
+            onSelected: () => this.props.changeWarehouse(wh.id),
         }));
     }
 }

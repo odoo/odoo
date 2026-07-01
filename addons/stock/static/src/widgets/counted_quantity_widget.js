@@ -1,5 +1,4 @@
-import { proxy } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { proxy, useEffect } from "@odoo/owl";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -10,26 +9,22 @@ export class CountedQuantityWidgetField extends FloatField {
         super.setup();
 
         this.hasInput = proxy({ value: false });
-        const inputRef = useRef("numpadDecimal");
-
-        useLayoutEffect(
-            (inputEl) => {
-                if (inputEl) {
-                    const boundOnInput = this.onInput.bind(this);
-                    const boundOnKeydown = this.onKeydown.bind(this);
-                    const boundOnBlur = this.onBlur.bind(this);
-                    inputEl.addEventListener("input", boundOnInput);
-                    inputEl.addEventListener("keydown", boundOnKeydown);
-                    inputEl.addEventListener("blur", boundOnBlur);
-                    return () => {
-                        inputEl.removeEventListener("input", boundOnInput);
-                        inputEl.removeEventListener("keydown", boundOnKeydown);
-                        inputEl.removeEventListener("blur", boundOnBlur);
-                    };
-                }
-            },
-            () => [inputRef.el]
-        );
+        useEffect(() => {
+            const inputEl = this.numpadDecimalRef();
+            if (inputEl) {
+                const boundOnInput = this.onInput.bind(this);
+                const boundOnKeydown = this.onKeydown.bind(this);
+                const boundOnBlur = this.onBlur.bind(this);
+                inputEl.addEventListener("input", boundOnInput);
+                inputEl.addEventListener("keydown", boundOnKeydown);
+                inputEl.addEventListener("blur", boundOnBlur);
+                return () => {
+                    inputEl.removeEventListener("input", boundOnInput);
+                    inputEl.removeEventListener("keydown", boundOnKeydown);
+                    inputEl.removeEventListener("blur", boundOnBlur);
+                };
+            }
+        });
     }
 
     updateValue(ev){

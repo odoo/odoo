@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -28,10 +27,14 @@ export class HierarchyController extends Component {
     };
     static template = "web_hierarchy.HierarchyView";
 
+    rootRef = signal(null);
+
     setup() {
-        this.rootRef = useRef("root");
         const { parentFieldName, childFieldName } = this.props.archInfo;
-        const { activeFields, fields } = extractFieldsFromArchInfo(this.props.archInfo, this.props.fields);
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.props.archInfo,
+            this.props.fields
+        );
         const additionalFields = [{ name: parentFieldName }];
         if (childFieldName) {
             additionalFields.push({ name: childFieldName });
@@ -54,11 +57,9 @@ export class HierarchyController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
-            getLocalState: () => {
-                return {
-                    modelState: this.model.exportState(),
-                };
-            },
+            getLocalState: () => ({
+                modelState: this.model.exportState(),
+            }),
         });
         this.searchBarToggler = useSearchBarToggler();
     }

@@ -1,12 +1,11 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
-import { Dialog } from '@web/core/dialog/dialog';
+import { Dialog } from "@web/core/dialog/dialog";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { parseInteger  } from "@web/views/fields/parsers";
+import { parseInteger } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, signal } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { user } from "@web/core/user";
 
@@ -18,21 +17,23 @@ export class GenerateDialog extends Component {
         move: { type: Object },
         close: { type: Function },
     };
+
+    nextSerial = signal(null);
+    nextSerialCount = signal(null);
+    totalReceived = signal(null);
+    keepLines = signal(null);
+    lots = signal(null);
+
     setup() {
-        this.size = 'md';
-        this.nextSerial = useRef('nextSerial');
-        this.nextSerialCount = useRef('nextSerialCount');
-        this.totalReceived = useRef('totalReceived');
-        this.keepLines = useRef('keepLines');
-        this.lots = useRef('lots');
+        this.size = "md";
         this.orm = useService("orm");
-        if (this.props.mode === 'generate') {
+        if (this.props.mode === "generate") {
             if (this.isLotTracking) {
                 this.title = _t("Generate Lot numbers");
-                useAutofocus({ refName: 'totalReceived' });
+                useAutofocus({ ref: this.totalReceived });
             } else {
                 this.title = _t("Generate Serial numbers");
-                useAutofocus({ refName: 'nextSerialCount' });
+                useAutofocus({ ref: this.nextSerialCount });
             }
         } else {
             this.title = this.isLotTracking ? _t("Import Lots") : _t("Import Serials");
@@ -40,33 +41,48 @@ export class GenerateDialog extends Component {
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
             // Automatically generate lot/serial number.
-            if (this.props.mode === 'generate') {
+            if (this.props.mode === "generate") {
                 await this._onGenerateCustomSerial();
             }
         });
         onMounted(() => {
-            if (this.props.mode === 'generate') {
-                this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
+            if (this.props.mode === "generate") {
+                this.nextSerialCount().value = this.props.move.data.product_uom_qty || 2;
                 if (this.nextCustomSerialNumber) {
-                    this.nextSerial.el.value = this.nextCustomSerialNumber;
+                    this.nextSerial().value = this.nextCustomSerialNumber;
                 }
                 if (this.isLotTracking) {
-                    this.totalReceived.el.value = this.props.move.data.quantity;
+                    this.totalReceived().value = this.props.move.data.quantity;
                 }
             }
         });
     }
 
     get isLotTracking() {
-        return this.props.move.data.has_tracking === 'lot';
+        return this.props.move.data.has_tracking === "lot";
     }
 
     async _onGenerateCustomSerial() {
-        const product = (await this.orm.searchRead("product.product", [["id", "=", this.props.move.data.product_id.id]], ["lot_sequence_id"]))[0];
+        const product = (
+            await this.orm.searchRead(
+                "product.product",
+                [["id", "=", this.props.move.data.product_id.id]],
+                ["lot_sequence_id"]
+            )
+        )[0];
         this.sequence = product.lot_sequence_id;
         if (product.lot_sequence_id) {
-            this.sequence = (await this.orm.searchRead("ir.sequence", [["id", "=", this.sequence[0]]], ["number_next", "number_next_actual"]))[0];
-            this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "get_next_char", [this.sequence.id, this.sequence.number_next]);
+            this.sequence = (
+                await this.orm.searchRead(
+                    "ir.sequence",
+                    [["id", "=", this.sequence[0]]],
+                    ["number_next", "number_next_actual"]
+                )
+            )[0];
+            this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "get_next_char", [
+                this.sequence.id,
+                this.sequence.number_next,
+            ]);
         }
     }
 
@@ -74,51 +90,55 @@ export class GenerateDialog extends Component {
         let count;
         let qtyToProcess;
         if (this.isLotTracking) {
-            count = parseFloat(this.nextSerialCount.el?.value || '0');
-            qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
+            count = parseFloat(this.nextSerialCount()?.value || "0");
+            qtyToProcess = parseFloat(
+                this.totalReceived()?.value || this.props.move.data.product_qty
+            );
         } else {
-            count = parseInteger(this.nextSerialCount.el?.value || '0');
+            count = parseInteger(this.nextSerialCount()?.value || "0");
             qtyToProcess = this.props.move.data.product_qty;
         }
-        const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [{
+        const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [
+            {
                 ...this.props.move.context,
                 default_product_id: this.props.move.data.product_id.id,
                 default_location_dest_id: this.props.move.data.location_dest_id.id,
                 default_location_id: this.props.move.data.location_id.id,
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
-                default_uom_id: this.props.move.data.has_tracking === 'lot' ? this.props.move.data.product_uom?.id : undefined,
+                default_uom_id:
+                    this.props.move.data.has_tracking === "lot"
+                        ? this.props.move.data.product_uom?.id
+                        : undefined,
             },
             this.props.mode,
-            this.nextSerial.el?.value,
+            this.nextSerial()?.value,
             count,
-            this.lots.el?.value,
+            this.lots()?.value,
         ]);
         const newlines = [];
-        let lines = []
+        let lines = [];
         lines = this.props.move.data.move_line_ids;
 
         // create records directly from values to bypass onchanges
         for (const values of move_line_vals) {
             newlines.push(
                 lines._createRecordDatapoint(values, {
-                    mode: 'readonly',
+                    mode: "readonly",
                     virtualId: getId("virtual"),
                     manuallyAdded: false,
                 })
             );
         }
-        if (!this.keepLines.el.checked) {
-            await lines._applyCommands(lines._currentIds.map((currentId) => [
-                x2ManyCommands.DELETE,
-                currentId,
-            ]));
+        if (!this.keepLines().checked) {
+            await lines._applyCommands(
+                lines._currentIds.map((currentId) => [x2ManyCommands.DELETE, currentId])
+            );
         }
         lines.records.push(...newlines);
-        lines._commands.push(...newlines.map((record) => [
-            x2ManyCommands.CREATE,
-            record._virtualId,
-        ]));
+        lines._commands.push(
+            ...newlines.map((record) => [x2ManyCommands.CREATE, record._virtualId])
+        );
         lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
         this.props.close();
@@ -127,33 +147,33 @@ export class GenerateDialog extends Component {
 
 class GenerateSerials extends Component {
     static template = "stock.GenerateSerials";
-    static props = {...standardWidgetProps};
+    static props = { ...standardWidgetProps };
 
-    setup(){
+    setup() {
         this.dialog = useService("dialog");
     }
 
-    openDialog(ev){
+    openDialog(ev) {
         this.dialog.add(GenerateDialog, {
             move: this.props.record,
-            mode: 'generate',
+            mode: "generate",
         });
     }
 }
 
 class ImportLots extends Component {
     static template = "stock.ImportLots";
-    static props = {...standardWidgetProps};
-    setup(){
+    static props = { ...standardWidgetProps };
+    setup() {
         this.dialog = useService("dialog");
     }
 
-    openDialog(ev){
+    openDialog(ev) {
         this.dialog.add(GenerateDialog, {
             move: this.props.record,
-            mode: 'import',
+            mode: "import",
         });
     }
 }
-registry.category("view_widgets").add("import_lots", {component: ImportLots});
-registry.category("view_widgets").add("generate_serials", {component: GenerateSerials});
+registry.category("view_widgets").add("import_lots", { component: ImportLots });
+registry.category("view_widgets").add("generate_serials", { component: GenerateSerials });

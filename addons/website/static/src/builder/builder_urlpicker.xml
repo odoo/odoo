@@ -12,7 +12,7 @@
             <attribute name="t-att-data-attribute-action">this.info.attributeAction</attribute>
             <attribute name="t-att-data-attribute-action-value">this.info.attributeActionValue</attribute>
         </xpath>
-        <xpath expr="//input[@t-custom-ref='input']" position="attributes">
+        <xpath expr="//input[@t-ref='this.inputRef']" position="attributes">
             <attribute name="t-attf-class" add="{{this.builderProps.inputClass}}" separator=" "/>
         </xpath>
     </t>

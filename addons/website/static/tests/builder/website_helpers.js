@@ -213,7 +213,7 @@ export async function setupWebsiteBuilder(
         },
         async reloadIframe() {
             await delayReload();
-            this.websiteContent.el.contentDocument.body.innerHTML = bodyHTML;
+            this.websiteContent().contentDocument.body.innerHTML = bodyHTML;
         },
     });
     patchWithCleanup(WebsiteSystrayItem.prototype, {

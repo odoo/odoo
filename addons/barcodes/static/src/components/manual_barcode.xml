@@ -3,7 +3,7 @@
     <t t-name="barcodes.BarcodeInput">
         <div class="input-group">
             <input id="manual_barcode" t-model.proxy="this.state.barcode" type="text" name="barcode"
-                    class="form-control" t-custom-ref="manualBarcode"
+                    class="form-control" t-ref="this.barcodeManual"
                     t-att-placeholder="this.props.placeholder" t-on-keydown="this._onKeydown"/>
             <button class="input-group-text" t-att-disabled="!this.state.barcode"
                     t-on-click.prevent="(ev) => this.props.onSubmit(this.state.barcode)">

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="portal.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter o-portal-Chatter w-100 h-100 flex-grow-1 d-flex pt-2" t-att-class="{ 'row':this.twoColumns() or this.displayRating, 'flex-column':!this.twoColumns() and !this.displayRating, 'o-review-Chatter mx-0': this.displayRating }" t-on-scroll="this.onScrollDebounced" t-custom-ref="root">
-        <div class="o-mail-Chatter-top top-0" t-att-class="{ 'col-lg-5':this.twoColumns() and !this.displayRating, 'col-lg-4': this.displayRating, 'col-xl-3 ps-0': this.displayRating and this.twoColumns(), 'position-sticky':this.composer() }" t-att-style="(!this.twoColumns() and this.env.inFrontendPortalChatter) and 'top: -1px !important; margin-top:-15px; padding-top: 20px'" t-custom-ref="top">
+    <div t-if="this.state.thread" class="o-mail-Chatter o-portal-Chatter w-100 h-100 flex-grow-1 d-flex pt-2" t-att-class="{ 'row':this.twoColumns() or this.displayRating, 'flex-column':!this.twoColumns() and !this.displayRating, 'o-review-Chatter mx-0': this.displayRating }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
+        <div class="o-mail-Chatter-top top-0" t-att-class="{ 'col-lg-5':this.twoColumns() and !this.displayRating, 'col-lg-4': this.displayRating, 'col-xl-3 ps-0': this.displayRating and this.twoColumns(), 'position-sticky':this.composer() }" t-att-style="(!this.twoColumns() and this.env.inFrontendPortalChatter) and 'top: -1px !important; margin-top:-15px; padding-top: 20px'" t-ref="this.topRef">
             <Composer t-if="this.composer() and !this.displayRating" composer="this.state.thread.composer" mode="'extended'" onPostCallback.bind="this.onPostCallback" dropzoneRef="this.rootRef" t-key="this.threadId()" type="'message'"/>
         </div>
         <div class="o-mail-Chatter-content" t-att-class="{ 'col-lg-6 offset-lg-1': this.twoColumns() and !this.displayRating, 'col-lg-8 px-0': this.displayRating, 'offset-xl-1': this.displayRating and this.twoColumns() }">

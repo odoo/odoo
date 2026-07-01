@@ -19,7 +19,7 @@
 
     <t t-name="hr_expense.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o-kanban-button-new')]" position="before">
-            <input type="file" name="ufile" class="d-none" t-custom-ref="fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput" />
+            <input type="file" name="ufile" class="d-none" t-ref="this.fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput" />
             <button t-if="this.canCreate and !this.uiService.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="this.uploadDocument">
                 Upload
             </button>

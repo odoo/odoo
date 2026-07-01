@@ -114,7 +114,7 @@ export class ListController extends Component {
             beforeLeave: this.beforeLeave.bind(this),
             beforeUnload: this.beforeUnload.bind(this),
             getLocalState: () => {
-                const renderer = this.rootRef().querySelector(".o_list_renderer");
+                const renderer = this.rootRef()?.querySelector(".o_list_renderer");
                 return {
                     modelState: this.model.exportState(),
                     rendererScrollPositions: {

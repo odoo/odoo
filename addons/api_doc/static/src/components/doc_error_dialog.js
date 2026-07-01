@@ -1,4 +1,4 @@
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class DocErrorDialog extends Component {
@@ -12,7 +12,7 @@ export class DocErrorDialog extends Component {
                 <div t-if="this.state.showTraceback" class="overflow-auto position-relative" style="max-height: 500px;">
                     <button
                         class="btn bg-100 position-absolute top-0 end-0"
-                        t-custom-ref="copyButton"
+                        t-ref="this.copyButtonRef"
                         t-on-click="this.onClickClipboard"
                     >
                         <span class="fa fa-clipboard"/>
@@ -28,14 +28,16 @@ export class DocErrorDialog extends Component {
         </div>
     `;
     static props = {
-        name: {type: String},
-        status: {type: Number, optional: true},
-        traceback: {type: String, optional: true},
+        name: { type: String },
+        status: { type: Number, optional: true },
+        traceback: { type: String, optional: true },
     };
+
+    copyButtonRef = signal(null);
 
     setup() {
         this.state = proxy({
-            showTraceback: false
+            showTraceback: false,
         });
     }
 

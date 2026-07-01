@@ -3,7 +3,7 @@
 
     <t t-name="hr_recruitment.GaugeChartWidget">
         <div class="oe_gauge position-relative pt-3">
-            <canvas t-custom-ref="canvas"/>
+            <canvas t-ref="this.canvasRef"/>
             <span class="o_gauge_value position-absolute start-0 end-0 bottom-0 text-center fs-2 fw-bolder">
                 <t t-out="this.formatPercent(this.totalScore)"/>
             </span>

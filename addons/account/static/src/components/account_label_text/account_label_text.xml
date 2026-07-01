@@ -16,7 +16,7 @@
             </div>
         </t>
         <t t-else="">
-            <div name="account_label_text" class="o_account_label_text" t-custom-ref="root">
+            <div name="account_label_text" class="o_account_label_text" t-ref="this.rootRef">
                 <div class="d-flex align-items-start">
                     <div class="flex-grow-1 position-relative">
                         <textarea
@@ -25,7 +25,7 @@
                             t-att-id="this.props.id"
                             t-att-placeholder="this.props.placeholder"
                             t-att-rows="this.rowCount"
-                            t-custom-ref="textarea"
+                            t-ref="this.textareaRef"
                             t-on-blur="this.onBlur"
                             t-on-input="this.debouncedOnLabelInput"
                             t-on-keydown="this.onLabelKeydown"

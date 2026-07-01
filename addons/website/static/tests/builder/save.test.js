@@ -105,7 +105,7 @@ test("discard modified elements", async () => {
 test("discard without any modifications", async () => {
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         async closeEditor() {
-            this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
+            this.websiteContent().contentDocument.body.innerHTML = wrapExample;
         },
     });
     await setupWebsiteBuilder(exampleContent);
@@ -460,8 +460,7 @@ function setupSaveAndReloadIframe() {
     });
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         async closeEditor() {
-            this.websiteContent.el.contentDocument.body.innerHTML =
-                resultSave.at(-1) || wrapExample;
+            this.websiteContent().contentDocument.body.innerHTML = resultSave.at(-1) || wrapExample;
         },
     });
     return resultSave;

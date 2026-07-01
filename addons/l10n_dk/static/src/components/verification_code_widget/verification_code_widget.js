@@ -1,9 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { range } from "@web/core/utils/numbers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, Resource } from "@odoo/owl";
 
 class VerificationCodeWidget extends Component {
     static props = {
@@ -11,9 +9,10 @@ class VerificationCodeWidget extends Component {
     };
     static template = "l10n_dk.VerificationCodeWidget";
 
-    setup() {
-        super.setup();
-        this.inputs = range(6).map((i) => useRef(`input_${i}`));
+    inputsRef = new Resource({ name: "inputs" });
+
+    get inputs() {
+        return this.inputsRef.items();
     }
 
     /*
@@ -27,10 +26,10 @@ class VerificationCodeWidget extends Component {
         }
         ev.preventDefault();
 
-        const pastedData = ev.clipboardData.getData('text').split('');
+        const pastedData = ev.clipboardData.getData("text").split("");
         const target = ev.target;
         for (let i = target.id; i < this.inputs.length; i++) {
-            this.inputs[i].el.value = pastedData.shift() || null;
+            this.inputs[i].value = pastedData.shift() || null;
         }
     }
 
@@ -46,7 +45,7 @@ class VerificationCodeWidget extends Component {
     }
 
     _save() {
-        let verificationCode = [...this.inputs.map((i) => i.el.value)].join("");
+        const verificationCode = [...this.inputs.map((el) => el.value)].join("");
         if (verificationCode.length === 6) {
             this.props.record.update({ verification_code: verificationCode });
         }

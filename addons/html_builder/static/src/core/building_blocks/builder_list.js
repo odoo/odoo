@@ -2,11 +2,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-<<<<<<< HEAD
-import { Component, computed, onPatched, props, t, xml, proxy } from "@odoo/owl";
-=======
-import { Component, onWillUpdateProps, onPatched, props, signal, t, xml, proxy } from "@odoo/owl";
->>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
+import { Component, computed, onPatched, props, proxy, signal, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -112,12 +108,7 @@ export class BuilderList extends Component {
         this.state = state;
         this.commit = commit;
         this.preview = preview;
-<<<<<<< HEAD
         this.allRecords = computed(() => this.formatRawValue(this.props.records));
-        this.tableRef = useRef("table");
-=======
-        this.allRecords = this.formatRawValue(this.props.records);
->>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
         this.visibilityState = proxy({
             limit: this.props.limit,
         });

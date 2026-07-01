@@ -1,9 +1,9 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Component, onMounted, onPatched, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, signal } from "@odoo/owl";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { useProductAndLabelAutoresize } from "./product_and_label_autoresize";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
@@ -44,9 +44,9 @@ export class ProductNameAndDescriptionField extends Component {
         this.labelVisibility = proxy({ value: false });
         this.switchToLabel = false;
         this.columnIsProductAndLabel = proxy({ value: this.props.record.columnIsProductAndLabel });
-        this.labelNode = useRef("labelNodeRef");
+        this.labelNode = signal(null);
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
-        this.productNode = useRef("productNodeRef");
+        this.productNode = signal(null);
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
 
         this.descriptionColumn = this.constructor.descriptionColumn;
@@ -65,9 +65,10 @@ export class ProductNameAndDescriptionField extends Component {
         );
 
         onPatched(() => {
-            if (this.labelNode.el && this.switchToLabel) {
+            const labelEl = this.labelNode();
+            if (labelEl && this.switchToLabel) {
                 this.switchToLabel = false;
-                this.labelNode.el.focus();
+                labelEl.focus();
             }
         });
 

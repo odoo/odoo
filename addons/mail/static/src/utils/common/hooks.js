@@ -342,22 +342,23 @@ export function useScrollState(ref) {
  * Hook that execute the callback function each time the scrollable element hit
  * the bottom minus the threshold.
  *
- * @param {string} refName scrollable t-ref name to observe
+ * @param {string|import("@odoo/owl").Signal<HTMLElement|null>} refOrName scrollable t-ref name or signal ref to observe
  * @param {function} callback function to execute when scroll hit the bottom minus the threshold
  * @param {number} threshold number of threshold pixel to trigger the callback
  */
-export function useOnBottomScrolled(refName, callback, threshold = 1) {
-    const ref = useRef(refName);
+export function useOnBottomScrolled(refOrName, callback, threshold = 1) {
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
     function onScroll() {
-        if (Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) < threshold) {
+        const el = resolveRefEl(ref);
+        if (el && Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < threshold) {
             callback();
         }
     }
     onMounted(() => {
-        ref.el?.addEventListener("scroll", onScroll);
+        resolveRefEl(ref)?.addEventListener("scroll", onScroll);
     });
     onWillUnmount(() => {
-        ref.el?.removeEventListener("scroll", onScroll);
+        resolveRefEl(ref)?.removeEventListener("scroll", onScroll);
     });
 }
 

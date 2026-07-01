@@ -12,11 +12,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-<<<<<<< HEAD
-import { Component, onMounted, useEffect, props, proxy, t } from "@odoo/owl";
-=======
-import { Component, onMounted, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
->>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
+import { Component, onMounted, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];

@@ -1,4 +1,4 @@
-import { render, useRef } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -10,7 +10,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 export class BoardController extends Component {
     static template = "board.BoardView";
@@ -20,6 +20,8 @@ export class BoardController extends Component {
         board: Object,
     };
 
+    mainRef = signal(null);
+
     setup() {
         this.board = proxy(this.props.board);
         this.dialogService = useService("dialog");
@@ -27,9 +29,8 @@ export class BoardController extends Component {
         if (this.uiService.isSmall) {
             this.selectLayout("1", false);
         } else {
-            const mainRef = useRef("main");
             useSortable({
-                ref: mainRef,
+                ref: this.mainRef,
                 elements: ".o-dashboard-action",
                 handle: ".o-dashboard-action-header",
                 cursor: "move",

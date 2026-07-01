@@ -1,5 +1,5 @@
-import { render, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { render } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { formatDate } from "@web/core/l10n/dates";
@@ -11,8 +11,9 @@ export class StockValuationReportFilters extends Component {
     };
     static props = {};
 
+    dateFilterRef = signal(null);
+
     setup() {
-        this.dateFilterRef = useRef("filterDate");
         const getPickerProps = () => {
             const pickerProps = {
                 value: this.env.controller.state.date,
@@ -21,7 +22,7 @@ export class StockValuationReportFilters extends Component {
             return pickerProps;
         };
         this.dateTimePicker = useDateTimePicker({
-            target: "filterDate",
+            target: this.dateFilterRef,
             get pickerProps() {
                 return getPickerProps();
             },

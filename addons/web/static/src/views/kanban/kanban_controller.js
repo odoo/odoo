@@ -139,7 +139,7 @@ export class KanbanController extends Component {
                 if (this.uiService.isSmall && this.model.root.isGrouped) {
                     const columnScrollTops = [];
                     const sel = ".o_kanban_group:not(.o_column_folded)";
-                    const columnEls = this.rootRef().querySelectorAll(sel);
+                    const columnEls = this.rootRef()?.querySelectorAll(sel) ?? [];
                     const groups = this.model.root.groups;
                     for (const columnEl of columnEls) {
                         const scrollTop = columnEl.scrollTop;
@@ -149,7 +149,7 @@ export class KanbanController extends Component {
                         }
                     }
                     state.scrollPositions = {
-                        scrollLeft: this.rootRef().querySelector(".o_renderer")?.scrollLeft || 0,
+                        scrollLeft: this.rootRef()?.querySelector(".o_renderer")?.scrollLeft || 0,
                         columnScrollTops,
                     };
                 }

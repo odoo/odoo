@@ -3,7 +3,7 @@
     <t t-name="account.AccountMoveSendAttachmentsSelector">
         <FileUploader multiUpload="true" onUploaded.bind="this.onFileUploaded">
             <t t-set-slot="toggler">
-                <span class="d-none" t-custom-ref="fileUploadTrigger"/>
+                <span class="d-none" t-ref="this.fileUploadTriggerRef"/>
             </t>
             <Dropdown menuClass="'account-move-send-attachments-selector-dropdown d-flex flex-column'" disabled="this.dropdownAttachments.length == 0">
                 <button class="btn btn-light w-auto" data-hotkey="a" title="Add Attachment" t-on-click="() => this.triggerFileUpload(this.dropdownAttachments.length == 0)">

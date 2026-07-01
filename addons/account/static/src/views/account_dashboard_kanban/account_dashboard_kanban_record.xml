@@ -7,7 +7,7 @@
             t-att-tabindex="this.props.record.model.useSampleModel ? -1 : 0"
             t-on-click="this.onGlobalClick"
             t-on-dragenter.stop.prevent="() => this.dropzoneState.visible = true"
-            t-custom-ref="root">
+            t-ref="this.rootRef">
             <AccountFileUploader t-if="this.allowDrop" record="this.props.record">
                 <t t-set-slot="default">
                     <UploadDropZone t-props="this.dropzoneProps"/>

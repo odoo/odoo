@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { tourRecorderState } from "./tour_recorder_state";
@@ -129,6 +128,8 @@ export class TourRecorder extends Component {
         tourName: "",
     };
 
+    tourRecorderRef = signal(null);
+
     setup() {
         this.originClickEvent = false;
         this.destClickEvent = false;
@@ -144,7 +145,6 @@ export class TourRecorder extends Component {
                 y: 0,
             },
         });
-        this.tourRecorderRef = useRef("tour_recorder");
         this.dropdownState = useDropdownState();
 
         this.state.steps = tourRecorderState.getCurrentTourRecorder();

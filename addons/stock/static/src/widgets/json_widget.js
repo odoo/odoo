@@ -1,16 +1,16 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, signal } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class JsonPopOver extends Component {
     static template = "";
-    static props = {...standardFieldProps};
+    static props = { ...standardFieldProps };
     get jsonValue() {
         return JSON.parse(this.props.record.data[this.props.name]);
     }
@@ -42,10 +42,10 @@ registry.category("fields").add("lead_days_widget", popOverLeadDays);
 
 export class ReplenishmentGraphWidget extends JsonPopOver {
     static template = "stock.replenishmentGraph";
+    canvasRef = signal(null);
     setup() {
         super.setup();
         this.chart = null;
-        this.canvasRef = useRef("canvas");
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
             await loadBundle("web.chartjs_lib");
@@ -60,10 +60,10 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
             };
         });
     }
-    get productUomName(){
+    get productUomName() {
         return this.jsonValue["product_uom_name"];
     }
-    get qtyOnHand(){
+    get qtyOnHand() {
         return this.jsonValue["qty_on_hand"];
     }
     get productMaxQty() {
@@ -93,14 +93,17 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
             this.chart.destroy();
         }
         const config = this.getScatterGraphConfig();
-        this.chart = new Chart(this.canvasRef.el, config);
+        this.chart = new Chart(this.canvasRef(), config);
     }
 
     getScatterGraphConfig() {
-        const dashLine = (ctx, value) => ctx.p1.raw.x === this.jsonValue['x_axis_vals'].slice(-1)[0] ? value : undefined;
-        const pushYLabels = (ticks) => ticks.push({value: this.productMinQty}, {value: this.productMaxQty});
-        const showYLabel = (tick) => tick === this.productMinQty || tick === this.productMaxQty ? tick : '';
-        const labels = this.jsonValue['x_axis_vals'];
+        const dashLine = (ctx, value) =>
+            ctx.p1.raw.x === this.jsonValue["x_axis_vals"].slice(-1)[0] ? value : undefined;
+        const pushYLabels = (ticks) =>
+            ticks.push({ value: this.productMinQty }, { value: this.productMaxQty });
+        const showYLabel = (tick) =>
+            tick === this.productMinQty || tick === this.productMaxQty ? tick : "";
+        const labels = this.jsonValue["x_axis_vals"];
         const maxLineColor = getColor(1, cookie.get("color_scheme"), "odoo");
         const minLineColor = getColor(2, cookie.get("color_scheme"), "odoo");
         const curveLineColor = getColor(3, cookie.get("color_scheme"), "odoo");
@@ -108,28 +111,32 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
             type: "scatter",
             data: {
                 labels,
-                datasets: [{
-                    type: "line",
-                    data: this.jsonValue["max_line_vals"],
-                    fill: false,
-                    pointStyle: false,
-                    borderColor: maxLineColor,
-                }, {
-                    type: "line",
-                    data: this.jsonValue["min_line_vals"],
-                    fill: false,
-                    pointStyle: false,
-                    borderColor: minLineColor,
-                }, {
-                    type: "line",
-                    data: this.jsonValue["curve_line_vals"],
-                    fill: false,
-                    pointStyle: false,
-                    borderColor: curveLineColor,
-                    segment: {
-                        borderDash: ctx => dashLine(ctx, [6, 6]),
-                    }
-                }],
+                datasets: [
+                    {
+                        type: "line",
+                        data: this.jsonValue["max_line_vals"],
+                        fill: false,
+                        pointStyle: false,
+                        borderColor: maxLineColor,
+                    },
+                    {
+                        type: "line",
+                        data: this.jsonValue["min_line_vals"],
+                        fill: false,
+                        pointStyle: false,
+                        borderColor: minLineColor,
+                    },
+                    {
+                        type: "line",
+                        data: this.jsonValue["curve_line_vals"],
+                        fill: false,
+                        pointStyle: false,
+                        borderColor: curveLineColor,
+                        segment: {
+                            borderDash: (ctx) => dashLine(ctx, [6, 6]),
+                        },
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: false,
@@ -140,22 +147,22 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
                 },
                 scales: {
                     y: {
-                        grid: {display: false},
-                        beforeTickToLabelConversion: data => pushYLabels(data.ticks),
+                        grid: { display: false },
+                        beforeTickToLabelConversion: (data) => pushYLabels(data.ticks),
                         ticks: {
                             autoSkip: false,
-                            callback: tick => showYLabel(tick),
+                            callback: (tick) => showYLabel(tick),
                         },
                         suggestedMax: this.productMaxQty * 1.1,
                         suggestedMin: this.productMinQty * 0.9,
                     },
                     x: {
-                        type: 'category',
-                        grid: {display: false},
+                        type: "category",
+                        grid: { display: false },
                     },
                 },
             },
-        }
+        };
     }
 }
 

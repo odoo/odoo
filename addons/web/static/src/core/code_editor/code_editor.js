@@ -3,6 +3,7 @@ import { Component, onWillStart, markRaw, props, signal, status, t, proxy } from
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
 import { Reactive } from "../utils/reactive";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 class CodeEditorState extends Reactive {
     /**@protected*/
@@ -167,7 +168,7 @@ export class CodeEditor extends Component {
                     aceEditor.destroy();
                 };
             },
-            () => [this.editorRef()]
+            () => [resolveRefEl(this.editorRef)]
         );
 
         useLayoutEffect(

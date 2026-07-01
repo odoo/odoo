@@ -16,7 +16,7 @@ import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     tourRecorderState,
 } from "@web_tour/js/tour_recorder/tour_recorder_state";
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -400,14 +400,16 @@ test("Edit input after autofocus", async () => {
         static template = xml/*html*/ `
             <t>
                 <div class="container">
-                    <input type="text" class="o_input" t-custom-ref="input"/>
+                    <input type="text" class="o_input" t-ref="this.inputRef"/>
                 </div>
             </t>
         `;
         static props = ["*"];
 
+        inputRef = signal(null);
+
         setup() {
-            useAutofocus({ refName: "input" });
+            useAutofocus({ ref: this.inputRef });
         }
     }
 

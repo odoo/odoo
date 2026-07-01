@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-7">
                                 <div name="next_serial" class="o_field_widget o_field_char">
-                                    <input placeholder="e.g. LOT-PR-00012" class="o_input" t-custom-ref="nextSerial" id="next_serial_0" type="text"/>
+                                    <input placeholder="e.g. LOT-PR-00012" class="o_input" t-ref="this.nextSerial" id="next_serial_0" type="text"/>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             </div>
                             <div class="col-9">
                                 <div name="next_serial_count" class="o_field_widget o_field_integer">
-                                    <input inputmode="numeric" t-custom-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="number"
+                                    <input inputmode="numeric" t-ref="this.nextSerialCount" class="o_input" id="next_serial_count_0" type="number"
                                         t-on-keydown="(ev) => !this.isLotTracking and ev.key === '.' and ev.preventDefault()"/>
                                 </div>
                                 <span t-if="this.isLotTracking &amp;&amp; this.displayUOM" t-out="this.props.move.data.uom_id.display_name"/>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-9">
                                 <div name="total_received" class="o_field_widget o_field_integer">
-                                    <input inputmode="numeric" t-custom-ref="totalReceived" class="o_input" id="total_received_0" type="number"/>
+                                    <input inputmode="numeric" t-ref="this.totalReceived" class="o_input" id="total_received_0" type="number"/>
                                 </div>
                                 <span t-if="this.displayUOM" t-out="this.props.move.data.uom_id.display_name"/>
                             </div>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="col-9">
                                 <div name="keep_lines">
-                                    <input type="checkbox" t-custom-ref="keepLines" id="keep_lines_0"/>
+                                    <input type="checkbox" t-ref="this.keepLines" id="keep_lines_0"/>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                             <div name="next_serial" class="o_field_widget o_field_char">
                                 <textarea
                                     placeholder="Write one lot/serial name per line, followed by the quantity."
-                                    class="o_input" t-custom-ref="lots" id="next_serial_0" type="text"/>
+                                    class="o_input" t-ref="this.lots" id="next_serial_0" type="text"/>
                             </div>
                         </div>
                         <div class="d-flex">
@@ -101,7 +101,7 @@
                         </div>
                         <div class="o_cell flex-grow-1 flex-sm-grow-0">
                             <div name="keep_lines">
-                                <input type="checkbox" t-custom-ref="keepLines" id="keep_lines_0"/>
+                                <input type="checkbox" t-ref="this.keepLines" id="keep_lines_0"/>
                             </div>
                         </div>
                     </div>

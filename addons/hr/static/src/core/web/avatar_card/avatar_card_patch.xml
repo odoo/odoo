@@ -30,7 +30,7 @@
             <span t-if="this.employee?.department_id" class="text-muted text-truncate" data-tooltip="Department" t-att-title="this.employee.department_id.name" t-out="this.employee.department_id.name"/>
         </xpath>
 
-        <xpath expr="//button[@t-custom-ref='viewProfileBtn']" position="after">
+        <xpath expr="//button[@t-ref='this.viewProfileBtnRef']" position="after">
             <Dropdown t-if="this.canActivateEmployeeCompany" position="'bottom-start'">
                 <button class="btn btn-secondary btn-sm dropdown-toggle">View Profile<i class="fa fa-fw fa-caret-down ms-1"/></button>
                 <t t-set-slot="content">

@@ -3,7 +3,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -25,11 +25,13 @@ export class AddToBoard extends Component {
     static components = { Dropdown };
     static props = {};
 
+    autofocusRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.state = proxy({ name: this.env.config.getDisplayName() });
 
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
     }
 
     //---------------------------------------------------------------------

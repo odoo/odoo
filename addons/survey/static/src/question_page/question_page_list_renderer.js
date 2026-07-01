@@ -16,7 +16,7 @@ export class QuestionPageListRenderer extends ListRenderer {
                     table.classList.add("o_section_list_view");
                 }
             },
-            () => [this.tableRef.el]
+            () => [this.tableRef()]
         );
     }
 

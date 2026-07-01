@@ -1,10 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.SuggestionList">
-<<<<<<< HEAD
-        <div class="o-we-SuggestionList user-select-none" t-custom-ref="suggestionList">
-=======
-        <div class="o-we-SuggestionList" t-ref="this.suggestionListRef">
->>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
+        <div class="o-we-SuggestionList user-select-none" t-ref="this.suggestionListRef">
             <t t-foreach="this.props.state.list" t-as="item" t-key="item.value">
                 <div class="d-flex align-items-center py-1 px-2 w-100 cursor-pointer o-navigable" t-on-click.stop="() => this.onClick(item)">
                     <strong class="px-2 fs-3" t-out="item.value" />

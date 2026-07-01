@@ -14,6 +14,7 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
@@ -73,7 +74,7 @@ export class HtmlViewer extends Component {
                 () => {
                     this.processReadonlyContent(this.readonlyElementRef());
                 },
-                () => [this.props.config.value.toString(), this.readonlyElementRef()]
+                () => [this.props.config.value.toString(), resolveRefEl(this.readonlyElementRef)]
             );
         }
 
@@ -98,7 +99,7 @@ export class HtmlViewer extends Component {
                         this.mountComponents();
                     }
                 },
-                () => [this.props.config.value.toString(), this.readonlyElementRef()]
+                () => [this.props.config.value.toString(), resolveRefEl(this.readonlyElementRef)]
             );
             this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }

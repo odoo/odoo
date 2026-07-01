@@ -62,7 +62,7 @@ function useClickAway(popover, callback, targetWindow = window) {
                 iframeEl.contentWindow,
                 "pointerdown",
                 () => {
-                    const popupEl = popover.popoverRef.el;
+                    const popupEl = popover.popoverRef();
                     let checkEl = iframeEl.parentElement;
                     while (checkEl) {
                         if (checkEl === popupEl) {

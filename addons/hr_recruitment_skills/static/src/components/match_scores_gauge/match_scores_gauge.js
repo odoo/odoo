@@ -1,9 +1,9 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, signal } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -29,7 +29,7 @@ export class GaugeChartWidget extends Component {
 
     setup() {
         this.chart = null;
-        this.canvasRef = useRef("canvas");
+        this.canvasRef = signal(null);
         this.orm = useService("orm");
 
         onWillStart(async () => {
@@ -165,7 +165,7 @@ export class GaugeChartWidget extends Component {
                 aspectRatio: 2,
             },
         };
-        this.chart = new Chart(this.canvasRef.el, config);
+        this.chart = new Chart(this.canvasRef(), config);
     }
 }
 

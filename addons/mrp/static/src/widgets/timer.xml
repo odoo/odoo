@@ -6,6 +6,6 @@
 
     <t t-name="mrp.MrpTimerField">
         <MrpTimer t-if="this.props.readonly" value="this.duration" ongoing="this.ongoing"/>
-        <input t-else="" t-att-id="this.props.id" t-custom-ref="numpadDecimal" t-att-placeholder="this.props.placeholder" inputmode="numeric" class="o_input" />
+        <input t-else="" t-att-id="this.props.id" t-ref="this.numpadDecimalRef" t-att-placeholder="this.props.placeholder" inputmode="numeric" class="o_input" />
     </t>
 </templates>

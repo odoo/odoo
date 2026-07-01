@@ -1,9 +1,8 @@
-import { onMounted, onPatched, props, t } from "@odoo/owl";
+import { onMounted, onPatched, props, signal, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
-import { useRef } from "@web/owl2/utils";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListTextField, textFieldProps } from "@web/views/fields/text/text_field";
@@ -23,9 +22,10 @@ export class AccountLabelTextField extends ListTextField {
         options: t.object().optional({}),
     });
 
+    rootRef = signal(null);
+
     setup() {
         super.setup();
-        this.rootRef = useRef("root");
         this.orm = useService("orm");
         this.action = useService("action");
         this.debouncedOnLabelInput = useDebounced(this.onLabelInput, 200);
@@ -76,13 +76,11 @@ export class AccountLabelTextField extends ListTextField {
     }
 
     get m2xInput() {
-        return this.rootRef.el?.querySelector(".o_m2o_overlay .o-autocomplete--input");
+        return this.rootRef()?.querySelector(".o_m2o_overlay .o-autocomplete--input");
     }
 
     get isDropdownVisible() {
-        const menu = this.rootRef.el?.querySelector(
-            ".o_m2o_overlay .o-autocomplete--dropdown-menu"
-        );
+        const menu = this.rootRef()?.querySelector(".o_m2o_overlay .o-autocomplete--dropdown-menu");
         if (!menu) {
             return false;
         }
@@ -103,7 +101,7 @@ export class AccountLabelTextField extends ListTextField {
         }
         await this.updateMany2XProduct(rec);
         // useInputField won't auto-sync when dirty (user was typing), force it.
-        const textarea = this.textareaRef.el;
+        const textarea = this.textareaRef();
         if (textarea) {
             textarea.value = this.props.record.data[this.props.name] || "";
             textarea.focus();
@@ -115,7 +113,7 @@ export class AccountLabelTextField extends ListTextField {
     }
 
     async onLabelInput() {
-        const textarea = this.textareaRef.el;
+        const textarea = this.textareaRef();
         if (!textarea || !this.canEditProduct) {
             return;
         }

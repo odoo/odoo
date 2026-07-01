@@ -1,4 +1,6 @@
-import { props, t, useListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { props, t } from "@odoo/owl";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
 
 export class AutoCompleteWithPages extends AutoComplete {
@@ -10,18 +12,34 @@ export class AutoCompleteWithPages extends AutoComplete {
 
     setup() {
         super.setup();
-        // targetDropdown outlives this component; a trailing event on teardown can fire when inputRef.el is already null.
-        const whenMounted = (handler) => (ev) => {
-            if (this.inputRef.el) {
-                handler.call(this, ev);
-            }
-        };
-        useListener(() => this.targetDropdown, "blur", whenMounted(this.onInputBlur));
-        useListener(() => this.targetDropdown, "click", whenMounted(this._syncInputClick));
-        useListener(() => this.targetDropdown, "change", whenMounted(this.onInputChange));
-        useListener(() => this.targetDropdown, "input", whenMounted(this._syncInputValue));
-        useListener(() => this.targetDropdown, "keydown", whenMounted(this.onInputKeydown));
-        useListener(() => this.targetDropdown, "focus", whenMounted(this.onInputFocus));
+        useLayoutEffect(
+            (input, inputRef) => {
+                if (inputRef) {
+                    inputRef.value = input.value;
+                }
+                const targetBlur = this.onInputBlur.bind(this);
+                const targetClick = this._syncInputClick.bind(this);
+                const targetChange = this.onInputChange.bind(this);
+                const targetInput = this._syncInputValue.bind(this);
+                const targetKeydown = this.onInputKeydown.bind(this);
+                const targetFocus = this.onInputFocus.bind(this);
+                input.addEventListener("blur", targetBlur);
+                input.addEventListener("click", targetClick);
+                input.addEventListener("change", targetChange);
+                input.addEventListener("input", targetInput);
+                input.addEventListener("keydown", targetKeydown);
+                input.addEventListener("focus", targetFocus);
+                return () => {
+                    input.removeEventListener("blur", targetBlur);
+                    input.removeEventListener("click", targetClick);
+                    input.removeEventListener("change", targetChange);
+                    input.removeEventListener("input", targetInput);
+                    input.removeEventListener("keydown", targetKeydown);
+                    input.removeEventListener("focus", targetFocus);
+                };
+            },
+            () => [this.targetDropdown, resolveRefEl(this.inputRef)]
+        );
     }
 
     get targetDropdown() {
@@ -34,8 +52,8 @@ export class AutoCompleteWithPages extends AutoComplete {
     }
 
     async _syncInputValue() {
-        if (this.inputRef.el) {
-            this.inputRef.el.value = this.targetDropdown.value;
+        if (this.inputRef()) {
+            this.inputRef().value = this.targetDropdown.value;
             this.onInput();
         }
     }

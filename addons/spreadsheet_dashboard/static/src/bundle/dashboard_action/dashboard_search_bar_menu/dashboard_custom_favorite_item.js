@@ -20,13 +20,13 @@ export class DashboardCustomFavoriteItem extends CustomFavoriteItem {
         // TODO: state.description does not update when user type and press Enter -> it gives the old value.
         // Reading from descriptionRef directly as a workaround.
         // Once parent CustomFavoriteItem is fixed, switch back to state.description.
-        const description = this.descriptionRef.el.value.trim();
+        const description = this.descriptionRef().value.trim();
         if (!description) {
             this.notificationService.add(_t("A name for your favorite filter is required."), {
                 type: "danger",
             });
             ev.stopPropagation();
-            this.descriptionRef.el.focus();
+            this.descriptionRef().focus();
             return false;
         }
 

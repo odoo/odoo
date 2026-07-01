@@ -1,16 +1,15 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { maybePlugin } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { onWillPatch } from "@odoo/owl";
+import { onWillPatch, signal, useEffect } from "@odoo/owl";
 
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
         this.portalChatterPlugin = maybePlugin(PortalChatterPlugin);
-        this.topRef = useRef("top");
+        this.topRef = signal.ref();
         onWillPatch(() => {
             // Keep the composer position under the page header on scrolling
             // unless the header is on the side.
@@ -27,14 +26,12 @@ patch(Chatter.prototype, {
                 );
             }
         });
-        useLayoutEffect(
-            () => {
-                if (this.topRef.el) {
-                    this.observer?.observe(this.topRef.el);
-                }
-            },
-            () => [this.topRef.el]
-        );
+        useEffect(() => {
+            const topEl = this.topRef();
+            if (topEl) {
+                this.observer?.observe(topEl);
+            }
+        });
     },
 
     get displayRating() {

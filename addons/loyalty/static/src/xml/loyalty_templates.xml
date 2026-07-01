@@ -33,7 +33,7 @@
         <t t-if="this.displayControlPanelButtons" position="replace">
             <h4 t-out="this.field.string or ''"/>
             <t t-if="this.displayControlPanelButtons">
-                <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons" t-custom-ref="buttons">
+                <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons">
                     <div>
                         <button type="button" class="btn btn-secondary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
                             Add

@@ -4,9 +4,12 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
+import { signal } from "@odoo/owl";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
+
+    datetimePickerTargetRef = signal.ref();
 
     /** @override **/
     setup() {
@@ -15,7 +18,7 @@ export class VersionsTimeline extends StatusBarField {
         this.orm = useService("orm");
 
         this.dateTimePicker = useDateTimePicker({
-            target: `datetime-picker-target-version`,
+            target: this.datetimePickerTargetRef,
             onApply: (date) => {
                 if (date) {
                     this.createVersion(date);

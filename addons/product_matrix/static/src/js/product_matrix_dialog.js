@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
-import { Dialog } from '@web/core/dialog/dialog';
+import { Dialog } from "@web/core/dialog/dialog";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { Component, onMounted, markup } from "@odoo/owl";
+import { Component, onMounted, markup, signal } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
     static template = "product_matrix.dialog";
@@ -17,10 +16,11 @@ export class ProductMatrixDialog extends Component {
     };
     static components = { Dialog };
 
-    setup() {
-        this.size = 'xl';
+    productMatrixRef = signal(null);
 
-        const productMatrixRef = useRef('productMatrix');
+    setup() {
+        this.size = "xl";
+
         useHotkey("enter", () => this._onConfirm(), {
             /***
              * By default, Hotkeys don't work in input fields. As the matrix table is composed of
@@ -31,14 +31,16 @@ export class ProductMatrixDialog extends Component {
              * discard button, we only set the hotkey area on the matrix table.
              */
             bypassEditableProtection: true,
-            area: () => productMatrixRef.el,
+            area: () => this.productMatrixRef(),
         });
 
         onMounted(() => {
-            if(this.props.editedCellAttributes.length) {
-                const inputs = document.getElementsByClassName('o_matrix_input');
-                const relevantInput = Array.from(inputs).filter((matrixInput) =>
-                    matrixInput.attributes.ptav_ids.nodeValue === this.props.editedCellAttributes
+            if (this.props.editedCellAttributes.length) {
+                const inputs = document.getElementsByClassName("o_matrix_input");
+                const relevantInput = Array.from(inputs).filter(
+                    (matrixInput) =>
+                        matrixInput.attributes.ptav_ids.nodeValue ===
+                        this.props.editedCellAttributes
                 )[0];
                 if (relevantInput) {
                     relevantInput.select();
@@ -48,37 +50,36 @@ export class ProductMatrixDialog extends Component {
                     inputs[0].select();
                 }
             } else {
-                document.getElementsByClassName('o_matrix_input')[0].select();
+                document.getElementsByClassName("o_matrix_input")[0].select();
             }
         });
     }
 
     toggleOpacity(ev) {
-        ev.target.classList.toggle('opacity-25', ev.target.value === '0');
+        ev.target.classList.toggle("opacity-25", ev.target.value === "0");
     }
 
-    _format({price, currency_id}) {
-        if (!price) { return ""; }
-        const sign = price < 0 ? '-' : '+';
-        const formatted = formatMonetary(
-            Math.abs(price),
-            {
-                currencyId: currency_id,
-            },
-        );
+    _format({ price, currency_id }) {
+        if (!price) {
+            return "";
+        }
+        const sign = price < 0 ? "-" : "+";
+        const formatted = formatMonetary(Math.abs(price), {
+            currencyId: currency_id,
+        });
         return markup(`&nbsp;${sign}&nbsp;${formatted}&nbsp;`);
     }
 
     _onConfirm() {
-        const inputs = document.getElementsByClassName('o_matrix_input');
-        let matrixChanges = [];
-        for (let matrixInput of inputs) {
+        const inputs = document.getElementsByClassName("o_matrix_input");
+        const matrixChanges = [];
+        for (const matrixInput of inputs) {
             if (matrixInput.value && matrixInput.value !== matrixInput.attributes.value.nodeValue) {
                 matrixChanges.push({
                     qty: parseFloat(matrixInput.value),
-                    ptav_ids: matrixInput.attributes.ptav_ids.nodeValue.split(",").map(
-                        id => parseInt(id)
-                    ),
+                    ptav_ids: matrixInput.attributes.ptav_ids.nodeValue
+                        .split(",")
+                        .map((id) => parseInt(id)),
                 });
             }
         }
@@ -87,9 +88,9 @@ export class ProductMatrixDialog extends Component {
             this.props.record.update({
                 grid: JSON.stringify({
                     changes: matrixChanges,
-                    product_template_id: this.props.product_template_id
+                    product_template_id: this.props.product_template_id,
                 }),
-                grid_update: true // to say that the changes to grid have to be applied to the SO.
+                grid_update: true, // to say that the changes to grid have to be applied to the SO.
             });
         }
         this.props.close();

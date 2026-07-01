@@ -11,6 +11,7 @@ import {
     onWillDestroy,
     props,
     proxy,
+    signal,
     t,
 } from "@odoo/owl";
 
@@ -97,25 +98,25 @@ class MrpTimerField extends Component {
     static components = { MrpTimer };
     props = props(standardFieldProps);
 
+    numpadDecimalRef = signal(null);
+
     setup() {
         this.orm = useService("orm");
         useInputField({
             getValue: () => this.durationFormatted,
-            refName: "numpadDecimal",
+            ref: this.numpadDecimalRef,
             parse: (v) => parseFloatTime(v),
         });
 
         useRecordObserver(async (record) => {
             if (!this.props.record.model.useSampleModel && record.data.state === "progress") {
-                this.duration = await this.orm.call(
-                    "mrp.workorder",
-                    "get_duration",
-                    [this.props.record.resId]
-                );
+                this.duration = await this.orm.call("mrp.workorder", "get_duration", [
+                    this.props.record.resId,
+                ]);
             } else {
                 this.duration = record.data[this.props.name];
             }
-        })
+        });
 
         onWillDestroy(() => clearTimeout(this.timer));
     }

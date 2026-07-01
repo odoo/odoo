@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
@@ -12,6 +11,9 @@ export class SubtaskCreate extends Component {
         onSubtaskCreateNameChanged: { type: Function },
         onBlur: { type: Function },
     };
+
+    input = signal(null);
+
     setup() {
         this.placeholder = _t("Write a task name");
         this.state = proxy({
@@ -19,8 +21,7 @@ export class SubtaskCreate extends Component {
             name: this.props.name,
             isFieldInvalid: false,
         });
-        this.input = useRef("subtaskCreateInput");
-        useAutofocus({ refName: "subtaskCreateInput" });
+        useAutofocus({ ref: this.input });
     }
 
     /**
@@ -43,7 +44,7 @@ export class SubtaskCreate extends Component {
     }
 
     _onClick() {
-        this.input.el.focus();
+        this.input()?.focus();
     }
 
     /**
@@ -59,8 +60,8 @@ export class SubtaskCreate extends Component {
     }
 
     _onSaveClick() {
-        if (this.input.el.value.trim() === "") {
-            this.props.onSubtaskCreateNameChanged(this.input.el.value.trim());
+        if (this.input().value.trim() === "") {
+            this.props.onSubtaskCreateNameChanged(this.input().value.trim());
             this.state.isFieldInvalid = true;
             this.state.name = "";
         }

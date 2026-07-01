@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="hr.VersionsTimeline" t-inherit="web.StatusBarField" t-inherit-mode="primary">
-        <div t-custom-ref="root" position="after">
+        <div t-ref="this.rootRef" position="after">
             <div class="o_arrow_button_wrapper">
                 <button
-                    t-custom-ref="datetime-picker-target-version"
+                    t-ref="this.datetimePickerTargetRef"
                     title="New Employee Record"
                     t-on-click="this.onClickDateTimePickerBtn"
                     class="btn btn-primary">
@@ -14,10 +14,10 @@
             </div>
         </div>
 
-        <button t-custom-ref="after" position="replace">
+        <button t-ref="this.afterRef" position="replace">
             <div class="o_arrow_button_wrapper">
                 <button
-                    t-custom-ref="after"
+                    t-ref="this.afterRef"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
                     t-att-disabled="this.props.isDisabled"
@@ -28,10 +28,10 @@
             </div>
         </button>
 
-        <button t-custom-ref="before" position="replace">
+        <button t-ref="this.beforeRef" position="replace">
             <div class="o_arrow_button_wrapper">
                 <button
-                    t-custom-ref="before"
+                    t-ref="this.beforeRef"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
                     t-att-disabled="this.props.isDisabled"

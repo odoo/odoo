@@ -288,7 +288,7 @@ test("within iframe", async () => {
     const marginTop = queryRect(".popover-arrow").height;
     const { top: targetTop, left: targetLeft } = popoverTarget.getBoundingClientRect();
     const { top: iframeTop, left: iframeLeft } = queryOne("iframe").getBoundingClientRect();
-    let popoverBox = comp.popoverRef.el.getBoundingClientRect();
+    let popoverBox = comp.popoverRef().getBoundingClientRect();
     let expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight + marginTop;
     const expectedLeft =
         iframeLeft + targetLeft + (popoverTarget.offsetWidth - popoverBox.width) / 2;
@@ -298,7 +298,7 @@ test("within iframe", async () => {
     await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom", "bottom"]);
-    popoverBox = comp.popoverRef.el.getBoundingClientRect();
+    popoverBox = comp.popoverRef().getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
     expect(Math.floor(popoverBox.left)).toBe(Math.floor(expectedLeft));

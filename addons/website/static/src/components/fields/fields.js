@@ -153,7 +153,7 @@ export class UrlWarningBannerVisibilityCharField extends CharField {
     }
 
     onBlur() {
-        this.props.record.update({ [this.props.name]: this.input.el.value });
+        this.props.record.update({ [this.props.name]: this.input().value });
         super.onBlur();
     }
 }

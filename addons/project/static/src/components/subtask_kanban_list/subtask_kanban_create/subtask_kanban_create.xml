@@ -4,7 +4,7 @@
         <input type="text" title="Rename" 
             class='o_input border-0 border-bottom py-1'
             t-att-class="{'o_field_invalid border-danger': this.state.isFieldInvalid}"
-            t-custom-ref='subtaskCreateInput'
+            t-ref="this.input"
             t-att-value="this.state.name"
             t-att-placeholder="this.placeholder"
             t-on-input="this._onInput"

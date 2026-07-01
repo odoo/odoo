@@ -5,7 +5,7 @@
         <div class="o_action">
             <Layout display="this.display">
                 <t t-set-slot="control-panel-buttons">
-                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-custom-ref="buttons">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons">
                         <button type="button" class="btn btn-primary" t-on-click="() => this.onClickPrint()">Print</button>
                         <t t-if="this.hasUnfoldableLines">
                             <button t-if="this.hasFoldedLines" type="button" class="btn btn-secondary ms-1" t-on-click="() => this.onClickUnfold()">Unfold</button>

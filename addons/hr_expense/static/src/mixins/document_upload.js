@@ -1,5 +1,5 @@
-import { props, proxy, t } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { props, proxy, signal, t } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
@@ -15,7 +15,6 @@ export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocument
         this.dragState = proxy({
             showDragZone: false,
         });
-        this.root = useRef("root");
 
         useLayoutEffect(
             (el) => {
@@ -37,7 +36,7 @@ export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocument
             () => [document.querySelector('.o_content')]
         );
 
-        useRefListener(this.root, 'click', (ev) => {
+        useRefListener(this.rootRef, 'click', (ev) => {
             let targetElement = ev.target;
             if (targetElement.closest('.o_view_nocontent_expense_receipt')) {
                 this.props.uploadDocument();
@@ -150,13 +149,14 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
 }
 
 export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends AbstractExpenseDocumentUpload(T) {
+    fileInput = signal(null);
+
     setup() {
         super.setup();
-        this.fileInput = useRef('fileInput');
         this.uploadsProcessing = 0;
 
         useBus(this.env.bus, "change_file_input", async (ev) => {
-            this.fileInput.el.files = ev.detail.files;
+            this.fileInput().files = ev.detail.files;
             this.uploadsProcessing++;
             await this.onChangeFileInput();
         });
@@ -164,12 +164,12 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
 
     uploadDocument() {
         this.uploadsProcessing++;
-        this.fileInput.el.click();
+        this.fileInput().click();
     }
 
     async onChangeFileInput() {
         try {
-            await this._onChangeFileInput([...this.fileInput.el.files]);
+            await this._onChangeFileInput([...this.fileInput().files]);
             if (this.uploadsProcessing === 1) {
                 await this.generateOpenExpensesAction(this.actionService.currentController.action);
             }
