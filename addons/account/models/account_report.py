@@ -1017,7 +1017,7 @@ class AccountReportColumn(models.Model):
     name = fields.Char(string="Name", translate=True, required=True)
     expression_label = fields.Char(string="Expression Label", required=True)
     sequence = fields.Integer(string="Sequence")
-    report_id = fields.Many2one(string="Report", comodel_name='account.report', index='btree_not_null')
+    report_id = fields.Many2one(string="Report", comodel_name='account.report', index='btree_not_null', required=True, ondelete='cascade')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")
