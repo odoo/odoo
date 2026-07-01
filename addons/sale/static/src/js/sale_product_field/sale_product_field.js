@@ -1,3 +1,4 @@
+import { useEffect } from "@odoo/owl";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
@@ -19,28 +20,26 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.wasCombo = false;
         let isMounted = false;
 
-        // useLayoutEffect(
-        //     (value) => {
-        //         if (!isMounted) {
-        //             isMounted = true;
-        //         } else if (value && this.isInternalUpdate) {
-        //             // we don't want to trigger product update when update comes from an external sources,
-        //             // such as an onchange, or the product configuration dialog itself
-        //             if (this.wasCombo) {
-        //                 // If the previously selected product was a combo, delete its selected combo
-        //                 // items before changing the product.
-        //                 this.props.record.update({ selected_combo_items: "[]" });
-        //             }
-        //             if (this.relation === "product.template" || this.isCombo) {
-        //                 this._onProductTemplateUpdate();
-        //             } else {
-        //                 this._onProductUpdate();
-        //             }
-        //         }
-        //         this.isInternalUpdate = false;
-        //     },
-        //     () => [this.value && this.value.id]
-        // );
+        useEffect(() => {
+            const value = this.value && this.value.id;
+            if (!isMounted) {
+                isMounted = true;
+            } else if (value && this.isInternalUpdate) {
+                // we don't want to trigger product update when update comes from an external sources,
+                // such as an onchange, or the product configuration dialog itself
+                if (this.wasCombo) {
+                    // If the previously selected product was a combo, delete its selected combo
+                    // items before changing the product.
+                    this.props.record.update({ selected_combo_items: "[]" });
+                }
+                if (this.relation === "product.template" || this.isCombo) {
+                    this._onProductTemplateUpdate();
+                } else {
+                    this._onProductUpdate();
+                }
+            }
+            this.isInternalUpdate = false;
+        });
     }
 
     get productName() {
