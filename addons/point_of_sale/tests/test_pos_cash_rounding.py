@@ -183,3 +183,21 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             "test_archived_product_removed_and_order_is_refunded",
             login="pos_admin"
         )
+
+    def test_to_pay_section_rounded(self):
+        rounding = self.env['account.cash.rounding'].create({
+            'name': 'Test rounding',
+            'rounding': 10,
+            'rounding_method': 'HALF-UP',
+        })
+        self.main_pos_config.write({
+            'rounding_method': rounding,
+            'cash_rounding': True,
+            'only_round_cash_method': True,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_to_pay_section_rounded",
+            login="pos_admin"
+        )

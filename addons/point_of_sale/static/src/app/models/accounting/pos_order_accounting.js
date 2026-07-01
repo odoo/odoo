@@ -189,6 +189,9 @@ export class PosOrderAccounting extends Base {
     get orderSign() {
         return this.prices.taxDetails.order_sign;
     }
+    get roundedTotalDue() {
+        return this.prices.taxDetails.total_amount_currency;
+    }
 
     /**
      * Determine if the amount to pay should be rounded depending on the payment method
