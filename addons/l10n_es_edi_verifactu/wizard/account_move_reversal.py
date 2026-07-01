@@ -9,7 +9,7 @@ class AccountMoveReversal(models.TransientModel):
         compute="_compute_l10n_es_edi_verifactu_required", store=True,
     )
 
-    l10n_es_edi_verifactu_refund_reason = fields.Selection(
+    l10n_es_invoice_type = fields.Selection(
         selection=[
             ('R1', "R1: Art 80.1 and 80.2 and error of law"),
             ('R2', "R2: Art. 80.3"),
@@ -18,7 +18,7 @@ class AccountMoveReversal(models.TransientModel):
             ('R5', "R5: Corrective invoices concerning simplified invoices"),
         ],
         string="Veri*Factu Refund Reason",
-        compute="_compute_l10n_es_edi_verifactu_refund_reason", store=True, readonly=False,
+        compute="_compute_l10n_es_invoice_type", store=True, readonly=False,
     )
 
     @api.depends('move_ids.l10n_es_edi_verifactu_required')
@@ -26,25 +26,27 @@ class AccountMoveReversal(models.TransientModel):
         for wizard in self:
             wizard.l10n_es_edi_verifactu_required = any(wizard.move_ids.mapped('l10n_es_edi_verifactu_required'))
 
-    @api.depends('move_ids.l10n_es_edi_verifactu_required')
-    def _compute_l10n_es_edi_verifactu_refund_reason(self):
+    @api.depends('move_ids.l10n_es_edi_verifactu_required', 'move_ids.l10n_es_is_simplified')
+    def _compute_l10n_es_invoice_type(self):
         for wizard in self:
-            refund_reason = False
             if wizard.l10n_es_edi_verifactu_required:
-                refund_reason = 'R4'
-            wizard.l10n_es_edi_verifactu_refund_reason = refund_reason
+                wizard.l10n_es_invoice_type = (
+                    'R5' if any(wizard.move_ids.mapped('l10n_es_is_simplified')) else 'R4'
+                )
+            else:
+                wizard.l10n_es_invoice_type = False
 
     def _prepare_default_reversal(self, move):
         # EXTEND 'account'
         values = super()._prepare_default_reversal(move)
-        if refund_reason := self.l10n_es_edi_verifactu_refund_reason:
-            values['l10n_es_edi_verifactu_refund_reason'] = refund_reason
+        if self.l10n_es_invoice_type:
+            values['l10n_es_invoice_type'] = self.l10n_es_invoice_type
         return values
 
     def _modify_default_reverse_values(self, origin_move):
         # EXTEND 'account'
         values = super()._modify_default_reverse_values(origin_move)
         values['l10n_es_edi_verifactu_substituted_entry_id'] = origin_move.id
-        if refund_reason := self.l10n_es_edi_verifactu_refund_reason:
-            values['l10n_es_edi_verifactu_refund_reason'] = refund_reason
+        if self.l10n_es_invoice_type:
+            values['l10n_es_invoice_type'] = self.l10n_es_invoice_type
         return values

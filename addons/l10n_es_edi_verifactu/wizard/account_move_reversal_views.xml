@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_move_reversal"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='reason']" position="after">
-                    <field name="l10n_es_edi_verifactu_refund_reason" invisible="not l10n_es_edi_verifactu_required"/>
+                    <field name="l10n_es_invoice_type" invisible="not l10n_es_edi_verifactu_required"/>
                 </xpath>
             </field>
         </record>

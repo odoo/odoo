@@ -118,7 +118,7 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
                 'move_ids': [Command.set((invoice.id,))],
                 'date': '2019-02-10',
                 'journal_id': invoice.journal_id.id,
-                'l10n_es_edi_verifactu_refund_reason': 'R1',
+                'l10n_es_invoice_type': 'R1',
             }
         ).reverse_moves()
         credit_note = invoice.reversal_move_ids
@@ -160,7 +160,7 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
                 'date': '2019-02-10',
                 'journal_id': invoice.journal_id.id,
                 # By default:
-                # 'l10n_es_edi_verifactu_refund_reason': 'R1',
+                # 'l10n_es_invoice_type': 'R4',
             }
         ).reverse_moves(is_modify=True)
 

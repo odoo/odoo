@@ -16,6 +16,15 @@
                            invisible="country_code != 'ES' and l10n_es_type != 'exento'"
                            required="l10n_es_type == 'exento' and type_tax_use == 'sale'"/>
                 </xpath>
+                <xpath expr="//page[@name='advanced_options']//group/field[@name='country_id']" position="after">
+                    <field name="l10n_es_available_vat_regime_code_ids" invisible="1"/> <!-- Needed for the dynamic_selection widget -->
+                    <field name="l10n_es_vat_regime_code_id"
+                           widget="dynamic_selection"
+                           options="{'available_field': 'l10n_es_available_vat_regime_code_ids'}"/>
+                    <field name="l10n_es_vat_regime_code_additional"
+                           widget="dynamic_selection"
+                           options="{'available_field': 'l10n_es_available_vat_regime_code_ids'}"/>
+                </xpath>
             </field>
         </record>
     </data>

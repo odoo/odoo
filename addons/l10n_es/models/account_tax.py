@@ -4,7 +4,8 @@ from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax', 'l10n.es.vat.regime.mixin']
+    _name = 'account.tax'
 
     l10n_es_exempt_reason = fields.Selection(
         selection=[
@@ -61,3 +62,19 @@ class AccountTax(models.Model):
     @api.model
     def _l10n_es_get_main_tax_types(self):
         return {'exento', 'sujeto', 'sujeto_agricultura', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'no_deducible'}
+
+    @api.depends('type_tax_use')
+    def _compute_l10n_es_vat_regime_available(self):
+        super()._compute_l10n_es_vat_regime_available()
+
+    @api.depends('type_tax_use')
+    def _compute_l10n_es_vat_regime_codes(self):
+        super()._compute_l10n_es_vat_regime_codes()
+
+    def _l10n_es_vat_regime_get_use(self):
+        self.ensure_one()
+        if self.type_tax_use == 'sale':
+            return 'sale'
+        if self.type_tax_use == 'purchase':
+            return 'purchase'
+        return None
