@@ -418,6 +418,10 @@ export class ProductPage extends Interaction {
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
+        if (combinationInfo.product_specifications) {
+            combinationInfo.product_specifications = markup(combinationInfo.product_specifications);
+        }
+
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
     }
@@ -745,6 +749,41 @@ export class ProductPage extends Interaction {
                     '[name="packaging_selector"] .o_wsale_product_page_variants'
                 );
                 variantSection.classList.toggle('d-none', !hasAttributes && !hasPackaging);
+            }
+        }
+
+        if (combination.product_specifications) {
+            const accordionEl = parent.querySelector("#product_accordion");
+            if (accordionEl) {
+                const openId = accordionEl.querySelector(".accordion-collapse.show")?.id;
+
+                accordionEl.insertAdjacentHTML(
+                    "beforebegin",
+                    htmlEscape(combination.product_specifications)
+                );
+                accordionEl.remove();
+
+                const replacedAccordion = parent.querySelector("#product_accordion");
+                if (replacedAccordion) {
+                    replacedAccordion.classList.remove("o_accordion_not_initialized");
+                    if (openId) {
+                        const toOpenCollapse = replacedAccordion.querySelector(`#${openId}`);
+                        toOpenCollapse?.classList.add("show");
+                        const toOpenButton = replacedAccordion.querySelector(
+                            `[data-bs-target="#${openId}"]`
+                        );
+                        toOpenButton?.classList.remove("collapsed");
+                    }
+                }
+            } else {
+                const specSection = document.querySelector("#product_full_spec");
+                if (specSection) {
+                    specSection.insertAdjacentHTML(
+                        "beforebegin",
+                        htmlEscape(combination.product_specifications)
+                    );
+                    specSection.remove();
+                }
             }
         }
 

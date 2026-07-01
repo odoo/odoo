@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ExtraFieldsOption">
+
+    <t
+        t-set="availableFields"
+        t-value="this.getAvailableFields()"
+    />
+    <t t-set="allFieldsAdded" t-value="availableFields.length === 0"/>
+
+    <BuilderRow label.translate="Add Field">
+        <BuilderSelect
+            action="'selectExtraField'"
+            preview="false"
+            t-key="`field-${this.sharedState.optionState.fieldId}`"
+        >
+            <t t-if="allFieldsAdded">
+                <BuilderSelectItem actionValue="''">
+                    — All fields added —
+                </BuilderSelectItem>
+            </t>
+            <t t-foreach="availableFields" t-as="field" t-key="field.id">
+                <BuilderSelectItem actionValue="`${field.id}`">
+                    <t t-out="field.field_description"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Category">
+        <BuilderSelect
+            action="'selectExtraFieldCategory'"
+            preview="false"
+            t-key="`category-${this.sharedState.optionState.categoryId}`"
+        >
+            <BuilderSelectItem actionValue="''">No category</BuilderSelectItem>
+            <t t-foreach="this.sharedState.categories" t-as="category" t-key="category.id">
+                <BuilderSelectItem actionValue="`${category.id}`">
+                    <t t-out="category.name"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <t
+            t-call="website_sale.CategoryCreateToggle"
+            t-call-context="{
+                categoryCreateMode: this.sharedState.optionState.categoryCreateMode,
+                onOpenCreateMode: () => this.setCategoryCreateMode(true),
+                onCloseCreateMode: () => this.setCategoryCreateMode(false),
+            }"
+        />
+    </BuilderRow>
+
+    <t t-if="this.sharedState.optionState.categoryCreateMode">
+        <t
+            t-call="website_sale.CategoryCreateForm"
+            t-call-context="{createActionName: 'createCategory'}"
+        />
+    </t>
+
+    <t t-if="!this.sharedState.optionState.categoryCreateMode">
+        <BuilderRow label.translate=" ">
+            <BuilderButton
+                action="'addExtraField'"
+                t-if="!allFieldsAdded and this.sharedState.optionState.fieldId"
+                preview="false"
+                type="'success'"
+            >
+                Confirm
+            </BuilderButton>
+        </BuilderRow>
+        <BuilderRow t-if="allFieldsAdded" label.translate=" ">
+            <small class="text-muted fst-italic">No more fields available to add.</small>
+        </BuilderRow>
+    </t>
+
+</t>
+
+<t t-name="website_sale.CategoryCreateToggle">
+    <BuilderButton
+        t-if="!categoryCreateMode"
+        title.translate="Create a new category"
+        className="'fa fa-plus text-success border-0'"
+        style="'background-color: transparent !important;'"
+        preview="false"
+        t-on-click="onOpenCreateMode"
+    />
+    <BuilderButton
+        t-if="categoryCreateMode"
+        title.translate="Cancel"
+        className="'fa fa-times text-danger border-0'"
+        style="'background-color: transparent !important;'"
+        preview="false"
+        t-on-click="onCloseCreateMode"
+    />
+</t>
+
+<t t-name="website_sale.CategoryCreateForm">
+    <BuilderRow label.translate="Name" level="1">
+        <BuilderTextInput
+            action="'setExtraFieldCategoryName'"
+            placeholder.translate="Category name..."
+        />
+    </BuilderRow>
+    <BuilderRow label.translate=" ">
+        <BuilderButton
+            t-props="{ action: createActionName, preview: false, type: 'success', className: 'w-auto' }"
+        >
+            + Create Category
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>
