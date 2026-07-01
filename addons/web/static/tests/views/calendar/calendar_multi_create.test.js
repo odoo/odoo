@@ -23,10 +23,10 @@ import {
 import { selectDateRange } from "./calendar_test_helpers";
 
 import { Domain } from "@web/core/domain";
-import { notificationService } from "@web/core/notifications/notification_service";
 import { range } from "@web/core/utils/numbers";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { WebClient } from "@web/webclient/webclient";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -471,7 +471,7 @@ test("multi_create: basic creation (datetime field)", async () => {
 
 test.tags("desktop");
 test("multi_create: input validation (datetime field)", async () => {
-    patchWithCleanup(notificationService, {
+    patchWithCleanup(NotificationPlugin.prototype, {
         start: () => ({
             add: (message) => {
                 expect.step(message);
@@ -684,7 +684,7 @@ test("multi_create: test onChange on form with no blur (input text)", async () =
 
 test.tags("desktop");
 test("multi_create: test onChange on TimePicker with no blur (input text)", async () => {
-    patchWithCleanup(notificationService, {
+    patchWithCleanup(NotificationPlugin.prototype, {
         start: () => ({
             add: (message) => {
                 expect.step(message);
@@ -804,13 +804,12 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
 
 test.tags("desktop");
 test("multi_create: test required attribute in form", async () => {
-    patchWithCleanup(notificationService, {
-        start: () => ({
-            add: (message) => {
-                expect.step(message);
-            },
-        }),
-    });
+    patchWithCleanup(NotificationPlugin.prototype, {
+          add(message) {
+              expect.step(message);
+          },
+      });
+
 
     onRpc("event", "create", ({ args: [records] }) => {
         for (const record of records) {

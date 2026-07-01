@@ -90,7 +90,6 @@ export function useVoiceRecorder(params = {}, options = {}) {
             }
         },
     });
-    /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
     const dialog = useService("dialog");
     const notification = useService("notification");
     const store = useService("mail.store");

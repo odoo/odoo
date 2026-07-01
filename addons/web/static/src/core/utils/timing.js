@@ -1,6 +1,7 @@
 import { useComponent } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
-import { onWillUnmount } from "@odoo/owl";
+import { computed, onWillDestroy, onWillUnmount, signal } from "@odoo/owl";
+import { clamp } from "@web/core/utils/numbers";
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same
@@ -210,4 +211,57 @@ export function useThrottleForAnimation(func) {
     const throttledForAnimation = throttleForAnimation(func.bind(component));
     onWillUnmount(() => throttledForAnimation.cancel());
     return throttledForAnimation;
+}
+
+
+/**
+ * Hook that animates a progress value from 0 to 1 over a given duration.
+ * The animation starts immediately and is automatically stopped when the
+ * component is destroyed.
+ * @param {number} duration total duration of the timer in milliseconds
+ * @returns {{ progress: ReactiveValue<number, number>, stop: () => void, reset: () => void, resume: () => void }}
+ *      - `progress`: reactive computed value in [0, 1] tracking the elapsed fraction of the duration
+ *      - `stop`: cancels the running animation frame
+ *      - `reset`: restarts the timer from the beginning
+ *      - `resume`: resumes the timer from the current progress
+ */
+export function useTimer(duration) {
+    const progress = signal(0);
+    let start = Date.now();
+    let rId = null;
+
+    const animate = () => {
+        rId = requestAnimationFrame(() => {
+            const elapsed = Date.now() - start;
+            progress.set(clamp(elapsed / duration, 0, 1));
+            if (elapsed < duration) {
+                animate();
+            }
+        });
+    }
+
+    const stop = () => cancelAnimationFrame(rId);
+
+    const reset = () => {
+        stop()
+        start = Date.now();
+        animate();
+    }
+
+    const resume = () => {
+        stop();
+        start = Date.now() - (progress() * duration);
+        animate();
+    }
+
+    animate();
+
+    onWillDestroy(stop);
+
+    return {
+        progress: computed(progress),
+        stop,
+        reset,
+        resume,
+    };
 }
