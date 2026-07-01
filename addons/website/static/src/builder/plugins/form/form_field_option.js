@@ -41,7 +41,6 @@ export class FormFieldOption extends BaseOptionComponent {
                 elClassList: [...el.classList],
                 fieldName,
                 modelName,
-                fieldTranslatedName: el.dataset.translatedName,
             };
         });
         this.format = {

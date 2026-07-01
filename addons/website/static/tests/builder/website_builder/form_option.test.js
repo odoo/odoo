@@ -1,7 +1,22 @@
-import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    bold,
+    deleteBackward,
+    insertText,
+    redo,
+    undo,
+} from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
-import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
-import { animationFrame, edit } from "@odoo/hoot-dom";
+import {
+    beforeEach,
+    describe,
+    expect,
+    press,
+    queryAllTexts,
+    queryOne,
+    test,
+    waitFor,
+} from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -22,10 +37,12 @@ import {
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import {
+    dummyBase64Img,
     getDragHelper,
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -284,23 +301,31 @@ const formWithCondition = `
 </form></section>
 `;
 
+function setSelectionOnNodeContent(el) {
+    setSelection({ anchorNode: el, anchorOffset: 0, focusOffset: el.childNodes.length });
+}
+
 test("Remove visibility dependency on field unavailable (change first)", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(formWithCondition);
-    getEditor();
-    await contains(":iframe input[name=a]").click();
-    await contains("[data-label=Label] input").click();
-    await contains("[data-label=Label] input").edit("b");
+    const editor = getEditor();
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(1);
+    const aLabelEl = queryOne(":iframe .s_website_form_label_content:contains(a)");
+    await contains(aLabelEl).click();
+    setSelectionOnNodeContent(aLabelEl);
+    await insertText(editor, "b");
     expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
 });
 
 test("Remove visibility dependency on field unavailable (change second)", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(formWithCondition);
-    getEditor();
-    await contains(":iframe input[name=b]").click();
-    await contains("[data-label=Label] input").click();
-    await contains("[data-label=Label] input").edit("a");
+    const editor = getEditor();
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(1);
+    const aLabelEl = queryOne(":iframe .s_website_form_label_content:contains(b)");
+    await contains(aLabelEl).click();
+    setSelectionOnNodeContent(aLabelEl);
+    await insertText(editor, "a");
     expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
 });
 
@@ -580,11 +605,34 @@ test("Last list entry cannot be removed", async () => {
     expect(".options-container .builder_list_remove_item").toHaveCount(2);
 });
 
+class ResCountryState extends models.Model {
+    _name = "res.country.state";
+    name = fields.Char({ string: "Name" });
+    _records = [
+        { id: 1, name: "State 1 (A)" },
+        { id: 2, name: "State 2 (B)" },
+    ];
+}
+const countryAndStateField = {
+    country_id: {
+        name: "country_id",
+        relation: "res.country",
+        string: "Country",
+        type: "many2one",
+    },
+    state_id: {
+        name: "state_id",
+        relation: "res.country.state",
+        string: "State",
+        type: "many2one",
+    },
+};
 test("Can link states to a country", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -598,7 +646,7 @@ test("Can link states to a country", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -631,10 +679,11 @@ test("Can link states to a country", async () => {
 });
 
 test("Shouldn't have the 'Link to country' option if there's no country field", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -661,10 +710,10 @@ test("Min and max character limits should not contradict one another.", async ()
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
-                                <span class="s_website_form_label_content">Your Name</span>
+                                <span class="s_website_form_label_content">name</span>
                                 <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
@@ -702,10 +751,11 @@ test("Min and max character limits should not contradict one another.", async ()
 });
 
 test("Only state fields have data-link-state-to-country attr", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -717,7 +767,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -743,38 +793,6 @@ test("Only state fields have data-link-state-to-country attr", async () => {
     await contains(".o-hb-select-dropdown-item:contains('Selection')").click();
     expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(
         "data-link-state-to-country"
-    );
-});
-
-test("Label falls back to default value (data-translated-name) when removed", async () => {
-    onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
-            <div class="container-fluid">
-            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
-                <div class="s_website_form_rows">
-                    <div data-name="Field" data-translated-name="Default value" class="s_website_form_field s_website_form_required" data-type="text">
-                        <div class="row">
-                            <label class="s_website_form_label" for="oyeqnysxh10b">
-                                <span class="s_website_form_label_content">My Field</span>
-                            </label>
-                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="field" />
-                        </div>
-                    </div>
-                </div>
-            </form>
-            </div>
-        </section>`
-    );
-
-    await contains(":iframe section span:contains('My Field')").click();
-    await contains("[data-action-id='setLabelText'] input").click();
-    expect("[data-action-id='setLabelText'] input").toHaveValue("My Field");
-    await edit("");
-    await press("Tab");
-    expect("[data-action-id='setLabelText'] input").toHaveValue("Default value");
-    expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
-        "Default value"
     );
 });
 
@@ -1131,6 +1149,73 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");
 });
 
+test("label's markup is preserved when switching between field's type", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form");
+    setSelectionOnNodeContent(
+        queryOne(":iframe .s_website_form_label_content:contains(Your Name)")
+    );
+    bold(getEditor());
+    expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
+        "<strong>Your Name</strong>"
+    );
+
+    await contains(":iframe .s_website_form_field:contains(Your Name)").click();
+    await contains("button[id='type_opt']").click();
+    await contains("[data-action-value='selection']").click();
+
+    expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
+        "<strong>Your Name</strong>"
+    );
+});
+
+test("tool to add a link is not available in <label>", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder("<label><span>text</span></label>");
+    setSelectionOnNodeContent(queryOne(":iframe label span"));
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar .btn[name='link']").toHaveCount(0);
+});
+
+test("powerbox tools that add links are not available in <label>", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<span class="out-label">text</span><label><span class="in-label">text</span></label>`
+    );
+    const items = ["Link", "Button", "Upload a file", "Media"];
+
+    setSelection({ anchorNode: queryOne(":iframe span.out-label"), anchorOffset: 0 });
+    await insertText(getEditor(), "/");
+    await animationFrame();
+    for (const item of items) {
+        expect(queryAllTexts(".o-we-command-name")).toInclude(item);
+    }
+
+    setSelection({ anchorNode: queryOne(":iframe span.in-label"), anchorOffset: 0 });
+    await insertText(getEditor(), "/");
+    await animationFrame();
+    for (const item of items) {
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude(item);
+    }
+});
+
+test("img in label should not have the option for link of click", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<img src="${dummyBase64Img}" class="out-label"/><label><img src="${dummyBase64Img}" class="in-label"/></label>`
+    );
+
+    await contains(":iframe img.out-label").click();
+    await waitSidebarUpdated();
+    expect("[data-action-id='setLink']").toHaveCount(1);
+    expect("[data-class-action='o_image_popup']").toHaveCount(1);
+
+    await contains(":iframe img.in-label").click();
+    await waitSidebarUpdated();
+    expect("[data-action-id='setLink']").toHaveCount(0);
+    expect("[data-class-action='o_image_popup']").toHaveCount(0);
+});
+
 test("builderList re-renders when the field type changes (custom fields)", async () => {
     onRpc("get_authorized_fields", () => ({}));
     patchWithCleanup(BuilderList.prototype, {
@@ -1245,4 +1330,16 @@ test("snippets that can't be dropped in forms", async () => {
     dragUtils = await contains("#snippet_content [name='Countdown'] .o_snippet_thumbnail").drag();
     expect(":iframe .s_website_form_rows .oe_drop_zone").toHaveCount(0);
     await dragUtils.cancel();
+});
+
+test("default for label when user deletes its content", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form");
+    const labelEl = queryOne(":iframe .s_website_form_label_content:contains(Your Name)");
+    setSelectionOnNodeContent(labelEl);
+    expect(labelEl).not.toHaveAttribute("data-show-default-label");
+    expect(labelEl).not.toHaveAttribute("data-default-label-content");
+    deleteBackward(getEditor());
+    expect(labelEl).toHaveAttribute("data-show-default-label", "true");
+    expect(labelEl).toHaveAttribute("data-default-label-content", "Custom Field");
 });

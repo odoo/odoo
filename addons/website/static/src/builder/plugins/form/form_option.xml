@@ -18,8 +18,9 @@
             <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Marker" level="1">
-        <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
+    <BuilderRow label.translate="Marker" level="1" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')">
+        <BuilderTextInput action="'setMark'" default="''"/>
+        <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--form-label-required-mark-color'"/>
     </BuilderRow>
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
@@ -168,9 +169,8 @@
     <BuilderRow label.translate="Height" level="1" applyTo="'textarea'">
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
     </BuilderRow>
-    <BuilderRow label.translate="Label">
-        <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
-        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="this.isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
+    <BuilderRow label.translate="Hide Label" t-if="this.isActiveItem('custom_field_boolean_opt')">
+        <BuilderCheckbox title.translate="Hide Label" action="'toggleCheckboxLabel'"/>
     </BuilderRow>
     <BuilderRow label.translate="Required">
         <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"

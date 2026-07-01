@@ -948,7 +948,7 @@ export class Form extends Interaction {
         const comparator = fieldEl.dataset.visibilityComparator;
         const between = fieldEl.dataset.visibilityBetween;
         const dependencyEl = this.el.querySelector(
-            `.s_website_form_input[name="${dependencyName}"]`
+            `.s_website_form_input[name="${CSS.escape(dependencyName)}"]`
         );
         const visibilityCondition = fieldEl.dataset.visibilityCondition;
         const containerEl = dependencyEl.closest(".s_website_form_field");

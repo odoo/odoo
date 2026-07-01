@@ -26,8 +26,7 @@
     <t t-name="website.form_field">
         <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
-            data-name="Field"
-            t-att-data-translated-name="this.defaultName">
+            data-name="Field">
             <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
                 <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''} #{this.field.formatInfo.labelInvisible and 'invisible' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>

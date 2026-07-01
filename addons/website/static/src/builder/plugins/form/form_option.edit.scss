@@ -9,7 +9,7 @@
         display: block !important;
         background-color: $o-we-fg-light;
     }
-    .s_website_form_label, .s_website_form_check_label {
+    .s_website_form_check_label {
         pointer-events: none;
     }
 
@@ -19,6 +19,15 @@
         }
         &:not(.d-none) {
             display: none !important;
+        }
+    }
+
+    .s_website_form_label_content[contenteditable="true"] {
+        cursor: text;
+
+        &[data-show-default-label]::after {
+            content: attr(data-default-label-content);
+            opacity: 0.3;
         }
     }
 }

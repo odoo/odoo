@@ -69,7 +69,9 @@ export class MediaPlugin extends Plugin {
                     this.openMediaDialog({
                         activeTab: this.getActiveDialogTab(context.searchTerm),
                     }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) &&
+                    !closestElement(selection.anchorNode, "label"),
             },
         ],
         toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image"] }),

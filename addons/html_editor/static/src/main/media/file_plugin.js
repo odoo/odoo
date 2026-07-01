@@ -12,6 +12,7 @@ import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FileModel } from "@web/core/file_viewer/file_model";
 import { downloadFile } from "@web/core/network/download";
+import { allowedToCreateLink } from "../link/link_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -28,7 +29,9 @@ export class FilePlugin extends Plugin {
             icon: "fa-upload",
             run: this.uploadAndInsertFiles.bind(this),
             isAvailable: (selection) =>
-                this.isUploadCommandAvailable(selection) && isHtmlContentSupported(selection),
+                this.isUploadCommandAvailable(selection) &&
+                isHtmlContentSupported(selection) &&
+                allowedToCreateLink(selection.anchorNode),
         },
         powerbox_items: {
             categoryId: "media",

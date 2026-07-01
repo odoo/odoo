@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
@@ -556,4 +556,21 @@ test("should not navigate table cells when powerbox is open", async () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `
     );
+});
+
+describe("availability", () => {
+    test("table should be available from span inside editable", async () => {
+        const { editor } = await setupEditor("<p><span>ab[]</span></p>");
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Table");
+    });
+    test("table should not be available from span which is the root of editable", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p><span contenteditable="true">ab[]</span></p></div>'
+        );
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Table");
+    });
 });
