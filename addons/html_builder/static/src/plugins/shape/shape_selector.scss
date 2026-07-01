@@ -34,7 +34,7 @@
 
 .builder_select_page {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--o-hb-shape-selector-grid-columns, 4), 1fr);
     gap: $o-we-item-spacing / 2;
     padding: $o-we-item-spacing;
     background-color: $o-we-bg-lighter;

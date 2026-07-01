@@ -16,7 +16,7 @@
             <div t-att-data-shape-group-id="group[0]">
                 <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">
                     <div class="ms-3 py-2" t-out="subgroup[1].label"/>
-                    <div class="builder_select_page my-2">
+                    <div t-attf-class="builder_select_page my-2" t-att-style="subgroup[1].columns ? '--o-hb-shape-selector-grid-columns:' + subgroup[1].columns : ''">
                         <ImgGroup>
                             <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
                                 <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose" t-if="!shape[1].isTechnical">
