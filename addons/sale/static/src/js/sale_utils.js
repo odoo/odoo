@@ -46,6 +46,7 @@ export function serializeComboItem(comboItem) {
                 custom_value: customPtav.value,
             })
         ),
+        combo_item_ratio: comboItem.quantity,
     }
 }
 

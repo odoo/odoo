@@ -14,25 +14,30 @@
                     t-att-src="this.props.product.image_src || `/web/image/product.product/${this.props.product.id}/image_256`"
                     alt="Product Image"
                 />
-                <div class="w-75 p-2">
-                    <t t-set="ptalsToShow" t-value="this.props.product.ptals.filter(this.shouldShowPtal)"/>
-                    <h6 name="product_card_title" class="mb-1" t-out="this.props.product.display_name"/>
-                    <div class="text-muted">
-                        <t t-if="ptalsToShow.length">
-                            <div
-                                t-foreach="ptalsToShow"
-                                t-as="ptal"
-                                t-key="ptal.id"
-                                t-out="ptal.ptalDisplayName"
-                            />
-                        </t>
-                        <small t-elif="this.props.isConfigurable">Click to configure</small>
+
+                <div class="w-75 p-2 d-flex flex-column justify-content-between align-items-start">
+                    <div>
+                        <t t-set="ptalsToShow" t-value="this.props.product.ptals.filter(this.shouldShowPtal)"/>
+                        <h6 name="product_card_title" class="mb-1" t-out="this.props.product.display_name"/>
+                        <div class="text-muted">
+                            <t t-if="ptalsToShow.length">
+                                <div
+                                    t-foreach="ptalsToShow"
+                                    t-as="ptal"
+                                    t-key="ptal.id"
+                                    t-out="ptal.ptalDisplayName"
+                                />
+                            </t>
+                        </div>
+                        <BadgeExtraPrice
+                            t-if="this.props.extraPrice"
+                            price="this.props.extraPrice"
+                            currencyId="this.env.currency.id"
+                        />
                     </div>
-                    <BadgeExtraPrice
-                        t-if="this.props.extraPrice"
-                        price="this.props.extraPrice"
-                        currencyId="this.env.currency.id"
-                    />
+                    <div class="mt-2">
+                        <t t-call-slot="quantityButtons" />
+                    </div>
                 </div>
             </article>
         </div>

@@ -5,43 +5,45 @@
         <field name="model">product.combo</field>
         <field name="arch" type="xml">
             <form string="Combo Choice">
-                <div class="oe_title">
-                    <label for="name" string="Combo Choice"/>
-                    <h1>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Combo Choice"/>
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="e.g. Burger Choice"
+                                widget="text"
+                                options="{'line_breaks': False}"
+                                class="text-break"
+                            />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="qty_free" string="Included" class="oe_inline"/>
                         <field
-                            name="name"
-                            placeholder="e.g. Burger Choice"
-                            widget="text"
-                            options="{'line_breaks': False}"
-                            class="text-break"
+                            name="company_id"
+                            placeholder="Visible to all"
+                            groups="base.group_multi_company"
+                            options="{'no_create': True}"
+                            class="oe_inline"
                         />
-                    </h1>
-                </div>
-                <group>
-                    <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        groups="base.group_multi_company"
-                        options="{'no_create': True}"
-                        class="oe_inline"
-                    />
-                </group>
-                <field name="combo_item_ids">
-                    <list editable="bottom">
-                        <field name="currency_id" column_invisible="True"/>
-                        <field name="product_id"/>
-                        <field
-                            name="lst_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
-                        <field
-                            name="extra_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
-                    </list>
-                </field>
+                    </group>
+                    <notebook>
+                        <page string="Options">
+                            <field name="combo_item_ids">
+                                <list editable="bottom">
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="product_id" nolabel="1"/>
+                                    <field
+                                        name="extra_price"
+                                        widget="monetary"
+                                        options="{'field_digits': True}"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
@@ -54,7 +56,6 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
                 <field name="combo_item_count"/>
             </list>
         </field>

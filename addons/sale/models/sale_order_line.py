@@ -400,6 +400,9 @@ class SaleOrderLine(models.Model):
     collapse_composition = fields.Boolean(
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
+    combo_item_ratio = fields.Float(
+        string="Combo Ratio", help="Remembers the initial quantity configured for this combo item."
+    )
 
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
@@ -877,6 +880,7 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
+            * self.product_uom_qty
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
@@ -911,7 +915,9 @@ class SaleOrderLine(models.Model):
             company=self.company_id,
             date=self.order_id.date_order,
         )
-        return combo_prices[self.combo_item_id.combo_id] + extra_price
+        return (
+            combo_prices[self.combo_item_id.combo_id] / self.combo_item_id.combo_id.qty_free
+        ) + extra_price
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_discount(self):

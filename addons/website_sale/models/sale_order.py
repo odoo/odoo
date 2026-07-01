@@ -621,19 +621,22 @@ class SaleOrder(models.Model):
                 # of the combo item with the least available quantity.
                 combo_quantity = quantity
                 for item_line in combo_item_lines:
-                    if quantity != item_line.product_uom_qty:
+                    target_child_qty = quantity * item_line.combo_item_ratio
+                    if target_child_qty != item_line.product_uom_qty:
                         combo_item_quantity, _warning = self._verify_updated_quantity(
                             item_line,
                             item_line.product_id.id,
-                            quantity,
+                            target_child_qty,
                             uom_id=item_line.product_uom_id.id,
                             **kwargs,
                         )
-                        combo_quantity = min(combo_quantity, combo_item_quantity)
+                        max_possible_combos = int(combo_item_quantity // item_line.combo_item_ratio)
+                        combo_quantity = min(combo_quantity, max_possible_combos)
                 for item_line in combo_item_lines:
-                    if combo_quantity != item_line.product_uom_qty:
+                    final_child_qty = combo_quantity * item_line.combo_item_ratio
+                    if final_child_qty != item_line.product_uom_qty:
                         self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
-                            line_id=item_line.id, quantity=combo_quantity
+                            line_id=item_line.id, quantity=final_child_qty
                         )
                 update_values["product_uom_qty"] = combo_quantity
 
@@ -677,6 +680,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
+        combo_item_ratio=1.0,
         donation_amount=None,
         **_kwargs,
     ):
@@ -710,11 +714,12 @@ class SaleOrder(models.Model):
 
         values = {
             "product_id": product.id,
-            "product_uom_qty": quantity,
+            "product_uom_qty": quantity * combo_item_ratio,
             "product_uom_id": uom_id or product.uom_id.id,
             "order_id": self.id,
             "linked_line_id": linked_line_id,
             "combo_item_id": combo_item_id,
+            "combo_item_ratio": combo_item_ratio,
         }
         # Set price_unit with the user-selected donation amount
         if product._is_donation() and donation_amount is not None:

@@ -45,20 +45,38 @@
                 </div>
             </div>
             <div t-foreach="this.configurableCombos" t-as="combo" t-key="combo.id">
-                <span
-                    name="sale_combo_configurator_title"
-                    t-attf-class="d-inline-block mb-3 h4 {{combo_index !== 0? 'mt-4' : ''}}"
-                    t-out="combo.name"
-                />
+                <div class="d-flex align-items-baseline mb-3">
+                    <span name="sale_combo_configurator_title" class="mb-0" t-out="combo.name"/>
+                    <h6 class="text-muted ms-2 mb-0 fw-normal fst-normal">
+                        <span class="small">
+                            <t t-out="this.getSelectedComboItemsText(combo)"/>
+                        </span>
+                        <span class="small"> included</span>
+                    </h6>
+                </div>
                 <div class="row row-cols-1 row-cols-md-3 g-3">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
-                        <ProductCard
-                            product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
-                            extraPrice="comboItem.extra_price"
-                            onClick="() => this.selectComboItem(combo.id, comboItem)"
-                            isSelected="this.state.selectedComboItems.get(combo.id)?.id === comboItem.id"
-                            isConfigurable="comboItem.is_configurable"
-                        />
+                        <div class="d-flex flex-column gap-2 align-items-center">
+                            <ProductCard
+                                product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
+                                extraPrice="comboItem.extra_price"
+                                onClick="() => this.selectComboItem(
+                                    combo.id,
+                                    comboItem,
+                                )"
+                                isSelected="this.state.qty[combo.id][comboItem.id] > 0"
+                                isConfigurable="comboItem.is_configurable"
+                            >
+                            <t t-if="combo.qty_free > 1" t-set-slot="quantityButtons">
+                                <div t-on-click.stop="() => {}">
+                                    <SubItemQuantityButtons
+                                        quantity="this.state.qty[combo.id][comboItem.id]"
+                                        setQuantity="(qty) => this.setItemQuantity(combo.id, comboItem, qty)"
+                                    />
+                                </div>
+                            </t>
+                            </ProductCard>
+                        </div>
                     </t>
                 </div>
             </div>
