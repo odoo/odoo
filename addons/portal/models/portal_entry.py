@@ -18,4 +18,4 @@ class PortalEntry(models.Model):
 
     # Override me to add custom logic
     def should_show_portal_card(self):
-        return self.is_config_card
+        return self.is_config_card and not self.placeholder_count
