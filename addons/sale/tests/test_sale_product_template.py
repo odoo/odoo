@@ -9,6 +9,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleProductTemplate(SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @users("salesman")
     def test_sale_get_configurator_display_price(self):
         configurator_price = self.env["product.template"]._get_configurator_display_price(

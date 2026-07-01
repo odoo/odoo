@@ -5,6 +5,26 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class TestAnalyticToSaleToInvoice(SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'analytic.group_analytic_accounting',
+        # FIXME: group_system is required because the business code reads ir.config_parameter
+        # without sudo (sale/models/account_analytic_line.py _sync_so_accounts_and_partners
+        # get_int). To be adapted by the team.
+        'base.group_system',
+        # FIXME: cross-module regression (group ignored when its module is absent):
+        # 'hr_timesheet.group_hr_timesheet_approver' is required because writing
+        # product_id/so_line/amount on an analytic line that is another user's timesheet triggers
+        # hr_timesheet account.analytic.line._check_can_write ("not yours") without sudo.
+        # Revealed by test_changing_product_on_analytic_line_recreates_upsale_lines & co.
+        # To be adapted by the hr_timesheet team.
+        'hr_timesheet.group_hr_timesheet_approver',
+    )
+
+    _test_user_name = 'Test Sales & Analytic Manager'
+
     @classmethod
     def default_env_context(cls):
         ctx = super().default_env_context()
@@ -147,8 +167,8 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         - Increasing quantity on an at-cost analytic line recomputes delivered qty.
         - Setting quantity to zero on a sales-price analytic line should be recomputed.
         """
-        self.at_cost_aal.unit_amount = 3
-        self.at_sale_price_aal.unit_amount = 0
+        self.at_cost_aal.sudo().unit_amount = 3
+        self.at_sale_price_aal.sudo().unit_amount = 0
 
         at_cost_upsale_order_line = self.at_cost_aal.so_line
         at_sale_price_upsale_order_line = self.at_sale_price_aal.so_line
@@ -180,8 +200,8 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
 
         empty_services_sale_order.action_confirm()
 
-        self.at_cost_aal.order_id = empty_services_sale_order
-        self.at_sale_price_aal.order_id = empty_services_sale_order
+        self.at_cost_aal.sudo().order_id = empty_services_sale_order
+        self.at_sale_price_aal.sudo().order_id = empty_services_sale_order
 
         self.assertEqual(
             len(self.services_sale_order.order_line),
@@ -256,8 +276,8 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             "uom_id": self.uom_hour.id,
         })
 
-        self.at_cost_aal.product_id = reinvoice_at_cost_product_new
-        self.at_sale_price_aal.product_id = reinvoice_at_sales_price_product_new
+        self.at_cost_aal.sudo().product_id = reinvoice_at_cost_product_new
+        self.at_sale_price_aal.sudo().product_id = reinvoice_at_sales_price_product_new
 
         self.assertFalse(
             at_cost_upsale_order_line.exists(),
@@ -346,13 +366,13 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             UserError,
             msg="It shouldn't be possible to update an analytic line linked to an invoice.",
         ):
-            self.at_cost_aal.unit_amount = 9
+            self.at_cost_aal.sudo().unit_amount = 9
 
         with self.assertRaises(
             UserError,
             msg="It shouldn't be possible to update an analytic line linked to an invoice.",
         ):
-            self.at_sale_price_aal.unit_amount = 9
+            self.at_sale_price_aal.sudo().unit_amount = 9
 
     def test_multiple_analytic_lines_aggregate_on_sales_price_line(self):
         """When multiple analytic lines point to the same sales-price product,
@@ -437,8 +457,8 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
 
     def test_manual_amount_update_updates_so_line_price_unit(self):
         """Updating the analytic line amount for at cost lines recomputes the SO line unit price."""
-        self.at_cost_aal.unit_amount = 2
-        self.at_cost_aal.amount = -20
+        self.at_cost_aal.sudo().unit_amount = 2
+        self.at_cost_aal.sudo().amount = -20
 
         extra_work_at_cost = (
             self

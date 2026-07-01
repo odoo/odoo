@@ -10,6 +10,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestAccessRights(SaleCommon, MailCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -17,7 +25,7 @@ class TestAccessRights(SaleCommon, MailCommon):
         cls.user_portal = cls._create_new_portal_user()
         cls.user_internal = cls._create_new_internal_user()
 
-        cls.sale_user2 = cls.env["res.users"].create({
+        cls.sale_user2 = cls.env["res.users"].sudo().create({
             "name": "salesman_2",
             "login": "salesman_2",
             "email": "default_user_salesman_2@example.com",

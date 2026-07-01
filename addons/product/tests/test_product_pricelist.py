@@ -13,6 +13,14 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductPricelist(ProductCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'base.group_partner_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product & Contact Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -302,7 +310,7 @@ class TestProductPricelist(ProductCommon):
         """Test that the min_quantity has the precision of Product UoM."""
         # Arrange: Change precision digits
         uom_precision = self.env.ref("uom.decimal_product_uom")
-        uom_precision.digits = 3
+        uom_precision.sudo().digits = 3
         pricelist_item = self.customer_pricelist.item_ids[0]
         precise_value = 1.234
 
@@ -335,10 +343,11 @@ class TestProductPricelist(ProductCommon):
     def test_pricelist_sync_on_partners(self):
         ResPartner = self.env['res.partner']
 
-        company_1, company_2 = self.env['res.company'].create([
+        company_1, company_2 = self.env['res.company'].sudo().create([
             {'name': 'company_1'},
             {'name': 'company_2'},
         ])
+        self.env.user.sudo().company_ids += company_1 + company_2
 
         test_partner_company = ResPartner.create({
             'name': 'This company',

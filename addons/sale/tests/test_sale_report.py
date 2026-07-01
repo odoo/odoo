@@ -7,15 +7,27 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("-at_install", "post_install")
 class TestSaleReportCurrencyRate(SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        # FIXME: needed to post the down-payment invoice (account.move.action_post checks
+        # account.group_account_invoice). Posting is not the subject here (sale.report aggregation
+        # is) but it runs the real feature to populate the report. Adapt/remove if that flow changes.
+        'account.group_account_invoice',
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.usd_cmp = cls.env["res.company"].create({
+        cls.usd_cmp = cls.env["res.company"].sudo().create({
             "name": "USD Company",
             "currency_id": cls.env.ref("base.USD").id,
         })
-        cls.eur_cmp = cls.env["res.company"].create({
+        cls.eur_cmp = cls.env["res.company"].sudo().create({
             "name": "EUR Company",
             "currency_id": cls.env.ref("base.EUR").id,
         })

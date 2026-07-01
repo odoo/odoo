@@ -12,6 +12,20 @@ from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 @tagged("-at_install", "post_install")
 class TestSaleOrder(SaleManagementCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        # FIXME: base.group_erp_manager is required because the discount wizard auto-creates the
+        # company's discount product on first use (sale/wizard/sale_order_discount.py
+        # _get_discount_product, requires company.has_access("write")). Business logic ->
+        # test_optional_section_discount_line_not_editable_on_portal. Prefer the user-level group
+        # 'base.group_user' once that flow no longer requires res.company write access.
+        'base.group_erp_manager',
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -358,8 +372,8 @@ class TestSaleOrder(SaleManagementCommon):
         # Remove product description to ease comparing before/after translations
         self.product_1.description_sale = None
 
-        # Commence activation of Dutch vernacular
-        self.env["res.lang"]._activate_lang("nl_NL")
+        # Commence activation of Dutch vernacular (language setup -> sudo)
+        self.env["res.lang"].sudo()._activate_lang("nl_NL")
         partner_NL = self.partner.copy({"lang": "nl_NL", "name": "Pieter-Jan Hollandman"})
         names_EN = ["Product 1", "Section 1", "Note 1", "Optional products", "Optional product"]
         names_NL = ["Artikel 1", "Sectie 1", "Nota 1", "Optionele producten", "Optioneel product"]
@@ -478,7 +492,8 @@ class TestSaleOrder(SaleManagementCommon):
         quotation_template.sale_order_template_line_ids = [
             Command.create({"product_id": self.product.id})
         ]
-        self.env["ir.default"].set("sale.order", "sale_order_template_id", quotation_template.id)
+        # ir.default is config setup -> sudo
+        self.env["ir.default"].sudo().set("sale.order", "sale_order_template_id", quotation_template.id)
         try:
             with self.assertLogs("odoo.tests.form.onchange") as log_catcher:
                 Form(self.env["sale.order"])
@@ -495,7 +510,8 @@ class TestSaleOrder(SaleManagementCommon):
             "name": "Test Quotation Template",
             "sale_order_template_line_ids": [Command.create({"product_id": self.product.id})],
         })
-        self.env["ir.default"].set("sale.order", "sale_order_template_id", quotation_template.id)
+        # ir.default is config setup -> sudo
+        self.env["ir.default"].sudo().set("sale.order", "sale_order_template_id", quotation_template.id)
         with Form(self.env["sale.order"]) as sale_order_form:
             self.assertTrue(sale_order_form.sale_order_template_id)
             self.assertTrue(sale_order_form.order_line)

@@ -13,6 +13,20 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 @tagged('post_install', '-at_install')
 class TestPricelist(ProductVariantsCommon):
 
+    # FIXME cross-module regression (group ignored when its module is absent):
+    # 'point_of_sale.group_pos_user' is only required because product.template.copy()
+    # carries over the urbanpiper_pos_config_ids field (pos.config m2m), whose write
+    # triggers a pos.config read check (enterprise pos_urban_piper) -> test_copy_product_variant_pricings.
+    # To be fixed by the pos_urban_piper team.
+    _test_groups = (
+        'base.group_user',
+        'base.group_partner_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'point_of_sale.group_pos_user',
+    )
+
+    _test_user_name = 'Test Product & Contact Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -202,7 +216,8 @@ class TestPricelist(ProductVariantsCommon):
 
     def test_pricelists_multi_comp_checks(self):
         first_company = self.env.company
-        second_company = self.env['res.company'].create({'name': 'Test Company'})
+        second_company = self.env['res.company'].sudo().create({'name': 'Test Company'})
+        self.env.user.sudo().company_ids += second_company
 
         shared_pricelist = self.env['product.pricelist'].create({
             'name': 'Test Multi-comp pricelist',
@@ -289,7 +304,8 @@ class TestPricelist(ProductVariantsCommon):
         })
         self.assertEqual(self.partner.property_product_pricelist, self.sale_pricelist_id)
 
-        company_2 = self.env.company.create({'name': "Company Two"})
+        company_2 = self.env.company.sudo().create({'name': "Company Two"})
+        self.env.user.sudo().company_ids += company_2
         company_1_b2b_pl, company_2_b2b_pl = self.sale_pricelist_id.create([{
             'name': f"B2B ({company.name})",
             'company_id': company.id,

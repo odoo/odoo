@@ -9,14 +9,24 @@ from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 @tagged("-at_install", "post_install")
 class TestSaleOrderTemplate(SaleManagementCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.branch_company, cls.other_company = cls.env["res.company"].create([
+        cls.branch_company, cls.other_company = cls.env["res.company"].sudo().create([
             {"name": "Branch company", "parent_id": cls.company.id},
             {"name": "Other Company"},
         ])
+        # Multi-company test: grant the test user access to the extra companies
+        cls.test_user.sudo().company_ids += (cls.branch_company | cls.other_company)
         (cls.parent_company_product, cls.branch_company_product, cls.other_company_product) = (
             cls.env["product.product"].create([
                 {"name": "Parent company product", "company_id": cls.company.id},

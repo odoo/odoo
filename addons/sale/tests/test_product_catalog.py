@@ -8,6 +8,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestProductCatalog(HttpCase, SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,7 +31,9 @@ class TestProductCatalog(HttpCase, SaleCommon):
     def setUp(self):
         super().setUp()
 
-        self.authenticate(self.sale_manager.login, self.sale_manager.login)
+        # Authenticate the HTTP session as the test_user (the env user the test body runs as).
+        # self.env.user isn't switched to it until the test method, so reference self._test_user here.
+        self.authenticate(self._test_user.login, self._test_user.login)
 
     def request_get_order_lines_info(self, products, **kwargs):
         response = self.opener.post(
@@ -129,7 +139,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def test_data_with_discounted_lines(self):
         self._create_pricelist_discount_rules()
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             # Discounts included in price
             "group_product_pricelist": True,
             "group_discount_per_so_line": True,
@@ -223,7 +233,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
         )
 
         # Enable discounts, add item --> discount should be on discount field
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             # Discounts included in price
             "group_product_pricelist": True,
             "group_discount_per_so_line": True,

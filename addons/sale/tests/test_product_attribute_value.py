@@ -8,6 +8,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestProductAttributeValue(HttpCase, SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -66,7 +74,7 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
 
         # Make sure variants are enabled (needed for menu access)
         group_variant = self.env.ref("product.group_product_variant")
-        self.group_user.implied_ids = [Command.link(group_variant.id)]
+        self.group_user.sudo().implied_ids = [Command.link(group_variant.id)]
 
         self.product_template.attribute_line_ids.update({"value_ids": [Command.set([self.a1.id])]})
         self.assertEqual(
@@ -74,4 +82,4 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
             self.a3,
         )
         self.assertFalse(self.order_line.product_no_variant_attribute_value_ids.ptav_active)
-        self.start_tour("/odoo", "delete_product_attribute_value_tour", login="admin")
+        self.start_tour("/odoo", "delete_product_attribute_value_tour", login=self.env.user.login)
