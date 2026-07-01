@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-05 19:33+0000\n"
 "PO-Revision-Date: 2026-01-14 16:33+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/iap/fr/"
@@ -59,21 +59,6 @@ msgstr ""
 "Odoo si cette erreur persiste."
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr "Recharge automatique"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
-msgid "Auto-refill Pack"
-msgstr "Pack de recharge automatique"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_threshold
-msgid "Auto-refill Threshold"
-msgstr "Seuil de recharge automatique"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 msgid "Balance"
 msgstr "Solde"
@@ -87,11 +72,6 @@ msgstr "Montant du solde"
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
 msgstr "Banni"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr "Acheter"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -255,11 +235,6 @@ msgid "Manage Service & Buy Credits"
 msgstr ""
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
-msgstr "Gérez votre moyen de paiement pour la recharge automatique"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__name
@@ -276,18 +251,6 @@ msgstr "Aucun service n'existe avec le nom technique fourni"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo In-App Purchase"
 msgstr "Achat intégré Odoo"
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_threshold
-msgid ""
-"Once you have this many credits or less, the system will automatically buy "
-"the following pack with your payment method on file. Set to 0 to disable "
-"auto-refill."
-msgstr ""
-"Une fois que vous atteignez ce nombre de crédits ou moins, le système "
-"achètera automatiquement le pack suivant avec le moyen de paiement "
-"enregistré. Définissez la valeur sur 0 pour désactiver la recharge "
-"automatique."
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
@@ -361,11 +324,6 @@ msgid "Service Packs"
 msgstr "Packs de services"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr "Définir des alertes & la recharge automatique"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Statut"
@@ -392,25 +350,6 @@ msgstr ""
 #: code:addons/iap/models/iap_account.py:0
 msgid "The IAP token provided is invalid or empty."
 msgstr "Le jeton IAP fourni est invalide ou vide."
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_pack_id
-msgid ""
-"The In-App Purchase pack the system will automatically buy when reaching "
-"your refill threshold."
-msgstr ""
-"Le pack d’achat intégré que le système achètera automatiquement lorsque le "
-"seuil de recharge sera atteint."
-
-#. module: iap
-#. odoo-python
-#: code:addons/iap/tools/iap_tools.py:0
-msgid ""
-"The request to the service timed out. Please contact the author of the app. "
-"The URL it tried to contact was %s"
-msgstr ""
-"La demande de service a expiré. Veuillez contacter l'auteur de "
-"l'application. L'URL qu'il a tenté de contacter était %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
