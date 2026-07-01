@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2025-11-08 17:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
@@ -324,15 +324,6 @@ msgid ""
 msgstr "सभी बकाया इनवॉइस का भुगतान करना असंभव है, अगर उनकी मुद्रा एक जैसी नहीं है।"
 
 #. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"टेस्ट मोड में, एक नकली भुगतान को टेस्ट भुगतान इंटरफ़ेस के ज़रिए प्रोसेस किया जाता है. \n"
-"प्रोवाइडर को सेट अप करते समय इस मोड का सुझाव दिया जाता है।"
-
-#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
 msgstr "इनवॉइस ऑनलाइन पेमेंट"
@@ -618,11 +609,6 @@ msgid "Source Payment"
 msgstr "सोर्स पेमेंट"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "राज्य"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -754,13 +740,9 @@ msgstr "ट्रांज़ैक्शन रद्द करें"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"आप किसी ऐसी भुगतान विधि को नहीं हटा सकते जो 'चालू' या 'टेस्ट' स्थिति में प्रोवाइडर से "
-"जुड़ी हुई है. \n"
-"जुड़े हुए प्रोवाइडर: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -776,11 +758,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"आपको किसी पेमेंट प्रोवाइडर को हटाने से पहले, उसे पहले डिऐक्टिवेट करना होगा.\n"
-"जुड़े हुए प्रोवाइडर: %s"
 
 #. module: account_payment
 #. odoo-javascript

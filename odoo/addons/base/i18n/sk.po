@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 08:36+0000\n"
+"POT-Creation-Date: 2026-06-30 15:03+0000\n"
 "PO-Revision-Date: 2025-11-16 15:34+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/base/sk/"
@@ -220,16 +220,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/ir_rule.py:0
-msgid ""
-"\n"
-"\n"
-"Note: this might be a multi-company issue. Switching company may help - in "
-"Odoo, not in real life!"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
 msgid ""
 "\n"
@@ -314,31 +304,21 @@ msgid ""
 msgstr ""
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/ir_rule.py:0
-msgid ""
-"\n"
-"\n"
-"This seems to be a multi-company issue, but you do not have access to the "
-"proper company to access the record anyhow."
-msgstr ""
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_rule.py:0
-msgid ""
-"\n"
-"\n"
-"This seems to be a multi-company issue, you might be able to access the "
-"record by switching to the company: %s."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_pos_imin
 msgid ""
 "\n"
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_users_apikeys_description__scope
+msgid ""
+"\n"
+"        A token with scope 'A' can only be used for endpoints requiring a "
+"bearer token of scope 'A' and\n"
+"        can't be used for endpoints requiring any other scope than 'A'.\n"
+"        "
 msgstr ""
 
 #. module: base
@@ -418,6 +398,35 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pdp
+msgid ""
+"\n"
+"- Support for the mandatory electronic invoicing in France\n"
+"- Send and receive documents via the Odoo approved platform\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_ai_mcp
+msgid ""
+"\n"
+"- To connect to your Odoo MCP Server:\n"
+"    1. Set the URL of the MCP server as the Odoo URL with the suffix /mcp. "
+"For example if the Odoo URL 'https://example.odoo.com', the MCP Server URL "
+"would be 'https://example.odoo.com/mcp'.\n"
+"    2. Generate an API Key to use it as the authentication token with your "
+"favourite MCP client:\n"
+"        a. Login into Odoo.\n"
+"        b. Click on the user avatar.\n"
+"        c. Go to the security tab.\n"
+"        d. Generate an API key. Set the scope as MCP.\n"
+"- Important:\n"
+"    1. NEVER share your token. Anyone who gets access to your token can use "
+"the MCP server as if it was you.\n"
+"    2. NEVER add your token in a text field on your MCP client. ALWAYS use "
+"fields of type Credential or Password as they are encrypted.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
 msgid ""
 "\n"
@@ -488,6 +497,13 @@ msgid ""
 "\"Applicable Code\" defines if the tax is to be applied.\n"
 "\n"
 "\"Python Code\" defines the amount of the tax.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_hu_reports_a60
+msgid ""
+"\n"
+"A60 accounting reports for Hungary\n"
 msgstr ""
 
 #. module: base
@@ -727,6 +743,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_kw_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Kuwait Payroll Rules\n"
+"============================================\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_hr_payroll_account
 msgid ""
 "\n"
@@ -775,11 +799,27 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_om_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Oman Payroll Rules\n"
+"============================================\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_pk_hr_payroll_account
 msgid ""
 "\n"
 "Accounting Data for Pakistan Payroll Rules\n"
 "==========================================\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ph_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Philippines Payroll Rules\n"
+"=============================================\n"
 msgstr ""
 
 #. module: base
@@ -899,13 +939,6 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting Reports for Nigeria\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_pk_reports
-msgid ""
-"\n"
-"Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
 
 #. module: base
@@ -1216,6 +1249,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_id_reports
+msgid ""
+"\n"
+"Accounting reports for Indonesia\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_il_reports
 msgid ""
 "\n"
@@ -1352,6 +1392,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mk_reports
+msgid ""
+"\n"
+"Accounting reports for North Macedonia\n"
+"============================================\n"
+"- Balance Sheet\n"
+"- Profit and Loss Statement\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
 msgid ""
 "\n"
@@ -1447,10 +1497,13 @@ msgid ""
 "Accounting reports for Slovakia\n"
 "=====================================\n"
 "This module includes accounting reports for Slovakia, including:\n"
-"-Balance Sheet + Profit and Loss (XML export)\n"
-"-Tax report (XML export). For more information, see https://"
+"- Balance Sheet + Profit and Loss (XML export)\n"
+"- Tax report (XML export). For more information, see https://"
 "www.financnasprava.sk/sk/podnikatelia/dane/dan-z-pridanej-hodnoty/danove-"
 "priznanie\n"
+"- VAT Control Statement (creation and XML export). For more information, see "
+"https://www.financnasprava.sk/sk/podnikatelia/dane/dan-z-pridanej-hodnoty/"
+"kontrolny-vykaz-dph\n"
 msgstr ""
 
 #. module: base
@@ -2137,7 +2190,7 @@ msgid ""
 "Allows to display sale information in the SOL services apps\n"
 "===========================================================\n"
 "Additional information is displayed in the name of the SOL when it is used "
-"in services apps (project and planning). \n"
+"in services apps (project and planning).\n"
 msgstr ""
 
 #. module: base
@@ -2394,6 +2447,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_databases_auth
+msgid ""
+"\n"
+"Autoconnect to your SaaS client databases\n"
+"============================================\n"
+"\n"
+"The Databases SaaS autoconnect module will help you to save time by allowing "
+"you\n"
+"to be directly authenticated into your SaaS client databases\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
 msgid ""
 "\n"
@@ -2494,6 +2559,15 @@ msgid ""
 "\n"
 "Base module for quality checks/points using IoT devices.\n"
 "This module is required for IoT integrations in both Manufacturing\n"
+"and Quality Control apps.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_obox_quality
+msgid ""
+"\n"
+"Base module for quality checks/points using Obox devices.\n"
+"This module is required for Obox integrations in both Manufacturing\n"
 "and Quality Control apps.\n"
 msgstr ""
 
@@ -2901,6 +2975,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_expense
+msgid ""
+"\n"
+"Bridge module between l10n_be_hr_payroll and hr_payroll_expense for mobility "
+"budget management.\n"
+"\n"
+"Features:\n"
+"- Mobility budget period tracking on hr.version\n"
+"- Configuration of mobility expense categories on company\n"
+"- Budget tracking banner on mobility expenses\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
 msgid ""
 "\n"
@@ -3063,6 +3150,13 @@ msgstr ""
 msgid ""
 "\n"
 "Chart Of Account and Taxes for Cambodia.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mk
+msgid ""
+"\n"
+"Chart Of Account and Taxes for North Macedonia.\n"
 msgstr ""
 
 #. module: base
@@ -3513,6 +3607,13 @@ msgid ""
 "- Základní sazby pro DPH z prodeje a nákupu\n"
 "\n"
 "- Základní fiskální pozice pro českou legislativu\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_reports_d300
+msgid ""
+"\n"
+"D300 VAT declaration export for Romania (ANAF).\n"
 msgstr ""
 
 #. module: base
@@ -3987,6 +4088,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hu_edi_receive
+msgid ""
+"\n"
+"Electronically receive vendor bills from the NAV (Hungarian Tax Agency).\n"
+"NAV Documentation: https://onlineszamla.nav.gov.hu/files/container/download/"
+"2025.10.09.%20EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20.pdf\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
 msgid ""
 "\n"
@@ -4003,6 +4113,13 @@ msgid ""
 "\n"
 "Employee Tax Deduction Card forms will be automatically integrated to the "
 "Document app.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_l10n_ph_hr_payroll
+msgid ""
+"\n"
+"Employee declarations will be automatically integrated to the Document app.\n"
 msgstr ""
 
 #. module: base
@@ -4088,10 +4205,25 @@ msgid ""
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid ""
+"\n"
+"Example: %(example)s"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
 msgid ""
 "\n"
 "Expense documents will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_hk_autopay
+msgid ""
+"\n"
+"Export Hong Kong's AutoPay payments files.\n"
 msgstr ""
 
 #. module: base
@@ -4109,11 +4241,10 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_hk_hsbcnet
-#: model:ir.module.module,description:base.module_l10n_hk_payment_hsbcnet
+#: model:ir.module.module,description:base.module_l10n_hk_payment_autopay
 msgid ""
 "\n"
-"Export payments file for HSBCnet file upload in Hong Kong.\n"
+"Export payments file for AutoPay file upload in Hong Kong.\n"
 msgstr ""
 
 #. module: base
@@ -4916,32 +5047,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_dk_nemhandel_response
-msgid ""
-"\n"
-"In addition to the Nemhandel module, this enable the business level response "
-"mechanism for Nemhandel documents.\n"
-"When sending a document, and if the counterpart also handles business "
-"responses, you will be able to\n"
-"see if your document has been accepted or rejected.\n"
-"When receiving a document, you will be able to send a rejection or approval "
-"of the received document.\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_peppol_response
-msgid ""
-"\n"
-"In addition to the PEPPOL module, this enable the business level response "
-"mechanism for PEPPOL documents.\n"
-"When sending a document, and if the counterpart also handles business "
-"responses, you will be able to\n"
-"see if your document has been accepted or rejected.\n"
-"When receiving a document, you will be able to send a rejection or approval "
-"of the received document.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
 msgid ""
 "\n"
@@ -5239,6 +5344,22 @@ msgid ""
 "    * Allow to configure Basic/Gross/Net Salary\n"
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_kw_hr_payroll
+msgid ""
+"\n"
+"Kuwait Payroll & Localization\n"
+"=============================\n"
+"- Basic setup for Kuwait payroll (Company, Employees, Schedule).\n"
+"- **Social Insurance:** Kuwaiti Social Security deduction & company "
+"contribution rules.\n"
+"- **End of Service:** EOS Benefit (Indemnity) and Monthly Provision "
+"calculations.\n"
+"- **Leaves & Provisions:** Annual Leave provision and Kuwaiti Sick Leave "
+"logic (Tiered deduction).\n"
+"- Includes \"Kuwait: Monthly Pay\" salary structure.\n"
 msgstr ""
 
 #. module: base
@@ -6359,6 +6480,22 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_om_hr_payroll
+msgid ""
+"\n"
+"Oman Payroll and End of Service rules.\n"
+"===========================================================\n"
+"- Monthly Salary Structure\n"
+"- Social Insurance Computation\n"
+"- EoS Provisions & Benefits\n"
+"- Remaining Annual Leave Compensation\n"
+"- Paid Time Off Types\n"
+"- Sick Leave Calculation\n"
+"- Oman Employee Plan\n"
+"- Overtime Rulesets (Normal & Special)\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_event
 msgid ""
 "\n"
@@ -6514,6 +6651,14 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be "
 "viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ph_hr_payroll
+msgid ""
+"\n"
+"Philippines Payroll Rules.\n"
+"==========================\n"
 msgstr ""
 
 #. module: base
@@ -6796,12 +6941,10 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_sa_withholding_tax
+#: model:ir.module.module,description:base.module_documents_hr_skills
 msgid ""
 "\n"
-"Saudi Arabia Withholding Tax Module\n"
-"\n"
-"Force the installation of the Withholding Tax on Payment module\n"
+"Save uploaded certificates to documents folder of employees.\n"
 msgstr ""
 
 #. module: base
@@ -8377,27 +8520,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_mondialrelay
-msgid ""
-"\n"
-"This module allow your customer to choose a Point Relais® and use it as "
-"shipping address.\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_delivery_mondialrelay
-msgid ""
-"\n"
-"This module allow your customer to choose a Point Relais® and use it as "
-"shipping address.\n"
-"This module doesn't implement the WebService. It is only the integration of "
-"the widget.\n"
-"\n"
-"Delivery price pre-configured is an example, you need to adapt the pricing's "
-"rules.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_pos_hr
 msgid ""
 "\n"
@@ -9440,6 +9562,17 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_base_report_paper_muncher
+msgid ""
+"\n"
+"This module is the implementation of the odoo's\n"
+"in house rendering engine called Paper Muncher.\n"
+"\n"
+"learn more about it here:\n"
+"https://odoo.github.io/paper-muncher/\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_base_report_wkhtmltox
 msgid ""
 "\n"
@@ -9566,6 +9699,19 @@ msgstr ""
 "Tento modul poskytuje správu vašich IoT Boxy vo vnútri Odoo.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_obox
+msgid ""
+"\n"
+"This module provides management of your Odoo IoT Boxes (Obox) inside Odoo.\n"
+"Obox are Odoo IoT Boxes, hardware devices that can be used to connect "
+"external\n"
+"devices (like printers, scales, payment terminals, etc.) to Odoo.\n"
+"\n"
+"This module allows you to manage your Obox devices, their certificates,\n"
+"and their connections to your Odoo databases.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_iap
 msgid ""
 "\n"
@@ -9593,6 +9739,13 @@ msgstr ""
 msgid ""
 "\n"
 "This module provides the link between manufacturing and IoT devices.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_obox_mrp
+msgid ""
+"\n"
+"This module provides the link between manufacturing and Obox devices.\n"
 msgstr ""
 
 #. module: base
@@ -9934,6 +10087,13 @@ msgstr ""
 "boxu.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_obox_quality_control
+msgid ""
+"\n"
+"Use devices connected to an Obox to control the quality of your products.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
 msgid ""
 "\n"
@@ -10199,11 +10359,6 @@ msgid " 1:00:00 PM"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_delivery_mondialrelay
-msgid " Let's choose a Point Relais® as shipping address "
-msgstr ""
-
-#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "\"group_by\" value must be a string %(attribute)s=“%(value)s”"
@@ -10218,11 +10373,6 @@ msgstr "# Prístupové práva"
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
 msgid "# Groups"
 msgstr "# Skupiny"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__rules_count
-msgid "# Record Rules"
-msgstr "# Pravidlá záznamu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -10405,16 +10555,6 @@ msgid "(Same"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "(Same Company ID)"
-msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid ") and"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ", or your preferred text editor"
 msgstr ", alebo tvoj preferovaný textový editor"
@@ -10431,7 +10571,7 @@ msgstr ", povinné"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid "- %(description)s (%(model)s)"
 msgstr ""
 
@@ -10513,6 +10653,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:website,contact_us_link_url:base.default_website
+msgid "/contactus"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
 msgid "1 Day"
 msgstr "1 deň"
@@ -10528,13 +10673,57 @@ msgid "1 Month"
 msgstr "1 mesiac"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_1099
-msgid "1099 Reporting"
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "123-45-67890 or 1234567890"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "1792060346001 or 1792060346"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
 msgid "2FA Invite mail"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "3002707692 [Tax identification number]"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
 
 #. module: base
@@ -10558,6 +10747,12 @@ msgid "3rd Party Tax Calculation for Sale"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "49-098-576 or 49098576"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
 msgid "5 Minutes"
 msgstr ""
@@ -10567,6 +10762,12 @@ msgstr ""
 msgid ""
 "5th and 6th Set Financial Reports. Inventory and Balance 3.1-3.7, 3.11-3.18, "
 "3.20,3.24 and 3.25"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "700 Number"
 msgstr ""
 
 #. module: base
@@ -10798,20 +10999,30 @@ msgid "<i class=\"fa fa-fw me-1 fa-suitcase\" title=\"Position\"/>"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid ""
-"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
-"label=\"Info\" title=\"Info\"/>"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid ""
+"<i class=\"o_button_icon oi oi-fw oi oi-arrow-right\"/>\n"
+"                                Access rights documentation"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<span class=\"badge rounded-pill bg-light border\">inactive</span>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+msgid "<span class=\"me-1\">For</span>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+msgid "<span class=\"me-1\">On</span>"
 msgstr ""
 
 #. module: base
@@ -11023,6 +11234,11 @@ msgid ""
 "'equation'\">\n"
 "                                    to this Python expression:\n"
 "                                </span>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid "<span> days</span>"
 msgstr ""
 
 #. module: base
@@ -11304,21 +11520,21 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model_terms:ir.actions.act_window,help:base.action_res_groups
+#: model:ir.module.module,description:base.module_theme_linea
 msgid ""
-"A group is a set of functional areas that will be assigned to the user in "
-"order to give them access and rights to specific applications and tasks in "
-"the system. You can create custom groups or edit the ones existing by "
-"default in order to customize the view of the menu that users will be able "
-"to see. Whether they can have a read, write, create and delete access right "
-"can be managed from here."
+"A hamburger nav with centered logo and sign-in link opens onto a full-bleed "
+"splash hero with overlaid headline and a bottom-anchored CTA, leading into a "
+"labeled four-column category grid, flowing into an asymmetric two-panel "
+"editorial showcase with full-bleed imagery and inset headlines, then a "
+"marquee trust-bar strip, building toward a dark full-bleed banner CTA with "
+"centered copy, followed by a references/logos grid, before closing on a "
+"split contact block pairing a full-bleed editorial photo with an inline "
+"contact details and opening-hours panel, with clean photo-driven full-bleed "
+"imagery throughout and no recurring background shape decoration. Image-"
+"forward and fashion-editorial-driven / suited for streetwear brands, "
+"independent clothing boutiques, urban lifestyle retailers, footwear labels, "
+"and accessories e-commerce stores."
 msgstr ""
-"Skupina je množina funkčných oblastí ktoré budú pridelené používateľom aby "
-"im umožnili prístup a oprávnenie na špecifické aplikácie a úlohy v systéme. "
-"Môžeš vytvoriť vlastné skupiny alebo upraviť existujúce aby si upravil "
-"zobrazenie ponuky ktorú budú môcť použivatelia vidieť. Či majú prístupové "
-"oprávnenie na prezeranie, úpravu, vytváranie a mazanie môžeš spravovať "
-"odtialto."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_http
@@ -11422,6 +11638,11 @@ msgid "A payment provider covering the Spanish market."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment_ecpay
+msgid "A payment provider covering the Taiwanese market."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_payment_xendit
 msgid "A payment provider for Indonesian and the Philippines."
 msgstr ""
@@ -11449,16 +11670,31 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid ""
+"A restriction is an access rights without group that is globally "
+"applied                                             and that cannot be "
+"bypassed. A permission is an access right associated with a "
+"group                                             that is constrained by "
+"their domain and the restrictions"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_theme_pawtastic
+msgid ""
+"A search-led header above a playful hero with scribble and shape doodles "
+"leads into a colorful bento photo grid, a featured picture block, and a "
+"numbered process steps row, then a rounded-card image showcase and "
+"testimonials wall before a trust-badges strip and collapsible FAQ, with "
+"rounded-corner cards and hand-drawn doodle accents as the recurring visual "
+"signature. Image-forward and playful, e-commerce-driven / suited for pet "
+"supply stores, pet grooming services, veterinary clinics, and pet care brands"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
 msgstr "Užívateľ pripojený ku kontaktu"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
-msgid ""
-"A user may not belong to this group and one of those.  For instance, users "
-"may not be portal users and internal users."
-msgstr ""
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
@@ -11478,6 +11714,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a0
 msgid "A0  5   841 x 1189 mm"
 msgstr "A0 5 841 x 1189 mm"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "A00012345"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a1
@@ -11535,6 +11777,12 @@ msgid "ABN"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "ACN"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_ai
 #: model:ir.module.module,shortdesc:base.module_ai
 #: model:ir.module.module,shortdesc:base.module_ai_app
@@ -11587,6 +11835,17 @@ msgid "AI Documents Source"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_hr_recruitment_integration_website_livechat
+msgid "AI HR Recruitment Integration Website Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_hr_recruitment_integration_website_livechat
+msgid ""
+"AI HR Recruitment Integration Website preview cards for website livechat"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_html_builder
 #: model:ir.module.module,summary:base.module_ai_html_builder
 msgid "AI HTML Builder"
@@ -11600,6 +11859,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_livechat
 msgid "AI Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_mcp
+msgid "AI MCP Server"
 msgstr ""
 
 #. module: base
@@ -11654,6 +11918,42 @@ msgid "AI Text Draft - Knowledge"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_appointment_livechat
+msgid "AI Website Appointment Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_appointment_sale
+#: model:ir.module.module,summary:base.module_ai_website_appointment_sale
+msgid "AI Website Appointment Sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_appointment_livechat
+msgid "AI Website Appointment preview cards for website livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_blog_livechat
+msgid "AI Website Blog Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_blog_livechat
+msgid "AI Website Blog preview cards for website livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_event_livechat
+msgid "AI Website Event Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_event_livechat
+msgid "AI Website Event preview cards for website livechat"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_website_helpdesk
 msgid "AI Website Helpdesk"
 msgstr ""
@@ -11672,6 +11972,36 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_ai_website_sale
 #: model:ir.module.module,summary:base.module_ai_website_sale
 msgid "AI Website Sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_sale_livechat
+msgid "AI Website Sale Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_sale_slides
+msgid "AI Website Sale Slides"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_sale_slides
+msgid "AI Website Sale Slides Integration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_sale_livechat
+msgid "AI Website Sale preview cards for website livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_website_slides_livechat
+msgid "AI Website Slides Livechat"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_ai_website_slides_livechat
+msgid "AI Website Slides preview cards for website livechat"
 msgstr ""
 
 #. module: base
@@ -11768,6 +12098,17 @@ msgid "Abstract Model"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_theme_muse
+msgid ""
+"Abstract gradient hero with oversized marquee text leads into an editorial "
+"intro block, an alternating image-text row, and a stacked services list, "
+"then a references grid and a testimonial carousel before a collapsible FAQ, "
+"with oversized typography as the recurring visual signature. Typography-"
+"driven and minimalist / suited for design agencies, branding studios, UX/UI "
+"consultancies, and creative tech firms"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
 msgstr ""
@@ -11794,7 +12135,6 @@ msgstr "Odsúhlasení užívatelia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__access_ids
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
 msgid "Access"
 msgstr "Prístup"
 
@@ -11805,9 +12145,9 @@ msgid "Access Control"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_groups__model_access
-msgid "Access Controls"
-msgstr "Kontroly prístupu"
+#: model:ir.model.fields,field_description:base.field_res_groups__access_count
+msgid "Access Count"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -11820,19 +12160,22 @@ msgid "Access Menu"
 msgstr "Prístup Ponuky"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
+msgid "Access Right"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
-#: model:ir.actions.act_window,name:base.ir_access_act
-#: model:ir.ui.menu,name:base.menu_ir_access_act
+#: model:ir.actions.act_window,name:base.ir_access_action
+#: model:ir.ui.menu,name:base.menu_ir_access
 #: model:res.groups,name:base.group_erp_manager
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_tree
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_tree_edition
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_list_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -11846,6 +12189,13 @@ msgid "Access Rights Inconsistency"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_groups.py:0
+#: model:ir.model.fields,field_description:base.field_res_groups__access_ids
+msgid "Access Rules"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
 msgstr "Prístupový token"
@@ -11854,6 +12204,20 @@ msgstr "Prístupový token"
 #: model:ir.module.module,summary:base.module_documents_hr
 msgid "Access documents from the employee profile"
 msgstr "Prístup k dokumentom z profilu zamestnanca"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid "Access name..."
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid ""
+"Access rights without group apply global restrictions that cannot be "
+"bypassed.<br/>\n"
+"                            Access rights associated with a group grant "
+"permissions. These are constrained by their domain and the restrictions."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
@@ -11874,6 +12238,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/environments.py:0
 msgid "Access to unauthorized or invalid companies."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_access.py:0
+msgid "Accesses with domain can not be applied on model Access itself."
 msgstr ""
 
 #. module: base
@@ -12008,6 +12378,11 @@ msgid "Accounting EDI for Dominican Republic"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_accounting_firm
+msgid "Accounting Firm"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_base_import
 msgid "Accounting Import"
 msgstr ""
@@ -12042,11 +12417,6 @@ msgid ""
 "Bank Account Number and the default Currency.\n"
 "\n"
 "Note: total digits configured by default are 6.\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_accounting_firm
-msgid "Accounting firm"
 msgstr ""
 
 #. module: base
@@ -12216,11 +12586,10 @@ msgid "Activate"
 msgstr "Aktivovať"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__active
 #: model:ir.model.fields,field_description:base.field_ir_cron__active
 #: model:ir.model.fields,field_description:base.field_ir_filters__active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__active
-#: model:ir.model.fields,field_description:base.field_ir_model_access__active
-#: model:ir.model.fields,field_description:base.field_ir_rule__active
 #: model:ir.model.fields,field_description:base.field_ir_sequence__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__active
@@ -12455,6 +12824,11 @@ msgid "Add pre-filled snippets in mass_mailing with an event snapshot"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_project_timesheet_forecast_field_service_sale
+msgid "Add project and task to your interventions"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
 msgstr "Pridajte informácie o predaji UTM na sociálnych sieťach"
@@ -12514,11 +12888,6 @@ msgid "Add views and tweaks on event"
 msgstr "Pridať názory a vylepšenia udalosti"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_groups_search
-msgid "Added from"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
 msgid "Adding"
 msgstr ""
@@ -12534,6 +12903,13 @@ msgid ""
 "Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_company__additional_identifiers
+#: model:ir.model.fields,field_description:base.field_res_partner__additional_identifiers
+#: model:ir.model.fields,field_description:base.field_res_users__additional_identifiers
+msgid "Additional Identifiers"
 msgstr ""
 
 #. module: base
@@ -13282,6 +13658,11 @@ msgid "Allow website visitors to chat with the collaborators."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_databases_auth
+msgid "Allow your user to be automatically connected to a SaaS database"
+msgstr ""
+
+#. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Allowed"
 msgstr ""
@@ -13301,6 +13682,13 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_plugin
 msgid "Allows integration with mail plugins."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_stock_fleet
+msgid ""
+"Allows organizing deliveries by dock, assigning drivers and vehicles, and "
+"printing the associated consignment notes."
 msgstr ""
 
 #. module: base
@@ -13338,13 +13726,6 @@ msgid "Allows to link forum on a course"
 msgstr "Umožňuje prepojiť fórum s kurzom"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_account_withholding_tax
-msgid ""
-"Allows to register withholding taxes during the payment of an invoice or "
-"bill."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
 msgid "Allows to register withholdings during the payment of an invoice."
 msgstr ""
@@ -13377,8 +13758,19 @@ msgstr ""
 "Umožňuje posielať SMS návštevníkom webových stránok, ktorí majú vedenie"
 
 #. module: base
+#: model:ir.module.module,description:base.module_voip_cloud_storage_google
+msgid "Allows to test voip cloud specyfic behaviour"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
 msgid "Allows use of stock application to manage rentals inventory"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_account_withholding_tax
+msgid ""
+"Allows users to manage withholding taxes on invoices, bills, and payments."
 msgstr ""
 
 #. module: base
@@ -14368,6 +14760,11 @@ msgid "Anguilla"
 msgstr "Anguilla"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_theme_pawtastic
+msgid "Animals, Pets, E-commerce, Safari, Nature"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_accountant_knowledge
 msgid "Annual Reports"
 msgstr ""
@@ -14469,6 +14866,11 @@ msgstr "Aplikácia"
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
 msgstr "Podmienky Aplikácie"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_fr_payment
+msgid "Applies CAWL/Worldline branding rules for French companies."
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
@@ -14628,7 +15030,8 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -14641,7 +15044,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Archived"
@@ -15238,11 +15640,11 @@ msgid "Assist with automatic completion & suggestions when filling address"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_autocomplete
-#: model:ir.module.module,summary:base.module_website_sale_autocomplete
+#: model:ir.module.module,description:base.module_website_address_autocomplete
+#: model:ir.module.module,summary:base.module_website_address_autocomplete
 msgid ""
 "Assist your users with automatic completion & suggestions when filling their "
-"address during checkout"
+"address"
 msgstr ""
 
 #. module: base
@@ -15551,6 +15953,12 @@ msgid "Australia/Yancowinna"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Australian Company Number."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
 msgid "Australian Reports - Accounting"
 msgstr "Austrálske správy - účtovníctvo"
@@ -15594,6 +16002,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_at
 msgid "Austrian Standardized Charts & Tax"
 msgstr "Rakúske štandardizované grafy a dane"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Austrian company ID number (UID)."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
@@ -15654,6 +16068,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
 msgstr "Automatické doplnenie"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_payment_autopay
+msgid "AutoPay Payments"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_sale_commission
@@ -15733,9 +16152,21 @@ msgid "Automobile Spare Parts"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_company__available_additional_identifiers_metadata
+#: model:ir.model.fields,field_description:base.field_res_partner__available_additional_identifiers_metadata
+#: model:ir.model.fields,field_description:base.field_res_users__available_additional_identifiers_metadata
+msgid "Available Additional Identifiers Metadata"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__available_model_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__available_model_ids
 msgid "Available Models"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__available_scopes_count
+msgid "Available Scopes Count"
 msgstr ""
 
 #. module: base
@@ -15917,6 +16348,12 @@ msgid "BBAN Plusgiro Bankgiro"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "BCE/KBO"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos
 msgid "BE POS Localization"
 msgstr ""
@@ -15927,7 +16364,8 @@ msgid "BIC/SWIFT"
 msgstr ""
 
 #. module: base
-#: model:res.country,vat_label:base.hk
+#. odoo-python
+#: code:addons/partner_identifiers.py:0 model:res.country,vat_label:base.hk
 msgid "BRN"
 msgstr ""
 
@@ -16107,6 +16545,17 @@ msgid "Banks"
 msgstr "Bankové doklady"
 
 #. module: base
+#: model:ir.module.module,description:base.module_theme_care
+msgid ""
+"Banner hero leads into a story block, a numbers grid, and a color-blocked "
+"featured picture, then a detailed team grid, a masonry block with key "
+"visuals and features and a testimonials wall before a collapsible FAQ, kept "
+"clean and photo-driven without background shape decoration. Credentials-and-"
+"team driven / suited for medical clinics, dental practices, hospitals, and "
+"healthcare providers"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
 msgid ""
 "Banner hero leads into alternating image-text rows, key visuals, detailed "
@@ -16268,6 +16717,11 @@ msgid "Base module for Slovenian reports "
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_printer
+msgid "Base module to manage external printers (e.g. ePOS, ZPL)"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__primary
 msgid "Base view"
 msgstr "Základný pohľad"
@@ -16337,6 +16791,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_beauty_parlor
+msgid "Beauty Parlor"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_beauty
 msgid "Beauty Theme"
 msgstr ""
@@ -16367,6 +16826,12 @@ msgid "Belarus"
 msgstr "Bielorusko"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Belgian Crossroads Bank for Enterprises number."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
@@ -16382,9 +16847,20 @@ msgid "Belgian Payroll - Attendance"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_expense
+msgid "Belgian Payroll - Mobility Budget Expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Registrovaná registračná pokladnica v Belgicku"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Belgian national identification number."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.be
@@ -16435,36 +16911,6 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
 msgstr "Belgicko - výplatná páska"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_acerta
-msgid "Belgium - Payroll - Export to Acerta"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_group_s
-msgid "Belgium - Payroll - Export to Group S"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_partena
-msgid "Belgium - Payroll - Export to Partena"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_prisma
-msgid "Belgium - Payroll - Export to Prisma"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_sd_worx
-msgid "Belgium - Payroll - Export to SD Worx"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_ucm
-msgid "Belgium - Payroll - Export to UCM"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
@@ -16591,9 +17037,9 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid ""
-"Blame the following rules:\n"
+"Blame the following accesses:\n"
 "%s"
 msgstr ""
 
@@ -16700,6 +17146,24 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Branch Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Branch Number of your company, leave empty for headquarters."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_company.py:0
 #: model:ir.model.fields,field_description:base.field_res_company__child_ids
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -16775,6 +17239,18 @@ msgid "Brazilian Accounting EDI for stock"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Brazilian company identification number. 14 digits."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Brazilian individual identification number."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
 msgid "Bridge Website Sale for Argentina"
 msgstr ""
@@ -16825,6 +17301,11 @@ msgstr "Most medzi predajom a účtovníctvom"
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
 msgstr "Prepojenie medzi skladom a účtovníctvom"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_voip_cloud_storage_google
+msgid "Bridge between VoIP and Cloud Storage"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_payment_custom
@@ -17008,6 +17489,22 @@ msgid "Brunei Darussalam"
 msgstr "Brunej"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_brutalist
+msgid "Brutalist Theme"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_theme_brutalist
+msgid "Brutalist, Bold, Raw, Monospace, High Contrast, Modern, Minimal"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Brønnøysund nr"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bubble
 msgid "Bubble"
 msgstr ""
@@ -17089,6 +17586,24 @@ msgid "Burundi"
 msgstr "Burundi"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Business ID"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Business ID (Y-tunnus)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Business Registration Number."
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_subunit_label:base.GMD
 msgid "Butut"
 msgstr ""
@@ -17135,6 +17650,12 @@ msgid "CFDI 4.0 fields for sale orders"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
 msgid "CIS"
 msgstr ""
@@ -17142,6 +17663,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_payment_cpa005
 msgid "CPA005 Payments"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "CPF"
 msgstr ""
 
 #. module: base
@@ -17227,8 +17754,9 @@ msgid "CUIT"
 msgstr "CUIT"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_cake_shop
-msgid "Cake Shop"
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "CVR"
 msgstr ""
 
 #. module: base
@@ -17409,8 +17937,28 @@ msgid "Cape Verde"
 msgstr "Kapverdy"
 
 #. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__card
+msgid "Card"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_care
+msgid "Care Theme"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_theme_care
+msgid "Care, Health, Wellness, Fitness, Gym, Yoga, Spa, Massage, Therapy "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_carpenter
 msgid "Carpenter"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mrp_delivery
+msgid "Carrier with kits"
 msgstr ""
 
 #. module: base
@@ -17435,6 +17983,7 @@ msgstr "Kategórie"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_list
+#: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_search
 msgid "Category"
 msgstr "Kategória"
 
@@ -17894,6 +18443,12 @@ msgid "Christmas Island"
 msgstr "Vianočný ostrov"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Citizen Identification"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__city
 #: model:ir.model.fields,field_description:base.field_res_device__city
 #: model:ir.model.fields,field_description:base.field_res_device_log__city
@@ -18068,6 +18623,11 @@ msgid "Cohort View"
 msgstr "Kohortové zobrazenie"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_planning_field_service
+msgid "Collect intervention requests via an online form"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
 msgid "Collect payments from your customers through SEPA direct debit."
 msgstr "Zhromažďujte platby od svojich zákazníkov prostredníctvom SEPA inkasa."
@@ -18112,12 +18672,6 @@ msgid "Colombian Accounting and Tax Preconfiguration"
 msgstr "Colombian Accounting and Tax Preconfiguration"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_co_edi_mandate
-msgid "Colombian EDI Mandate Invoicing extension"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_co_dian
 #: model:ir.module.module,summary:base.module_l10n_co_edi
 msgid "Colombian Localization for EDI documents"
 msgstr "Kolumbijská lokalizácia pre dokumenty EDI"
@@ -18216,15 +18770,16 @@ msgid "Command Line Interface"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_groups__comment
-msgid "Comment"
-msgstr "Komentár"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_partner_id
 msgid "Commercial Entity"
 msgstr "Komerčný subjekt"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Commercial Registration Number"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commission
@@ -18281,6 +18836,7 @@ msgstr "Spoločnosti"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_id
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__company_id
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
+#: model:ir.model.fields,field_description:base.field_website__company_id
 #: model_terms:ir.ui.view,arch_db:base.ir_default_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -18319,9 +18875,8 @@ msgid "Company Employer"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_company__company_registry
-#: model:ir.model.fields,field_description:base.field_res_partner__company_registry
-#: model:ir.model.fields,field_description:base.field_res_users__company_registry
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
 msgid "Company ID"
 msgstr "IČO"
 
@@ -18355,6 +18910,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
 msgid "Company Tagline"
 msgstr "Tagline spoločnosti"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Company identification number"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_header
@@ -18561,6 +19122,11 @@ msgid "Congo - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_ai_mcp
+msgid "Connect Odoo to any external server via the MCP"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_iot_drivers
 msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "Pripoj Web Klienta k Hardvérovým Perifériám"
@@ -18719,7 +19285,7 @@ msgstr "Tagy kontaktu"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid "Contact your administrator to request access if necessary."
 msgstr "Ak je to potrebné, požiadajte správcu o prístup."
 
@@ -18800,6 +19366,11 @@ msgstr "Majte kontrolu nad kvalitou svojich výrobkov"
 #: model:ir.module.module,summary:base.module_quality_control_iot
 msgid "Control the quality of your products with IoT devices"
 msgstr "Ovládajte kvalitu svojich produktov so zariadeniami IoT"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_obox_quality_control
+msgid "Control the quality of your products with Obox devices"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
@@ -19033,15 +19604,12 @@ msgid "Coworking"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#: model:ir.model.fields,field_description:base.field_ir_access__for_create
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__c
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Create"
 msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__perm_create
-msgid "Create Access"
-msgstr "Prístup Vytvárania"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_accountant_knowledge
@@ -19231,6 +19799,41 @@ msgid "Create worksheet with property field"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cd
+msgid "Create, Delete"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cr
+msgid "Create, Read"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crd
+msgid "Create, Read, Delete"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cru
+msgid "Create, Read, Update"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crud
+msgid "Create, Read, Update, Delete"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cu
+msgid "Create, Update"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cud
+msgid "Create, Update, Delete"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Menus"
 msgstr "Vytvorené Menu"
@@ -19255,6 +19858,7 @@ msgstr "Vytvorené Pohľady"
 #: model:ir.model.fields,field_description:base.field_change_password_wizard__create_uid
 #: model:ir.model.fields,field_description:base.field_clearing_label__create_uid
 #: model:ir.model.fields,field_description:base.field_decimal_precision__create_uid
+#: model:ir.model.fields,field_description:base.field_ir_access__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__create_uid
@@ -19282,7 +19886,6 @@ msgstr "Vytvorené Pohľady"
 #: model:ir.model.fields,field_description:base.field_ir_logging__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_model__create_uid
-#: model:ir.model.fields,field_description:base.field_ir_model_access__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_data__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__create_uid
@@ -19291,7 +19894,6 @@ msgstr "Vytvorené Pohľady"
 #: model:ir.model.fields,field_description:base.field_ir_module_category__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_module_module__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__create_uid
-#: model:ir.model.fields,field_description:base.field_ir_rule__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_sequence__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__create_uid
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__create_uid
@@ -19324,6 +19926,7 @@ msgstr "Vytvorené Pohľady"
 #: model:ir.model.fields,field_description:base.field_res_users_settings__create_uid
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__create_uid
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__create_uid
+#: model:ir.model.fields,field_description:base.field_website__create_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_uid
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Created by"
@@ -19344,6 +19947,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:base.field_change_password_wizard__create_date
 #: model:ir.model.fields,field_description:base.field_clearing_label__create_date
 #: model:ir.model.fields,field_description:base.field_decimal_precision__create_date
+#: model:ir.model.fields,field_description:base.field_ir_access__create_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__create_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__create_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__create_date
@@ -19371,7 +19975,6 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:base.field_ir_logging__create_date
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model__create_date
-#: model:ir.model.fields,field_description:base.field_ir_model_access__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_data__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__create_date
@@ -19379,7 +19982,6 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:base.field_ir_module_category__create_date
 #: model:ir.model.fields,field_description:base.field_ir_module_module__create_date
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__create_date
-#: model:ir.model.fields,field_description:base.field_ir_rule__create_date
 #: model:ir.model.fields,field_description:base.field_ir_sequence__create_date
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__create_date
@@ -19411,6 +20013,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:base.field_res_users_settings__create_date
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__create_date
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__create_date
+#: model:ir.model.fields,field_description:base.field_website__create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_date
 msgid "Created on"
 msgstr "Vytvorené"
@@ -19475,6 +20078,12 @@ msgid "Croatian Intrastat Declaration"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Croatian company ID number."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__cron_id
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
@@ -19497,6 +20106,15 @@ msgstr ""
 msgid ""
 "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s "
 "times. More information can be found in the server logs around %(time)s."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_cron.py:0
+msgid ""
+"Cron job %(name)s (%(id)s) is failing and will be deactivated if you don't "
+"take action. More information can be found in the server logs around %"
+"(time)s."
 msgstr ""
 
 #. module: base
@@ -19634,6 +20252,7 @@ msgstr "Aktuálne Okno"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__manual
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__custom
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Custom"
@@ -19647,6 +20266,11 @@ msgstr "Vlastné pole"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_custom_furniture
 msgid "Custom Furniture Production"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_custom_industrial_equipment
+msgid "Custom Industrial Equipment"
 msgstr ""
 
 #. module: base
@@ -19715,6 +20339,12 @@ msgid "Customizations"
 msgstr "Prispôsobenia"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+#: model_terms:ir.ui.view,arch_db:base.view_model_form
+msgid "Customize"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -19763,6 +20393,12 @@ msgid "Czech Republic- Accounting Reports"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Czech business identification number (IČO)."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_intrastat
 msgid "Czechian Intrastat Declaration"
 msgstr ""
@@ -19775,6 +20411,12 @@ msgstr "Côte d'Ivoire"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
 msgid "D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "DE123456788 or 12/345/67890"
 msgstr ""
 
 #. module: base
@@ -19848,8 +20490,26 @@ msgid "DOM-TOM"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "DUNS"
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_unit_label:base.GMD
 msgid "Dalasi"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Danish Central Business Register number."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Danish tax entity number (SE-nummer)."
 msgstr ""
 
 #. module: base
@@ -19917,6 +20577,11 @@ msgstr "Štruktúra databázy"
 #: model:ir.module.category,name:base.module_category_services_databases
 #: model:ir.module.module,shortdesc:base.module_databases
 msgid "Databases"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_databases_auth
+msgid "Databases SaaS autoconnect"
 msgstr ""
 
 #. module: base
@@ -20123,14 +20788,22 @@ msgid "Defines the map view for odoo enterprise"
 msgstr "Definuje zobrazenie mapy pre podnik odoo"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid ""
+"Defines the number of days the API keys will be alive for users in this group"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
 msgid "Definition"
 msgstr "Definícia"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_rule__perm_unlink
+#: model:ir.model.fields,field_description:base.field_ir_access__for_unlink
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__d
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete"
 msgstr ""
 
@@ -20138,11 +20811,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
 msgid "Delete API key."
 msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
-msgid "Delete Access"
-msgstr "Prístup Vymazať"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_kanban
@@ -20195,6 +20863,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_mrp_delivery
+msgid "Delivery and MRP Management"
 msgstr ""
 
 #. module: base
@@ -20285,6 +20958,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
 #: model:ir.model.fields,field_description:base.field_ir_module_module__dependencies_id
 #: model_terms:ir.ui.view,arch_db:base.module_form
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Dependencies"
 msgstr "Závislosti"
 
@@ -20339,6 +21013,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_theme_muse
+msgid "Design, Freelance, Creative, Technology IT, Consulting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
 msgid "Design, send and track SMS"
 msgstr "Navrhujte, odosielajte a sledujte SMS"
@@ -20363,11 +21042,6 @@ msgstr "Cieľový kontakt"
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
 msgstr "Cieľový model"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Detailed algorithm:"
-msgstr "Detailný algritmus:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__api_key_duration
@@ -20499,6 +21173,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_theme_zenith
+msgid ""
+"Discovery hero with a blurry shape backdrop flows into a freegrid showcase, "
+"floating image blocks, a marquee announcement bar, inline impact stats, an "
+"instructor team spotlight, a membership-plan comparison, and a collapsible "
+"FAQ, with pill-shaped buttons and bold condensed Anton headings as the "
+"typographic signature. Energy-forward yet serene / suited for fitness "
+"studios, yoga and pilates centers, gym memberships, personal training "
+"services, and wellness brands"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Discuss"
@@ -20535,6 +21221,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_format_address_mixin__display_name
 #: model:ir.model.fields,field_description:base.field_format_vat_label_mixin__display_name
 #: model:ir.model.fields,field_description:base.field_image_mixin__display_name
+#: model:ir.model.fields,field_description:base.field_ir_access__display_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__display_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__display_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__display_name
@@ -20566,7 +21253,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging__display_name
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:base.field_ir_model__display_name
-#: model:ir.model.fields,field_description:base.field_ir_model_access__display_name
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__display_name
 #: model:ir.model.fields,field_description:base.field_ir_model_data__display_name
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__display_name
@@ -20600,7 +21286,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_selection__display_name
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_text__display_name
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_time__display_name
-#: model:ir.model.fields,field_description:base.field_ir_rule__display_name
 #: model:ir.model.fields,field_description:base.field_ir_sequence__display_name
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__display_name
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__display_name
@@ -20639,6 +21324,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__display_name
+#: model:ir.model.fields,field_description:base.field_website__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
 msgstr "Zobrazovaný názov"
@@ -20754,6 +21440,7 @@ msgstr "Zobrazené polia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_anelusia
+#: model:ir.module.module,summary:base.module_theme_linea
 msgid "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
 msgstr ""
 
@@ -20794,6 +21481,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_be_hr_payroll
 msgid "Documents - Belgian Payroll"
 msgstr "Dokumenty - belgická mzda"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_skills
+msgid "Documents - Certificates"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_sign
@@ -20839,6 +21531,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
 msgid "Documents - Payroll"
 msgstr "Dokumenty - mzdy"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_l10n_ph_hr_payroll
+msgid "Documents - Philippines Payroll"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
@@ -20930,10 +21627,10 @@ msgid "Dollars"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__domain
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__domain
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__domain
-#: model:ir.model.fields,field_description:base.field_ir_rule__domain_force
 msgid "Domain"
 msgstr "Doména"
 
@@ -21054,6 +21751,12 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Dun & Bradstreet unique 9-digit business identifier."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_copy
 msgid "Duplicate Record"
 msgstr ""
@@ -21061,6 +21764,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Duplicate from"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+#: model_terms:ir.ui.view,arch_db:base.view_model_form
+msgid "Duplicate this access to customize it"
 msgstr ""
 
 #. module: base
@@ -21076,6 +21785,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__duration
 msgid "Duration"
 msgstr "Obdobie"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Dutch Chamber of Commerce registration number."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Dutch government Organisation Identification Number."
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -21115,6 +21836,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_vn_edi_viettel
 msgid "E-invoicing using SInvoice by Viettel"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_website__domain
+msgid "E.g. https://www.mydomain.com"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "EAN/GLN"
 msgstr ""
 
 #. module: base
@@ -21379,13 +22111,14 @@ msgid "Electronic Store"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_co_edi
-msgid "Electronic invoicing for Colombia"
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Electronic address for French e-invoicing platforms (PDP/PPF)."
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_co_dian
-msgid "Electronic invoicing for Colombia with DIAN"
+#: model:ir.module.module,shortdesc:base.module_l10n_co_edi
+msgid "Electronic invoicing for Colombia"
 msgstr ""
 
 #. module: base
@@ -21528,6 +22261,14 @@ msgid "Enable Ai fields configuration in studio"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_frontdesk_sms
+msgid ""
+"Enable SMS alerts to hosts when visitors check in, or when hosts are "
+"unavailable. This bridge module extends Frontdesk with SMS delivery options, "
+"using host phone numbers and configurable templates."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_appointment_google_reserve
 msgid "Enable a link between your appointment type and the google API"
 msgstr ""
@@ -21637,8 +22378,10 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
-msgid "Enter a description of and purpose for the key."
-msgstr "Zadajte popis a účel kľúča."
+msgid ""
+"Enter a description of and purpose for the key. <strong>it will be the only "
+"way to identify the key once created</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
@@ -21830,6 +22573,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ee_intrastat
 msgid "Estonia Intrastat Declaration"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Estonian business registry code."
 msgstr ""
 
 #. module: base
@@ -22465,14 +23214,16 @@ msgstr ""
 "CRM Sale modulu."
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
+#: model:ir.model.fields,help:base.field_res_currency_rate__rate
 msgid ""
-"Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
-"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
+"Exchange rate expressed as reference-currency units per 1 unit of this "
+"currency"
 msgstr ""
-"Príklad: GLOBÁLNE_PRAVIDLO_1 A GLOBÁLNE_PRAVIDLO_2 A ( (SKUPINA_A_PRAVIDLO_1 "
-"ALEBO SKUPINA_A_PRAVIDLO_2) ALEBO (SKUPINA_B_PRAVIDLO_1 ALEBO "
-"SKUPINA_B_PRAVIDLO_2) )"
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "Exchange rate from the company currency to this currency"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_excise_management
@@ -22670,53 +23421,15 @@ msgid "Export Type"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_us_hr_payroll_adp
-#: model:ir.module.module,summary:base.module_l10n_us_hr_payroll_adp
-msgid "Export Work Entries to ADP"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_acerta
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_acerta
-msgid "Export Work Entries to Acerta"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_group_s
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_group_s
-msgid "Export Work Entries to Group S"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_partena
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_partena
-msgid "Export Work Entries to Partena"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_prisma
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_prisma
-msgid "Export Work Entries to Prisma"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_sd_worx
-#: model:ir.module.module,description:base.module_l10n_it_hr_payroll_sd_worx
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_sd_worx
-#: model:ir.module.module,summary:base.module_l10n_it_hr_payroll_sd_worx
-msgid "Export Work Entries to SD Worx"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_ucm
-#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_ucm
-msgid "Export Work Entries to UCM"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_aba
 msgid "Export payments as ABA Credit Transfer files"
 msgstr "Exportujte platby ako súbory kreditného prevodu ABA"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_hk_autopay
+#: model:ir.module.module,summary:base.module_l10n_hk_payment_autopay
+msgid "Export payments as AutoPay files"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_uk_bacs
@@ -22731,12 +23444,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_hk_hsbcnet
-#: model:ir.module.module,summary:base.module_l10n_hk_payment_hsbcnet
-msgid "Export payments as HSBCnet files"
 msgstr ""
 
 #. module: base
@@ -22767,6 +23474,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_iot
 msgid "Extend Manufacturing operations using IoT devices"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_obox_mrp
+msgid "Extend Manufacturing operations using Obox devices"
 msgstr ""
 
 #. module: base
@@ -23081,6 +23793,7 @@ msgstr "Názov poľa"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_field_service
+#: model:ir.module.module,shortdesc:base.module_planning_field_service
 msgid "Field Service"
 msgstr "Manažment pracovníkov v teréne"
 
@@ -23102,6 +23815,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_field_service_sale_subscription
 msgid "Field Service - Sale Subscription"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_planning_field_service_stock
+msgid "Field Service - Stock"
 msgstr ""
 
 #. module: base
@@ -23360,8 +24078,10 @@ msgstr "Financie/Poistenie"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_crm
+#: model:ir.module.module,description:base.module_data_merge_product
 #: model:ir.module.module,description:base.module_data_merge_utm
 #: model:ir.module.module,summary:base.module_data_merge_crm
+#: model:ir.module.module,summary:base.module_data_merge_product
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
 msgstr "Nájdite duplicitné záznamy a zlúčte ich"
@@ -23455,6 +24175,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fitness
 msgid "Fitness Center"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_theme_zenith
+msgid "Fitness, Yoga, Pilates, Gym, Wellness, Sport, Health, Training"
 msgstr ""
 
 #. module: base
@@ -23671,11 +24396,6 @@ msgid "Forum on Courses"
 msgstr "Fórum o kurzoch"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_coal_petroleum
-msgid "Fossil Fuel Trading"
-msgstr ""
-
-#. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid ""
@@ -23726,6 +24446,16 @@ msgid "France - BIS3 integration for Chorus Pro"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pdp
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pdp_pos
+msgid "France - E-reporting for POS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec_import
 msgid "France - FEC Import"
 msgstr ""
@@ -23754,6 +24484,23 @@ msgstr ""
 "286 I-3 bis)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_payment
+msgid "France - Worldline Payment Branding"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "France FRCTC Electronic Address"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "France Register of legal persons"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Free access"
@@ -23768,6 +24515,18 @@ msgid ""
 "Balances structured authority with image-led project showcase / suited for "
 "architecture firms, finance and corporate practices, and high-trust business "
 "services"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "French 14-digit establishment identification number (SIREN + NIC)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "French 9-digit business identification number."
 msgstr ""
 
 #. module: base
@@ -23789,6 +24548,12 @@ msgstr "Francúzska Polynézia"
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
 msgstr "Francúzske južné územia"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "French national identification number (NIR)."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
@@ -23818,10 +24583,19 @@ msgid "Frontdesk"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-msgid "Full Access"
-msgstr "Plný prístup"
+#: model:ir.module.module,shortdesc:base.module_frontdesk_sms
+msgid "Frontdesk - SMS"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_frontdesk_partnership
+msgid "Frontdesk Partnership"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
+msgid "Full"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -23864,6 +24638,30 @@ msgstr ""
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
 msgid ""
 "G - WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "GB123456782 or XI123456782"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "GCC ID"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "GCC ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "GEBA"
 msgstr ""
 
 #. module: base
@@ -23982,11 +24780,6 @@ msgid "Gelato/Stock bridge"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "General"
-msgstr "Všeobecné"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "General Information"
 msgstr "Všeobecné informácie"
@@ -24051,6 +24844,18 @@ msgid "Generate recurring invoices and manage renewals"
 msgstr "Generujte opakujúce sa faktúry a spravujte obnovenia"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_populate
+msgid "Generate synthetic data for an Odoo database"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_populate
+msgid ""
+"Generate synthetic data for an Odoo database, following a predefined "
+"blueprint. Used for performance testing."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_links
 msgid "Generate trackable & short URLs"
 msgstr "Generujte sledovateľné a krátke adresy URL"
@@ -24080,6 +24885,18 @@ msgstr ""
 #: model:res.country,name:base.ge
 msgid "Georgia"
 msgstr "Gruzínsko"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "German Commercial Register (Handelsregister) number."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "German Electronic Business Address."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
@@ -24175,31 +24992,15 @@ msgid "Give a duration for the key's validity"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_rule__global
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Global"
 msgstr "Globálne"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid ""
-"Global rules (non group-specific) are restrictions, and cannot be bypassed.\n"
-"                         Group-specific rules grant additional permissions, "
-"but are constrained within the bounds of global ones.\n"
-"                         The first group rules restrict further the global "
-"rules, but can be relaxed by additional group rules."
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Global Location Number, used to identify parties and locations."
 msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid ""
-"Global rules are combined together with a logical AND operator, and with the "
-"result of the following steps"
-msgstr ""
-"Globálne pravidlá sú kombinované s logickým operátorom AND a s výsledkom "
-"nasledujúcich krokov"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_gmail
@@ -24242,11 +25043,6 @@ msgstr "Google mapy"
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
 msgstr "Google užívatelia"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
-msgid "Google places autocompletion"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
@@ -24329,10 +25125,9 @@ msgid "Groszy"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__group_id
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
+#: model:ir.model.fields,field_description:base.field_ir_access__group_id
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Group"
 msgstr "Skupina"
 
@@ -24344,26 +25139,9 @@ msgid "Group Name"
 msgstr "Meno skupiny"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_groups__share
-msgid "Group created to set access rights for sharing data with some users."
-msgstr ""
-"Skupina vytvorená na nastavenie prístupových práv pre zdieľanie dát s "
-"niektorými užívateľmi."
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__number_group
 msgid "Group of Contacts"
 msgstr "Skupina kontaktov"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-msgid "Group-based"
-msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr "Pravidlá špecifické pre skupinu sa kombinujú s logickým operátorom OR"
 
 #. module: base
 #. odoo-python
@@ -24379,7 +25157,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__group_ids
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__groups_ids
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__groups
-#: model:ir.model.fields,field_description:base.field_ir_rule__groups
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__group_ids
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__group_ids
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__group_ids
@@ -24394,9 +25171,13 @@ msgid "Groups"
 msgstr "Skupiny"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Groups (no group = global)"
-msgstr "Skupiny (žiadna skupina = globálne)"
+#: model_terms:ir.actions.act_window,help:base.action_res_groups
+msgid ""
+"Groups allow centralize and manage user access rights.<br>\n"
+"                    Define which models, menus and views the users can "
+"interact with,\n"
+"                    or enforce strict record-level security rules."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
@@ -24584,13 +25365,9 @@ msgid "HR Gamification"
 msgstr "ĽZ Gamifikácia"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_hk_hsbcnet
-msgid "HSBCnet"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_hk_payment_hsbcnet
-msgid "HSBCnet Payments"
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "HRB Nr"
 msgstr ""
 
 #. module: base
@@ -24728,6 +25505,7 @@ msgid "Height"
 msgstr "Výška"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.view_client_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
@@ -24956,6 +25734,11 @@ msgid "Hong Kong - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_autopay
+msgid "Hong Kong - AutoPay"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll
 msgid "Hong Kong - Payroll"
 msgstr ""
@@ -25017,6 +25800,11 @@ msgid "Hr Recruitment Interview Forms"
 msgstr "Ľz Formuláre na Prijímanie do Zamestnania"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_skills
+msgid "Hr Skills Certificates in Documents"
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_unit_label:base.UAH
 msgid "Hryvnia"
 msgstr ""
@@ -25044,9 +25832,26 @@ msgid "Hungarian Intrastat Declaration"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Hungarian Tax ID"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Hungarian company ID number."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr "Maďarsko"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hu_reports_a60
+msgid "Hungary - A60 accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
@@ -25064,6 +25869,11 @@ msgid "Hungary - E-invoicing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hu_edi_receive
+msgid "Hungary - E-invoicing Receive Vendor Bills"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I - ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
 msgstr ""
@@ -25077,6 +25887,12 @@ msgstr "IAP / CRM"
 #: model:ir.module.module,shortdesc:base.module_iap_mail
 msgid "IAP / Mail"
 msgstr "IAP / mail"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "ICE"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__id
@@ -25099,6 +25915,7 @@ msgstr "IAP / mail"
 #: model:ir.model.fields,field_description:base.field_format_address_mixin__id
 #: model:ir.model.fields,field_description:base.field_format_vat_label_mixin__id
 #: model:ir.model.fields,field_description:base.field_image_mixin__id
+#: model:ir.model.fields,field_description:base.field_ir_access__id
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__id
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__id
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__id
@@ -25130,7 +25947,6 @@ msgstr "IAP / mail"
 #: model:ir.model.fields,field_description:base.field_ir_logging__id
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:base.field_ir_model__id
-#: model:ir.model.fields,field_description:base.field_ir_model_access__id
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__id
 #: model:ir.model.fields,field_description:base.field_ir_model_data__id
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__id
@@ -25164,7 +25980,6 @@ msgstr "IAP / mail"
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_selection__id
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_text__id
 #: model:ir.model.fields,field_description:base.field_ir_qweb_field_time__id
-#: model:ir.model.fields,field_description:base.field_ir_rule__id
 #: model:ir.model.fields,field_description:base.field_ir_sequence__id
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__id
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__id
@@ -25203,6 +26018,7 @@ msgstr "IAP / mail"
 #: model:ir.model.fields,field_description:base.field_res_users_settings__id
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__id
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__id
+#: model:ir.model.fields,field_description:base.field_website__id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
 msgstr "ID"
@@ -25226,6 +26042,12 @@ msgstr "ID pohľadu definovaného v XML súbore"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__barcode
 msgid "ID used for employee identification."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "IIN"
 msgstr ""
 
 #. module: base
@@ -25269,6 +26091,12 @@ msgstr ""
 #: model:res.partner.industry,name:base.res_partner_industry_J
 msgid "IT/Communication"
 msgstr "IT / komunikácia"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "IVA"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_extract
@@ -25349,11 +26177,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_rule__global
-msgid "If no group is specified the rule is global and applied to everyone"
-msgstr "Ak nie je zadaná skupina, pravidlo je globálne a platí pre všetkých"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window_view__multi
 #: model:ir.model.fields,help:base.field_ir_actions_report__multi
 msgid ""
@@ -25415,15 +26238,6 @@ msgstr ""
 "povolený"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid ""
-"If user belongs to several groups, the results from step 2 are combined with "
-"logical OR operator"
-msgstr ""
-"Ak užívateľ patrí do niekoľkých skupín, výsledky z kroku 2 sa skombinujú s "
-"logickým operátorom OR"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__overwrite
 msgid ""
 "If you check this box, your customized translations will be overwritten and "
@@ -25454,33 +26268,11 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid ""
 "If you really, really need access, perhaps you can win over your friendly "
 "administrator with a batch of freshly baked cookies."
 msgstr ""
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_model_access__active
-msgid ""
-"If you uncheck the active field, it will disable the ACL without deleting it "
-"(if you delete a native ACL, it will be re-created when you reload the "
-"module)."
-msgstr ""
-"Ak zrušíte začiarknutie aktívneho poľa, deaktivuje sa zoznam ACL bez jeho "
-"odstránenia (ak odstránite natívny zoznam ACL, znova sa vytvorí po opätovnom "
-"načítaní modulu)."
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_rule__active
-msgid ""
-"If you uncheck the active field, it will disable the record rule without "
-"deleting it (if you delete a native record rule, it may be re-created when "
-"you reload the module)."
-msgstr ""
-"Ak zrušíte začiarknutie aktívneho poľa, deaktivuje sa pravidlo záznamu bez "
-"jeho odstránenia (ak odstránite pravidlo natívneho záznamu, môže sa znovu "
-"vytvoriť po opätovnom načítaní modulu)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -25613,12 +26405,25 @@ msgstr ""
 "Ministerstva Financií."
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_groups_search
-msgid "Implied"
+#: model:ir.model.fields,field_description:base.field_res_groups__implied_by_count
+msgid "Implied By Count"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_groups__implied_count
+msgid "Implied Count"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_search
+msgid "Implied Group"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_groups.py:0
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implied Groups"
 msgstr ""
 
@@ -25628,7 +26433,15 @@ msgid "Implied groups"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_search
+msgid "Implying Group"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_groups.py:0
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implying Groups"
 msgstr ""
 
@@ -25814,6 +26627,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_model.py:0
+msgid ""
+"Inconsistent values: model=%(model)s does not match model_id=%(model_id)s."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid ""
 "Incorrect Password, try again or click on Forgot Password to reset your "
@@ -25982,9 +26802,21 @@ msgid "Indian/Reunion"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,help:base.field_res_groups__share
+msgid ""
+"Indicates that the group is used external data sharing prupose (e.g., portal "
+"access to specific records)"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.id
 msgid "Indonesia"
 msgstr "Indonézia"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_id_reports
+msgid "Indonesia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id_hr_payroll
@@ -26046,11 +26878,6 @@ msgstr "Informácia"
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inherit"
 msgstr "Zdediť"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_groups_form
-msgid "Inherited"
-msgstr "Zdedené"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
@@ -26237,6 +27064,11 @@ msgid "Integrate your POS with a Tyro payment terminal (AU)"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_cashmatic
+msgid "Integrate your POS with a cash matic automatic cash payment device"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
 msgid "Integrate your POS with an Adyen payment terminal"
 msgstr "Integrujte svoj POS s platobným terminálom Adyen"
@@ -26277,6 +27109,20 @@ msgid "Integrates Fleet and Maintenance"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_self_order_sms
+msgid ""
+"Integrates POS Self Order with SMS to send customers order confirmation via "
+"SMS."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_whatsapp_pos_self_order
+msgid ""
+"Integrates POS Self Order with WhatsApp to send customers order confirmation "
+"and receipt."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment_sign
 msgid ""
 "Integrates Sign with the Recruitment folder from Documents HR Recruitment."
@@ -26314,11 +27160,6 @@ msgid "Interaction between Sales and services apps (project and planning)"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Interaction between rules"
-msgstr "Interakcia medzi pravidlami"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock_inter_company_rules
 msgid "Intercompany SO/PO"
 msgstr ""
@@ -26328,11 +27169,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
 msgstr "Medzipodnikové PO/NO/FAK pravidlá"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_groups_search
-msgid "Internal Groups"
-msgstr "Interné Skupiny"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -26475,7 +27311,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid "Invalid domain %(domain)s: %(error)s"
 msgstr ""
 
@@ -26483,6 +27319,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Invalid identifier: %(identifier)s.%(example)s"
 msgstr ""
 
 #. module: base
@@ -26726,6 +27568,18 @@ msgid "IoT in PoS Kiosk"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Iqama ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Iqama Number"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
 msgid "Ir profile"
 msgstr ""
@@ -26776,6 +27630,12 @@ msgid "Ireland - Accounting Reports"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Ireland Personal Public Service Number."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie_intrastat
 msgid "Irish Intrastat Declaration"
 msgstr ""
@@ -26805,6 +27665,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__is_public
 msgid "Is Public"
 msgstr "Verejné"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__is_standard
+msgid "Is Standard"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
@@ -26842,14 +27707,6 @@ msgstr ""
 #: code:addons/base/models/res_groups.py:0
 msgid ""
 "It is not possible to remove implied group %(group)s from users %(users)s"
-msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
-msgid ""
-"It is very important that this description be clear\n"
-"                        and complete, <strong>it will be the only way to\n"
-"                        identify the key once created</strong>."
 msgstr ""
 
 #. module: base
@@ -26919,11 +27776,6 @@ msgid "Italy - E-invoicing"
 msgstr "Taliansko - elektronická fakturácia"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_it_hr_payroll_sd_worx
-msgid "Italy - Payroll - Export to SD Worx"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_pos
 msgid "Italy - Point of Sale"
 msgstr ""
@@ -26946,6 +27798,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ci_reports
 msgid "Ivory Coast - Accounting Reports"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "IČO"
 msgstr ""
 
 #. module: base
@@ -26981,6 +27839,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp_zengin
 msgid "Japan - Zengin Payment"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Japanese corporate number (Specified Subject to Tax)."
 msgstr ""
 
 #. module: base
@@ -27077,6 +27941,12 @@ msgid "KPI Digests"
 msgstr "Výkazy KPI"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "KVK"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__kanban
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__kanban
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
@@ -27124,6 +27994,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr_recruitment
 msgid "Keep track of recruitment appointments"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid "Keep track of what this access right does and why it exists..."
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid "Keep track of what this groups does and why it exists..."
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_form
+msgid "Keep track of what this scope does and why it exists..."
 msgstr ""
 
 #. module: base
@@ -27232,6 +28117,11 @@ msgid "Kina"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__kind
+msgid "Kind"
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_unit_label:base.LAK
 msgid "Kip"
 msgstr ""
@@ -27325,6 +28215,16 @@ msgid "Kuwait - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_kw_hr_payroll
+msgid "Kuwait - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_kw_hr_payroll_account
+msgid "Kuwait - Payroll with Accounting"
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_unit_label:base.MWK
 #: model:res.currency,currency_unit_label:base.ZMW
 msgid "Kwacha"
@@ -27371,6 +28271,12 @@ msgid "LATAM Localization Base"
 msgstr "LATAM lokalizačná základňa"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "LEI"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
 msgid "LGPL Version 3"
 msgstr "LGPL verzia 3"
@@ -27383,6 +28289,12 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MVR
 msgid "Laari"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_groups_privilege__placeholder
+msgid ""
+"Label displayed when the user does not belong of any group of that scope."
 msgstr ""
 
 #. module: base
@@ -27503,6 +28415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_change_password_wizard__write_uid
 #: model:ir.model.fields,field_description:base.field_clearing_label__write_uid
 #: model:ir.model.fields,field_description:base.field_decimal_precision__write_uid
+#: model:ir.model.fields,field_description:base.field_ir_access__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__write_uid
@@ -27530,7 +28443,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_model__write_uid
-#: model:ir.model.fields,field_description:base.field_ir_model_access__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_data__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__write_uid
@@ -27539,7 +28451,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_category__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_module_module__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__write_uid
-#: model:ir.model.fields,field_description:base.field_ir_rule__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_sequence__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__write_uid
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__write_uid
@@ -27572,6 +28483,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_settings__write_uid
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_uid
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__write_uid
+#: model:ir.model.fields,field_description:base.field_website__write_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
@@ -27591,6 +28503,7 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:base.field_change_password_wizard__write_date
 #: model:ir.model.fields,field_description:base.field_clearing_label__write_date
 #: model:ir.model.fields,field_description:base.field_decimal_precision__write_date
+#: model:ir.model.fields,field_description:base.field_ir_access__write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__write_date
@@ -27618,7 +28531,6 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:base.field_ir_logging__write_date
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model__write_date
-#: model:ir.model.fields,field_description:base.field_ir_model_access__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_data__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__write_date
@@ -27626,7 +28538,6 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:base.field_ir_module_category__write_date
 #: model:ir.model.fields,field_description:base.field_ir_module_module__write_date
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__write_date
-#: model:ir.model.fields,field_description:base.field_ir_rule__write_date
 #: model:ir.model.fields,field_description:base.field_ir_sequence__write_date
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__write_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__write_date
@@ -27659,6 +28570,7 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:base.field_res_users_settings__write_date
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_date
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__write_date
+#: model:ir.model.fields,field_description:base.field_website__write_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
@@ -27707,6 +28619,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv_reports
 msgid "Latvia - Accounting Reports"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Latvian unified registration number."
 msgstr ""
 
 #. module: base
@@ -27802,6 +28720,12 @@ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
 msgstr "Právne 3 8.5 x 14 palcov, 215.9 x 355.6 mm"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Legal Entity Identifier"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_theme_clean
 msgid "Legal, Corporate, Business, Tech, Services"
 msgstr ""
@@ -27810,6 +28734,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid "Legend (for prefix, suffix)"
 msgstr "Legenda (pre predponu, príponu)"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Leitweg-ID"
+msgstr ""
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ALL
@@ -27850,11 +28780,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_whatsapp_hr_referral
 msgid ""
 "Let your employees share job positions and refer their friends by WhatsApp"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_website_sale_mondialrelay
-msgid "Let's choose Point Relais® on your ecommerce"
 msgstr ""
 
 #. module: base
@@ -27941,6 +28866,11 @@ msgid "Line"
 msgstr "Riadok"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_linea
+msgid "Linea Theme"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Linebreak"
@@ -27973,6 +28903,16 @@ msgstr "Sledovač linky"
 msgid ""
 "Link a spreadsheet to a quotation templates and access your calculator from "
 "a Sale Order."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_obox_pos_self_order
+msgid "Link between Obox and PoS self order"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_obox_point_of_sale
+msgid "Link between Obox and Point of Sale"
 msgstr ""
 
 #. module: base
@@ -28180,6 +29120,12 @@ msgid "Lithuanian Standard Audit File for Tax"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Lithuanian legal entity code (JAK)."
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
@@ -28340,6 +29286,12 @@ msgid "Luxembourg - Payroll with Accounting"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Luxembourg business registry number."
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 msgstr ""
@@ -28347,6 +29299,42 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__met
 msgid "MET"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MHRSD License"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MHRSD License Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MISA License"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MISA License Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MOMRAH License"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "MOMRAH License Number"
 msgstr ""
 
 #. module: base
@@ -28606,6 +29594,12 @@ msgid "Malaysia - UBL PINT"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Malaysian company registration number."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mv
 msgid "Maldives"
 msgstr "Maledivy"
@@ -28736,6 +29730,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid "Manage Scopes"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_databases
 msgid "Manage a fleet of Odoo databases"
 msgstr ""
@@ -28782,6 +29781,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_certificate
 msgid "Manage certificate"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_mrp_delivery
+msgid "Manage datas of carriers with kit products"
 msgstr ""
 
 #. module: base
@@ -28973,16 +29977,16 @@ msgid "Manat"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_co_edi_mandate
-msgid "Mandate invoicing for Colombia"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
 msgid "Manufacturing"
 msgstr "Výroba"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_obox_mrp
+msgid "Manufacturing & Obox"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_product_expiry
@@ -29185,6 +30189,12 @@ msgid "Mauritania - Accounting Reports"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Mauritian Business Registration Number."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mu
 msgid "Mauritius"
 msgstr "Maurícius"
@@ -29303,6 +30313,12 @@ msgid "Merge with Manual Check"
 msgstr "Zlúčiť s manuálnou kontrolou"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Mersis Number"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__message
 msgid "Message"
@@ -29402,6 +30418,17 @@ msgstr "Napodobniť typ"
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
 msgid "MinID"
 msgstr "MinID"
+
+#. module: base
+#: model:ir.module.module,description:base.module_theme_brutalist
+msgid ""
+"Minimal header opens onto a personal-brand hero pairing oversized serif "
+"typography with a yellow-framed portrait, then an awards list, a centered "
+"statement, and asymmetric black-and-white image grids before a full image "
+"wall and closing visual CTA, with yellow highlight accents as the recurring "
+"visual signature. Editorial and image-forward, portfolio-driven / suited for "
+"architecture firms, photographers, design studios, and personal portfolios"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -29545,6 +30572,11 @@ msgid "Mobile View Mode"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_expense
+msgid "Mobility budget management for Belgian payroll expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_theme_odoo_experts
 msgid ""
 "Mockup hero leads into client references, alternating image-and-text proof "
@@ -29558,29 +30590,28 @@ msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model
+#: model:ir.model.fields,field_description:base.field_ir_access__model_id
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__model_id
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__model_id
 #: model:ir.model.fields,field_description:base.field_ir_filters__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model__model
-#: model:ir.model.fields,field_description:base.field_ir_model_access__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__model
-#: model:ir.model.fields,field_description:base.field_ir_rule__model_id
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__export_type__model
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -29598,11 +30629,6 @@ msgstr "Model %s neexistuje"
 #: code:addons/base/models/ir_model.py:0
 msgid "Model %s does not exist!"
 msgstr "Model %s neexistuje!"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_model_access
-msgid "Model Access"
-msgstr "Prístup k modelu"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
@@ -29653,7 +30679,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__model_name
 #: model:ir.model.fields,field_description:base.field_ir_model_data__model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__model
-#: model:ir.model.fields,field_description:base.field_ir_rule__model_name
 msgid "Model Name"
 msgstr "Názov modelu"
 
@@ -29933,6 +30958,13 @@ msgid "Montserrat"
 msgstr "Montserrat"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid ""
+"Moroccan joint business identifier (Identifiant Commun de l'Entreprise)."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ma
 msgid "Morocco"
 msgstr "Maroko"
@@ -29998,6 +31030,11 @@ msgid "Multi Currencies"
 msgstr "Multi meny"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_muse
+msgid "Muse Theme"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_museum
 msgid "Museum"
 msgstr ""
@@ -30034,19 +31071,14 @@ msgid "N - ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_payment_nacha
-msgid "NACHA Payments"
-msgstr ""
-
-#. module: base
 #: model:res.country,vat_label:base.co model:res.country,vat_label:base.gt
 msgid "NIT"
 msgstr "NIT"
 
 #. module: base
 #: model:res.country,vat_label:base.id
-msgid "NPWP"
-msgstr "NPWP"
+msgid "NPWP/NIK"
+msgstr ""
 
 #. module: base
 #: model:res.country,vat_label:base.pk
@@ -30056,6 +31088,12 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.mz
 msgid "NUIT"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "NZBN"
 msgstr ""
 
 #. module: base
@@ -30073,6 +31111,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
 #: model:ir.model.fields,field_description:base.field_clearing_label__name
+#: model:ir.model.fields,field_description:base.field_ir_access__name
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo__name
 #: model:ir.model.fields,field_description:base.field_ir_asset__name
 #: model:ir.model.fields,field_description:base.field_ir_attachment__name
@@ -30080,12 +31119,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__name
 #: model:ir.model.fields,field_description:base.field_ir_logging__name
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__name
-#: model:ir.model.fields,field_description:base.field_ir_model_access__name
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selection__name
 #: model:ir.model.fields,field_description:base.field_ir_module_category__name
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__name
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__name
-#: model:ir.model.fields,field_description:base.field_ir_rule__name
 #: model:ir.model.fields,field_description:base.field_ir_sequence__name
 #: model:ir.model.fields,field_description:base.field_report_layout__name
 #: model:ir.model.fields,field_description:base.field_report_paperformat__name
@@ -30103,6 +31140,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_session_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_currency_tree
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_tree
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -30161,14 +31199,15 @@ msgid "Narrow"
 msgstr "Úzke"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "National ID"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "Nauru"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_dk_nemhandel_response
-msgid "Nemhandel Business Response"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.np
@@ -30247,6 +31286,12 @@ msgstr "Nový Zéland - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_reports
 msgid "New Zealand - Accounting Reports"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "New Zealand Business Number."
 msgstr ""
 
 #. module: base
@@ -30394,9 +31439,19 @@ msgstr "Žiadna medzera"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid "No group currently allows this operation."
 msgstr "Táto operácia momentálne neumožňuje žiadna skupina."
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
+msgid "No group label"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_res_groups
+msgid "No groups found. Let's create one!"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -30452,6 +31507,11 @@ msgstr ""
 " %s"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid "No scope"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "No spaces allowed in view_mode: “%s”"
@@ -30461,6 +31521,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
 msgid "Non Updatable"
 msgstr "Neaktualizovateľný"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_sequence.py:0
+msgid "Non-ASCII characters in %s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -30489,7 +31555,7 @@ msgstr "Žiadne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
-msgid "Nonprofit organization"
+msgid "Nonprofit Organization"
 msgstr ""
 
 #. module: base
@@ -30511,6 +31577,16 @@ msgstr "Severná Kórea"
 #: model:res.country,name:base.mk
 msgid "North Macedonia"
 msgstr "Severné Macedónsko"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mk
+msgid "North Macedonia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mk_reports
+msgid "North Macedonia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.xi
@@ -30543,6 +31619,12 @@ msgid "Norway SAF-T Import"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Norwegian Register of Legal Entities (Brønnøysund Register Center)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
 msgid "Norwegian Standard Audit File for Tax"
 msgstr "Nórsky štandardný audítorský súbor pre daň"
@@ -30570,15 +31652,25 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__note
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Note"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_access.py:0
+msgid ""
+"Note: this might be a multi-company issue. Switching company may help - in "
+"Odoo, not in real life!"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_groups__comment
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__note
 #: model:ir.model.fields,field_description:base.field_res_users__comment
-#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_form
@@ -30621,11 +31713,6 @@ msgid "Number of modules updated"
 msgstr "Počet aktualizovaných modulov"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_users__rules_count
-msgid "Number of record rules that apply to the current user"
-msgstr "Počet pravidiel záznamu, ktoré sa vzťahujú na aktuálneho používateľa"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_groups__all_users_count
 msgid "Number of users having this group (implicitly or explicitly)"
 msgstr ""
@@ -30661,6 +31748,12 @@ msgid "OHADA - Accounting"
 msgstr "OHADA - Účtovníctvo"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "OIN"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "ORM API Documentation"
 msgstr ""
@@ -30674,6 +31767,16 @@ msgstr "Objekt"
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Object:"
 msgstr "Objekt:"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_supply_chain_obox
+msgid "Obox"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_obox
+msgid "Obox - Odoo IoT management"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -31262,8 +32365,7 @@ msgid ""
 "Odoo Point of Sale\n"
 "-----------------------------\n"
 "\n"
-"Odoo's <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Point of "
-"Sale</a>\n"
+"Odoo's Point of Sale\n"
 "introduces a super clean interface with no installation required that runs\n"
 "online and offline on modern hardwares.\n"
 "\n"
@@ -31383,6 +32485,11 @@ msgid ""
 "With Odoo, you get a 360° customer view, including cross-channel sales,\n"
 "interaction history, profiles, and more.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_populate
+msgid "Odoo Populate Tests"
 msgstr ""
 
 #. module: base
@@ -31881,6 +32988,16 @@ msgid "Oman - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_om_hr_payroll
+msgid "Oman - Payroll Localization"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_om_hr_payroll_account
+msgid "Oman - Payroll with Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
 msgid "On Delete"
 msgstr "Pri zmazaní"
@@ -31970,6 +33087,12 @@ msgstr "Online pracovné miesta"
 #: model:ir.module.module,shortdesc:base.module_website_project
 msgid "Online Task Submission"
 msgstr "Online zadanie úlohy"
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__active
+msgid ""
+"Only active accesses are taken into account when checking access rights."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -32100,6 +33223,17 @@ msgstr ""
 msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__operation
+msgid "Operation"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
+msgid "Operations"
 msgstr ""
 
 #. module: base
@@ -32415,6 +33549,18 @@ msgid "Other Extra Rights"
 msgstr "Iné extra práva"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Other ID"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Other ID Number"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_osi_approved_licence
 msgid "Other OSI Approved License"
 msgstr "Iná licencia schválená OSI"
@@ -32532,6 +33678,11 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_fr_pdp_pos
+msgid "PDP Flux 10 e-reporting for POS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_plm
 #: model:ir.module.module,summary:base.module_mrp_workorder_plm
 msgid "PLM for workorder"
@@ -32630,6 +33781,11 @@ msgstr "Skenovanie čiarových kódov POS v mobile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cashdro
 msgid "POS Cashdro Cash Machines"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_cashmatic
+msgid "POS Cashmatic Cash Machines"
 msgstr ""
 
 #. module: base
@@ -32738,6 +33894,11 @@ msgid "POS Self Order Razorpay"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_self_order_sms
+msgid "POS Self Order SMS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_sale
 msgid "POS Self Order Sale"
 msgstr ""
@@ -32770,6 +33931,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_imin
 msgid "POS iMin"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "PPSN"
 msgstr ""
 
 #. module: base
@@ -33026,11 +34193,6 @@ msgid "Pakistan - Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
-msgid "Pakistan - Accounting Reports"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pk_hr_payroll
 msgid "Pakistan - Payroll"
 msgstr ""
@@ -33070,6 +34232,11 @@ msgstr "Konfigurácia formátu papiera"
 #: model:ir.actions.act_window,name:base.paper_format_action
 msgid "Paper Format General Configuration"
 msgstr "Všeobecná konfigurácia formátu papiera"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_base_report_paper_muncher
+msgid "Paper Muncher Engine"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__paperformat_id
@@ -33204,12 +34371,6 @@ msgid "Partner module for website"
 msgstr "Partnerský modul pre web"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
-#: model:ir.model.fields,field_description:base.field_res_users__same_company_registry_partner_id
-msgid "Partner with same Company Registry"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
@@ -33256,6 +34417,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_passkey_portal
 msgid "Passkeys for portal users"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Passport ID"
 msgstr ""
 
 #. module: base
@@ -33338,6 +34505,11 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Pattern to format"
 msgstr "Vzor na formátovanie"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_pawtastic
+msgid "Pawtastic Theme"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_direct_deposit
@@ -33437,6 +34609,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_demo
 msgid "Payment Provider: Demo"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_ecpay
+msgid "Payment Provider: ECPay"
 msgstr ""
 
 #. module: base
@@ -33559,8 +34736,9 @@ msgid "Peppol"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_peppol_response
-msgid "Peppol Business Response"
+#: model:ir.model.fields.selection,name:base.selection__ir_access__kind__permission
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid "Permission"
 msgstr ""
 
 #. module: base
@@ -33605,6 +34783,11 @@ msgid "Peru - Stock Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_withholding
+msgid "Peru - Withholding Documents"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock
 msgid "Peruvian - Electronic Delivery Note"
 msgstr ""
@@ -33617,6 +34800,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_pos
 msgid "Peruvian Localization for the Point of Sale"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Peruvian unique taxpayer registry number (RUC)."
 msgstr ""
 
 #. module: base
@@ -33676,6 +34865,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ph_reports
 msgid "Philippines - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ph_hr_payroll
+msgid "Philippines - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ph_hr_payroll_account
+msgid "Philippines - Payroll with Accounting"
 msgstr ""
 
 #. module: base
@@ -33827,13 +35026,13 @@ msgid "Place orders through Gelato's print-on-demand service"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
-msgid "Placeholder"
+#: model:ir.module.module,summary:base.module_planning_field_service_sale_timesheet
+msgid "Plan intervention and invoice your time and materials to your customers"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_planning_field_service_sale_timesheet
-msgid "Plan intervention and invoice your time and materials to your customers"
+#: model:ir.module.module,summary:base.module_planning_field_service_stock
+msgid "Plan intervention and track serial numbers for shifts"
 msgstr ""
 
 #. module: base
@@ -33851,11 +35050,6 @@ msgstr "Naplánujte si zdroje na projektové úlohy"
 #: model:ir.module.module,shortdesc:base.module_planning
 msgid "Planning"
 msgstr "Plánovanie"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_planning_field_service
-msgid "Planning - Field Service"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_hr_skills
@@ -33925,15 +35119,6 @@ msgstr ""
 "databázu."
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
-msgid ""
-"Please note that modifications will be applied for all users of the "
-"specified group"
-msgstr ""
-"Upozorňujeme, že úpravy budú použité pre všetkých používateľov zadanej "
-"skupiny"
-
-#. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid ""
@@ -33942,6 +35127,11 @@ msgid ""
 msgstr ""
 "Prosím použite sprievodcu zmenou hesla (v užívateľskom nastavení alebo "
 "užívateľskom menu) pre zmenu svojho hesla."
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_obox_point_of_sale
+msgid "PoS & Obox"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_event_sale
@@ -33986,6 +35176,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_pricer
 msgid "PoS Pricer"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_obox_pos_self_order
+msgid "PoS Self Order & Obox"
 msgstr ""
 
 #. module: base
@@ -34124,6 +35319,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_intrastat
 msgid "Polish Intrastat Declaration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_populate
+msgid "Populate"
 msgstr ""
 
 #. module: base
@@ -34311,6 +35511,11 @@ msgid "Printed Report Name"
 msgstr "Vytlačený názov výkazu"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_printer
+msgid "Printer"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__priority
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__sequence
 msgid "Priority"
@@ -34323,7 +35528,6 @@ msgstr "Súkromný"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups_privilege
-#: model:ir.model.fields,field_description:base.field_res_groups__privilege_id
 msgid "Privilege"
 msgstr ""
 
@@ -34333,9 +35537,7 @@ msgid "Privilege Name"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_res_groups_privilege
 #: model:ir.model.fields,field_description:base.field_ir_module_category__privilege_ids
-#: model:ir.ui.menu,name:base.menu_action_res_groups_privilege
 msgid "Privileges"
 msgstr ""
 
@@ -34368,6 +35570,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_conversion
 msgid "Product Conversion & Grading Management"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_product
+msgid "Product Deduplication"
 msgstr ""
 
 #. module: base
@@ -34521,6 +35728,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
 msgid "Project Expenses"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_field_service_sale
+msgid "Project Forecast - Field Service - Sale"
 msgstr ""
 
 #. module: base
@@ -34825,6 +36037,12 @@ msgid "Property Owner Association"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_actions_server__update_property
+#: model:ir.model.fields,field_description:base.field_ir_cron__update_property
+msgid "Property to Update"
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
 msgstr ""
@@ -34853,6 +36071,11 @@ msgstr ""
 #: model:res.partner.industry,name:base.res_partner_industry_O
 msgid "Public Administration"
 msgstr "Verejná správa"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_website__user_id
+msgid "Public User"
+msgstr ""
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -34924,6 +36147,11 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_subunit_label:base.AFN
 msgid "Puls"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_website__domain_punycode
+msgid "Punycode Domain"
 msgstr ""
 
 #. module: base
@@ -35086,6 +36314,11 @@ msgid "Quality Base"
 msgstr "Základ kvality"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_obox_quality_control
+msgid "Quality Control & Obox"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 #: model:ir.module.module,summary:base.module_quality_mrp_workorder
 msgid "Quality Management with MRP"
@@ -35094,6 +36327,11 @@ msgstr "Manažment kvality s MRP"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_repair
 msgid "Quality Management with Repair"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_obox_quality
+msgid "Quality Steps & Obox"
 msgstr ""
 
 #. module: base
@@ -35111,6 +36349,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_quality_iot
 msgid "Quality steps and IoT devices"
 msgstr "Kroky kvality a zariadenia IoT"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_obox_quality
+msgid "Quality steps and Obox devices"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql_count
@@ -35251,6 +36494,12 @@ msgid "R - ARTS, ENTERTAINMENT AND RECREATION"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "RC123456"
+msgstr ""
+
+#. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
 msgstr "RFC"
@@ -35259,6 +36508,17 @@ msgstr "RFC"
 #: model:res.country,vat_label:base.do
 msgid "RNC"
 msgstr "RNC"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "RO1234567897 or 8001011234567 or 9000123456789"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__res_users_apikeys_description__scope__rpc
+msgid "RPC"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rpc
@@ -35303,16 +36563,27 @@ msgid "Rates"
 msgstr "Kurzy"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#: model:ir.model.fields,field_description:base.field_ir_access__for_read
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__r
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Read"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
-msgid "Read Access"
-msgstr "Prístup pre čítanie"
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rd
+msgid "Read, Delete"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ru
+msgid "Read, Update"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rud
+msgid "Read, Update, Delete"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
@@ -35366,25 +36637,6 @@ msgid "Record ID"
 msgstr "ID záznamu"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-msgid "Record Rule"
-msgstr "Pravidlo záznamu"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/res_users.py:0
-#: model:ir.actions.act_window,name:base.action_rule
-#: model:ir.model.fields,field_description:base.field_ir_model__rule_ids
-#: model:ir.ui.menu,name:base.menu_action_rule
-#: model_terms:ir.ui.view,arch_db:base.view_groups_form
-#: model_terms:ir.ui.view,arch_db:base.view_model_form
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_tree
-#: model_terms:ir.ui.view,arch_db:base.view_users_form
-msgid "Record Rules"
-msgstr "Pravidlá záznamu"
-
-#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_cron.py:0
 msgid ""
@@ -35405,11 +36657,6 @@ msgstr ""
 #: code:addons/base/models/ir_binary.py:0
 msgid "Record has no field “%s”"
 msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Record rules"
-msgstr "Pravidlá záznamu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
@@ -35502,6 +36749,12 @@ msgstr "Dátum referencie"
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
 msgid "Referrals"
 msgstr "Odporúčanie"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Registrikood"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -35698,6 +36951,11 @@ msgstr "Report"
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
 msgstr "Akcia výkazu"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_base_report_paper_muncher
+msgid "Report Engine: Paper Muncher"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_report_wkhtmltox
@@ -35912,6 +37170,27 @@ msgid "Restrict"
 msgstr "Obmedziť"
 
 #. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__kind__restriction
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid "Restriction"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid "Restriction globally applied"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
+msgid ""
+"Restrictions are combined together with a logical AND operator.<br/>\n"
+"                            Permissions are combined together with a logical "
+"OR operator.<br/>\n"
+"                            If a user belongs to several groups, the "
+"permissions are combined with a logical OR operator."
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_retail
 #: model:ir.module.category,name:base.module_category_theme_retail
 msgid "Retail"
@@ -36028,6 +37307,11 @@ msgid "Romania - Accounting Reports"
 msgstr "Romania - Accounting Reports"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_reports_d300
+msgid "Romania - D300 VAT Report"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
 msgid "Romania - E-Transport"
 msgstr ""
@@ -36101,6 +37385,12 @@ msgstr "Jednotka zaokrúhľovania"
 
 #. module: base
 #. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Routing ID for invoicing German public authorities."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Routing Number should only contain numbers (maximum 9 digits)."
 msgstr ""
@@ -36126,30 +37416,9 @@ msgid "Rufiyaa"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule
+#: model:ir.model,name:base.model_ir_access
 msgid "Rule"
 msgstr "Pravidlo"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_rule_form
-msgid "Rule Definition (Domain Filter)"
-msgstr "Definícia pravidla (filter domény)"
-
-#. module: base
-#: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
-msgid "Rule must have at least one checked access right!"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
-msgid "Rules"
-msgstr "Pravidlá"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_rule.py:0
-msgid "Rules can not be applied on the Record Rules model."
-msgstr "Pravidlá nemožno aplikovať na model pravidiel záznamov ."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -36221,6 +37490,12 @@ msgid "SAF-T Import"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "SE"
+msgstr ""
+
+#. module: base
 #: model:res.country.group,name:base.sepa_zone
 msgid "SEPA Countries"
 msgstr "Krajiny SEPA"
@@ -36239,6 +37514,18 @@ msgstr "SEPA inkaso"
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_iso20022
 msgid "SEPA Payments for Payroll"
 msgstr "SEPA platby za mzdy"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "SIREN"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "SIRET"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
@@ -36349,6 +37636,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__ssl
 msgid "SSL/TLS, encryption only"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "SST"
 msgstr ""
 
 #. module: base
@@ -36842,13 +38135,74 @@ msgid "Saudi Arabia - Point of Sale"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
-msgid "Saudi Arabia - Withholding Tax"
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia 700 Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia Commercial Registration Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia GCC ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia Iqama ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia MHRSD License Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia MISA License Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia MOMRAH License Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia National ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia Other ID Number"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia Passport ID Number"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_attendance
 msgid "Saudi Arabia Payroll - Attendance"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Saudi Arabia Tax Identification Number"
 msgstr ""
 
 #. module: base
@@ -36921,13 +38275,23 @@ msgid "Scientific"
 msgstr "Vedecký"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_groups__privilege_id
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__scope
+#: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__scope
+#: model_terms:ir.ui.view,arch_db:base.view_groups_search
+#: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_search
 msgid "Scope"
 msgstr "Rozsah"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_groups_privilege
+#: model:ir.ui.menu,name:base.menu_action_res_groups_privilege
+msgid "Scopes"
 msgstr ""
 
 #. module: base
@@ -37041,6 +38405,11 @@ msgstr "Zvoliť správnu veľkosť papiera"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a field to link the record to"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+msgid "Select a scope"
 msgstr ""
 
 #. module: base
@@ -37197,6 +38566,11 @@ msgid "Send SMS messages using Twilio"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_frontdesk_sms
+msgid "Send SMS notifications for visitor check-ins"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
 msgid "Send SMS to Visitor"
 msgstr "Pošlite SMS návštevníkovi"
@@ -37329,13 +38703,13 @@ msgid "Send your surveys or share them live."
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_sendcloud
-msgid "Sendcloud Shipping"
+#: model:ir.module.module,shortdesc:base.module_website_delivery_sendcloud
+msgid "Sendcloud Locations for Website Delivery"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_delivery_sendcloud
-msgid "Sendcould Locations for Website Delivery"
+#: model:ir.module.module,shortdesc:base.module_delivery_sendcloud
+msgid "Sendcloud Shipping"
 msgstr ""
 
 #. module: base
@@ -37403,6 +38777,7 @@ msgstr "Oddeľovač slúži na rozdelenie adresy od display_name."
 #: model:ir.model.fields,field_description:base.field_res_groups__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__sequence
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sequence
+#: model:ir.model.fields,field_description:base.field_website__sequence
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__evaluation_type__sequence
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
@@ -37578,6 +38953,11 @@ msgid "Set as Todo"
 msgstr "Označiť ako úloha"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
+msgid "Sets in which scope this group appears on the users access rights page"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__binding_model_id
 #: model:ir.model.fields,help:base.field_ir_actions_act_window_close__binding_model_id
@@ -37609,12 +38989,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__res_users_settings_id
 #: model:ir.ui.menu,name:base.menu_administration
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Settings"
 msgstr "Nastavenia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_settle_due
 msgid "Settle partner's due in the POS UI."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_om_hr_payroll
+msgid "Setup for Oman payroll localization based on Oman Labor Law."
 msgstr ""
 
 #. module: base
@@ -37857,6 +39243,12 @@ msgid "Singapore - UBL PINT"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Singapore Unique Entity Number."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr "Saint Martin (French part)"
@@ -37915,6 +39307,12 @@ msgstr "Lomítko"
 #: model:ir.module.module,shortdesc:base.module_l10n_sk
 msgid "Slovak - Accounting"
 msgstr "Slovenčina - Účtovníctvo"
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Slovak company identification number (IČO)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -37976,6 +39374,11 @@ msgstr "Kontrola slimačej pošty"
 #: model:ir.module.category,name:base.module_category_social
 msgid "Social"
 msgstr "Sociálna"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_ai_social
+msgid "Social AI"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_demo
@@ -38285,8 +39688,8 @@ msgid "Sponsors, Tracks, Agenda, Event News"
 msgstr "Sponzori, stopy, program, novinky udalosti"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_sport_events
-msgid "Sport Events"
+#: model:ir.module.category,name:base.module_category_theme_sport
+msgid "Sport"
 msgstr ""
 
 #. module: base
@@ -38560,6 +39963,11 @@ msgid "Sri Lanka - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_populate
+msgid "Standalone testing module for Odoo Populate module."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
 msgid "Standard"
 msgstr "Štandard"
@@ -38718,7 +40126,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_fleet
-msgid "Stock Transport: Dispatch Management System"
+msgid "Stock Transport Management"
 msgstr ""
 
 #. module: base
@@ -38784,6 +40192,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_hk_hr_payroll
 msgid "Store ir56 forms in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_l10n_ph_hr_payroll
+msgid "Store payroll declarations in the Document app"
 msgstr ""
 
 #. module: base
@@ -39054,8 +40467,20 @@ msgid "Sweden Registered Cash Register"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Swedish organization number (Organisationsnummer)."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_pos
 msgid "Swiss - Point of Sale"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Swiss company identification number (UIDB)."
 msgstr ""
 
 #. module: base
@@ -39177,6 +40602,12 @@ msgstr "TGZ formát: spája viaceré súbory PO(T) do jedného archívu"
 #: model:res.country,vat_label:base.ug model:res.country,vat_label:base.us
 #: model:res.country,vat_label:base.uz
 msgid "TIN"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "TKU"
 msgstr ""
 
 #. module: base
@@ -39357,6 +40788,12 @@ msgstr "DIČ"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat_label
 #: model:ir.model.fields,field_description:base.field_res_users__vat_label
 msgid "Tax ID Label"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Tax Identification Number"
 msgstr ""
 
 #. module: base
@@ -39612,6 +41049,12 @@ msgid "Test ORM"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_l10n_ph_hr_payroll_account
+#: model:ir.module.module,summary:base.module_test_l10n_ph_hr_payroll_account
+msgid "Test Philippines Payroll"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_sale_subscription
 msgid "Test Sale Subscription"
 msgstr ""
@@ -39657,7 +41100,6 @@ msgid "Test Translation"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_test_l10n_us_hr_payroll_account
 #: model:ir.module.module,summary:base.module_test_l10n_us_hr_payroll_account
 msgid "Test US Payroll"
 msgstr ""
@@ -39665,6 +41107,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module_install
 msgid "Test data module (see test_data_module) installation"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_populate
+msgid "Test module for Odoo's Populate"
 msgstr ""
 
 #. module: base
@@ -39726,13 +41173,6 @@ msgid "Text"
 msgstr "Text"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_groups_privilege__placeholder
-msgid ""
-"Text that is displayed as placeholder in the selection field of the user "
-"form."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_whatsapp
 msgid "Text your Contacts on WhatsApp"
 msgstr ""
@@ -39779,8 +41219,25 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_sequence.py:0
+msgid ""
+"The %(field)s %(value)s contains non-ASCII characters. Names generated by "
+"this sequence may be printed as Code128 barcodes in reports, which only "
+"support ASCII characters."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_company.py:0
 msgid "The %s of a subsidiary must be the same as it's root company."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
 msgstr ""
 
 #. module: base
@@ -39793,6 +41250,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The API key must have an expiration date"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+msgid ""
+"The API key will only be valid for the selected scope and can't be used for "
+"other scopes."
 msgstr ""
 
 #. module: base
@@ -39969,7 +41433,6 @@ msgstr "Kód meny musí byť jedinečný!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -40288,6 +41751,11 @@ msgid "The only predefined variables are"
 msgstr "Jediné preddefinované premenné sú"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_access__domain
+msgid "The operations will only be allowed for records in this domain"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
 msgid ""
 "The optional domain to restrict possible values for relationship fields, "
@@ -40371,16 +41839,6 @@ msgid "The provided API key is invalid."
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Kurz meny ku kurzu meny 1"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
-msgid "The rate of the currency to the currency of rate 1 "
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
 msgid "The rate of the currency to the currency of rate 1."
 msgstr "Kurz meny ku kurzu meny 1."
@@ -40395,15 +41853,6 @@ msgid ""
 "Use either no prefix and no dot or a prefix that isn't an existing module. "
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_company__company_registry
-#: model:ir.model.fields,help:base.field_res_partner__company_registry
-#: model:ir.model.fields,help:base.field_res_users__company_registry
-msgid ""
-"The registry number of the company. Use it if it is different from the Tax "
-"ID. It must be unique across all partners of a same country"
 msgstr ""
 
 #. module: base
@@ -41158,20 +42607,6 @@ msgid "This module is used to send/receive documents with Peppol"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_dk_nemhandel_response
-msgid ""
-"This module is used to send/receive responses to documents received/sent "
-"with Nemhandel"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_account_peppol_response
-msgid ""
-"This module is used to send/receive responses to documents received/sent "
-"with PEPPOL"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_pos_appointment
 msgid "This module lets you manage online reservations for PoS"
 msgstr ""
@@ -41207,13 +42642,29 @@ msgstr "Tento modul spustí odinštalovanie nasledujúcich modulov."
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid ""
 "This operation is allowed for the following groups:\n"
 "%(groups_list)s"
 msgstr ""
 "Táto operácia je povolená pre nasledujúce skupiny:\n"
 "%(groups_list)s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_access.py:0
+msgid ""
+"This seems to be a multi-company issue, but you do not have access to the "
+"proper company to access the record anyhow."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_access.py:0
+msgid ""
+"This seems to be a multi-company issue, you might be able to access the "
+"record by switching to the company: %s."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -41552,6 +43003,12 @@ msgid "Track, prioritize, and solve customer tickets"
 msgstr "Sledujte, uprednostňujte a riešte vstupenky zákazníkov"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "Trade Registry Number"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
 msgstr "Tréningy, konferencie, stretnuia, výstavy, registrácie"
@@ -41671,11 +43128,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_stock_fleet
-msgid "Transport Management: organize packs in your fleet, or carriers."
-msgstr ""
-
-#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
 msgid "Transportation/Logistics"
 msgstr ""
@@ -41785,9 +43237,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_device__device_type
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__account_type
 #: model:ir.model.fields,field_description:base.field_res_session__device_type
+#: model_terms:ir.ui.view,arch_db:base.ir_access_list_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
+#: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
 msgstr "Typ"
@@ -41877,6 +43332,18 @@ msgid "UBL in the Point of Sale "
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "UEN"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "UIDB"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
 msgid "UK"
 msgstr ""
@@ -41946,16 +43413,6 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_cron__webhook_url
 msgid "URL to send the POST request to."
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_reports
-msgid "US - Accounting Reports"
-msgstr "USA - účtovné správy"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
-msgid "US Checks Layout"
-msgstr "USA kontroluje rozloženie"
 
 #. module: base
 #: model:res.country,name:base.um
@@ -42031,7 +43488,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid ""
 "Uh-oh! Looks like you have stumbled upon some top-secret records.\n"
 "\n"
@@ -42229,9 +43686,24 @@ msgid "United States"
 msgstr "Spojené štáty"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_us_1099
+msgid "United States - 1099 Reporting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_account
 msgid "United States - Accounting"
 msgstr "Spojené štáty - účtovníctvo"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_us_reports
+msgid "United States - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
+msgid "United States - Checks Layout"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_direct_deposit
@@ -42244,18 +43716,23 @@ msgid "United States - Localizations"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_us_payment_nacha
+msgid "United States - NACHA Payments"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll
 msgid "United States - Payroll"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll_adp
-msgid "United States - Payroll - Export to ADP"
+#: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll_account
+msgid "United States - Payroll with Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll_account
-msgid "United States - Payroll with Accounting"
+#: model:ir.module.module,shortdesc:base.module_test_l10n_us_hr_payroll_account
+msgid "United States - Test Payroll"
 msgstr ""
 
 #. module: base
@@ -42405,7 +43882,11 @@ msgid "Updatable"
 msgstr "Aktualizovateľný"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_access__for_write
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__u
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__evaluation_type__value
+#: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Update"
@@ -42440,6 +43921,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_related_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_related_model_id
 msgid "Update Related Model"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ud
+msgid "Update, Delete"
 msgstr ""
 
 #. module: base
@@ -42604,6 +44090,12 @@ msgstr ""
 msgid ""
 "Use discounts, gift cards, eWallets and loyalty programs in your sales "
 "channels"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_frontdesk_partnership
+#: model:ir.module.module,summary:base.module_frontdesk_partnership
+msgid "Use grades to filter the validity at a frontdesk"
 msgstr ""
 
 #. module: base
@@ -42876,18 +44368,20 @@ msgid "Users explicitly in this group"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_groups_form
-msgid "Users having this group (implicitly or explicitly)"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_by_ids
-msgid "Users in those groups are implicitly part of this group."
+msgid "Users in implying groups are implicitly part of the current group"
 msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_ids
-msgid "Users of this group are also implicitly part of those groups"
+msgid "Users in the current group are implicitly part of the implied groups"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
+msgid ""
+"Users in the current group cannot be added in disjoint groups. For example, "
+"a user cannot be in the \"Internal\" and \"Portal\" groups at the same time."
 msgstr ""
 
 #. module: base
@@ -42943,6 +44437,12 @@ msgid "VAT Number Validation"
 msgstr "Overenie DPH čísla"
 
 #. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "VAT Registry (VAT ID)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_phone_validation
 msgid "Validate and format phone numbers"
 msgstr "Overenie a formát telefónneho čísla"
@@ -42978,6 +44478,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__evaluation_type
 msgid "Value Type"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
+msgid "Value of 1 unit of this currency in the company currency"
 msgstr ""
 
 #. module: base
@@ -43279,6 +44784,11 @@ msgid "Visitor management system"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_voip_cloud_storage_google
+msgid "VoIP Cloud Storage"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__wet
 msgid "WET"
 msgstr ""
@@ -43443,6 +44953,7 @@ msgid "Webhook URL"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_website
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_accounting_localizations_website
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing_website
@@ -43455,6 +44966,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Website"
 msgstr "Webstránka"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_address_autocomplete
+msgid "Website Address Autocomplete"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_appointment_crm
@@ -43474,6 +44990,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_documents
 msgid "Website Documents"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_website__domain
+msgid "Website Domain"
+msgstr ""
+
+#. module: base
+#: model:ir.model.constraint,message:base.constraint_website_domain_unique
+msgid "Website Domain should be unique."
 msgstr ""
 
 #. module: base
@@ -43549,6 +45075,11 @@ msgid "Website Modules Test"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_website__name
+msgid "Website Name"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
 msgstr "Partner webstránky"
@@ -43562,6 +45093,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_website_payment
 msgid "Website Payment"
 msgstr "Platba na webstránke"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_planning_field_service
+msgid "Website Planning Field Service"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
@@ -43629,11 +45165,6 @@ msgid "Weeks"
 msgstr "Týždne"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_wellness_practitioner
-msgid "Wellness Practitioner"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.eh
 msgid "Western Sahara"
 msgstr "Západná Sahara"
@@ -43668,6 +45199,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp
 msgid "WhatsApp Messaging"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_whatsapp_pos_self_order
+msgid "WhatsApp PoS Self Order"
 msgstr ""
 
 #. module: base
@@ -43791,6 +45327,11 @@ msgstr ""
 "(range_year)s namiesto %(year)s."
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_access__is_standard
+msgid "Whether the access is defined by a module"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
 msgid "Whether the value is copied when duplicating a record."
 msgstr "Či je hodnota skopírovaná pri duplikovaní záznamu."
@@ -43799,6 +45340,26 @@ msgstr "Či je hodnota skopírovaná pri duplikovaní záznamu."
 #: model:ir.model.fields,help:base.field_ir_model_fields__store
 msgid "Whether the value is stored in the database."
 msgstr "Či je hodnota uložená v databáze."
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__for_create
+msgid "Whether this access record applies for operation 'create'"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__for_read
+msgid "Whether this access record applies for operation 'read'"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__for_unlink
+msgid "Whether this access record applies for operation 'unlink'"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__for_write
+msgid "Whether this access record applies for operation 'write'"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__employee
@@ -43812,8 +45373,10 @@ msgid "Whether this dependency blocks automatic installation of the dependent"
 msgstr "Či táto závislosť blokuje automatickú inštaláciu závislej osoby"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_model__abstract
-msgid "Whether this model is abstract"
+#: model:ir.model.fields,help:base.field_ir_access__kind
+msgid ""
+"Whether this record adds (permission) or restricts (restriction) access to "
+"the given model"
 msgstr ""
 
 #. module: base
@@ -43828,6 +45391,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__company_dependent
 msgid "Whether values for this field is company dependent"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_access__operation
+msgid "Which operation(s) this access applies to, a subset of 'crud'."
 msgstr ""
 
 #. module: base
@@ -43869,7 +45437,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
-msgid "Withholding Tax on Payment"
+msgid "Withholding Tax"
 msgstr ""
 
 #. module: base
@@ -43933,18 +45501,6 @@ msgid "Worksheet for Quality Control"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-msgid "Write"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
-msgid "Write Access"
-msgstr "Povolenie zapisovať"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
 msgstr "Napíš dátum"
@@ -43967,8 +45523,20 @@ msgid "Write down your key"
 msgstr "Zapíšte si kľúč"
 
 #. module: base
+#: model:ir.module.module,description:base.module_ai_social
+#: model:ir.module.module,summary:base.module_ai_social
+msgid "Write social post using AI."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "X"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/partner_identifiers.py:0
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 
 #. module: base
@@ -44016,7 +45584,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
@@ -44025,7 +45593,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
@@ -44034,7 +45602,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
@@ -44043,7 +45611,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
+#: code:addons/base/models/ir_access.py:0 code:addons/base/models/ir_model.py:0
 msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
@@ -44174,6 +45742,14 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it "
 "is still used in the following case(s):\n"
 "%(usage_details)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_attachment.py:0
+msgid ""
+"You cannot attach an attachment to itself.\n"
+"Attachment %(record)s cannot have res_id: %(res_id)s"
 msgstr ""
 
 #. module: base
@@ -44443,6 +46019,11 @@ msgid "Zengin Branch Code must consist of 3 digits."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_zenith
+msgid "Zenith Theme"
+msgstr ""
+
+#. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
 msgid "ZiGs"
 msgstr ""
@@ -44519,11 +46100,6 @@ msgid "always forbidden"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "and Company ID)"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
 msgstr ""
@@ -44566,7 +46142,7 @@ msgstr "vybrať"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid "create"
 msgstr ""
 
@@ -44604,8 +46180,9 @@ msgid "day"
 msgstr "deň"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_mondialrelay
-msgid "delivery_mondialrelay"
+#. odoo-python
+#: code:addons/base/models/ir_access.py:0
+msgid "delete"
 msgstr ""
 
 #. module: base
@@ -44650,6 +46227,7 @@ msgid "e.g. %(placeholder)s"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. BE0477472701"
 msgstr "napr. BE0477472701"
@@ -44742,11 +46320,6 @@ msgstr "napr. https://www.odoo.com"
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
 msgstr "Elektronický obchod"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_mondialrelay
-msgid "eCommerce Mondialrelay Delivery"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting
@@ -45043,7 +46616,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid "read"
 msgstr ""
 
@@ -45152,12 +46725,6 @@ msgid "true"
 msgstr "pravda"
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/ir_rule.py:0
-msgid "unlink"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__update_boolean_value
 msgid "update_boolean_value"
 msgstr ""
@@ -45195,7 +46762,7 @@ msgstr ""
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_rule.py:0
+#: code:addons/base/models/ir_access.py:0
 msgid "write"
 msgstr ""
 
