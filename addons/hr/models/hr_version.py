@@ -312,6 +312,10 @@ class HrVersion(models.Model):
                     self.env._('Employee %s must always have at least one active version.') % employee_id.name
                 )
 
+    def _get_old_contract_values(self):
+        trigger_fields = ['contract_date_start', 'contract_date_end']
+        return {version: {field: version[field] for field in trigger_fields} for version in self}
+
     def write(self, vals):
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
@@ -358,7 +362,7 @@ class HrVersion(models.Model):
             for f_name, f_value in vals.items()
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
-        for employee, versions in multiple_versions.grouped('employee_id').items():
+        for employee, versions in multiple_versions.sorted('date_version').grouped('employee_id').items():
 
             dates_vals = {}
             first_version = next(iter(versions), versions)
@@ -372,17 +376,46 @@ class HrVersion(models.Model):
             else:
                 dates_vals["contract_date_end"] = first_version.contract_date_end
 
-            if first_version.contract_date_start:
-                versions_to_sync = employee._get_contract_versions(
-                    date_start=first_version.contract_date_start,
-                    date_end=first_version.contract_date_end,
-                )
+            if first_version.contract_date_start and dates_vals.get('contract_date_start'):
+                versions_to_sync = self.env['hr.version'].search([('employee_id', 'in', employee.id), ('date_start', '>=', first_version.contract_date_start if first_version.contract_date_start < dates_vals.get('contract_date_start') else dates_vals.get('contract_date_start'))])
                 all_versions_to_sync = self.env['hr.version']
-                for contract_versions in versions_to_sync.values():
-                    all_versions_to_sync |= next(iter(contract_versions.values()))
+                for contract_versions in versions_to_sync:
+                    all_versions_to_sync |= contract_versions
 
                 if all_versions_to_sync:
-                    all_versions_to_sync.with_context(sync_contract_dates=True).write(dates_vals)
+                    # we have to call write() a first time to avoid validation errors
+                    contract_start_dates = {version: version.contract_date_start for version in all_versions_to_sync}
+                    contract_end_dates = {version: version.contract_date_end for version in all_versions_to_sync}
+                    old_values = self._get_old_contract_values()
+                    all_versions_to_sync.with_context(sync_contract_dates=True, old_values=False).write({'contract_date_start': date.min, 'contract_date_end': date.min})
+                    # if we change the start date of a version B occurring after a version A, the start date of version A shouldn't change and the end date should be adapted
+                    versions_vals = {}
+                    for version in all_versions_to_sync:
+                        prev_version_vals = {}
+                        version_vals = {**dates_vals}
+                        prev_version = all_versions_to_sync.filtered(lambda v: v.date_version < version.date_version)[-1:]
+                        if prev_version:
+                            if version in self and prev_version not in self and version_vals.get('contract_date_start') and version_vals.get('contract_date_start') >= version.date_version:
+                                prev_contract_date_end = version_vals.get('contract_date_start') - relativedelta(days=1)
+                            else:
+                                prev_contract_date_end = versions_vals.get(prev_version).get('contract_date_end')
+                            previous_contract_date_start = versions_vals.get(prev_version).get('contract_date_start')
+                            prev_version_vals = {**dates_vals,
+                                                'contract_date_start': contract_start_dates.get(prev_version) if prev_contract_date_end and previous_contract_date_start > prev_contract_date_end else previous_contract_date_start,
+                                                'contract_date_end': prev_contract_date_end}
+                            versions_vals[prev_version] = prev_version_vals
+
+                        if version.date_version > (dates_vals.get('contract_date_end') or date.max):
+                            contract_date_start = prev_version_vals.get('contract_date_start') if prev_version and not prev_version_vals.get('contract_date_end') else version.date_version
+                            contract_date_end = contract_end_dates.get(version) if prev_version and (prev_version_vals.get('contract_date_end') or date.max) < contract_date_start else False
+                            version_vals['contract_date_start'] = contract_date_start
+                            version_vals['contract_date_end'] = contract_date_end
+                        if version not in self and version.date_version < dates_vals.get('contract_date_start'):
+                            version_vals['contract_date_start'] = contract_start_dates.get(version)
+                            version_vals['contract_date_end'] = dates_vals.get('contract_date_start') - relativedelta(days=1)
+                        versions_vals[version] = version_vals
+                    for version, _ in versions_vals.items():
+                        version.with_context(sync_contract_dates=True, old_values=old_values).write(versions_vals[version])
 
             else:
                 versions.with_context(sync_contract_dates=True).write(dates_vals)
