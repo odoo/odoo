@@ -920,12 +920,31 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         holidays = self.filtered("employee_id")
         holidays._create_resource_leave()
         meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
+        outdated_meeting_holidays = meeting_holidays.filtered(
+            lambda l: l.meeting_id and (
+                (
+                    l.meeting_id.start != UTC.localize(l.date_from).astimezone(timezone(l.tz)).replace(tzinfo=None)
+                    or l.meeting_id.stop != UTC.localize(l.date_to).astimezone(timezone(l.tz)).replace(tzinfo=None)
+                ) if l.meeting_id.allday else (
+                    l.meeting_id.start != l.date_from
+                    or l.meeting_id.stop != l.date_to
+                )
+            )
+        )
+        # Leaves with no meeting at all
+        new_meeting_holidays = meeting_holidays.filtered(lambda l: not l.meeting_id)
+
         meetings = self.env['calendar.event']
         if meeting_holidays:
             Meeting = self.env['calendar.event']
             Meeting.check_access('create')
-            meeting_values_for_user_id = meeting_holidays._prepare_holidays_meeting_values()
-            Meeting = self.env['calendar.event']
+            # Arhive outdated meetings before creating a new one
+            outdated_meeting_holidays.mapped('meeting_id').active = False
+
+            # Create meetings for both new + outdated
+            holidays_to_create = new_meeting_holidays | outdated_meeting_holidays
+            meeting_values_for_user_id = holidays_to_create._prepare_holidays_meeting_values()
+
             for user_id, meeting_values in meeting_values_for_user_id.items():
                 meetings += Meeting.with_user(user_id or self.env.uid).sudo().with_context(clean_context({**self.env.context, **dict(
                                 allowed_company_ids=[],

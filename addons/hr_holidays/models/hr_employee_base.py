@@ -484,6 +484,8 @@ class HrEmployeeBase(models.AbstractModel):
                 leaves.write({'resource_calendar_id': values['resource_calendar_id']})
                 non_hourly_leaves = leaves.filtered(lambda l: not l.request_unit_hours)
                 non_hourly_leaves.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+                # Remove old resource time off records to prevent duplication on revalidation.
+                non_hourly_leaves.filtered(lambda l: l.state == 'validate')._remove_resource_leave()
                 non_hourly_leaves.filtered(lambda l: l.state == 'validate')._validate_leave_request()
             except ValidationError:
                 raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
