@@ -1357,7 +1357,7 @@ class SaleOrderLine(models.Model):
         for line in lines:
             if line.qty_delivered_method == 'manual' and line.is_storable:
                 qty_delivered = line.product_uom_id._compute_quantity(line.qty_delivered, line.product_id.uom_id)
-                line.product_id.with_context(skip_qty_available_update=True).qty_available -= qty_delivered
+                line.product_id.sudo().with_context(skip_qty_available_update=True).qty_available -= qty_delivered
             if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
@@ -1413,7 +1413,7 @@ class SaleOrderLine(models.Model):
                     continue
                 delta_qty_delivered = values['qty_delivered'] - line.qty_delivered
                 delta_qty_delivered = line.product_uom_id._compute_quantity(delta_qty_delivered, line.product_id.uom_id)
-                line.product_id.with_context(skip_qty_available_update=True).qty_available -= delta_qty_delivered
+                line.product_id.sudo().with_context(skip_qty_available_update=True).qty_available -= delta_qty_delivered
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
