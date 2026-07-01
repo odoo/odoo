@@ -712,29 +712,27 @@ export class SelfOrder extends Reactive {
     }
 
     async initMobileData() {
-        if (this.config.self_ordering_mode !== "qr_code") {
-            if (
-                this.access_token &&
-                this.config.self_ordering_mode !== "consultation" &&
-                (this.session || this.models["pos.preset"].filter((p) => p.use_timing).length > 0)
-            ) {
-                await this.getUserDataFromServer();
-                this.ordering = true;
-                if (!this.isSessionOpened) {
-                    this.dialog.add(InfoPopup, {
-                        text: _t(
-                            "The shop is currently closed but you can still place an order for later."
-                        ),
-                        buttons: [
-                            {
-                                text: _t("Close"),
-                                onClick: () => {
-                                    this.dialog.closeAll();
-                                },
+        if (
+            this.access_token &&
+            this.config.self_ordering_mode !== "consultation" &&
+            (this.session || this.models["pos.preset"].filter((p) => p.use_timing).length > 0)
+        ) {
+            await this.getUserDataFromServer();
+            this.ordering = true;
+            if (!this.isSessionOpened) {
+                this.dialog.add(InfoPopup, {
+                    text: _t(
+                        "The shop is currently closed but you can still place an order for later."
+                    ),
+                    buttons: [
+                        {
+                            text: _t("Close"),
+                            onClick: () => {
+                                this.dialog.closeAll();
                             },
-                        ],
-                    });
-                }
+                        },
+                    ],
+                });
             }
         }
     }
