@@ -9,6 +9,12 @@ from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
 @tagged("mail_poll")
 class TestMailPoll(MailCommon, HttpCase):
 
+    POLL_OPTIONS = [
+        {"emoji": "🍔", "label": "Burger"},
+        {"emoji": "🍕", "label": "Pizza"},
+        {"emoji": "🌮", "label": "Tacos"},
+    ]
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -20,13 +26,14 @@ class TestMailPoll(MailCommon, HttpCase):
             "/mail/poll/create",
             {
                 "duration": 1,
-                "option_labels": ["Burger", "Pizza", "Tacos"],
+                "options": self.POLL_OPTIONS,
                 "question": "What is your favorite food?",
                 "thread_id": self.test_record.id,
                 "thread_model": self.test_record._name,
             },
         )
         poll = self.env["mail.poll"].search([("id", "=", poll_id)])
+        self.assertEqual(poll.option_ids.mapped("option_emoji"), ["🍔", "🍕", "🌮"])
         with (
             self.assertRaises(JsonRpcException) as error_catcher,
             self.assertLogs("odoo.http", level="WARNING") as log_catcher,
@@ -51,7 +58,7 @@ class TestMailPoll(MailCommon, HttpCase):
             {
                 "allow_multiple_options": True,
                 "duration": 1,
-                "option_labels": ["Burger", "Pizza", "Tacos"],
+                "options": self.POLL_OPTIONS,
                 "question": "What is your favorite food?",
                 "thread_id": self.test_record.id,
                 "thread_model": self.test_record._name,
@@ -73,7 +80,7 @@ class TestMailPoll(MailCommon, HttpCase):
             {
                 "allow_multiple_options": True,
                 "duration": 1,
-                "option_labels": ["Burger", "Pizza", "Tacos"],
+                "options": self.POLL_OPTIONS,
                 "question": "What is your favorite food?",
                 "thread_id": channel.id,
                 "thread_model": "discuss.channel",
@@ -136,7 +143,7 @@ class TestMailPoll(MailCommon, HttpCase):
             "/mail/poll/create",
             {
                 "duration": 1,
-                "option_labels": ["foo", "bar", "baz"],
+                "options": self.POLL_OPTIONS,
                 "question": "???",
                 "thread_id": channel.id,
                 "thread_model": channel._name,
@@ -158,7 +165,7 @@ class TestMailPoll(MailCommon, HttpCase):
             "/mail/poll/create",
             {
                 "duration": 0,
-                "option_labels": ["Burger", "Pizza", "Tacos"],
+                "options": self.POLL_OPTIONS,
                 "question": "What is your favorite food?",
                 "thread_id": self.test_record.id,
                 "thread_model": self.test_record._name,

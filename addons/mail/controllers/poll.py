@@ -11,7 +11,7 @@ class PollController(ThreadController):
     def poll_create(
         self,
         duration,
-        option_labels,
+        options,
         question,
         thread_id,
         thread_model,
@@ -28,7 +28,10 @@ class PollController(ThreadController):
         end_dt = fields.Datetime.now() + timedelta(minutes=duration)
         poll_values = {
             "allow_multiple_options": allow_multiple_options,
-            "option_ids": [Command.create({"option_label": label}) for label in option_labels],
+            "option_ids": [
+                Command.create({"option_emoji": option.get("emoji"), "option_label": option["label"]})
+                for option in options
+            ],
             "poll_end_dt": end_dt,
             "poll_question": question,
             "start_message_id": message.id,

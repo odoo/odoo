@@ -12,7 +12,8 @@ class MailPollOption(models.Model):
     _name = "mail.poll.option"
 
     number_of_votes = fields.Integer(compute="_compute_number_of_votes")
-    option_label = fields.Char(required=True)
+    option_emoji = fields.Char(string="Emoji", help="Emoji of the poll option")
+    option_label = fields.Char(string="Label", required=True, help="Label of the poll option")
     poll_id = fields.Many2one("mail.poll", ondelete="cascade", required=True, index=True)
     selected_by_self = fields.Boolean(compute="_compute_selected_by_self")
     vote_ids = fields.One2many("mail.poll.vote", "option_id")
@@ -96,6 +97,6 @@ class MailPollOption(models.Model):
             option.vote_percentage = percentage_by_option[option]
 
     def _store_poll_option_fields(self, res: Store.FieldList):
-        res.extend(["number_of_votes", "poll_id", "option_label", "vote_percentage"])
+        res.extend(["number_of_votes", "poll_id", "option_emoji", "option_label", "vote_percentage"])
         if res.is_for_current_user():
             res.attr("selected_by_self")

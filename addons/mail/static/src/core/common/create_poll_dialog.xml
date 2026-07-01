@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.CreatePollDialog">
-    <Dialog size="'md'" title.translate="Create a poll">
+    <Dialog size="'md'" title.translate="Create a poll" contentClass="'o-mail-CreatePollDialog'">
         <div class="w-100 mb-3">
             <label class="w-100">
                 <span class="d-inline-block mb-2 fw-bold">Question</span>
-                <input type="text" name="poll_question" t-model.proxy="this.state.question" class="form-control rounded" placeholder="What question do you want to ask?" t-custom-ref="question"/>
+                <input type="text" name="poll_question" t-model.proxy="this.state.question" class="form-control rounded o-py-1_5" placeholder="What question do you want to ask?" t-custom-ref="question"/>
                 <div t-if="this.questionMissing" class="text-danger form-text ms-1">The question cannot be empty.</div>
             </label>
         </div>
@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-between gap-3">
             <label class="d-flex align-items-center">
                 <span class="fw-bold me-2">Allow multiple options</span>
-                <input type="checkbox" name="poll_allow_multiple_options" t-model.proxy="this.state.allowMultipleOptions"/>
+                <input class="form-check-input mt-0" type="checkbox" name="poll_allow_multiple_options" t-model.proxy="this.state.allowMultipleOptions"/>
             </label>
             <label class="d-flex align-items-center">
                 <span class="fw-bold me-2">Duration</span>
@@ -29,6 +29,9 @@
                     <option value="240">4 hours</option>
                     <option value="480">8 hours</option>
                     <option value="1440">24 hours</option>
+                    <option value="4320">3 days</option>
+                    <option value="10080">1 week</option>
+                    <option value="20160">2 weeks</option>
                 </select>
         </label>
         </div>
