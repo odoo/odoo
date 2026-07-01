@@ -3,14 +3,13 @@
     <t t-name="mail.ActivityAssignPopover">
         <div class="o-mail-ActivityAssignPopover">
             <h6 t-if="this.props.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Assign</h6>
-            <div class="py-2 px-3" style="min-width: 16rem;">
+            <div class="py-2 px-3">
                 <div class="d-flex align-items-center">
                     <i class="fa fa-user me-2" role="img" aria-label="User"/>
                     <img t-if="this.userId()"
-                         t-att-src="this.getAvatarUrl(this.userId())"
-                         class="o_avatar rounded me-2"
-                         style="width: 1.5rem; height: 1.5rem; object-fit: cover;" 
-                         alt="Avatar"
+                        t-att-src="this.getAvatarUrl(this.userId())"
+                        class="o-mail-Avatar o_avatar rounded me-2"
+                        alt="Avatar"
                     />
                     <Many2XAutocomplete
                         resModel="'res.users'"
@@ -25,10 +24,10 @@
                             <div class="d-flex align-items-center">
                                 <img t-if="scope.data?.record?.id"
                                     t-att-src="this.getAvatarUrl(scope.data.record.id)"
-                                        class="o_avatar rounded me-2"
-                                        style="width: 1.5rem; height: 1.5rem; object-fit: cover;" 
-                                        alt="Avatar"/>
-                                <span t-out="scope.label"/>
+                                    class="o-mail-Avatar o_avatar rounded me-2"
+                                    alt="Avatar"
+                                />
+                                <span class="text-truncate" t-out="scope.label"/>
                             </div>
                         </t>
                     </Many2XAutocomplete>

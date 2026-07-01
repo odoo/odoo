@@ -148,6 +148,69 @@ class TestUser(MailCommon):
                     })
                     self.assertFalse(portal_user.is_out_of_office, 'Portal users are never OOO')
 
+    def test_user_archive_activity_reassignment(self):
+        """ Test the behavior of activities when their assigned user is archived. """
+        user_creator_active = self.user_admin
+        user_creator_inactive = mail_new_test_user(
+            self.env,
+            company_id=self.company_admin.id,
+            country_id=self.env.ref('base.be').id,
+            groups='base.group_user,base.group_partner_manager',
+            login='archived_employee',
+            name='Archived Employee',
+            active=False,
+        )
+        user_to_archive = self.user_employee
+        test_role = self.env['res.role'].create({
+            'name': 'Archive Role',
+            'user_ids': [(4, user_to_archive.id)]
+        })
+        test_record = self.env['res.partner'].create({'name': 'Activity Target'})
+        activity_type_todo = self.env.ref('mail.mail_activity_data_todo').id
+        partner_model_id = self.env['ir.model']._get('res.partner').id
+        activity_personal = self.env['mail.activity'].with_user(user_to_archive).create({
+            'activity_type_id': activity_type_todo,
+            'summary': 'Personal',
+            'user_id': user_to_archive.id,
+        })
+        activity_active_creator = self.env['mail.activity'].with_user(user_creator_active).create({
+            'activity_type_id': activity_type_todo,
+            'res_model_id': partner_model_id,
+            'res_id': test_record.id,
+            'summary': 'Reassign to creator',
+            'user_id': user_to_archive.id,
+        })
+        activity_with_role = self.env['mail.activity'].with_user(user_creator_active).create({
+            'activity_type_id': activity_type_todo,
+            'res_model_id': partner_model_id,
+            'res_id': test_record.id,
+            'summary': 'Fallback to role',
+            'user_id': user_to_archive.id,
+            'role_id': test_role.id,
+        })
+        activity_inactive_creator = self.env['mail.activity'].with_user(user_creator_inactive).create({
+            'activity_type_id': activity_type_todo,
+            'res_model_id': partner_model_id,
+            'res_id': test_record.id,
+            'summary': 'Unassign (creator inactive)',
+            'user_id': user_to_archive.id,
+        })
+        activity_self_created = self.env['mail.activity'].with_user(user_to_archive).create({
+            'activity_type_id': activity_type_todo,
+            'res_model_id': partner_model_id,
+            'res_id': test_record.id,
+            'summary': 'Unassign (self created)',
+            'user_id': user_to_archive.id,
+        })
+
+        user_to_archive.action_archive()
+        self.assertFalse(activity_personal.exists(), "Personal activities of archived users should be deleted.")
+        self.assertEqual(activity_active_creator.user_id, user_creator_active, "Should fallback to the active creator.")
+        self.assertFalse(activity_with_role.user_id, "User should be unassigned because a role is present.")
+        self.assertEqual(activity_with_role.role_id, test_role, "Role should remain intact.")
+        self.assertFalse(activity_inactive_creator.user_id, "User should be unassigned if the creator is also inactive.")
+        self.assertFalse(activity_self_created.user_id, "User should be unassigned if they created the activity themselves.")
+
     def test_web_create_users(self):
         src = [
             'POILUCHETTE@test.example.com',
