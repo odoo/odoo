@@ -1673,7 +1673,16 @@ class SaleOrder(models.Model):
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        moves = self._create_account_invoices(invoice_vals_list, final)
+        # Group the prepared values by company and create each group within its
+        # own company's context, so company-dependent fields resolve correctly
+        # and the _create_account_invoices hook always runs in the right context.
+        moves = self.env['account.move']
+        invoice_vals_by_company = {}
+        for invoice_vals in invoice_vals_list:
+            invoice_vals_by_company.setdefault(invoice_vals.get('company_id'), []).append(invoice_vals)
+        for company_id, company_invoice_vals_list in invoice_vals_by_company.items():
+            order = self.with_company(company_id) if company_id else self
+            moves |= order._create_account_invoices(company_invoice_vals_list, final)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
