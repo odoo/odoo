@@ -76,9 +76,12 @@ patch(ThreadService.prototype, {
         if ("followers" in result) {
             if (result.selfFollower) {
                 thread.selfFollower = { followedThread: thread, ...result.selfFollower };
+            } else {
+                thread.selfFollower = false;
             }
             thread.followersCount = result.followersCount;
             Record.MAKE_UPDATE(() => {
+                thread.followers.clear()
                 for (const followerData of result.followers) {
                     const follower = this.store.Follower.insert({
                         followedThread: thread,
