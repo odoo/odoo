@@ -182,8 +182,7 @@ class TestMultiCompany(TransactionCase):
         the lot is created in Company A since the product belongs to Company A.
         """
         product = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'name': 'product',
             'company_id': self.company_a.id,
         })
@@ -223,8 +222,7 @@ class TestMultiCompany(TransactionCase):
         """
         product = self.env['product.product'].create({
             'type': 'consu',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'name': 'Cross-Company Product',
         })
         lot = self.env['stock.lot'].create({
@@ -443,8 +441,7 @@ class TestMultiCompany(TransactionCase):
 
         self.user_a.company_ids = [(6, 0, [self.company_a.id])]
         product_lot = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'name': 'product lot',
         })
 
@@ -545,8 +542,7 @@ class TestMultiCompany(TransactionCase):
         self.assertTrue(resupply_route, "Resupply route not found")
 
         product_lot = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'name': 'product lot',
             'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)],
         })

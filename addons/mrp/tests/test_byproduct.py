@@ -18,7 +18,7 @@ class TestMrpByProduct(common.TransactionCase):
         def create_product(name, route_ids=[]):
             return cls.env['product.product'].create({
                 'name': name,
-                'is_storable': True,
+                'store_by': 'quantity',
                 'route_ids': route_ids})
 
         # Create product A, B, C.
@@ -36,8 +36,7 @@ class TestMrpByProduct(common.TransactionCase):
             })
         cls.produced_serial = cls.env['product.product'].create({
             'name': 'Produced Serial',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.sn_1 = cls.env['stock.lot'].create({
             'name': 'Serial_01',
@@ -371,10 +370,12 @@ class TestMrpByProduct(common.TransactionCase):
         # Create product
         self.product_d = self.env['product.product'].create({
                 'name': 'Product D',
-                'is_storable': True})
+                'store_by': 'quantity',
+        })
         self.product_e = self.env['product.product'].create({
                 'name': 'Product E',
-                'is_storable': True})
+                'store_by': 'quantity',
+        })
 
         # Create byproduct
         byproduct_1 = self.env['stock.move'].create({
@@ -455,7 +456,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         component, final_product, byproduct = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
         } for name in ['Old Blood', 'Insight', 'Eyes on the Inside']])
         self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, 1)
         mo = self.env["mrp.production"].create({

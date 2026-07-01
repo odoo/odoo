@@ -83,10 +83,10 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         ensure the extra cost asked from the subcontractor is added correctly on all the finished
         product valuation layer. Not only the first one. """
         todo_nb = 4
-        self.comp2.tracking = 'lot'
-        self.comp1.tracking = 'serial'
+        self.comp2.store_by = 'lot'
+        self.comp1.store_by = 'serial'
         self.comp2.standard_price = 100
-        self.finished.tracking = 'serial'
+        self.finished.store_by = 'serial'
         self.finished.categ_id = self.category_fifo
 
         picking_receipt = self.env['stock.picking'].create({
@@ -167,9 +167,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         Create a receipt for 10 x P, receive 5, then 3 and then 2
         """
         self.product_category.property_cost_method = 'fifo'
-        self.comp1.tracking = 'lot'
+        self.comp1.store_by = 'lot'
         self.comp1.standard_price = 10
-        self.comp2.tracking = 'lot'
+        self.comp2.store_by = 'lot'
         self.comp2.standard_price = 20
 
         lot01, lot02 = self.env['stock.lot'].create([{

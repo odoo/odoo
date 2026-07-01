@@ -36,8 +36,7 @@ class TestBatchPicking(TransactionCase):
 
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         cls.lots_p_a = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
@@ -45,8 +44,7 @@ class TestBatchPicking(TransactionCase):
         } for i in range(4)])
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.lots_p_b = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
@@ -322,7 +320,7 @@ class TestBatchPicking(TransactionCase):
     def test_wave_mutliple_move_lines(self):
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
@@ -448,11 +446,11 @@ class TestBatchPicking(TransactionCase):
         warehouse.reception_steps = 'three_steps'
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product Test B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         picking = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,
@@ -496,8 +494,7 @@ class TestBatchPicking(TransactionCase):
             that the picking stays unchanged (except for the 'picked' state of the move)
             and is removed from the transfer
         """
-        self.productA.tracking = 'none'
-        self.productB.tracking = 'none'
+        (self.productA | self.productB).store_by = 'quantity'
         (picking_1, picking_2) = self.env['stock.picking'].create([
             {
             'picking_type_id': self.picking_type_in,
@@ -592,7 +589,7 @@ class TestBatchPicking(TransactionCase):
             Check that we can validate a wave transfer containing a picking without quantity.
             In that case, the picking remains unchanged and is removed from the wave
         """
-        (self.productA | self.productB).tracking = 'none'
+        (self.productA | self.productB).store_by = 'quantity'
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
         picking_1, picking_2 = self.env['stock.picking'].create([

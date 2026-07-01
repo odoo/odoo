@@ -92,14 +92,8 @@ class TestPosStockFlow(CommonPosStockTest):
             'usage': 'internal',
             'location_id': wh_location.id,
         })
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_15_incl.product_variant_id.write({
-            'tracking': 'none',
-            'is_storable': True,
-        })
+        self.ten_dollars_with_10_incl.product_variant_id.store_by = 'lot'
+        self.twenty_dollars_with_15_incl.product_variant_id.store_by = 'quantity'
         lot = self.env['stock.lot'].create({
             'name': 'SuperLot',
             'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
@@ -194,14 +188,7 @@ class TestPosStockFlow(CommonPosStockTest):
             "Specific Route" set to a multi-step (2/3) route can be validated.
             This config implies multiple picking types and multiple move_lines.
         """
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
+        (self.ten_dollars_with_10_incl | self.twenty_dollars_with_10_incl).product_variant_id.store_by = 'lot'
         twenty_dollars_lot = self.env['stock.lot'].create({
             'name': '80085',
             'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
@@ -278,10 +265,7 @@ class TestPosStockFlow(CommonPosStockTest):
 
     def test_tracked_product_with_owner(self):
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'serial',
-            'is_storable': True,
-        })
+        self.ten_dollars_with_10_incl.product_variant_id.store_by = 'serial'
         lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
@@ -362,10 +346,7 @@ class TestPosStockFlow(CommonPosStockTest):
     def test_order_different_lots(self):
         self.pos_config_usd.open_ui()
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
+        self.ten_dollars_with_10_incl.product_variant_id.store_by = 'lot'
 
         lot_1 = self.env['stock.lot'].create({
             'name': '1001',
@@ -419,10 +400,7 @@ class TestPosStockFlow(CommonPosStockTest):
         self.assertEqual(stock_quant_2.quantity, 3)
 
     def test_order_unexisting_lots(self):
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
+        self.ten_dollars_with_10_incl.product_variant_id.store_by = 'lot'
 
         order, _ = self.create_backend_pos_order({
             'line_data': [{
@@ -693,8 +671,7 @@ class TestPosStockFlow(CommonPosStockTest):
 
         self.product = self.env['product.product'].create({
             'name': 'Test Product',
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
         })
 
         self.warehouse = self.env['stock.warehouse'].create({
@@ -758,8 +735,7 @@ class TestPosStockFlow(CommonPosStockTest):
     def test_order_refund_lot_valuated(self):
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'available_in_pos': True,
             'lot_valuated': True,
             'lst_price': 500.0
@@ -822,10 +798,7 @@ class TestPosStockFlow(CommonPosStockTest):
     def test_invoiced_lot_values_use_stock_lot_for_pos_lot(self):
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
         product = self.twenty_dollars_no_tax.product_variant_id
-        product.write({
-            'tracking': 'serial',
-            'is_storable': True,
-        })
+        product.store_by = 'serial'
         lot = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': product.id,

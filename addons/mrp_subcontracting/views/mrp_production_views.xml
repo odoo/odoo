@@ -33,7 +33,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
-                <attribute name="invisible">product_tracking in ('none', False)</attribute>
+                <attribute name="invisible">not product_tracking</attribute>
             </xpath>
             <xpath expr="//page[@name='miscellaneous']" position="attributes">
                 <attribute name="invisible">1</attribute>

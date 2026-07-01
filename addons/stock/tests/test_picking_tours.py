@@ -26,8 +26,7 @@ class TestStockPickingTour(HttpCase):
         """generate some serial numbers in the detailed operation modal"""
         product_serial = self.env['product.product'].create({
             'name': 'Product Serial',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         url = self._get_picking_url(self.receipt.id)
 
@@ -47,8 +46,7 @@ class TestStockPickingTour(HttpCase):
         """ Generate lot numbers in the detailed operation modal """
         product_lot_1 = self.env['product.product'].create({
             'name': 'Product Lot 1',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         url = self._get_picking_url(self.receipt.id)
         self.start_tour(url, 'test_generate_serial_2', login='admin', timeout=60)
@@ -77,8 +75,8 @@ class TestStockPickingTour(HttpCase):
         (without clicking on anything else)
         """
         self.env['product.product'].create([
-            {'name': 'Product 1', 'is_storable': True},
-            {'name': 'Product 2', 'is_storable': True},
+            {'name': 'Product 1', 'store_by': 'quantity'},
+            {'name': 'Product 2', 'store_by': 'quantity'},
         ])
 
         menu = self.env.ref('stock.menu_action_inventory_tree')
@@ -102,8 +100,7 @@ class TestStockPickingTour(HttpCase):
         warehouse = self.env.ref("stock.warehouse0")
         product_lot = self.env['product.product'].create({
             'name': 'Product Lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lot_1, lot_2, lot_3 = self.env['stock.lot'].create([
             {'name': 'LOT001', 'product_id': product_lot.id, 'company_id': warehouse.company_id.id},

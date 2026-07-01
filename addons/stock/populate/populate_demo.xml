@@ -16,7 +16,7 @@
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
                 <field name="categ_id" ref="product_categories"/>
-                <field name="tracking" values="{'none': 6, 'lot': 2, 'serial': 2}"/>
+                <field name="tracking" values="{False: 6, 'lot': 2, 'serial': 2}"/>
                 <field name="list_price" start="5.0" end="2000.0" distribution="exponential(rate=0.002)"/>
                 <field name="standard_price" start="1.0" end="1000.0" distribution="exponential(rate=0.003)"/>
                 <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>

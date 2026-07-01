@@ -19,7 +19,7 @@ class TestSaleMrpProcurement(TransactionCase):
     def test_sale_mrp(self):
         # Required for `uom_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('uom.group_uom')
-        # Required for `tracking` to be visible in the view
+        # Required for `store_by` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
@@ -43,7 +43,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.tracking = 'none'
+        product.store_by = 'quantity'
         product.uom_id = uom_unit
         product.route_ids.clear()
         product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
@@ -91,7 +91,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('uom.group_uom')
         # Required for `manufacture_step` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
-        # Required for `tracking` to be visible in the view
+        # Required for `store_by` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
@@ -106,7 +106,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.raw_product = product_form.save()
 
@@ -114,7 +114,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -123,7 +123,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -132,7 +132,7 @@ class TestSaleMrpProcurement(TransactionCase):
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.raw_product_2 = product_form.save()
 

@@ -15,8 +15,7 @@ class TestStockLot(TestStockCommon):
         # Creates a tracked product using expiration dates.
         cls.product_apple = cls.ProductObj.create({
             'name': 'Apple',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'use_expiration_date': True,
             'expiration_time': 10,
             'use_time': 5,
@@ -40,7 +39,7 @@ class TestStockLot(TestStockCommon):
         # Creates a producible product and its BOM.
         cls.product_apple_pie = cls.ProductObj.create({
             'name': 'Apple Pie',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.bom_apple_pie = cls.env['mrp.bom'].create({
             'product_id': cls.product_apple_pie.id,

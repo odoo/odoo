@@ -9,7 +9,8 @@ from odoo.addons.stock.tests.common import TestStockCommon
 class TestMrpCommon(TestStockCommon):
 
     @classmethod
-    def generate_mo(cls, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
+    def generate_mo(cls, tracking_final='quantity', tracking_base_1='quantity', tracking_base_2='quantity',
+                    qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
         """ This function generate a manufacturing order with one final
         product and two consumed product. Arguments allows to choose
         the tracking/qty for each different products. It returns the
@@ -19,18 +20,15 @@ class TestMrpCommon(TestStockCommon):
             {
                 'name': 'Young Tom',
                 'type': 'consu',
-                'is_storable': True,
-                'tracking': tracking_final,
+                'store_by': tracking_final,
             }, {
                 'name': 'Botox',
                 'type': 'consu',
-                'is_storable': True,
-                'tracking': tracking_base_1,
+                'store_by': tracking_base_1,
             }, {
                 'name': 'Old Tom',
                 'type': 'consu',
-                'is_storable': True,
-                'tracking': tracking_base_2,
+                'store_by': tracking_base_2,
             }
         ])
         bom_1 = cls.env['mrp.bom'].create({
@@ -94,10 +92,8 @@ class TestMrpCommon(TestStockCommon):
         }])
 
         # Update demo products
-        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7_3 | cls.product_8).write({
-            'type': 'consu',
-            'is_storable': True,
-        })
+        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 |
+         cls.product_6 | cls.product_7_3 | cls.product_8).store_by = 'quantity'
 
         # User Data: mrp user and mrp manager
         cls.user_mrp_user = mail_new_test_user(

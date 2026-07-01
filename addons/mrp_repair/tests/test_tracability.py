@@ -19,8 +19,7 @@ class TestRepairTraceability(TestMrpCommon):
         """
         product_to_repair = self.env['product.product'].create({
             'name': 'product first serial to act repair',
-            'tracking': 'serial',
-            'is_storable': True,
+            'store_by': 'serial',
         })
         ptrepair_lot = self.env['stock.lot'].create({
             'name': 'A1',
@@ -28,8 +27,7 @@ class TestRepairTraceability(TestMrpCommon):
         })
         product_to_remove = self.env['product.product'].create({
             'name': 'other first serial to remove with repair',
-            'tracking': 'serial',
-            'is_storable': True,
+            'store_by': 'serial',
         })
         ptremove_lot = self.env['stock.lot'].create({
             'name': 'B2',
@@ -116,11 +114,10 @@ class TestRepairTraceability(TestMrpCommon):
 
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'SN Component',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         }])
 
         sn_lot = self.env['stock.lot'].create({
@@ -199,11 +196,10 @@ class TestRepairTraceability(TestMrpCommon):
         """
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'SN Componentt',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         }])
 
         sn_lot = self.env['stock.lot'].create({
@@ -273,10 +269,7 @@ class TestRepairTraceability(TestMrpCommon):
 
         finished = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
-        component.write({
-            'is_storable': True,
-            'tracking': 'serial',
-        })
+        component.store_by = 'serial'
 
         sn_lot = self.env['stock.lot'].create({
             'product_id': component.id,

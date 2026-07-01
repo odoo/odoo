@@ -1066,8 +1066,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.cat.property_cost_method = 'average'
         product = self.env['product.product'].create({
             'name': 'product1',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'categ_id': self.cat.id,
             'lot_valuated': True,
         })

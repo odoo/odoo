@@ -28,9 +28,8 @@ class TestMultiCompanyLotValuation(TransactionCase):
 
         cls.product_fifo_lot = cls.env['product.product'].create({
             'name': 'Product FIFO Lot Valuated',
-            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'company_id': False,
             'lot_valuated': True,
         })

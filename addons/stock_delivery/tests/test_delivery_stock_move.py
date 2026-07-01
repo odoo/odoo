@@ -101,9 +101,7 @@ class TestStockMoveInvoice(TestSaleCommon):
 
     def test_02_delivery_stock_move(self):
         # Test if SN product shipment line has the correct amount
-        self.product_cable_management_box.write({
-            'tracking': 'serial'
-        })
+        self.product_cable_management_box.store_by = 'serial'
 
         serial_numbers = self.env['stock.lot'].create([{
             'name': str(x),

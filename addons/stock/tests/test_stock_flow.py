@@ -1147,7 +1147,7 @@ class TestStockFlow(TestStockCommon):
         # Change basic operation type not to get lots
         # Create product with lot tracking
         self.picking_type_in.use_create_lots = False
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -2049,13 +2049,11 @@ class TestStockFlow(TestStockCommon):
         # Creates two tracked products (one by lots and one by SN).
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         product_serial = self.env['product.product'].create({
             'name': 'Tracked by SN',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         # Creates two receipts using some lot names in common.
         picking_form = Form(self.env['stock.picking'])
@@ -2305,9 +2303,7 @@ class TestStockFlow(TestStockCommon):
         if is_scrap context is set."""
         tracked_product = self.env['product.product'].create({
             'name': 'Tracked Product',
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location, 1.0)
 
@@ -2363,7 +2359,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(scrap.state, 'done')
 
     def test_receive_tracked_product(self):
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
@@ -2501,7 +2497,7 @@ class TestStockFlow(TestStockCommon):
         stock_location = warehouse.lot_stock_id
         sub_loc = stock_location.child_ids[0]
 
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
@@ -2610,7 +2606,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(backorder.state, 'done')
 
     def test_picking_mixed_tracking_with_backorder(self):
-        self.productB.tracking = 'lot'
+        self.productB.store_by = 'lot'
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2739,8 +2735,7 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         sn = self.env['stock.lot'].create({
             'name': 'super_sn',

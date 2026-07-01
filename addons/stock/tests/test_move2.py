@@ -431,7 +431,7 @@ class TestPickShip(TestStockCommon):
         """ Let’s say two moves are chained: the first is done and the second is assigned.
         Editing the lot on the move line of the first move should impact the reservation of the second one.
         """
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
@@ -530,7 +530,7 @@ class TestPickShip(TestStockCommon):
         """
         picking_pick, picking_ship = self.create_pick_ship()
         picking_ship.picking_type_id.return_picking_type_id = False
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
@@ -607,7 +607,7 @@ class TestPickShip(TestStockCommon):
         if all the link orgini/destination between moves are correct.
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
@@ -826,7 +826,7 @@ class TestPickShip(TestStockCommon):
         """ With two distinct deliveries for the same product tracked by lot, ensure that the
         return of the second picking suggest the lot from the picking returned.
         """
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
@@ -1342,7 +1342,7 @@ class TestSinglePicking(TestStockCommon):
         reserved quantity should be updated.
         Otherwise a new move lines with the new lot should be added.
         """
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
@@ -1392,7 +1392,7 @@ class TestSinglePicking(TestStockCommon):
     def test_recheck_availability_3(self):
         """ Same check than test_recheck_availability_2 but with different lots.
         """
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
@@ -1448,7 +1448,7 @@ class TestSinglePicking(TestStockCommon):
         """ Same check than test_recheck_availability_2 but with serial number this time.
         Serial number reservation should always create a new move line.
         """
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
         serial1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.productA.id,
@@ -1508,7 +1508,7 @@ class TestSinglePicking(TestStockCommon):
             'use_create_lots': False,
             'use_existing_lots': False,
         })
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
@@ -1540,7 +1540,7 @@ class TestSinglePicking(TestStockCommon):
             'use_create_lots': True,
             'use_existing_lots': True,
         })
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
@@ -1579,7 +1579,7 @@ class TestSinglePicking(TestStockCommon):
             'use_create_lots': True,
             'use_existing_lots': False,
         })
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
@@ -1618,7 +1618,7 @@ class TestSinglePicking(TestStockCommon):
             'use_create_lots': False,
             'use_existing_lots': True,
         })
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
@@ -1669,7 +1669,7 @@ class TestSinglePicking(TestStockCommon):
             'use_create_lots': False,
             'use_existing_lots': False,
         })
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
@@ -2311,7 +2311,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(picking.state, 'cancel', "Picking should be in a cancel state.")
 
     def test_immediate_picking_with_lot(self):
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2396,8 +2396,7 @@ class TestSinglePicking(TestStockCommon):
         """
         tracked_product = self.env['product.product'].create({
             'name': "Lovely Product",
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
         # Use the removal strategy by alphabetical order of locations
@@ -2608,9 +2607,8 @@ class TestStockUOM(TestStockCommon):
         })
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
-            'is_storable': True,
             'uom_ids': [Command.link(T_LBS.id)],
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
 
         picking_in = self.env['stock.picking'].create({
@@ -3250,8 +3248,7 @@ class TestAutoAssign(TestStockCommon):
     def test_serial_lot_ids(self):
         self.product_serial = self.env['product.product'].create({
             'name': 'PSerial',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
 
         move = self.env['stock.move'].create({
@@ -3398,8 +3395,7 @@ class TestPickShipBackorder(TestStockCommon):
             {
                 "name": "Lot Product",
                 "type": "consu",
-                "is_storable": True,
-                "tracking": "lot",
+                "store_by": "lot",
                 "uom_id": cls.uom_unit.id,
             }
         )

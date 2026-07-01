@@ -23,13 +23,11 @@ class TestStockMove(TestStockCommon):
         ]})
         cls.product_serial = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         cls.product_consu = cls.env['product.product'].create({
             'name': 'Product A',
@@ -222,7 +220,7 @@ class TestStockMove(TestStockCommon):
         """
         # make some stock
 
-        self.productA.is_storable = False
+        self.productA.store_by = 'untracked'
         self.assertEqual(len(self.gather_relevant(self.productA, self.stock_location)), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0.0)
 
@@ -267,9 +265,9 @@ class TestStockMove(TestStockCommon):
         Ensure the state is correct
         """
         productA, productB, productC = self.env['product.product'].create([
-            {'name': 'Product A', 'is_storable': True},
-            {'name': 'Product B', 'is_storable': True},
-            {'name': 'Product C (out of stock)', 'is_storable': True},
+            {'name': 'Product A', 'store_by': 'quantity'},
+            {'name': 'Product B', 'store_by': 'quantity'},
+            {'name': 'Product C (out of stock)', 'store_by': 'quantity'},
         ])
         # make some stock
         self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 1)
@@ -1298,7 +1296,7 @@ class TestStockMove(TestStockCommon):
         # create a different product and its quant
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant'].create({
             'product_id': product2.id,
@@ -1644,7 +1642,7 @@ class TestStockMove(TestStockCommon):
 
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         move2 = self.env['stock.move'].create({
@@ -2106,7 +2104,7 @@ class TestStockMove(TestStockCommon):
         Test the quantity is correct when looking in the past in strict mode.
         """
         today = fields.Date.today()
-        self.product.is_storable = True
+        self.product.store_by = 'quantity'
         self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 10.0)
         moves = self.env['stock.move'].create([
             {
@@ -3243,11 +3241,11 @@ class TestStockMove(TestStockCommon):
     def test_use_unreserved_move_line_4(self):
         product_01 = self.env['product.product'].create({
             'name': 'Product 01',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_02 = self.env['product.product'].create({
             'name': 'Product 02',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product_01, self.stock_location, 1)
         self.env['stock.quant']._update_available_quantity(product_02, self.stock_location, 1)
@@ -4227,7 +4225,7 @@ class TestStockMove(TestStockCommon):
         """
         product5 = self.env['product.product'].create({
             'name': 'Product 5',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
@@ -4345,7 +4343,7 @@ class TestStockMove(TestStockCommon):
         """
         product_id = self.product_serial
         self.assertTrue(self.picking_type_in.use_create_lots or self.picking_type_in.use_existing_lots)
-        self.assertEqual(product_id.tracking, 'serial')
+        self.assertEqual(product_id.store_by, 'serial')
 
         picking = self._create_picking_test_immediate_validate_5(self.picking_type_in, product_id)
         # should raise because no serial numbers were specified
@@ -4820,7 +4818,7 @@ class TestStockMove(TestStockCommon):
         product01 = self.productA
         product02 = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.env['stock.quant']._update_available_quantity(product01, self.stock_location, 3)
@@ -5333,7 +5331,7 @@ class TestStockMove(TestStockCommon):
             - switching the product type when there are already done moves
             - switching the product tracking
         """
-        self.productA.is_storable = False
+        self.productA.store_by = 'untracked'
         move_in = self.env['stock.move'].create({
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
@@ -5345,13 +5343,13 @@ class TestStockMove(TestStockCommon):
         move_in._action_confirm()
         move_in._action_assign()
 
-        self.productA.is_storable = True
+        self.productA.store_by = 'quantity'
         move_in._action_done()
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10)
         # cache corruption
         self.productA.qty_available = 10
-        self.assertEqual(self.productA.tracking, 'none')
+        self.assertEqual(self.productA.store_by, 'quantity')
 
         move_out = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
@@ -5364,7 +5362,7 @@ class TestStockMove(TestStockCommon):
         move_out._action_confirm()
         move_out._action_assign()
 
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         lot_1 = self.env['stock.lot'].create({
             'product_id': self.productA.id,
@@ -5376,7 +5374,7 @@ class TestStockMove(TestStockCommon):
         move_out.picked = True
         move_out._action_done()
 
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
         sn_01, sn_02, sn_03, sn_04, sn_05 = self.env['stock.lot'].create([{
             'product_id': self.productA.id,
             'name': name,
@@ -5407,7 +5405,7 @@ class TestStockMove(TestStockCommon):
             {'lot_id': sn_05.id},
         ])
 
-        self.productA.is_storable = False
+        self.productA.store_by = 'untracked'
 
         self.assertRecordValues(move2.move_line_ids, [
             {'lot_id': sn_01.id},
@@ -5508,7 +5506,7 @@ class TestStockMove(TestStockCommon):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
         self.env['stock.quant']._update_available_quantity(product1, self.stock_location, 2)
@@ -5553,7 +5551,7 @@ class TestStockMove(TestStockCommon):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
         self.env['stock.quant']._update_available_quantity(product1, self.stock_location, 2)
@@ -5603,11 +5601,11 @@ class TestStockMove(TestStockCommon):
         # Creates two other products.
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product3 = self.env['product.product'].create({
             'name': 'Product C',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         # Adds some quantity on stock.
         self.env['stock.quant'].with_context(inventory_mode=True).create([{
@@ -5627,7 +5625,7 @@ class TestStockMove(TestStockCommon):
         # Not in stock product
         product4 = self.env['product.product'].create({
             'name': 'Product D',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         # Creates a delivery for a bunch of products.
@@ -6086,7 +6084,7 @@ class TestStockMove(TestStockCommon):
         uom_kg = self.env.ref('uom.product_uom_kgm')
         product1 = self.env['product.product'].create({
             'name': 'product1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': uom_kg.id,
         })
         move.product_id = product1
@@ -6674,7 +6672,7 @@ class TestStockMove(TestStockCommon):
                 'location_dest_id': self.supplier_location.id,
             })]
         })
-        self.product.is_storable = True
+        self.product.store_by = 'quantity'
         self.assertEqual(picking.move_ids.forecast_availability, -10)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
         self.env.invalidate_all()

@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class TestTraceability(TestMrpCommon):
-    TRACKING_TYPES = ['none', 'serial', 'lot']
+    TRACKING_TYPES = [False, 'serial', 'lot']
 
     @classmethod
     def setUpClass(cls):
@@ -28,10 +28,10 @@ class TestTraceability(TestMrpCommon):
         })
 
     def test_tracking_types_on_mo(self):
-        finished_no_track = self._create_product('none')
+        finished_no_track = self._create_product(False)
         finished_lot = self._create_product('lot')
         finished_serial = self._create_product('serial')
-        consumed_no_track = self._create_product('none')
+        consumed_no_track = self._create_product(False)
         consumed_lot = self._create_product('lot')
         consumed_serial = self._create_product('serial')
         Lot = self.env['stock.lot']

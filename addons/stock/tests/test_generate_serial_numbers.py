@@ -15,8 +15,7 @@ class StockGenerateCommon(TransactionCase):
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
             'name': 'Tracked by SN',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
@@ -313,8 +312,7 @@ class StockGenerateCommon(TransactionCase):
         """
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lots',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         abc_lot_id = self.env['stock.lot'].create({
             'product_id': product_lot.id,
@@ -361,8 +359,7 @@ class StockGenerateCommon(TransactionCase):
         """
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lots',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         sn_t1_01 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-01'})
         sn_t1_02 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-02'})
@@ -483,7 +480,7 @@ class StockGenerateCommon(TransactionCase):
             lot01, lot02, lot03, lot04, using `generate_lot_names()`.
         """
         product = self.product_serial
-        product.write({'tracking': 'lot', 'lot_sequence_id': False})
+        product.write({'store_by': 'lot', 'lot_sequence_id': False})
         move_line_vals = self.env['stock.move'].action_generate_lot_line_vals({
                 'default_tracking': 'lot',
                 'default_product_id': product.id,
@@ -499,7 +496,7 @@ class StockGenerateCommon(TransactionCase):
 
     def test_lots_generation_on_product_with_zero_quantity_received(self):
         product = self.product_serial
-        product.tracking = 'lot'
+        product.store_by = 'lot'
         move_line_vals = self.env['stock.move'].action_generate_lot_line_vals({
                 'default_tracking': 'lot',
                 'default_product_id': product.id,

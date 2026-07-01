@@ -14,7 +14,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
         in order to test all the triggers.
 
         SERIAL : MO's product_tracking is 'serial'
-        DEFAULT : MO's product_tracking is 'none' or 'lot'
+        DEFAULT : MO's product_tracking is False or 'lot'
         AVAILABLE : MO'S raw components are fully available
         """
         super().setUpClass()
@@ -45,10 +45,10 @@ class TestConsumeComponentCommon(common.TransactionCase):
             'tracking': 'serial',
             'route_ids': [(4, cls.manufacture_route.id, 0)],
         })
-        cls.produced_none = cls.env['product.product'].create({
-            'name': 'Produced None',
+        cls.produced_untracked = cls.env['product.product'].create({
+            'name': 'Produced Untracked',
             'is_storable': True,
-            'tracking': 'none',
+            'tracking': False,
             'route_ids': [(4, cls.manufacture_route.id, 0)],
         })
 
@@ -62,13 +62,13 @@ class TestConsumeComponentCommon(common.TransactionCase):
             'is_storable': True,
             'tracking': 'serial',
         })
-        cls.raw_none = cls.env['product.product'].create({
-            'name': 'Raw None',
+        cls.raw_untracked = cls.env['product.product'].create({
+            'name': 'Raw Untracked',
             'is_storable': True,
-            'tracking': 'none',
+            'tracking': False,
         })
 
-        cls.raws = [cls.raw_none, cls.raw_lot, cls.raw_serial]
+        cls.raws = [cls.raw_untracked, cls.raw_lot, cls.raw_serial]
 
         # Workcenter
         cls.workcenter = cls.env['mrp.workcenter'].create({
@@ -76,13 +76,13 @@ class TestConsumeComponentCommon(common.TransactionCase):
         })
 
         # BoMs
-        cls.bom_none = cls.env['mrp.bom'].create({
-            'product_tmpl_id': cls.produced_none.product_tmpl_id.id,
-            'uom_id': cls.produced_none.uom_id.id,
+        cls.bom_untracked = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.produced_untracked.product_tmpl_id.id,
+            'uom_id': cls.produced_untracked.uom_id.id,
             'sequence': 1
         })
 
-        cls.bom_none_lines = cls.create_bom_lines(cls.bom_none, cls.raws, [3, 2, 1])
+        cls.bom_untracked_lines = cls.create_bom_lines(cls.bom_untracked, cls.raws, [3, 2, 1])
 
         cls.bom_lot = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_lot.product_tmpl_id.id,
@@ -101,11 +101,11 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.bom_serial_lines = cls.create_bom_lines(cls.bom_serial, cls.raws, [3, 2, 1])
 
         # Manufacturing Orders
-        cls.mo_none_tmpl = {
-            'product_id': cls.produced_none.id,
-            'uom_id': cls.produced_none.uom_id.id,
+        cls.mo_untracked_tmpl = {
+            'product_id': cls.produced_untracked.id,
+            'uom_id': cls.produced_untracked.uom_id.id,
             'product_qty': 1,
-            'bom_id': cls.bom_none.id
+            'bom_id': cls.bom_untracked.id,
         }
 
         cls.mo_lot_tmpl = {
@@ -228,16 +228,16 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         -> Tracked components are fully consumed
         """
 
-        mo_none = self.create_mo(self.mo_none_tmpl, self.DEFAULT_AVAILABLE_TRIGGERS_COUNT)
+        mo_untracked = self.create_mo(self.mo_untracked_tmpl, self.DEFAULT_AVAILABLE_TRIGGERS_COUNT)
         mo_serial = self.create_mo(self.mo_serial_tmpl, self.SERIAL_AVAILABLE_TRIGGERS_COUNT)
         mo_lot = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_AVAILABLE_TRIGGERS_COUNT)
 
-        mo_all = mo_none + mo_serial + mo_lot
+        mo_all = mo_untracked + mo_serial + mo_lot
         mo_all.action_confirm()
 
         all_qty = 2 * self.DEFAULT_AVAILABLE_TRIGGERS_COUNT + self.SERIAL_AVAILABLE_TRIGGERS_COUNT
 
-        quant = self.create_quant(self.raw_none, 3*all_qty)
+        quant = self.create_quant(self.raw_untracked, 3 * all_qty)
         quant |= self.create_quant(self.raw_lot, 2*all_qty)
         quant |= self.create_quant(self.raw_serial, 1*all_qty)
         quant.action_apply_inventory()
@@ -248,12 +248,12 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             self.assertEqual(mov.product_qty, mov.quantity, "Reserved quantity shall be equal to To Consume quantity.")
 
         self.executeConsumptionTriggers(mo_serial)
-        self.executeConsumptionTriggers(mo_none)
+        self.executeConsumptionTriggers(mo_untracked)
         self.executeConsumptionTriggers(mo_lot)
 
         # updating qty_producing by _on_change_producing() or action_generate_serial()
         # doesn't mark moves as picked but only qty_done to match the qty_consumed
-        should_be_picked_moves = mo_serial[2].move_raw_ids | mo_none[1].move_raw_ids | mo_lot[1].move_raw_ids
+        should_be_picked_moves = mo_serial[2].move_raw_ids | mo_untracked[1].move_raw_ids | mo_lot[1].move_raw_ids
         should_not_be_picked_moves = mo_all.move_raw_ids - should_be_picked_moves
 
         for move in should_be_picked_moves:
@@ -271,11 +271,11 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         -> Tracked components are not consumed
         """
 
-        mo_none = self.create_mo(self.mo_none_tmpl, self.DEFAULT_TRIGGERS_COUNT)
+        mo_untracked = self.create_mo(self.mo_untracked_tmpl, self.DEFAULT_TRIGGERS_COUNT)
         mo_serial = self.create_mo(self.mo_serial_tmpl, self.SERIAL_TRIGGERS_COUNT)
         mo_lot = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_TRIGGERS_COUNT)
 
-        mo_all = mo_none + mo_serial + mo_lot
+        mo_all = mo_untracked + mo_serial + mo_lot
         mo_all.action_confirm()
 
         # Quantities are not reserved at all (stock.move state is confirmed)
@@ -284,7 +284,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             self.assertEqual(0, mov.quantity, "Reserved quantity shall be equal to 0.")
 
         self.executeConsumptionTriggers(mo_serial)
-        self.executeConsumptionTriggers(mo_none)
+        self.executeConsumptionTriggers(mo_untracked)
         self.executeConsumptionTriggers(mo_lot)
 
         for mov in mo_all.move_raw_ids:
@@ -297,14 +297,14 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         """
 
         # Update BoM serial component qty
-        self.bom_none_lines[2].product_qty = 2
+        self.bom_untracked_lines[2].product_qty = 2
         self.bom_serial_lines[2].product_qty = 2
         self.bom_lot_lines[2].product_qty = 2
 
-        raw_none_qty = 2
+        raw_untracked_qty = 2
         raw_tracked_qty = 1
 
-        quant = self.create_quant(self.raw_none, raw_none_qty)
+        quant = self.create_quant(self.raw_untracked, raw_untracked_qty)
         quant |= self.create_quant(self.raw_lot, raw_tracked_qty)
         quant |= self.create_quant(self.raw_serial, raw_tracked_qty)
         quant.action_apply_inventory()
@@ -317,10 +317,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             #  are partially reserved (stock.move state is partially_available)
             mo.action_assign()
             for mov in mo.move_raw_ids:
-                if mov.has_tracking not in ['lot', 'serial']:
-                    self.assertEqual(raw_none_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_none_qty) + ".")
+                if mov.has_tracking:
+                    self.assertEqual(raw_tracked_qty, mov.quantity, f"Reserved quantity should be equal to {raw_tracked_qty}.")
                 else:
-                    self.assertEqual(raw_tracked_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_tracked_qty) + ".")
+                    self.assertEqual(raw_untracked_qty, mov.quantity, f"Reserved quantity should be equal to {raw_untracked_qty}.")
 
             if serialTrigger is None:
                 self.executeConsumptionTriggers(mo)
@@ -331,7 +331,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
                 mo.action_generate_serial()
 
             for mov in mo.move_raw_ids:
-                if mov.has_tracking not in ['lot', 'serial']:
+                if not mov.has_tracking:
                     if serialTrigger in (None, 2):
                         self.assertFalse(mov.picked, "components should not be auto-picked via qty_producing or action_generate_serial")
                     else:
@@ -339,7 +339,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
                 self.assertEqual(mov.product_qty, mov.quantity, "Done quantity should be equal to To Consume quantity.")
             mo.action_cancel()
 
-        testUnit(self.mo_none_tmpl)
+        testUnit(self.mo_untracked_tmpl)
         testUnit(self.mo_lot_tmpl)
         testUnit(self.mo_serial_tmpl, 1)
         testUnit(self.mo_serial_tmpl, 2)
@@ -459,7 +459,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         If we have a manufacturing order (MO) for a product tracked by lot, and we assign a lot number
         and then unassign it, the components should not be consumed at that point.
         """
-        quant = self.create_quant(self.raw_none, 3)
+        quant = self.create_quant(self.raw_untracked, 3)
         quant |= self.create_quant(self.raw_lot, 2)
         quant |= self.create_quant(self.raw_serial, 1)
         quant.action_apply_inventory()
