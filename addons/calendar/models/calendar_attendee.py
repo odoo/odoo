@@ -120,11 +120,8 @@ class CalendarAttendee(models.Model):
         self.filtered(lambda attendee: attendee.event_id.start > now)._notify_attendees(
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
             force_send=True,
-            notified_attendees_log_message=self._get_invitation_log_message,
+            notified_attendees_log_message=_('An invitation has been sent to:'),
         )
-
-    def _get_invitation_log_message(self):
-        return _('An invitation has been sent to:')
 
     def _notify_attendees(self, mail_template, notify_author=False, force_send=False, notified_attendees_log_message=False):
         """ Notify attendees about event main changes (invite, cancel, ...) based
