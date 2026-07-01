@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import subprocess
 import threading
 import time
@@ -101,10 +102,22 @@ class IotBoxOwlHomePage(Controller):
     @route.iot_route('/iot_drivers/iot_logs', type='http', cors='*')
     def get_iot_logs(self):
         logs_path = "/var/log/odoo/odoo-server.log" if IS_RPI else Path().absolute().parent.joinpath('odoo.log')
+        log_max_size_chars = 2000000
+        log_max_size_lines = 10000
+
         with open(logs_path, encoding="utf-8") as file:
+            file_length = file.seek(0, 2)
+            starting_offset = max(file_length - log_max_size_chars, 0)
+            file.seek(starting_offset)
+
+            file_contents = file.read()
+            file_contents_no_ansi_codes = re.sub(r"\x1b\[[\w;]+m", "", file_contents)
+            file_lines = file_contents_no_ansi_codes.splitlines()
+            filtered_lines = [line for line in file_lines if not "GET /iot_drivers/iot_logs" in line]
+            log_text = "\n".join(filtered_lines[-log_max_size_lines:])
             return json.dumps({
                 'status': 'success',
-                'logs': file.read(),
+                'logs': log_text,
             })
 
     @route.iot_route('/iot_drivers/six_payment_terminal_clear', type='http', cors='*')
