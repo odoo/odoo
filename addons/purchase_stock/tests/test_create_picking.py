@@ -45,6 +45,7 @@ class TestCreatePicking(ProductVariantsCommon):
         """
 
         # Draft purchase order created
+        self.po_vals['priority'] = '1'
         self.po = self.env['purchase.order'].create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
 
@@ -53,6 +54,7 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
         self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created')
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'One move should be created')
+        self.assertEqual(self.po.picking_ids.priority, '1', 'The po priority should be propagated to the picking')
         # Change purchase order line product quantity
         self.po.order_line.write({'product_qty': 7.0})
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'The two moves should be merged in one')

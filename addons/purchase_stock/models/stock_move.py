@@ -115,6 +115,12 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _get_new_picking_values(self):
+        vals = super()._get_new_picking_values()
+        if priority := self.env.context.get('purchase_priority'):
+            vals['priority'] = priority
+        return vals
+
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_ids': [Command.clear()]})
