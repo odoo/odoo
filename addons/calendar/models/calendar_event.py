@@ -999,7 +999,7 @@ class CalendarEvent(models.Model):
                 )._notify_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False),
                     force_send=True,
-                    notified_attendees_log_message=_('An update of the date has been sent to:')
+                    notified_attendees_log_message=(_('An update of the date has been sent to:'), False)
                 )
 
         # Change base event when the main base event is archived. If it isn't done when trying to modify

@@ -121,10 +121,10 @@ class CalendarAttendee(models.Model):
         self.filtered(lambda attendee: attendee.event_id.start > now)._notify_attendees(
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
             force_send=True,
-            notified_attendees_log_message=_('An invitation has been sent to:'),
+            notified_attendees_log_message=(_('An invitation has been sent to:'), True),
         )
 
-    def _notify_attendees(self, mail_template, notify_author=False, force_send=False, notified_attendees_log_message=False):
+    def _notify_attendees(self, mail_template, notify_author=False, force_send=False, notified_attendees_log_message=None):
         """ Notify attendees about event main changes (invite, cancel, ...) based
         on template.
 
@@ -216,9 +216,13 @@ class CalendarAttendee(models.Model):
         # batch sending at the end
         if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
+            log_message, create = notified_attendees_log_message
             for event, attendees in notified_attendees_per_event.items():
-                test = event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
-                print(test)
+                message = Markup('<p class="m-0">%s</p>') % log_message + self._generate_notified_attendees_html_list(attendees)
+                if create:
+                    event._message_log(body=message)
+                else:
+                    event._track_set_log_message(message)
 
     @api.model
     def _generate_notified_attendees_html_list(self, attendees):

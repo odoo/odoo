@@ -200,7 +200,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 alarm.mail_template_id,
                 force_send=len(attendees) <= force_send_limit,
                 notify_author=True,
-                notified_attendees_log_message=_('The %s reminder was sent', Markup('<i>%s</i>') % alarm.name)
+                notified_attendees_log_message=(_('The %s reminder was sent', Markup('<i>%s</i>') % alarm.name), True)
             )
 
         events._setup_event_recurrent_alarms(events_by_alarm)
