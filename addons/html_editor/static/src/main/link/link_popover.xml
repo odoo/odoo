@@ -32,6 +32,22 @@
                                         </div>
                                     </t>
                                 </t>
+                                <hr/>
+                                <div class="py-1 gap-2">
+                                    <label
+                                        for="o_we_description_link"
+                                        data-tooltip="Add an optional description if the link content is not self-explanatory.
+                                        This helps visually impaired users understand the purpose of the link.">
+                                        Aria Description
+                                        <sup><i class="oi" data-icon="question_mark" aria-hidden="true" role="img"/></sup>
+                                    </label>
+                                    <input
+                                        id="o_we_description_link"
+                                        class="o_we_description_link border-dark-subtle form-control form-control-sm"
+                                        t-model.proxy="this.state.description"
+                                        title="Description"
+                                        t-on-input="this.onChange"/>
+                                </div>
                             </div>
                         </div>
                     </t>

@@ -24,7 +24,7 @@
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!this.areAllCombosSelected"
             >
-                <i class="oi me-2" data-icon="shopping_cart"/>
+                <i class="oi me-2" data-icon="shopping_cart" aria-hidden="true" role="img" />
                 Add to Cart
             </button>
             <button
@@ -35,7 +35,7 @@
                 t-att-disabled="!this.areAllCombosSelected"
             >
                 Go to Checkout
-                <i class="oi ms-2" data-icon="keyboard_arrow_right"/>
+                <i class="oi ms-2" data-icon="keyboard_arrow_right" aria-hidden="true" role="img" />
             </button>
         </button>
     </t>
