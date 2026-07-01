@@ -13,10 +13,12 @@
         <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->
         <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
             <div id="header_synchronization_settings" class="mx-2 ms-auto d-flex flex-wrap align-items-end">
-                <div t-if="this.model.state?.googlePendingSync || this.model.state?.microsoftPendingSync" class="text-center me-2">
+                <div t-if="
+                    (this.model.syncStatus.google_calendar === 'sync_active' and this.model.state?.googlePendingSync and this.model.googleSyncTimedOut)
+                    or (this.model.syncStatus.microsoft_calendar === 'sync_active' and this.model.state?.microsoftPendingSync and this.model.microsoftSyncTimedOut)"
+                    class="text-center me-2">
                     <i class="fa fa-spinner fa-spin"/>
-                    <span class="ms-1">Sync in progress...</span>
-                    <div class="small">This may take some time</div>
+                    <span class="ms-1">Syncing</span>
                 </div>
                 <div t-elif="this.model.state?.googleSyncError">
                     <button class="btn btn-link text-nowrap py-0"
