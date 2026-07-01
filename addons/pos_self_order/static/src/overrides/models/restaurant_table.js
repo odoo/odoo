@@ -15,4 +15,7 @@ patch(RestaurantTable.prototype, {
         );
         return [...orders, ...selfOrdering];
     },
+    getOrder() {
+        return super.getOrder() || this.getOrders().find((o) => !o.finalized);
+    },
 });

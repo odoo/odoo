@@ -10,6 +10,9 @@
                 <field name="table_id"/>
                 <field name="customer_count"/>
             </xpath>
+            <xpath expr="//field[@name='session_id']" position="after">
+                <field name="duration" invisible="not duration"/>
+            </xpath>
         </field>
     </record>
 

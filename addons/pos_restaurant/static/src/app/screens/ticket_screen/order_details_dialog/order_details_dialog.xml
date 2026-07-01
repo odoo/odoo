@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderDetailsDialog" t-inherit="point_of_sale.OrderDetailsDialog" t-inherit-mode="extension">
+        <xpath expr="//Dialog" position="inside">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center w-100 position-relative">
+                    <h3 class="modal-title" t-out="this.title"/>
+                    <t t-set="table" t-value="this.getTableInfo()"/>
+                    <t t-if="table and table.orderDuration()">
+                        <div class="position-absolute start-50 translate-middle-x d-flex gap-1 text-muted">
+                            <i class="fa fa-clock-o fs-3 m-auto"/>
+                            <span class="fs-3" t-out="table.orderDuration()"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
