@@ -12,15 +12,16 @@ import {
 } from "@website/js/tours/tour_utils";
 
 const TEST_COLOR_HEX = "00FF00";
+const TEST_COLOR_HEX_2 = "7ED1ED";
 
-function verifyShapeColorsUpdated(trigger) {
+function verifyShapeColorsUpdated(trigger, expectedHex) {
     return {
         content: "Verify that the shape colors are updated",
         trigger,
         async run() {
             const backgroundImageUrl =
                 this.anchor.querySelector(".o_we_shape").style.backgroundImage;
-            if (!backgroundImageUrl.includes(TEST_COLOR_HEX)) {
+            if (!backgroundImageUrl.includes(expectedHex)) {
                 throw new Error(
                     "Updating the theme color should also update the background shape color."
                 );
@@ -28,7 +29,7 @@ function verifyShapeColorsUpdated(trigger) {
             await assertSvgColors(
                 this.anchor.querySelector("img[data-shape]"),
                 "Updating the theme color should update the image shape SVG color.",
-                [`#${TEST_COLOR_HEX}`]
+                [`#${expectedHex}`]
             );
         },
     };
@@ -61,6 +62,28 @@ registerWebsitePreviewTour(
         ),
         ...goToTheme(),
         clickOnElement("color option", "[data-label='Colors'] button"),
+        clickOnElement("Click color palette", ".o_theme_tab .hb-sliding-panel .o-dropdown-caret"),
+        clickOnElement(
+            "Change color palette",
+            `.o-color-palette-dropdown [data-action-value="'default-light-1'"]`
+        ),
+        {
+            content: "Wait for no loading",
+            trigger: ":iframe body:not(:has(.o_loading_screen))",
+        },
+        verifyShapeColorsUpdated(":iframe .s_company_team", TEST_COLOR_HEX_2),
+        goBackToBlocks(),
+        clickOnElement(
+            "custom category block",
+            ".o_snippet[name='Custom'] .o_snippet_thumbnail_area"
+        ),
+        verifyShapeColorsUpdated(
+            ":iframe .o_snippets_preview_row .s_company_team",
+            TEST_COLOR_HEX_2
+        ),
+        clickOnElement("X to close the 'Insert snippet' dialog", ".modal .btn-close"),
+        ...goToTheme(),
+        clickOnElement("color option", "[data-label='Colors'] button"),
         clickOnElement(
             "color picker of theme preset 1",
             ".hb-sliding-panel-content .o_we_color_preview"
@@ -74,7 +97,7 @@ registerWebsitePreviewTour(
             content: "Wait for no loading",
             trigger: ":iframe body:not(:has(.o_loading_screen))",
         },
-        verifyShapeColorsUpdated(":iframe .s_company_team"),
+        verifyShapeColorsUpdated(":iframe .s_company_team", TEST_COLOR_HEX),
         clickOnElement("any image in the snippet", ":iframe .s_company_team img[data-shape]"),
         assertCssVariable(
             "background-color",
@@ -86,6 +109,6 @@ registerWebsitePreviewTour(
             "custom category block",
             ".o_snippet[name='Custom'] .o_snippet_thumbnail_area"
         ),
-        verifyShapeColorsUpdated(":iframe .o_snippets_preview_row .s_company_team"),
+        verifyShapeColorsUpdated(":iframe .o_snippets_preview_row .s_company_team", TEST_COLOR_HEX),
     ]
 );
