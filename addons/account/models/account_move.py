@@ -4758,7 +4758,7 @@ class AccountMove(models.Model):
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
         else:
             content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': True})
-            attachments = self.env['ir.attachment'].new({
+            attachments = self.env['ir.attachment'].create({
                 'raw': content,
                 'name': self._get_invoice_proforma_pdf_report_filename(),
                 'mimetype': 'application/pdf',
@@ -5105,12 +5105,12 @@ class AccountMove(models.Model):
 
     def _get_moves_zip_export_docs(self):
         docs = set()
-        for move in self.filtered(lambda m: m.state == 'posted' and m.is_sale_document()):
+        for move in self.filtered(lambda m: m.state == 'posted' and m.is_invoice()):
             try:
                 legal_docs = move._get_invoice_legal_documents()
                 docs.update(legal_docs.ids)
-            except Exception:  # noqa: BLE001
-                pass  # no legal docs for this move
+            except Exception as e:  # noqa: BLE001
+                raise UserError(_("Error while exporting %s: %s", move.name, str(e)))
 
         filename = _('documents')
         return docs, filename

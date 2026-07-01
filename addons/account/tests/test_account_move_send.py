@@ -4,6 +4,7 @@ import json
 
 from datetime import date
 from unittest.mock import patch
+from urllib.parse import urlsplit, parse_qs
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -1134,3 +1135,23 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(pdf_report)
         invoice.invoice_pdf_report_id.unlink()
         self.assertTrue(invoice.is_move_sent)
+
+    def test_export_zip(self):
+        """Test the export zip function of account.move"""
+
+        out_inv = self._create_invoice(move_type='out_invoice', post=True)
+        in_inv = self._create_invoice(move_type='in_invoice', post=True)
+        out_ref = self._create_invoice(move_type='out_refund', post=True)
+        in_ref = self._create_invoice(move_type='in_refund', post=True)
+        moves = out_inv + in_inv + out_ref + in_ref
+
+        # simulate pdf creation of some moves to test both branches in the function action_export_zip()
+        wizard = self.create_send_and_print(out_inv + in_ref)
+        wizard.action_send_and_print()
+
+        action = moves.action_export_zip()
+        parsed_url = urlsplit(action['url'])
+        query_params = parse_qs(parsed_url.query)
+        self.assertTrue(len(query_params['ids']) == 4)
+        attachments_in_db = self.env['ir.attachment'].search([('id', 'in', query_params['ids'])])
+        self.assertEqual(len(attachments_in_db), len(query_params['ids']))
