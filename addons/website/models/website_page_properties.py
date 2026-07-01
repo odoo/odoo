@@ -168,7 +168,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
             target.is_published = self.is_published
 
     def _get_ir_ui_view_unpublish_group(self):
-        return self.env.ref('base.group_user')
+        return self.env.ref('base.group_user_regular')
 
     def _is_ir_ui_view_unpublished(self, view):
         view.ensure_one()

@@ -16,7 +16,7 @@ class TestLiteUserCore(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.group_user = cls.env.ref('base.group_user_regular')
+        cls.group_user_light = cls.env.ref('base.group_user')
 
     def test_provision_no_email_synthetic_login(self):
         emp = self.env['hr.employee'].create({'name': 'No Email'})
@@ -24,7 +24,7 @@ class TestLiteUserCore(TransactionCase):
         self.assertTrue(emp.user_id.login.startswith('__emp_'),
                         "a userless, emailless employee gets a synthetic login")
         self.assertFalse(emp.user_id.share, "the provisioned user is an internal user")
-        self.assertIn(self.group_user, emp.user_id.all_group_ids,
+        self.assertIn(self.group_user_light, emp.user_id.all_group_ids,
                       "a Light user is a an internal user")
         self.assertEqual(emp.user_id.role, 'group_user',
                          "with no extra access, the provisioned user is a Light user")
@@ -47,7 +47,7 @@ class TestLiteUserCore(TransactionCase):
     def test_provision_reuses_existing_user(self):
         user = self.env['res.users'].create({
             'name': 'Reuse', 'login': 'reuse@example.com',
-            'group_ids': [(6, 0, self.group_user.ids)],
+            'group_ids': [(6, 0, self.group_user_light.ids)],
         })
         emp = self.env['hr.employee'].create({'name': 'Reuse Emp', 'work_email': 'reuse@example.com'})
         self.assertEqual(emp.user_id, user, "an existing user matching the email is reused, not duplicated")
@@ -76,10 +76,10 @@ class TestLiteUserCore(TransactionCase):
         self.assertEqual(user.role, 'group_user')
         app_group = self.env['res.groups'].create({
             'name': 'Some App / User',
-            'implied_ids': [(4, self.group_user.id)],
+            'implied_ids': [(4, self.group_user_light.id)],
         })
         user.write({'group_ids': [(4, app_group.id)]})
-        self.assertIn(self.group_user, user.all_group_ids)
+        self.assertIn(self.group_user_light, user.all_group_ids)
         self.assertEqual(user.role, 'group_user_regular')
 
     def test_lite_user_can_browse_directory(self):
