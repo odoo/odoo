@@ -8,7 +8,9 @@
             initialWidth="400"
             icon="'oi oi-search'"
         >
-            <SearchMessageInput closeSearch="this.props.closeSearch" messageSearch="this.messageSearch" thread="this.props.thread"/>
+            <t t-set-slot="header">
+                <SearchMessageInput closeSearch="this.props.closeSearch" messageSearch="this.messageSearch" thread="this.props.thread"/>
+            </t>
             <SearchMessageResult thread="this.props.thread" messageSearch="this.messageSearch"/>
         </ActionPanel>
     </t>
