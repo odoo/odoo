@@ -22,6 +22,7 @@ from . import test_ir_sequence
 from . import test_ir_ui_menu
 from . import test_ir_ui_view
 from . import test_partner_identifiers
+from . import test_rate_limit
 from . import test_res_company
 from . import test_res_config
 from . import test_res_country

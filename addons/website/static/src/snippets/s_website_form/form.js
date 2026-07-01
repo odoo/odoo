@@ -71,6 +71,8 @@ export class Form extends Interaction {
                 }),
             },
     };
+    // List of placeholder values to ignore for submission.
+    valuesToIgnore = ["_other"];
 
     setup() {
         this.isHidden = false;
@@ -321,10 +323,8 @@ export class Form extends Interaction {
         }
 
         const formFields = [];
-        // List of placeholder values to ignore for submission
-        const valuesToIgnore = ["_other"];
         new FormData(this.el).forEach((value, key) => {
-            if (valuesToIgnore.includes(value)) {
+            if (this.valuesToIgnore.includes(value)) {
                 return;
             }
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
@@ -403,6 +403,16 @@ export class Form extends Interaction {
         const formData = new FormData();
         for (const [key, value] of Object.entries(formValues)) {
             formData.append(key, value);
+        }
+
+        // If "send a copy" is enabled and an email is provided, appends field
+        // data and recipient address to formData.
+        const sendCopyEmail = this.el
+            .querySelector(".s_website_form_copy_email input")
+            ?.value.trim();
+        if (sendCopyEmail) {
+            formData.append("_send_copy_fields", JSON.stringify(this.getSendCopyFields()));
+            formData.append("_send_copy_mail_address", sendCopyEmail);
         }
 
         // Post form and handle result
@@ -751,10 +761,9 @@ export class Form extends Interaction {
         }
         // Checking the files size.
         const maxFileSize = inputEl.dataset.maxFileSize; // in megabytes.
-        const bytesInMegabyte = 1_000_000;
         if (maxFileSize) {
             for (const file of Object.values(inputEl.files)) {
-                if (file.size / bytesInMegabyte > maxFileSize) {
+                if (this.fileSizeInMB(file.size) > maxFileSize) {
                     const errorMessage = _t(
                         "Please fill in the form correctly. The file “%(fileName)s” is too large. (Maximum %(max)s MB)",
                         { fileName: file.name, max: maxFileSize }
@@ -1279,6 +1288,55 @@ export class Form extends Interaction {
         }
 
         return _t("An error has occurred, the form has not been sent.");
+    }
+    /**
+     * Returns the file size in megabytes formatted to two decimals.
+     *
+     * @param {number} fileSize
+     * @returns {number}
+     */
+    fileSizeInMB(fileSize) {
+        const bytesInMegabyte = 1_000_000;
+        return Math.round((fileSize / bytesInMegabyte) * 100) / 100;
+    }
+    /**
+     * Collects the visible fields as label/value pairs to include in the "send
+     * a copy" email.
+     *
+     * @returns {Array<{label: string, value: string}>}
+     */
+    getSendCopyFields() {
+        const fieldsWithLabels = [];
+        for (const fieldEl of this.el.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone, .s_website_form_field_hidden, .d-none)"
+        )) {
+            const labelEl = fieldEl.querySelector(
+                ".s_website_form_label:not(.d-none) .s_website_form_label_content"
+            );
+            const label = labelEl?.innerText.trim() || "[Unnamed]";
+            const type = fieldEl.dataset.type;
+
+            let values = [];
+
+            if (type === "binary") {
+                const fileInputEl = fieldEl.querySelector("input[type=file]");
+                values = [...fileInputEl.files].map(
+                    (file) => `${file.name} (${this.fileSizeInMB(file.size)} MB)`
+                );
+            } else {
+                values = [
+                    ...fieldEl.querySelectorAll(
+                        "input:not([type='checkbox']):not([type='radio']), input[type='checkbox']:checked, input[type='radio']:checked, select, textarea"
+                    ),
+                ].map((input) => input.value);
+            }
+
+            values = values
+                .map((value) => value.trim())
+                .filter((value) => value && !this.valuesToIgnore.includes(value));
+            fieldsWithLabels.push({ label, value: values.join(", ") });
+        }
+        return fieldsWithLabels;
     }
 }
 

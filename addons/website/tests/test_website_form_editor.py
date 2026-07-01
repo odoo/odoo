@@ -143,3 +143,33 @@ class TestWebsiteForm(TransactionCase):
         with self.assertRaises(ValidationError):
             self.test_field.unlink()
         self.assertTrue(self.test_field.exists())
+
+    def test_copy_mail_created_when_send_copy_email_provided(self):
+        WebsiteFormController = WebsiteForm()
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
+            WebsiteFormController._handle_website_form(
+                'mail.mail',
+                website_form_signature='a26d8a4d29f13332dce94fbd202dc86793a34895762b62496782b9caa0fcb3db',
+                _send_copy_mail_address="test@example.com",
+                _send_copy_fields='[{"label":"Name","value":"Dustin"}]',
+            )
+            copy_mail = self.env['mail.mail'].search([('subject', '=', "Your answers on Form")])
+            self.assertEqual(
+                copy_mail.email_to,
+                "test@example.com",
+                "Visitor copy should go to the email entered in the form.",
+            )
+
+    def test_no_copy_mail_created_when_send_copy_email_missing(self):
+        WebsiteFormController = WebsiteForm()
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
+            WebsiteFormController._handle_website_form(
+                'mail.mail',
+                name="test name",
+                website_form_signature='a26d8a4d29f13332dce94fbd202dc86793a34895762b62496782b9caa0fcb3db',
+            )
+            copy_mail = self.env['mail.mail'].search([('subject', '=', "Your answers on Form")])
+            self.assertFalse(
+                copy_mail,
+                "Copy mail must not be created when no send a copy email is provided.",
+            )
