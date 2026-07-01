@@ -144,19 +144,11 @@
 <template id="search_setting" inherit_id="website_partnership.index" name="Search">
     <xpath expr="//section[@id='page_top_section']" position="inside">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
-            <form class="flex-grow-1" action="" method="get">
-                <div id="search_input_group" class="input-group" role="search">
-                    <input id="search_input_text" type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                    <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
-                        <i class="oi oi-search"/>
-                    </button>
-                </div>
-            </form>
-            <button class="btn btn-light position-relative ms-2 d-lg-none"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#o_wcrm_offcanvas">
-                <i class="fa fa-sliders"/>
-            </button>
+            <t t-call="website.website_search_box_input"
+                search_type.f="partners"
+                action="keep_partners_url(search=0)"
+                limit.f="6"
+            />
         </div>
     </xpath>
 </template>

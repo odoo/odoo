@@ -4,6 +4,7 @@
 import werkzeug.urls
 
 from odoo import http
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _, LazyTranslate
@@ -143,6 +144,11 @@ class WebsiteCustomer(GoogleMap):
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
         tag = tag_id and Tag.browse(tag_id) or False
 
+        keep = QueryURL('/customers', ['industry', 'country'],
+                        industry=industry,
+                        country=country,
+                        **{key: value for key, value in post.items() if (key in ['search', 'tag_id'])}
+                        )
         values = {
             'countries': countries,
             'current_country_id': country.id if country and partners else 0,
@@ -158,6 +164,7 @@ class WebsiteCustomer(GoogleMap):
             'tags': tags,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
+            'keep_partners_url': keep,
         }
         return request.render("website_customer.index", values)
 
