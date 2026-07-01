@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,10 +26,10 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 });
 
 test("subscribe to presence channels according to store data", async () => {
-    const env = await makeMockEnv();
-    const store = env.services["mail.store"];
+    await makeMockEnv();
+    const store = getService("mail.store");
     onWebsocketEvent("subscribe", (data) => expect.step(`subscribe - [${data.channels}]`));
-    expect(env.services.bus_service.isActive).toBe(false);
+    expect(getService("bus_service").isActive).toBe(false);
     // Should not subscribe to presences as bus service is not started.
     store["res.partner"].insert({ id: 1, name: "Partner 1", user_ids: [1] });
     store["res.partner"].insert({ id: 2, name: "Partner 2", user_ids: [2] });
@@ -38,7 +38,7 @@ test("subscribe to presence channels according to store data", async () => {
     await tick();
     expect.waitForSteps([]);
     // Starting the bus should subscribe to known presence channels.
-    env.services.bus_service.start();
+    getService("bus_service").start();
     await expect.waitForSteps([
         "subscribe - [odoo-presence-res.users_1,odoo-presence-res.users_2]",
     ]);

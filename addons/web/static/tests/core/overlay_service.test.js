@@ -39,14 +39,9 @@ test("shadow DOM overlays are visible when registered before main component is m
     root.attachShadow({ mode: "open" });
     getFixture().appendChild(root);
 
-    const env = await makeMockEnv();
+    await makeMockEnv({ rootId: "my-root-id" });
     getService("overlay").add(MyComp, {}, { rootId: "my-root-id" });
-    const componentEnv = Object.assign(Object.create(env), {
-        rootId: "my-root-id",
-    });
     await mountWithCleanup(MainComponentsContainer, {
-        componentEnv,
-        containerEnv: componentEnv,
         target: root.shadowRoot,
     });
     await animationFrame();

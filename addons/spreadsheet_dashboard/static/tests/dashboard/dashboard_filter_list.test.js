@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { contains, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    getMockEnv,
+    makeMockEnv,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { Model } from "@odoo/o-spreadsheet";
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
@@ -47,8 +52,8 @@ const relationalGlobalFilter = {
 };
 
 beforeEach(async () => {
-    const env = await makeMockEnv();
-    model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } });
 });
 
 test("basic text filter", async function () {

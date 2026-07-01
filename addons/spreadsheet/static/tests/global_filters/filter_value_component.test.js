@@ -3,7 +3,13 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    getMockEnv,
+    makeMockEnv,
+    mountWithCleanup,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 import { Model } from "@odoo/o-spreadsheet";
 import {
@@ -63,8 +69,11 @@ async function mountFilterValueComponent(props) {
 }
 
 test("basic text filter", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -80,8 +89,11 @@ test("basic text filter", async function () {
 });
 
 test("can clear a text filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -103,8 +115,11 @@ test("can clear a text filter value", async function () {
 });
 
 test("text filter with range", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
@@ -139,8 +154,11 @@ test("text filter with range", async function () {
 });
 
 test("cannot edit text filter input with range", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "foo");
     const filter = {
@@ -163,8 +181,11 @@ test("cannot edit text filter input with range", async function () {
 });
 
 test("text filter cannot have the same value twice", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -182,8 +203,11 @@ test("text filter cannot have the same value twice", async function () {
 });
 
 test("text filter have a placeholder", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -201,8 +225,11 @@ test("relational filter with domain", async function () {
         expect.step("name_search");
         expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
     });
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -217,8 +244,11 @@ test("relational filter with domain", async function () {
 });
 
 test("Filter with showClear should display the clear icon", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -234,8 +264,11 @@ test("Filter with showClear should display the clear icon", async function () {
 });
 
 test("Filter without showClear should not display the clear icon", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -259,8 +292,11 @@ test("relational filter with a contextual domain", async function () {
             ["id", "in", []],
         ]);
     });
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -275,8 +311,11 @@ test("relational filter with a contextual domain", async function () {
 });
 
 test("selection filter", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "selection",
@@ -294,8 +333,11 @@ test("selection filter", async function () {
 });
 
 test("numeric filter", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeMockEnv();
+    const model = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     await addGlobalFilter(model, {
         id: "42",
         type: "numeric",

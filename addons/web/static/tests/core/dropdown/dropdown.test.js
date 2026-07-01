@@ -33,6 +33,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
+import { useService } from "@web/core/utils/hooks";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -283,9 +284,8 @@ test("close on outside click in shadow dom", async () => {
         }
     }
 
+    await makeMockEnv({ rootId: shadowRootId });
     await mountWithCleanup(ShadowDom, {
-        componentEnv: { rootId: shadowRootId },
-        containerEnv: { rootId: shadowRootId },
         noMainContainer: true,
     });
 
@@ -813,8 +813,6 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
 });
 
 test("don't close parent dropdown when clicking in a child active element", async () => {
-    const env = await makeMockEnv();
-
     // This test checks that if a dropdown element opens a dialog with a dropdown inside,
     // opening this dropdown will not close the first dropdown.
     class CustomDialog extends Component {
@@ -848,12 +846,16 @@ test("don't close parent dropdown when clicking in a child active element", asyn
                 </div>
             `;
 
+        setup() {
+            this.dialog = useService("dialog");
+        }
+
         clicked() {
-            env.services.dialog.add(CustomDialog);
+            this.dialog.add(CustomDialog);
         }
     }
 
-    await mountWithCleanup(Parent, { env });
+    await mountWithCleanup(Parent);
 
     await click("button.parent-toggle");
     await animationFrame();
@@ -932,8 +934,6 @@ test("t-if t-else as toggler", async () => {
 });
 
 test("Dropdown in dialog in dropdown, first dropdown should stay open when clicking inside the second one", async () => {
-    const env = await makeMockEnv();
-
     class DialogDropdown extends Component {
         static components = { Dialog, Dropdown };
         static props = { close: true };
@@ -962,12 +962,16 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
                 </Dropdown>
             `;
 
+        setup() {
+            this.dialog = useService("dialog");
+        }
+
         onClick() {
-            env.services.dialog.add(DialogDropdown);
+            this.dialog.add(DialogDropdown);
         }
     }
 
-    await mountWithCleanup(Parent, { env });
+    await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Open dialog

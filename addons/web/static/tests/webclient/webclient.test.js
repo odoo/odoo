@@ -2,12 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 
-import {
-    contains,
-    makeMockEnv,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -23,10 +18,9 @@ test("can render a main component", async () => {
         static template = xml`<span class="chocolate">MyComponent</span>`;
     }
 
-    const env = await makeMockEnv();
     registry.category("main_components").add("mycomponent", { Component: MyComponent });
 
-    await mountWithCleanup(WebClient, { env });
+    await mountWithCleanup(WebClient);
 
     expect(`.chocolate`).toHaveCount(1);
 });

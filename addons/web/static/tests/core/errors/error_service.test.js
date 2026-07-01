@@ -172,8 +172,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 });
 
 test("will let handlers from the registry handle errors first", async () => {
-    const testEnv = await makeMockEnv();
-    testEnv.someValue = 14;
+    await makeMockEnv({ someValue: 14 });
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(originalError).toBe(error);
         expect(env.someValue).toBe(14);
@@ -191,7 +190,6 @@ test("will let handlers from the registry handle errors first", async () => {
 });
 
 test("originalError is the root cause of the error chain", async () => {
-    await makeMockEnv();
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(err).toBeInstanceOf(UncaughtPromiseError); // Wrapped by error service
         // owl no longer wraps lifecycle errors in OwlError, so the cause is the original error directly

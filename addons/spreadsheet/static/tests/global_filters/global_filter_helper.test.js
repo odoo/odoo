@@ -14,7 +14,12 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
+import {
+    getMockEnv,
+    makeMockEnv,
+    allowTranslations,
+    mockService,
+} from "@web/../tests/web_test_helpers";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 
 import { defineSpreadsheetModels } from "../helpers/data";
@@ -569,22 +574,18 @@ test("getFacetInfo for relation values", async () => {
         label: "Relation Filter",
         id: "1",
     };
-    const nameService = {
-        loadDisplayNames: (resModel, ids) => ids.map((id) => `Name ${id}`),
-    };
-    const env = await makeMockEnv({
-        services: {
-            name: nameService,
-        },
+    mockService("name", {
+        loadDisplayNames: (_resModel, ids) => ids.map((id) => `Name ${id}`),
     });
-    expect(await getFacetInfo(env, filter, { operator: "in", ids: [1] })).toEqual({
+    await makeMockEnv();
+    expect(await getFacetInfo(getMockEnv(), filter, { operator: "in", ids: [1] })).toEqual({
         title: "Relation Filter",
         id: "1",
         separator: "or",
         operator: "",
         values: ["Name 1"],
     });
-    expect(await getFacetInfo(env, filter, { operator: "in", ids: [1, 2] })).toEqual({
+    expect(await getFacetInfo(getMockEnv(), filter, { operator: "in", ids: [1, 2] })).toEqual({
         title: "Relation Filter",
         id: "1",
         separator: "or",
@@ -602,18 +603,21 @@ test("getFacetInfo for selection values", async () => {
         resModel: "res.currency",
         selectionField: "position",
     };
-    const env = await makeMockEnv();
-    expect(await getFacetInfo(env, filter, { operator: "in", selectionValues: ["after"] })).toEqual(
-        {
-            title: "Selection Filter",
-            id: "42",
-            separator: "or",
-            operator: "",
-            values: ["A"],
-        }
-    );
+    await makeMockEnv();
     expect(
-        await getFacetInfo(env, filter, { operator: "in", selectionValues: ["after", "before"] })
+        await getFacetInfo(getMockEnv(), filter, { operator: "in", selectionValues: ["after"] })
+    ).toEqual({
+        title: "Selection Filter",
+        id: "42",
+        separator: "or",
+        operator: "",
+        values: ["A"],
+    });
+    expect(
+        await getFacetInfo(getMockEnv(), filter, {
+            operator: "in",
+            selectionValues: ["after", "before"],
+        })
     ).toEqual({
         title: "Selection Filter",
         id: "42",

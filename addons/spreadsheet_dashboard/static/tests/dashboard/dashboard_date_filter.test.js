@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { DashboardDateFilter } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_date_filter/dashboard_date_filter";
 import { Model } from "@odoo/o-spreadsheet";
@@ -11,14 +11,13 @@ defineSpreadsheetModels();
  *
  * @param {{ model: Model, filter: object}} props
  */
-async function mountDashboardFilterValue(env, props) {
+async function mountDashboardFilterValue(props) {
     const model = new Model();
-    await mountWithCleanup(DashboardDateFilter, { props: { model, ...props }, env });
+    await mountWithCleanup(DashboardDateFilter, { props: { model, ...props } });
 }
 
 test("Can display the input as a button", async function () {
-    const env = await makeMockEnv();
-    await mountDashboardFilterValue(env, {
+    await mountDashboardFilterValue({
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
@@ -27,8 +26,7 @@ test("Can display the input as a button", async function () {
 });
 
 test("Can navigate with buttons to select the next period", async function () {
-    const env = await makeMockEnv();
-    await mountDashboardFilterValue(env, {
+    await mountDashboardFilterValue({
         value: { type: "month", month: 1, year: 2023 },
         update: (value) => {
             expect.step("update");
@@ -40,8 +38,7 @@ test("Can navigate with buttons to select the next period", async function () {
 });
 
 test("Can navigate with buttons to select the previous period", async function () {
-    const env = await makeMockEnv();
-    await mountDashboardFilterValue(env, {
+    await mountDashboardFilterValue({
         value: { type: "month", month: 1, year: 2023 },
         update: (value) => {
             expect.step("update");
