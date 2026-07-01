@@ -71,6 +71,7 @@ export class LocationSelectorDialog extends Component {
      */
     _getLocationsParams() {
         return {
+            is_frontend: this.state.isFrontend,
             zip_code: this.state.zipCode,
             delivery_method_id: this.props.deliveryMethodId,
             country_id: this.props.countryId,

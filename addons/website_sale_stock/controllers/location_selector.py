@@ -15,12 +15,15 @@ class LocationSelector(Delivery):
         :return: The closest pickup locations' data.
         :rtype: dict
         """
-        if order_sudo := request.cart:  # Request from frontend
+        if not kwargs.get("is_frontend", True):
+            delivery_method = self.env["delivery.carrier"].browse(delivery_method_id)
+            delivery_method.check_access("read")
+            country = self.env["res.country"].browse(country_id)
+        elif order_sudo := request.cart:
             delivery_method = order_sudo.carrier_id
             country = order_sudo.partner_shipping_id.country_id
-        else:  # From the backend
-            delivery_method = request.env["delivery.carrier"].sudo().browse(delivery_method_id)
-            country = request.env["res.country"].browse(country_id)
+        else:
+            delivery_method = self.env["delivery.carrier"]
 
         if not delivery_method:
             return {}

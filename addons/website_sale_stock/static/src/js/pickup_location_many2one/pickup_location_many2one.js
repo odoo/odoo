@@ -28,6 +28,7 @@ export class PickupLocationMany2OneField extends Many2OneField {
     async onSelectLocation(ev) {
         await this.props.record.save();
         this.dialog.add(LocationSelectorDialog, {
+            isFrontend: true,
             ...this._getLocationSelectorDialogProps(),
         });
     }
