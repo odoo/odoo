@@ -218,6 +218,7 @@ class SaleOrderLine(models.Model):
                 at_least_one_done = at_least_one_done or move.state == 'done'
             return at_least_one_done
         super()._compute_invoice_status()
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self:
             # We handle the following specific situation: a physical product is partially delivered,
             # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
@@ -233,6 +234,20 @@ class SaleOrderLine(models.Model):
                 and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom.rounding)
             ):
                 line.invoice_status = 'invoiced'
+            elif (
+                line.state == 'sale'
+                and line.invoice_status == 'to invoice'
+                and line.qty_to_invoice < 0
+                ):
+                outgoing_moves, _ = line._get_outgoing_incoming_moves()
+                pending_qty = sum(
+                    m.product_uom._compute_quantity(m.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    for m in outgoing_moves if m.state not in ('done', 'cancel')
+                )
+                if float_compare(line.qty_to_invoice + pending_qty, 0, precision_rounding=precision) >= 0:
+                    is_invoiced = float_compare(line.qty_invoiced, line.product_uom_qty, precision_rounding=precision) >= 0
+                    if is_invoiced:
+                        line.invoice_status = 'invoiced'
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1664,6 +1664,41 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         activity = self.env['mail.activity'].search([('res_id', '=', so_2.id), ('res_model', '=', 'sale.order')])
         self.assertEqual(len(activity), 1, 'When no backorder is created for a partial delivery, a warning error should be logged in its origin SO')
 
+    def test_exchange_invoice_status(self):
+        """
+        When returning for exchange, the SO invoice status should not change to "To Invoice"
+        since the pending replacement move balances the returned quantity.
+        """
+        sale_order = self._get_new_sale_order()
+        sale_order.order_line.product_id.invoice_policy = 'delivery'
+
+        sale_order.action_confirm()
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 10, 'picked': True})
+        delivery.button_validate()
+
+        sale_order._create_invoices()
+        self.assertEqual(sale_order.invoice_status, 'invoiced')
+
+        return_picking_form = self.env['stock.return.picking'].with_context(
+            active_id=delivery.id, active_model='stock.picking')
+
+        return_form = Form(return_picking_form)
+        with return_form.product_return_moves.edit(0) as line:
+            line.quantity = 10
+        return_wizard = return_form.save()
+        res = return_wizard.action_create_exchanges()
+
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.write({'quantity': 10, 'picked': True})
+        return_picking.button_validate()
+        self.assertEqual(sale_order.invoice_status, 'invoiced')
+
+        replacement_picking = sale_order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
+        replacement_picking.move_ids.write({'quantity': 10, 'picked': True})
+        replacement_picking.button_validate()
+        self.assertEqual(sale_order.invoice_status, 'invoiced')
+
     def test_3_steps_and_unpack(self):
         """
         When removing the package of a stock.move.line mid-flow in a 3-steps delivery with backorders, make sure that
