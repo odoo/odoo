@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:38+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -144,8 +144,8 @@ msgstr "설정"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Confirm"
-msgstr "승인"
+msgid "Continue"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
@@ -158,19 +158,9 @@ msgid "Created on"
 msgstr "작성일자"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
-msgid "Delete from Odoo"
-msgstr "Odoo에서 삭제"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
-msgid "Delete from both"
-msgstr "양 쪽에서 삭제"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
-msgid "Delete from the current Google Calendar account"
-msgstr "현재 구글 캘린더 계정에서 삭제"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_events
+msgid "Delete synced events from Odoo"
+msgstr ""
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -180,6 +170,11 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_google_disable_auto_videocall_link
 msgid "Disable videocall generation"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
+msgid "Disconnect Google Calendar"
 msgstr ""
 
 #. module: google_calendar
@@ -223,10 +218,15 @@ msgid "Google Calendar"
 msgstr "구글 캘린더"
 
 #. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
 msgstr "구글 캘린더 계정 리셋"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_account_email
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_account_email
+msgid "Google Calendar Email"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -325,11 +325,6 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
-msgid "Leave them untouched"
-msgstr "변경하지 않고 나가기"
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
@@ -341,11 +336,6 @@ msgstr "동기화 필요"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
 msgid "Next Sync Token"
 msgstr "다음 동기화 토큰"
-
-#. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
-msgid "Next Synchronization"
-msgstr "다음 동기화"
 
 #. module: google_calendar
 #. odoo-python
@@ -370,24 +360,9 @@ msgid "Reset Account"
 msgstr "계정 초기화"
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Reset Google Calendar Account"
-msgstr "구글 캘린더 계정 재설정"
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
 msgstr "구글 캘린더와 레코드 동기화"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
-msgid "Synchronize all existing events"
-msgstr "기존 행사 전체 동기화"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
-msgid "Synchronize only new events"
-msgstr "새로운 행사만 동기화"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -414,7 +389,7 @@ msgid "The following event could not be synced with Google Calendar."
 msgstr "다음 행사를 Google 캘린더와 동기화할 수 없습니다."
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
 msgid "This will only affect events for which the user is the owner"
 msgstr "사용자가 행사 소유자인 경우에만 영향이 있습니다."
 
@@ -442,14 +417,14 @@ msgid "User token"
 msgstr "사용자 토큰"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
-msgid "User's Existing Events"
-msgstr "사용자의 기존 행사"
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
 msgstr "화상 회의 소스"
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "What should happen to previously synced events?"
+msgstr ""
 
 #. module: google_calendar
 #. odoo-python

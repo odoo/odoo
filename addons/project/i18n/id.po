@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-05-07 10:01+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -489,6 +489,12 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
+msgid ""
+"<i class=\"fa fa-calendar px-1 mt-1\" role=\"img\" aria-label=\"Deadline\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid ""
@@ -542,7 +548,7 @@ msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
 msgstr "<i class=\"oi oi-arrow-right me-1\"/>Kembali ke mode edit"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
 msgstr "<i title=\"Tugas Privat\" class=\"fa fa-lock\"/>"
 
@@ -562,12 +568,12 @@ msgid "<small class=\"text-muted\">Customer</small>"
 msgstr "<small class=\"text-muted\">Pelanggan</small>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
 msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Tanggal\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
@@ -586,7 +592,7 @@ msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 msgstr ""
@@ -686,12 +692,12 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span>Reporting</span>"
 msgstr "Laporan"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span>View</span>"
 msgstr "<span>Lihat</span>"
 
@@ -1265,20 +1271,20 @@ msgid "Average Rating (1-5)"
 msgstr "Rating Rata-Rata (1-5)"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Happy"
 msgstr "Rating Rata-Rata: Senang"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Neutral"
 msgstr "Rating Rata-Rata: Netral"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Unhappy"
 msgstr "Rating Rata-Rata: Tidak Bahagia"
 
@@ -1345,7 +1351,7 @@ msgstr "Bug"
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Burndown Chart"
 msgstr "Grafik Burndown"
 
@@ -1557,6 +1563,12 @@ msgid "Contact Number"
 msgstr "Nomor Kontak"
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
+msgid "Convert Project to Template"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
 msgstr "Konversikan Task"
@@ -1606,20 +1618,25 @@ msgid "Create Date"
 msgstr "Tanggal dibuat"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.open_create_project
+msgid "Create Project"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/wizard/project_template_create_wizard.py:0
+msgid "Create Project (Template: %s)"
+msgstr ""
+
+#. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
 msgid "Create a Customer"
 msgstr "Buat Pelanggan"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_create_project
-msgid "Create a Project"
-msgstr "Buat Project"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/wizard/project_template_create_wizard.py:0
-msgid "Create a Project from Template %s"
-msgstr "Buat Project dari Templat %s"
+#: model:ir.actions.act_window,name:project.open_create_project_template
+msgid "Create a Project Template"
+msgstr ""
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -1665,11 +1682,6 @@ msgid ""
 msgstr ""
 "Buat project untuk mengatur tugas-tugas Anda. Definisikan workflow berbeda "
 "untuk setiap project."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
-msgid "Create tasks by email:"
-msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -1767,7 +1779,7 @@ msgstr "Customer Portal URL"
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Customer Ratings"
 msgstr "Rating Pelanggan"
 
@@ -1894,6 +1906,7 @@ msgstr "Hari-hari sampai busuk"
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Deadline"
@@ -2120,7 +2133,7 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Duplicate"
 msgstr "Gandakan"
 
@@ -2406,8 +2419,8 @@ msgid "Handoff"
 msgstr "Handoff"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Happy face"
 msgstr "Muka bahagia"
 
@@ -3025,7 +3038,7 @@ msgstr "Milestone"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_milestones
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_milestones
 #: model:ir.model.fields,field_description:project.field_project_project__allow_milestones
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Milestones"
 msgstr "Milestone"
 
@@ -3073,6 +3086,7 @@ msgstr "Project"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_my_task
 #: model:ir.ui.menu,name:project.menu_project_management_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
@@ -3114,8 +3128,8 @@ msgstr ""
 "tiket, sprint, dsb..."
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Neutral face"
 msgstr "Muka netral"
 
@@ -3265,6 +3279,11 @@ msgstr "Tidak ada milestone yang ditemukan. Ayo buat baru!"
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
 msgid "No project role found. Let's create one!"
 msgstr "Tidak ada peran project yang ditemukan. Ayo buat baru!"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.open_view_project_template
+msgid "No project templates found. Let's create one!"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3557,6 +3576,7 @@ msgstr "Status Task Pribadi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Planned Date"
@@ -3795,6 +3815,8 @@ msgstr "Wizard buat Templat Project"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_template_dropdown.xml:0
+#: model:ir.actions.act_window,name:project.open_view_project_template
+#: model:ir.ui.menu,name:project.menu_project_config_project_template
 msgid "Project Templates"
 msgstr "Templat-Templat Project"
 
@@ -3903,6 +3925,7 @@ msgstr "Status project - {{ object.name }}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Project's Email"
 msgstr ""
@@ -4347,6 +4370,14 @@ msgid "Save the task to be able to paste images in description"
 msgstr "Simpan task untuk dapat menempel gambar di keterangan"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.open_view_project_template
+msgid ""
+"Save time by using project templates with pre-filled details.<br>\n"
+"                    Standardize workflows and ensure consistency across "
+"projects."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Schedule your activity once it is ready."
@@ -4429,7 +4460,7 @@ msgid "Security Token"
 msgstr "Token Keamanan"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "See Parent Task"
 msgstr ""
 
@@ -4467,7 +4498,7 @@ msgid "Sequence"
 msgstr "Urutan"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Set Cover Image"
 msgstr "Foto Cover"
 
@@ -4511,7 +4542,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Settings"
 msgstr "Pengaturan"
 
@@ -4526,14 +4557,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model:ir.actions.server,name:project.action_server_share_project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Share Project"
 msgstr "Share Projec"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model:ir.actions.server,name:project.action_server_share_task
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Share Task"
 msgstr "Bagikan Task"
 
@@ -5000,7 +5031,7 @@ msgstr "Task:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_calendar
@@ -5013,7 +5044,7 @@ msgstr "Kegiatan"
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.model,name:project.model_report_project_task_user
 #: model:ir.ui.menu,name:project.menu_project_report_task_analysis
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_graph
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -5585,8 +5616,8 @@ msgid "Unfollow"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Unhappy face"
 msgstr "Wajah tidak bahagia"
 
@@ -5624,7 +5655,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_updates
-#: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
+#: model_terms:ir.ui.view,arch_db:project.project_view_card_inherit_project
 msgid "Updates"
 msgstr ""
 
@@ -5747,7 +5778,7 @@ msgid "User can user the your employees' schedule"
 msgstr "User dapat menggunakan jadwal karyawan Anda"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "View"
 msgstr "Tampilan"
 
@@ -5801,25 +5832,10 @@ msgstr ""
 "dimulai di sini.</i>"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
-#: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
-#: model:ir.model.fields,field_description:project.field_project_update__website_message_ids
-msgid "Website Messages"
-msgstr "Pesan situs"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Website Redesign"
 msgstr "Desain Ulang Website"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
-#: model:ir.model.fields,help:project.field_project_project__website_message_ids
-#: model:ir.model.fields,help:project.field_project_task__website_message_ids
-#: model:ir.model.fields,help:project.field_project_update__website_message_ids
-msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__weekly
@@ -6096,7 +6112,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_card
 msgid "assignees"
 msgstr "ditugasi"
 
@@ -6275,7 +6291,7 @@ msgstr ""
 "Kepuasan"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "{{0}} Milestones reached out of {{1}}"
 msgstr "{{0}} Milestone dicapai dari {{1}}"
 
@@ -6291,15 +6307,3 @@ msgstr "👤 Belum Ditugaskan"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
-
-#~ msgid "Communication history"
-#~ msgstr "Sejarah komunikasi"
-
-#~ msgid "State readonly"
-#~ msgstr "Status readonly"
-
-#~ msgid "<span>Progress</span>"
-#~ msgstr "<span>Progress</span>"
-
-#~ msgid "<span>Status</span>"
-#~ msgstr "<span>Status</span>"

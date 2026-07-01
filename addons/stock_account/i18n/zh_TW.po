@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-01-16 05:56+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -560,6 +560,11 @@ msgid "Inventory Valuation"
 msgstr "庫存計價"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
+msgid "Invoice Line"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 msgid "Is Dropship"
 msgstr ""
@@ -742,8 +747,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product__property_price_difference_account_id
-#: model:ir.model.fields,field_description:stock_account.field_product_template__property_price_difference_account_id
 msgid "Price Difference Account"
 msgstr "價格差額賬戶"
 
@@ -905,6 +908,7 @@ msgstr "庫存日記帳"
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_move_ids
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__stock_move_id
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__stock_move
 msgid "Stock Move"
 msgstr "庫存移動"
@@ -1133,8 +1137,6 @@ msgstr "執行自動庫存評估時，這是會計日誌，其中處理庫存移
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-#: model:ir.model.fields,help:stock_account.field_product_product__property_price_difference_account_id
-#: model:ir.model.fields,help:stock_account.field_product_template__property_price_difference_account_id
 msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
@@ -1186,13 +1188,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "單位"
-
-#~ msgid ""
-#~ "Value of the product (automatically computed in AVCO).\n"
-#~ "        Used to value the product when the purchase cost is not known "
-#~ "(e.g. inventory adjustment).\n"
-#~ "        Used to compute margins on sale orders."
-#~ msgstr ""
-#~ "產品價值（在 AVCO 中自動計算）。\n"
-#~ "        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
-#~ "        用於計算銷售訂單的利潤率。"

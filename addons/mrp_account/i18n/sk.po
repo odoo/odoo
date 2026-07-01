@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2023\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
@@ -97,11 +97,6 @@ msgid "Account Move Line"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Acme Corp."
-msgstr ""
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analytický účet"
@@ -170,6 +165,11 @@ msgid ""
 msgstr ""
 "Vypočítať cenu produktu pomocou produkotv a operácií pridružených "
 "kusovníkov, len pre vyrobené produkty."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-javascript
@@ -307,11 +307,6 @@ msgid "Label"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Laptop"
-msgstr ""
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
 msgid "Last Updated by"
@@ -419,8 +414,8 @@ msgid "Production Account"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
+msgid "Rate"
 msgstr ""
 
 #. module: mrp_account
@@ -499,11 +494,6 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
-msgstr ""
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Units"
 msgstr ""
 
 #. module: mrp_account

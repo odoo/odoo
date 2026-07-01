@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-04-18 13:40+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -118,6 +118,8 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_order_receipt__display_name
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
 msgid "Display Name"
@@ -151,10 +153,17 @@ msgstr "Échec de la récupération du jeton d’accès depuis Safaricom"
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_order_receipt__id
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
 msgstr "ID"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_identifier_type
+msgid "Identifier Type"
+msgstr ""
 
 #. module: pos_safaricom
 #. odoo-python
@@ -219,6 +228,12 @@ msgid "Passkey"
 msgstr "Clé d'accès"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_paybill_number
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__paybill
+msgid "Paybill number"
+msgstr ""
+
+#. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment Failed"
@@ -252,6 +267,16 @@ msgstr "Téléphone"
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Phone number is required for M-Pesa payment."
 msgstr "Le numéro de téléphone est requis pour le paiement M-Pesa."
+
+#. module: pos_safaricom
+#: model:ir.model,name:pos_safaricom.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
+msgstr ""
+
+#. module: pos_safaricom
+#: model:ir.model,name:pos_safaricom.model_pos_payment
+msgid "Point of Sale Payment"
+msgstr ""
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment_method
@@ -292,6 +317,11 @@ msgid "Safaricom M-Pesa Error"
 msgstr "Erreur Safaricom M-Pesa"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment__safaricom_transaction_id
+msgid "Safaricom transaction id"
+msgstr ""
+
+#. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Scan to Pay with M-Pesa"
@@ -303,22 +333,26 @@ msgid "Test Mode"
 msgstr "Mode test"
 
 #. module: pos_safaricom
-#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
-msgid ""
-"The business short code and till number combination as 'shortcode-"
-"tillnumber' (ex: 123456-789012)"
-msgstr ""
-
-#. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
 msgstr ""
 "La clé secrète est utilisée pour générer le mot de passe pour le STK Push"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_till_number
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__till
+msgid "Till number"
+msgstr ""
+
+#. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
 msgid "Transaction ID"
 msgstr "ID de transaction"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_order_receipt
+msgid "Transaction ID:"
+msgstr ""
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
@@ -329,6 +363,3 @@ msgstr "Transaction Lipa na M-PESA"
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
 msgstr "Utiliser l’environnement sandbox"
-
-#~ msgid "Failed to register URLs"
-#~ msgstr "Échec de l’enregistrement des URL"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-30 00:50+0000\n"
 "PO-Revision-Date: 2026-02-28 13:45+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -215,7 +215,7 @@ msgstr "입력한 URL을 불러오는 동안 오류가 발생했습니다."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Angle"
 msgstr ""
 
@@ -324,6 +324,12 @@ msgstr "경고 배너"
 #: model:ir.model,name:html_editor.model_base
 msgid "Base"
 msgstr "기준"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Basic Block"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -452,6 +458,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "닫기"
@@ -477,7 +484,7 @@ msgstr "코드 보기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Colors"
 msgstr ""
 
@@ -507,7 +514,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Conic"
 msgstr ""
 
@@ -601,7 +608,8 @@ msgstr "이미지 자르기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/custom/color_picker_custom_tab.js:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 #: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Custom"
 msgstr "사용자 정의"
@@ -627,7 +635,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 msgid "Define a custom gradient"
 msgstr "사용자 지정 그라데이션"
 
@@ -724,6 +732,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed %s Video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Embed Image"
 msgstr "이미지 임베드"
@@ -733,6 +747,12 @@ msgstr "이미지 임베드"
 #: code:addons/html_editor/static/src/main/youtube_plugin.js:0
 msgid "Embed Youtube Video"
 msgstr "유튜브 동영상 임베드"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed the %s video in the document."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -766,25 +786,25 @@ msgstr "도구 모음 확장"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest corner"
 msgstr "가장 가까운 모서리로 확장"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest side"
 msgstr "가장 가까운 쪽으로 확장"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest corner"
 msgstr "가장 먼 곳까지 확장"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest side"
 msgstr "가장 먼 쪽으로 확장"
 
@@ -838,7 +858,13 @@ msgstr "형식"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Google Drive"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.js:0
 msgid "Gradient"
 msgstr "그라데이션"
 
@@ -980,6 +1006,12 @@ msgstr "HTML 편집기 변환기 하위 테스트"
 #: model:ir.model,name:html_editor.model_html_editor_converter_test
 msgid "Html Editor Converter Test"
 msgstr "HTML 편집기 변환기 테스트"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Hue"
+msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__id
@@ -1160,9 +1192,15 @@ msgstr "오른쪽으로 삽입"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Insert your email signature"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
-msgid "Insert your signature"
-msgstr "서명 입력하기"
+msgid "Insert your handwritten signature"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1213,7 +1251,7 @@ msgstr "왼쪽 정렬"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Linear"
 msgstr ""
 
@@ -1266,6 +1304,12 @@ msgstr "로그아웃"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Loom"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Loop"
 msgstr "반복"
@@ -1273,8 +1317,8 @@ msgstr "반복"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
-msgid "MM:SS"
-msgstr "MM:SS"
+msgid "M:SS"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1315,6 +1359,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "파일 누락"
@@ -1437,6 +1482,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
+#: code:addons/html_editor/static/src/main/table/table_border_style_selector.xml:0
 msgid "None"
 msgstr ""
 
@@ -1496,6 +1542,7 @@ msgstr "죄송합니다, AI와 연결할 수 없습니다."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid ""
 "Oops, the file %s could not be found. Please replace this file box by a new "
@@ -1503,6 +1550,12 @@ msgid ""
 msgstr ""
 "%s 파일을 찾을 수 없습니다. 파일을 다시 업로드하시려면 이 파일 박스를 새로운 "
 "항목으로 바꾸시기 바랍니다."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Opacity"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1541,13 +1594,19 @@ msgstr "URL로 붙여넣기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Pick a color from the screen"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position X"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position Y"
 msgstr ""
 
@@ -1663,7 +1722,7 @@ msgstr "Qweb 텍스트 필드"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Radial"
 msgstr ""
 
@@ -1688,8 +1747,8 @@ msgstr "이미지 제거(삭제)"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
-msgid "Remove Format"
-msgstr "형식 제거"
+msgid "Remove Format (Ctrl + Space)"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1706,13 +1765,12 @@ msgstr "열 삭제"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Repeating"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "Replace"
 msgstr "이미지 바꾸기"
@@ -1740,6 +1798,12 @@ msgstr "아이콘 바꾸기"
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Replace media"
 msgstr "미디어 바꾸기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/color_picker.xml:0
+msgid "Reset"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1841,6 +1905,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/mobile_table_picker.xml:0
 msgid "Row count"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Saturation and brightness color picker."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.js:0
+msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
 msgstr ""
 
 #. module: html_editor
@@ -1966,12 +2042,13 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
 msgid "Signature"
 msgstr "서명"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Size"
 msgstr ""
 
@@ -1987,6 +2064,12 @@ msgstr "작게"
 #: code:addons/html_editor/static/src/main/font/font_type_plugin.js:0
 msgid "Small section heading"
 msgstr "작은 섹션 제목"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/solid/color_picker_solid_tab.js:0
+msgid "Solid"
+msgstr ""
 
 #. module: html_editor
 #. odoo-python
@@ -2068,6 +2151,24 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border color"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border style"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border width"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
 msgid "Table of Contents"
@@ -2132,12 +2233,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url does not reference any supported video"
 msgstr "제공된 URL이 지원되는 동영상을 참조하지 않습니다"
-
-#. module: html_editor
-#. odoo-python
-#: code:addons/html_editor/tools.py:0
-msgid "The provided url is invalid"
-msgstr "입력하신 URL이 유효하지 않습니다"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2291,7 +2386,13 @@ msgstr "행으로 전환"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Twitch"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Type"
 msgstr ""
 
@@ -2376,6 +2477,15 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid ""
+"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
+"keys to adapt the saturation. Press the Control or Command key at the same "
+"time to have finer control."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Vertical"
 msgstr "수직선"
@@ -2401,7 +2511,7 @@ msgstr "동영상 플레이어"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/custom_media_dialog.js:0
-#: code:addons/html_editor/static/src/main/media/video_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
 msgid "Videos"
 msgstr "동영상"
 
@@ -2557,7 +2667,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "deg"
 msgstr "각"
 
@@ -2576,7 +2686,7 @@ msgstr "문서"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
-msgid "dynamic placeholder"
+msgid "dynamic"
 msgstr ""
 
 #. module: html_editor
@@ -2593,6 +2703,12 @@ msgstr "파일"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "hex"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "line"
 msgstr ""
@@ -2601,6 +2717,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "or"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "personalize"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "placeholder"
 msgstr ""
 
 #. module: html_editor
@@ -2625,43 +2753,3 @@ msgstr "웹소켓 메시지 처리"
 #: code:addons/html_editor/static/src/main/table/table_picker.xml:0
 msgid "x"
 msgstr ""
-
-#~ msgid ""
-#~ "'Alt tag' specifies an alternate text for an image, if the image cannot "
-#~ "be displayed (slow connection, missing image, screen reader ...)."
-#~ msgstr ""
-#~ "'Alt 태그'는 이미지를 표시할 수 없는 경우(저속 연결, 누락된 이미지, 화면 "
-#~ "판독기 등) 이미지의 대체 텍스트를 지정합니다."
-
-#~ msgid "'Title tag' is shown as a tooltip when you hover the picture."
-#~ msgstr "사진을 가리키면 '제목 태그'가 툴팁으로 표시됩니다."
-
-#~ msgid "Click again to reset transformation"
-#~ msgstr "변환을 초기화하려면 다시 클릭하세요"
-
-#~ msgid "Description"
-#~ msgstr "설명"
-
-#~ msgid "Edit media description"
-#~ msgstr "매체 설명 편집"
-
-#~ msgid "Set shape: Circle"
-#~ msgstr "모양 설정: 원형"
-
-#~ msgid "Set shape: Rounded"
-#~ msgstr "모양 설정: 둥근형"
-
-#~ msgid "Set shape: Shadow"
-#~ msgstr "모양 설정: 그림자"
-
-#~ msgid "Set shape: Thumbnail"
-#~ msgstr "모양 설정: 썸네일"
-
-#~ msgid "Tooltip"
-#~ msgstr "툴팁"
-
-#~ msgid "Transform the picture (click twice to reset transformation)"
-#~ msgstr "그림 변환 (변환을 재설정하려면 두 번 클릭)"
-
-#~ msgid "Select font style"
-#~ msgstr "글꼴 스타일 선택"

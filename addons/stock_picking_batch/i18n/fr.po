@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-04-14 13:45+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -32,7 +32,7 @@ msgid "%s was removed from the batch, no quantity processed"
 msgstr "%s a été retiré du lot, aucune quantité traitée"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendrier\"/>"
 
@@ -385,17 +385,6 @@ msgid "Categories to consider when grouping waves."
 msgstr "Catégories à prendre en compte lors du regroupement par vague."
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Check Availability"
-msgstr "Vérifier la disponibilité"
-
-#. module: stock_picking_batch
-#. odoo-python
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-msgid "Choose Labels Layout"
-msgstr "Choisir le modèle d'étiquettes"
-
-#. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Choose Type of Labels To Print"
@@ -478,6 +467,7 @@ msgstr "Détails"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__display_name
@@ -543,6 +533,7 @@ msgstr "A un message"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__id
@@ -792,11 +783,6 @@ msgid "Open: Stock Move"
 msgstr "Ouvrir : mouvement de stock"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
-msgid "Operation Category"
-msgstr "Catégorie d’opération"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
 msgid "Operation Type"
 msgstr "Type d'opération"
@@ -936,6 +922,11 @@ msgstr ""
 "d'emballage."
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
@@ -1011,14 +1002,14 @@ msgid "Show Allocation Button"
 msgstr "Afficher le bouton d'allocation"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid "Show Check Availability"
-msgstr "Afficher Vérifier la disponibilité"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
 msgid "Show Lots Text"
 msgstr "Afficher Texte des lots"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -1087,6 +1078,11 @@ msgstr ""
 "En retard : l'échéance est déjà dépassée\n"
 "Aujourd'hui : la date d'activité est aujourd'hui\n"
 "Planifié : activités futures."
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_allocation_report
+msgid "Stock Allocation Report"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -1194,7 +1190,7 @@ msgstr "Activités du jour"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "Transfer"
 msgstr "Transfert"
 
@@ -1221,10 +1217,15 @@ msgstr "Transféré par"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Transferts"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
+msgid "Type of Operation"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
@@ -1291,16 +1292,6 @@ msgid "Wave transfers"
 msgstr "Transferts de la vague"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
 msgstr "Lorsque cette case est cochée, le lot est créé en statut brouillon"
@@ -1344,6 +1335,12 @@ msgstr "un transfert par lot existant"
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
 msgstr "un transfert par vague existant"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/report/stock_allocation_report.py:0
+msgid "batches"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume

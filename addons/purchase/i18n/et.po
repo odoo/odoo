@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-01-15 20:34+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -60,6 +60,20 @@ msgstr "Ostuarvete arv"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
 msgstr "Ridade arv"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "%(added_lines_count)s PO lines added to the bill."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid ""
+"%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
+"unmatched remaining."
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -98,6 +112,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "-&gt;"
 msgstr "-&gt;"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "0 bill lines matched with this PO."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -313,18 +333,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr "<span class=\"o_stat_text\">Arve sobitamine</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
 msgstr "<span class=\"o_stat_text\">Hinnavõrdlus</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
-msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr "<span class=\"o_stat_text\">Ostu sobitamine</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -388,12 +398,6 @@ msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
 msgstr "<strong class=\"d-block mt-3\">Tarneaadress</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Vahesumma</strong>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
 msgstr "<strong>Summa</strong>"
@@ -428,6 +432,12 @@ msgstr "<strong>Eeldatav saabumine:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
 msgstr "<strong>Eeldatav kuupäev</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -870,10 +880,21 @@ msgid "Bill Lines"
 msgstr "Ostuarve read"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
+msgid "Bill Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Bill Matching"
 msgstr "Arve sobitamine"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Bill Qty"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -914,6 +935,7 @@ msgstr "Arveldamise staatus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Bills"
 msgstr "Ostuarved"
 
@@ -1063,6 +1085,11 @@ msgid "Connect your software"
 msgstr "Ühendage oma tarkvara"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
@@ -1133,7 +1160,10 @@ msgid "Customer Portal URL"
 msgstr "Kliendiportaali URL"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__date
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Date"
 msgstr ""
 
@@ -1218,9 +1248,19 @@ msgid ""
 msgstr "Kuupäev, mille jooksul pakkumine tuleb kinnitada ja luua ostutellimus."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__description
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Description"
 msgstr "Kirjeldus"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid ""
+"Difference between demand and quantity but not affected by invoice policy"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1242,6 +1282,11 @@ msgstr "Allahindlus:"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
 msgid "Display Auto Complete Field"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
+msgid "Display Matching Tag"
 msgstr ""
 
 #. module: purchase
@@ -1275,6 +1320,12 @@ msgstr "Kuvamise tüüp"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
 msgstr "Jaotumise analüütiline konto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
+msgid "Document Tax Mode"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1534,8 +1585,15 @@ msgstr "Tellimuses"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm"
 msgstr "Tarnetingimus"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
+msgid "Incoterm Location"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -1552,6 +1610,8 @@ msgstr "Kasutaja poolt määratud sisemine hoiatus partneri või toote kohta."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_users__purchase_incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -1755,6 +1815,29 @@ msgstr "Manuaalne vastuvõetud kogus"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Match"
 msgstr "Sobita"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Matched"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
+msgid "Matched Invoices Count"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Matching"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "Matching Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -1974,6 +2057,11 @@ msgid "Not Acknowledged"
 msgstr "Kinnitamata"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid "Not Invoiced Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
 msgstr ""
@@ -2118,6 +2206,13 @@ msgid "Ordered Quantity:"
 msgstr "Tellitud kogus:"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid ""
+"Ordered quantity not invoiced. This may or may not include quantities that "
+"won't be invoiced, depending on the product's Control Policy."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Orders"
@@ -2138,6 +2233,16 @@ msgstr ""
 #: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
 msgstr "Meie tellimused"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+msgid "PO Matching"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "PO Qty"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2203,7 +2308,7 @@ msgid "Preview the reminder email by sending it to yourself."
 msgstr "Vaadake meeldetuletuse e-kiri üle saates see endale."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Price"
 msgstr "Hind"
 
@@ -2228,6 +2333,7 @@ msgstr "Prioriteet"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -2239,11 +2345,6 @@ msgstr "Toode"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
 msgstr "Toote kategooria"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
-msgid "Product Description"
-msgstr "Toote kirjeldus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2264,6 +2365,11 @@ msgstr "Toote ühikhind"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
 msgstr "Toote ühiku kogus"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
+msgid "Product Uom Qty To Invoice"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2362,10 +2468,21 @@ msgid "Purchase Line and Vendor Bill line matching view"
 msgstr "Ostutellimuse rea ja ostuarve rea sobitamise vaade"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
+msgid "Purchase Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
 msgstr "Ostu sobitamine"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
+msgid "Purchase Matching Issue Msg"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -2390,6 +2507,7 @@ msgstr "Ostu sobitamine"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchase Order"
 msgstr "Ostutellimus"
 
@@ -2418,11 +2536,13 @@ msgstr "Ostutellimuste arv"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 msgid "Purchase Order Line"
 msgstr "Ostutellimuse rida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
 msgstr "Ostutellimuse read"
@@ -2537,22 +2657,17 @@ msgid "Purchased"
 msgstr "Ostetud"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
+"orders not received, or partially received"
 msgstr ""
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
@@ -2593,19 +2708,30 @@ msgid "Qty Received"
 msgstr "Vastuvõetud kogus"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid "Qty not invoiced"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "Qty to Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
 msgstr "Arveldamata kogus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Qty to invoice"
 msgstr "Arveldamisele kuuluv kogus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
 msgstr "Kogus"
@@ -2655,6 +2781,11 @@ msgstr "Hinnapäring on koondatud %s"
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
 msgstr "Hinnapäringud ja ostud"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
+msgid "Rate"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -2727,6 +2858,7 @@ msgid "Reference"
 msgstr "Viide"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
 msgstr ""
@@ -3105,6 +3237,16 @@ msgid "Tax Country"
 msgstr "Maksuriik"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
+msgid "Tax Excl."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
+msgid "Tax Incl."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
 msgstr "Maksu kogusumma"
@@ -3312,6 +3454,12 @@ msgid "To Approve"
 msgstr "Ootab kinnitamist"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "To Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
 msgstr "Kogus arveldada"
@@ -3354,6 +3502,7 @@ msgstr "Kogus kokku"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Total Untaxed"
 msgstr "Kogusumma ilma maksudeta"
 
@@ -3421,7 +3570,9 @@ msgstr "Ühik"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Unit Price"
 msgstr "Ühikhind"
@@ -3454,6 +3605,16 @@ msgid "Unlock"
 msgstr "Lukusta lahti"
 
 #. module: purchase
+#: model:ir.actions.server,name:purchase.action_unmatch_lines
+msgid "Unmatch"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Unmatched"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
@@ -3475,6 +3636,12 @@ msgstr "Maksudeta summa"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "Ilma maksudeta kokku"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "Update"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -3518,8 +3685,10 @@ msgstr "Variatsiooni võrgustiksisestus"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3542,6 +3711,7 @@ msgstr "Ostuarve ridasid saab lisada ainult ühele ostutellimusele."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Ostuarved"
@@ -3552,12 +3722,25 @@ msgid "Vendor Country"
 msgstr "Tarnija riik"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
+msgid "Vendor Incoterm"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
+msgid "Vendor Incoterm Location"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
 msgstr "Tarnija hinnakirjad"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 msgid "Vendor Reference"
 msgstr "Tarnija viide"
 
@@ -3636,16 +3819,6 @@ msgstr "Hoiatus ostutellimustel ja arvetel"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Warnings"
 msgstr "Hoiatused"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
-msgid "Website Messages"
-msgstr "Veebilehe sõnumid"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
-msgid "Website communication history"
-msgstr "Veebilehe suhtluse ajalugu"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -3749,16 +3922,15 @@ msgid "e.g. This vendor is on vacation until the end of August."
 msgstr "nt See tarnija on puhkusel augusti lõpuni."
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "id"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "or create new"
 msgstr "või loo uus"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/account_invoice.py:0
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "partner_id"
-msgstr "partner_id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3817,6 +3989,3 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-
-#~ msgid "Communication history"
-#~ msgstr "Suhtluse ajalugu"
