@@ -39,6 +39,7 @@ export class SelectMany2X extends Component {
         message: t.string().optional(_t("Choose a record...")),
         create: t.function().optional(),
         nullText: t.string().optional(),
+        displayField: t.string().optional("display_name"),
     });
     static components = { SelectMenu, SelectMany2XCreate };
 
@@ -81,7 +82,7 @@ export class SelectMany2X extends Component {
         this.onNavigatedAway();
     }
     searchInvalidationKey(props) {
-        return JSON.stringify([props.model, props.fields, props.domain]);
+        return JSON.stringify([props.model, props.fields, props.domain, props.displayField]);
     }
     searchMore(searchValue) {
         this.state.limit += this.props.limit;
@@ -105,13 +106,13 @@ export class SelectMany2X extends Component {
         const results = await this.cachedModel.ormRead(
             this.props.model,
             tuples.map(([id, _name]) => id),
-            [...new Set(this.props.fields).add("display_name").add("name")]
+            [...new Set(this.props.fields).add(this.props.displayField).add("name")]
         );
         if (this.props.nullText && (!results.length || results[0].id)) {
             results.unshift({
                 id: 0,
                 name: this.props.nullText,
-                display_name: this.props.nullText,
+                [this.props.displayField]: this.props.nullText,
             });
         }
         this.state.searchResults = results;

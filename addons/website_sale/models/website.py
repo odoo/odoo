@@ -286,6 +286,14 @@ class Website(models.Model):
         check_company=True,
     )
 
+    extra_step_category_ids = fields.Many2many(
+        "product.public.category",
+        relation="website_extra_step_category_rel",
+        string="Extra Step Categories",
+        help="If set, the extra step is only shown when the cart contains "
+        "products from these eCommerce categories.",
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -981,15 +989,19 @@ class Website(models.Model):
                 )
             step.copy({"website_id": self.id, "is_published": is_published})
 
-    def _get_checkout_step_values(self, href):
-        next_href = self._get_next_breadcrumb_step_href(href)
+    def _get_checkout_step_values(self, href, order=None):
+        next_href = self._get_next_breadcrumb_step_href(href, order=order)
 
         # /shop/address is a "hidden" step of /shop/checkout
         if href == "/shop/address":
             href = "/shop/checkout"
         current_step_sudo = self._get_checkout_step(href)
-        next_step_sudo = current_step_sudo.browse(self._get_next_breadcrumb_step_id(href))
-        previous_step_sudo = current_step_sudo.browse(self._get_previous_breadcrumb_step_id(href))
+        next_step_sudo = current_step_sudo._get_next_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(order=order), limit=1
+        )
+        previous_step_sudo = current_step_sudo._get_previous_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(order=order), limit=1
+        )
 
         return {
             "current_website_checkout_step_href": current_step_sudo.step_href,
@@ -1006,27 +1018,13 @@ class Website(models.Model):
         self.ensure_one()
         return self.env["website.checkout.step"].sudo()._get_step_by_href(href, self).id
 
-    @api.ormcache("self.id", "href")
-    def _get_next_breadcrumb_step_id(self, href):
-        current_step_sudo = self._get_checkout_step(href)
-        return current_step_sudo._get_next_steps(
-            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
-        ).id
-
-    @api.ormcache("self.id", "href")
-    def _get_previous_breadcrumb_step_id(self, href):
-        current_step_sudo = self._get_checkout_step(href)
-        return current_step_sudo._get_previous_steps(
-            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
-        ).id
-
-    def _get_next_breadcrumb_step_href(self, href):
+    def _get_next_breadcrumb_step_href(self, href, order=None):
         # redirect handled by '/shop/address/submit' route when all values are properly filled
         if href == "/shop/address":
             return False
-
-        next_step_sudo = (
-            self.env["website.checkout.step"].sudo().browse(self._get_next_breadcrumb_step_id(href))
+        current_step_sudo = self._get_checkout_step(href)
+        next_step_sudo = current_step_sudo._get_next_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(order=order), limit=1
         )
 
         # try_skip_step option required on /shop/checkout next button
@@ -1034,19 +1032,33 @@ class Website(models.Model):
             return "/shop/checkout?try_skip_step=true"
         return next_step_sudo.step_href
 
-    def _get_checkout_breadcrumb_steps(self):
+    def _get_checkout_breadcrumb_steps(self, order=None):
         return (
             self
             .env["website.checkout.step"]
             .sudo()
-            .search(self._get_breadcrumb_checkout_steps_domain(), order="sequence")
+            .search(self._get_breadcrumb_checkout_steps_domain(order=order), order="sequence")
         )
 
-    def _get_breadcrumb_checkout_steps_domain(self):
-        return self._get_allowed_checkout_steps_domain() & Domain("show_in_breadcrumb", "=", True)
+    def _get_breadcrumb_checkout_steps_domain(self, order=None):
+        return self._get_allowed_checkout_steps_domain(order=order) & Domain(
+            "show_in_breadcrumb", "=", True
+        )
 
-    def _get_allowed_checkout_steps_domain(self):
-        return Domain([("website_id", "=", self.id), ("is_published", "=", True)])
+    def _get_allowed_checkout_steps_domain(self, order=None):
+        domain = Domain([("website_id", "=", self.id), ("is_published", "=", True)])
+        if self._is_extra_step_hidden(order):
+            domain &= Domain("step_href", "!=", "/shop/extra_info")
+        return domain
+
+    def _is_extra_step_hidden(self, order):
+        """Whether `/shop/extra_info` should be hidden for the given order."""
+        restricted_categories = self.sudo().extra_step_category_ids
+        return (
+            bool(order)
+            and bool(restricted_categories)
+            and not (order.order_line.product_id.public_categ_ids & restricted_categories)
+        )
 
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""

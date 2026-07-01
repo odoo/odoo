@@ -14,9 +14,8 @@
 
     <xpath expr="//t[@id='page_options_hook']" position="after">
         <checkout_page_option
-            template="website_sale.checkoutPageOption"
             selector="main:has(.oe_website_sale .o_wizard)"
-            title="Checkout Page"
+            title="Checkout"
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
         <products_list_page_option
