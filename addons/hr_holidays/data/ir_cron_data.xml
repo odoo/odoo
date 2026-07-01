@@ -5,7 +5,15 @@
         <field name="name">Accrual Time Off: Updates the number of time off</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="state">code</field>
-        <field name="code">model._update_accrual()</field>
+        <field name="code">model.search([
+                ('allocation_type', '=', 'accrual'),
+                ('state', '=', 'validate'),
+                ('accrual_plan_id', '!=', False),
+                ('date_from', '&lt;=', date.today()),
+                '|', ('date_to', '=', False), ('date_to', '&gt;=', date.today()),
+                '|', ('nextcall', '=', False), ('nextcall', '&lt;=', date.today()),
+            ])._update_accrual()
+        </field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
     </record>

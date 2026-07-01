@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from calendar import monthrange
+from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
 

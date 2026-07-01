@@ -509,11 +509,11 @@ class HrEmployee(models.Model):
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
-    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False):
-        """ This method won't call `_get_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
+    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}):
+        """ This method won't call `_get_additionnal_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
             the `number_of_days` of the allocation, alias `number_of_hours_display`)
 
-            `precomputed_allocations`: context variable (recordset) which can be used to pass allocation that are considered to be already computed
+            `precomputed_allocations`: recordset which can be used to pass allocation that are considered to be already computed
         """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
@@ -590,21 +590,19 @@ class HrEmployee(models.Model):
                 'to_recheck_leaves': self.env['hr.leave']
             })
         )
-        precomputed_allocations = self.env.context.get('precomputed_allocations')
         for allocation in allocations:
             allocation_data = allocations_leaves_consumed[allocation.employee_id][allocation.work_entry_type_id][allocation]
-            precomputed = False
-            if precomputed_allocations:
-                if allocation.id in precomputed_allocations.ids:
-                    allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
-                    precomputed = True
             future_leaves = 0
-            if allocation.accrual_plan_id and not precomputed and not ignore_future:
-                future_leaves = allocation._get_future_leaves_on(target_date)
-            max_leaves = allocation.number_of_hours_display\
-                if allocation.work_entry_type_id.unit_of_measure == 'hour'\
-                else allocation.number_of_days_display
-            max_leaves += future_leaves
+            if allocation in precomputed_allocations:
+                max_leaves = precomputed_allocations[allocation]['number_of_days']
+                if allocation.work_entry_type_id.unit_of_measure == 'hour':
+                    max_leaves *= allocation._get_employee_hours_per_day(allocation_data)
+            else:
+                if allocation.accrual_plan_id and not ignore_future:
+                    future_leaves = allocation._get_additionnal_future_leaves_on(target_date)
+                max_leaves = (allocation.number_of_hours_display
+                    if allocation.work_entry_type_id.unit_of_measure == 'hour'
+                    else allocation.number_of_days_display) + future_leaves
             allocation_data.update({
                 'max_leaves': max_leaves,
                 'accrual_bonus': future_leaves,
@@ -617,7 +615,7 @@ class HrEmployee(models.Model):
         for employee in employees:
             for work_entry_type in work_entry_types:
                 if not work_entry_type.requires_allocation:
-                    # Ensure that leave types that do not require allocation are
+                    # Ensure that time types that do not require allocation are
                     # still stored in the consumed allocation leaves.
                     # False is the special key used for this type of leave
                     allocations_leaves_consumed[employee][
@@ -732,7 +730,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation and allocation._get_future_leaves_on(date_to_simulate)
+                        latest_accrual_bonus += allocation and allocation._get_additionnal_future_leaves_on(date_to_simulate, precomputed_allocations or {})
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:
