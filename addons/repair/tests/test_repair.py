@@ -52,6 +52,10 @@ class TestRepairCommon(common.TransactionCase):
             'is_storable': True,
             'tracking': 'lot',
         })
+        cls.product_delivery_invoice_policy = cls.env['product.product'].create({
+            'name': 'Product Delivery Invoice Policy',
+            'invoice_policy': 'delivery'
+        })
 
         # Repair product
         cls.product_order_repair = cls.env['product.product'].create({
@@ -135,14 +139,23 @@ class TestRepairCommon(common.TransactionCase):
             'uom_id': self.uom_unit.id,
             'partner_id': self.res_partner_12.id,
             'picking_type_id': self.stock_warehouse.repair_type_id.id,
-            'move_ids': [Command.create({
-                'product_id': self.product_product_11.id,
-                'product_uom_qty': 1.0,
-                'state': 'draft',
-                'uom_id': self.uom_unit.id,
-                'repair_line_type': 'add',
-                'company_id': self.env.company.id,
-            })],
+            'move_ids': [
+                    Command.create({
+                    'product_id': self.product_product_11.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'uom_id': self.uom_unit.id,
+                    'repair_line_type': 'add',
+                }),
+                    Command.create({
+                    'product_id': self.product_delivery_invoice_policy.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'uom_id': self.uom_unit.id,
+                    'repair_line_type': 'add',
+                    'company_id': self.env.company.id,
+                }),
+            ],
             'repair_service_line_ids': [Command.create({
                 'product_id': self.product_order_repair.id,
                 'quantity': 2.0,
@@ -730,11 +743,11 @@ class TestRepair(TestRepairCommon):
         repair_order.action_repair_start()
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
-        self.assertEqual(repair_order.move_ids.quantity, 1.0)
+        self.assertEqual(repair_order.move_ids.mapped('quantity'), [1.0, 1.0])
         repair_order.action_create_sale_order()
         sale_order = repair_order.sale_order_id
         sale_order.action_confirm()
-        self.assertEqual(sale_order.order_line.mapped('qty_delivered'), [1.0, 2.0])
+        self.assertEqual(sale_order.order_line.mapped('qty_delivered'), [1.0, 1.0, 2.0])
 
     def test_repair_order_uncomplete_moves(self):
         """
@@ -1012,45 +1025,6 @@ class TestRepair(TestRepairCommon):
         self.assertFalse(repair.exists())
         self.assertFalse(moves.exists())
 
-    def test_invoice_fields_propagation(self):
-        repair_order = self._create_repair_order_with_moves_and_services()
-        repair_order.action_create_invoice()
-        invoice = repair_order.invoice_ids
-        inv_part_line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_product_11)
-        inv_service_line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_order_repair)
-        price_part = inv_part_line.price_unit
-        price_service = inv_service_line.price_unit
-
-        # Initial propagation
-        self.assertEqual(inv_part_line.quantity, 1)
-        self.assertEqual(inv_part_line.product_uom_id, self.uom_unit)
-
-        self.assertEqual(inv_service_line.quantity, 2)
-        self.assertEqual(inv_service_line.product_uom_id, self.uom_unit)
-
-        # Propagation after invoice creation
-        repair_order.move_ids[0].write({
-            'product_uom_qty': 5,
-            'uom_id': self.uom_dozen.id,
-        })
-        repair_order.repair_service_line_ids[0].write({
-            'quantity': 6,
-            'uom_id': self.uom_dozen.id,
-        })
-        self.assertEqual(inv_part_line.quantity, 5)
-        self.assertEqual(inv_part_line.product_uom_id, self.uom_dozen)
-        self.assertEqual(inv_part_line.price_unit, price_part * self.uom_dozen.factor)
-
-        self.assertEqual(inv_service_line.quantity, 6)
-        self.assertEqual(inv_service_line.product_uom_id, self.uom_dozen)
-        self.assertEqual(inv_service_line.price_unit, price_service * self.uom_dozen.factor)
-
-        repair_order.move_ids[0].unlink()
-        repair_order.repair_service_line_ids[0].unlink()
-
-        self.assertEqual(inv_part_line.quantity, 0)
-        self.assertEqual(inv_service_line.quantity, 0)
-
     def test_sale_order_fields_propagation(self):
         repair_order = self._create_repair_order_with_moves_and_services()
         repair_order.action_create_sale_order()
@@ -1087,6 +1061,63 @@ class TestRepair(TestRepairCommon):
 
         self.assertEqual(so_part_line.product_uom_qty, 0)
         self.assertEqual(so_service_line.product_uom_qty, 0)
+
+    def test_invoice_creation_logic(self):
+        repair_order = self._create_repair_order_with_moves_and_services()
+        part_move1 = repair_order.move_ids.filtered(lambda m: m.product_id == self.product_product_11)
+        part_move2 = repair_order.move_ids.filtered(lambda m: m.product_id == self.product_delivery_invoice_policy)
+        service_line = repair_order.repair_service_line_ids.filtered(lambda l: l.product_id == self.product_order_repair)
+        part_move1.product_uom_qty = 1
+        service_line.quantity = 2
+
+        self.assertEqual(part_move1.qty_to_invoice, 1)
+        self.assertEqual(part_move2.qty_to_invoice, 0)
+        self.assertEqual(service_line.qty_to_invoice, 2)
+
+        # Due to the mismatch of the way records are sorted on the testing environment and
+        # on production, we do this to retrieve the last created invoice.
+        invoices_before = repair_order.invoice_ids
+        repair_order.action_create_invoice()
+        invoice = (repair_order.invoice_ids - invoices_before)[0]
+
+        self.assertEqual(invoice.move_type, 'out_invoice')
+        # Make sure that the product with 'delivery' invoicing policy is not invoiced
+        self.assertTrue(self.product_delivery_invoice_policy not in invoice.invoice_line_ids.mapped('product_id'))
+
+        inv_part_line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_product_11)
+        inv_service_line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_order_repair)
+
+        self.assertEqual(inv_part_line.quantity, 1)
+        self.assertEqual(inv_service_line.quantity, 2)
+        self.assertEqual(part_move1.qty_invoiced, 1)
+        self.assertEqual(part_move1.qty_to_invoice, 0)
+        self.assertEqual(service_line.qty_invoiced, 2)
+        self.assertEqual(service_line.qty_to_invoice, 0)
+
+        inv_service_line.quantity = 3  # Invoiced more than needed
+        self.assertEqual(service_line.qty_to_invoice, -1)
+
+        part_move1.product_uom_qty = 3
+        self.assertEqual(part_move1.qty_to_invoice, 2)
+
+        invoices_before_refund = repair_order.invoice_ids
+        repair_order.action_create_invoice()
+        refund_invoice = (repair_order.invoice_ids - invoices_before_refund)[0]
+
+        # If there is any negative `qty_to_invoice` a credit note is created
+        self.assertEqual(refund_invoice.move_type, 'out_refund')
+        self.assertEqual(part_move1.qty_invoiced, 3)
+        self.assertEqual(part_move1.qty_to_invoice, 0)
+
+        # Removing/Recycling a part should allow you to create another credit note for the user
+        part_move1.repair_line_type = 'remove'
+        self.assertEqual(part_move1.qty_to_invoice, -part_move1.qty_invoiced)
+        # Only done moves are counted towards `qty_to_invoice` of products with 'delivery'
+        # invoicing policy
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(part_move2.qty_to_invoice, 1)
 
 
 @tagged('post_install', '-at_install')

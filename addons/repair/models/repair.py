@@ -192,7 +192,7 @@ class RepairOrder(models.Model):
     # Invoice Binding
     invoice_count = fields.Integer(string='Invoice Count', compute='_compute_invoice_count')
     invoice_ids = fields.One2many('account.move', 'repair_order_id', string='Invoice', compute='_compute_invoice_ids', store=True, copy=False)
-    can_create_extra_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice')
+    can_create_extra_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice_or_invoice')  # will be renamed on master
 
     # UI Fields
     has_uncomplete_moves = fields.Boolean(compute='_compute_has_uncomplete_moves')
@@ -203,7 +203,7 @@ class RepairOrder(models.Model):
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
     picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
-    can_create_sale_or_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice')
+    can_create_sale_or_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice_or_invoice')  # will be renamed on master
 
     def _compute_picking_type_visible(self):
         repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
@@ -254,8 +254,11 @@ class RepairOrder(models.Model):
         for repair in self:
             repair.invoice_count = len(repair.invoice_ids)
 
-    @api.depends('invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state', 'move_ids', 'repair_service_line_ids')
-    def _compute_can_create_sale_or_invoice(self):
+    @api.depends(
+        'invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state',
+        'move_ids.qty_to_invoice', 'repair_service_line_ids.qty_to_invoice',
+    )
+    def _compute_can_create_sale_or_invoice_or_invoice(self):
         for repair in self:
             repair.can_create_sale_or_invoice = (
                 repair.partner_id
@@ -264,15 +267,13 @@ class RepairOrder(models.Model):
                 and repair.state != "cancel"
             )
             repair.can_create_extra_invoice = (
-                    repair.partner_id
-                    and all(invoice.state == "posted" for invoice in repair.invoice_ids)
-                    and not repair.sale_order_id
-                    and (
-                        any(not move.invoice_line_ids for move in repair.move_ids)
-                        or any(not repair_service_line.invoice_line_ids for repair_service_line in repair.repair_service_line_ids
-                        )
-                    )
+                repair.partner_id
+                and not repair.sale_order_id
+                and (
+                    any(move.qty_to_invoice for move in repair.move_ids)
+                    or any(rsl.qty_to_invoice for rsl in repair.repair_service_line_ids)
                 )
+            )
 
     @api.depends('product_id', 'product_id.uom_id')
     def _compute_uom_id(self):
@@ -493,10 +494,14 @@ class RepairOrder(models.Model):
         self.move_ids._action_cancel()  # Quantity of parts added from the RO to the SO is set to 0
         return self.write({'state': 'cancel'})
 
+    def is_refund_type(self):
+        return any(move.qty_to_invoice < 0 for move in self.move_ids) or any(line.qty_to_invoice < 0 for line in self.repair_service_line_ids)
+
     def action_create_invoice(self):
         self.ensure_one()
+        move_type = 'out_refund' if self.is_refund_type() else 'out_invoice'
         invoice = self.env['account.move'].create({
-                'move_type': 'out_invoice',
+                'move_type': move_type,
                 'partner_id': self.partner_id.id,
                 'repair_order_id': self.id,
             })
@@ -601,8 +606,6 @@ class RepairOrder(models.Model):
         all_moves._action_done(cancel_backorder=True)
         self.repair_service_line_ids._set_service_qty_delivered()
         self.state = 'done'
-        self.move_ids._update_repair_linked_line()
-        self.repair_service_line_ids._update_repair_linked_line()
         return True
 
     def action_repair_end(self):
@@ -623,7 +626,7 @@ class RepairOrder(models.Model):
                     'product_expected_qty_uom': move.product_uom_qty,
                 }))
             ctx.update({'default_repair_id': self.id, 'default_repair_consumption_warning_line_ids': lines})
-            action = self.env["ir.actions.actions"]._for_xml_id("repair.action_repair_consumption_warning")
+            action = self.env['ir.actions.actions']._for_xml_id('repair.action_repair_consumption_warning')
             action['context'] = ctx
             return action
         return self.action_repair_done()
@@ -715,7 +718,7 @@ class RepairOrder(models.Model):
                 sale_order_lines._compute_price_unit()
 
     def _update_invoice_line_price(self):
-        invoices = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        invoices = self.invoice_ids.filtered(lambda inv: inv.state == 'draft' and inv.move_type == 'out_invoice')
         if self.under_warranty:
             invoices.invoice_line_ids.write({'price_unit': 0.0})
         else:

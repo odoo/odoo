@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, fields, models
-from odoo.exceptions import UserError
 
 
 MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
@@ -71,6 +70,16 @@ class StockMove(models.Model):
                 moves_with_reference.add(move.id)
         super(StockMove, self - self.env['stock.move'].browse(moves_with_reference))._compute_reference()
 
+    @api.depends('repair_line_type')
+    def _compute_qty_to_invoice(self):
+        super()._compute_qty_to_invoice()
+        for move in self:
+            if move.repair_line_type != 'add':
+                if move.qty_invoiced:
+                    move.qty_to_invoice = move.qty_invoiced * -1
+                else:
+                    move.qty_to_invoice = 0
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -111,13 +120,13 @@ class StockMove(models.Model):
         res = draft_repair_moves._action_confirm()
         res._trigger_scheduler()
         confirmed_repair_moves = (res | other_repair_moves)
-        confirmed_repair_moves._create_repair_linked_line()
+        confirmed_repair_moves._create_repair_sale_order_line()
         return (confirmed_repair_moves | no_repair_moves)
 
     def write(self, vals):
         res = super().write(vals)
         repair_moves = self.env['stock.move']
-        moves_to_create_linked_line = self.env['stock.move']
+        moves_to_create_sale_line = self.env['stock.move']
         for move in self:
             if not move.repair_id:
                 continue
@@ -125,16 +134,14 @@ class StockMove(models.Model):
             if (
                 not move.sale_line_id
                 and "sale_line_id" not in vals
-                and not move.invoice_line_ids
-                and "invoice_line_ids" not in vals
                 and move.repair_line_type == "add"
             ):
-                moves_to_create_linked_line |= move
-            if (move.sale_line_id or move.invoice_line_ids) and any(field in vals for field in ('repair_line_type', 'product_uom_qty', 'uom_id', 'product_id')):
+                moves_to_create_sale_line |= move
+            if move.sale_line_id and any(field in vals for field in ('repair_line_type', 'product_uom_qty', 'uom_id', 'product_id')):
                 repair_moves |= move
 
-        repair_moves._update_repair_linked_line()
-        moves_to_create_linked_line._create_repair_linked_line()
+        repair_moves._update_repair_sale_order_line()
+        moves_to_create_sale_line._create_repair_sale_order_line()
         return res
 
     def action_add_from_catalog_repair(self):
@@ -143,20 +150,25 @@ class StockMove(models.Model):
 
     # Needed to also cancel the lastly added part
     def _action_cancel(self):
-        self._clean_repair_linked_lines
+        self._clean_repair_linked_lines()
         return super()._action_cancel()
 
     def _create_repair_invoice_line(self):
+        if not self:
+            return
         invoice_lines_vals = []
+        invoice_id = self.repair_id.invoice_ids[0]
+        is_refund_type = invoice_id.move_type == 'out_refund'
         for move in self:
-            invoice_id = move.repair_id.invoice_ids.filtered(lambda invoice: invoice.state != 'posted')
-            if move.invoice_line_ids or move.repair_line_type != 'add' or not invoice_id:
+            if not invoice_id or not move.qty_to_invoice or (move.repair_line_type != 'add' and not is_refund_type):
                 continue
-            product_qty = move.product_uom_qty if move.repair_id.state != 'done' else move.quantity
+            move_qty = move.qty_to_invoice
+            if is_refund_type:
+                move_qty *= -1
             invoice_lines_vals.append({
-                'move_id': invoice_id[0].id,  # Add to the most recent 'draft' invoice
+                'move_id': invoice_id.id,
                 'product_id': move.product_id.id,
-                'quantity': product_qty,
+                'quantity': move_qty,
                 'product_uom_id': move.uom_id.id,
                 'stock_move_id': move.id,
             })
@@ -189,14 +201,9 @@ class StockMove(models.Model):
         self.env['sale.order.line'].create(so_line_vals)
 
     def _clean_repair_linked_lines(self):
-        if self.repair_id.invoice_ids:
-            self.filtered(
-                lambda m: m.repair_id and m.invoice_line_ids and m.invoice_line_ids.move_id.state != 'posted'
-            ).invoice_line_ids.write({'quantity': 0.0})
-        else:
-            self.filtered(
-                lambda m: m.repair_id and m.sale_line_id
-            ).sale_line_id.write({'product_uom_qty': 0.0})
+        self.filtered(
+            lambda m: m.repair_id and m.sale_line_id
+        ).sale_line_id.write({'product_uom_qty': 0.0})
 
     def _pre_update_repair_linked_lines(self):
         moves_to_clean = self.env['stock.move']
@@ -204,24 +211,12 @@ class StockMove(models.Model):
         for move in self:
             if not move.repair_id:
                 continue
-            if (move.sale_line_id or move.invoice_line_ids) and move.repair_line_type != 'add':
+            if move.sale_line_id and move.repair_line_type != 'add':
                 moves_to_clean |= move
-            if (move.sale_line_id or move.invoice_line_ids) and move.repair_line_type == 'add':
+            if move.sale_line_id and move.repair_line_type == 'add':
                 moves_to_update |= move
         moves_to_clean._clean_repair_linked_lines()
         return moves_to_update
-
-    def _update_repair_linked_line(self):
-        if self.repair_id.sale_order_id:
-            return self._update_repair_sale_order_line()
-        if self.repair_id.invoice_ids:
-            return self._update_repair_invoice_line()
-
-    def _create_repair_linked_line(self):
-        if self.repair_id.sale_order_id:
-            return self._create_repair_sale_order_line()
-        if self.repair_id.invoice_ids:
-            return self._create_repair_invoice_line()
 
     def _update_repair_sale_order_line(self):
         moves_to_update = self._pre_update_repair_linked_lines()
@@ -242,28 +237,6 @@ class StockMove(models.Model):
         lines_to_recreate.sale_line_id.unlink()
         lines_to_recreate._create_repair_sale_order_line()
 
-        if moves_to_update.repair_id.under_warranty:
-            moves_to_update.price_unit = 0.0
-
-    def _update_repair_invoice_line(self):
-        moves_to_update = self._pre_update_repair_linked_lines()
-        lines_to_recreate = self.env['stock.move']
-        for move in moves_to_update:
-            if move.invoice_line_ids.move_id.state == 'posted':
-                raise UserError(self.env._("This line is linked to a posted invoice and cannot be modified.\n"
-                                    "Please create a new line to link to a new invoice or reset the invoice to draft."))
-            if move.product_id != move.invoice_line_ids.product_id:
-                lines_to_recreate |= move
-                continue
-
-            move.invoice_line_ids.write({
-                'product_uom_id': move.uom_id.id,
-                'quantity': move.product_uom_qty if move.repair_id.state != 'done' else move.quantity
-            })
-
-        lines_to_recreate.description_picking = ""
-        lines_to_recreate.invoice_line_ids.unlink()
-        lines_to_recreate._create_repair_invoice_line()
         if moves_to_update.repair_id.under_warranty:
             moves_to_update.price_unit = 0.0
 
