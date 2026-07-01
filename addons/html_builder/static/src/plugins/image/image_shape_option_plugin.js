@@ -177,7 +177,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         const isNewShape = previousShapeId !== shapeId;
         const shapeSvgText = await this.getShapeSvgText(shapeId);
 
-        // Get colors.
+        // Get colors.ddd
         const defaultShapeColors = this.getThemedSvgColors(shapeSvgText).join(";");
         newDataset.shapeColors =
             newDataset.shapeColors ??
