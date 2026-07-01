@@ -798,9 +798,9 @@ class TestTrackingInternals(TestTrackingCommon):
         cls.properties_linked_records = cls.env['mail.test.ticket'].create([{'name': f'Record {i}'} for i in range(3)])
         cls.properties_parent_1, cls.properties_parent_2, cls.properties_parent_monetary = cls.env['mail.test.track.all.properties.parent'].create([{
             'definition_properties': [
-                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value', 'tracking': True},
                 {'name': 'separator', 'type': 'separator'},
-                {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337},
+                {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337, 'tracking': True},
                 {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
                  'default': (cls.properties_linked_records[0].id, cls.properties_linked_records[0].display_name), 'comodel': 'mail.test.ticket'},
                 {'name': 'property_signature', 'string': 'Property Signature', 'type': 'signature'},
@@ -811,16 +811,16 @@ class TestTrackingInternals(TestTrackingCommon):
                 {'name': 'property_m2m', 'string': 'Property M2M', 'type': 'many2many',
                  'default': [(rec.id, rec.display_name) for rec in cls.properties_linked_records], 'comodel': 'mail.test.ticket'},
                 {'name': 'property_separator', 'string': 'Separator', 'type': 'separator'},
-                {'name': 'property_tags', 'string': 'Property Tags', 'type': 'tags',
+                {'name': 'property_tags', 'string': 'Property Tags', 'type': 'tags', 'tracking': True,
                  'default': ['aa', 'bb'], 'tags': [('aa', 'AA', 7), ('bb', 'BB', 2), ('cc', 'CC', 3)]},
                 {'name': 'property_datetime', 'string': 'Property Datetime', 'type': 'datetime', 'default': '2024-01-02 12:59:01'},
-                {'name': 'property_date', 'string': 'Property Date', 'type': 'date', 'default': '2024-01-03'},
+                {'name': 'property_date', 'string': 'Property Date', 'type': 'date', 'default': '2024-01-03', 'tracking': True},
             ],
             'name': 'Properties Parent 2',
         }, {
             'definition_properties': [
                 {'name': 'property_amount', 'string': 'Property Amount', 'type': 'monetary',
-                 'currency_field': 'currency_id'},
+                 'currency_field': 'currency_id', 'tracking': True},
             ],
             'name': 'Properties Parent Monetary',
         }])
@@ -1074,72 +1074,43 @@ class TestTrackingInternals(TestTrackingCommon):
 
     @users('employee')
     def test_mail_track_properties(self):
-        """Test that the old properties values are logged when the parent changes."""
-        properties_record_2 = self.properties_record_2.with_env(self.env)
-
-        # change the parent, it will change the properties values
-        with self.mock_mail_gateway(), self.mock_mail_app():
-            properties_record_2.properties_parent_id = self.properties_parent_1
-            self.flush_tracking()
-        self.assertMessageFields(
-            self._new_msgs, {
-                'author_id': self.partner_employee,
-                'tracking_values': [
-                    ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', 'properties', datetime(2024, 1, 3, 0, 0, 0), False, {'prop_field_string': 'Properties: Property Date', 'prop_type': 'date'}),
-                    ('properties', 'properties', datetime(2024, 1, 2, 12, 59, 1), False, {'prop_field_string': 'Properties: Property Datetime', 'prop_type': 'datetime'}),
-                    ('properties', 'properties', 'AA, BB', '', {'prop_field_string': 'Properties: Property Tags', 'prop_type': 'tags'}),
-                    ('properties', 'properties', 'Record 0, Record 1, Record 2', '', {'prop_field_string': 'Properties: Property M2M', 'prop_type': 'many2many'}),
-                ],
-            }
-        )
+        """Test that the properties can be tracked"""
 
         properties_record_1 = self.properties_record_1.with_env(self.env)
         with self.mock_mail_gateway(), self.mock_mail_app():
             properties_record_1.properties_parent_id = self.properties_parent_2
+            properties_record_1.properties = {
+                'property_tags': ['aa'],  # Even if tracking true, shouldn't track tags
+                'property_datetime': False,
+                'property_date': False,
+            }
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
                 'author_id': self.partner_employee,
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
-                    ('properties', 'properties', self.properties_linked_records[0], False, {'prop_field_string': 'Properties: Property M2O', 'prop_type': 'many2one'}),
-                    ('properties', 'properties', 1337, False, {'prop_field_string': 'Properties: Property Int', 'prop_type': 'integer'}),
+                    ('properties', 'properties', 1337, 0, {'prop_field_string': 'Properties: Property Int', 'prop_type': 'integer'}),
                     ('properties', 'properties', 'char value', False, {'prop_field_string': 'Properties: Property Char', 'prop_type': 'char'}),
                 ],
             }
         )
 
-        # changing the parent and then changing again
-        # to the original one to not create tracking values
+        properties_record_2 = self.properties_record_2.with_env(self.env)
         with self.mock_mail_gateway(), self.mock_mail_app():
-            properties_record_1.properties_parent_id = self.properties_parent_1
-            properties_record_1.properties_parent_id = self.properties_parent_2
-            self.flush_tracking()
-        self.assertFalse(self._new_mails)
-        self.assertFalse(self._new_msgs)
-
-        # do not create tracking if the value was false
-        with self.mock_mail_gateway(), self.mock_mail_app():
-            properties_record_1.properties = {
-                'property_m2m': False,
-                'property_tags': ['aa'],
-                'property_datetime': False,
-                'property_date': False,
+            properties_record_2.properties_parent_id = self.properties_parent_1
+            properties_record_2.properties = {
+                'property_char': False,
+                'property_int': 0,
             }
             self.flush_tracking()
-
-        with self.mock_mail_gateway(), self.mock_mail_app():
-            properties_record_1.properties_parent_id = self.properties_parent_1
-            self.flush_tracking()
-        self.assertEqual(len(self._new_msgs), 1)
-        # Only the parent and the tags property should have been tracked
+        # Only date is tracked
         self.assertMessageFields(
             self._new_msgs, {
                 'author_id': self.partner_employee,
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', 'properties', 'AA', '', {'prop_field_string': 'Properties: Property Tags', 'prop_type': 'tags'}),
+                    ('properties', 'properties', datetime(2024, 1, 3, 0, 0, 0), False, {'prop_field_string': 'Properties: Property Date', 'prop_type': 'date'}),
                 ],
             }
         )
