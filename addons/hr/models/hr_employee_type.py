@@ -13,6 +13,7 @@ class HrEmployeeType(models.Model):
     country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company', string='Company')
     employees_count = fields.Integer(compute='_compute_employee_count', string='Employees')
+    employee_ids = fields.One2many('hr.employee', 'employee_type_id', string='Related Employees')
     sequence = fields.Integer(default=10)
 
     @api.depends('name')
