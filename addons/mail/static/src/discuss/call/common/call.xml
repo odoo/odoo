@@ -47,8 +47,11 @@
                         <CallActionList channel="this.channel" compact="this.props.compact or this.props.isPip"/>
                     </div>
                 </div>
-                <div t-if="this.hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': this.rtc.isFullscreen, 'ps-2 pb-2': !this.rtc.isFullscreen }">
-                    <span class="o-discuss-Call-notification text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.rtc.notifications.values()" t-as="notification" t-key="notification.id" t-out="notification.text"/>
+                <div t-if="this.topNotifications.length" class="position-absolute d-flex flex-column start-50 translate-middle-x top-0" t-att-class="{ 'pt-5': this.rtc.isFullscreen, 'pt-2': !this.rtc.isFullscreen }">
+                    <span class="o-discuss-Call-notification text-bg-light shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.topNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
+                </div>
+                <div t-if="this.bottomNotifications.length" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': this.rtc.isFullscreen, 'ps-2 pb-2': !this.rtc.isFullscreen }">
+                    <span class="o-discuss-Call-notification text-bg-light shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.bottomNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
                 </div>
             </div>
             <div t-if="this.state.sidebar and this.channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">

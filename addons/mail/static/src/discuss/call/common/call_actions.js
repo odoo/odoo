@@ -221,6 +221,15 @@ registerCallAction("fullscreen", {
     sequence: 80,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
+registerCallAction("minimize", {
+    condition: ({ channel, owner, store }) =>
+        channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
+    name: _t("Minimize"),
+    icon: "fa fa-window-minimize",
+    onSelected: ({ store }) => store.rtc.minimize(),
+    sequence: 90,
+    tags: ACTION_TAGS.CALL_LAYOUT,
+});
 registerCallAction("picture-in-picture", {
     condition: ({ owner, channel, store }) =>
         channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
@@ -292,7 +301,20 @@ registerCallAction("join-with-camera", {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Video Call"),
     icon: "fa fa-video-camera",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: async ({ channel, store, owner }) => {
+        await store.rtc.toggleCall(channel, { camera: true });
+
+        // Joining a video call from a chat window opens the wide meeting overlay
+        // rather than the cramped in-window call view.
+        if (owner.env.inChatWindow && store.rtc.selfSession) {
+            store.rtc.enterFullscreen();
+            store.rtc.addCallNotification({
+                id: "minimize_hint",
+                position: "top",
+                text: _t("To minimize, press ESC"),
+            });
+        }
+    },
     sequence: 120,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
