@@ -53,7 +53,7 @@ export class AttachmentList extends Component {
         });
         this.ui = useService("ui");
         this.dialog = useService("dialog");
-        this.fileViewer = useFileViewer();
+        this.fileViewer = useFileViewer(this.rootRef);
         this.actionsMenuState = useDropdownState();
         this.isMobileOS = isMobileOS();
     }

@@ -1,20 +1,29 @@
 import { onWillDestroy } from "@odoo/owl";
-import { FileViewer } from "./file_viewer";
-import { useService } from "../utils/hooks";
-import { useComponent } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
+import { useService } from "../utils/hooks";
+import { FileViewer } from "./file_viewer";
 
 const fileViewerService = {
     dependencies: ["overlay"],
+    /**
+     * @param {import("@web/env").OdooEnv} _env
+     * @param {import("services").Services} services
+     */
     start(_env, { overlay }) {
-        return (owner) => {
-            let closeFn;
+        /**
+         * @param {import("@odoo/owl").Signal<HTMLElement | null>} [ref]
+         */
+        function createFileViewer(ref) {
+            function close() {
+                closeFn();
+            }
+
             /**
              * @param {import("@web/core/file_viewer/file_viewer").File} file
              * @param {import("@web/core/file_viewer/file_viewer").File[]} files
              */
             function open(file, files = [file]) {
-                closeFn?.();
+                close();
                 if (!file.isViewable) {
                     return;
                 }
@@ -26,22 +35,29 @@ const fileViewerService = {
                         {
                             files: viewableFiles,
                             startIndex: index,
-                            close: () => closeFn?.(),
+                            close,
                         },
-                        { rootId: owner?.root?.el?.getRootNode()?.host?.id }
+                        { rootId: ref?.()?.getRootNode()?.host?.id }
                     );
                 }
             }
-            return { open, close: () => closeFn?.() };
-        };
+
+            let closeFn = () => {};
+
+            return { open, close };
+        }
+
+        return createFileViewer;
     },
 };
 registry.category("services").add("fileViewer", fileViewerService);
 
-export function useFileViewer() {
-    const owner = useComponent();
+/**
+ * @param {import("@odoo/owl").Signal<HTMLElement | null>} [ref]
+ */
+export function useFileViewer(ref) {
     const createFileViewer = useService("fileViewer");
-    const { open, close } = createFileViewer(owner);
-    onWillDestroy(close);
-    return { open, close };
+    const fileViewer = createFileViewer(ref);
+    onWillDestroy(fileViewer.close);
+    return fileViewer;
 }

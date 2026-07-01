@@ -1,13 +1,13 @@
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
-    onWillUpdateProps,
     onWillUnmount,
+    onWillUpdateProps,
     props,
     t,
     useListener,
 } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 function useResizable({
     containerRef,
@@ -19,10 +19,10 @@ function useResizable({
 }) {
     containerRef = typeof containerRef == "string" ? useRef(containerRef) : containerRef;
     handleRef = typeof handleRef == "string" ? useRef(handleRef) : handleRef;
-    const props = useComponent().props;
+    const resizeableProps = props(resizablePanelProps);
 
-    let minWidth = getMinWidth(props);
-    let resizeSide = getResizeSide(props);
+    let minWidth = getMinWidth(resizeableProps);
+    let resizeSide = getResizeSide(resizeableProps);
     let isChangingSize = false;
 
     useListener(document, "mouseup", () => onMouseUp());

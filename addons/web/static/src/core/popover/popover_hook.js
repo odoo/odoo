@@ -1,5 +1,4 @@
-import { useComponent } from "@web/owl2/utils";
-import { onWillUnmount, status } from "@odoo/owl";
+import { onWillUnmount, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -60,13 +59,15 @@ export function usePopover(component, options = {}) {
     } else {
         service = useService("popover");
     }
-    const owner = useComponent();
     const newOptions = Object.create(options);
-    newOptions.onClose = () => {
-        if (status(owner) !== "destroyed") {
-            options.onClose?.();
-        }
-    };
+    const scope = useScope();
+    if (options.onClose) {
+        newOptions.onClose = () => {
+            if (scope.status === 1) {
+                options.onClose();
+            }
+        };
+    }
     const popover = makePopover(service.add, component, newOptions);
     onWillUnmount(popover.close);
     return popover;

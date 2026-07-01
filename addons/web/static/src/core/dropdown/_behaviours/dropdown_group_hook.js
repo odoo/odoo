@@ -1,10 +1,13 @@
-import { useComponent, useEnv, useLayoutEffect } from "@web/owl2/utils";
 import { DROPDOWN_GROUP } from "@web/core/dropdown/dropdown_group";
+import { useEnv, useLayoutEffect } from "@web/owl2/utils";
 
 /**
- * @typedef DropdownGroupState
- * @property {boolean} isInGroup
- * @property {boolean} isOpen
+ * @typedef {{
+ *  isInGroup: boolean;
+ *  readonly isOpen: boolean;
+ * }} DropdownGroupState
+ *
+ * @typedef {(typeof import("../dropdown").dropdownProps)["state"]} DropdownState
  */
 
 /**
@@ -12,11 +15,12 @@ import { DROPDOWN_GROUP } from "@web/core/dropdown/dropdown_group";
  * DropdownGroup component, allowing it to know
  * if it's in a group and if the group is open.
  *
- * @returns {DropdownGroupState}
+ * @param {DropdownState} state
  */
-export function useDropdownGroup() {
+export function useDropdownGroup(state) {
     const env = useEnv();
 
+    /** @type {DropdownGroupState} */
     const group = {
         isInGroup: DROPDOWN_GROUP in env,
         get isOpen() {
@@ -25,10 +29,9 @@ export function useDropdownGroup() {
     };
 
     if (group.isInGroup) {
-        const dropdown = useComponent();
         useLayoutEffect(() => {
-            env[DROPDOWN_GROUP].add(dropdown.state);
-            return () => env[DROPDOWN_GROUP].delete(dropdown.state);
+            env[DROPDOWN_GROUP].add(state);
+            return () => env[DROPDOWN_GROUP].delete(state);
         });
     }
 

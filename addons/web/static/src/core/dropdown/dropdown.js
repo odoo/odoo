@@ -110,7 +110,7 @@ export class Dropdown extends Component {
 
         this.state = this.props.state || useDropdownState();
         this.nesting = useDropdownNesting(this.state);
-        this.group = useDropdownGroup();
+        this.group = useDropdownGroup(this.state);
 
         this.navigation = useNavigation(this.menuRef, {
             shouldRegisterHotkeys: false,
