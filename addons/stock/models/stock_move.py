@@ -625,40 +625,111 @@ Please change the quantity done or the rounding precision in your settings.""",
             move.lot_ids = lots_by_move_id.get(move._origin.id, [])
 
     def _set_lot_ids(self):
+        """
+        Setting the lot_ids of a stock move should adapt the reservation following these rules:
+
+        1. Removing a lot should remove its reference from sml but not the reserved quantity.
+        2. Additional lots should be handled sequentially assigning the macimum between the
+           remaining demand and the available quantity of the lot if none is available.
+        """
         for move in self:
-            if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids):
+            if move.product_id.tracking == 'none':
                 continue
+            if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids) and move.move_line_ids.lot_id == move.lot_ids:
+                continue
+            product = move.product_id
+            uom = move.product_id.uom_id if move.product_id.tracking == 'serial' else move.uom_id
             move_lines_commands = []
-            mls = move.move_line_ids
-            mls_with_lots = mls.filtered(lambda ml: ml.lot_id)
-            mls_without_lots = (mls - mls_with_lots)
-            for ml in mls_with_lots:
-                if ml.quantity and ml.lot_id not in move.lot_ids:
-                    move_lines_commands.append((2, ml.id))
-            ls = move.move_line_ids.lot_id
-            for lot in move.lot_ids:
-                if lot not in ls:
-                    if mls_without_lots[:1]:  # Updates an existing line without serial number.
-                        move_line = mls_without_lots[:1]
-                        move_lines_commands.append(Command.update(move_line.id, {
-                            'lot_id': lot.id,
-                            'uom_id': move.product_id.uom_id.id if move.product_id.tracking == 'serial' else move.uom_id.id,
-                            'quantity': 1 if move.product_id.tracking == 'serial' else move.quantity,
-                        }))
-                        mls_without_lots -= move_line
-                    else:  # No line without serial number, creates a new one.
-                        reserved_quants = self.env['stock.quant'].with_context(packaging_uom_id=move.packaging_uom_id)._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
-                        if reserved_quants and reserved_quants[0][0].lot_id:
-                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
-                        else:
-                            move_line_vals = self._prepare_move_line_vals(quantity=0)
-                            move_line_vals['lot_id'] = lot.id
-                        move_line_vals['uom_id'] = move.product_id.uom_id.id
-                        move_line_vals['quantity'] = 1
-                        move_lines_commands.append((0, 0, move_line_vals))
+            lot_id_by_name = {lot.name: lot.id for lot in move.lot_ids}
+            available_move_line_ids = []
+            free_uom_qty = move.uom_id._compute_quantity(max(move.quantity, move.product_uom_qty), product.uom_id)
+            assigned_lot_ids = set()
+            for ml in move.move_line_ids:
+                lot_name = ml.lot_id.name or ml.lot_name
+                if ml.uom_id.is_zero(ml.quantity):
+                    continue
+                elif not ml.lot_id and not ml.lot_name:
+                    available_move_line_ids.append(ml.id)
+                elif lot_name in lot_id_by_name:
+                    lot_id = lot_id_by_name[lot_name]
+                    assigned_lot_ids.add(lot_id)
+                    free_uom_qty -= ml.uom_id._compute_quantity(ml.quantity, product.uom_id)
+                    move_lines_commands.append(Command.update(ml.id, {'lot_id': lot_id}))
                 else:
-                    move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
-                    move_line.quantity = 1
+                    move_lines_commands.append(Command.delete(ml.id))
+            should_bypass_reservation = move._should_bypass_reservation()
+            available_move_lines = self.env['stock.move.line'].browse(available_move_line_ids)
+            # Since each lot needs to be represented by a move line we will by default
+            # reserve at least 1 unit (in the product.uom_id) for each lot the
+            # exceeding free_uom_qty can then be assigned from available quantity
+            extra_uom_qty = free_uom_qty - len(set(move.lot_ids.ids) - assigned_lot_ids)
+            if not should_bypass_reservation:
+                quants_by_lot = self.env['stock.quant']._gather(move.product_id, move.location_id).grouped('lot_id')
+            for lot in move.lot_ids:
+                if lot.id in assigned_lot_ids:
+                    continue
+                if should_bypass_reservation:
+                    if available_move_lines:
+                        # Updates an existing line without lot.
+                        move_line = available_move_lines[0]
+                        new_vals = {
+                            'lot_id': lot.id,
+                            'lot_name': lot.name,
+                            'uom_id': uom.id,
+                            'quantity': 1.0 if move.product_id.tracking == 'serial' else move_line.quantity
+                        }
+                        move_lines_commands.append(Command.update(move_line.id, new_vals))
+                        available_move_lines -= move_line
+                        extra_uom_qty -= uom._compute_quantity(new_vals['quantity'], product.uom_id) - 1
+                    else:
+                        # No line to update creates a new one.
+                        quantity_to_reserve = 1.0
+                        # For lot tracked product reserve the maximal available quantity
+                        if move.product_id.tracking == 'lot' and product.uom_id.compare(extra_uom_qty, 0.0) > 0:
+                            quantity_to_reserve += extra_uom_qty
+                            extra_uom_qty = 0
+                        move_line_vals = self._prepare_move_line_vals(quantity=quantity_to_reserve)
+                        move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
+                        if move.product_id.tracking == 'serial':
+                            move_line_vals.update({'quantity': 1.0, 'uom_id': product.uom_id.id})
+                        move_lines_commands.append(Command.create(move_line_vals))
+                else:
+                    reserved = False
+                    quants_to_reserve = quants_by_lot.get(lot, self.env['stock.quant'])
+                    for quant in quants_to_reserve:
+                        if reserved and product.uom_id.compare(extra_uom_qty, 0.0) <= 0:
+                            break
+                        if not quant.lot_id or product.uom_id.compare(quant.available_quantity, 0.0) <= 0:
+                            continue
+                        quantity_to_reserve = min(quant.available_quantity, max(extra_uom_qty if reserved else extra_uom_qty + 1, 1))
+                        if product.uom_id.compare(quantity_to_reserve, 0.0) > 0:
+                            move_line_vals = self._prepare_move_line_vals(quantity=quantity_to_reserve, reserved_quant=quant)
+                            move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
+                            if move.product_id.tracking == 'serial':
+                                quantity_to_reserve = 1
+                                move_line_vals.update({'quantity': 1.0, 'uom_id': product.uom_id.id})
+                            move_lines_commands.append(Command.create(move_line_vals))
+                            extra_uom_qty -= quantity_to_reserve if reserved else quantity_to_reserve - 1
+                            reserved = True
+                    # If no reservation has been made from existing quant reserve a qty of 1 product.uom_id
+                    if not reserved:
+                        move_line_vals = self._prepare_move_line_vals(quantity=1.0)
+                        move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
+                        if move.product_id.tracking == 'serial':
+                            move_line_vals.update({'quantity': 1.0, 'uom_id': product.uom_id.id})
+                        move_lines_commands.append(Command.create(move_line_vals))
+            if not should_bypass_reservation and available_move_line_ids:
+                # Unlink and re-create empty move lines to alter the reservation order and prioritise
+                # lot set move lines in un-reservation process relying on the process decrease
+                move_lines_commands.extend(Command.delete(id) for id in available_move_line_ids)
+                for move_line in available_move_lines:
+                    if product.uom_id.compare(extra_uom_qty, 0.0) <= 0:
+                        break
+                    ml_quantity = move_line.uom_id._compute_quantity(move_line.quantity, product.uom_id)
+                    quantity_to_reserve = min(ml_quantity, extra_uom_qty)
+                    new_ml_quantity = product.uom_id._compute_quantity(quantity_to_reserve, move_line.uom_id)
+                    move_lines_commands.append(Command.create(move_line.copy_data({'quantity': new_ml_quantity, 'picked': move_line.picked})[0]))
+                    extra_uom_qty -= quantity_to_reserve
             move.write({'move_line_ids': move_lines_commands})
             # When `quantity` is written in the same call as `lot_ids`, the
             # user-set value is kept and the recompute triggered by this
@@ -1398,24 +1469,76 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
-        quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
-        quantity += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.uom_id)
-        self.update({'quantity': quantity})
-        base_location = self.location_id
-        quants = self.env['stock.quant'].sudo().search([
+        """
+        Updates the quantity of the move to match the quantity resulting from the `_set_lot_ids`.
+        """
+        product = self.product_id
+        if product.tracking == 'none':
+            return
+
+        assigned_quantity = 0
+        assignable_quantity = 0
+        nb_of_assignable_sml = 0
+        new_lot_names = OrderedSet(lot.name for lot in self.lot_ids if lot.name)
+        for sml in self.move_line_ids:
+            sml_quantity = sml.uom_id._compute_quantity(sml.quantity, self.uom_id)
+            if not sml.lot_id.name and not sml.lot_name:
+                assignable_quantity += sml_quantity
+                nb_of_assignable_sml += 1
+            elif (sml.lot_id.name or sml.lot_name) in new_lot_names:
+                assigned_quantity += sml_quantity
+
+        old_lot_names = OrderedSet(lot.name for lot in self._origin.lot_ids if lot.name) if self._origin else OrderedSet()
+        extra_lot_names = new_lot_names - old_lot_names
+        quantity = assigned_quantity + assignable_quantity
+        if not extra_lot_names:
+            self.update({'quantity': quantity})
+            return
+        base_location = self.picking_id.location_id or self.location_id
+        extra_lot_ids = {rec['id'] for rec in self.env['stock.lot'].sudo().search_read([('product_id', '=', self.product_id.id), ('name', 'in', extra_lot_names)], ['id'])}
+        quant_domain = Domain([
             ('product_id', '=', self.product_id.id),
-            ('lot_id', 'in', self.lot_ids.ids),
+            ('lot_id', 'in', extra_lot_ids),
             ('quantity', '!=', 0),
             ('location_id.usage', 'in', ('internal', 'transit', 'customer')),
-            ('location_id', 'not any', [('location_id', 'child_of', base_location.id)])
+            ('company_id', 'in', (False, self.company_id.id)),
         ])
+        uom = self.uom_id
+        minimal_quantity = product.uom_id._compute_quantity(1, uom)
+        if self._should_bypass_reservation():
+            nb_of_exceed = max(len(extra_lot_names) - nb_of_assignable_sml, 0)
+            if nb_of_exceed > 0:
+                quantity = max(self.product_uom_qty, quantity + nb_of_exceed * minimal_quantity)
+        else:
+            free_qty = self.product_uom_qty - assigned_quantity
+            available_quant_domain = Domain.AND([quant_domain, Domain('location_id', 'child_of', base_location.id)])
+            quant_by_lot = self.env['stock.quant'].sudo()._read_group(available_quant_domain, ['lot_id'], ['quantity:sum', 'reserved_quantity:sum'])
+            available_quantity_by_lot_name = defaultdict(float)
+            for lot, total_quantity, reserved_quantity in quant_by_lot:
+                available_quantity_by_lot_name[lot.name] += product.uom_id._compute_quantity(total_quantity - reserved_quantity, uom)
+            # Since each lot needs to be represented by a move line we will by default
+            # reserve at least 1 unit (in the product.uom_id) for each lot
+            free_qty -= len(new_lot_names - old_lot_names) * minimal_quantity
+            new_assigned_quantity = len(new_lot_names - old_lot_names) * minimal_quantity
+            for lot_name in extra_lot_names:
+                if uom.compare(free_qty, 0.0) > 0:
+                    extra_qty = min(available_quantity_by_lot_name[lot_name], free_qty + minimal_quantity) - minimal_quantity
+                    if uom.compare(extra_qty, 0) > 0:
+                        new_assigned_quantity += extra_qty
+                        free_qty -= extra_qty
+            quantity += max(0, new_assigned_quantity - assignable_quantity)
 
-        if quants:
-            sn_to_location = ""
-            for quant in quants:
-                sn_to_location += _("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
-            return {
-                'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
+        self.update({'quantity': quantity})
+
+        if self.product_id.tracking == 'serial':
+            problematic_quant_domain = Domain.AND([quant_domain, ~Domain('location_id', 'child_of', base_location.id)])
+            problematic_quants = self.env['stock.quant'].sudo().search(problematic_quant_domain)
+            if problematic_quants:
+                sn_to_location = ""
+                for quant in problematic_quants:
+                    sn_to_location += _("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
+                return {
+                    'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
             }
 
     def _key_assign_picking(self):
