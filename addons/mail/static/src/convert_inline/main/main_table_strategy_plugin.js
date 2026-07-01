@@ -59,7 +59,7 @@ export class MainTableStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.isMainTable) {
             // Margin is already included in the main table layout, no need
             // for an extra wrapper
-            emailNode.analysis.facts.desktopMarginStyleInfo = new StyleInfo();
+            emailNode.analysis.facts.desktopMarginStyleInfo = undefined;
         }
     }
 
@@ -150,7 +150,7 @@ export class MainTableStrategyPlugin extends Plugin {
         }
         refs.td ??= {};
         const tdStyle = refs.td.style ?? {};
-        refs.td.style = this.getContextStyleInfo(this.config.referenceDocument.body).merge(
+        refs.td.style = this.getTableContextStyleInfo(this.config.referenceDocument.body).merge(
             StyleInfo.from(tdStyle)
         );
         return new MainTableModel({ refs });

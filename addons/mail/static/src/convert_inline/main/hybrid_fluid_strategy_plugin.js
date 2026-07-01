@@ -15,6 +15,7 @@ import { isAllowedContent } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { EmptyCellLayout } from "./table_models";
+import { StyleInfo } from "../core/style_models";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -116,7 +117,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!isHybridFluidLayout && !isResponsiveElement) {
             return;
         } else if (isResponsiveElement) {
-            analysis.facts.isResponsiveElement;
+            analysis.facts.isResponsiveElement = true;
         }
         Object.assign(analysis.parsingFacts, {
             canMerge: false,
@@ -223,12 +224,9 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return emailNode;
     }
 
-    buildHybridCell({ styleContext, isLast, cluster, emailNode, width, verticalAlign }) {
+    buildHybridCell({ isLast, cluster, emailNode, width, verticalAlign }) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
-        const refs = {
-            root: {},
-            styleContext,
-        };
+        const refs = { root: {} };
         const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
         Object.assign(refs.root, {
             style: {
@@ -250,14 +248,11 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return cellEmailNode;
     }
 
-    buildTableCell({ styleContext, isLast, cluster, emailNode, widthRatio }) {
+    buildTableCell({ contextStyleInfo, isLast, cluster, emailNode, widthRatio }) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
-        const refs = {
-            root: {},
-            styleContext,
-        };
+        const refs = { root: {} };
         Object.assign(refs.root, {
-            style: { width: `${widthRatio}%` },
+            style: StyleInfo.from({ width: `${widthRatio}%` }).merge(contextStyleInfo),
             attributes: { width: `${widthRatio}%` },
         });
         const layout = new HybridFluidTableCell(refs.root);
@@ -304,7 +299,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     buildHybridCellWithOffset({
-        styleContext,
+        contextStyleInfo,
         isLast,
         cluster,
         emailNode,
@@ -322,7 +317,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
             isLast,
         });
         const cellEmailNode = this.buildHybridCell({
-            styleContext,
+            contextStyleInfo,
             cluster,
             emailNode,
             width,
@@ -339,7 +334,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     buildTableCellWithOffset({
-        styleContext,
+        contextStyleInfo,
         isLast,
         cluster,
         emailNode,
@@ -349,7 +344,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const cells = [];
         const offsetEmailNode = this.buildTableEmptyCell({ widthRatio: offsetWidthRatio });
         const cellEmailNode = this.buildTableCell({
-            styleContext,
+            contextStyleInfo,
             widthRatio,
             emailNode,
             cluster,

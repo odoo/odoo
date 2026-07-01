@@ -24,6 +24,7 @@ const VERTICAL_ALIGN = {
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = [
+        "contextStyle",
         "math",
         "measurementSnapshot",
         "responsiveBlock",
@@ -594,12 +595,7 @@ export class TableStrategyPlugin extends Plugin {
         // getStylePropertyValue should probably filter values and only
         // return what is allowed
         // TODO EGGMAIL: style should probably be refined in this fragment
-        const styleContext = {
-            style: {
-                "text-align": this.getStylePropertyValue(referenceNode, "text-align"),
-                "font-size": this.getStylePropertyValue(referenceNode, "font-size"),
-            },
-        };
+        const contextStyleInfo = this.getTableContextStyleInfo(referenceNode);
         // TODO EGGMAIL: approximate vertical alignment support:
         // start/center/end/stretch -> default stretch
         const verticalAlign =
@@ -623,7 +619,7 @@ export class TableStrategyPlugin extends Plugin {
             if (band.clusters.length > 0) {
                 prevCluster = band.clusters[0];
                 const measures = {
-                    styleContext,
+                    contextStyleInfo,
                     isLast: !hasLastOffset && band.clusters.length === 1,
                     cluster: prevCluster,
                     emailNode,
@@ -643,7 +639,7 @@ export class TableStrategyPlugin extends Plugin {
                 const cluster = band.clusters[i];
                 const gap = this.gapX(prevCluster.rect, cluster.rect);
                 const measures = {
-                    styleContext,
+                    contextStyleInfo,
                     isLast: !hasLastOffset && i === band.clusters.length - 1,
                     cluster,
                     emailNode,
@@ -704,12 +700,9 @@ export class TableStrategyPlugin extends Plugin {
         return emailNode;
     }
 
-    buildCell({ styleContext, cluster, emailNode, widthRatio, verticalAlign, isLast }) {
+    buildCell({ contextStyleInfo, cluster, emailNode, widthRatio, verticalAlign, isLast }) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
-        const refs = {
-            root: {},
-            styleContext,
-        };
+        const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%` };
         if (verticalAlign) {
@@ -717,7 +710,7 @@ export class TableStrategyPlugin extends Plugin {
             attributes.valign = verticalAlign;
         }
         Object.assign(refs.root, {
-            style,
+            style: StyleInfo.from(style).merge(contextStyleInfo),
             attributes,
         });
         const layout = new CellLayout(refs.root);
@@ -752,7 +745,7 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     buildCellWithOffset({
-        styleContext,
+        contextStyleInfo,
         cluster,
         emailNode,
         widthRatio,
@@ -763,7 +756,7 @@ export class TableStrategyPlugin extends Plugin {
         const cells = [];
         const offsetEmailNode = this.buildEmptyCell({ widthRatio: offsetWidthRatio });
         const cellEmailNode = this.buildCell({
-            styleContext,
+            contextStyleInfo,
             widthRatio,
             emailNode,
             cluster,

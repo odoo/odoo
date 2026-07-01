@@ -155,14 +155,14 @@ export class SpacingPlugin extends Plugin {
         if (!this.isBlock(contextNode)) {
             return;
         }
-        const styleContext = { style: this.getContextStyleInfo(contextNode) };
+        const context = { style: this.getTableContextStyleInfo(contextNode) };
         if (
             emailNode.analysis.facts.desktopMarginStyleInfo &&
             !paragraphRelatedElements.includes(layout.ancestorTag)
         ) {
             const marginNode = this.buildMarginNode(emailNode.analysis.facts);
             if (marginNode) {
-                marginNode.layout.setAttributes(styleContext, "cell");
+                marginNode.layout.setAttributes(context, "cell");
                 emailNode.marginNode = marginNode;
             }
         }
@@ -172,7 +172,7 @@ export class SpacingPlugin extends Plugin {
         ) {
             const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
             if (paddingNode) {
-                paddingNode.layout.setAttributes(styleContext, "cell");
+                paddingNode.layout.setAttributes(context, "cell");
                 emailNode.paddingNode = paddingNode;
             }
         }
