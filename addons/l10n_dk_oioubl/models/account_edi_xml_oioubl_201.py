@@ -352,3 +352,20 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
         tax_subtotal_node = super()._get_tax_subtotal_node(vals)
         tax_subtotal_node['cbc:Percent'] = None
         return tax_subtotal_node
+
+    def _get_line_discount_allowance_charge_node(self, vals):
+        # Unlike EN16931/PEPPOL, OIOUBL requires a TaxCategory on line-level
+        # AllowanceCharge nodes (e.g. a discount on a product line).
+        # https://www.oioubl.info/Classes/en/AllowanceCharge.html
+        if not (node := super()._get_line_discount_allowance_charge_node(vals)):
+            return None
+
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(vals['base_line'], vals['tax_grouping_function'])
+        return {
+            **node,
+            'cac:TaxCategory': [
+                self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+                for grouping_key in aggregated_tax_details
+                if grouping_key
+            ],
+        }

@@ -202,6 +202,45 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])
 
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_line_discount_allowance_charge_contains_tax_category(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+            'invoice_payment_term_id': self.pay_terms_b.id,
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'narration': 'test narration',
+            'ref': 'ref_move_discount',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'price_unit': 500.0,
+                    'discount': 10.0,
+                    'tax_ids': [Command.set(self.dk_local_sale_tax_1.ids + self.dk_local_sale_tax_2.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        wizard = self.env['account.move.send.wizard'] \
+            .with_context(active_model=invoice._name, active_ids=invoice.ids) \
+            .create({})
+        wizard.action_send_and_print()
+
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        xml_tree = self.get_xml_tree_from_attachment(invoice.ubl_cii_xml_id)
+        allowance_charge_nodes = xml_tree.findall('.//{*}InvoiceLine/{*}AllowanceCharge')
+        self.assertEqual(len(allowance_charge_nodes), 1)
+
+        tax_category_nodes = allowance_charge_nodes[0].findall('{*}TaxCategory')
+        self.assertGreaterEqual(len(tax_category_nodes), 1)
+        self.assertTrue(all(
+            tax_category.find('{*}ID').get('schemeID') == 'urn:oioubl:id:taxcategoryid-1.3'
+            for tax_category in tax_category_nodes
+        ))
+
     #########
     # IMPORT
     #########
