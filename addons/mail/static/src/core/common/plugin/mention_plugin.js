@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { generateThreadMentionElement } from "@mail/utils/common/format";
+import { generateThreadMentionElement, messageUrlRegExp } from "@mail/utils/common/format";
+import { setAttributes } from "@web/core/utils/xml";
 
 export class MentionPlugin extends Plugin {
     static id = "mention";
@@ -67,6 +68,16 @@ export class MentionPlugin extends Plugin {
                 selector: "a.o-discuss-mention",
                 checker: (el) => true,
             },
+            {
+                selector: 'a[href*="mail/message/"]',
+                checker: (el) => this.isValidMessageMentionElement(el),
+                validMentionsHandler: (messageLinks) => {
+                    this.prepareValidMessageMentions(messageLinks);
+                    if (this.store.prettifyMessageMentions(messageLinks)) {
+                        this.dependencies.history.addStep();
+                    }
+                },
+            }
         ];
     }
 
@@ -101,6 +112,31 @@ export class MentionPlugin extends Plugin {
                 this.dependencies.history.addStep();
             }
         }
+    }
+
+    /**
+     * @param {HTMLElement} element
+     * @returns {boolean}
+     */
+    isValidMessageMentionElement(el) {
+        return messageUrlRegExp.exec(el.getAttribute("href"));
+    }
+
+    /**
+     * @param {HTMLElement[]} messageLinks
+     */
+    prepareValidMessageMentions(messageLinks) {
+        messageLinks.forEach((el) => {
+            const messageMatch = messageUrlRegExp.exec(el.getAttribute("href"));
+            setAttributes(el, {
+                class: "o_message_redirect",
+                "data-oe-id": messageMatch[1],
+                "data-oe-model": "mail.message",
+                "data-oe-protected": "true",
+                contenteditable: "false",
+                target: false,
+            });
+        });
     }
 
     async isValidChannelMentionElement(el) {

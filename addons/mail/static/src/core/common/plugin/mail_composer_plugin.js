@@ -3,6 +3,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { messageUrlRegExp } from "@mail/utils/common/format";
 
 const ALLOWED_TAGS = [
     "A",
@@ -28,7 +29,7 @@ const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o_channel_redirect", "
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "link", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
@@ -54,6 +55,7 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     setup() {
@@ -105,6 +107,15 @@ export class MailComposerPlugin extends Plugin {
         [...sanitizedFragment.childNodes].forEach(removeStyle);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.addStep();
+        return true;
+    }
+
+    handlePasteText(selection, text) {
+        const messageMatch = messageUrlRegExp.exec(text);
+        if (!messageMatch) {
+            return false;
+        }
+        this.dependencies.link.insertLink(text, text);
         return true;
     }
 }
