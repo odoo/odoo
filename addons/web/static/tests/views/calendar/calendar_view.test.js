@@ -2019,6 +2019,35 @@ test(`create all day event in week mode (no quickCreate)`, async () => {
     expect.verifySteps(["doAction"]);
 });
 
+test(`event end is flagged as implicit only when not selected by the user`, async () => {
+    mockTimeZone(2);
+    Event._records = [];
+
+    let expectImplicitEnd;
+    mockService("action", {
+        doAction(request) {
+            expect.step("doAction");
+            expect(request.context.calendar_default_implicit_end).toBe(expectImplicitEnd);
+        },
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week" quick_create="0"/>`,
+    });
+
+    // The user picked the end, so it is not flagged as implicit.
+    expectImplicitEnd = undefined;
+    await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
+
+    // The end is only a default, so it is flagged for server-side defaults to override.
+    expectImplicitEnd = true;
+    await clickAllDaySlot("2016-12-13");
+
+    expect.verifySteps(["doAction", "doAction"]);
+});
+
 test(`create event in month mode`, async () => {
     mockTimeZone(2);
     Event._records = [];
@@ -2358,6 +2387,7 @@ test(`open form view`, async () => {
             default_start: "2016-12-27",
             default_stop: "2016-12-27",
             default_is_all_day: true,
+            calendar_default_implicit_end: true,
             lang: "en",
             tz: "taht",
             uid: serverState.userId,
@@ -2384,6 +2414,7 @@ test(`create and edit event in month mode (all_day: false)`, async () => {
                     default_start: "2016-12-27 11:00:00", // 7:00 + 4h
                     default_stop: "2016-12-27 23:00:00", // 19:00 + 4h
                     default_allday: true,
+                    calendar_default_implicit_end: true,
                     lang: "en",
                     tz: "taht",
                     uid: serverState.userId,
@@ -2499,6 +2530,7 @@ test(`readonly date_start field`, async () => {
             default_start: "2016-12-27",
             default_stop: "2016-12-27",
             default_is_all_day: true,
+            calendar_default_implicit_end: true,
             lang: "en",
             tz: "taht",
             uid: serverState.userId,
@@ -2550,6 +2582,7 @@ test(`readonly calendar view`, async () => {
             default_start: "2016-12-27",
             default_stop: "2016-12-27",
             default_is_all_day: true,
+            calendar_default_implicit_end: true,
             lang: "en",
             tz: "taht",
             uid: serverState.userId,
@@ -4056,6 +4089,7 @@ test(`calendar fallback to form view id in action if necessary`, async () => {
                     default_start: "2016-12-13 06:00:00",
                     default_stop: "2016-12-13 18:00:00",
                     default_allday: true,
+                    calendar_default_implicit_end: true,
                     allowed_company_ids: [1],
                 },
             });
