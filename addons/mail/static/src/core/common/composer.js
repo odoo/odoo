@@ -362,6 +362,7 @@ export class Composer extends Component {
                 onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
+                handleValidPartnerMention: this.handleValidPartnerMention.bind(this),
             },
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
@@ -676,6 +677,13 @@ export class Composer extends Component {
         return markup`<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
+    async handleValidPartnerMention(partnerLinks) {
+        this.props.composer.mentionedPartners = [];
+        for (const partnerLink of partnerLinks) {
+            this.props.composer.mentionedPartners.push(this.store["res.partner"].get(Number(partnerLink.dataset.oeId)));
+        }
+    }
+
     clear() {
         this.props.composer.clear();
         browser.localStorage.removeItem(this.props.composer.localId);
@@ -907,6 +915,7 @@ export class Composer extends Component {
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
+            partnerIdsMentionToken,
             replyToMessageId,
             fromFullComposer = composer.restoredFromFullComposer,
         }) => {
@@ -918,6 +927,9 @@ export class Composer extends Component {
                     JSON.stringify({
                         emailAddSignature,
                         replyToMessageId,
+                        partnerIdsMentionToken: Object.keys(partnerIdsMentionToken || {}).length
+                            ? partnerIdsMentionToken
+                            : undefined,
                         composerHtml: isMarkup(composerHtml)
                             ? ["markup", composerHtml]
                             : composerHtml,
@@ -932,16 +944,23 @@ export class Composer extends Component {
                     saveContentToLocalStorage({ ...args[0], fromFullComposer: true }),
             });
         } else {
+            const partner_ids_mention_token = {};
+            for (const partner of composer.mentionedPartners) {
+                if (partner?.mention_token) {
+                    partner_ids_mention_token[partner.id] = partner.mention_token;
+                }
+            }
             saveContentToLocalStorage({
                 composerHtml: composer.composerHtml,
                 emailAddSignature: true,
+                partnerIdsMentionToken: partner_ids_mention_token,
                 replyToMessageId: composer.replyToMessage?.id,
                 fromFullComposer: false,
             });
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         let config;
         try {
@@ -961,6 +980,19 @@ export class Composer extends Component {
         }
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
+        }
+        if (Array.isArray(config.partnerIdsMentionToken)) {
+            await this.store.fetchStoreData("partners_no_fields", {
+                partner_ids: config.partnerIdsMentionToken.keys(),
+                partner_ids_mention_token: config.partnerIdsMentionToken,
+            });
+            for (const partnerId in config.partnerIdsMentionToken) {
+                const partner = this.store["res.partner"].get(partnerId);
+                if (!partner) {
+                    continue;
+                }
+                partner.mention_token = config.partnerIdsMentionToken[partnerId];
+            }
         }
     }
 
