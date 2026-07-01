@@ -694,6 +694,10 @@ class Users(models.Model):
             # the new ones to other existing users
             old_groups = self._default_groups()
 
+        if 'email' in values and not self._is_internal():
+            if not tools.single_email_re.match(values.get('email')):
+                raise ValidationError(_('Invalid Email! Please enter a valid email address.'))
+
         res = super(Users, self).write(values)
 
         if old_groups:
