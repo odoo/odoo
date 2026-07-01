@@ -29,7 +29,7 @@ export class AllocationReport extends Component {
             return false;
         }
         return this.productLines.some((line) =>
-            line.freeQty() > 0 && line.needs && line.needs.some((need) => need.allocateQuantity())
+            line.freeQty() > 0 && line.needs && line.needs.some((need) => need.quantityToAllocate())
         );
     })
 
@@ -80,7 +80,7 @@ export class AllocationReport extends Component {
             const key = this._getOperationKey(outMove);
             if (!needsByOperations[key]) {
                 needsByOperations[key] = {
-                    allocateQuantity: signal(0),
+                    quantityToAllocate: signal(0),
                     availableQuantity: 0,
                     isReserved: signal(false),
                     moves: [outMove],
@@ -148,7 +148,10 @@ export class AllocationReport extends Component {
             // Do the allocation.
             const notAssignedMoves = outLine.moves
                 .filter(move => !move.is_reserved && !move.move_orig_ids.length);
-            const outDemandQty = notAssignedMoves.reduce((qty, move) => qty += move.quantity, 0);
+            const outDemandQty = notAssignedMoves.reduce(
+                (qty, move) => (qty += move.quantity - move.reserved_quantity),
+                0
+            );
             const quantityToReserve = Math.min(productLine.freeQty(), outDemandQty);
             if (!quantityToReserve) {
                 return; // Avoid useless RPC if nothing to reserve.
@@ -163,7 +166,7 @@ export class AllocationReport extends Component {
             productLine.freeQty.set(productLine.freeQty() - quantityToReserve);
         } else {
             // Free allocated quantity.
-            const quantityToFree = outLine.allocateQuantity() || outLine.moves.reduce(
+            const quantityToFree = outLine.quantityToAllocate() || outLine.moves.reduce(
                 (qtySum, move) => qtySum + (move.is_reserved ? move.quantity : 0), 0
             );
             const updatedData = await this.ormService.call(
@@ -183,33 +186,33 @@ export class AllocationReport extends Component {
      * Share available quantity between all needs.
      */
     shareQuantity(productLine) {
-        let quantityToAllocate = productLine.freeQty();
+        let freeQuantity = productLine.freeQty();
         for (const outLine of productLine.needs) {
-            outLine.allocateQuantity = outLine.allocateQuantity || signal(0);
+            outLine.quantityToAllocate = outLine.quantityToAllocate || signal(0);
             outLine.isReserved = outLine.isReserved || signal(false);
-            outLine.reservedQuantity = outLine.reservedQuantity || signal(0);
+            outLine.allocatedQuantity = outLine.allocatedQuantity || signal(0);
 
-            let allocateQuantity = 0;
-            let reservedQuantity = 0;
+            let quantityToAllocate = 0;
+            let allocatedQuantity = 0;
             let isReserved = false;
             for (const outMove of outLine.moves) {
                 const hasOriginMoves = Boolean(outMove.move_orig_ids.length);
                 isReserved = isReserved || outMove.is_reserved || hasOriginMoves;
-                if (!outMove.is_reserved && quantityToAllocate > 0) {
-                    const qtyForThisNeed = Math.min(quantityToAllocate, outMove.quantity);
-                    allocateQuantity += qtyForThisNeed;
-                    quantityToAllocate -= qtyForThisNeed;
+                if (!outMove.is_reserved && freeQuantity > 0) {
+                    const qtyForThisNeed = Math.min(freeQuantity, outMove.quantity - outMove.reserved_quantity);
+                    quantityToAllocate += qtyForThisNeed;
+                    freeQuantity -= qtyForThisNeed;
                 } else if (outMove.is_reserved) {
-                    reservedQuantity += outMove.quantity;
+                    allocatedQuantity += outMove.quantity;
                 }
             }
-            outLine.allocateQuantity.set(allocateQuantity);
+            outLine.quantityToAllocate.set(quantityToAllocate);
             if (outLine.hidden === undefined) {
                 // Set `hidden` only once to not override it when `shareQuantity` is called again.
-                outLine.hidden = signal(!(allocateQuantity || reservedQuantity));
+                outLine.hidden = signal(!(quantityToAllocate || allocatedQuantity));
             }
             outLine.isReserved.set(isReserved);
-            outLine.reservedQuantity.set(reservedQuantity);
+            outLine.allocatedQuantity.set(allocatedQuantity);
         }
     }
 
@@ -310,7 +313,7 @@ export class AllocationReport extends Component {
         for (const productLine of this.productLines) {
             const allocionData = [productLine.sourceIds, []];
             for (const need of productLine.needs) {
-                const possibleAllocationQty = need.allocateQuantity();
+                const possibleAllocationQty = need.quantityToAllocate();
                 if (possibleAllocationQty) {
                     const moveIds = need.moves.map((move) => move.id);
                     allocionData[1].push([moveIds, possibleAllocationQty]);
