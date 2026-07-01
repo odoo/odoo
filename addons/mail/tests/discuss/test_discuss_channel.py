@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 from markupsafe import Markup
+from psycopg2 import errors
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
@@ -1224,3 +1225,18 @@ class TestChannelInternals(MailCommon, HttpCase):
         result = self.make_jsonrpc_request("/discuss/search", {"term": "test"})
         channel_ids = [c["id"] for c in result.get("discuss.channel", [])]
         self.assertEqual(channel_ids[0], favorite.id, "Favorite channel should come first")
+
+    @mute_logger("odoo.sql_db")
+    def test_chat_cannot_be_duplicated_with_same_partners(self):
+        self.env["discuss.channel"]._get_or_create_chat(self.partner_employee.ids)
+        with self.assertRaises(errors.UniqueViolation):
+            self.env["discuss.channel"].create(
+                {
+                    "name": "Chat",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        Command.create({"partner_id": self.partner_employee.id}),
+                        Command.create({"partner_id": self.env.user.partner_id.id}),
+                    ],
+                }
+            )
