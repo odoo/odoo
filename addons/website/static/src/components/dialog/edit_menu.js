@@ -389,6 +389,7 @@ export class EditMenuDialog extends Component {
                 data.push(menuFields);
             }
         });
+
         await this.orm.call(
             "website.menu",
             "save",
