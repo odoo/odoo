@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-14 13:45+0000\n"
+"PO-Revision-Date: 2026-06-06 13:18+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_skills/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_skills
 #. odoo-python
@@ -52,6 +52,8 @@ msgstr ""
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">No Certifications available!</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">Aucune certification disponible !"
+"</p>"
 
 #. module: hr_skills
 #. odoo-python
@@ -64,6 +66,12 @@ msgid ""
 "                Show Skill Types\n"
 "                </a>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">Aucune certification disponible. "
+"Accédez aux types de compétences !</p>\n"
+"<a type=\"action\" name=\"hr_skills.hr_skill_type_action\" class=\"btn btn-"
+"primary\">\n"
+"Afficher les types de compétences\n"
+"</a>"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
@@ -398,13 +406,13 @@ msgstr "Craigmore South Junior Primary School"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Create Resume Lines"
-msgstr ""
+msgstr "Créer des lignes de CV"
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Create Skills"
-msgstr ""
+msgstr "Créer des compétences"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -445,7 +453,7 @@ msgstr "Réflexion critique"
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Current"
-msgstr ""
+msgstr "Actuel"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__current_employee_skill_ids
@@ -742,7 +750,7 @@ msgstr "Expérience"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 msgid "Experience -"
-msgstr ""
+msgstr "Expérience -"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__course_type__external
@@ -1002,6 +1010,8 @@ msgstr ""
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "If skills are missing, they can be created by an HR officer."
 msgstr ""
+"Si des compétences sont manquantes, elles peuvent être créées par un "
+"responsable RH."
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_report__active
@@ -1448,7 +1458,7 @@ msgstr "Ouverture à la critique"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_organizational
 msgid "Organizational"
-msgstr "Organisationnel"
+msgstr "Sens de l’organisation"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -1527,7 +1537,7 @@ msgstr "Phillips, Jones and Brown"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Pick a skill from the list"
-msgstr ""
+msgstr "Choisissez une compétence dans la liste"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_mit_burns_lester_and_cuevas
@@ -1960,7 +1970,7 @@ msgstr "Compétences"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Skills & Certifications"
-msgstr ""
+msgstr "Compétences et certifications"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_department_view_kanban
@@ -2153,13 +2163,13 @@ msgstr "Logopède"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 msgid "There are no resume lines on this employee."
-msgstr ""
+msgstr "Il n'y a aucune ligne de CV pour cet employé."
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "There are no skills defined in the library."
-msgstr ""
+msgstr "Aucune compétence n'est définie dans la bibliothèque."
 
 #. module: hr_skills
 #: model_terms:ir.actions.act_window,help:hr_skills.hr_employee_skill_report_action
@@ -2184,7 +2194,7 @@ msgstr "Gestion du temps"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Timeline"
-msgstr ""
+msgstr "Chronologie"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
@@ -2422,7 +2432,7 @@ msgstr "heures"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "hours)"
-msgstr ""
+msgstr "heures)"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__is_certification
