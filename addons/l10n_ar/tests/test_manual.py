@@ -339,11 +339,21 @@ class TestArManual(common.TestArCommon):
         self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)
 
     def test_l10n_ar_vat_with_non_numeric_value(self):
+        partner = self.env["res.partner"].create({"name": "AR Company", "country_id": self.env.ref("base.ar").id})
+
         with self.assertRaises(ValidationError) as e:
-            with Form(self.partner) as partner_form:
-                partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
-                partner_form.vat = "test"
+            partner.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
+            partner.vat = "test"
         self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+
+        with self.assertRaises(ValidationError) as e:
+            partner.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_CUIL")
+            partner.vat = "1234567890a"
+        self.assertIn('Only numbers allowed for "CUIL"', str(e.exception))
+
+        partner.l10n_latam_identification_type_id = self.env.ref("l10n_latam_base.it_pass")
+        partner.vat = "A12345678"
+        self.assertEqual(partner.vat, "A12345678")
 
     def test_create_debit_note_for_credit_note(self):
         """
