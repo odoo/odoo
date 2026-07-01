@@ -108,8 +108,8 @@ class TremolG03Driver(SerialDriver):
 
         except serial.serialutil.SerialTimeoutException:
             pass
-        except Exception:
-            _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
+        except Exception:  # noqa: BLE001
+            _logger.warning('Error while probing %s with protocol %s', device, protocol.name)
 
     # ----------------
     # HELPERS
@@ -167,7 +167,7 @@ class TremolG03Driver(SerialDriver):
                     try:
                         response = self._connection.read(output_size)
                     except serial.serialutil.SerialTimeoutException:
-                        _logger.exception('Timeout error while reading response to command %s', msg)
+                        _logger.warning('Timeout error while reading response to command %s', msg)
                         self.data['status'] = "Device timeout error"
                 else:
                     time.sleep(self._protocol.measureDelay)
@@ -175,14 +175,14 @@ class TremolG03Driver(SerialDriver):
                 _logger.debug('Debug send response: %s', response)
                 if not response:
                     self.data['status'] = "No response"
-                    _logger.error("Sent request: %s,\n Received no response", request)
+                    _logger.warning("Sent request: %s,\n Received no response", request)
                     self.abort_post()
                     break
                 if response[0] == ACK:
                     # In the case where either byte is not 0x30, there has been an error
                     if response[2] != 0x30 or response[3] != 0x30:
                         self.data['status'] = response[2:4].decode('cp1251')
-                        _logger.error(
+                        _logger.warning(
                             "Sent request: %s,\n Received fiscal device error: %s \n Received command error: %s",
                             request, FD_ERRORS.get(response[2], 'Unknown fiscal device error'),
                             COMMAND_ERRORS.get(response[3], 'Unknown command error'),
@@ -192,7 +192,7 @@ class TremolG03Driver(SerialDriver):
                     replies.append('')
                 elif response[0] == NACK:
                     self.data['status'] = "Received NACK"
-                    _logger.error("Sent request: %s,\n Received NACK \x15", request)
+                    _logger.warning("Sent request: %s,\n Received NACK \x15", request)
                     self.abort_post()
                     break
                 elif response[0] == 0x02:
@@ -221,7 +221,7 @@ class TremolG03Driver(SerialDriver):
             _logger.info("Invoice successfully cancelled")
         else:
             self.data['status'] += "\n The invoice could not be cancelled."
-            _logger.error("Failed to cancel invoice, received response: %s", response)
+            _logger.warning("Failed to cancel invoice, received response: %s", response)
 
 
 class TremolG03Controller(http.Controller):

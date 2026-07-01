@@ -84,7 +84,7 @@ class DisplayDriver(Driver):
             data = json.loads(response.content.decode())
             return data.get(self.device_identifier)
         except requests.exceptions.RequestException:
-            _logger.exception("Failed to get display URL from server")
+            _logger.warning("Failed to get display URL from server")
         except json.decoder.JSONDecodeError:
             return response.content.decode('utf8')
 
