@@ -1,4 +1,5 @@
 import { ForecastKanbanController } from "@crm/views/forecast_kanban/forecast_kanban_controller";
+import { CrmControlPanel } from "@crm/views/crm_control_panel/crm_control_panel";
 import { CrmKanbanArchParser } from "@crm/views/crm_kanban/crm_kanban_arch_parser";
 import { ForecastKanbanModel } from "@crm/views/forecast_kanban/forecast_kanban_model";
 import { ForecastKanbanRenderer } from "@crm/views/forecast_kanban/forecast_kanban_renderer";
@@ -11,6 +12,7 @@ export const forecastKanbanView = {
     ArchParser: CrmKanbanArchParser,
     Model: ForecastKanbanModel,
     Controller: ForecastKanbanController,
+    ControlPanel: CrmControlPanel,
     Renderer: ForecastKanbanRenderer,
     SearchModel: ForecastSearchModel,
 };

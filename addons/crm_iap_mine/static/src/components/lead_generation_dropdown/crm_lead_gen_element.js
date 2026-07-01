@@ -19,6 +19,10 @@ patch(LeadGenerationDropdown.prototype, {
 
     async openLeadGenerationForm() {
         const action = await this.orm.call("crm.lead", "action_generate_leads", []);
+        const default_team_id = this.env.searchModel.context.default_team_id;
+        if (default_team_id) {
+            Object.assign(action.context, { default_team_id });
+        }
         this.action.doAction(action);
     }
 });

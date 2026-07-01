@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_switch_buttons')]" position="before">
+            <TeamSwitcher/>
+        </xpath>
+    </t>
+
+</templates>

@@ -385,7 +385,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Leads Generation" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
+                <calendar string="Leads Generation" js_class="crm_calendar" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
                     <field name="expected_revenue"/>
                     <field name="partner_id" avatar_field="avatar_128"/>
                     <field name="user_id" filters="1" invisible="1"/>
@@ -469,7 +469,7 @@
             <field name="name">crm.lead.view.activity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <activity string="Leads or Opportunities">
+                <activity string="Leads or Opportunities" js_class="crm_activity">
                     <field name="user_id"/>
                     <field name="company_currency"/>
                     <templates>
@@ -829,7 +829,7 @@
             <field name="name">crm.lead.view.graph</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities" sample="1">
+                <graph string="Opportunities" js_class="crm_graph" sample="1">
                     <field name="stage_id"/>
                     <field name="user_id"/>
                     <field name="color" invisible="1"/>
@@ -869,7 +869,7 @@
             <field name="name">crm.lead.view.pivot</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <pivot string="Pipeline Analysis" sample="1">
+                <pivot string="Pipeline Analysis" js_class="crm_pivot" sample="1">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="expected_revenue" type="measure"/>
@@ -1150,8 +1150,8 @@
             <field name="context">{
                     'default_type': 'opportunity',
                     'search_default_assigned_to_me': 1,
-                    'show_user_team_stages': 1,
                     'show_lead_gen_button': True,
+                    'show_team_switcher': True,
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>
@@ -1203,6 +1203,7 @@
                 'search_default_date_deadline': 1,
                 'forecast_field': 'date_deadline',
                 'crm_lead_prioritize_team_help': 1,
+                'show_team_switcher': True,
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
