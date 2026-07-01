@@ -75,3 +75,24 @@ El stack Docker de la API no arranca tal cual en Windows/Debian actual. Fue nece
 
 - `crlibre_client.py` debe parsear `data["resp"]` (no la raíz) y validar `status == "ok"`.
 - La URL base para llamadas desde el contenedor Odoo será `http://host.docker.internal:8080` (verificado en Task 8).
+
+## Task 8 — Evidencia del PoC end-to-end (2026-06-30)
+
+Prueba manual en la UI (`http://localhost:8069`) sobre la factura `INV/2026/00008`:
+
+- Estado FE: **generated**
+- Clave (50 díg.): `50630062600070232071700100001010000000010133579480`
+- Consecutivo (20 díg.): `00100001010000000010`
+- XML: 2480 bytes, namespace **v4.4**, bien formado (`<?xml ...>` ... `</FacturaElectronica>`).
+- Chatter registró: "Comprobante FE generado (PoC). Clave: ...".
+
+### Lección de operación (importante)
+Tras cambiar el código del addon, **hay que reiniciar el contenedor `erp-odoo-1`**
+(`docker restart erp-odoo-1`) y hacer **recarga forzada** en el navegador (`Ctrl+Shift+R`).
+El `-u ... --stop-after-init` corre en un proceso aparte y actualiza la BD, pero el
+servidor que atiende el navegador se queda con el registry y los assets viejos, lo que
+produce el error `"account.move"."l10n_cr_fe_state" field is undefined` en el cliente Owl.
+
+### Observaciones (limitaciones del PoC, no fallos)
+- Si la factura está en una moneda != CRC, el PoC envía `tipo_cambio=1` (no mapea el real).
+- Si la factura no lleva impuestos, el XML no incluye desglose de IVA.
