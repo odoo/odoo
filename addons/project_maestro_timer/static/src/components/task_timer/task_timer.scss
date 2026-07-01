@@ -1,0 +1,30 @@
+.o_task_timer {
+    .o_timer_display {
+        letter-spacing: 0.06em;
+        min-width: 95px;
+        justify-content: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    // Ponto pulsante de "gravando"
+    .o_timer_dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        flex-shrink: 0;
+        animation: o_timer_blink 1s step-start infinite;
+    }
+}
+
+@keyframes o_timer_blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.15; }
+}
+
+.o_timer_stop_dialog {
+    .o_timer_elapsed_badge {
+        display: inline-block;
+    }
+}

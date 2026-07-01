@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="view_payment_setup_wizard_form" model="ir.ui.view">
+    <field name="name">payment.setup.wizard.form</field>
+    <field name="model">payment.setup.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Configurar Pagamentos">
+        <sheet>
+
+          <!-- Cabeçalho / título -->
+          <div class="row mb-4">
+            <div class="col-12 text-center">
+              <h2 class="text-primary">
+                <i class="fa fa-credit-card me-2"/>
+                Configuração de Pagamentos
+              </h2>
+              <p class="text-muted">
+                Configure Stripe e Mercado Pago em um único passo.
+                Os dois podem ficar ativos ao mesmo tempo — o cliente escolhe na hora de pagar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Status atual -->
+          <div class="row mb-4">
+            <div class="col-6">
+              <div t-att-class="'alert ' + ('alert-success' if record.stripe_configured.value else 'alert-secondary') + ' text-center py-2'">
+                <field name="stripe_configured" invisible="1"/>
+                <i t-att-class="'fa fa-' + ('check-circle text-success' if record.stripe_configured.value else 'circle text-muted') + ' me-1'"/>
+                <strong>Stripe</strong>
+                <span t-if="record.stripe_configured.value" class="ms-1 text-success">Ativo</span>
+                <span t-else="" class="ms-1 text-muted">Não configurado</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div t-att-class="'alert ' + ('alert-success' if record.mercado_pago_configured.value else 'alert-secondary') + ' text-center py-2'">
+                <field name="mercado_pago_configured" invisible="1"/>
+                <i t-att-class="'fa fa-' + ('check-circle text-success' if record.mercado_pago_configured.value else 'circle text-muted') + ' me-1'"/>
+                <strong>Mercado Pago</strong>
+                <span t-if="record.mercado_pago_configured.value" class="ms-1 text-success">Ativo</span>
+                <span t-else="" class="ms-1 text-muted">Não configurado</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── STRIPE ────────────────────────────────────────────── -->
+          <div class="o_payment_provider_block border rounded p-3 mb-4"
+               style="border-left: 4px solid #635bff !important;">
+            <div class="d-flex align-items-center mb-3">
+              <div style="width:36px;height:36px;background:#635bff;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px">
+                <i class="fa fa-stripe text-white" style="font-size:20px"/>
+              </div>
+              <div class="flex-grow-1">
+                <h5 class="mb-0" style="color:#635bff">Stripe</h5>
+                <small class="text-muted">Cartão de crédito/débito · Melhor taxa para assinaturas recorrentes (3,49% + R$0,39)</small>
+              </div>
+              <field name="enable_stripe" widget="boolean_toggle"/>
+            </div>
+
+            <div invisible="not enable_stripe">
+              <div class="alert alert-info py-2 mb-3">
+                <i class="fa fa-info-circle me-1"/>
+                Acesse <a href="https://dashboard.stripe.com/apikeys" target="_blank">dashboard.stripe.com/apikeys</a>
+                para copiar suas chaves.
+              </div>
+              <group col="2">
+                <group>
+                  <field name="stripe_publishable_key"
+                         placeholder="pk_live_xxxxxxxxxxxx"
+                         required="enable_stripe"/>
+                  <field name="stripe_secret_key"
+                         password="True"
+                         placeholder="sk_live_xxxxxxxxxxxx"
+                         required="enable_stripe"/>
+                </group>
+                <group>
+                  <field name="stripe_mode" widget="radio"/>
+                  <div class="text-muted small mt-2">
+                    <i class="fa fa-lightbulb-o me-1 text-warning"/>
+                    Use <b>Teste</b> primeiro para validar a integração sem cobrar ninguém.
+                    Troque para <b>Produção</b> quando estiver pronto.
+                  </div>
+                </group>
+              </group>
+            </div>
+          </div>
+
+          <!-- ── MERCADO PAGO ───────────────────────────────────────── -->
+          <div class="o_payment_provider_block border rounded p-3 mb-4"
+               style="border-left: 4px solid #00b1ea !important;">
+            <div class="d-flex align-items-center mb-3">
+              <div style="width:36px;height:36px;background:#00b1ea;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px">
+                <i class="fa fa-money text-white" style="font-size:18px"/>
+              </div>
+              <div class="flex-grow-1">
+                <h5 class="mb-0" style="color:#009ee3">Mercado Pago</h5>
+                <small class="text-muted">PIX (0,99%) · Boleto (R$3,49) · Cartão · Ideal para clientes pessoa física</small>
+              </div>
+              <field name="enable_mercado_pago" widget="boolean_toggle"/>
+            </div>
+
+            <div invisible="not enable_mercado_pago">
+              <div class="alert alert-info py-2 mb-3">
+                <i class="fa fa-info-circle me-1"/>
+                Acesse <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank">mercadopago.com.br/developers</a>
+                → Suas integrações → Selecione sua app → Credenciais de produção.
+              </div>
+              <group col="2">
+                <group>
+                  <field name="mercado_pago_access_token"
+                         password="True"
+                         placeholder="APP_USR-0000000000000000-000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-000000000"
+                         required="enable_mercado_pago"/>
+                  <field name="mercado_pago_public_key"
+                         placeholder="APP_USR-00000000-0000-0000-0000-000000000000"
+                         help="Necessário para habilitar pagamentos com cartão e tokenização (assinaturas)."/>
+                </group>
+                <group>
+                  <field name="mercado_pago_mode" widget="radio"/>
+                  <div class="text-muted small mt-2">
+                    <i class="fa fa-lightbulb-o me-1 text-warning"/>
+                    Use <b>Teste</b> para validar com cartões de teste do MP.
+                    A <b>Public Key</b> é opcional, mas necessária para habilitar assinaturas recorrentes.
+                  </div>
+                </group>
+              </group>
+            </div>
+          </div>
+
+          <!-- Nota de rodapé -->
+          <div class="text-center text-muted small mt-2">
+            <i class="fa fa-lock me-1"/>
+            As chaves são armazenadas de forma segura no banco de dados e nunca são exibidas em texto claro após salvar.
+          </div>
+
+        </sheet>
+
+        <footer>
+          <button name="action_apply"
+                  string="✅ Ativar Pagamentos"
+                  type="object"
+                  class="btn-primary"
+                  data-hotkey="s"/>
+          <button string="Fechar" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Ação que abre o wizard -->
+  <record id="action_payment_setup_wizard" model="ir.actions.act_window">
+    <field name="name">Configurar Stripe e Mercado Pago</field>
+    <field name="res_model">payment.setup.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_payment_setup_wizard_form"/>
+    <field name="target">new</field>
+  </record>
+
+</odoo>

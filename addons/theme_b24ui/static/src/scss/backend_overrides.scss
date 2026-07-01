@@ -1,0 +1,98 @@
+// Tema B24 UI - ajustes visuais de componentes do backend
+// Baseado nos tokens do Air Design System (b24ui-clone / Bitrix24).
+// Apenas casca visual via SCSS/CSS — não altera XML/OWL nem lógica.
+
+// Tons "soft" de status (fundos claros), usados em alerts/badges/highlights
+$o-b24-soft-primary: #e6f4ff !default;
+$o-b24-soft-success: #e7fff5 !default;
+$o-b24-soft-warning: #fff4d6 !default;
+$o-b24-soft-danger: #ffe8e8 !default;
+
+// = Tipografia (headings com peso "light", como no Air Design System)
+// ----------------------------------------------------------------------------
+h1, h2, h3, .h1, .h2, .h3 {
+    font-weight: 300;
+}
+
+h4, h5, .h4, .h5 {
+    font-weight: 400;
+}
+
+h6, .h6 {
+    font-weight: 600;
+}
+
+// = Navbar
+// ----------------------------------------------------------------------------
+.o_main_navbar {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+// = Kanban cards
+// ----------------------------------------------------------------------------
+.o_kanban_record, .o_kanban_view .o_kanban_group {
+    border-radius: $o-border-radius-lg;
+}
+
+.o_kanban_record:not(.o_kanban_ghost) {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.15s ease-in-out;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+}
+
+// = Botões (alturas/raios inspirados na escala md do b24ui: 34px / radius-sm)
+// ----------------------------------------------------------------------------
+.btn {
+    border-radius: $o-border-radius-sm;
+    font-weight: 500;
+}
+
+.btn-primary {
+    box-shadow: none;
+}
+
+.btn-link {
+    color: $o-main-link-color;
+}
+
+// = Inputs / formulários (altura ~34px = tamanho "md" do b24ui)
+// ----------------------------------------------------------------------------
+.o_input, .form-control, .form-select {
+    border-radius: $o-border-radius-sm;
+    min-height: 34px;
+}
+
+.o_input:focus, .form-control:focus, .form-select:focus {
+    border-color: $o-brand-primary;
+    box-shadow: 0 0 0 1px $o-brand-primary;
+}
+
+.o_list_view, .o_form_view .o_form_sheet {
+    border-radius: $o-border-radius;
+}
+
+// = Status / badges e alerts (cores + fundos "soft" do Air Design System)
+// ----------------------------------------------------------------------------
+.badge.text-bg-success { background-color: $o-success !important; }
+.badge.text-bg-warning { background-color: $o-warning !important; }
+.badge.text-bg-danger { background-color: $o-danger !important; }
+
+.alert-success { background-color: $o-b24-soft-success; border-color: $o-success; }
+.alert-warning { background-color: $o-b24-soft-warning; border-color: $o-warning; }
+.alert-danger { background-color: $o-b24-soft-danger; border-color: $o-danger; }
+.alert-info { background-color: $o-b24-soft-primary; border-color: $o-brand-primary; }
+
+// = Ícones
+// ----------------------------------------------------------------------------
+// Nota: o b24icons é um pacote de SVGs Vue, incompatível diretamente com o
+// sistema de fonte de ícones do Odoo (Font Awesome + sprite "oi"). Trocar
+// 1:1 exigiria substituir cada glifo usado nos templates OWL, fora do escopo
+// de um tema CSS. Mantemos os ícones nativos do Odoo; só alinhamos a cor de
+// destaque dos botões "ícone apenas" do menu de apps à paleta do tema.
+.o_navbar_apps_menu .dropdown-toggle:hover .oi,
+.o_menu_toggle:hover .oi {
+    color: $o-brand-primary;
+}
