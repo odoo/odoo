@@ -232,7 +232,7 @@ class BaseDocumentLayout(models.TransientModel):
 
     def document_layout_save(self):
         # meant to be overridden
-        return self.env.context.get('report_action') or {'type': 'ir.actions.act_window_close'}
+        return self.env.context.get('report_action') or {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def _get_asset_style(self):
         """
