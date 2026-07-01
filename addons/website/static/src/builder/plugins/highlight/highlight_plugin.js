@@ -1,7 +1,7 @@
-import { useChildEnv, useRef } from "@web/owl2/utils";
+import { useChildEnv } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, xml, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
@@ -297,14 +297,14 @@ class HighlightToolbarButton extends Component {
         getSelection: Function,
     };
     static template = xml`
-        <button t-custom-ref="root" t-attf-class="btn btn-light o-select-highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
+        <button t-ref="this.root" t-attf-class="btn btn-light o-select-highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
             <i class="fa oi oi-text-effect oi-fw py-1"/>
         </button>
     `;
+    root = signal(null);
 
     setup() {
         this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());
-        this.root = useRef("root");
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {
             componentStack: this.componentStack,
@@ -321,7 +321,7 @@ class HighlightToolbarButton extends Component {
     }
     openHighlightConfigurator() {
         this.props.onClick();
-        this.configuratorPopover.open(this.root.el, {
+        this.configuratorPopover.open(this.root(), {
             stackState: this.componentStack,
             style: "max-height: 300px; width: 262px",
             class: "d-flex flex-column p-2",

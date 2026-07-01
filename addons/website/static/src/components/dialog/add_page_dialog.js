@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useSubEnv } from "@web/owl2/utils";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { rpc } from "@web/core/network/rpc";
@@ -15,7 +15,7 @@ import {
     removeTextHighlight,
     getObservedEls,
 } from "@website/js/highlight_utils";
-import { Component, onWillStart, onMounted, props, status, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onMounted, props, signal, status, proxy, t } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
@@ -37,10 +37,11 @@ export class AddPageConfirmDialog extends Component {
         Switch,
         WebsiteDialog,
     };
+    autofocusRef = signal(null);
 
     setup() {
         super.setup();
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
         this.state = proxy({
             addMenu: true,
@@ -74,13 +75,12 @@ class AddPageTemplatePreview extends Component {
         },
         onPageKeydown: { type: Function },
     };
+    iframeRef = signal(null);
+    previewRef = signal(null);
+    holderRef = signal(null);
 
     setup() {
         super.setup();
-        this.iframeRef = useRef("iframe");
-        this.previewRef = useRef("preview");
-        this.holderRef = useRef("holder");
-
         this.resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const targetEl = entry.target.querySelector(".o_text_highlight") || entry.target;
@@ -90,13 +90,13 @@ class AddPageTemplatePreview extends Component {
         });
 
         onMounted(async () => {
-            const holderEl = this.holderRef.el;
+            const holderEl = this.holderRef();
             holderEl.classList.add("o_loading");
             if (!this.props.template.key) {
                 return;
             }
-            const previewEl = this.previewRef.el;
-            const iframeEl = this.iframeRef.el;
+            const previewEl = this.previewRef();
+            const iframeEl = this.iframeRef();
             // Firefox replaces the built content with about:blank.
             const isFirefox = isBrowserFirefox();
             if (isFirefox && !(iframeEl?.contentDocument.readyState === "complete")) {
@@ -226,7 +226,7 @@ class AddPageTemplatePreview extends Component {
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");
             }
-            if (!this.previewRef.el) {
+            if (!this.previewRef()) {
                 // Stop the process when preview is removed
                 return;
             }
@@ -234,7 +234,7 @@ class AddPageTemplatePreview extends Component {
             await iframeEl.contentDocument.fonts.ready;
             holderEl.classList.remove("o_loading");
             const adjustHeight = () => {
-                if (!this.previewRef.el) {
+                if (!this.previewRef()) {
                     // Stop ajusting height when preview is removed.
                     return;
                 }
@@ -280,10 +280,10 @@ class AddPageTemplatePreview extends Component {
     }
 
     select() {
-        if (this.holderRef.el.classList.contains("o_loading")) {
+        if (this.holderRef().classList.contains("o_loading")) {
             return;
         }
-        const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
+        const wrapEl = this.iframeRef().contentDocument.getElementById("wrap").cloneNode(true);
         const templateId = this.props.template.key;
         for (const previewEl of wrapEl.querySelectorAll(
             ".o_new_page_snippet_preview, .s_dialog_preview"
@@ -323,13 +323,12 @@ class AddPageTemplatePreviews extends Component {
     static components = {
         AddPageTemplatePreview,
     };
+    container = signal(null);
 
     setup() {
         super.setup();
-        this.container = useRef("previews-container");
-
         this.onPageKeydown = useMatrixKeyNavigation(
-            () => [this.container.el],
+            () => [this.container()],
             ".o_page_template",
             ".o_button_area"
         );
@@ -355,13 +354,15 @@ class AddPageTemplates extends Component {
     static components = {
         AddPageTemplatePreviews,
     };
+    tabsRef = signal(null);
+    panesRef = signal(null);
+    autofocusRef = signal(null);
+    inactiveTabRef = signal(null);
 
     setup() {
         super.setup();
         this.website = useService("website");
-        this.tabsRef = useRef("tabs");
-        this.panesRef = useRef("panes");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
         const isMobile = isMobileView();
         this.state = proxy({
@@ -449,7 +450,7 @@ class AddPageTemplates extends Component {
 
     onTabListBtnClick(id) {
         this.state.activePageId = id;
-        const tabEl = this.tabsRef.el.querySelector(`[data-id=${id}]`);
+        const tabEl = this.tabsRef().querySelector(`[data-id=${id}]`);
         this.props.onTemplatePageChanged(tabEl.textContent);
     }
 
@@ -470,7 +471,7 @@ class AddPageTemplates extends Component {
         if (!["arrowleft", "arrowright", "arrowdown", "arrowup"].includes(hotkey)) {
             return;
         }
-        const currentTabEl = this.tabsRef.el.querySelector(`[data-id=${ev.target.dataset.id}]`);
+        const currentTabEl = this.tabsRef().querySelector(`[data-id=${ev.target.dataset.id}]`);
         if (["arrowleft", "arrowup"].includes(hotkey)) {
             currentTabEl.previousElementSibling?.focus();
         } else {
@@ -495,10 +496,11 @@ export class AddPageDialog extends Component {
         AddPageTemplates,
         AddPageTemplatePreviews,
     };
+    autofocusRef = signal(null);
 
     setup() {
         super.setup();
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
         this.primaryTitle = _t("Create");
         this.switchLabel = _t("Add to menu");

@@ -65,7 +65,7 @@
                         <div class="form-text text-muted">Upload a zip with multiple weights for best results.</div>
                     </div>
                     <div class="col-md-8">
-                        <input t-custom-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
+                        <input t-ref="this.fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
                             id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
                             t-on-change="this.onUploadChange"
                         />

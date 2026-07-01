@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
@@ -188,12 +187,12 @@ export class EditMenuDialog extends Component {
     };
     static props = ["rootID?", "close", "save?"];
 
+    menuEditor = signal(null);
+
     setup() {
         this.orm = useService("orm");
         this.website = useService("website");
         this.dialogs = useService("dialog");
-
-        this.menuEditor = useRef("menu-editor");
 
         this.state = proxy({ rootMenu: {} });
 
@@ -229,7 +228,7 @@ export class EditMenuDialog extends Component {
                 // of the placeholder.
                 element.style.width = getComputedStyle(placeholder).width;
                 element.style.marginLeft =
-                    parent && element.parentElement === this.menuEditor.el ? "2rem" : "";
+                    parent && element.parentElement === this.menuEditor() ? "2rem" : "";
             },
             preventDrag: (el) => el.querySelector(":scope > button"),
         });

@@ -64,7 +64,7 @@
 
 <t t-name="website.EditMenuDialog">
     <WebsiteDialog close="this.props.close" title.translate="Edit Menu" primaryTitle.translate="Save" primaryClick="() => this.onClickSave()">
-        <ul t-custom-ref="menu-editor" class="oe_menu_editor list-unstyled">
+        <ul t-ref="this.menuEditor" class="oe_menu_editor list-unstyled">
             <t t-foreach="this.state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
                 <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)" createPage="(id) => this.createPage(id)"/>
             </t>

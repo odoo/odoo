@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -8,11 +7,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 class GoogleFontAutoComplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.sourcesListRef = useRef("sourcesList");
-    }
-
     get dropdownOptions() {
         return {
             ...super.dropdownOptions,
@@ -22,8 +16,8 @@ class GoogleFontAutoComplete extends AutoComplete {
 
     onInput(ev) {
         super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
+        if (this.listRef()) {
+            this.listRef().scrollTop = 0;
         }
     }
 }
@@ -93,8 +87,8 @@ export class AddFontDialog extends Component {
         uploadedFontFaces: undefined,
         previewText: _t("The quick brown fox jumps over the lazy dog."),
     });
+    fileInput = signal(null);
     setup() {
-        this.fileInput = useRef("fileInput");
         this.dialog = useService("dialog");
         this.orm = useService("orm");
     }
@@ -138,7 +132,7 @@ export class AddFontDialog extends Component {
         ];
     }
     async onGoogleFontSelect(fontFamily) {
-        this.fileInput.el.value = "";
+        this.fileInput().value = "";
         this.state.uploadedFonts = [];
         this.state.uploadedFontName = undefined;
         this.state.uploadedFontFaces = undefined;
@@ -170,7 +164,7 @@ export class AddFontDialog extends Component {
     }
     async onUploadChange(e) {
         this.state.googleFontFamily = undefined;
-        const file = this.fileInput.el.files[0];
+        const file = this.fileInput().files[0];
         if (!file) {
             this.state.uploadedFonts = [];
             this.state.uploadedFontName = undefined;

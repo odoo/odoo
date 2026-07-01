@@ -11,7 +11,7 @@
                 Page Title
             </label>
             <div class="col-md-9">
-                <input type="text" t-custom-model="this.state.name" class="form-control" required="required" t-custom-ref="autofocus"/>
+                <input type="text" t-custom-model="this.state.name" class="form-control" required="required" t-ref="this.autofocusRef"/>
             </div>
             <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label.translate="Add to menu" value="this.state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
         </div>
@@ -19,8 +19,8 @@
 </t>
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
-    <div t-custom-ref="holder" class="o_page_template position-relative mx-auto mx-lg-3 placeholder-glow transition-base" t-att-class="{ 'mt-4': !this.props.firstRow }" t-att-data-configurator-page="this.props.template and this.props.template.is_from_configurator">
-        <div t-custom-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
+    <div t-ref="this.holderRef" class="o_page_template position-relative mx-auto mx-lg-3 placeholder-glow transition-base" t-att-class="{ 'mt-4': !this.props.firstRow }" t-att-data-configurator-page="this.props.template and this.props.template.is_from_configurator">
+        <div t-ref="this.previewRef" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
         <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{this.props.animationDelay + 500}ms"/>
         <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="this.select" t-on-keydown="this.props.onPageKeydown">
             <div t-if="this.props.template and this.props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="this.props.template.name"/>
@@ -37,13 +37,13 @@
 
 <t t-name="website.AddPageTemplatePreview">
     <t t-call="website.AddPageTemplatePreviewWrapper">
-        <iframe class="border-0 pe-none transition-base" t-custom-ref="iframe" src="about:blank" aria-label="Add page template"/>
+        <iframe class="border-0 pe-none transition-base" t-ref="this.iframeRef" src="about:blank" aria-label="Add page template"/>
     </t>
 </t>
 
 <t t-name="website.AddPageTemplatePreviews">
     <div class="container-fluid py-3 py-xl-4">
-        <div class="row g-0" t-custom-ref="previews-container">
+        <div class="row g-0" t-ref="this.container">
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
                 <i class="fa fa-2x fa-info-circle me-3"/>
                 To add your page to this category, open the page properties: "Site -&gt; Properties".<br/>
@@ -73,7 +73,7 @@
         <t t-if="this.state.isMobile">
             <!-- Menu -->
             <div t-if="!this.state.activePageId" class="d-flex flex-column h-100" >
-                <div t-custom-ref="tabs" class="list-group list-group-flush overflow-y-auto flex-grow-1">
+                <div t-ref="this.tabsRef" class="list-group list-group-flush overflow-y-auto flex-grow-1">
                     <button type="button" class="list-group-item list-group-item-action p-3 fw-bold" t-on-click="this.addBlankPage">
                         <i class="oi oi-plus me-2"/>Blank Page
                     </button>
@@ -115,7 +115,7 @@
                     t-on-click="this.addBlankPage">
                     <i class="oi oi-plus me-2" role="img" aria-hidden="true"/>Blank Page
                 </button>
-                <div t-custom-ref="tabs"
+                <div t-ref="this.tabsRef"
                     class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto flex-grow-1"
                     role="tablist"
                     aria-orientation="vertical"
@@ -130,7 +130,7 @@
                             t-att-tabindex="this.state.activePageId === page.id ? 0 : -1"
                             t-att-aria-selected="this.state.activePageId === page.id ? 'true' : 'false'"
                             t-att-aria-controls="'pane_' + page.id"
-                            t-custom-ref="{{this.state.activePageId === page.id ? 'autofocus' : page.id}}"
+                            t-ref="this.state.activePageId === page.id ? this.autofocusRef : this.inactiveTabRef"
                         >
                             <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
                             <t t-out="page.title"/>
@@ -138,7 +138,7 @@
                     </t>
                 </div>
             </aside>
-            <div t-custom-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200"
+            <div t-ref="this.panesRef" class="position-relative flex-grow-1 flex-shrink-1 bg-200"
                  role="application"
                  aria-roledescription="New page template"
                  aria-describedby="o_page_templates_pane_description">

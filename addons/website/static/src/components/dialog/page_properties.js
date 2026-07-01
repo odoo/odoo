@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
@@ -8,7 +7,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onMounted, onWillDestroy, props, xml, proxy, t } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, props, signal, xml, proxy, t } from "@odoo/owl";
 import { FormController, formControllerProps } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
@@ -29,11 +28,12 @@ export class PageDependencies extends Component {
         onDependenciesLoaded: { type: Function, optional: true },
     };
 
+    action = signal(null);
+
     setup() {
         super.setup();
         this.orm = useService("orm");
 
-        this.action = useRef("action");
         this.sprintf = sprintf;
 
         onMounted(() => {
@@ -64,7 +64,7 @@ export class PageDependencies extends Component {
     }
 
     showDependencies() {
-        const popover = window.Popover.getOrCreateInstance(this.action.el, {
+        const popover = window.Popover.getOrCreateInstance(this.action(), {
             title: _t("Dependencies"),
             boundary: "viewport",
             placement: "right",
@@ -78,7 +78,7 @@ export class PageDependencies extends Component {
     }
 
     async destroyDependenciesPopover() {
-        const actionEl = this.action.el;
+        const actionEl = this.action();
         const popover = window.Popover.getInstance(actionEl);
         if (popover) {
             // If popover is hiding (animation), wait for the animation to
@@ -177,11 +177,12 @@ export class DuplicatePageDialog extends Component {
         close: Function,
         pageIds: { type: Array, element: Number },
     };
+    autofocusRef = signal(null);
 
     setup() {
         this.orm = useService("orm");
         this.website = useService("website");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
         this.state = proxy({
             name: "",

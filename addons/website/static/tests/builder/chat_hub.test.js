@@ -30,7 +30,7 @@ test("chat hub offsets when website in edition mode", async () => {
         setup() {
             super.setup();
             onRendered(() => {
-                const rootEl = this.root.el;
+                const rootEl = this.root();
                 if (!rootEl) {
                     return;
                 }

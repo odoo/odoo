@@ -8,6 +8,7 @@ import {
     onWillDestroy,
     onWillUnmount,
     props,
+    signal,
     status,
     proxy,
     t,
@@ -22,7 +23,7 @@ import { useBus, useChildRef, useForwardRefToParent, useService } from "@web/cor
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { isBlock } from "@html_editor/utils/blocks";
@@ -52,12 +53,15 @@ export class MassMailingIframe extends Component {
         withBuilder: t.boolean().optional(),
     });
 
+    sidebarRef = signal(null);
+    iframeRef = signal(null);
+    iframeWrapperRef = signal(null);
+
     setup() {
         this.ui = useService("ui");
         this.overlayRef = useChildRef();
-        this.iframeRef = useForwardRefToParent("iframeRef");
-        this.iframeWrapperRef = useForwardRefToParent("iframeWrapperRef");
-        this.sidebarRef = useRef("sidebarRef");
+        useForwardRefToParent(this.iframeRef, "iframeRef");
+        useForwardRefToParent(this.iframeWrapperRef, "iframeWrapperRef");
         this.isRTL = localization.direction === "rtl";
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
@@ -96,7 +100,7 @@ export class MassMailingIframe extends Component {
             this.setupBasicEditor();
         }
         const iframeResize = () => {
-            const iframe = this.iframeRef.el;
+            const iframe = this.iframeRef();
             if (this.state.isMobile) {
                 // aspect-ratio of internal screen of /html_builder/static/img/phone.svg
                 iframe.style.height = "668px";
@@ -116,7 +120,7 @@ export class MassMailingIframe extends Component {
             }
         };
         const sidebarResize = () => {
-            const sidebar = this.sidebarRef.el;
+            const sidebar = this.sidebarRef();
             if (!sidebar) {
                 return;
             }
@@ -182,7 +186,7 @@ export class MassMailingIframe extends Component {
                     if (status(this) === "destroyed") {
                         return;
                     }
-                    this.iframeRef.el.contentDocument.body.classList[
+                    this.iframeRef().contentDocument.body.classList[
                         this.state.showFullscreen ? "add" : "remove"
                     ]("o_mass_mailing_iframe_fullscreen");
                     this.throttledResize();
@@ -197,7 +201,7 @@ export class MassMailingIframe extends Component {
                     if (status(this) === "destroyed") {
                         return;
                     }
-                    this.iframeRef.el.contentDocument.body.classList[
+                    this.iframeRef().contentDocument.body.classList[
                         this.state.isMobile ? "add" : "remove"
                     ]("o_mass_mailing_iframe_mobile");
                     this.throttledResize();
@@ -223,7 +227,7 @@ export class MassMailingIframe extends Component {
     async setupIframe() {
         let loadingError;
         try {
-            this.bundleControls = await loadIframe(this.iframeRef.el, (iframe) => {
+            this.bundleControls = await loadIframe(this.iframeRef(), (iframe) => {
                 iframe.contentDocument?.head.appendChild(this.renderHeadContent());
                 return this.loadIframeAssets();
             });
@@ -236,29 +240,29 @@ export class MassMailingIframe extends Component {
             throw loadingError;
         }
         this.htmlResizeObserver = new ResizeObserver(this.throttledResize);
-        this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe");
+        this.iframeRef().contentDocument.body.classList.add("o_in_iframe");
         if (this.props.withBuilder) {
-            this.iframeRef.el.contentDocument.body.classList.add("o_mass_mailing_with_builder");
+            this.iframeRef().contentDocument.body.classList.add("o_mass_mailing_with_builder");
         } else {
-            this.iframeRef.el.contentDocument.body.classList.add("bg-white");
+            this.iframeRef().contentDocument.body.classList.add("bg-white");
         }
-        this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
+        this.iframeRef().contentDocument.body.appendChild(this.renderBodyContent());
         this.htmlResizeObserver.observe(
-            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+            this.iframeRef().contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );
         if (this.props.readonly) {
             this.retargetLinks(
-                this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+                this.iframeRef().contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
             );
-            this.fixInlineDynamicPlaceholders(this.iframeRef.el);
+            this.fixInlineDynamicPlaceholders(this.iframeRef());
         }
         // Set `ready` symbol for tours
-        this.iframeRef.el.setAttribute("is-ready", "true");
-        this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
-            this.iframeRef.el.removeAttribute("is-ready");
+        this.iframeRef().setAttribute("is-ready", "true");
+        this.iframeRef().contentWindow.addEventListener("beforeUnload", () => {
+            this.iframeRef().removeAttribute("is-ready");
         });
-        this.iframeRef.el.contentWindow.addEventListener("focus", this.props.onFocus.bind(this));
-        this.iframeLoaded.resolve(this.iframeRef.el);
+        this.iframeRef().contentWindow.addEventListener("focus", this.props.onFocus.bind(this));
+        this.iframeLoaded.resolve(this.iframeRef());
         this.state.ready = true;
     }
 
@@ -296,7 +300,7 @@ export class MassMailingIframe extends Component {
             ref: this.overlayRef,
         };
         this.editor.attachTo(
-            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+            this.iframeRef().contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );
     }
 
@@ -311,8 +315,8 @@ export class MassMailingIframe extends Component {
             iframeBundles = ["mass_mailing.assets_inside_basic_editor_iframe"];
         }
         return Promise.all([
-            loadIframeBundles(this.iframeRef.el, iframeBundles),
-            loadGoogleFonts(this.iframeRef.el.contentDocument),
+            loadIframeBundles(this.iframeRef(), iframeBundles),
+            loadGoogleFonts(this.iframeRef().contentDocument),
         ]);
     }
 
@@ -342,7 +346,7 @@ export class MassMailingIframe extends Component {
             },
             isMobile: this.state.isMobile,
             toggleMobile: () => {
-                this.iframeRef.el.contentDocument.body.scrollTop = 0;
+                this.iframeRef().contentDocument.body.scrollTop = 0;
                 this.state.isMobile = !this.state.isMobile;
             },
             editableSelector: IFRAME_VALUE_SELECTOR,
@@ -392,11 +396,11 @@ export class MassMailingIframe extends Component {
             this.state.isMobile = false;
             if (this.editor?.editable) {
                 this.state.emptyBody = !isVisible(this.editor.editable);
-                this.iframeRef.el.contentDocument.getSelection().removeAllRanges();
+                this.iframeRef().contentDocument.getSelection().removeAllRanges();
                 this.editor.shared.builderOptions.deactivateContainers();
             }
         }
-        this.iframeRef.el.contentDocument.body.classList.toggle(
+        this.iframeRef().contentDocument.body.classList.toggle(
             "pe-none",
             this.state.isSmall ? false : !this.state.showFullscreen
         );

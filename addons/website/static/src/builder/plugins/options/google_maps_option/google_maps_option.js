@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onMounted, onWillDestroy, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
@@ -9,6 +9,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
     static id = "google_maps_option";
     static template = "website.GoogleMapsOption";
     static dependencies = ["googleMapsOption"];
+    inputRef = signal(null);
 
     async setup() {
         super.setup();
@@ -19,7 +20,6 @@ export class GoogleMapsOption extends BaseOptionComponent {
         /** @type {function(Element, Place):void} */
         this.commitPlace = this.dependencies.googleMapsOption.commitPlace;
 
-        this.inputRef = useRef("inputRef");
         /** @type {{ formattedAddress: string }} */
         this.state = proxy({
             formattedAddress: this.env.getEditingElement().dataset.pinAddress || "",
@@ -31,7 +31,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
             () => [this.state.formattedAddress]
         );
         onMounted(async () => {
-            this.initializeAutocomplete(this.inputRef.el);
+            this.initializeAutocomplete(this.inputRef());
         });
         onWillDestroy(() => {
             if (this.autocompleteListener) {

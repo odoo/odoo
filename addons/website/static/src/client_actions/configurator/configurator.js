@@ -1,4 +1,4 @@
-import { useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -15,7 +15,15 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
-import { Component, onMounted, onWillStart, proxy, useEffect, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    proxy,
+    signal,
+    useEffect,
+    useListener,
+} from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -220,12 +228,15 @@ export class DescriptionScreen extends Component {
         navigate: Function,
         skip: Function,
     };
+    industrySelection = signal(null);
+    purposeSelectionRef = signal(null);
+    autofocusRef = signal(null);
+    scratchTypeRef = signal(null);
+    scratchPositioningRef = signal(null);
     setup() {
-        this.industrySelection = useRef("industrySelection");
-        this.purposeSelectionRef = useRef("purposeSelection");
         this.state = useStore();
         this.orm = useService("orm");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
         this.splitRegex = /[|\s,]+/;
 
@@ -245,10 +256,10 @@ export class DescriptionScreen extends Component {
         useLayoutEffect(
             (selectedType, selectedIndustry) => {
                 if (selectedType && !selectedIndustry) {
-                    this.industrySelection.el?.querySelector("input").focus();
+                    this.industrySelection()?.querySelector("input").focus();
                 }
                 if (selectedIndustry) {
-                    this.purposeSelectionRef.el?.focus();
+                    this.purposeSelectionRef()?.focus();
                 }
             },
             () => [this.state.selectedType, this.state.selectedIndustry]
@@ -533,9 +544,9 @@ export class PaletteSelectionScreen extends Component {
         navigate: Function,
         skip: Function,
     };
+    logoInputRef = signal(null);
     setup() {
         this.state = useStore();
-        this.logoInputRef = useRef("logoSelectionInput");
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.hoverState = proxy({ palette: null });
@@ -640,7 +651,7 @@ Return ONLY a JSON object with:
     }
 
     uploadLogo() {
-        this.logoInputRef.el?.click();
+        this.logoInputRef()?.click();
     }
 
     /**
@@ -651,8 +662,8 @@ Return ONLY a JSON object with:
     async removeLogo(ev) {
         ev.stopPropagation();
         // Permit to trigger onChange even with the same file.
-        if (this.logoInputRef.el) {
-            this.logoInputRef.el.value = "";
+        if (this.logoInputRef()) {
+            this.logoInputRef().value = "";
         }
         if (this.state.logoAttachmentId) {
             await this._removeAttachments([this.state.logoAttachmentId]);
@@ -663,7 +674,7 @@ Return ONLY a JSON object with:
     }
 
     async changeLogo() {
-        const logoSelectInput = this.logoInputRef.el;
+        const logoSelectInput = this.logoInputRef();
         if (!logoSelectInput) {
             return;
         }

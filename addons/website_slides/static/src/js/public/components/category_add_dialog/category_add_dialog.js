@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { props, signal, t } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
@@ -12,19 +12,21 @@ export class CategoryAddDialog extends ConfirmationDialog {
         channelId: t.string(),
     });
 
+    inputRef = signal(null);
+
     setup() {
         super.setup();
-        this.inputRef = useAutofocus();
+        useAutofocus({ ref: this.inputRef });
         this.csrf_token = odoo.csrf_token;
         this.lastInputValue;
     }
 
     _confirm() {
         this.execButton(() => {
-            if (this.inputRef.el.value === this.lastInputValue) {
+            if (this.inputRef().value === this.lastInputValue) {
                 return;
             }
-            this.lastInputValue = this.inputRef.el.value;
+            this.lastInputValue = this.inputRef().value;
             return this.props.confirm({ formEl: this.modalRef.el.querySelector("form") });
         });
     }

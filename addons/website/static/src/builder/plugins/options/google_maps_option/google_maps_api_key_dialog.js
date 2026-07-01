@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
@@ -24,7 +23,6 @@ export class GoogleMapsApiKeyDialog extends Component {
             apiKey: this.props.originalApiKey,
             apiKeyValidation: { isValid: false },
         });
-        this.apiKeyInput = useRef("apiKeyInput");
         // @TODO mysterious-egg: the `google_map service` is a duplicate of the
         // `website_map_service`, but without the dependency on public
         // interactions. These are used only to restart the interactions once

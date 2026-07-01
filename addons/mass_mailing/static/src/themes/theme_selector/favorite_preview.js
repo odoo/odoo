@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, signal } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { renderToFragment } from "@web/core/utils/render";
 
@@ -10,9 +9,10 @@ export class FavoritePreview extends Component {
         styleSheetsPromise: Promise,
     };
 
+    shadowRootRef = signal(null);
+
     setup() {
         this.isRTL = localization.direction === "rtl";
-        this.shadowRootRef = useRef("shadowRoot");
         this.styleSheets = [];
         this.root = undefined;
         onWillStart(async () => {
@@ -32,7 +32,7 @@ export class FavoritePreview extends Component {
     }
 
     setupShadowRoot() {
-        this.root = this.shadowRootRef.el.attachShadow({ mode: "open" });
+        this.root = this.shadowRootRef().attachShadow({ mode: "open" });
         this.root.adoptedStyleSheets = [...this.root.adoptedStyleSheets, ...this.styleSheets];
         this.root.replaceChildren(this.renderBodyContent());
     }

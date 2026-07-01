@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, signal } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { user } from "@web/core/user";
 import { ResCompanyUpdateDialog } from "../components/company_update_dialog";
@@ -12,12 +11,13 @@ export class SocialMediaLinks extends BaseOptionComponent {
     static template = "mass_mailing.SocialMediaLinks";
     static dependencies = ["builderActions", "history", "massMailingSocialMediaOptionPlugin"];
 
+    rootRef = signal(null);
+
     /** @override */
     setup() {
         super.setup();
         this.companies = user.allowedCompanies;
         this.overlayButtonsPlugin = this.env.editor.shared.overlayButtons;
-        this.rootRef = useRef("root");
 
         onWillStart(async () => {
             this.canEditCompanies = await user.checkAccessRight("res.company", "write");

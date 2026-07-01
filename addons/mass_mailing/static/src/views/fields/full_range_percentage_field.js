@@ -23,7 +23,7 @@ export class FullRangePercentageField extends PercentageField {
                     noSymbol: true,
                     field: this.props.record.fields[this.props.name],
                 }),
-            refName: "numpadDecimal",
+            ref: this.numpadDecimalRef,
             parse: (v) => parsePercentage(v),
         });
     }

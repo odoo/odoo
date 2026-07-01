@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, proxy } from "@odoo/owl";
+import { onWillStart, proxy, signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
@@ -9,6 +8,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
     static id = "social_media_links";
     static template = "website.SocialMediaLinks";
     static dependencies = ["socialMediaOptionPlugin", "history", "operation"];
+    rootRef = signal(null);
 
     setup() {
         super.setup();
@@ -26,7 +26,6 @@ export class SocialMediaLinks extends BaseOptionComponent {
                 }
             });
         });
-        this.rootRef = useRef("root");
         this.domState = useDomState((editingElement) => ({
             presentLinks: [...editingElement.querySelectorAll(":scope > a[href]")],
         }));

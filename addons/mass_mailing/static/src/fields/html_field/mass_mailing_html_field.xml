@@ -7,7 +7,7 @@
             <div class="d-flex">
                 <textarea name="codeView" t-custom-ref="codeView" class="o_codeview" t-att-value="this.value"
                     t-on-input="this.onTextareaInput"/>
-                <div t-if="this.state.showCodeView" t-custom-ref="codeViewButtonRef"
+                <div t-if="this.state.showCodeView" t-ref="this.codeViewButtonRef"
                     class="btn-group o_mass_mailing_code_view">
                     <button class="o_codeview_btn btn btn-primary" t-on-click="this.toggleCodeView" accesskey="d">
                         <i class="fa fa-code" />

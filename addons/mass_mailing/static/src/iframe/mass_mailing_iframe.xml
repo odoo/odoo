@@ -1,7 +1,7 @@
 <templates>
     <t t-name="mass_mailing.MassMailingIframe">
         <div class="o_mass_mailing_iframe_wrapper"
-            t-custom-ref="iframeWrapperRef"
+            t-ref="this.iframeWrapperRef"
             t-att-class="{
                 'o_mass_mailing_fullscreen': this.state.showFullscreen,
                 [this.props.extraClass]: this.props.extraClass,
@@ -30,12 +30,12 @@
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                             t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': this.props.showThemeSelector or this.props.showCodeView }"
-                            t-custom-ref="iframeRef"/>
+                            t-ref="this.iframeRef"/>
                     </div>
                 </div>
                 <div t-if="!this.props.readonly and this.props.withBuilder and !this.props.showThemeSelector and !this.props.showCodeView">
                     <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
-                        t-att-class="{ 'd-none': this.ui.isSmall or !this.state.showFullscreen }" t-custom-ref="sidebarRef">
+                        t-att-class="{ 'd-none': this.ui.isSmall or !this.state.showFullscreen }" t-ref="this.sidebarRef">
                         <LazyComponent t-if="this.state.ready" Component="'mass_mailing.MassMailingBuilder'"
                             props="() => ({
                                 builderProps: this.getBuilderProps(),

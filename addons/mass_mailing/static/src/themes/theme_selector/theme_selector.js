@@ -1,5 +1,13 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, status, useEffect, proxy } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    status,
+    useEffect,
+    proxy,
+    signal,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { FavoritePreview } from "./favorite_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -15,17 +23,18 @@ export class ThemeSelector extends Component {
         themesPromise: Promise,
         // Reactive wrapper for favoriteThemes promise: { promise }
         favoriteThemes: Object,
-        iframeRef: Object,
+        iframeRef: { type: Function },
     };
     static components = {
         FavoritePreview,
     };
 
+    themeSelectorWrapperRef = signal(null);
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.themeService = useService("mass_mailing.themes");
-        this.themeSelectorWrapperRef = useRef("themeSelectorWrapper");
         this.config = this.props.config;
         this.commonThemes = this.themeService.getCommonThemes();
         this.simpleThemes = this.themeService.getSimpleThemes();
@@ -56,10 +65,10 @@ export class ThemeSelector extends Component {
             if (status(this) === "destroyed") {
                 return;
             }
-            const iframe = this.props.iframeRef.el;
+            const iframe = this.props.iframeRef();
             iframe.style.width = "";
             const height = Math.trunc(
-                this.themeSelectorWrapperRef.el.getBoundingClientRect().height
+                this.themeSelectorWrapperRef().getBoundingClientRect().height
             );
 
             // If reducing the size of the frame would cause the scrollable element to become unscrollable,
@@ -83,7 +92,7 @@ export class ThemeSelector extends Component {
         });
         onMounted(() => {
             this.htmlResizeObserver = new ResizeObserver(this.throttledResize);
-            this.htmlResizeObserver.observe(this.themeSelectorWrapperRef.el);
+            this.htmlResizeObserver.observe(this.themeSelectorWrapperRef());
         });
         onWillUnmount(() => {
             this.htmlResizeObserver.disconnect();

@@ -1,5 +1,5 @@
-import { useChildEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
+import { useChildEnv, useChildSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { AnimateOption } from "./animate_option";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -17,15 +17,15 @@ export class AnimateTextPopover extends BaseOptionComponent {
         close: { type: Function, optional: true },
     };
     static components = { AnimateOption };
+    contentRef = signal(null);
 
     setup() {
         super.setup();
-        this.contentRef = useRef("content");
         this.resizeObserver = new ResizeObserver(() => {
             this.env[POSITION_BUS]?.trigger("update");
         });
         onMounted(() => {
-            this.resizeObserver.observe(this.contentRef.el);
+            this.resizeObserver.observe(this.contentRef());
         });
         onWillDestroy(() => {
             this.resizeObserver.disconnect();
@@ -44,11 +44,12 @@ export class AnimateText extends Component {
         isDisabled: Function,
     };
 
+    root = signal(null);
+
     setup() {
         this.state = proxy({});
         this.updateState();
 
-        this.root = useRef("root");
         useChildSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElement,
@@ -79,7 +80,7 @@ export class AnimateText extends Component {
         this.activeElement = element;
 
         this.updateState();
-        this.popover.open(this.root.el, {
+        this.popover.open(this.root(), {
             animateOptionProps: this.props.animateOptionProps,
             onReset: () => {
                 onReset(this.activeElement);

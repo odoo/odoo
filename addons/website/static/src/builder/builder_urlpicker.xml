@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website.AutoCompleteBuilderUrlPicker" t-inherit="web.AutoComplete">
-        <xpath expr="//div[@t-custom-ref='root']" position="attributes">
+        <xpath expr="//div[@t-ref='this.root']" position="attributes">
             <attribute name="t-att-data-action-id">this.info.actionId</attribute>
             <attribute name="t-att-data-action-param">this.info.actionParam</attribute>
             <attribute name="t-att-data-action-value">this.info.actionValue</attribute>

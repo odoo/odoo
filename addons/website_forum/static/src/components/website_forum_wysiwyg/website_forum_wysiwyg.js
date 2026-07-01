@@ -31,7 +31,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
         super.setup();
         if (this.props.resizable) {
             // Event listener added on template.
-            this.onResizerMouseDown = useResizer("content");
+            this.onResizerMouseDown = useResizer(this.contentRef);
         }
         const form = this.props.textareaEl.closest("form");
         // Prevent form submission behavior of buttons inside the form

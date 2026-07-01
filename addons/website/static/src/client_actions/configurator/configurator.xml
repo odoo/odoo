@@ -142,7 +142,7 @@
                                             t-on-click="() => this.selectWebsiteType(type.id)"
                                             class="dropdown-item o_change_website_type"
                                             role="menuitem"
-                                            t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
+                                            t-ref="type.id === 1 ? this.autofocusRef : this.scratchTypeRef">
                                         <t t-out="type.label"/>
                                     </button>
                                 </t>
@@ -152,7 +152,7 @@
                     </div>
                     <div t-att-class="this.state.selectedType ? '' : 'opacity-0'" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
                         <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                        <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
+                        <label class="o_configurator_industry_wrapper me-2" t-ref="this.industrySelection">
                             <AutoComplete
                                 placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
                                 value="this.state.selectedIndustry?.label ?? ''"
@@ -192,7 +192,7 @@
                                     <button t-on-click="() => this.selectPositioning(positioning)"
                                             class="dropdown-item o_change_website_purpose"
                                             role="menuitem"
-                                            t-custom-ref="{{positioning_first ? 'purposeSelection' : positioning}}">
+                                            t-ref="positioning_first ? this.purposeSelectionRef : this.scratchPositioningRef">
                                         <t t-out="positioning"/>
                                     </button>
                                 </t>
@@ -210,7 +210,7 @@
     <div class="o_configurator_screen o_palette_selection_screen min-vh-100 position-relative d-flex flex-row justify-content-between flex-nowrap">
         <div class="o_palette_selection_main_panel d-flex flex-column flex-grow-1 justify-content-between bg-view flex-xl-shrink-0">
             <div class="p-3 p-lg-5 pb-lg-0 o_palette_selection_intro d-flex flex-column flex-grow-1 mb-auto bg-view">
-                <input type="file" class="logo_selection_input d-none" t-on-change="this.changeLogo" name="logo_selection" t-custom-ref="logoSelectionInput" accept="image/*"/>
+                <input type="file" class="logo_selection_input d-none" t-on-change="this.changeLogo" name="logo_selection" t-ref="this.logoInputRef" accept="image/*"/>
                 <div>
                     <h1 class="o_configurator_typing_text">Choose your <b class="text-info">Color Palette</b></h1>
                     <p class="lead">
@@ -452,8 +452,7 @@
             >
                 <button
                     class="btn btn-secondary btn-lg px-4 py-2"
-                    t-on-click="this.getMoreThemes"
-                    t-custom-ref="extraThemesButton">
+                    t-on-click="this.getMoreThemes">
                     Generate more
                 </button>
             </div>

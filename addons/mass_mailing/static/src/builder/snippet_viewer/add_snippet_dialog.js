@@ -14,7 +14,7 @@ export class AddSnippetDialogSandboxed extends AddSnippetDialog {
     }
 
     renderIframeHead() {
-        const iframe = this.iframeRef.el;
+        const iframe = this.iframeRef();
         iframe.contentDocument.head.prepend(renderToFragment("mass_mailing.IframeHead"));
     }
 }
