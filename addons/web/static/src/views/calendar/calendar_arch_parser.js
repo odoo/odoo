@@ -58,12 +58,13 @@ export class CalendarArchParser {
 
         const popoverFieldNodes = {};
         const popoverTemplates = {};
+        const popoverFieldNames = [];
         const filtersInfo = {};
         visitXML(xmlDoc, (node) => {
             switch (node.tagName) {
                 case "field": {
                     const fieldName = node.getAttribute("name");
-                    fieldNames.add(fieldName);
+                    popoverFieldNames.push(fieldName);
 
                     const fieldInfo = Field.parseFieldNode(
                         node,
@@ -147,7 +148,7 @@ export class CalendarArchParser {
             isTimeHidden,
             monthOverflow,
             popover: {
-                fields: [...fieldNames],
+                fields: popoverFieldNames,
                 fieldNodes: popoverFieldNodes, // temporarily kept for backward compatibility
                 templates: popoverTemplates,
             },
