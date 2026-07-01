@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -6,6 +5,7 @@ import logging
 from odoo import _, api, fields, models
 from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
 from odoo.exceptions import ValidationError
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +19,7 @@ class EventBoothCategory(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
         domain=[('service_tracking', '=', 'event_booth')], default=_default_product_id,
+        init_column='_auto_init_product_id',
         groups="event.group_event_registration_desk")
     price = fields.Float(
         string='Price', compute='_compute_price', min_display_digits='Product Price', readonly=False,
@@ -85,26 +86,12 @@ class EventBoothCategory(models.Model):
             taxes = tax_ids.compute_all(category.price_reduce, category.currency_id, 1.0, product=category.product_id)
             category.price_reduce_taxinc = taxes['total_included'] or 0
 
-    def _init_column(self, column_name):
-        """ Initialize product_id for existing columns when installing sale
-        bridge, to ensure required attribute is fulfilled. """
-        if column_name != "product_id":
-            return super(EventBoothCategory, self)._init_column(column_name)
-
-        # fetch void columns
-        self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
-        booth_category_ids = self.env.cr.fetchall()
-        if not booth_category_ids:
-            return
-
-        # update existing columns
-        _logger.debug("Table '%s': setting default value of new column %s to unique values for each row",
-                      self._table, column_name)
-        default_booth_product = self._default_product_id()
-        if default_booth_product:
-            product_id = default_booth_product.id
-        else:
-            product_id = self.env['product.product'].create({
+    def _auto_init_product_id(self):
+        """ Initialize product_id during installation. """
+        product = self._default_product_id()
+        if not product:
+            # need to create it during installation (data files not yet loaded)
+            product = self.env['product.product'].create({
                 'name': 'Generic Event Booth Product',
                 'categ_id': self.env.ref('event_product.product_category_events').id,
                 'list_price': 100,
@@ -112,14 +99,14 @@ class EventBoothCategory(models.Model):
                 'type': 'service',
                 'service_tracking': 'event_booth',
                 'invoice_policy': 'order',
-            }).id
+            })
             self.env['ir.model.data'].create({
                 'name': 'product_product_event_booth',
                 'module': 'event_booth_sale',
                 'model': 'product.product',
-                'res_id': product_id,
+                'res_id': product.id,
             })
-        self.env.cr._obj.execute(
-            f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
-            (product_id, tuple(booth_category_ids))
-        )
+        self.env.execute_query(SQL(
+            "UPDATE %s SET product_id = %s WHERE product_id IS NULL",
+            SQL.identifier(self._table), product.id,
+        ))

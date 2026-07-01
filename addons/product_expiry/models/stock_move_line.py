@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 
 from odoo import api, fields, models
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockMoveLine(models.Model):
@@ -13,23 +11,11 @@ class StockMoveLine(models.Model):
     expiration_date = fields.Datetime(
         string='Expiration Date', compute='_compute_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
-        ' become dangerous and must not be consumed.')
-    removal_date = fields.Datetime(string='Removal Date', compute='_compute_removal_date', readonly=False, store=True)
+        ' become dangerous and must not be consumed.', init_column=lambda model: None)
+    removal_date = fields.Datetime(string='Removal Date', compute='_compute_removal_date', readonly=False, store=True, init_column=lambda model: None)
     is_expired = fields.Boolean(related='lot_id.product_expiry_alert')
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
-
-    def _auto_init(self):
-        """ Create column for 'expiration_date' here to avoid MemoryError when letting
-        the ORM compute it after module installation. Since both 'lot_id.expiration_date'
-        and 'product_id.use_expiration_date' are new fields introduced in this module,
-        there is no need for an UPDATE statement here.
-        """
-        if not column_exists(self.env.cr, "stock_move_line", "expiration_date"):
-            create_column(self.env.cr, "stock_move_line", "expiration_date", "timestamp")
-        if not column_exists(self.env.cr, "stock_move_line", "removal_date"):
-            create_column(self.env.cr, "stock_move_line", "removal_date", "timestamp")
-        return super()._auto_init()
 
     @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date', 'quant_id')
     def _compute_expiration_date(self):

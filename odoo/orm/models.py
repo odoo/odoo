@@ -2398,32 +2398,15 @@ class BaseModel(metaclass=MetaModel):
             if row['attnotnull']:
                 sql.drop_not_null(cr, self._table, row['attname'])
 
+    @deprecated("Since 20.0, field initialization is defined in Field.init_column")
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows. """
-        # get the default value; ideally, we should use default_get(), but it
-        # fails due to ir.default not being ready
         field = self._fields[column_name]
-        if field.default:
-            value = field.default(self)
-            value = field.convert_to_write(value, self)
-            value = field.convert_to_column_insert(value, self)
-        else:
-            value = None
-        # Write value if non-NULL, except for booleans for which False means
-        # the same as NULL - this saves us an expensive query on large tables,
-        # if the boolean is required we still write False to allow NOT NULL constraints.
-        necessary = (value is not None) if field.type != 'boolean' or field.required else value
-        if necessary:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                          self._table, column_name, value)
-            self.env.cr.execute(SQL(
-                "UPDATE %(table)s SET %(field)s = %(value)s WHERE %(field)s IS NULL",
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(column_name),
-                value=value,
-            ))
+        columns = sql.table_columns(self.env.cr, self._table)
+        field.update_db(self, columns)
 
     @api.ormcache()
+    @deprecated("Since 20.0, _table_has_rows is removed")
     def _table_has_rows(self) -> bool:
         """ Return whether the model's table has rows. This method should only
             be used when updating the database schema (:meth:`~._auto_init`).
@@ -2494,27 +2477,13 @@ class BaseModel(metaclass=MetaModel):
 
             # update the database schema for fields
             columns = sql.table_columns(cr, self._table)
-            fields_to_compute = []
 
             for field in sorted(self._fields.values(), key=lambda f: f.column_order):
                 if not field.store:
                     continue
                 if field.manual and not update_custom_fields:
                     continue            # don't update custom fields
-                new = field.update_db(self, columns)
-                if new and field.compute:
-                    fields_to_compute.append(field)
-
-            if fields_to_compute:
-                # mark existing records for computation now, so that computed
-                # required fields are flushed before the NOT NULL constraint is
-                # added to the database
-                cr.execute(SQL('SELECT id FROM %s', SQL.identifier(self._table)))
-                records = self.browse(row[0] for row in cr.fetchall())
-                if records:
-                    for field in fields_to_compute:
-                        _logger.info("Prepare computation of %s", field)
-                        self.env.add_to_compute(field, records)
+                field.update_db(self, columns)
 
         if self._auto:
             self._add_sql_constraints()

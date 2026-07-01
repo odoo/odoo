@@ -11,7 +11,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.db import FunctionStatus
 from odoo.tools import float_round, is_html_empty, lazy
-from odoo.tools.sql import SQL, column_exists, create_column
+from odoo.tools.sql import SQL
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.tools import text_from_html
@@ -131,6 +131,7 @@ class ProductTemplate(models.Model):
         string="Website Sequence",
         help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
+        init_column='_auto_init_website_sequence',
         copy=False,
         index=True,
     )
@@ -165,6 +166,7 @@ class ProductTemplate(models.Model):
     variants_default_code = fields.Char(
         compute="_compute_variants_default_code",
         store=True,
+        init_column='_auto_init_variants_default_code',
         index="trigram",
         help="Technical field to enhance performance when looking up default code of product"
         "variants (LIKE/ILIKE)",
@@ -197,30 +199,28 @@ class ProductTemplate(models.Model):
         )
     )
 
-    def _auto_init(self):
-        """Override _auto_init to prevent MemoryError on ecommerce installation in dbs with lots of
+    def _auto_init_variants_default_code(self):
+        """Prevent MemoryError on ecommerce installation in dbs with lots of
         products."""
-        if not column_exists(self.env.cr, "product_template", "variants_default_code"):
-            create_column(self.env.cr, "product_template", "variants_default_code", "varchar")
-            self.env.cr.execute(
-                SQL(
-                    """
-                    UPDATE product_template
-                    SET variants_default_code = variants.default_codes
-                    FROM (
-                        SELECT pt.id AS template_id,
-                               STRING_AGG(pv.default_code, %s) AS default_codes
-                        FROM product_template pt
-                        JOIN product_product pv ON pv.product_tmpl_id = pt.id
-                        WHERE pv.default_code IS NOT NULL
-                        GROUP BY pt.id
-                    ) AS variants
-                    WHERE product_template.id = variants.template_id
-                """,
-                    RARE_DELIMITER,
-                )
+        self.env.execute_query(
+            SQL(
+                """
+                UPDATE product_template
+                SET variants_default_code = variants.default_codes
+                FROM (
+                    SELECT pt.id AS template_id,
+                            STRING_AGG(pv.default_code, %s) AS default_codes
+                    FROM product_template pt
+                    JOIN product_product pv ON pv.product_tmpl_id = pt.id
+                    WHERE pv.default_code IS NOT NULL
+                    GROUP BY pt.id
+                ) AS variants
+                WHERE product_template.id = variants.template_id
+                AND variants_default_code IS NULL
+            """,
+                RARE_DELIMITER,
             )
-        return super()._auto_init()
+        )
 
     # === COMPUTE METHODS ===#
 
@@ -1125,30 +1125,27 @@ class ProductTemplate(models.Model):
             return "image_512"
         return "image_1024"
 
-    def _init_column(self, column_name):
+    def _auto_init_website_sequence(self):
         # to avoid generating a single default website_sequence when installing the module,
         # we need to set the default row by row for this column
-        if column_name == "website_sequence":
-            _logger.debug(
-                "Table '%s': setting default value of new column %s to unique values for each row",
-                self._table,
-                column_name,
-            )
-            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
-            prod_tmpl_ids = self.env.cr.dictfetchall()
-            max_seq = self._default_website_sequence()
-            query = f"""
-                UPDATE {self._table}
-                SET website_sequence = p.web_seq
-                FROM (VALUES %s) AS p(p_id, web_seq)
-                WHERE id = p.p_id
-            """
-            values_args = [
-                (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
-            ]
-            self.env.cr.execute_values(query, values_args)
-        else:
-            super()._init_column(column_name)
+        _logger.debug(
+            "Table '%s': setting default value of new column %s to unique values for each row",
+            self._table,
+            'website_sequence',
+        )
+        self.env.cr.execute(SQL("SELECT id FROM %s WHERE website_sequence IS NULL", SQL.identifier(self._table)))
+        prod_tmpl_ids = self.env.cr.dictfetchall()
+        max_seq = self._default_website_sequence()
+        query = f"""
+            UPDATE {self._table}
+            SET website_sequence = p.web_seq
+            FROM (VALUES %s) AS p(p_id, web_seq)
+            WHERE id = p.p_id
+        """
+        values_args = [
+            (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
+        ]
+        self.env.cr.execute_values(query, values_args)
 
     def set_sequence_top(self):
         min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)

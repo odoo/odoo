@@ -10,7 +10,6 @@ from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
-from odoo.tools.sql import column_exists, create_column
 
 from stdnum.it import codicefiscale, iva
 
@@ -115,6 +114,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_it_payment_method',
         store=True,
         readonly=False,
+        init_column=lambda model: None,  # avoid timeout on large databases
     )
 
     l10n_it_document_type = fields.Many2one(
@@ -123,6 +123,7 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
         copy=False,
+        init_column=lambda model: None,  # avoid timeout on large databases
     )
 
     l10n_it_convention_code = fields.Char(
@@ -130,16 +131,6 @@ class AccountMove(models.Model):
         size=100,
         help=" Used to connect an individual invoice to a broader framework agreement, a specific project, or a long-term convention."
     )
-
-    def _auto_init(self):
-        # Create compute stored field l10n_it_document_type and l10n_it_payment_method
-        # here to avoid timeout error on large databases.
-        if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_payment_method', 'varchar')
-        if not column_exists(self.env.cr, 'account_move', 'l10n_it_document_type'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'integer')
-        return super()._auto_init()
-
 
     # -------------------------------------------------------------------------
     # Computes

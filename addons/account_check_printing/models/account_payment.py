@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
-from odoo.tools.sql import column_exists, create_column
 
 INV_LINES_PER_STUB = 9
 
@@ -24,6 +22,7 @@ class AccountPayment(models.Model):
         copy=False,
         compute='_compute_check_number',
         inverse='_inverse_check_number',
+        init_column=lambda model: None,  # skip initialization OOM on large databases
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
@@ -49,16 +48,6 @@ class AccountPayment(models.Model):
         for payment_check in self.filtered('check_number'):
             if not payment_check.check_number.isdecimal():
                 raise ValidationError(_('Check numbers can only consist of digits'))
-
-    def _auto_init(self):
-        """
-        Create compute stored field check_number
-        here to avoid MemoryError on large databases.
-        """
-        if not column_exists(self.env.cr, 'account_payment', 'check_number'):
-            create_column(self.env.cr, 'account_payment', 'check_number', 'varchar')
-
-        return super()._auto_init()
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number_unique(self):

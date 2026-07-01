@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockRoute(models.Model):
@@ -14,22 +13,18 @@ class StockRoute(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    def _auto_init(self):
-        if not column_exists(self.env.cr, "stock_move", "weight"):
-            # In case of a big database with a lot of stock moves, the RAM gets exhausted
-            # To prevent a process from being killed We create the column 'weight' manually
-            # Then we do the computation in a query by multiplying product weight with qty
-            create_column(self.env.cr, "stock_move", "weight", "numeric")
-            self.env.cr.execute("""
+    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True,
+        # In case of a big database with a lot of stock moves, the RAM gets exhausted
+        # To prevent a process from being killed We create the column 'weight' manually
+        # Then we do the computation in a query by multiplying product weight with qty
+        init_column=lambda model: model.env.cr.execute("""
                 UPDATE stock_move move
                 SET weight = move.product_qty * product.weight
                 FROM product_product product
                 WHERE move.product_id = product.id
                 AND move.state != 'cancel'
-                """)
-        return super()._auto_init()
-
-    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
+                """),
+    )
 
     @api.depends('product_id', 'product_uom_qty', 'uom_id')
     def _cal_move_weight(self):

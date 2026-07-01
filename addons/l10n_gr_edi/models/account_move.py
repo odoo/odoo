@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
-from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.l10n_gr_edi.models.l10n_gr_edi_document import _make_mydata_request
 from odoo.addons.l10n_gr_edi.models.preferred_classification import (
@@ -34,11 +33,13 @@ class AccountMove(models.Model):
         string='Mark',
         compute='_compute_from_l10n_gr_edi_document_ids',
         store=True,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_cls_mark = fields.Char(
         string='Classification Mark',
         compute='_compute_from_l10n_gr_edi_document_ids',
         store=True,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_document_ids = fields.One2many(
         comodel_name='l10n_gr_edi.document',
@@ -56,6 +57,7 @@ class AccountMove(models.Model):
         compute='_compute_from_l10n_gr_edi_document_ids',
         store=True,
         tracking=True,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_available_inv_type = fields.Char(compute='_compute_l10n_gr_edi_available_inv_type')
     l10n_gr_edi_correlation_id = fields.Many2one(
@@ -68,12 +70,14 @@ class AccountMove(models.Model):
         compute='_compute_l10n_gr_edi_inv_type',
         store=True,
         readonly=False,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_payment_method = fields.Selection(
         selection=PAYMENT_METHOD_SELECTION,
         string='Payment Method',
         compute='_compute_l10n_gr_edi_payment_method',
         store=True,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_alerts = fields.Json(compute='_compute_l10n_gr_edi_alerts')
     l10n_gr_edi_need_correlated = fields.Boolean(compute='_compute_l10n_gr_edi_need_fields')
@@ -85,6 +89,7 @@ class AccountMove(models.Model):
         comodel_name='ir.attachment',
         compute='_compute_from_l10n_gr_edi_document_ids',
         store=True,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_budget_type = fields.Selection([
         ('1', '1 - Ordinary Budget'),
@@ -102,26 +107,6 @@ class AccountMove(models.Model):
         default='0',
         required=True,
     )
-
-    def _auto_init(self):
-        """
-        Create all compute-stored fields here to avoid MemoryError when initializing on large databases.
-        """
-        for column_name, column_type in (
-            ('l10n_gr_edi_mark', 'varchar'),
-            ('l10n_gr_edi_cls_mark', 'varchar'),
-            ('l10n_gr_edi_state', 'varchar'),
-            ('l10n_gr_edi_inv_type', 'varchar'),
-            ('l10n_gr_edi_payment_method', 'varchar'),
-            ('l10n_gr_edi_attachment_id', 'int4'),
-            ('l10n_gr_edi_budget_type', 'varchar'),
-            ('l10n_gr_edi_project_reference', 'varchar'),
-            ('l10n_gr_edi_contract_reference', 'varchar'),
-        ):
-            if not column_exists(self.env.cr, 'account_move', column_name):
-                create_column(self.env.cr, 'account_move', column_name, column_type)
-
-        return super()._auto_init()
 
     ################################################################################
     # Standard Field Computes

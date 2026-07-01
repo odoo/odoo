@@ -13,7 +13,7 @@ from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
 from .commands import Command
 from .domains import Domain
-from .fields import IR_MODELS, Field, _logger
+from .fields import IR_MODELS, Field, _logger, determine
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
@@ -1404,7 +1404,27 @@ class Many2many(_RelationalMulti):
             ))
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
             model.pool.post_init(self.update_db_foreign_keys, model)
-            return True
+
+            # Check if we have a custom init function
+            if self.init_column:
+                _logger.debug("Table '%s': call %s for column %s", model._table, self.init_column, self.name)
+                to_compute = determine(self.init_column, model)
+            else:
+                to_compute = True
+            # Mark computed fields to recompute
+            if to_compute and self.compute:
+                _logger.info("Prepare computation of %s", self)
+                if isinstance(to_compute, list):
+                    records = model.browse(to_compute)
+                else:
+                    cr.execute(SQL(
+                        "SELECT id FROM %(table)s WHERE id NOT IN (SELECT %(id1)s FROM %(rel)s)",
+                        table=SQL.identifier(model._table),
+                        rel=SQL.identifier(self.relation),
+                        id1=SQL.identifier(self.column1),
+                    ))
+                    records = model.browse(row[0] for row in cr.fetchall())
+                model.env.add_to_compute(self, records)
 
         model.pool.post_init(self.update_db_foreign_keys, model)
 

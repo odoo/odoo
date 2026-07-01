@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        init_column='_auto_init_warehouse_id',
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
@@ -43,7 +44,7 @@ class SaleOrder(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
 
-    def _init_column(self, column_name):
+    def _auto_init_warehouse_id(self):
         """ Ensure the default warehouse_id is correctly assigned
 
         At column initialization, the ir.model.fields for res.users.property_warehouse_id isn't created,
@@ -51,9 +52,6 @@ class SaleOrder(models.Model):
         We therefore enforce the default here, without going through
         the default function on the warehouse_id field.
         """
-        if column_name != "warehouse_id":
-            return super(SaleOrder, self)._init_column(column_name)
-
         default_warehouse = self.env["stock.warehouse"].search([], limit=1)
 
         query = """
@@ -64,7 +62,7 @@ class SaleOrder(models.Model):
         """
         params = [default_warehouse.id]
 
-        _logger.debug("Initializing column '%s' in table '%s'", column_name, self._table)
+        _logger.debug("Initializing column 'warehouse_id' in table '%s'", self._table)
         self.env.cr.execute(query, params)
 
     @api.depends('picking_ids.date_done')

@@ -2,7 +2,6 @@ import re
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.sql import column_exists, create_column
 
 _CONTRACTING_AUTHORITY_REGEX = re.compile(r'^\d+\.\d+\.\d+$')
 
@@ -16,6 +15,7 @@ class ResPartner(models.Model):
         compute='_compute_l10n_gr_edi_branch_number',
         store=True,
         readonly=False,
+        init_column=lambda model: None,
     )
     l10n_gr_edi_contracting_authority_name = fields.Char(
         string="Contracting authority",
@@ -26,16 +26,6 @@ class ResPartner(models.Model):
         help="Code of the contracting authority (e.g. 2048.8010430600.00061)"
     )
     invoice_edi_format = fields.Selection(selection_add=[('ubl_gr', "Greece (Greek CIUS BIS 3.0)")])
-
-    def _auto_init(self):
-        for column_name, column_type in (
-            ('l10n_gr_edi_branch_number', 'int4'),
-            ('l10n_gr_edi_contracting_authority_name', 'varchar'),
-            ('l10n_gr_edi_contracting_authority_code', 'varchar'),
-        ):
-            if not column_exists(self.env.cr, 'res_partner', column_name):
-                create_column(self.env.cr, 'res_partner', column_name, column_type)
-        return super()._auto_init()
 
     @api.depends('country_code')
     def _compute_l10n_gr_edi_branch_number(self):
