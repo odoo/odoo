@@ -697,15 +697,7 @@ class IrAttachment(models.Model):
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
         assert not self._active_name, "active name not supported on ir.attachment"
-        domain = Domain(domain)
-        if (
-            not self.env.context.get('skip_res_field_check')
-            and not any(d.field_expr in ('id', 'res_field') for d in domain.iter_conditions())
-            and not bypass_access
-        ):
-            domain &= Domain('res_field', '=', False)
-
-        domain = domain.optimize_full(self)
+        domain = Domain(domain).optimize_full(self)
         if self.env.su or bypass_access or domain.is_false():
             return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
         if self.env.context.get('_generating_sql_for_fields'):

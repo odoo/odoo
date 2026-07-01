@@ -273,8 +273,10 @@ export class FileSelector extends Component {
         if (this.props.resId) {
             domain = [
                 "&",
+                "&",
                 ["res_model", "=", this.props.resModel],
                 ["res_id", "=", this.props.resId],
+                ["res_field", "=", false],
             ];
         } else {
             domain = [["id", "in", this.props.pendingAttachments]];
