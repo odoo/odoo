@@ -3,7 +3,6 @@
 import re
 from collections import defaultdict
 from datetime import datetime, time
-from statistics import mode
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -25,13 +24,13 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
+        """ Return the project linked to at least 3 of the employee's 5 most recent
+        timesheets, if any, since they are the most likely to keep logging time on it. """
         last_timesheets = self.search_fetch(
             self._get_favorite_project_id_domain(employee_id), ['project_id'], limit=5
         )
-        if not last_timesheets:
-            internal_project = self.env.company.internal_project_id
-            return internal_project.has_access('read') and internal_project.active and internal_project.allow_timesheets and internal_project.id
-        return mode([t.project_id.id for t in last_timesheets])
+        project_ids = [t.project_id.id for t in last_timesheets]
+        return next((pid for pid in project_ids if project_ids.count(pid) >= 3), False)
 
     @api.model
     def default_get(self, fields):
