@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:34+0000\n"
-"PO-Revision-Date: 2025-11-08 19:16+0000\n"
+"PO-Revision-Date: 2026-06-13 13:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_stock/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
@@ -107,6 +107,7 @@ msgstr "<span class=\"o_stat_text\">Продажі</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+#, fuzzy
 msgid ""
 "<span class=\"small badge rounded-pill text-bg-success "
 "orders_label_text_align\">\n"
@@ -114,11 +115,17 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Доставлено\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#, fuzzy
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Референс клієнта</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -202,8 +209,9 @@ msgstr "В наявності"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Available in stock"
-msgstr ""
+msgstr "Доступний на складі"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -213,8 +221,9 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Компанія"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -445,8 +454,10 @@ msgstr "Виробництво на замовлення"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
+"Це вказує товари, які можуть бути доставлені частково або все одночасно"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
@@ -486,8 +497,9 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_sale_order_view_search_inherit
+#, fuzzy
 msgid "Late Availability"
-msgstr ""
+msgstr "Пізня доступність"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -553,14 +565,17 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+#, fuzzy
 msgid "No delivery yet! Automate them with sales orders."
 msgstr ""
+"Доставка ще не надходить! Автоматизуйте їх за допомогою замовлень на продаж."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "No future availability"
-msgstr ""
+msgstr "Немає доступності на майбутнє"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -581,8 +596,9 @@ msgstr "Не доставлено"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Not enough future availability"
-msgstr ""
+msgstr "Недостатньо доступності на майбутнє"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -594,8 +610,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "Увімкнути"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
@@ -644,8 +661,9 @@ msgstr "К-сть для доставки"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Quotations"
-msgstr ""
+msgstr "Комерційні пропозиції"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__name
@@ -659,11 +677,16 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+#, fuzzy
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Зменшіть кількість замовлень, що залишилися, за допомогою бронювань, "
+"управління локаціями, розумних\n"
+" пропозицій щодо поповнення запасів, конекторів доставки, сканера штрих-"
+"кодів тощо."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
@@ -678,8 +701,9 @@ msgstr "Посилання"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Залишок попиту доступний в"
 
 #. module: sale_stock
 #. odoo-python
@@ -885,8 +909,9 @@ msgstr "Звіт складського правила"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "The delivery"
-msgstr ""
+msgstr "Доставка"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -937,8 +962,9 @@ msgstr "Користувач"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "View Forecast"
-msgstr ""
+msgstr "Переглянути прогноз"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -961,15 +987,18 @@ msgstr "Коли усі товари готові"
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "Ви повинні мати склад для рядка з доставкою в іншій компанії."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
+#, fuzzy
 msgid "You must set a warehouse on your sale order to proceed."
 msgstr ""
+"Щоб продовжити, вам потрібно вказати склад у вашому замовленні на продаж."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -1000,5 +1029,6 @@ msgstr "обробляється замість"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "will be late."
-msgstr ""
+msgstr "буде запізнено."

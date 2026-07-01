@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-08 09:03+0000\n"
+"PO-Revision-Date: 2026-06-06 13:40+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_safaricom/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -29,7 +29,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Select M-Pesa Transaction'"
-msgstr ""
+msgstr "'选择 M-Pesa 交易'"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -48,12 +48,12 @@ msgstr "金额"
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Arrived at"
-msgstr ""
+msgstr "到达"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
 msgid "Business Short Code"
-msgstr ""
+msgstr "业务简短代码"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
@@ -63,6 +63,9 @@ msgid ""
 "                                This happens automatically on creation, but "
 "you can re-register if you deleted them from the business portal."
 msgstr ""
+"为使 Lipa na M-PESA 正常运行，必须向 Safaricom 注册 C2B 回调 URL。\n"
+"                                此操作在创建时会自动完成，但如果您从业务门户"
+"中删除了它们，可以重新注册。"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -80,23 +83,23 @@ msgstr "无法处理含浮点数的交易。请将数取整。"
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "不能处理包含负数金额的交易。"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
 msgid "Consumer Key"
-msgstr ""
+msgstr "消费者密钥"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
-msgstr ""
+msgstr "Safaricom M-Pesa 需要消费者密钥和消费者密钥"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
-msgstr ""
+msgstr "消费者秘密"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -108,7 +111,7 @@ msgstr ""
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建者"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
@@ -190,8 +193,9 @@ msgstr ""
 
 #. module: pos_safaricom
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
+#, fuzzy
 msgid "M-PESA Express"
-msgstr ""
+msgstr "M-PESA Express"
 
 #. module: pos_safaricom
 #. odoo-javascript

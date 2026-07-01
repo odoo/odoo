@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 18:11+0000\n"
-"PO-Revision-Date: 2026-06-10 03:41+0000\n"
+"PO-Revision-Date: 2026-06-13 13:00+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master-l10n/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3-l10n/"
 "l10n_account_withholding_tax/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -68,7 +68,7 @@ msgstr "บัญชี"
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "เทมเพลตแผนภูมิบัญชี"
+msgstr "เทมเพลตผังบัญชี"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -521,13 +521,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/wizards/account_payment_register.py:0
 msgid "The withholding net amount cannot be negative."
-msgstr ""
+msgstr "ยอดสุทธิของภาษีหัก ณ ที่จ่าย ไม่สามารถเป็นค่าติดลบได้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_res_company__withholding_tax_base_account_id
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_res_config_settings__withholding_tax_base_account_id
 msgid "This account will be set on withholding tax base lines."
-msgstr ""
+msgstr "บัญชีนี้จะถูกตั้งค่าตามฐานภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_register_withholding_line__withholding_sequence_id
@@ -537,43 +537,43 @@ msgstr ""
 msgid ""
 "This sequence will be used to generate default numbers on payment "
 "withholding lines."
-msgstr ""
+msgstr "ลำดับเลขนี้จะถูกใช้เพื่อสร้างเลขที่เอกสารเริ่มต้น บนบรรทัดรายการภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Total Withheld Amount"
-msgstr ""
+msgstr "ยอดรวมภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__type_tax_use
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__type_tax_use
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__type_tax_use
 msgid "Type Tax Use"
-msgstr ""
+msgstr "ประเภทภาษีการใช้งาน"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Base Counterpart: %(names)s"
-msgstr ""
+msgstr "บัญชีคู่ขาสำหรับฐานภาษีหัก ณ ที่จ่าย:%(names)s"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Base: %(names)s"
-msgstr ""
+msgstr "ยอดเงินได้ก่อนหักภาษี: %(names)s"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Tax: %(name)s"
-msgstr ""
+msgstr "ภาษีหัก ณ ที่จ่าย: %(name)s"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
 msgid "Withheld Amount"
-msgstr ""
+msgstr "จำนวนเงินภาษีที่ถูกหักไว้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withhold
@@ -621,13 +621,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_hide_tax_base_account
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_hide_tax_base_account
 msgid "Withholding Hide Tax Base Account"
-msgstr ""
+msgstr "การซ่อนบัญชีพักฐานภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_line_ids
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_line_ids
 msgid "Withholding Lines"
-msgstr ""
+msgstr "บรรทัดการหักภาษี ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -636,6 +636,8 @@ msgid ""
 "Withholding On Payment taxes cannot use the 'Group of Taxes' or the "
 "'Percentage Tax Included' computations."
 msgstr ""
+"ภาษีประเภท 'หัก ณ ที่จ่ายเมื่อชำระเงิน' ไม่สามารถใช้สูตรการคำนวณแบบ 'กลุ่มภาษี' หรือแบบ "
+"'คำนวณรวมในราคาสินค้า' ได้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
@@ -649,13 +651,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__withholding_sequence_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__withholding_sequence_id
 msgid "Withholding Sequence"
-msgstr ""
+msgstr "ระบบรันลำดับเลขที่เอกสารภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_company__withholding_tax_base_account_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_config_settings__withholding_tax_base_account_id
 msgid "Withholding Tax Base"
-msgstr ""
+msgstr "ฐานภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
@@ -668,21 +670,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__amount
 msgid "Withholding amount"
-msgstr ""
+msgstr "จำนวนเงินภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__base_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__base_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__base_amount
 msgid "Withholding base"
-msgstr ""
+msgstr "ฐานภาษีหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.res_config_settings_form
 msgid "Withholding:"
-msgstr ""
+msgstr "การหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_withholding_line
 msgid "withholding line"
-msgstr ""
+msgstr "บรรทัดรายการภาษีหัก ณ ที่จ่าย"

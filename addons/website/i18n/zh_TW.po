@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"PO-Revision-Date: 2026-06-06 13:16+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/website/zh_Hant/>\n"
+"projects/odoo-s19-3/website/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -289,7 +289,7 @@ msgstr "\" 已在使用中。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "'. Showing results for '"
-msgstr "'.顯示結果 '"
+msgstr "」。顯示以下結果：「"
 
 #. module: website
 #. odoo-javascript
@@ -2417,6 +2417,10 @@ msgid ""
 "&gt;= 2\">Install multiple languages to enable translation across your "
 "website.</span>"
 msgstr ""
+"<span invisible=\"website_language_count &lt; 2\">網站訪客看到的語言版本，會"
+"與其瀏覽器語言相符。若無可用版本，會顯示預設語言。</span>\n"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">你可安裝多種語言，以啟用網站全站翻譯。</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_big_number
@@ -3176,7 +3180,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
 msgid "Add Cards"
-msgstr ""
+msgstr "加入卡片"
 
 #. module: website
 #. odoo-javascript
@@ -4068,7 +4072,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Arrow Position"
-msgstr ""
+msgstr "箭嘴位置"
 
 #. module: website
 #. odoo-javascript
@@ -4184,7 +4188,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__publish_on
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "自動發佈於"
 
 #. module: website
 #. odoo-javascript
@@ -4703,19 +4707,19 @@ msgstr "下方"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Center"
-msgstr ""
+msgstr "底部置中"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Left"
-msgstr ""
+msgstr "左下"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Right"
-msgstr ""
+msgstr "右下"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -6257,7 +6261,7 @@ msgstr "建立"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Create New"
-msgstr "建立新的"
+msgstr "建立新一項"
 
 #. module: website
 #. odoo-javascript
@@ -7282,6 +7286,8 @@ msgid ""
 "Display a customizable cookies bar on your website. Please ensure your site "
 "is GDPR-compliant (e.g. Google Fonts usage)."
 msgstr ""
+"在你的網站顯示可自訂的 Cookie 通知列。請確保你的網站符合歐盟 GDPR 規定（例"
+"如：使用 Google Fonts 字體的方式）。"
 
 #. module: website
 #. odoo-python
@@ -7310,12 +7316,12 @@ msgstr "在網站上顯示此標誌。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website for this web address"
-msgstr "為此網址顯示此網站"
+msgstr "使用以下網址時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr "當使用者連至此網域時顯示這個網站"
+msgstr "訪客存取以下網域時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
@@ -7375,7 +7381,7 @@ msgstr "推軌變焦"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_domain
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Domain"
-msgstr "篩選範圍"
+msgstr "網域"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
@@ -8458,7 +8464,7 @@ msgstr "我們優勝過人的特色"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
 msgid "Fetched Elements"
-msgstr "已讀取元素"
+msgstr "顯示項目數量"
 
 #. module: website
 #. odoo-javascript
@@ -8728,7 +8734,7 @@ msgstr "懸浮卡片"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
 msgid "Floating blocks alert"
-msgstr ""
+msgstr "浮動區塊警示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_social
@@ -9014,7 +9020,7 @@ msgstr "全螢幕"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/snippet_model.js:0
 msgid "Full-Screen"
-msgstr ""
+msgstr "全螢幕"
 
 #. module: website
 #. odoo-javascript
@@ -10581,7 +10587,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Inside"
-msgstr ""
+msgstr "內部"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -10764,7 +10770,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Inverted colors"
-msgstr ""
+msgstr "反轉顏色"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -12758,12 +12764,12 @@ msgstr "電子報"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Aside"
-msgstr ""
+msgstr "旁附電子通訊"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Benefits"
-msgstr ""
+msgstr "電子通訊優勢"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -13466,7 +13472,7 @@ msgstr "有效地組織及展示關鍵資訊，可大大提升訪客轉化為客
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/snippets/s_website_form/add_other_option.js:0
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #. module: website
 #. odoo-python
@@ -14223,7 +14229,7 @@ msgstr "請正確填寫表單."
 msgid ""
 "Please fill in the form correctly. The file “%(fileName)s” is too large. "
 "(Maximum %(max)s MB)"
-msgstr ""
+msgstr "請正確填寫表單。檔案「%(fileName)s」過大，最大上限為 %(max)s MB。"
 
 #. module: website
 #. odoo-javascript
@@ -14705,7 +14711,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__published_date
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__published_date
 msgid "Published date"
-msgstr ""
+msgstr "發佈日期"
 
 #. module: website
 #. odoo-javascript
@@ -15452,7 +15458,7 @@ msgstr "我們提供全天候協助，確保問題能快速解決，助你保持
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Rounded"
-msgstr "圓"
+msgstr "圓角"
 
 #. module: website
 #. odoo-javascript
@@ -16371,6 +16377,8 @@ msgid ""
 "Showing results for\n"
 "                '"
 msgstr ""
+"顯示以下結果：\n"
+"                「"
 
 #. module: website
 #. odoo-javascript
@@ -16418,7 +16426,7 @@ msgstr "簡單"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Simple and privacy-friendly Google Analytics alternative"
-msgstr ""
+msgstr "簡單、重視私隱的 Google Analytics 分析替代方案"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_block
@@ -16439,7 +16447,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Single"
-msgstr "單身"
+msgstr "單項"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_site
@@ -17072,13 +17080,13 @@ msgstr "提交"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "Subtle"
-msgstr "微妙"
+msgstr "淺色"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 msgid "Subtle colors"
-msgstr ""
+msgstr "淺色"
 
 #. module: website
 #. odoo-javascript
@@ -18174,7 +18182,7 @@ msgstr "自上次網頁檢視以來的時間.例如: 2分鐘前"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 msgid "Time's up! You can now visit"
-msgstr ""
+msgstr "時間到！你現在可以訪問"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
@@ -20516,7 +20524,7 @@ msgstr "你未有提供有效的 Facebook 連結"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "You do not have the necessary permissions to create new content pages."
-msgstr ""
+msgstr "你沒有建立新內容頁面所需的權限。"
 
 #. module: website
 #. odoo-python
@@ -20548,7 +20556,7 @@ msgstr "您已將此頁面從搜尋結果中隱藏.此頁面將不會被搜尋�
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "You have uploaded too many files(Maximum %s files)."
-msgstr ""
+msgstr "你上載了太多檔案。最多只可上載 %s 個檔案。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -20570,7 +20578,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
 msgid "You need at least two cards to perform the effect"
-msgstr ""
+msgstr "此效果需要最少兩張卡片，才可運作"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
@@ -20605,6 +20613,8 @@ msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provide enough options to retrieve its content.<br/>"
 msgstr ""
+"你的動態小摘要將在此處顯示。系統現時顯示此訊息，是因為你未有提供足夠的選項去"
+"讀取其內容。<br/>"
 
 #. module: website
 #. odoo-javascript
@@ -20742,7 +20752,7 @@ msgstr ""
 msgid ""
 "Your upload is too large for the server to accept. Please choose smaller "
 "files."
-msgstr ""
+msgstr "你上載的檔案過大，伺服器未能接收。請選擇檔案大小較小的檔案。"
 
 #. module: website
 #. odoo-javascript
@@ -22073,7 +22083,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 msgid "result(s)"
-msgstr ""
+msgstr "項結果"
 
 #. module: website
 #. odoo-javascript
