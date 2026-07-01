@@ -43,7 +43,7 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    work_entries_vals_list += contracts._get_work_entries_values(
+                    work_entries_vals_list += contract._get_work_entries_values(
                         datetime.combine(leave.date_from, time.min),
                         datetime.combine(leave.date_to, time.max),
                     )
