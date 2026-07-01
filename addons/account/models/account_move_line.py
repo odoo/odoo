@@ -840,12 +840,13 @@ class AccountMoveLine(models.Model):
         line2rate = {}
         if len(self.env.companies.currency_id) > 1:
             query = self._search([('id', 'in', self.ids)])
+            consolidation_rate = self._consolidation_rate_sql(query.table)
             line2rate = {aml_id: values for aml_id, *values in self.env.execute_query(query.select(
                 query.table.id,
-                query.table.consolidation_rate,
-                query.table.consolidation_debit,
-                query.table.consolidation_credit,
-                query.table.consolidation_balance,
+                consolidation_rate,
+                SQL("(%s * %s)", consolidation_rate, query.table.debit),
+                SQL("(%s * %s)", consolidation_rate, query.table.credit),
+                SQL("(%s * %s)", consolidation_rate, query.table.balance),
             ))}
         for aml in self:
             (
@@ -854,6 +855,52 @@ class AccountMoveLine(models.Model):
                 aml.consolidation_credit,
                 aml.consolidation_balance,
             ) = line2rate.get(aml._origin.id, (1, aml.debit, aml.credit, aml.balance))
+
+    def _consolidation_rate_sql(self, table):
+        currency_translation = self.env.context.get('currency_translation', 'current')
+        if len(self.env.companies.currency_id) == 1:
+            return SQL("1")
+
+        date_from = self.env.context.get('date_from')
+        date_to = self.env.context['date_to']
+        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
+
+        raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
+        raw_rates_table = SQL(
+            """(
+                SELECT %(historical)s::jsonb AS historical,
+                       %(average)s::jsonb AS average,
+                       %(current)s::jsonb AS current
+            )""",
+            historical=json.dumps(historical),
+            average=json.dumps(average),
+            current=json.dumps(current),
+        )
+        cta_alias = table._make_alias(currency_translation)
+        if currency_translation == 'cta':
+            conversion_table = SQL(
+                """(
+                    SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
+                                ELSE %(current)s->>(%(base_line_company)s::text)
+                           END::numeric AS rate
+                )""",
+                base_line_date=table.date,
+                base_line_company=table.company_id,
+                base_line_account_type=table.account_id.account_type,
+                historical=raw_rates_alias.historical,
+                average=raw_rates_alias.average,
+                current=raw_rates_alias.current,
+            )
+        else:
+            conversion_table = SQL(
+                "(SELECT (%(current)s->>(%(base_line_company)s::text))::numeric AS rate)",
+                base_line_company=table.company_id,
+                current=raw_rates_alias.current,
+            )
+        table._query.add_join(kind='JOIN', alias=raw_rates_alias, table=raw_rates_table, condition=SQL("TRUE"))
+        table._query.add_join(kind='LEFT JOIN LATERAL', alias=cta_alias, table=conversion_table, condition=SQL("TRUE"))
+        return SQL("COALESCE(%s, 1)", cta_alias.rate)
 
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
     def _compute_cumulated_balance(self):
@@ -1006,18 +1053,40 @@ class AccountMoveLine(models.Model):
     @api.depends_context('recon_limit')
     def _compute_residual_at_date(self):
         query = self._search([('id', 'in', self.ids)])
+        residual_at_date_sql = self._residual_at_date_sql(query.table)
+        residual_currency_at_date_sql = self._residual_currency_at_date_sql(query.table)
         residuals_at_date = {
             line_id: (residual_at_date, residual_currency_at_date)
             for line_id, residual_at_date, residual_currency_at_date in self.env.execute_query(query.select(
                 query.table.id,
-                query.table.residual_at_date,
-                query.table.residual_currency_at_date,
+                residual_at_date_sql,
+                residual_currency_at_date_sql,
             ))
         }
         for aml in self:
             residual_at_date, residual_currency_at_date = residuals_at_date.get(aml.id, (0.0, 0.0))
             aml.residual_at_date = residual_at_date
             aml.residual_currency_at_date = residual_currency_at_date
+
+    def _residual_at_date_sql(self, table):
+        if not self.env.context.get('recon_limit'):
+            return table.amount_residual
+        partial_summary_alias = self._join_partial_summary_query(table)
+        return SQL(
+            "(%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0))",
+            balance_field=table.balance,
+            partial_summary_amount_field=partial_summary_alias.amount_to_date,
+        )
+
+    def _residual_currency_at_date_sql(self, table):
+        if not self.env.context.get('recon_limit'):
+            return table.amount_residual_currency
+        partial_summary_alias = self._join_partial_summary_query(table)
+        return SQL(
+            "%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0)",
+            balance_field=table.amount_currency,
+            partial_summary_amount_field=partial_summary_alias.amount_currency_to_date,
+        )
 
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')

@@ -6,13 +6,7 @@ This module is deliberately built as a small pipeline:
 * parse a compute method into a tiny intermediate shape;
 * lower ordinary Python expressions to SQL;
 * recognize SQL/projection computes;
-* keep exceptional business semantics in one adapter catalog.
-
-The adapter catalog exists because a few current computes do not contain their
-business formula in Python at all: they select ``query.table.<same field>`` or
-delegate to ORM/report helpers.  Those cases are supported, but isolated so they
-can be replaced by more general primitives without touching the expression
-lowerer.
+* validate that the result can be represented safely by the ORM query layer.
 """
 from __future__ import annotations
 
@@ -55,6 +49,14 @@ def _source_funcdef(method) -> ast.FunctionDef:
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
             return node
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Lambda):
+            return ast.fix_missing_locations(ast.FunctionDef(
+                name='<lambda>',
+                args=node.args,
+                body=[ast.Return(value=node.body)],
+                decorator_list=[],
+            ))
     raise _UnsupportedNode("No function body found")
 
 
@@ -88,20 +90,63 @@ def _const_seq(node: ast.AST) -> list[Any]:
     return [_const(node)]
 
 
+def _literal_string(node: ast.AST, bindings=None) -> str | None:
+    bindings = bindings or {}
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.Name):
+        binding = bindings.get(node.id)
+        if isinstance(binding, ast.Constant) and isinstance(binding.value, str):
+            return binding.value
+        if isinstance(binding, _EnvConst):
+            value = _eval_env(None, binding.node)
+            return value if isinstance(value, str) else None
+    if isinstance(node, ast.JoinedStr):
+        parts = []
+        for value in node.values:
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                parts.append(value.value)
+            elif isinstance(value, ast.FormattedValue):
+                part = _literal_string(value.value, bindings)
+                if part is None:
+                    return None
+                parts.append(part)
+            else:
+                return None
+        return ''.join(parts)
+    return None
+
+
 def _is_env_expr(node: ast.AST) -> bool:
     if isinstance(node, ast.Name):
-        return node.id in {'self', 'fields', 'date'}
+        return node.id in {'self', 'fields', 'date', 'request'}
     if isinstance(node, ast.Constant):
         return True
+    if isinstance(node, ast.IfExp):
+        return _is_env_expr(node.test) and _is_env_expr(node.body) and _is_env_expr(node.orelse)
+    if isinstance(node, ast.BoolOp):
+        return all(_is_env_expr(value) for value in node.values)
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        return _is_env_expr(node.operand)
+    if isinstance(node, ast.Compare):
+        return _is_env_expr(node.left) and all(_is_env_expr(comparator) for comparator in node.comparators)
     if isinstance(node, ast.Attribute):
         return _is_env_expr(node.value)
     if isinstance(node, ast.Subscript):
         return _is_env_expr(node.value) and isinstance(node.slice, ast.Constant)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+        if node.func.id == 'len':
+            return len(node.args) == 1 and _is_env_expr(node.args[0])
+        if node.func.id == 'hasattr':
+            return len(node.args) == 2 and _is_env_expr(node.args[0]) and isinstance(node.args[1], ast.Constant)
+        return False
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
         if node.func.attr not in {
             *_TRANSPARENT_RECORDSET_METHODS,
             'browse',
+            'exists',
             'get',
+            'has_group',
             '_get_main_company',
             '_get_definition_for_property_field',
             '_get_definition_id_for_property_field',
@@ -118,6 +163,7 @@ def _is_env_expr(node: ast.AST) -> bool:
 def _eval_env(model, node: ast.AST):
     from datetime import date
     from odoo import fields
+    from odoo.http import request
     if isinstance(node, ast.Name):
         if node.id == 'self':
             return model
@@ -125,12 +171,63 @@ def _eval_env(model, node: ast.AST):
             return fields
         if node.id == 'date':
             return date
+        if node.id == 'request':
+            return request
     if isinstance(node, ast.Constant):
         return node.value
+    if isinstance(node, ast.IfExp):
+        return _eval_env(model, node.body if _eval_env(model, node.test) else node.orelse)
+    if isinstance(node, ast.BoolOp):
+        if isinstance(node.op, ast.And):
+            result = True
+            for value in node.values:
+                result = _eval_env(model, value)
+                if not result:
+                    return result
+            return result
+        result = False
+        for value in node.values:
+            result = _eval_env(model, value)
+            if result:
+                return result
+        return result
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        return not _eval_env(model, node.operand)
+    if isinstance(node, ast.Compare):
+        left = _eval_env(model, node.left)
+        for op, comparator in zip(node.ops, node.comparators):
+            right = _eval_env(model, comparator)
+            if isinstance(op, ast.Eq):
+                ok = left == right
+            elif isinstance(op, ast.NotEq):
+                ok = left != right
+            elif isinstance(op, ast.Lt):
+                ok = left < right
+            elif isinstance(op, ast.LtE):
+                ok = left <= right
+            elif isinstance(op, ast.Gt):
+                ok = left > right
+            elif isinstance(op, ast.GtE):
+                ok = left >= right
+            elif isinstance(op, ast.In):
+                ok = left in right
+            elif isinstance(op, ast.NotIn):
+                ok = left not in right
+            else:
+                raise _UnsupportedNode(f"Unsupported setup-time comparison {type(op).__name__}")
+            if not ok:
+                return False
+            left = right
+        return True
     if isinstance(node, ast.Attribute):
         return getattr(_eval_env(model, node.value), node.attr)
     if isinstance(node, ast.Subscript):
         return _eval_env(model, node.value)[_const(node.slice)]
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+        if node.func.id == 'len':
+            return len(_eval_env(model, node.args[0]))
+        if node.func.id == 'hasattr':
+            return hasattr(_eval_env(model, node.args[0]), _const(node.args[1]))
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
         receiver = _eval_env(model, node.func.value)
         args = [_eval_env(model, arg) for arg in node.args]
@@ -201,6 +298,39 @@ def _rewrite_name(node, old_name, new_name):
     return ast.fix_missing_locations(_NameRewriter(old_name, new_name).visit(node))
 
 
+class _NameBindingRewriter(ast.NodeTransformer):
+    def __init__(self, bindings):
+        self.bindings = bindings
+
+    def visit_Name(self, node):
+        if isinstance(node.ctx, ast.Load) and node.id in self.bindings:
+            return ast.copy_location(self.bindings[node.id], node)
+        return node
+
+
+def _rewrite_bound_names(node, bindings):
+    if not bindings:
+        return node
+    return ast.fix_missing_locations(_NameBindingRewriter(bindings).visit(node))
+
+
+class _EnvConstNameInliner(ast.NodeTransformer):
+    def __init__(self, bindings):
+        self.bindings = bindings
+
+    def visit_Name(self, node):
+        binding = self.bindings.get(node.id)
+        if isinstance(binding, _EnvConst):
+            return ast.copy_location(binding.node, node)
+        return node
+
+
+def _inline_env_const_names(node, bindings):
+    if not bindings:
+        return node
+    return ast.fix_missing_locations(_EnvConstNameInliner(bindings).visit(node))
+
+
 def _same_expr(left: ast.AST, right: ast.AST) -> bool:
     return ast.dump(left, include_attributes=False) == ast.dump(right, include_attributes=False)
 
@@ -227,6 +357,13 @@ class _FieldSQL:
 @dataclasses.dataclass(frozen=True)
 class _MethodSQL:
     method_name: str
+
+
+@dataclasses.dataclass(frozen=True)
+class _MethodCallSQL:
+    method_name: str
+    args: tuple[ast.AST, ...]
+    kwargs: tuple[tuple[str, ast.AST], ...]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -288,6 +425,11 @@ class _Compiler:
         old_depth = self._value_depth
         self._value_depth = 0
         try:
+            try:
+                if _is_env_expr(node):
+                    return _S()('TRUE' if _eval_env(self.ctx.model, node) else 'FALSE')
+            except Exception:
+                pass
             if isinstance(node, ast.BoolOp):
                 return self._boolop(node, bool_mode=True)
             sql = self.sql(node)
@@ -325,6 +467,10 @@ class _Compiler:
             return self.ctx.table[binding.field_name]
         if isinstance(binding, _MethodSQL):
             return getattr(self.ctx.model, binding.method_name)(self.ctx.table)
+        if isinstance(binding, _MethodCallSQL):
+            args = [_eval_env(self.ctx.model, arg) for arg in binding.args]
+            kwargs = {key: _eval_env(self.ctx.model, value) for key, value in binding.kwargs}
+            return getattr(self.ctx.model, binding.method_name)(self.ctx.table, *args, **kwargs)
         if isinstance(binding, _RecordVariant):
             return self.ctx.table._with_model(_eval_env(self.ctx.model, binding.node)).id
         if isinstance(binding, ast.expr):
@@ -342,10 +488,16 @@ class _Compiler:
             if _is_env_expr(node):
                 return _constant_sql(_eval_env(self.ctx.model, node))
         except Exception:
-            pass
+            chain, base = _unroll(node)
+            if isinstance(base, ast.Name) and base.id == 'request' and chain:
+                return _S()('NULL')
+        if first_field_sql := self._first_relation_record_field_sql(node):
+            return first_field_sql
         chain, base = _unroll(node)
         if isinstance(base, ast.BoolOp) and isinstance(base.op, ast.Or) and chain:
             return _S()('COALESCE(%s)', _S()(', ').join(self.value_sql(_make_attr(value, chain)) for value in base.values))
+        if isinstance(base, ast.Name) and chain and chain[0] == 'table':
+            return self._field_chain_sql(self.ctx.model, self.ctx.table, chain[1:], node)
         if isinstance(base, ast.Name) and base.id == self.ctx.record_var:
             return self._field_chain_sql(self.ctx.model, self.ctx.table, chain, node)
         if isinstance(base, ast.Name) and base.id in self.ctx.bindings:
@@ -355,6 +507,11 @@ class _Compiler:
             if isinstance(binding, _RecordVariant):
                 table = self.ctx.table._with_model(_eval_env(self.ctx.model, binding.node))
                 return self._field_chain_sql(table._model, table, chain, node)
+            if isinstance(binding, (_MethodSQL, _MethodCallSQL)):
+                sql = self.sql(base)
+                for fname in chain:
+                    sql = sql[fname]
+                return sql
             if isinstance(binding, ast.expr):
                 return self.sql(_make_attr(binding, chain))
             return _constant_chain_sql(binding, chain)
@@ -424,6 +581,136 @@ class _Compiler:
             table.id,
         )
 
+    def _relation_condition_sql(self, model, table, field_name, target_name, target_value, neg=False):
+        SQL = _S()
+        field = model._fields[field_name]
+        comodel = model.env[field.comodel_name]
+        if field.type == 'many2many':
+            exists = SQL(
+                """EXISTS (
+                    SELECT 1
+                      FROM %s rel
+                      JOIN %s child ON child.id = rel.%s
+                     WHERE rel.%s = %s
+                       AND child.%s = %s
+                )""",
+                SQL.identifier(field.relation),
+                SQL.identifier(comodel._table),
+                SQL.identifier(field.column2),
+                SQL.identifier(field.column1),
+                table.id,
+                SQL.identifier(target_name),
+                target_value,
+            )
+        else:
+            exists = SQL(
+                """EXISTS (
+                    SELECT 1
+                      FROM %s child
+                     WHERE child.%s = %s
+                       AND child.%s = %s
+                )""",
+                SQL.identifier(comodel._table),
+                SQL.identifier(field.inverse_name),
+                table.id,
+                SQL.identifier(target_name),
+                target_value,
+            )
+        return SQL('(NOT %s)', exists) if neg else exists
+
+    def _first_relation_record_field_sql(self, node):
+        if not isinstance(node, ast.Attribute):
+            return None
+        relation = self._first_relation_record(node.value)
+        if relation is None:
+            return None
+        model, table, field_name = relation
+        return self._relation_ordered_field_sql(model, table, field_name, node.attr)
+
+    def _first_relation_record(self, node):
+        relation_node = None
+        if isinstance(node, ast.Subscript) and self._is_first_slice(node.slice):
+            relation_node = node.value
+        if (
+            isinstance(relation_node, ast.Call)
+            and isinstance(relation_node.func, ast.Attribute)
+            and relation_node.func.attr == 'sorted'
+            and not relation_node.args
+            and not relation_node.keywords
+        ):
+            relation_node = relation_node.func.value
+        chain, base = _unroll(relation_node) if relation_node is not None else ([], None)
+        if not (isinstance(base, ast.Name) and base.id == self.ctx.record_var and len(chain) == 1):
+            return None
+        field = self.ctx.model._fields.get(chain[0])
+        if not field or field.type not in ('one2many', 'many2many'):
+            return None
+        return self.ctx.model, self.ctx.table, chain[0]
+
+    def _is_first_slice(self, node):
+        return (
+            isinstance(node, ast.Constant) and node.value == 0
+        ) or (
+            isinstance(node, ast.Slice)
+            and node.lower is None
+            and isinstance(node.upper, ast.Constant)
+            and node.upper.value == 1
+            and node.step is None
+        )
+
+    def _relation_ordered_field_sql(self, model, table, field_name, target_name):
+        SQL = _S()
+        field = model._fields[field_name]
+        comodel = model.env[field.comodel_name]
+        target = SQL.identifier('child', target_name)
+        order = self._simple_model_order_sql(comodel)
+        if field.type == 'many2many':
+            return SQL(
+                """(
+                    SELECT %(target)s
+                      FROM %(relation)s rel
+                      JOIN %(table)s child ON child.id = rel.%(column2)s
+                     WHERE rel.%(column1)s = %(id)s
+                  ORDER BY %(order)s
+                     LIMIT 1
+                )""",
+                target=target,
+                relation=SQL.identifier(field.relation),
+                table=SQL.identifier(comodel._table),
+                column1=SQL.identifier(field.column1),
+                column2=SQL.identifier(field.column2),
+                id=table.id,
+                order=order,
+            )
+        return SQL(
+            """(
+                SELECT %(target)s
+                  FROM %(table)s child
+                 WHERE child.%(inverse)s = %(id)s
+              ORDER BY %(order)s
+                 LIMIT 1
+            )""",
+            target=target,
+            table=SQL.identifier(comodel._table),
+            inverse=SQL.identifier(field.inverse_name),
+            id=table.id,
+            order=order,
+        )
+
+    def _simple_model_order_sql(self, model):
+        SQL = _S()
+        terms = []
+        for term in (model._order or 'id').split(','):
+            pieces = term.strip().split()
+            if not pieces:
+                continue
+            fname = pieces[0]
+            if fname not in model._fields and fname != 'id':
+                continue
+            direction = pieces[1].upper() if len(pieces) > 1 and pieces[1].upper() in ('ASC', 'DESC') else 'ASC'
+            terms.append(SQL("%s %s", SQL.identifier('child', fname), SQL(direction)))
+        return SQL(', ').join(terms) if terms else SQL.identifier('child', 'id')
+
     def visit_BinOp(self, node):
         op = self._BINOPS.get(type(node.op))
         if op is None:
@@ -441,6 +728,10 @@ class _Compiler:
             if sql := self._record_in_recordset(node.left, right_node, neg):
                 return sql
             if sql := self._many2many_contains(node.left, right_node, neg):
+                return sql
+            if sql := self._mapped_membership(node.left, right_node, neg):
+                return sql
+            if sql := self._read_group_membership(node.left, right_node, neg):
                 return sql
             left = self.sql(node.left)
             try:
@@ -478,6 +769,159 @@ class _Compiler:
             return None
         return _S()('(%s %s %s)', self.ctx.table.id, _S()('NOT IN' if neg else 'IN'), _S()('%s', tuple(recordset.ids) or (None,)))
 
+    def _mapped_membership(self, left, right, neg=False):
+        binding = right
+        if isinstance(right, ast.Name):
+            binding = self.ctx.bindings.get(right.id)
+        if not (
+            isinstance(binding, ast.Call)
+            and isinstance(binding.func, ast.Attribute)
+            and binding.func.attr == 'mapped'
+            and len(binding.args) == 1
+            and isinstance(binding.args[0], ast.Constant)
+            and isinstance(binding.args[0].value, str)
+        ):
+            return None
+        chain, base = _unroll(binding.func.value)
+        if not (isinstance(base, ast.Name) and base.id == self.ctx.record_var and len(chain) == 1):
+            return None
+        field = self.ctx.model._fields.get(chain[0])
+        if not field or field.type not in ('one2many', 'many2many'):
+            return None
+        return self._relation_condition_sql(
+            self.ctx.model,
+            self.ctx.table,
+            chain[0],
+            binding.args[0].value,
+            self.sql(left),
+            neg,
+        )
+
+    def _read_group_membership(self, left, right, neg=False):
+        if not _is_record_id(left, self.ctx.record_var):
+            return None
+        expr = self._bound_expr(right)
+        spec = self._read_group_set_spec(expr)
+        if spec is None:
+            return None
+        receiver, domain_node, groupby_field = spec
+        model = _eval_env(self.ctx.model, receiver)
+        query = self._read_group_query(model, domain_node, groupby_field, self.ctx.table.id)
+        return _S()('%sEXISTS %s', _S()('NOT ') if neg else _S()(''), query.subselect())
+
+    def _bound_expr(self, node):
+        if isinstance(node, ast.Name) and isinstance(self.ctx.bindings.get(node.id), ast.expr):
+            return self.ctx.bindings[node.id]
+        return node
+
+    def _read_group_set_spec(self, node):
+        if not (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == 'self'
+        ):
+            return None
+        method = getattr(type(self.ctx.model), node.func.attr, None)
+        if method is None:
+            return None
+        try:
+            fd = _source_funcdef(method)
+        except _UnsupportedNode:
+            return None
+        expr = _return_expression(fd.body)
+        if not isinstance(expr, (ast.SetComp, ast.ListComp)):
+            return None
+        if len(expr.generators) != 1:
+            return None
+        comp = expr.generators[0]
+        if comp.ifs:
+            return None
+        target_name = None
+        if isinstance(comp.target, ast.Tuple) and len(comp.target.elts) == 1 and isinstance(comp.target.elts[0], ast.Name):
+            target_name = comp.target.elts[0].id
+        elif isinstance(comp.target, ast.Name):
+            target_name = comp.target.id
+        if target_name is None:
+            return None
+        if not (
+            isinstance(expr.elt, ast.Attribute)
+            and isinstance(expr.elt.value, ast.Name)
+            and expr.elt.value.id == target_name
+            and expr.elt.attr == 'id'
+        ):
+            return None
+        call = comp.iter
+        if not (
+            isinstance(call, ast.Call)
+            and isinstance(call.func, ast.Attribute)
+            and call.func.attr == '_read_group'
+        ):
+            return None
+        receiver = call.func.value
+        if not _is_env_expr(receiver):
+            return None
+        helper_bindings = _call_bindings(fd, node.args, node.keywords, self.ctx.record_var)
+        domain_node = _read_group_argument(call, 'domain', 0)
+        groupby_node = _read_group_argument(call, 'groupby', 1)
+        if domain_node is None or groupby_node is None:
+            return None
+        domain_node = _rewrite_bound_names(domain_node, helper_bindings)
+        groupby_node = _rewrite_bound_names(groupby_node, helper_bindings)
+        groupby = _const_seq(groupby_node)
+        if len(groupby) != 1 or not isinstance(groupby[0], str):
+            return None
+        return receiver, ast.fix_missing_locations(domain_node), groupby[0]
+
+    def _read_group_query(self, model, domain_node, groupby_field, correlated_sql):
+        SQL = _S()
+        if not isinstance(domain_node, (ast.List, ast.Tuple)):
+            raise _UnsupportedNode(f"Unsupported _read_group domain: {ast.unparse(domain_node)!r}")
+        static_domain = []
+        correlated = []
+        for item in domain_node.elts:
+            if isinstance(item, ast.Constant) and item.value in ('&', '|', '!'):
+                static_domain.append(item.value)
+                continue
+            if not (isinstance(item, (ast.Tuple, ast.List)) and len(item.elts) == 3):
+                raise _UnsupportedNode(f"Unsupported _read_group domain term: {ast.unparse(item)!r}")
+            fname = _const(item.elts[0])
+            op = _const(item.elts[1])
+            value = item.elts[2]
+            if fname == groupby_field and self._is_self_ids(value):
+                correlated.append((fname, op, correlated_sql))
+                continue
+            static_domain.append((fname, op, self._domain_value(value)))
+        query = model._search(static_domain)
+        if correlated:
+            for fname, op, value in correlated:
+                query.add_where(self._correlated_groupby_sql(query.table, fname, op, value))
+        else:
+            query.add_where(SQL('(%s = %s)', query.table[groupby_field], correlated_sql))
+        return query
+
+    def _domain_value(self, node):
+        if _is_env_expr(node):
+            value = _eval_env(self.ctx.model, node)
+            if hasattr(value, '_name') and hasattr(value, 'ids'):
+                return value.ids
+            return value
+        if isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+            return [self._domain_value(elt) for elt in node.elts]
+        return _const(node)
+
+    def _is_self_ids(self, node):
+        chain, base = _unroll(node)
+        return isinstance(base, ast.Name) and base.id == 'self' and chain == ['ids']
+
+    def _correlated_groupby_sql(self, table, field_name, operator, correlated_sql):
+        SQL = _S()
+        if operator in ('in', '='):
+            return SQL('(%s = %s)', table[field_name], correlated_sql)
+        if operator in ('not in', '!='):
+            return SQL('(%s != %s)', table[field_name], correlated_sql)
+        raise _UnsupportedNode(f"Unsupported correlated _read_group operator {operator!r}")
+
     def _many2many_contains(self, left, right, neg=False):
         chain, base = _unroll(right)
         if not (isinstance(base, ast.Name) and base.id == self.ctx.record_var and len(chain) == 1):
@@ -498,9 +942,15 @@ class _Compiler:
 
     def visit_BoolOp(self, node):
         if isinstance(node.op, ast.And) and self.ctx.target_type in {'many2one', 'integer', 'float', 'monetary', 'char', 'text', 'selection', 'date', 'datetime'}:
+            condition = _S()(' AND ').join(self.bool_sql(value) for value in node.values[:-1])
+            folded = _folded_bool_sql(condition)
+            if folded is False:
+                return _S()('NULL')
+            if folded is True:
+                return self.value_sql(node.values[-1])
             return _S()(
                 'CASE WHEN %s THEN %s ELSE NULL END',
-                _S()(' AND ').join(self.bool_sql(value) for value in node.values[:-1]),
+                condition,
                 self.value_sql(node.values[-1]),
             )
         if isinstance(node.op, ast.Or) and self.ctx.target_type in {'many2one', 'integer', 'float', 'monetary', 'char', 'text', 'selection', 'date', 'datetime'}:
@@ -569,6 +1019,11 @@ class _Compiler:
 
     def visit_Subscript(self, node):
         SQL = _S()
+        try:
+            if _is_env_expr(node):
+                return _constant_sql(_eval_env(self.ctx.model, node))
+        except Exception:
+            pass
         if (
             isinstance(node.value, ast.Call)
             and isinstance(node.value.func, ast.Attribute)
@@ -598,6 +1053,9 @@ class _Compiler:
             pass
         if isinstance(node.func, ast.Attribute):
             chain, base = _unroll(node.func)
+            if node.func.attr == 'join' and len(node.args) == 1:
+                if sql := self._join_iterable(node.func.value, node.args[0]):
+                    return sql
             if isinstance(base, ast.Name) and base.id == 'fields' and chain == ['Date', 'context_today']:
                 return SQL('%s', fields.Date.context_today(self.ctx.model))
             if isinstance(base, ast.Name) and base.id == 'date' and chain == ['today'] and not node.args:
@@ -619,6 +1077,13 @@ class _Compiler:
                 return self._inline_model_method(base, chain[0], node.args, node.keywords)
             if len(chain) == 1:
                 return self._string_method(base, chain[0], node.args)
+        if isinstance(node.func, ast.Name) and node.func.id == 'SQL':
+            if not node.args:
+                raise _UnsupportedNode("SQL() requires a template")
+            template = _const(node.args[0])
+            args = [self.sql(arg) for arg in node.args[1:]]
+            kwargs = {kw.arg: self.sql(kw.value) for kw in node.keywords if kw.arg}
+            return SQL(template, *args, **kwargs)
         if isinstance(node.func, ast.Name):
             return self._builtin(node)
         raise _UnsupportedNode(f"Unsupported call: {ast.unparse(node)!r}")
@@ -631,6 +1096,11 @@ class _Compiler:
             return SQL('(%s::%s)', self.sql(node.args[0]), SQL(cast))
         if name == 'bool':
             return self.bool_sql(node.args[0])
+        if name == 'hasattr' and len(node.args) == 2:
+            try:
+                return SQL('TRUE' if _eval_env(self.ctx.model, node) else 'FALSE')
+            except Exception:
+                return SQL('FALSE')
         if name == 'abs':
             return SQL('ABS(%s)', self.sql(node.args[0]))
         if name == 'len':
@@ -640,7 +1110,10 @@ class _Compiler:
         if name in {'max', 'min'}:
             return SQL('%s(%s)', SQL('GREATEST' if name == 'max' else 'LEAST'), SQL(', ').join(self.sql(arg) for arg in node.args))
         if name == 'any' and len(node.args) == 1 and isinstance(node.args[0], ast.GeneratorExp):
-            return self._any_generator(node.args[0])
+            return self._any_external_ids(node.args[0]) or self._any_generator(node.args[0])
+        if name == 'all' and len(node.args) == 1:
+            if sql := self._parent_path_all_sql(node.args[0]):
+                return sql
         if name == 'timedelta':
             return self._timedelta(node)
         raise _UnsupportedNode(f"Unsupported builtin {name!r}")
@@ -663,6 +1136,142 @@ class _Compiler:
                 raise _UnsupportedNode(f"Unsupported timedelta unit {kw.arg!r}")
             parts.append(_S()("(%s * INTERVAL %s)", self.sql(kw.value), supported[kw.arg]))
         return _S()('(%s)', _S()(' + ').join(parts)) if parts else _S()("INTERVAL '0 second'")
+
+    def _join_iterable(self, separator_node, iterable_node):
+        separator = _const(separator_node)
+        if not isinstance(separator, str):
+            return None
+        if mapped_field := self._parent_path_mapped_field(iterable_node):
+            return self._parent_path_string_agg_sql(mapped_field, separator)
+        return None
+
+    def _parent_path_mapped_field(self, node):
+        node = self._bound_expr(node)
+        if not (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == 'mapped'
+            and len(node.args) == 1
+        ):
+            return None
+        mapped_field = _literal_string(node.args[0], self.ctx.bindings)
+        if not mapped_field:
+            return None
+        chain, base = _unroll(node.func.value)
+        if not (isinstance(base, ast.Name) and base.id == self.ctx.record_var and len(chain) == 1):
+            return None
+        relation = self.ctx.model._fields.get(chain[0])
+        target = self.ctx.model._fields.get(mapped_field)
+        if not (
+            relation
+            and relation.comodel_name == self.ctx.model._name
+            and relation.type in ('one2many', 'many2many')
+            and target
+            and 'parent_path' in self.ctx.model._fields
+            and self.ctx.model._parent_store
+        ):
+            return None
+        return mapped_field
+
+    def _parent_path_array_sql(self):
+        return _S()("string_to_array(TRIM(BOTH '/' FROM COALESCE(%s, '')), '/')", self.ctx.table.parent_path)
+
+    def _parent_path_query(self, mapped_field):
+        from odoo.orm.query import Query
+        SQL = _S()
+        query = Query(self.ctx.model, alias='parent')
+        path = self._parent_path_array_sql()
+        query.add_where(SQL("(%s::text = ANY(%s))", query.table.id, path))
+        return query, path, query.table[mapped_field]
+
+    def _parent_path_string_agg_sql(self, mapped_field, separator):
+        SQL = _S()
+        query, path, target = self._parent_path_query(mapped_field)
+        return SQL(
+            "(%s)",
+            query.select(SQL("STRING_AGG(%s, %s ORDER BY array_position(%s, %s::text))", target, separator, path, query.table.id)),
+        )
+
+    def _parent_path_all_sql(self, node):
+        if not (mapped_field := self._parent_path_mapped_field(node)):
+            return None
+        SQL = _S()
+        query, _path, target = self._parent_path_query(mapped_field)
+        field_type = self.ctx.model._fields[mapped_field].type
+        if field_type in {'char', 'text', 'html', 'selection'}:
+            falsey = SQL("(%s IS NULL OR %s = '')", target, target)
+        elif field_type == 'boolean':
+            falsey = SQL("(%s IS NOT TRUE)", target)
+        elif field_type in {'integer', 'float', 'monetary'}:
+            falsey = SQL("(%s IS NULL OR %s = 0)", target, target)
+        else:
+            falsey = SQL("(%s IS NULL)", target)
+        query.add_where(falsey)
+        return SQL("(NOT EXISTS %s)", query.subselect())
+
+    def _any_external_ids(self, gen):
+        if len(gen.generators) != 1:
+            return None
+        comp = gen.generators[0]
+        if comp.ifs or not isinstance(comp.target, ast.Name):
+            return None
+        iter_node = comp.iter
+        if not (
+            isinstance(iter_node, ast.Subscript)
+            and _is_record_id(iter_node.slice, self.ctx.record_var)
+            and isinstance(iter_node.value, ast.Name)
+            and isinstance(self.ctx.bindings.get(iter_node.value.id), ast.Call)
+        ):
+            return None
+        source = self.ctx.bindings[iter_node.value.id]
+        if not (
+            isinstance(source.func, ast.Attribute)
+            and source.func.attr == '_get_external_ids'
+            and isinstance(source.func.value, ast.Name)
+            and source.func.value.id == 'self'
+            and not source.args
+            and not source.keywords
+        ):
+            return None
+        condition = self._external_id_condition(gen.elt, comp.target.id)
+        if condition is None:
+            return None
+        SQL = _S()
+        return SQL(
+            """EXISTS (
+                SELECT 1
+                  FROM ir_model_data data
+                 WHERE data.model = %s
+                   AND data.res_id = %s
+                   AND %s
+            )""",
+            self.ctx.model._name,
+            self.ctx.table.id,
+            condition,
+        )
+
+    def _external_id_condition(self, node, xid_var):
+        negated = isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not)
+        if negated:
+            node = node.operand
+        if not (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == 'startswith'
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == xid_var
+            and len(node.args) == 1
+        ):
+            return None
+        prefixes = _const_seq(node.args[0])
+        SQL = _S()
+        xid_sql = SQL("(data.module || '.' || data.name)")
+        tests = [
+            SQL("%s LIKE (%s || '%%')", xid_sql, prefix)
+            for prefix in prefixes
+        ]
+        condition = SQL(' OR ').join(tests) if tests else SQL('FALSE')
+        return SQL('(NOT (%s))', condition) if negated else SQL('(%s)', condition)
 
     def _string_method(self, base, method, args):
         SQL = _S()
@@ -825,6 +1434,22 @@ def _call_bindings(fd, args, keywords, outer_record_var):
     return bindings
 
 
+def _delegated_compute(fd, model):
+    expr = _return_expression(fd.body)
+    if not (
+        isinstance(expr, ast.Call)
+        and isinstance(expr.func, ast.Attribute)
+        and isinstance(expr.func.value, ast.Name)
+        and expr.func.value.id == 'self'
+    ):
+        return None
+    method = getattr(type(model), expr.func.attr, None)
+    if method is None:
+        return None
+    helper_fd = _source_funcdef(method)
+    return helper_fd, _call_bindings(helper_fd, expr.args, expr.keywords, 'self')
+
+
 class _LoopFinder(ast.NodeVisitor):
     def __init__(self):
         self.record_var = None
@@ -872,15 +1497,53 @@ class _LocalCollector:
                 self.bindings[stmt.targets[0].id] = self._binding(stmt.value)
 
     def _binding(self, value):
+        value = _rewrite_bound_names(value, {
+            key: binding
+            for key, binding in self.bindings.items()
+            if isinstance(binding, ast.expr)
+        })
+        value = _inline_env_const_names(value, self.bindings)
         if _is_env_expr(value):
             return _EnvConst(value)
         return value
 
 
+def _single_name_assignment(stmts):
+    if len(stmts) != 1:
+        return None
+    stmt = stmts[0]
+    if (
+        isinstance(stmt, ast.Assign)
+        and len(stmt.targets) == 1
+        and isinstance(stmt.targets[0], ast.Name)
+    ):
+        return stmt.targets[0].id, stmt.value
+    return None
+
+
+def _loop_local_value_bindings(stmts):
+    bindings = {}
+    for stmt in stmts:
+        if (
+            isinstance(stmt, ast.Assign)
+            and len(stmt.targets) == 1
+            and isinstance(stmt.targets[0], ast.Name)
+        ):
+            bindings[stmt.targets[0].id] = stmt.value
+            continue
+        if isinstance(stmt, ast.If):
+            body = _single_name_assignment(stmt.body)
+            orelse = _single_name_assignment(stmt.orelse)
+            if body and orelse and body[0] == orelse[0]:
+                bindings[body[0]] = ast.IfExp(test=stmt.test, body=body[1], orelse=orelse[1])
+    return bindings
+
+
 class _AssignmentExtractor:
-    def __init__(self, record_var, field_name):
+    def __init__(self, record_var, field_name, bindings=None):
         self.record_var = record_var
         self.field_name = field_name
+        self.bindings = bindings or {}
 
     def extract(self, stmts):
         if stmts and (fallback := self._fallback(stmts[-1])) is not None:
@@ -890,12 +1553,20 @@ class _AssignmentExtractor:
         return self._stmts(stmts, [])
 
     def _is_target(self, node):
-        return (
+        if (
             isinstance(node, ast.Attribute)
             and isinstance(node.value, ast.Name)
             and node.value.id == self.record_var
             and node.attr == self.field_name
-        )
+        ):
+            return True
+        if (
+            isinstance(node, ast.Subscript)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == self.record_var
+        ):
+            return _literal_string(node.slice, self.bindings) == self.field_name
+        return False
 
     def _fallback(self, stmt):
         if (
@@ -1016,6 +1687,14 @@ def _recordset_assignment(fd, field_name):
     return None
 
 
+def _walk_statement_blocks(stmts):
+    for stmt in stmts:
+        yield stmt
+        for attr in ('body', 'orelse', 'finalbody'):
+            for child in getattr(stmt, attr, []) or []:
+                yield from _walk_statement_blocks([child])
+
+
 # ---------------------------------------------------------------------------
 # SQL projection computes
 # ---------------------------------------------------------------------------
@@ -1048,6 +1727,41 @@ def _field_source(model, field_name):
     if hasattr(type(model), method_name):
         return _MethodSQL(method_name)
     return None
+
+
+def _method_call_source(node, model):
+    if not (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == 'self'
+        and node.args
+        and hasattr(type(model), node.func.attr)
+    ):
+        return None
+    chain, base = _unroll(node.args[0])
+    if not (isinstance(base, ast.Name) and chain == ['table']):
+        return None
+    if any(kw.arg is None for kw in node.keywords):
+        return None
+    return _MethodCallSQL(
+        node.func.attr,
+        tuple(node.args[1:]),
+        tuple((kw.arg, kw.value) for kw in node.keywords),
+    )
+
+
+def _call_argument(node, name, position):
+    if position < len(node.args):
+        return node.args[position]
+    for kw in node.keywords:
+        if kw.arg == name:
+            return kw.value
+    return None
+
+
+def _read_group_argument(node, name, position):
+    return _call_argument(node, name, position)
 
 
 def _select_call(node):
@@ -1102,14 +1816,43 @@ def _select_sources(select_call, local_sql, model):
             sources.extend(starred)
         elif isinstance(arg, ast.Name) and arg.id in local_sql:
             sources.append(local_sql[arg.id])
+        elif source := _method_call_source(arg, model):
+            sources.append(source)
         elif fname := _table_field_name(arg):
             source = _field_source(model, fname)
             if source is None:
                 return None
             sources.append(source)
+        elif _projection_sql_expr(arg, local_sql):
+            sources.append(arg)
         else:
             return None
     return sources
+
+
+def _projection_sql_expr(node, local_sql):
+    if isinstance(node, ast.Name) and node.id in local_sql:
+        return True
+    if _table_field_name(node):
+        return True
+    if (
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id in local_sql
+    ):
+        return True
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == 'SQL'
+        and node.args
+    ):
+        try:
+            _const(node.args[0])
+        except _UnsupportedNode:
+            return False
+        return all(_projection_sql_expr(arg, local_sql) or isinstance(arg, ast.Constant) for arg in node.args[1:])
+    return False
 
 
 class _ProjectionLookupRewriter(ast.NodeTransformer):
@@ -1178,25 +1921,20 @@ def _query_projection_spec(fd, field_name, model):
     if not loop.find(fd.body):
         return None
 
+    pre_loop = _pre_loop_stmts(fd, loop.record_var)
     local_sql = {}
-    for stmt in fd.body:
+    for stmt in _walk_statement_blocks(pre_loop):
         if (
             isinstance(stmt, ast.Assign)
             and len(stmt.targets) == 1
             and isinstance(stmt.targets[0], ast.Name)
-            and isinstance(stmt.value, ast.Call)
-            and isinstance(stmt.value.func, ast.Attribute)
-            and isinstance(stmt.value.func.value, ast.Name)
-            and stmt.value.func.value.id == 'self'
-            and stmt.value.args
         ):
-            chain, base = _unroll(stmt.value.args[0])
-            if isinstance(base, ast.Name) and chain == ['table']:
-                local_sql[stmt.targets[0].id] = _MethodSQL(stmt.value.func.attr)
+            if source := _method_call_source(stmt.value, model):
+                local_sql[stmt.targets[0].id] = source
 
     projections = {}
-    bindings = {}
-    for stmt in fd.body:
+    bindings = dict(local_sql)
+    for stmt in _walk_statement_blocks(pre_loop):
         if not (isinstance(stmt, ast.Assign) and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Name)):
             continue
         select = _select_call(stmt.value)
@@ -1224,7 +1962,7 @@ def _query_projection_spec(fd, field_name, model):
 
 
 def _execute_query_loop_spec(fd, field_name, model):
-    for stmt in fd.body:
+    for stmt in _walk_statement_blocks(fd.body):
         if not (
             isinstance(stmt, ast.For)
             and isinstance(stmt.target, (ast.Tuple, ast.List))
@@ -1270,19 +2008,11 @@ def _execute_query_loop_spec(fd, field_name, model):
 
 
 # ---------------------------------------------------------------------------
-# Semantic adapters for computes that do not expose a formula in Python.
-# ---------------------------------------------------------------------------
-
-
-
-# ---------------------------------------------------------------------------
 # Spec construction, validation, public API
 # ---------------------------------------------------------------------------
 
 def _compute_sql_spec(compute_name: str | Callable, field_name: str, model):
     if callable(compute_name):
-        if adapter := _semantic_adapter(None, field_name, model):
-            return adapter
         raw = compute_name
         label = getattr(raw, '__name__', repr(raw))
     else:
@@ -1291,9 +2021,10 @@ def _compute_sql_spec(compute_name: str | Callable, field_name: str, model):
     if raw is None:
         raise _UnsupportedNode(f"Compute method {label!r} not found on {model._name!r}")
     fd = _source_funcdef(raw)
+    initial_bindings = {}
+    if delegated := _delegated_compute(fd, model):
+        fd, initial_bindings = delegated
 
-    if adapter := _semantic_adapter(fd, field_name, model):
-        return adapter
     if spec := _query_projection_spec(fd, field_name, model):
         _validate_spec(spec, field_name, model)
         return spec
@@ -1309,14 +2040,20 @@ def _compute_sql_spec(compute_name: str | Callable, field_name: str, model):
     if not loop.find(fd.body):
         raise _UnsupportedNode(f"No 'for record in self' loop in {label!r}")
     collector = _LocalCollector(loop.record_var, model)
+    collector.bindings.update(initial_bindings)
     collector.bindings.update(loop.extra_bindings)
     collector.collect(_pre_loop_stmts(fd, loop.record_var))
     collector.collect(loop.body)
     if _straightline_assignment_count(loop.body, loop.record_var, field_name) > 1:
         raise _UnsupportedNode(f"Multiple straight-line assignments to {field_name!r}")
-    target = _AssignmentExtractor(loop.record_var, field_name).extract(loop.body)
+    target = _AssignmentExtractor(loop.record_var, field_name, collector.bindings).extract(loop.body)
     if target is None:
         raise _UnsupportedNode(f"No assignment to {field_name!r} in {label!r}")
+    local_value_bindings = {
+        name: _inline_env_const_names(value, collector.bindings)
+        for name, value in _loop_local_value_bindings(loop.body).items()
+    }
+    target = _rewrite_bound_names(target, local_value_bindings)
     self_ref = _SelfFieldReference(loop.record_var, field_name)
     self_ref.visit(target)
     if self_ref.found:
@@ -1351,7 +2088,18 @@ def _validate_spec(spec, field_name, model):
                         break
                     if index == 0 and fname == field_name:
                         raise _UnsupportedNode(f"Expression for {field_name!r} reads itself")
-                    if index == len(chain) - 1 and not field.store and not field.compute_sql and not field.related:
+                    if (
+                        index == len(chain) - 1
+                        and not field.store
+                        and not field.compute_sql
+                        and not field.related
+                        and not (
+                            field.type in ('one2many', 'many2many')
+                            and field.comodel_name == current._name
+                            and current._parent_store
+                            and 'parent_path' in current._fields
+                        )
+                    ):
                         raise _UnsupportedNode(f"Non-stored field {fname!r} has no SQL")
                     if index != len(chain) - 1:
                         if not field.comodel_name:
@@ -1361,6 +2109,19 @@ def _validate_spec(spec, field_name, model):
 
 def _normalize_sql(sql):
     return re.sub(r'\s+', ' ', getattr(sql, '_sql_tuple', ('',))[0]).strip()
+
+
+def _folded_bool_sql(sql):
+    code = _normalize_sql(sql).upper()
+    if not re.fullmatch(r'[()\sTRUEFALSANDORNOT]+', code):
+        return None
+    if 'FALSE' in code and 'AND' in code:
+        return False
+    if code.strip('() ') == 'FALSE':
+        return False
+    if code.replace('(', '').replace(')', '').replace('AND', '').strip() == 'TRUE':
+        return True
+    return None
 
 
 def _efficiency_warnings(sql):

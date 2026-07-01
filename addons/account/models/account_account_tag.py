@@ -40,10 +40,11 @@ class AccountAccountTag(models.Model):
     def _compute_report_expression_id(self):
         self.check_access('read')
         query = self._as_query(ordered=False)
+        expr_t = self._join_report_expression(query.table)
         id2expression = {tag_id: vals for tag_id, *vals in self.env.execute_query(query.select(
             query.table.id,
-            query.table.report_expression_id,
-            query.table.balance_negate,
+            expr_t.id,
+            SQL("STARTS_WITH(%s, '-')", expr_t.formula),
         ))}
         for tag in self:
             tag.report_expression_id, tag.balance_negate = id2expression.get(tag._origin.id, (False, False))
