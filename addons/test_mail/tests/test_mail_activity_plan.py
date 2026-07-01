@@ -41,6 +41,21 @@ class TestActivitySchedule(ActivityScheduleCase):
             'delay_count': 3,
             'delay_unit': 'weeks',
         })
+        cls.test_role_1 = cls.env['res.role'].create({
+            'name': 'Role 1',
+            'user_ids': [(4, cls.user_employee.id)]
+        })
+        cls.test_role_2 = cls.env['res.role'].create({
+            'name': 'Role 2',
+            'user_ids': [(4, cls.user_admin.id)]
+        })
+        cls.type_no_default = cls.env['mail.activity.type'].create({'name': 'No Default'})
+        cls.type_default_user = cls.env['mail.activity.type'].create({
+            'name': 'Default User', 'default_user_id': cls.user_employee.id
+        })
+        cls.type_default_role = cls.env['mail.activity.type'].create({
+            'name': 'Default Role', 'default_role_id': cls.test_role_1.id
+        })
 
         # prepare plans
         cls.plan_party = cls.env['mail.activity.plan'].create({
@@ -122,6 +137,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     form.summary = 'Write specification'
                     form.note = '<p>Useful link ...</p>'
                     form.activity_user_id = self.user_admin
+                    form.activity_role_id = self.test_role_2
                     with self._mock_activities():
                         form.save().action_schedule_activities()
 
@@ -133,6 +149,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                         'note': '<p>Useful link ...</p>',
                         'summary': 'Write specification',
                         'user_id': self.user_admin,
+                        'role_id': self.test_role_2,
                     })
 
                 # 2. LOG DONE ACTIVITIES
@@ -140,6 +157,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
                     form.activity_user_id = self.user_admin
+                    form.activity_role_id = self.test_role_2
                     with self._mock_activities(), freeze_time(self.reference_now):
                         form.save().with_context(
                             mail_activity_quick_update=True
@@ -154,6 +172,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
                     form.activity_user_id = self.user_admin
+                    form.activity_role_id = self.test_role_2
                     with self._mock_activities():
                         form.save().with_context(
                             mail_activity_quick_update=True
@@ -167,6 +186,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                         'note': False,
                         'summary': 'TodoSumCallSummary',
                         'user_id': self.user_admin,
+                        'role_id': self.test_role_2,
                     })
 
         # global activity creation from tests
@@ -175,6 +195,48 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[2].activity_ids), 2)
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
+
+    @users('employee')
+    def test_activity_schedule_compute_assignation(self):
+        """ Test activity_user_id and activity_role_id computes upon activity type changes in the wizard. """
+        user_1 = self.user_employee
+        user_2 = self.user_admin
+        test_record = self.test_records[0].with_env(self.env)
+        context = {
+            'active_model': test_record._name,
+            'active_ids': test_record.ids,
+        }
+        init_states = [
+            (user_2, self.env['res.role']),
+            (self.env['res.users'], self.test_role_2),
+            (user_2, self.test_role_2),
+        ]
+        for init_user, init_role in init_states:
+            cases = [
+                (self.type_no_default, init_user, init_role),  # Target has no defaults -> Keep existing values
+                (self.type_default_user, user_1, self.env['res.role']),  # Target has default user -> Default user, clear role
+                (self.type_default_role, self.env['res.users'], self.test_role_1),  # Target has default role -> Default role, clear user
+            ]
+            for target_type, exp_user, exp_role in cases:
+                with self.subTest(init_user=init_user, init_role=init_role, target_type=target_type.name):
+                    with Form(self.env['mail.activity.schedule'].with_context(context)) as form:
+                        form.activity_user_id = init_user
+                        form.activity_role_id = init_role
+                        form.activity_type_id = target_type
+                        self.assertEqual(form.activity_user_id, exp_user)
+                        self.assertEqual(form.activity_role_id, exp_role)
+
+        with self.subTest(init_user=False, init_role=False, target_type=self.type_no_default.name):
+            with Form(self.env['mail.activity.schedule'].with_context(context)) as form:
+                form.activity_user_id = self.env['res.users']
+                form.activity_role_id = self.env['res.role']
+                form.activity_type_id = self.type_no_default
+                self.assertEqual(
+                    form.activity_user_id,
+                    self.env.user,
+                    "Should fallback to current user when both are empty and no defaults."
+                )
+                self.assertFalse(form.activity_role_id)
 
     @users('admin')
     def test_activity_schedule_rights_upload(self):
@@ -395,3 +457,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 ValidationError, msg='When selecting responsible "other", you must specify a responsible.'):
             template.responsible_type = 'other'
         template.write({'responsible_type': 'other', 'responsible_id': self.user_admin})
+        with self.assertRaises(ValidationError, msg='When selecting "role" assignment, you must specify an assigned role.'):
+            template.write({'responsible_type': 'role', 'role_id': False})
+        template.write({'responsible_type': 'role', 'role_id': self.test_role_1.id})
+        self.assertEqual(template.role_id, self.test_role_1)

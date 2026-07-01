@@ -29,6 +29,14 @@ class TestActivityCommon(ActivityScheduleCase):
             {'name': 'Test'},
             {'name': 'Test_2'},
         ])
+        cls.test_role_1 = cls.env['res.role'].create({
+            'name': 'Role 1',
+            'user_ids': [(4, cls.user_employee.id)]
+        })
+        cls.test_role_2 = cls.env['res.role'].create({
+            'name': 'Role 2',
+            'user_ids': [(4, cls.user_admin.id)]
+        })
 
 
 @tests.tagged('mail_activity')
@@ -260,6 +268,48 @@ class TestActivityRights(TestActivityCommon):
 @tests.tagged('mail_activity')
 class TestActivityFlow(TestActivityCommon):
 
+    def test_activity_compute_assignation(self):
+        """ Test user_id and role_id computes upon activity type changes. """
+        user_1 = self.user_employee
+        user_2 = self.user_admin
+        type_no_default = self.env['mail.activity.type'].create({'name': 'No Default'})
+        type_default_user = self.env['mail.activity.type'].create({'name': 'Default User', 'default_user_id': user_1.id})
+        type_default_role = self.env['mail.activity.type'].create({'name': 'Default Role', 'default_role_id': self.test_role_1.id})
+        init_states = [
+            (user_2, self.env['res.role']),
+            (self.env['res.users'], self.test_role_2),
+            (user_2, self.test_role_2),
+        ]
+
+        for init_user, init_role in init_states:
+            cases = [
+                (type_no_default, init_user, init_role),  # Target has no defaults -> Keep existing values
+                (type_default_user, user_1, self.env['res.role']),  # Target has default user -> Default user, clear role
+                (type_default_role, self.env['res.users'], self.test_role_1),  # Target has default role -> Default role, clear user
+            ]
+            for target_type, exp_user, exp_role in cases:
+                with self.subTest(init_user=init_user, init_role=init_role, target_type=target_type.name):
+                    with Form(self.env['mail.activity'].with_context(
+                        default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'),
+                        default_res_id=self.test_record.id
+                    )) as form:
+                        form.user_id = init_user
+                        form.role_id = init_role
+                        form.activity_type_id = target_type
+                        self.assertEqual(form.user_id, exp_user)
+                        self.assertEqual(form.role_id, exp_role)
+
+        with self.subTest(init_user=False, init_role=False, target_type=type_no_default.name):
+            with Form(self.env['mail.activity'].with_context(
+                default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'),
+                default_res_id=self.test_record.id
+            )) as form:
+                form.user_id = self.env['res.users']
+                form.role_id = self.env['res.role']
+                form.activity_type_id = type_no_default
+                self.assertEqual(form.user_id, self.env.user, "Should fallback to current user when both are empty and no defaults.")
+                self.assertFalse(form.role_id)
+
     def test_activity_flow_employee(self):
         with self.with_user('employee'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
@@ -321,7 +371,7 @@ class TestActivityFlow(TestActivityCommon):
 
     @freeze_time('2026-01-22')
     def test_activity_edition(self):
-        """ Test summary, user_id, date_deadline, note computed based on activity_type """
+        """ Test summary, date_deadline, note computed based on activity_type """
         todo_activity_type = self.env.ref('mail.mail_activity_data_todo')
         todo_activity_type.write({'default_note': 'Test note', 'default_user_id': self.user_employee.id})
         call_activity_type = self.env['mail.activity.type'].create({
@@ -340,11 +390,6 @@ class TestActivityFlow(TestActivityCommon):
             'summary should fallback to name when first loaded activity_type does not contain the default summary.'
         )
         self.assertEqual(
-            test_activity.user_id.id,
-            self.env.user.id,
-            'user_id should fallback to current user when first loaded activity_type does not contain the default user_id.'
-        )
-        self.assertEqual(
             test_activity.date_deadline,
             date(2026, 1, 22),
             'date_deadline should fallback to today when first loaded activity_type does not have the delay_count.'
@@ -358,11 +403,6 @@ class TestActivityFlow(TestActivityCommon):
             'summary should be computed based on the default_summary provided on activity_type'
         )
         self.assertEqual(
-            test_activity.user_id.id,
-            self.user_employee.id,
-            'user_id should be computed based on the default_user_id provided on activity_type.'
-        )
-        self.assertEqual(
             test_activity.date_deadline,
             date(2026, 1, 22) + relativedelta(days=4),
             'date_deadline should be computed based on delay_count provided on activity_type.'
@@ -372,7 +412,6 @@ class TestActivityFlow(TestActivityCommon):
         test_activity.activity_type_id = call_activity_type
         # Values should not change as call_activity_type doesn't contains the default values.
         self.assertEqual(test_activity.summary, 'TodoSummary')
-        self.assertEqual(test_activity.user_id.id, self.user_employee.id)
         self.assertEqual(test_activity.date_deadline, date(2026, 1, 22) + relativedelta(days=4))
         self.assertEqual(test_activity.note, Markup('<p>Test note</p>'))
 
@@ -461,22 +500,26 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         # records and leads and free activities
         # have 1 record (or activity) for today, one for tomorrow
         cls.test_activities = cls.env['mail.activity']
-        for record, summary, dt, creator in (
-            (cls.test_record, "Summary Today'", cls.dt_reference, cls.user_employee),
-            (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
-            (cls.test_lead_records[0], "Summary Today'", cls.dt_reference, cls.user_employee),
-            (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
-            (cls.test_lead_records[2], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
-            (cls.test_lead_records[3], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_admin),
+        for record, summary, dt, creator, user_id, role_id in (
+            (cls.test_record, "Summary Today'", cls.dt_reference, cls.user_employee, cls.user_employee.id, False),
+            (cls.test_record, "Role Tomorrow", cls.dt_reference + timedelta(days=1), cls.user_admin, False, cls.test_role_1.id),
+            (cls.test_record, "Role Only Today", cls.dt_reference, cls.user_admin, False, cls.test_role_2.id),
+            (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee, cls.user_employee.id, cls.test_role_1.id),
+            (cls.test_lead_records[0], "Summary Today'", cls.dt_reference, cls.user_employee, cls.user_employee.id, cls.test_role_1.id),
+            (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee, cls.user_employee.id, False),
+            (cls.test_lead_records[2], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee, cls.user_employee.id, cls.test_role_1.id),
+            (cls.test_lead_records[3], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_admin, cls.user_employee.id, cls.test_role_1.id),
         ):
             cls.test_activities += record.with_user(creator).activity_schedule(
                 "test_mail.mail_act_test_todo_generic",
                 date_deadline=dt.date(),
                 summary=summary,
-                user_id=cls.user_employee.id,
+                user_id=user_id,
+                role_id=role_id,
             )
 
-        cls.test_lead_activities = cls.test_activities[2:]
+        cls.test_role_only_activities = cls.test_activities[1:3]
+        cls.test_lead_activities = cls.test_activities[4:]
         cls.test_activities_removed = cls.deleted_record.activity_ids
         cls.test_activities_company_2 = cls.test_lead_records[3].activity_ids
 
@@ -593,6 +636,18 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             set(lead_act_attachments.exists().mapped('res_model')), set(['mail.message'] * 2))
 
     @users("employee")
+    def test_systray_activities_to_assign_count(self):
+        """ Check that the 'to assign' counter correctly counts unassigned activities targeting the user's roles. """
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with freeze_time(self.dt_reference):
+            store_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {})
+        self.assertEqual(store_data.get('activities_to_assign_count'), 1)
+        self.test_role_only_activities[0].write({'user_id': self.user_employee.id})
+        with freeze_time(self.dt_reference):
+            store_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {})
+        self.assertEqual(store_data.get('activities_to_assign_count'), 0)
+
+    @users("employee")
     def test_systray_activities_multi_company(self):
         """ Explicitly check MC support, as well as allowed_company_ids, that
         limits visible records in a given session, should impact systray activities. """
@@ -677,6 +732,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
                 'res_id': cls.test_record.id,
                 'date_deadline': dt,
                 'user_id': cls.user_employee.id,
+                'role_id': cls.test_role_1.id,
             } | extra
             for dt, extra in zip(
                 (datetime(2023, 12, 31, 15, 0, 0), datetime(2023, 12, 31, 15, 0, 0), datetime(2024, 1, 1, 15, 0, 0), datetime(2024, 1, 2, 15, 0, 0)),
@@ -693,6 +749,18 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
                 activities = self.env['mail.activity'].create(user_activity_vals)
             with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_deleted": True, "count_diff": -2})):
                 activities.unlink()
+
+    @users('employee')
+    def test_notify_role_only_activities(self):
+        """Check that creating or unlinking an activity assigned only to a role does not trigger user-specific bus notifications."""
+        role_activity_vals = [
+            vals | {'user_id': False, 'role_id': self.test_role_1.id}
+            for vals in self.activity_vals
+        ]
+        with self.assertBus([]):
+            activities = self.env['mail.activity'].create(role_activity_vals)
+        with self.assertBus([]):
+            activities.unlink()
 
     @users('employee')
     def test_notify_update_activities(self):
@@ -749,13 +817,16 @@ class TestActivityViewHelpers(TestActivityCommon):
             'res_id': cls.test_record_2.id,
         } for idx in range(2)])
         cls.user_employee.tz = cls.user_admin.tz
+        cls.test_role = cls.env['res.role'].create({
+            'name': 'Test Role',
+            'user_ids': [(4, cls.user_employee_2.id)]
+        })
 
     @freeze_time("2023-10-18 06:00:00")
     def test_get_activity_data(self):
         get_activity_data = self.env['mail.activity'].get_activity_data
 
         with self.with_user('employee'):
-            # Setup activities: 3 for the first record, 2 "done" and 2 ongoing for the second
             test_record, test_record_2 = self.env['mail.test.activity'].browse(
                 (self.test_record + self.test_record_2).ids
             )
@@ -763,17 +834,30 @@ class TestActivityViewHelpers(TestActivityCommon):
             now_user = now_utc.astimezone(ZoneInfo(self.env.user.tz or 'UTC'))
             today_user = now_user.date()
 
-            for days, user_id in ((-1, self.user_employee_2), (0, self.user_employee), (1, self.user_admin)):
+            for days, user_id, role_id in (
+                (-1, self.user_employee_2, self.env['res.role']),   # Overdue: user only
+                (0, self.user_employee, self.test_role_1),          # Today: user + role
+                (1, self.env['res.users'], self.test_role_2),       # Planned: role only
+            ):
                 test_record.activity_schedule(
                     'test_mail.mail_act_test_upload_document',
                     today_user + relativedelta(days=days),
-                    user_id=user_id.id)
-            for days, user_id in ((-2, self.user_admin), (0, self.user_employee), (2, self.user_employee_2),
-                                  (3, self.user_admin), (4, self.env['res.users'])):
+                    user_id=user_id.id,
+                    role_id=role_id.id)
+            for days, user_id, role_id in (
+                (-2, self.user_admin, self.env['res.role']),         # Done
+                (0, self.user_employee, self.env['res.role']),       # Done
+                (2, self.user_employee_2, self.env['res.role']),     # Ongoing: user only
+                (3, self.user_admin, self.env['res.role']),          # Ongoing: user only
+                (4, self.env['res.users'], self.env['res.role']),    # Ongoing: neither
+                (5, self.env['res.users'], self.test_role_1),        # Ongoing: role only
+                (6, self.user_employee_2, self.test_role_1),         # Ongoing: user + role
+            ):
                 test_record_2.activity_schedule(
                     'test_mail.mail_act_test_upload_document',
                     today_user + relativedelta(days=days),
-                    user_id=user_id.id)
+                    user_id=user_id.id,
+                    role_id=role_id.id)
             record_activities = test_record.activity_ids
             record_2_activities = test_record_2.activity_ids
             record_2_activities[0].action_feedback(feedback='Done', attachment_ids=self.attachment_1.ids)
@@ -798,7 +882,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
-                'role_assigned_ids': [],
+                'role_assigned_ids': [self.test_role_1.id, self.test_role_2.id],
                 'summaries': [act.summary for act in record_activities],
             })
 
@@ -806,11 +890,11 @@ class TestActivityViewHelpers(TestActivityCommon):
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'planned',
-                'count_by_state': {'done': 2, 'planned': 3},  # free user is planned
+                'count_by_state': {'done': 2, 'planned': 5},  # free user or role only is planned
                 'ids': set(record_2_activities.ids),
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
-                'role_assigned_ids': [],
+                'role_assigned_ids': [self.test_role_1.id],
                 'attachments_info': {
                     'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'},
                 'summaries': [act.summary for act in record_2_activities],
@@ -870,7 +954,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
-                'role_assigned_ids': [],
+                'role_assigned_ids': [self.test_role_1.id, self.test_role_2.id],
                 'summaries': [act.summary for act in record_activities],
             })
 
