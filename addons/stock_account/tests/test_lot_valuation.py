@@ -663,3 +663,22 @@ class TestLotValuation(TestStockValuationCommon):
         self.product.standard_price = 12
         self.assertEqual(self.product.standard_price, 12)
         self.assertEqual(self.lot1.standard_price, 12)
+
+    def test_fifo_remaining_qty_by_lot(self):
+        """
+        Test that for lot-valuated products, each receipt's remaining_qty must
+        reflect only its own lot's on-hand stock.
+        Receive 10unit of lot1 + 10units of lot2, then deliver 2units from lot1
+        and 4units from lot2.
+        Each receipt must show what is still available for that lot:
+        - lot1 receipt: 10 - 2 = 8
+        - lot2 receipt: 10 - 4 = 6
+        """
+        self.product.categ_id = self.category_fifo
+        in_move_lot1 = self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        in_move_lot2 = self._make_in_move(self.product, 10, 7, lot_ids=[self.lot2])
+        self._make_out_move(self.product, 2, lot_ids=[self.lot1])
+        self._make_out_move(self.product, 4, lot_ids=[self.lot2])
+
+        self.assertEqual(in_move_lot1.remaining_qty, 8)
+        self.assertEqual(in_move_lot2.remaining_qty, 6)

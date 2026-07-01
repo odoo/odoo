@@ -369,12 +369,17 @@ class ProductProduct(models.Model):
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
-            moves, remaining_qty = product._run_fifo_get_stack()
-            moves = self.env['stock.move'].concat(*moves)
-            if not moves:
+            qty_by_move = defaultdict(float)
+            lots = product.stock_quant_ids.filtered(lambda q: q.lot_id and q.location_id.is_valued_internal and q.quantity > 0).lot_id
+            for lot in lots or [None]:
+                moves, remaining_qty = product._run_fifo_get_stack(lot=lot)
+                if not moves:
+                    continue
+                qty_by_move[moves[0]] += remaining_qty
+                for move in moves[1:]:
+                    qty_by_move[move] += move._get_valued_qty(lot)
+            if not qty_by_move:
                 continue
-            qty_by_move = {m: m.quantity for m in moves[1:]}
-            qty_by_move[moves[0]] = remaining_qty
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
