@@ -77,6 +77,16 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         )
         self.assertEqual(tx.state, "error")
 
+    def test_cop_currency_rounded_on_creation(self):
+        self.currency = (
+            self
+            .env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", "COP")], limit=1)
+        )
+        tx = self._create_transaction("direct", amount=1111.87)
+        self.assertEqual(tx.amount, 1111)
+
     def test_cop_currency_rounding(self):
         """Ensure COP payments get sent as integer amounts to Mercado Pago."""
         self.currency = (

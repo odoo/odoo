@@ -417,3 +417,8 @@ class TestPaymentTransaction(PaymentCommon):
         ):
             tx._validate_amount({})
         self.assertNotEqual(tx.state, "error")
+
+    def test_currency_rounding_on_creation(self):
+        self.currency_euro.rounding = 0.001
+        tx = self._create_transaction("direct", amount=1111.9999)
+        self.assertEqual(tx.amount, 1111.99)

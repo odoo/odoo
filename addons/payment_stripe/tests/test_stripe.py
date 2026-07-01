@@ -241,3 +241,13 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             call_args = mock.call_args.kwargs["json"]["payload"].keys()
             for payload_param in ("account", "return_url", "refresh_url", "type"):
                 self.assertIn(payload_param, call_args)
+
+    def test_mga_currency_rounding_on_creation(self):
+        self.currency = (
+            self
+            .env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", "MGA")], limit=1)
+        )
+        tx = self._create_transaction("direct", amount=1111.87)
+        self.assertEqual(tx.amount, 1111)

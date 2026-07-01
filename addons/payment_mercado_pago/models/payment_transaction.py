@@ -4,11 +4,9 @@ from urllib.parse import quote as url_quote
 
 from odoo import api, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 
@@ -65,7 +63,7 @@ class PaymentTransaction(models.Model):
                     "title": self.reference,
                     "quantity": 1,
                     "currency_id": self.currency_id.name,
-                    "unit_price": self._mercado_pago_convert_amount(),
+                    "unit_price": self.amount,
                 }
             ],
             "payer": {
@@ -87,13 +85,7 @@ class PaymentTransaction(models.Model):
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload.update({
             "additional_info": {
-                "items": [
-                    {
-                        "title": self.reference,
-                        "quantity": 1,
-                        "unit_price": self._mercado_pago_convert_amount(),
-                    }
-                ]
+                "items": [{"title": self.reference, "quantity": 1, "unit_price": self.amount}]
             },
             "payer": {
                 "first_name": first_name,
@@ -138,15 +130,9 @@ class PaymentTransaction(models.Model):
         # Send the payment request to Mercado Pago.
         data.update({
             "additional_info": {
-                "items": [
-                    {
-                        "title": self.reference,
-                        "quantity": 1,
-                        "unit_price": self._mercado_pago_convert_amount(),
-                    }
-                ]
+                "items": [{"title": self.reference, "quantity": 1, "unit_price": self.amount}]
             },
-            "transaction_amount": self._mercado_pago_convert_amount(),
+            "transaction_amount": self.amount,
             "token": response_content["id"],
             "installments": 1,
             "payer": {"type": "customer", "id": self.token_id.mercado_pago_customer_id},
@@ -158,24 +144,6 @@ class PaymentTransaction(models.Model):
             idempotency_key=payment_utils.generate_idempotency_key(self, scope="token_payment"),
         )
         self._record(response_content)
-
-    def _mercado_pago_convert_amount(self):
-        """Convert the transaction amount according to Mercado Pago's currency requirements.
-
-        Mercado Pago requires certain currencies (COP, HNL, NIO) to be expressed as integers rather
-        than following the standard ISO 4217 decimal places. This method rounds down the amount to
-        the appropriate decimal places to ensure API compatibility.
-
-        :return: The transaction amount rounded to Mercado Pago's required decimal precision.
-        :rtype: float
-        """
-        unit_price = self.amount
-        decimal_places = const.CURRENCY_DECIMALS.get(
-            self.currency_id.name, CURRENCY_MINOR_UNITS.get(self.currency_id.name)
-        )
-        if decimal_places is not None:
-            unit_price = float_round(unit_price, decimal_places, rounding_method="DOWN")
-        return unit_price
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -252,11 +220,7 @@ class PaymentTransaction(models.Model):
         else:  # 'online_token', 'offline'
             amount = payment_data.get("transaction_amount")
         currency_code = payment_data.get("currency_id")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
-        }
+        return {"amount": float(amount), "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on payment data."""

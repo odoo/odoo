@@ -171,3 +171,11 @@ class TestPaymentTransaction(NuveiCommon):
         ):
             processing_values = tx._get_specific_rendering_values(None)
         self.assertEqual(processing_values.get("url_params").get("total_amount"), 1000)
+
+    def test_webpay_rounding_on_creation(self):
+        currency_usd = self.env.ref("base.USD")
+        webpay_id = self.provider._get_pm_from_code("webpay")
+        tx = self._create_transaction(
+            "redirect", amount=1111.87, currency_id=currency_usd.id, payment_method_id=webpay_id.id
+        )
+        self.assertEqual(tx.amount, 1111)
