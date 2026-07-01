@@ -2253,12 +2253,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             two_last_orders[1].picking_ids.move_line_ids.owner_id.id,
             "The owner of the refund is not the same as the owner of the original order")
 
-    def test_only_existing_lots(self):
+    def _run_existing_lots_test(self, removal_strategy, tour_name):
+        category = self.env['product.category'].create({
+            'name': 'Test Category',
+            'removal_strategy_id': removal_strategy.id,
+        })
         product = self.env['product.product'].create({
             'name': 'Product with existing lots',
             'is_storable': True,
             'tracking': 'lot',
             'available_in_pos': True,
+            'categ_id': category.id,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create([{
             'product_id': product.id,
@@ -2278,7 +2283,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_only_existing_lots', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, tour_name, login="pos_user")
+
+    def test_only_existing_lots_fifo(self):
+        self._run_existing_lots_test(self.env.ref('stock.removal_fifo'), tour_name='test_only_existing_lots_fifo')
+
+    def test_only_existing_lots_lifo(self):
+        self._run_existing_lots_test(self.env.ref('stock.removal_lifo'), tour_name='test_only_existing_lots_lifo')
 
     def test_order_with_existing_serial(self):
         product = self.env['product.product'].create({
