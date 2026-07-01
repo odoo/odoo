@@ -97,6 +97,21 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
                 code=duplicate.code,
             ))
 
+    @api.model
+    def _archive_generic_types(self):
+        companies = self.env['res.company'].sudo().search([])
+        if not companies or any(not c.country_id for c in companies):
+            return
+        company_country_ids = list(set(companies.mapped('country_id.id')))
+        countries_with_types = set(self.sudo().search([
+            ('country_id', 'in', company_country_ids)
+        ]).mapped('country_id.id'))
+        if len(company_country_ids) != len(countries_with_types):
+            return
+        generic_types = self.sudo().search([('country_id', '=', False)])
+        if generic_types:
+            generic_types.write({'active': False})
+
     def copy_data(self, default=None):
         default = default or {}
         data_list = super().copy_data(default)

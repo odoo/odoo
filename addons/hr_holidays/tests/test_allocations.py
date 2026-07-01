@@ -296,7 +296,8 @@ class TestAllocations(TestHrHolidaysCommon):
             employee_id=self.employee.id,
             leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
-            default_date_to='2024-08-18 15:00:00'
+            default_date_to='2024-08-18 15:00:00',
+            active_test=False
         ).name_search(domain=[['id', '=', work_entry_type.id]])
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
         if display_country_name:
