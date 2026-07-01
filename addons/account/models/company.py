@@ -336,6 +336,13 @@ class ResCompany(models.Model):
         compute='_compute_has_ledger',
     )
 
+    account_cash_rounding_id = fields.Many2one(
+        comodel_name='account.cash.rounding',
+        check_company=True,
+        string='Cash Rounding Method',
+        help='Defines the smallest coinage of the currency that can be used to pay by cash.',
+    )
+
     def get_next_batch_payment_communication(self):
         '''
         When in need of a batch payment communication reference (several invoices paid at the same time)
