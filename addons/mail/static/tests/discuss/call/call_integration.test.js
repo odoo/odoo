@@ -8,7 +8,7 @@ import {
     onlineTest,
     defineMailModels,
 } from "@mail/../tests/mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { getService, onRpc } from "@web/../tests/web_test_helpers";
 import { PeerToPeer, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 defineMailModels();
@@ -27,9 +27,9 @@ function connectionReady(p2p) {
 }
 
 async function mockPeerToPeerCallEnvironment({ channelId, remoteSessionId }) {
-    const env = await start();
-    const rtc = env.services["discuss.rtc"];
-    const localUserP2P = env.services["discuss.p2p"];
+    await start();
+    const rtc = getService("discuss.rtc");
+    const localUserP2P = getService("discuss.p2p");
     const remoteUserP2P = new PeerToPeer({
         notificationRoute: "/mail/rtc/session/notify_call_members",
     });

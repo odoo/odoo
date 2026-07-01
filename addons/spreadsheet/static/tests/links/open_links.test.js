@@ -159,8 +159,7 @@ test("Click a link containing an action xml id", async () => {
 
 test("Can open link when some views are absent from the referred action", async () => {
     const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
-    env.services.action = {
-        ...env.services.action,
+    mockService("action", {
         doAction(action) {
             expect.step("do-action");
             expect(action.name).toBe("My Action Name");
@@ -173,7 +172,7 @@ test("Can open link when some views are absent from the referred action", async 
             ]);
             expect(action.domain).toEqual([(1, "=", 1)]);
         },
-    };
+    });
 
     const view = {
         name: "My Action Name",
@@ -200,13 +199,12 @@ test("Can open link when some views are absent from the referred action", async 
 
 test("Context is passed correctly to the action service", async () => {
     const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
-    env.services.action = {
-        ...env.services.action,
+    mockService("action", {
         loadAction(_, context) {
             expect.step("load-action");
             expect(context).toEqual({ search_default_partner: 1 });
         },
-    };
+    });
 
     const view = {
         name: "My Action Name",

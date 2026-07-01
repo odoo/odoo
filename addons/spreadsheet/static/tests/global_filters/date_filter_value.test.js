@@ -1,6 +1,6 @@
 import { describe, expect, test, getFixture, beforeEach } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { DateFilterValue } from "@spreadsheet/global_filters/components/date_filter_value/date_filter_value";
 import { Model } from "@odoo/o-spreadsheet";
@@ -18,13 +18,12 @@ beforeEach(() => {
  *
  * @param {{ model: Model, filter: object}} props
  */
-async function mountDateFilterValue(env, props) {
-    await mountWithCleanup(DateFilterValue, { props: { model: new Model(), ...props }, env });
+async function mountDateFilterValue(props) {
+    await mountWithCleanup(DateFilterValue, { props: { model: new Model(), ...props } });
 }
 
 test("basic date filter value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: () => {
             expect.step("update");
@@ -37,8 +36,7 @@ test("basic date filter value", async function () {
 });
 
 test("Date filter without initial value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: () => {},
     });
@@ -46,8 +44,7 @@ test("Date filter without initial value", async function () {
 });
 
 test("Date filter with relative value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "relative", period: "last_7_days" },
         update: () => {},
     });
@@ -55,8 +52,7 @@ test("Date filter with relative value", async function () {
 });
 
 test("Date filter with month value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "month", month: 1, year: 2023 },
         update: () => {},
     });
@@ -64,8 +60,7 @@ test("Date filter with month value", async function () {
 });
 
 test("Date filter with quarter value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "quarter", quarter: 1, year: 2023 },
         update: () => {},
     });
@@ -73,8 +68,7 @@ test("Date filter with quarter value", async function () {
 });
 
 test("Date filter with year value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "year", year: 2023 },
         update: () => {},
     });
@@ -82,8 +76,7 @@ test("Date filter with year value", async function () {
 });
 
 test("Date filter with range value", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
@@ -92,8 +85,7 @@ test("Date filter with range value", async function () {
 
 test("Date options are computed from the current date", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: () => {},
     });
@@ -109,8 +101,7 @@ test("Date options are computed from the current date", async function () {
 
 test("Month props value should override date options", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "month", month: 1, year: 2025 },
         update: () => {},
     });
@@ -126,8 +117,7 @@ test("Month props value should override date options", async function () {
 
 test("Quarter props value should override date options", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "quarter", quarter: 1, year: 2025 },
         update: () => {},
     });
@@ -143,8 +133,7 @@ test("Quarter props value should override date options", async function () {
 
 test("Year props value should override date options", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "year", year: 2025 },
         update: () => {},
     });
@@ -159,8 +148,7 @@ test("Year props value should override date options", async function () {
 });
 
 test("All the options should be displayed", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: () => {},
     });
@@ -184,8 +172,7 @@ test("All the options should be displayed", async function () {
 });
 
 test("Opening the custom range calendar does not trigger update", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {
             expect.step("update");
@@ -201,8 +188,7 @@ test("Opening the custom range calendar does not trigger update", async function
 });
 
 test("Can select a relative period", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "relative", period: "last_30_days" });
@@ -217,8 +203,7 @@ test("Can select a relative period", async function () {
 
 test("Can select a month", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "month", month: 7, year: 2022 });
@@ -233,8 +218,7 @@ test("Can select a month", async function () {
 
 test("Can select previous month", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "month", month: 6, year: 2022 });
@@ -249,8 +233,7 @@ test("Can select previous month", async function () {
 
 test("Can select next month", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "month", month: 8, year: 2022 });
@@ -265,8 +248,7 @@ test("Can select next month", async function () {
 
 test("Can select a quarter", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "quarter", quarter: 3, year: 2022 });
@@ -281,8 +263,7 @@ test("Can select a quarter", async function () {
 
 test("Can select previous quarter", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "quarter", quarter: 2, year: 2022 });
@@ -297,8 +278,7 @@ test("Can select previous quarter", async function () {
 
 test("Can select next quarter", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "quarter", quarter: 4, year: 2022 });
@@ -313,8 +293,7 @@ test("Can select next quarter", async function () {
 
 test("Can select a year", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "year", year: 2022 });
@@ -329,8 +308,7 @@ test("Can select a year", async function () {
 
 test("Can select previous year", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "year", year: 2021 });
@@ -345,8 +323,7 @@ test("Can select previous year", async function () {
 
 test("Can select next year", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: (value) => {
             expect(value).toEqual({ type: "year", year: 2023 });
@@ -361,8 +338,7 @@ test("Can select next year", async function () {
 
 test("Can select all time", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "relative", period: "last_7_days" },
         update: (value) => {
             expect(value).toBe(undefined);
@@ -376,8 +352,7 @@ test("Can select all time", async function () {
 });
 
 test("Input value is correct for relative period", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "relative", period: "last_30_days" },
         update: () => {},
     });
@@ -387,8 +362,7 @@ test("Input value is correct for relative period", async function () {
 });
 
 test("Input value is correct for month", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "month", month: 1, year: 2023 },
         update: () => {},
     });
@@ -398,8 +372,7 @@ test("Input value is correct for month", async function () {
 });
 
 test("Input value is correct for quarter", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "quarter", quarter: 1, year: 2023 },
         update: () => {},
     });
@@ -409,8 +382,7 @@ test("Input value is correct for quarter", async function () {
 });
 
 test("Input value is correct for year", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "year", year: 2023 },
         update: () => {},
     });
@@ -420,8 +392,7 @@ test("Input value is correct for year", async function () {
 });
 
 test("Input value is correct for range", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
@@ -431,8 +402,7 @@ test("Input value is correct for range", async function () {
 });
 
 test("Input value is correct for all time", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: undefined,
         update: () => {},
     });
@@ -442,8 +412,7 @@ test("Input value is correct for all time", async function () {
 });
 
 test("Can open date time picker to select a range", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
@@ -454,8 +423,7 @@ test("Can open date time picker to select a range", async function () {
 });
 
 test("Choosing a from after the to will re-order dates", async function () {
-    const env = await makeMockEnv();
-    await mountDateFilterValue(env, {
+    await mountDateFilterValue({
         value: { type: "range", from: "2023-01-30", to: "2023-01-31" },
         update: (value) => {
             expect(value).toEqual({ type: "range", from: "2023-01-01", to: "2023-01-30" });

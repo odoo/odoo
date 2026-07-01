@@ -14,7 +14,7 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, allowTranslations, mockService } from "@web/../tests/web_test_helpers";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 
 import { defineSpreadsheetModels } from "../helpers/data";
@@ -569,14 +569,10 @@ test("getFacetInfo for relation values", async () => {
         label: "Relation Filter",
         id: "1",
     };
-    const nameService = {
-        loadDisplayNames: (resModel, ids) => ids.map((id) => `Name ${id}`),
-    };
-    const env = await makeMockEnv({
-        services: {
-            name: nameService,
-        },
+    mockService("name", {
+        loadDisplayNames: (_resModel, ids) => ids.map((id) => `Name ${id}`),
     });
+    const env = await makeMockEnv();
     expect(await getFacetInfo(env, filter, { operator: "in", ids: [1] })).toEqual({
         title: "Relation Filter",
         id: "1",

@@ -2,7 +2,7 @@ import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
@@ -23,8 +23,7 @@ test("Can replace an image", async () => {
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
-    await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`, { env });
+    await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`);
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     await click("img");
     await tick(); // selectionchange
@@ -48,10 +47,8 @@ test("Replace an image with link by a document should remove the link", async ()
             image_src: "",
         },
     ]);
-    const env = await makeMockEnv();
     await setupEditor(
-        `<p><a href="http://test.com"><img class="img-fluid" src="/web/static/img/logo.png"></a></p>`,
-        { env }
+        `<p><a href="http://test.com"><img class="img-fluid" src="/web/static/img/logo.png"></a></p>`
     );
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     await click("img");
@@ -70,10 +67,7 @@ test("Replace an image with link by a document should remove the link", async ()
 
 test("Replace an image by icon should remove invalid classes", async () => {
     onRpc("ir.attachment", "search_read", () => []);
-    const env = await makeMockEnv();
-    await setupEditor(`<p><img class="img-fluid w-100" src="/web/static/img/logo.png"></p>`, {
-        env,
-    });
+    await setupEditor(`<p><img class="img-fluid w-100" src="/web/static/img/logo.png"></p>`);
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     expect("img[src='/web/static/img/logo.png']").toHaveClass("img-fluid w-100");
     await click("img");
@@ -104,10 +98,8 @@ test("Selection is collapsed after the image after replacing it", async () => {
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
     const { el } = await setupEditor(
-        `<p>abc<img class="img-fluid" src="/web/static/img/logo.png">def</p>`,
-        { env }
+        `<p>abc<img class="img-fluid" src="/web/static/img/logo.png">def</p>`
     );
     await click("img");
     await waitFor(".o-we-toolbar");
@@ -172,8 +164,7 @@ test("Can insert an image, and selection should be collapsed after it", async ()
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
-    const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
+    const { editor, el } = await setupEditor("<p>a[]bc</p>");
     await insertText(editor, "/image");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 1);
@@ -187,8 +178,7 @@ test("Can insert an image, and selection should be collapsed after it", async ()
 
 test("press escape to close media dialog", async () => {
     onRpc("ir.attachment", "search_read", () => []);
-    const env = await makeMockEnv();
-    const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
+    const { editor, el } = await setupEditor("<p>a[]bc</p>");
     await insertText(editor, "/image");
     await waitFor(".o-we-powerbox");
     await press("Enter");
@@ -409,8 +399,7 @@ test("double-click on image in Media Dialog executes onClickAttachment only once
         },
     });
 
-    const env = await makeMockEnv();
-    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`, { env });
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`);
     await click("img");
     await waitFor(".o-we-toolbar");
     await click("button[name='replace_image']");

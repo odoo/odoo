@@ -28,6 +28,7 @@ import {
     defineModels,
     fields,
     getService,
+    mockService,
     models,
     mountView,
     mountWithCleanup,
@@ -275,7 +276,7 @@ defineModels([Partner, ResCompany, User, ResCurrency]);
 test("properties: no access to parent", async () => {
     onRpc("has_access", () => false);
 
-    const formView = await mountView({
+    await mountView({
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -291,7 +292,7 @@ test("properties: no access to parent", async () => {
         actionMenus: {},
     });
 
-    patchWithCleanup(formView.env.services.notification, {
+    mockService("notification", {
         add: (message, options) => {
             expect(message).toBe('Oops! You cannot edit the Company "Company 1".');
         },
@@ -3042,7 +3043,7 @@ test("many2one property in list view", async () => {
 test("properties: no parent document set", async () => {
     onRpc("has_access", () => true);
 
-    const formView = await mountView({
+    await mountView({
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -3057,7 +3058,7 @@ test("properties: no parent document set", async () => {
         actionMenus: {},
     });
 
-    patchWithCleanup(formView.env.services.notification, {
+    mockService("notification", {
         add: (message, options) => {
             expect.step("notification");
             expect(message).toBe("Oops! A Company is needed to add property fields.");
