@@ -4,8 +4,8 @@
 <t t-name="hr.hr_org_chart_employee">
     <t t-set="is_self" t-value="employee.id == this.view_employee_id"/>
 
-    <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{this.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
-        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} position-relative d-flex align-items-center overflow-visible #{this.managers.length &gt; 0 ? 'o_treeEntry' : ''}">
+    <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{this.state.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
+        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} position-relative d-flex align-items-center overflow-visible #{this.state.managers.length &gt; 0 ? 'o_treeEntry' : ''}">
             <t t-call="hr.hr_org_chart_employee_content" is_self="is_self"/>
         </div>
     </section>
@@ -62,24 +62,24 @@
 
         -->
     <t t-set="emp_count" t-value="0"/>
-    <div t-if='this.managers.length &gt; 0' class="o_org_chart_group_up position-relative">
-        <div t-if='this.managers_more' class="o_org_chart_more pe-3" t-attf-class="{{this.max_level !== null ? 'invisible' : ''}}">
-            <a href="#" t-att-data-employee-id="this.managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(this.managers[0].id)">
+    <div t-if='this.state.managers.length &gt; 0' class="o_org_chart_group_up position-relative">
+        <div t-if='this.state.managers_more' class="o_org_chart_more pe-3" t-attf-class="{{this.max_level !== null ? 'invisible' : ''}}">
+            <a href="#" t-att-data-employee-id="this.state.managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(this.state.managers[0].id)">
                 <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
             </a>
         </div>
 
-        <t t-foreach="this.managers" t-as="employee" t-key="employee_index">
+        <t t-foreach="this.state.managers" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-call="hr.hr_org_chart_employee" employee_type="'manager'"/>
         </t>
     </div>
 
-    <t t-if="this.children.length || this.managers.length" t-call="hr.hr_org_chart_employee"
+    <t t-if="this.state.children.length || this.state.managers.length" t-call="hr.hr_org_chart_employee"
         employee_type="'self'"
-        employee="this.self"/>
+        employee="this.state.self"/>
 
-    <t t-if="!this.children.length &amp;&amp; !this.managers.length">
+    <t t-if="!this.state.children.length &amp;&amp; !this.state.managers.length">
         <p class="mb-3 text-muted fst-italic">Set a manager or reports to show in org chart.</p>
         <div class="o_org_chart_entry_self_container opacity-50">
             <div class="o_org_chart_entry o_org_chart_entry_self d-flex py-2 pe-none">
@@ -120,20 +120,20 @@
         </section>
     </t>
 
-    <div t-if="this.children.length" t-attf-class="o_org_chart_group_down position-relative #{this.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
-        <t t-foreach="this.children" t-as="employee" t-key="employee_index">
+    <div t-if="this.state.children.length" t-attf-class="o_org_chart_group_down position-relative #{this.state.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
+        <t t-foreach="this.state.children" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
                 <t t-call="hr.hr_org_chart_employee" employee_type="'sub'"/>
             </t>
         </t>
 
-        <t t-if="(this.children.length + this.managers.length) &gt; 19">
+        <t t-if="(this.state.children.length + this.state.managers.length) &gt; 19">
             <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
                 <div class="o_media_left position-relative">
                     <a href="#"
-                        t-att-data-employee-id="this.self.id"
-                        t-att-data-employee-name="this.self.name"
+                        t-att-data-employee-id="this.state.self.id"
+                        t-att-data-employee-name="this.state.self.name"
                         class="o_org_chart_show_more o_employee_sub_redirect btn btn-link ps-2"
                         t-on-click.prevent="this._onEmployeeSubRedirect">See All</a>
                 </div>

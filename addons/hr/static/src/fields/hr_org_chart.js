@@ -1,4 +1,3 @@
-import { render } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -48,11 +47,18 @@ export class HrOrgChart extends Component {
         this.actionService = useService("action");
         this.popover = usePopover(HrOrgChartPopover);
 
-        this.state = proxy({ employee_id: null });
+        this.state = proxy({
+            employee_id: null,
+            managers: [],
+            children: [],
+            managers_more: false,
+            self: null,
+        });
         this.max_level = null;
         this.lastEmployeeId = null;
         this.lastJobTitle = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
+        this.fetchId = 0;
 
         useRecordObserver(async (record) => {
             const newParentId = record.data.parent_id?.id || false;
@@ -73,35 +79,48 @@ export class HrOrgChart extends Component {
     }
 
     async fetchEmployeeData(employeeId, newParentId = null, newJobTitle = null, force = false) {
+        this.fetchId++;
+        const currentFetchId = this.fetchId;
+        const updateData = (data) => {
+            this.state.managers = data.managers || [];
+            this.state.children = data.children || [];
+            this.state.managers_more = data.managers_more;
+            this.state.self = data.self;
+        };
         if (!employeeId) {
-            this.managers = [];
-            this.children = [];
-            if (this.view_employee_id) {
-                render(this, true);
-            }
             this.view_employee_id = null;
+            this.state.managers = [];
+            this.state.children = [];
         } else if (employeeId !== this.view_employee_id || force) {
             this.view_employee_id = employeeId;
-            let orgData = await rpc("/hr/get_org_chart", {
-                employee_id: employeeId,
-                new_parent_id: newParentId,
-                new_job_title: newJobTitle,
-                context: {
-                    ...user.context,
-                    max_level: this.max_level,
+            await rpc(
+                "/hr/get_org_chart",
+                {
+                    employee_id: employeeId,
+                    new_parent_id: newParentId,
+                    new_job_title: newJobTitle,
+                    context: {
+                        ...user.context,
+                        max_level: this.max_level,
+                    },
                 },
-            });
-            if (Object.keys(orgData).length === 0) {
-                orgData = {
-                    managers: [],
-                    children: [],
-                };
-            }
-            this.managers = orgData.managers;
-            this.children = orgData.children;
-            this.managers_more = orgData.managers_more;
-            this.self = orgData.self;
-            render(this, true);
+                {
+                    cache: {
+                        type: "disk",
+                        update: "always",
+                        callback: (freshData, hasChanged) => {
+                            if (
+                                hasChanged ||
+                                currentFetchId !== this.fetchId ||
+                                this.view_employee_id !== employeeId
+                            ) {
+                                return;
+                            }
+                            updateData(freshData);
+                        },
+                    },
+                }
+            ).then(updateData);
         }
     }
 
