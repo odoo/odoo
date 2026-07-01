@@ -1052,6 +1052,354 @@ class ProjectProject(models.Model):
             'color': self.last_update_color,
         }
 
+<<<<<<< cdfc97f9aa545c13d2b3dd0565dee131595060a1
+||||||| 457684cc3377cda5167a4002aa1816b4aa15699f
+    def get_panel_data(self):
+        self.ensure_one()
+        if not self.env.user.has_group('project.group_project_user'):
+            return {}
+        show_profitability = self._show_profitability()
+        panel_data = {
+            'user': self._get_user_values(),
+            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
+            'currency_id': self.currency_id.id,
+            'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
+            'show_milestones': self.allow_milestones,
+        }
+        if self.allow_milestones:
+            panel_data['milestones'] = self._get_milestones()
+        if show_profitability:
+            profitability_items = self.with_context(active_test=False)._get_profitability_items()
+            if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+                profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+                profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+            panel_data['profitability_items'] = profitability_items
+            panel_data['profitability_labels'] = self._get_profitability_labels()
+        return panel_data
+
+    def get_milestones(self):
+        if self.env.user.has_group('project.group_project_user'):
+            return self._get_milestones()
+        return {}
+
+    def _get_profitability_labels(self):
+        return {}
+
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {}
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        # To be extended to avoid account.move.line overlap between
+        # profitability reports.
+        return []
+
+    def _get_user_values(self):
+        return {
+            'is_project_user': self.env.user.has_group('project.group_project_user'),
+        }
+
+    def _show_profitability(self):
+        self.ensure_one()
+        return True
+
+    def _show_profitability_helper(self):
+        return self.env.user.has_group('analytic.group_analytic_accounting')
+
+    def _get_profitability_aal_domain(self):
+        return [('account_id', 'in', self.account_id.ids)]
+
+    def _get_profitability_items(self, with_action=True):
+        return self._get_items_from_aal(with_action)
+
+    def _get_items_from_aal(self, with_action=True):
+        return {
+            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
+        }
+
+    def _get_milestones(self):
+        self.ensure_one()
+        return {
+            'data': self.milestone_ids._get_data_list(),
+        }
+
+    def _get_stat_buttons(self):
+        self.ensure_one()
+        closed_task_count = self.task_count - self.open_task_count
+        if self.task_count:
+            number = self.env._(
+                "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)",
+                closed_task_count=closed_task_count,
+                task_count=self.task_count,
+                closed_rate=round(100 * closed_task_count / self.task_count),
+            )
+        else:
+            number = self.env._(
+                "%(closed_task_count)s / %(task_count)s",
+                closed_task_count=closed_task_count,
+                task_count=self.task_count,
+            )
+        buttons = [{
+            'icon': 'check',
+            'text': self.label_tasks,
+            'number': number,
+            'action_type': 'object',
+            'action': 'action_view_tasks',
+            'show': True,
+            'sequence': 1,
+        }]
+        if self.rating_count != 0:
+            if self.rating_avg >= rating_data.RATING_AVG_TOP:
+                icon = 'smile-o text-success'
+            elif self.rating_avg >= rating_data.RATING_AVG_OK:
+                icon = 'meh-o text-warning'
+            else:
+                icon = 'frown-o text-danger'
+            buttons.append({
+                'icon': icon,
+                'text': self.env._('Average Rating'),
+                'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
+                'action_type': 'object',
+                'action': 'action_view_all_rating',
+                'show': self.show_ratings,
+                'sequence': 15,
+            })
+        if self.env.user.has_group('project.group_project_user'):
+            buttons.append({
+                'icon': 'area-chart',
+                'text': self.env._('Burndown Chart'),
+                'action_type': 'action',
+                'action': 'project.action_project_task_burndown_chart_report',
+                'additional_context': json.dumps({
+                    'active_id': self.id,
+                    'stage_name_and_sequence_per_id': {
+                        stage.id: {
+                            'sequence': stage.sequence,
+                            'name': stage.name
+                        } for stage in self.type_ids
+                    },
+                }),
+                'show': True,
+                'sequence': 60,
+            })
+        return buttons
+
+    def _get_profitability_values(self):
+        if not self.env.user.has_group('project.group_project_manager'):
+            return {}, False
+        profitability_items = self._get_profitability_items(False)
+        if profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+            profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+            profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+        costs = sum(profitability_items['costs']['total'].values())
+        revenues = sum(profitability_items['revenues']['total'].values())
+        margin = revenues + costs
+        to_bill_to_invoice = profitability_items['costs']['total']['to_bill'] + profitability_items['revenues']['total']['to_invoice']
+        billed_invoiced = profitability_items['costs']['total']['billed'] + profitability_items['revenues']['total']['invoiced']
+        expected_percentage, to_bill_to_invoice_percentage, billed_invoiced_percentage = 0, 0, 0
+        if revenues:
+            expected_percentage = formatLang(self.env, (margin / revenues) * 100, digits=0)
+        if profitability_items['revenues']['total']['to_invoice']:
+            to_bill_to_invoice_percentage = formatLang(self.env, (to_bill_to_invoice / profitability_items['revenues']['total']['to_invoice']) * 100, digits=0)
+        if profitability_items['revenues']['total']['invoiced']:
+            billed_invoiced_percentage = formatLang(self.env, (billed_invoiced / profitability_items['revenues']['total']['invoiced']) * 100, digits=0)
+        profitability_values_dict = {
+            'account_id': self.account_id,
+            'costs': profitability_items['costs'],
+            'revenues': profitability_items['revenues'],
+            'expected_percentage': expected_percentage,
+            'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
+            'billed_invoiced_percentage': billed_invoiced_percentage,
+            'total': {
+                'costs': costs,
+                'revenues': revenues,
+                'margin': margin,
+                'margin_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
+                                                digits=0),
+            },
+            'labels': self._get_profitability_labels(),
+        }
+        show_profitability = bool(profitability_values_dict.get('account_id')
+            and (profitability_values_dict.get('costs') or profitability_values_dict.get('revenues'))
+        )
+        return profitability_values_dict, show_profitability
+
+=======
+    def get_panel_data(self):
+        self.ensure_one()
+        if not self.env.user.has_group('project.group_project_user'):
+            return {}
+        show_profitability = self._show_profitability()
+        panel_data = {
+            'user': self._get_user_values(),
+            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
+            'currency_id': self.currency_id.id,
+            'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
+            'show_milestones': self.allow_milestones,
+        }
+        if self.allow_milestones:
+            panel_data['milestones'] = self._get_milestones()
+        if show_profitability:
+            profitability_items = self.with_context(active_test=False)._get_profitability_items()
+            if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+                profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+                profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+            panel_data['profitability_items'] = profitability_items
+            panel_data['profitability_labels'] = self._get_profitability_labels()
+        return panel_data
+
+    def get_milestones(self):
+        if self.env.user.has_group('project.group_project_user'):
+            return self._get_milestones()
+        return {}
+
+    def _get_profitability_labels(self):
+        return {}
+
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {}
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        # To be extended to avoid account.move.line overlap between
+        # profitability reports.
+        return []
+
+    def _get_user_values(self):
+        return {
+            'is_project_user': self.env.user.has_group('project.group_project_user'),
+        }
+
+    def _show_profitability(self):
+        self.ensure_one()
+        return True
+
+    def _show_profitability_helper(self):
+        return self.env.user.has_group('analytic.group_analytic_accounting')
+
+    def _get_profitability_aal_domain(self):
+        return [('account_id', 'in', self.account_id.ids)]
+
+    def _get_profitability_items(self, with_action=True):
+        return self._get_items_from_aal(with_action)
+
+    def _get_items_from_aal(self, with_action=True):
+        return {
+            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
+        }
+
+    def _get_milestones(self):
+        self.ensure_one()
+        return {
+            'data': self.milestone_ids._get_data_list(),
+        }
+
+    def _get_stat_buttons(self):
+        self.ensure_one()
+        closed_task_count = self.task_count - self.open_task_count
+        if self.task_count:
+            number = self.env._(
+                "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)",
+                closed_task_count=closed_task_count,
+                task_count=self.task_count,
+                closed_rate=round(100 * closed_task_count / self.task_count),
+            )
+        else:
+            number = self.env._(
+                "%(closed_task_count)s / %(task_count)s",
+                closed_task_count=closed_task_count,
+                task_count=self.task_count,
+            )
+        buttons = [{
+            'icon': 'check',
+            'text': self.label_tasks,
+            'number': number,
+            'action_type': 'object',
+            'action': 'action_view_tasks',
+            'show': True,
+            'sequence': 1,
+        }]
+        if self.rating_count != 0:
+            if self.rating_avg >= rating_data.RATING_AVG_TOP:
+                icon = 'smile-o text-success'
+            elif self.rating_avg >= rating_data.RATING_AVG_OK:
+                icon = 'meh-o text-warning'
+            else:
+                icon = 'frown-o text-danger'
+            buttons.append({
+                'icon': icon,
+                'text': self.env._('Average Rating'),
+                'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
+                'action_type': 'object',
+                'action': 'action_view_all_rating',
+                'show': self.show_ratings,
+                'sequence': 15,
+            })
+        if self.env.user.has_group('project.group_project_user'):
+            buttons.append({
+                'icon': 'area-chart',
+                'text': self.env._('Burndown Chart'),
+                'action_type': 'action',
+                'action': 'project.action_project_task_burndown_chart_report',
+                'additional_context': json.dumps({
+                    'active_id': self.id,
+                    'stage_name_and_sequence_per_id': {
+                        stage.id: {
+                            'sequence': stage.sequence,
+                            'name': stage.name
+                        } for stage in self.type_ids
+                    },
+                }),
+                'show': True,
+                'sequence': 60,
+            })
+        return buttons
+
+    def _get_profitability_values(self):
+        if not self.env.user.has_group('project.group_project_manager'):
+            return {}, False
+        profitability_items = self._get_profitability_items(False)
+        if profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+            profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+            profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+        costs = sum(profitability_items['costs']['total'].values())
+        revenues = sum(profitability_items['revenues']['total'].values())
+        margin = revenues + costs
+        to_bill_to_invoice = profitability_items['costs']['total']['to_bill'] + profitability_items['revenues']['total']['to_invoice']
+        billed_invoiced = profitability_items['costs']['total']['billed'] + profitability_items['revenues']['total']['invoiced']
+        expected_percentage, to_bill_to_invoice_percentage, billed_invoiced_percentage = 0, 0, 0
+        if revenues:
+            expected_percentage = formatLang(self.env, (margin / revenues) * 100, digits=0)
+        if profitability_items['revenues']['total']['to_invoice']:
+            to_bill_to_invoice_percentage = formatLang(self.env, (to_bill_to_invoice / profitability_items['revenues']['total']['to_invoice']) * 100, digits=0)
+        if profitability_items['revenues']['total']['invoiced']:
+            billed_invoiced_percentage = formatLang(self.env, (billed_invoiced / profitability_items['revenues']['total']['invoiced']) * 100, digits=0)
+        profitability_values_dict = {
+            'account_id': self.account_id,
+            'costs': profitability_items['costs'],
+            'revenues': profitability_items['revenues'],
+            'expected_percentage': expected_percentage,
+            'to_bill_to_invoice': to_bill_to_invoice,
+            'billed_invoiced': billed_invoiced,
+            'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
+            'billed_invoiced_percentage': billed_invoiced_percentage,
+            'total': {
+                'costs': costs,
+                'revenues': revenues,
+                'margin': margin,
+                'margin_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
+                                                digits=0),
+            },
+            'labels': self._get_profitability_labels(),
+        }
+        show_profitability = bool(profitability_values_dict.get('account_id')
+            and (profitability_values_dict.get('costs') or profitability_values_dict.get('revenues'))
+        )
+        return profitability_values_dict, show_profitability
+
+>>>>>>> be3d5b24e80d7cea62f8d4e4da0142a826424086
     # ---------------------------------------------------
     #  Business Methods
     # ---------------------------------------------------
