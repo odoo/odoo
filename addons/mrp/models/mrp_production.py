@@ -1010,6 +1010,13 @@ class MrpProduction(models.Model):
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
+        old_qty_by_production = {}
+        if 'product_qty' in vals:
+            old_qty_by_production = {
+                production.id: production.product_qty
+                for production in self
+                if production.state not in ('done', 'cancel') and production.product_qty
+            }
         for move_str in ('move_raw_ids', 'move_finished_ids'):
             if move_str not in vals or self.state in ['cancel', 'done']:
                 continue
@@ -1062,6 +1069,9 @@ class MrpProduction(models.Model):
                 new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
+            old_qty = old_qty_by_production.get(production.id)
+            if old_qty and production.product_qty != old_qty:
+                production._rescale_workorders_duration(production.product_qty / old_qty)
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign.filtered(
@@ -1955,6 +1965,10 @@ class MrpProduction(models.Model):
             return regex.sub(seq_back, name)
         return name + seq_back
 
+    def _rescale_workorders_duration(self, ratio):
+        for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
+            workorder.duration_expected = workorder._get_duration_expected(ratio=ratio)
+
     def _get_backorder_mo_vals(self):
         self.ensure_one()
         return {
@@ -2183,8 +2197,8 @@ class MrpProduction(models.Model):
             bo = production_to_backorders[production]
 
             # Adapt duration
-            for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+            for backorder in bo:
+                backorder._rescale_workorders_duration(backorder.product_qty / initial_qty if initial_qty else 1)
 
             # Adapt quantities produced
             for workorder in production.workorder_ids.sorted('id'):

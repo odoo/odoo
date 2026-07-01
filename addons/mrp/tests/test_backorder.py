@@ -1033,6 +1033,33 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(backorder.move_raw_ids.quantity, 8.0)
 
+    def test_split_mo_duration(self):
+        """
+        Test that when an MO is split, the duration_expected of work orders
+        WITHOUT an operation_id (i.e. manually added WOs) is distributed
+        proportionally to the split quantities.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_1.product_id.id,
+            'product_qty': 2.0,
+            'bom_id': self.bom_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'Manual WO',
+                'workcenter_id': self.workcenter_1.id,
+                'duration_expected': 120.0,
+            })]
+        })
+        wo = mo.workorder_ids
+        self.assertFalse(wo.operation_id, "WO must have no operation_id for this test")
+        self.assertEqual(wo.duration_expected, 120.0)
+        action = mo.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        splits = mo.production_group_id.production_ids
+        self.assertEqual(len(splits), 2, "MO must split into 2 productions")
+        self.assertEqual(splits.mapped('workorder_ids.duration_expected'), [67.5, 67.5])
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod

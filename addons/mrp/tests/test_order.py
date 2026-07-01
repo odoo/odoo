@@ -422,7 +422,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(production)
         mo_form.product_qty = 3
         production = mo_form.save()
-        self.assertEqual(production.workorder_ids.duration_expected, 40)
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
 
         production.action_confirm()
         update_quantity_wizard = self.env['change.production.qty'].create({
@@ -430,7 +430,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_qty': 9,
         })
         update_quantity_wizard.change_prod_qty()
-        self.assertEqual(production.workorder_ids.duration_expected, 90)
+        self.assertEqual(production.workorder_ids.duration_expected, 240)
 
         # The same test than above but without form
         production = self.env['mrp.production'].create({
@@ -447,7 +447,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         self.assertEqual(production.workorder_ids.duration_expected, 40)
         production.product_qty = 3
-        self.assertEqual(production.workorder_ids.duration_expected, 40)
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
 
         production.action_confirm()
         update_quantity_wizard = self.env['change.production.qty'].create({
@@ -455,7 +455,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_qty': 9,
         })
         update_quantity_wizard.change_prod_qty()
-        self.assertEqual(production.workorder_ids.duration_expected, 90)
+        self.assertEqual(production.workorder_ids.duration_expected, 240)
 
     def test_qty_producing(self):
         """Qty producing should be the qty remain to produce, instead of 0"""
