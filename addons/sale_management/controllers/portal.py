@@ -59,7 +59,16 @@ class CustomerPortal(portal.CustomerPortal):
             combo_item_lines = order_line._get_linked_lines().filtered("combo_item_id")
             combo_item_lines.update({"product_uom_qty": quantity})
 
-        with self.env.protecting(
-            [order_line._fields["discount"], order_line._fields["price_unit"]], order_line
-        ):
+        recompute_prices = (
+            self
+            .env["ir.config_parameter"]
+            .sudo()
+            .get_bool("sale_management.recompute_prices_on_portal_update")
+        )
+        if recompute_prices:
             order_line.product_uom_qty = quantity
+        else:
+            with self.env.protecting(
+                [order_line._fields["discount"], order_line._fields["price_unit"]], order_line
+            ):
+                order_line.product_uom_qty = quantity

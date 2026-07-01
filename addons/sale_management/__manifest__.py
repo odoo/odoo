@@ -37,6 +37,7 @@ The Dashboard for the Sales Manager will include
     "website": "https://www.odoo.com/app/sales",
     "depends": ["sale", "digest"],
     "data": [
+        "data/ir_config_parameter.xml",
         "data/digest_data.xml",
         # Define SO template views & actions before their place of use
         "views/sale_order_template_views.xml",
