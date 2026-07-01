@@ -175,6 +175,7 @@ export class Checkout extends Interaction {
                 const jsonLocation = JSON.stringify(locationData);
                 // Assign the selected pickup location to the order.
                 await this.waitFor(this._setPickupLocation(jsonLocation));
+                await this._onPickupLocationConfirmed();
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, locationData, jsonLocation);
@@ -554,6 +555,14 @@ export class Checkout extends Interaction {
     async _setPickupLocation(pickupLocationData) {
         await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
     }
+
+    /**
+     * Hook called after confirming a pickup location from the selector.
+     *
+     * @private
+     * @return {void}
+     */
+    async _onPickupLocationConfirmed() {}
 
     // #=== GETTERS & SETTERS ===#
 
