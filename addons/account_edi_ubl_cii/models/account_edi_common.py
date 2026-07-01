@@ -233,15 +233,13 @@ class AccountEdiCommon(models.AbstractModel):
             if customer.zip[:2] in ('51', '52'):
                 return create_dict(tax_category_code='M')  # Ceuta & Mellila
 
-        cocontractant_note = self._get_belgian_cocontractant_note(invoice, customer)
+        cocontractant_note = not tax.amount and self._get_belgian_cocontractant_note(invoice, customer)
         if cocontractant_note:
-            if not tax.amount:
-                return create_dict(
-                    tax_category_code='AE',
-                    tax_exemption_reason_code='VATEX-EU-AE',
-                    tax_exemption_reason=cocontractant_note
-                )
-            raise UserError(_("Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor tax, or ensure your custom tax uses a tax amount of 0"))
+            return create_dict(
+                tax_category_code='AE',
+                tax_exemption_reason_code='VATEX-EU-AE',
+                tax_exemption_reason=cocontractant_note
+            )
 
         if supplier.country_id == customer.country_id:
             if not tax or tax.amount == 0:
