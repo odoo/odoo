@@ -70,17 +70,15 @@
         <t t-out="profitability['expected_percentage']"/><t>%</t>
     </t>
 </td>
-<td t-attf-class="#{'text-danger' if profitability['total']['revenues'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
-    <t t-out="format_monetary(profitability['total']['revenues'])"/><br/>
+<td t-attf-class="#{'text-danger' if profitability['to_bill_to_invoice'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
+    <t t-out="format_monetary(profitability['to_bill_to_invoice'])"/><br/>
     <t t-if="profitability['to_bill_to_invoice_percentage']">
-
         <t t-out="profitability['to_bill_to_invoice_percentage']"/><t>%</t>
     </t>
 </td>
-<td t-attf-class="#{'text-danger' if profitability['total']['costs'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
-    <t t-out="format_monetary(profitability['total']['costs'])"/><br/>
+<td t-attf-class="#{'text-danger' if profitability['billed_invoiced'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
+    <t t-out="format_monetary(profitability['billed_invoiced'])"/><br/>
     <t t-if="profitability['billed_invoiced_percentage']">
-
         <t t-out="profitability['billed_invoiced_percentage']"/><t>%</t>
     </t>
 </td>
