@@ -1083,8 +1083,7 @@ class PurchaseOrder(models.Model):
     def send_reminder_preview(self):
         self.ensure_one()
         if not self.env.user.has_group('purchase.group_send_reminder'):
-            return
-
+            return {'toast_message': escape(_("You don't have access to send email. Please contact your administrator.")), 'type': 'danger'}
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
         if template and self.env.user.email and self.id:
             template.with_context(is_reminder=True).send_mail(
@@ -1095,6 +1094,12 @@ class PurchaseOrder(models.Model):
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
             )
             return {'toast_message': escape(_("A sample email has been sent to %s.", self.env.user.email))}
+        if not template:
+            return {'toast_message': escape(_("Email template not found. Please contact your system administrator.")), 'type': 'danger'}
+        if not self.env.user.email:
+            return {'toast_message': escape(_("Your user account does not have an email address configured.")), 'type': 'danger'}
+        if not self.id:
+            return {'toast_message': escape(_("Purchase order must be saved before sending a preview.")), 'type': 'danger'}
 
     def _send_reminder_open_composer(self,template_id):
         self.ensure_one()

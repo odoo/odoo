@@ -19,8 +19,15 @@ class ButtonWithNotification extends Component {
         const result = await this.orm.call(this.props.record.resModel, this.props.method, [
             this.props.record.resId,
         ]);
-        const message = result.toast_message;
-        this.notification.add(message, { type: "success" });
+        if (result) {
+            const message = result?.toast_message;
+            this.notification.add(message, { type: result?.type || "success" });
+        } else {
+            this.notification.add(
+                this.env._t("An unexpected error occurred. Please contact your administrator."),
+                { type: "danger" }
+            );
+        }
     }
 }
 
