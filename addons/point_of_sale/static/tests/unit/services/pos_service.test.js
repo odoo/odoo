@@ -300,6 +300,7 @@ describe("pos_store.js", () => {
         expect(newChanges.title).toBe("NEW");
         expect(newChanges.data.length).toBe(2);
         expect(newChanges.data[0]).toEqual({
+            uuid: order.lines[0].uuid,
             basic_name: "TEST",
             customer_note: "Test Orderline Customer Note",
             product_id: 5,
@@ -313,6 +314,7 @@ describe("pos_store.js", () => {
             combo_parent_uuid: undefined,
         });
         expect(newChanges.data[1]).toEqual({
+            uuid: order.lines[1].uuid,
             basic_name: "TEST 2",
             customer_note: "",
             product_id: 6,
@@ -325,6 +327,51 @@ describe("pos_store.js", () => {
             combo_line_ids: [],
             combo_parent_uuid: undefined,
         });
+    });
+
+    test("generateReceiptsDataToPrint keeps combo children on the split product ticket", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(7),
+                payload: [
+                    [
+                        { combo_item_id: store.models["product.combo.item"].get(1), qty: 1 },
+                        { combo_item_id: store.models["product.combo.item"].get(3), qty: 1 },
+                    ],
+                    [],
+                ],
+                qty: 2,
+            },
+            order
+        );
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(5),
+                qty: 2,
+            },
+            order
+        );
+
+        const posCategories = store.models["pos.category"].map((c) => c.id);
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const tickets = generator.generatePreparationData(new Set(posCategories), {});
+        const splitTickets = store.ticketPrinter._splitTicketsPerProduct(tickets);
+
+        expect(splitTickets).toHaveLength(4);
+        expect(splitTickets[0].changes.data.map((line) => line.basic_name)).toEqual([
+            "Product combo",
+            "Wood chair",
+            "Wood desk",
+        ]);
+        expect(splitTickets[1].changes.data.map((line) => line.basic_name)).toEqual([
+            "Product combo",
+            "Wood chair",
+            "Wood desk",
+        ]);
+        expect(splitTickets[2].changes.data.map((line) => line.basic_name)).toEqual(["TEST"]);
+        expect(splitTickets[3].changes.data.map((line) => line.basic_name)).toEqual(["TEST"]);
     });
 
     test("filterChangeByCategories", async () => {

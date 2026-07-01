@@ -23,6 +23,7 @@
                             <field name="timeout" widget="integer" options="{'type': 'number', 'step': 1000}" placeholder="3000" groups="base.group_no_one"/>
                             <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'" placeholder="None"/>
                             <field name="use_cashdrawer" invisible="use_type != 'receipt' or paper_size == 'label'"/>
+                            <field name="is_split_per_product"/>
                         </group>
                     </group>
                 </sheet>

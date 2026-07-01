@@ -397,6 +397,7 @@ class PosOrderReceipt(models.AbstractModel):
         first_categ = product.pos_categ_ids[:1]
 
         return {
+            "uuid": line.uuid,
             "basic_name": product.name if is_restaurant else product.display_name,
             "product_id": product.id,
             "attribute_value_names": attributes.mapped("name"),
