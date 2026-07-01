@@ -1,6 +1,4 @@
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
-const localStorage = browser.localStorage;
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
     if (e.detail.moduleName !== "@web/public/interaction") {
@@ -10,14 +8,14 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
     const { Interaction } = e.detail.module;
 
     const localStorageKey = "interactionAndWysiwygLifecycle";
-    if (!localStorage.getItem(localStorageKey)) {
-        localStorage.setItem(localStorageKey, "[]");
+    if (!window.localStorage.getItem(localStorageKey)) {
+        window.localStorage.setItem(localStorageKey, "[]");
     }
 
     function addLifecycleStep(step) {
-        const oldValue = localStorage.getItem(localStorageKey);
+        const oldValue = window.localStorage.getItem(localStorageKey);
         const newValue = JSON.stringify(JSON.parse(oldValue).concat(step));
-        localStorage.setItem(localStorageKey, newValue);
+        window.localStorage.setItem(localStorageKey, newValue);
     }
 
     class CountdownPatch extends Interaction {
