@@ -2888,3 +2888,9 @@ class CrmLead(models.Model):
                 } for element in sorted_scores_with_name[::-1][:3] if tools.float_compare(element[0], 0.50, 2) > 0
             ],
         }
+
+    @api.model
+    def web_read_group(self, *args, **kwargs):
+        if 'domain' in kwargs and ['active', '=', False] in kwargs['domain']:
+            return super(CrmLead, self.with_context(active_test=False)).web_read_group(*args, **kwargs)
+        return super().web_read_group(*args, **kwargs)
