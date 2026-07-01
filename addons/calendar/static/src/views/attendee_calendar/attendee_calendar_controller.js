@@ -61,7 +61,6 @@ export class AttendeeCalendarController extends CalendarController {
                 await record.getChanges();
                 const updates = {
                     ...(!record.data.name && { name: _t("(No Title)") }),
-                    ...(record.data.allday && { show_as: "free" }),
                 };
                 if (Object.keys(updates).length) {
                     await record.update(updates);
