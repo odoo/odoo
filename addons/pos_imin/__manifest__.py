@@ -16,8 +16,13 @@ Use iMin ePOS Printers without the IoT Box in the Point of Sale
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_imin/static/lib/imin-printer/imin-printer.js',
+            'pos_imin/static/lib/**/*',
             'pos_imin/static/src/**/*',
+            ('remove', 'pos_imin/static/src/backend/**/*'),
+        ],
+        'web.assets_backend': [
+            'pos_imin/static/lib/**/*',
+            'pos_imin/static/src/backend/test_imin/*',
         ],
     },
     'author': 'Odoo S.A.',
