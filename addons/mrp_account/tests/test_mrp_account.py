@@ -221,6 +221,22 @@ class TestMrpAccount(TestBomPriceCommon):
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
 
+    def test_stock_valuation_report_cost_of_production_past_date(self):
+        date_before = fields.Datetime.now() - timedelta(days=1)
+
+        mo = self._create_mo(self.bom_1, 1)
+        mo.button_mark_done()
+
+        report = self.env['stock_account.stock.valuation.report']
+        report_data_before = report._get_report_data(date=date_before)
+
+        cost_before = report_data_before.get('cost_of_production', {}).get('value', 0)
+        self.assertEqual(cost_before, 0)
+
+        report_data_after = report._get_report_data(date=fields.Datetime.now())
+        cost_after = report_data_after.get('cost_of_production', {}).get('value', 0)
+        self.assertNotEqual(cost_after, 0)
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
