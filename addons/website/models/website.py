@@ -1510,7 +1510,7 @@ class Website(models.CachedModel):
             except AccessError:
                 pass
         translatable = has_group_restricted_editor and self.env.context.get('lang') != IrHttp._get_default_lang().code
-        editable = editable and not translatable
+        editable = editable and not (translatable and self.env.context.get('edit_translations'))
 
         if has_group_restricted_editor and user.has_group('website.group_multi_website'):
             values['multi_website_websites_current'] = self.name
