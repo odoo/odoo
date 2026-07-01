@@ -6,6 +6,10 @@
         <div id="threshold_message" position="attributes">
             <attribute name="t-elif" add="!this.show_click_and_collect_availability" separator=" and "/>
         </div>
+
+        <div id="out_of_stock_message" position="attributes">
+            <attribute name="t-if" add="!this.show_click_and_collect_availability" separator=" and "/>
+        </div>
     </t>
 
 </templates>

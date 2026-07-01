@@ -553,7 +553,7 @@
     </template>
 
     <template id="website_sale.cta_wrapper" name="CTA Wrapper">
-        <div class="availability_messages o_not_editable"/>
+        <div id="out_of_stock_messages" class="o_not_editable"/>
         <input id="wsale_user_email" type="hidden" t-att-value="user_email"/>
         <div
             id="o_wsale_cta_wrapper"
@@ -598,6 +598,7 @@
                 t-attf-class="d-flex d-empty-none flex-wrap gap-2 w-100 {{'w-sm-auto' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ''}}"
             />
         </div>
+        <div class="availability_messages o_not_editable"/>
     </template>
 
     <template

@@ -832,7 +832,7 @@ class ProductTemplate(models.Model):
         return combination_info
 
     def _get_additional_combination_info(
-        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **_kwargs
     ):
         """Compute additional combination info, based on given parameters.
 
