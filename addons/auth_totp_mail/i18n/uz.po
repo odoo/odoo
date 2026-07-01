@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -207,12 +207,6 @@ msgid "Authentication Device"
 msgstr "Autentifikatsiya qurilmasi"
 
 #. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "Authentication code via email"
-msgstr ""
-
-#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, fuzzy
@@ -220,6 +214,12 @@ msgid "Cannot send email: user %s has no email address."
 msgstr ""
 "Elektron xat yuborish imkonsiz: %s foydalanuvchisining elektron pochta "
 "manzili yo‘q."
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Check your mailbox"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -271,12 +271,6 @@ msgstr ""
 #, fuzzy
 msgid "Enforce two-factor authentication"
 msgstr "Ikki bosqichli tasdiqlashni majburiy qilish"
-
-#. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "Enter below the six-digit authentication code just sent to your email"
-msgstr ""
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_ir_http
@@ -388,6 +382,12 @@ msgid "Settings: 2Fa New Login"
 msgstr "Sozlamalar: Ikki bosqichli tasdiqlash yangi kirish"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Six-digit authentication code"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 #, fuzzy
 msgid "Two-factor Authentication"
@@ -439,6 +439,12 @@ msgid "Verify"
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "We sent a 6-digit code to your email address."
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 #, fuzzy
 msgid ""
@@ -448,12 +454,6 @@ msgid ""
 msgstr ""
 "Hisobingizni himoyalash uchun autentifikator ilovasi yordamida ikki "
 "bosqichli tasdiqlashni yoqishni qat'iy tavsiya etamiz. <br/>"
-
-#. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "XXXXXX"
-msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2025-12-03 08:34+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -35,13 +35,9 @@ msgstr ""
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
-msgid "Estimated Margins"
 msgstr ""
 
 #. module: sale_margin
@@ -50,11 +46,23 @@ msgid "Expected Cost"
 msgstr ""
 
 #. module: sale_margin
+#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
+msgid "Forecast Margins"
+msgstr ""
+
+#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_margin
+#. odoo-python
+#: code:addons/sale_margin/models/sale_order_line.py:0
+msgid "If the cost is not 0, it is not possible to set the margin to 100%"
+msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -74,6 +82,12 @@ msgid "Margin"
 msgstr "Отступ"
 
 #. module: sale_margin
+#. odoo-python
+#: code:addons/sale_margin/models/sale_order.py:0
+msgid "Margin (%(percent).0f%%)"
+msgstr ""
+
+#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__margin_percent
@@ -88,6 +102,11 @@ msgstr ""
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Product"
+msgstr ""
+
+#. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order_template_line
+msgid "Quotation Template Line"
 msgstr ""
 
 #. module: sale_margin
@@ -122,7 +141,7 @@ msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
-msgid "This report performs analysis on estimated margins of sales orders."
+msgid "This report performs analysis on forecast margins of sales orders."
 msgstr ""
 
 #. module: sale_margin
@@ -167,5 +186,6 @@ msgstr ""
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__purchase_price
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_template_line__purchase_price
 msgid "Unit Cost"
 msgstr ""
