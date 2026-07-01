@@ -1004,6 +1004,7 @@ else:
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
+    _has_logged_browser_version = False
 
     def __init__(self, test_class, headless=True):
         self._logger = test_class._logger
@@ -1325,6 +1326,9 @@ class ChromeBrowser:
     def _open_websocket(self):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
+        if not self.__class__._has_logged_browser_version:
+            self._logger.runbot('Browser version: %s', version['Browser'])
+            self.__class__._has_logged_browser_version = True
 
         start = time.time()
         while (time.time() - start) < 5.0:
