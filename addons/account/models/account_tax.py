@@ -2417,6 +2417,9 @@ class AccountTax(models.Model):
         else:
             repartition_lines_field = 'invoice_repartition_line_ids'
 
+        # Base line grouping_key.
+        base_line['grouping_key'] = base_line_grouping_key = self._prepare_base_line_grouping_key(base_line)
+
         # Tags on the base line.
         taxes_data = base_line['tax_details']['taxes_data']
         base_line['tax_tag_ids'] = self.env['account.account.tag']
@@ -2511,7 +2514,6 @@ class AccountTax(models.Model):
                             tax_rep_data['tax_tags'] |= tags
 
                 # Add the accounting grouping_key to create the tax lines.
-                base_line_grouping_key = self._prepare_base_line_grouping_key(base_line)
                 tax_rep_data['grouping_key'] = self._prepare_base_line_tax_repartition_grouping_key(
                     base_line,
                     base_line_grouping_key,
@@ -3108,12 +3110,18 @@ class AccountTax(models.Model):
         tax_lines_to_delete = []
         for tax_line in tax_lines or []:
             grouping_key = frozendict(self._prepare_tax_line_repartition_grouping_key(tax_line))
-            if grouping_key in tax_lines_mapping and grouping_key not in tax_lines_to_update:
+            if grouping_key in tax_lines_mapping:
                 amounts = tax_lines_mapping.pop(grouping_key)
                 tax_lines_to_update.append((tax_line, grouping_key, amounts))
             else:
                 tax_lines_to_delete.append(tax_line)
-        tax_lines_to_add = [{**grouping_key, **values} for grouping_key, values in tax_lines_mapping.items()]
+        tax_lines_to_add = [
+            {
+                **{k: v for k, v in grouping_key.items() if k != '__keep_zero_line'},
+                **values,
+            }
+            for grouping_key, values in tax_lines_mapping.items()
+        ]
 
         return {
             'tax_lines_to_add': tax_lines_to_add,
@@ -3121,6 +3129,227 @@ class AccountTax(models.Model):
             'tax_lines_to_update': tax_lines_to_update,
             'base_lines_to_update': base_lines_to_update,
         }
+
+    @api.model
+    def _sync_tax_lines_compare_base_lines(self, company, old_base_lines, new_base_lines):
+        def track_base_lines_taxes_values(base_lines):
+            base_line_tracked_values = defaultdict(lambda: {
+                'base_lines': [],
+                'amounts': [],
+                'rates': [],
+                'analytic_distributions': [],
+            })
+            for base_line in base_lines:
+                # Reuse the grouping key cached by '_add_accounting_data_in_base_lines_tax_details'
+                # when present; fall back to recomputing it for the unrounded "before" snapshot.
+                grouping_key = base_line['grouping_key'] = self._prepare_base_line_grouping_key(base_line)
+
+                # Changing the currency is handled by 'rates' because it won't necessarily
+                # change the taxes amounts.
+                grouping_key.pop('currency_id')
+
+                # Changing the analytic distribution might impact the taxes amounts or not
+                # depending if 'analytic' is ticked on the tax or if the repartition lines
+                # are 'use_in_tax_closing' or not.
+                grouping_key.pop('analytic_distribution')
+
+                # Manage formula taxes: include product / uom in the key as soon as ANY tax on
+                # the line depends on them, so old/new snapshots bucket consistently regardless
+                # of the order returned by '_flatten_taxes_and_sort_them'.
+                flat_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
+                grouping_key['product_id'] = (
+                    base_line['product_id']
+                    if any(t._eval_taxes_computation_prepare_product_fields() for t in flat_taxes)
+                    else None
+                )
+                grouping_key['product_uom_id'] = (
+                    base_line['product_uom_id']
+                    if any(t._eval_taxes_computation_prepare_product_uom_fields() for t in flat_taxes)
+                    else None
+                )
+
+                amounts = (
+                    base_line['price_unit'],
+                    base_line['quantity'],
+                    base_line['discount'],
+                )
+                values = base_line_tracked_values[frozendict(grouping_key)]
+                values['base_lines'].append(base_line)
+                values['amounts'].append(amounts)
+                values['rates'].append(base_line['rate'])
+                values['analytic_distributions'].append(base_line['analytic_distribution'])
+            return base_line_tracked_values
+
+        old_base_line_tracked_taxes_values = track_base_lines_taxes_values(old_base_lines)
+        new_base_line_tracked_taxes_values = track_base_lines_taxes_values(new_base_lines)
+
+        base_line_grouping_key_mapping = defaultdict(set)
+        tax_rep_grouping_key_mapping = defaultdict(set)
+
+        for key in new_base_line_tracked_taxes_values.keys() | old_base_line_tracked_taxes_values.keys():
+            new_values = new_base_line_tracked_taxes_values.get(key, {})
+            old_values = old_base_line_tracked_taxes_values.get(key, {})
+            amount_has_changed = sorted(new_values.get('amounts', [])) != sorted(old_values.get('amounts', []))
+            rate_has_changed = sorted(new_values.get('rates', [])) != sorted(old_values.get('rates', []))
+
+            for base_line in new_values.get('base_lines', []):
+                base_line_grouping_key = frozendict(base_line['grouping_key'])
+                for tax_data in base_line['tax_details']['taxes_data']:
+                    for tax_rep_data in tax_data['tax_reps_data']:
+                        grouping_key = frozendict({k: v for k, v in tax_rep_data['grouping_key'].items() if not k.startswith('__')})
+                        base_line_grouping_key_mapping[base_line_grouping_key].add(grouping_key)
+
+                        if amount_has_changed:
+                            tax_rep_grouping_key_mapping[grouping_key].add('amount')
+                        else:
+                            if rate_has_changed:
+                                tax_rep_grouping_key_mapping[grouping_key].add('rate')
+
+                            analytic_distribution_has_changed = (
+                                (tax_rep_data['tax_rep'].tax_id.analytic or not tax_rep_data['tax_rep'].use_in_tax_closing)
+                                and new_values.get('analytic_distributions', []) != old_values.get('analytic_distributions', [])
+                            )
+                            if analytic_distribution_has_changed:
+                                tax_rep_grouping_key_mapping[grouping_key].add('analytic_distributions')
+
+        return {
+            'base_line_grouping_key_mapping': base_line_grouping_key_mapping,
+            'tax_rep_grouping_key_mapping': tax_rep_grouping_key_mapping,
+        }
+
+    @api.model
+    def _sync_tax_lines_compare_tax_lines(self, company, old_tax_lines, new_tax_lines):
+        def track_tax_lines_values(tax_lines):
+            tax_line_tracked_values = defaultdict(lambda: {
+                'tax_lines': [],
+                'amounts': [],
+            })
+            for tax_line in tax_lines:
+                grouping_key = tax_line['grouping_key']
+                values = tax_line_tracked_values[frozendict(grouping_key)]
+                values['tax_lines'].append(tax_line)
+                values['amounts'].append((tax_line['amount_currency'], tax_line['balance']))
+            return tax_line_tracked_values
+
+        old_tax_line_tracked_values = track_tax_lines_values(old_tax_lines)
+        new_tax_line_tracked_values = track_tax_lines_values(new_tax_lines)
+
+        manually_edited = False
+        tax_rep_grouping_key_mapping = defaultdict(set)
+
+        for key in new_tax_line_tracked_values.keys() | old_tax_line_tracked_values.keys():
+            new_values = new_tax_line_tracked_values.get(key, {})
+            old_values = old_tax_line_tracked_values.get(key, {})
+            new_values_amounts = sorted(new_values.get('amounts', []))
+            old_values_amounts = sorted(old_values.get('amounts', []))
+            if [x[0] for x in new_values_amounts] != [x[0] for x in old_values_amounts]:
+                tax_rep_grouping_key_mapping[key].add('edited_amount_currency')
+                manually_edited = True
+            if [x[1] for x in new_values_amounts] != [x[1] for x in old_values_amounts]:
+                tax_rep_grouping_key_mapping[key].add('edited_balance')
+                manually_edited = True
+
+            if old_values and not new_values:
+                tax_rep_grouping_key_mapping[key].add('deleted')
+            elif not old_values and new_values:
+                tax_rep_grouping_key_mapping[key].add('added')
+
+        return {
+            'manually_edited': manually_edited,
+            'tax_rep_grouping_key_mapping': tax_rep_grouping_key_mapping,
+        }
+
+    @api.model
+    def _sync_tax_lines(self, company, old_base_lines, old_tax_lines, new_base_lines, new_tax_lines):
+        """ Diff-aware variant of '_prepare_tax_lines' that preserves manually-edited tax amounts
+        whenever the change to the move would not legitimately alter them.
+
+        Compares the base lines and tax lines as they were before the write ('old_*') against the
+        ones produced after ('new_*')
+        Three types of behaviours:
+
+            - tax_keys_recompute_amounts: a base line input that affects the tax amount
+              (price_unit / quantity / discount, or a product/uom for a formula tax) changed.
+              The tax line is fully recomputed.
+            - tax_keys_recompute_rates: only the currency rate changed for that bucket. The
+              'amount_currency' on the existing tax line is preserved and only 'balance' is
+              recomputed using the new rate.
+            - tax_line_protected_keys: the tax line itself was edited manually between the two
+              snapshots. Both 'amount_currency' and 'balance' are preserved.
+
+        :param company: Company
+        :param old_base_lines:  Base lines snapshot taken before the write (unrounded; see
+                                'AccountMove._get_base_and_tax_lines').
+        :param old_tax_lines:   Tax lines snapshot taken before the write.
+        :param new_base_lines:  Base lines after the write, with tax_details/grouping_key already
+                                populated by '_add_accounting_data_in_base_lines_tax_details'.
+        :param new_tax_lines:   Tax lines after the write.
+        :return: The dict returned by '_prepare_tax_lines' with 'tax_lines_to_update' adjusted.
+        """
+        compare_base_lines = self._sync_tax_lines_compare_base_lines(
+            company=company,
+            old_base_lines=old_base_lines,
+            new_base_lines=new_base_lines,
+        )
+        base_line_tax_rep_grouping_key_mapping = compare_base_lines['tax_rep_grouping_key_mapping']
+        compare_tax_lines = self._sync_tax_lines_compare_tax_lines(
+            company=company,
+            old_tax_lines=old_tax_lines,
+            new_tax_lines=new_tax_lines,
+        )
+        tax_rep_grouping_key_mapping = compare_tax_lines['tax_rep_grouping_key_mapping']
+
+        tax_results = self._prepare_tax_lines(
+            base_lines=new_base_lines,
+            company=company,
+            tax_lines=new_tax_lines,
+        )
+
+        base_lines_to_update = []
+        for base_line, to_update in tax_results['base_lines_to_update']:
+            grouping_key = frozendict(base_line['grouping_key'])
+            base_lines_to_update.append((base_line, to_update))
+        tax_results['base_lines_to_update'] = base_lines_to_update
+
+        tax_lines_to_update = []
+        for tax_line, grouping_key, to_update in tax_results['tax_lines_to_update']:
+            grouping_key = frozendict(tax_line['grouping_key'])
+
+            # Has been updated or created manually.
+            if tax_rep_grouping_key_mapping[grouping_key] & {'edited_amount_currency', 'added'}:
+                continue
+
+            base_line_tax_rep_state = base_line_tax_rep_grouping_key_mapping[grouping_key]
+            if 'amount' in base_line_tax_rep_state or 'analytic_distribution' in base_line_tax_rep_state:
+                tax_lines_to_update.append((tax_line, grouping_key, to_update))
+            else:
+                # Only adapt the new currency rate.
+                if 'rate' in base_line_tax_rep_state:
+                    rate = to_update['amount_currency'] / to_update['balance'] if to_update['balance'] else 0.0
+                    amount_currency = tax_line['amount_currency']
+                    balance = tax_line['currency_id'].round(amount_currency / rate if rate else 0.0)
+                    tax_lines_to_update.append((tax_line, grouping_key, {
+                        **to_update,
+                        'amount_currency': amount_currency,
+                        'balance': balance,
+                    }))
+        tax_results['tax_lines_to_update'] = tax_lines_to_update
+
+        tax_lines_to_delete = []
+        for tax_line in tax_results['tax_lines_to_delete']:
+            if compare_tax_lines['manually_edited'] or not base_line_tax_rep_grouping_key_mapping:
+                continue
+            tax_lines_to_delete.append(tax_line)
+        tax_results['tax_lines_to_delete'] = tax_lines_to_delete
+
+        tax_lines_to_add = []
+        for tax_line in tax_results['tax_lines_to_add']:
+            if compare_tax_lines['manually_edited'] or not base_line_tax_rep_grouping_key_mapping:
+                continue
+            tax_lines_to_add.append(tax_line)
+        tax_results['tax_lines_to_add'] = tax_lines_to_add
+
+        return tax_results
 
     # -------------------------------------------------------------------------
     # ADVANCED LINES MANIPULATION HELPERS

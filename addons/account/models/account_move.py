@@ -1629,18 +1629,20 @@ class AccountMove(models.Model):
             sign=self.direction_sign,
         )
 
-    def _get_rounded_base_and_tax_lines(self, round_from_tax_lines=True):
-        """ Small helper to extract the base and tax lines for the taxes computation from the current move.
-        The move could be stored or not and could have some features generating extra journal items acting as
-        base lines for the taxes computation (e.g. epd, rounding lines).
+    def _get_base_and_tax_lines(self, round_from_tax_lines=True):
+        """ Extract the base and tax lines for the taxes computation from the current move
+        without applying '_round_base_lines_tax_details'.
 
-        :param round_from_tax_lines:    Indicate if the manual tax amounts of tax journal items should be kept or not.
-                                        It only works when the move is stored.
-        :return:                        A tuple <base_lines, tax_lines> for the taxes computation.
+        Suitable for taking a "before" snapshot prior to a write, since rounding would already
+        bake in the existing tax-line amounts and erase the signal '_sync_tax_lines' relies on
+        to detect manual edits. Use '_get_rounded_base_and_tax_lines' for the read-side flows
+        that need rounded values.
+
+        :return: A tuple <base_lines, tax_lines> for the taxes computation.
         """
         self.ensure_one()
-        AccountTax = self.env['account.tax']
         is_invoice = self.is_invoice(include_receipts=True)
+        AccountTax = self.env['account.tax']
 
         if self.id or not is_invoice:
             base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
@@ -1657,20 +1659,35 @@ class AccountMove(models.Model):
             cash_rounding_amls = self.line_ids \
                 .filtered(lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id)
             base_lines += [self._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
-            AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
-            if round_from_tax_lines == 'reapply_currency_rate':
-                for tax_line in tax_lines:
-                    rate = self.invoice_currency_rate
-                    if rate:
-                        tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
+            for tax_line in tax_lines:
+                tax_line['grouping_key'] = AccountTax._prepare_tax_line_repartition_grouping_key(tax_line)
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)
-            AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        return base_lines, tax_lines
+
+    def _get_rounded_base_and_tax_lines(self, round_from_tax_lines=True):
+        """ Small helper to extract the base and tax lines for the taxes computation from the current move.
+        The move could be stored or not and could have some features generating extra journal items acting as
+        base lines for the taxes computation (e.g. epd, rounding lines).
+
+        :param round_from_tax_lines:    Indicate if the manual tax amounts of tax journal items should be kept or not.
+                                        It only works when the move is stored.
+        :return:                        A tuple <base_lines, tax_lines> for the taxes computation.
+        """
+        self.ensure_one()
+        base_lines, tax_lines = self._get_base_and_tax_lines(round_from_tax_lines=round_from_tax_lines)
+        AccountTax = self.env['account.tax']
+        is_invoice = self.is_invoice(include_receipts=True)
+        company = self.company_id or self.env.company
+
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(
+            base_lines=base_lines,
+            company=company, tax_lines=tax_lines if round_from_tax_lines and self.id else [],
+        )
         return base_lines, tax_lines
 
     @api.depends_context('lang')
@@ -1691,12 +1708,30 @@ class AccountMove(models.Model):
         for move in self:
             if move.is_invoice(include_receipts=True):
                 base_lines, _tax_lines = move._get_rounded_base_and_tax_lines()
-                move.tax_totals = self.env['account.tax']._get_tax_totals_summary(
+                new_totals = self.env['account.tax']._get_tax_totals_summary(
                     base_lines=base_lines,
                     currency=move.currency_id,
                     company=move.company_id,
                     cash_rounding=move.invoice_cash_rounding_id,
                 )
+
+                # Protect XML/manual taxes from being wiped out during an onchange.
+                if not move.id and move._origin and move._origin.tax_totals:
+                    # 2. Compute what the origin's totals WOULD be if we stripped away its manual XML taxes
+                    origin_base_lines, origin_tax_lines = move._origin._get_rounded_base_and_tax_lines(round_from_tax_lines=False)
+                    origin_unanchored_totals = self.env['account.tax']._get_tax_totals_summary(
+                        base_lines=origin_base_lines,
+                        currency=move._origin.currency_id,
+                        company=move._origin.company_id,
+                        cash_rounding=move._origin.invoice_cash_rounding_id,
+                    )
+
+                    # If Odoo's raw math hasn't changed, the user only touched non-math fields (like analytics).
+                    # We safely restore the database totals (which preserves the imported XML taxes).
+                    if new_totals == origin_unanchored_totals:
+                        new_totals = move._origin.tax_totals
+
+                move.tax_totals = new_totals
                 move.tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
                     and move.company_currency_id != move.currency_id
@@ -3004,10 +3039,17 @@ class AccountMove(models.Model):
                 for fname in values
             )
 
+        moves_base_lines_tax_lines_before = {}
+        for move in container['records']:
+            old_base_lines, old_tax_lines = move._get_base_and_tax_lines()
+            moves_base_lines_tax_lines_before[move] = {
+                'base_lines': old_base_lines,
+                'tax_lines': old_tax_lines,
+            }
         moves_values_before = {
             move: {
                 field: get_value(move, field)
-                for field in ('currency_id', 'partner_id', 'move_type', 'invoice_currency_rate', 'invoice_date')
+                for field in ('currency_id', 'partner_id', 'move_type', 'invoice_date')
             }
             for move in container['records']
             if move.state == 'draft'
@@ -3041,57 +3083,42 @@ class AccountMove(models.Model):
             if move.state != 'draft':
                 continue
 
-            tax_lines = get_tax_lines(move)
-            base_lines = get_base_lines(move)
-            move_tax_lines_values_before = tax_lines_values_before.get(move, {})
-            move_base_lines_values_before = base_lines_values_before.get(move, {})
+            old_base_lines = moves_base_lines_tax_lines_before.get(move, {}).get('base_lines', [])
+            old_tax_lines = moves_base_lines_tax_lines_before.get(move, {}).get('tax_lines', [])
+            new_base_lines, new_tax_lines = move._get_base_and_tax_lines()
+            company = move.company_id
+
+            # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
             if (
                 move.is_invoice(include_receipts=True)
                 and (
                     field_has_changed(moves_values_before, move, 'currency_id')
                     or field_has_changed(moves_values_before, move, 'move_type')
+                    or field_has_changed(moves_values_before, move, 'invoice_currency_rate')
                 )
             ):
-                # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
                 round_from_tax_lines = False
-            elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
-                # Removed a base line affecting the taxes.
-                round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
-            elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
-                # A base line has been modified.
-                round_from_tax_lines = (
-                    # The changed lines don't affect the taxes.
-                    all(
-                        not line.tax_ids and not move_base_lines_values_before.get(line, {}).get('tax_ids')
-                        for line in changed_lines
-                    )
-                    # Keep the tax lines amounts if an amount has been manually computed.
-                    or (
-                        list(move_tax_lines_values_before) != list(tax_lines)
-                        or any(
-                            self.env.is_protected(line._fields[fname], line)
-                            for line in tax_lines
-                            for fname in move_tax_lines_values_before[line]
-                        )
-                    )
-                )
-
-                # If the move has been created with all lines including the tax ones and the balance/amount_currency are provided on
-                # base lines, we don't need to recompute anything.
-                if (
-                    round_from_tax_lines
-                    and any(line[field] for line in changed_lines for field in ('amount_currency', 'balance'))
-                ):
-                    continue
-            elif field_has_changed(moves_values_before, move, 'invoice_currency_rate'):
-                # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
-                round_from_tax_lines = 'reapply_currency_rate'
             else:
-                continue
+                round_from_tax_lines = AccountTax._sync_tax_lines_compare_tax_lines(company, old_tax_lines, new_tax_lines)['manually_edited']
 
-            base_lines_values, tax_lines_values = move._get_rounded_base_and_tax_lines(round_from_tax_lines=round_from_tax_lines)
-            AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines_values, move.company_id, include_caba_tags=move.always_tax_exigible)
-            tax_results = AccountTax._prepare_tax_lines(base_lines_values, move.company_id, tax_lines=tax_lines_values)
+            AccountTax._add_tax_details_in_base_lines(new_base_lines, company)
+            AccountTax._round_base_lines_tax_details(
+                base_lines=new_base_lines,
+                company=company,
+                tax_lines=new_tax_lines if round_from_tax_lines else [],
+            )
+            AccountTax._add_accounting_data_in_base_lines_tax_details(
+                base_lines=new_base_lines,
+                company=company,
+                include_caba_tags=move.always_tax_exigible,
+            )
+            tax_results = AccountTax._sync_tax_lines(
+                company=company,
+                old_base_lines=old_base_lines,
+                old_tax_lines=old_tax_lines,
+                new_base_lines=new_base_lines,
+                new_tax_lines=new_tax_lines,
+            )
 
             for base_line, to_update in tax_results['base_lines_to_update']:
                 line = base_line['record']
@@ -3262,7 +3289,11 @@ class AccountMove(models.Model):
                 return
             def update_containers():
                 # Only invoice-like and journal entries in "auto tax mode" are synced
-                tax_container['records'] = container['records'].filtered(lambda m: m.is_invoice(True) or m.line_ids.tax_ids or m.line_ids.tax_repartition_line_id)
+                tax_container['records'] = container['records'].filtered(
+                    lambda m: m.is_invoice(True) or (
+                            not m.origin_payment_id and (m.line_ids.tax_ids or m.line_ids.tax_repartition_line_id)
+                    )
+                )
                 invoice_container['records'] = container['records'].filtered(lambda m: m.is_invoice(True))
                 misc_container['records'] = container['records'].filtered(lambda m: m.is_entry() and not m.tax_cash_basis_origin_move_id)
 
