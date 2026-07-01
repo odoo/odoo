@@ -23,13 +23,14 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
+                        <field name="can_change_chart_template" invisible="1"/>
                         <block title="Initial Setup" name="fiscal_localization_setting_container" invisible="not is_root_company">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">
                                     <div class="mt16">
                                         <div>
-                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template" class="w-100" placeholder="Package"/>
+                                            <field name="chart_template" readonly="has_accounting_entries and not can_change_chart_template" required="chart_template" class="w-100" placeholder="Package"/>
                                         </div>
                                         <div class="mt16">
                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
