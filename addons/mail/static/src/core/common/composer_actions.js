@@ -121,7 +121,7 @@ registerComposerAction("open-full-composer", {
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
-        !owner.env.inFrontendPortalChatter,
+        !owner.portalChatterPlugin?.inFrontendPortalChatter(),
     hasBtnBg: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",

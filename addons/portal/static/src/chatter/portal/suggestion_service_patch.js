@@ -5,8 +5,8 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
-    getSupportedDelimiters(thread, env) {
-        if (env?.inFrontendPortalChatter) {
+    getSupportedDelimiters(thread, owner) {
+        if (owner?.portalChatterPlugin?.inFrontendPortalChatter()) {
             return [
                 [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
                 [SUGGESTION_DELIMITERS.EMOJI, undefined, 2],

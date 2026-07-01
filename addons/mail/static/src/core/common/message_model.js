@@ -730,7 +730,7 @@ export class Message extends Record {
      * @param {import("@web/env").OdooEnv} owner.env
      */
     onShowDeleteConfirm(owner) {
-        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner) });
     }
 
     /**
@@ -820,7 +820,7 @@ export class Message extends Record {
         ]);
     }
 
-    shouldHideFromMessageListOnDelete(env) {
+    shouldHideFromMessageListOnDelete(owner) {
         return false;
     }
 
