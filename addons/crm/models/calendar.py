@@ -53,3 +53,8 @@ class CalendarEvent(models.Model):
         res_model_id = defaults.get('res_model_id', False) or ctx and ctx.get('default_res_model_id')
 
         return res_model and res_model == 'crm.lead' or res_model_id and self.env['ir.model'].sudo().browse(res_model_id).model == 'crm.lead'
+
+    def _sync_linked_document(self):
+        super()._sync_linked_document()
+
+        self._sync_linked_model_field('crm.lead', 'opportunity_id')
