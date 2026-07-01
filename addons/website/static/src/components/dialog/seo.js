@@ -17,7 +17,9 @@ import {
     onWillStart,
     onWillUnmount,
     proxy,
+    props,
     signal,
+    t,
     useApp,
     useEffect,
 } from "@odoo/owl";
@@ -684,9 +686,7 @@ export class TitleDescription extends Component {
 export class BrokenLink extends Component {
     static template = "website.BrokenLink";
 
-    static props = {
-        link: Object,
-    };
+    props = props({ link: t.object() });
 
     urlInputRef = signal.ref();
 
