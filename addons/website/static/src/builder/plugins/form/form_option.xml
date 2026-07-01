@@ -11,6 +11,13 @@
         </BuilderSelect>
     </BuilderRow>
     <FormActionFieldsOption activeForm="this.state.activeForm"/>
+    <BuilderRow label.translate="Share &amp; Pre-fill" tooltip.translate="Get a link to share the form with pre-filled values">
+        <BuilderCheckbox action="'toggleShareable'" actionParam="'shareable'" actionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow t-if="this.state.isShareable" label.translate="Shareable Link" level="1">
+        <input type="text" class="o-hb-input-base" disabled="disabled" t-att-value="this.state.shareableUrl"/>
+        <BuilderButton action="'copyToClipboard'" actionParam="'shareableLink'" icon="'fa-clipboard'" title.translate="Copy Link"/>
+    </BuilderRow>
     <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -167,6 +174,10 @@
     </BuilderRow>
     <BuilderRow label.translate="Height" level="1" applyTo="'textarea'">
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Field Name" t-if="this.domState.isFormShareable" tooltip.translate="Add '?fieldname=value' before the # in your shareable link.">
+        <input type="text" class="o-hb-input-base" disabled="disabled" t-att-value="this.domState.fieldName"/>
+        <BuilderButton action="'copyToClipboard'" actionParam="'fieldName'" icon="'fa-clipboard'" title.translate="Copy Field Name"/>
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>

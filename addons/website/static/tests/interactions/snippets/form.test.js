@@ -1,6 +1,6 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockLocation, test } from "@odoo/hoot";
 import {
     animationFrame,
     clear,
@@ -599,6 +599,237 @@ test("form submit result cleaned but not removed on stop", async () => {
     expect(queryOne("#s_website_form_result").children.length).toEqual(1);
     core.stopInteractions();
     expect(queryOne("#s_website_form_result").children.length).toEqual(0);
+});
+
+const allFieldsFormTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form id="test-form" action="/website/form/" method="post" data-model_name="mail.mail" data-shareable="true">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                            <input class="form-control s_website_form_input" type="text" name="name"/>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
+                            <input class="form-control s_website_form_input" type="email" name="email_from"/>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="tel">
+                            <input class="form-control s_website_form_input" type="tel" name="phone"/>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="text">
+                            <textarea class="form-control s_website_form_input" name="message"></textarea>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="many2one">
+                            <select class="form-select s_website_form_input" name="Select">
+                                <option value="Option 1">Option 1</option>
+                                <option value="Option 2">Option 2</option>
+                            </select>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="one2many">
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" name="Your Company" value="Option 1">
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" name="Your Company" value="Option 2">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="boolean">
+                            <input class="s_website_form_input form-check-input" type="checkbox" name="Subscribe"/>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="selection">
+                            <input class="s_website_form_input form-check-input" type="radio" name="Radio Button" value="Option 1"/>
+                            <input class="s_website_form_input form-check-input" type="radio" name="Radio Button" value="Option 2"/>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-no-prefill="true" data-type="char">
+                            <input class="form-control s_website_form_input" type="text" name="no_prefill"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
+test("URL params prefill all supported field types", async () => {
+    const params = new URLSearchParams({
+        name: " Tony  ",
+        email_from: "india@odoo.com",
+        phone: "+999-888-7777",
+        message: "Hello there !",
+        Select: "Option 2",
+        Subscribe: "true",
+        "Radio Button": "Option 1",
+        no_prefill: "no pre fill",
+    });
+    params.append("Your Company", "Option 1");
+    params.append("Your Company", "Option 2");
+    mockLocation.href = `/page?${params.toString()}`;
+
+    const { core } = await startInteractions(allFieldsFormTemplate);
+    expect(core.interactions).toHaveLength(1);
+
+    // whitespace should be trimmed
+    expect(queryOne("form input[name=name]")).toHaveValue("Tony");
+    expect(queryOne("form input[name=email_from]")).toHaveValue("india@odoo.com");
+    expect(queryOne("form input[name=phone]")).toHaveValue("+999-888-7777");
+    expect(queryOne("form textarea[name=message]")).toHaveValue("Hello there !");
+    expect(queryOne("form select[name=Select]")).toHaveValue("Option 2");
+    expect(queryOne("form input[name=Subscribe]")).toBeChecked();
+    expect(queryOne("form input[name='Your Company'][value='Option 1']")).toBeChecked();
+    expect(queryOne("form input[name='Your Company'][value='Option 2']")).toBeChecked();
+    expect(queryOne("form input[name='Radio Button'][value='Option 1']")).toBeChecked();
+    expect(queryOne("form input[name='Radio Button'][value='Option 2']")).not.toBeChecked();
+    // field with no-prefill attribute should not be filled even if there is a
+    // corresponding URL parameter.
+    expect(queryOne("form input[name='no_prefill']")).not.toHaveValue("no pre fill");
+});
+
+test("URL prefill is scoped to the form matching the URL hash", async () => {
+    mockLocation.href = "?name=Tony#form-1a2b3";
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="form-1a2b3" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="form-control s_website_form_input" type="text" name="name"/>
+                    </div>
+                </form>
+            </section>
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="form-3b2a1" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="form-control s_website_form_input" type="text" name="name"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(queryOne("form#form-1a2b3 input[name=name]")).toHaveValue("Tony");
+    expect(queryOne("form#form-3b2a1 input[name=name]")).toHaveValue("");
+});
+
+test("data-for (server values) overrides URL params", async () => {
+    mockLocation.href = "?name=Tony&email_from=url@gujarat.com";
+    const { core } = await startInteractions(`
+        <div id="wrapwrap">
+            <div data-for="test-form" data-values='{"name": "Server Name", "email_from": "server@gujarat.com"}'></div>
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="test-form" data-shareable="true">
+                    <input class="s_website_form_input" type="text" name="name" data-fill-with="name"/>
+                    <input class="s_website_form_input" type="email" name="email_from" data-fill-with="email"/>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect(queryOne("form input[name=name]")).toHaveValue("Server Name");
+    expect(queryOne("form input[name=email_from]")).toHaveValue("server@gujarat.com");
+});
+
+test("data-fill-with overrides URL params", async () => {
+    mockLocation.href = "?name=Tony";
+    const { core } = await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="test-form" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="s_website_form_input" type="text" name="name" data-fill-with="name"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect(queryOne("form input[name=name]")).toHaveValue("Mitchell Admin");
+});
+
+test("data-for selects the matching radio, ignoring the URL param", async () => {
+    mockLocation.href = "?Priority=Low#test-form";
+    const { core } = await startInteractions(`
+        <div id="wrapwrap">
+            <div data-for="test-form" data-values='{"Priority": "High"}'></div>
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="test-form" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="selection">
+                        <input class="s_website_form_input" type="radio" name="Priority" value="Low"/>
+                        <input class="s_website_form_input" type="radio" name="Priority" value="High"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect(queryOne("form input[value='High']")).toBeChecked();
+    expect(queryOne("form input[value='Low']")).not.toBeChecked();
+});
+
+test("URL prefill ignores values that match no existing option", async () => {
+    mockLocation.href = "?Select=Bogus&Radio Button=Bogus";
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="test-form" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="many2one">
+                        <select class="form-select s_website_form_input" name="Select">
+                            <option value="Option 1">Option 1</option>
+                            <option value="Option 2" selected="selected">Option 2</option>
+                        </select>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field" data-type="selection">
+                        <input class="s_website_form_input" type="radio" name="Radio Button" value="Option 1"/>
+                        <input class="s_website_form_input" type="radio" name="Radio Button" value="Option 2" checked="checked"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    // An invalid value must be dropped without clearing the pre-selected default.
+    expect(queryOne("form select[name=Select]")).toHaveValue("Option 2");
+    expect(queryOne("form input[name='Radio Button'][value='Option 1']")).not.toBeChecked();
+});
+
+test("URL prefill only applies to forms with sharing enabled", async () => {
+    mockLocation.href = "/page?name=Tony";
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="form-on" data-shareable="true">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="s_website_form_input" type="text" name="name"/>
+                    </div>
+                </form>
+            </section>
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="form-off">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="s_website_form_input" type="text" name="name"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(queryOne("form#form-on input[name=name]")).toHaveValue("Tony");
+    expect(queryOne("form#form-off input[name=name]")).toHaveValue("");
+});
+
+test("URL prefill ignores a hash matching a sharing-disabled form", async () => {
+    mockLocation.href = "?name=Tony#test-form";
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form id="test-form">
+                    <div data-name="Field" class="s_website_form_field" data-type="char">
+                        <input class="s_website_form_input" type="text" name="name"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    expect(queryOne("form input[name=name]")).toHaveValue("");
 });
 
 function formWithVisibilityRulesOnCheckbox(condition) {
