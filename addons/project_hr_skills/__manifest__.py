@@ -11,6 +11,7 @@
     'auto_install': True,
     'data': [
         'views/project_task_views.xml',
+        'views/res_users_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
