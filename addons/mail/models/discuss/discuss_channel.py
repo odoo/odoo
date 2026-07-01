@@ -114,11 +114,19 @@ class DiscussChannel(models.Model):
         index=True,
         help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
     )
+    auto_subscribe = fields.Boolean(
+        string="Auto Subscribe", default=False,
+        help="Auto-subscribe authorised users to this channel. "
+             "Users can leave anytime and won't be re-added automatically.")
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
-        help="Members of those groups will automatically added as followers. "
-             "Note that they will be able to manage their subscription manually "
-             "if necessary.")
+        help="Restrict auto-subscribe users to the selected groups.")
+    auto_subscribe_company_ids = fields.Many2many(
+        "res.company", string="Companies",
+        help="Restrict auto-subscribe users to the selected companies.")
+    auto_subscribed_partner_ids = fields.Many2many(
+        "res.partner", "auto_subscribed_partners", export_string_translation=False,
+    )
     # access
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
@@ -188,12 +196,20 @@ class DiscussChannel(models.Model):
             if len(ch.channel_member_ids) > 2:
                 raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
 
-    @api.constrains('group_public_id', 'group_ids')
+    @api.constrains("auto_subscribe", "group_public_id", "group_ids")
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
+        failing_channels = self.sudo().filtered(
+            lambda channel: channel.channel_type != "channel" and (
+                channel.group_public_id or channel.auto_subscribe or channel.group_ids
+            ),
+        )
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(_(
+                "For %(channels)s, channel_type should be 'channel' to have the group-based "
+                "authorization or auto-subscription",
+                channels=[ch.name for ch in failing_channels],
+            ))
 
     # COMPUTE / INVERSE
 
@@ -552,7 +568,9 @@ class DiscussChannel(models.Model):
                         )
                     )
         result = super().write(vals)
-        if vals.get('group_ids'):
+        if {
+            "auto_subscribe", "auto_subscribe_company_ids", "group_ids", "group_public_id",
+        } & set(vals):
             self._subscribe_users_automatically()
         return result
 
@@ -636,7 +654,10 @@ class DiscussChannel(models.Model):
     # ------------------------------------------------------------
 
     def _subscribe_users_automatically(self):
-        if not (new_members_to_create := self._subscribe_users_automatically_get_members()):
+        channels = self.filtered(lambda c: c.auto_subscribe)
+        if not channels:
+            return
+        if not (new_members_to_create := channels._subscribe_users_automatically_get_members()):
             return
         to_create = [
             {"channel_id": channel_id, "partner_id": partner_id}
@@ -645,7 +666,9 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
+        auto_subscribed_members = []
         for member, store in new_members._get_member_store_list():
+            auto_subscribed_members.append((member.channel_id.id, member.partner_id.id))
             store.add(member.channel_id, "_store_channel_fields").add(
                 member,
                 lambda res: (
@@ -653,14 +676,23 @@ class DiscussChannel(models.Model):
                     res.attr("unpin_dt"),
                 ),
             )
+        self.env.cr.execute_values("""
+            INSERT INTO auto_subscribed_partners (discuss_channel_id, res_partner_id)
+                 VALUES %s
+            ON CONFLICT DO NOTHING
+            """, auto_subscribed_members,
+        )
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
-        return dict(
-            (channel.id,
-             ((channel.group_ids.all_user_ids.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids))
-                for channel in self
-            )
+        partners_by_channel = {}
+        users = self.env["res.users"].search_fetch([], ["partner_id"])
+        for channel in self:
+            filtered_users = users.filtered_domain(channel._get_auto_subscribe_domain())
+            if not filtered_users:
+                continue
+            partners_by_channel[channel.id] = filtered_users.partner_id.ids
+        return partners_by_channel
 
     def action_unfollow(self):
         if self.channel_type in self._types_allowing_unfollow():
@@ -806,6 +838,27 @@ class DiscussChannel(models.Model):
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
                     channel.self_member_id.sudo()._rtc_invite_members(member_ids=new_members.ids)
         return all_new_members
+
+    def _get_auto_subscribe_domain(self):
+        joined_partners = self.channel_member_ids.partner_id | self.auto_subscribed_partner_ids
+        user_domain = Domain([
+            ("partner_id.active", "=", True),
+            ("partner_id", "not in", joined_partners.ids),
+        ])
+        # sudo: res_company - can access all companies for auto-subscribing
+        company_ids = self.sudo().auto_subscribe_company_ids.ids
+        if self.group_public_id:
+            user_domain &= Domain("all_group_ids", "in", self.group_public_id.ids)
+        if company_ids:
+            user_domain &= Domain("company_ids", "in", company_ids)
+        user_domain &= self._get_extra_domain()
+        return user_domain
+
+    def _get_extra_domain(self):
+        domain = Domain(True)
+        if self.group_ids:
+            domain &= Domain("all_group_ids", "in", self.group_ids.ids)
+        return domain
 
     def _get_member_join_notification(self, member):
         if member.is_self:

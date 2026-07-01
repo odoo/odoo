@@ -103,12 +103,17 @@
                                 </field>
                             </page>
                             <page string="Privacy" name="privacy" invisible="channel_type != 'channel'">
-                                <group class="o_label_nowrap">
-                                    <field name="group_public_id"
-                                        invisible="channel_type != 'channel' or parent_channel_id" readonly="not is_editable"/>
-                                    <field name="group_ids" widget="many2many_tags"
-                                        invisible="channel_type != 'channel'"
-                                        string="Auto Subscribe Groups" readonly="not is_editable"/>
+                                <group string="Channel Visibility" invisible="parent_channel_id">
+                                    <field name="group_public_id" placeholder="Public - anyone with the link can access"
+                                        readonly="not is_editable"/>
+                                </group>
+                                <group string="Auto-Subscribe Rules">
+                                    <field name="auto_subscribe" string="Auto-Subscribe channel"/>
+                                    <field name="auto_subscribe_company_ids" widget="many2many_tags" placeholder="All companies"
+                                        string="Companies" readonly="not is_editable" invisible="not auto_subscribe"/>
+                                    <field name="group_ids" widget="many2many_tags" placeholder="All groups"
+                                        string="Groups" domain="[('all_implied_ids', 'in', group_public_id)]"
+                                        readonly="not is_editable" invisible="not auto_subscribe"/>
                                 </group>
                             </page>
                             <page string="Extra info" name="extra_info" groups="base.group_no_one">
