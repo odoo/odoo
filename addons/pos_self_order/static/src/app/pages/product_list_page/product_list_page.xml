@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
-                <OrderWidget t-if="this.selfOrder.ordering" action.bind="this.review"/>
+                <OrderWidget t-if="this.selfOrder.ordering" t-props="this.orderWidgetProps"/>
             </div>
         </div>
     </t>

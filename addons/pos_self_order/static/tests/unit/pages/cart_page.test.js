@@ -193,3 +193,166 @@ test("pay opens combo suggestion popup and redirects upsell combos to combo sele
     await animationFrame();
     expect.verifySteps(["combo_selection:7:cart"]);
 });
+
+test("getBackButton", async () => {
+    await setupSelfPosEnv();
+    const comp = await mountWithCleanup(CartPage, {});
+
+    const backButton = comp.getBackButton();
+    const expected = {
+        position: "left",
+        label: "Back",
+        icon: "oi oi-chevron-left",
+        severity: "secondary",
+        extraClasses: "btn-back",
+    };
+
+    expect(backButton).toMatchObject(expected);
+});
+
+test("getPresetButton", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    const inPreset = store.models["pos.preset"].get(1);
+    store.config.self_ordering_pay_after = "each";
+    store.config.use_presets = true;
+    order.preset_id = inPreset;
+
+    const expected = {
+        position: "right",
+        label: "In",
+        severity: "secondary",
+        extraClasses: "preset-btn",
+    };
+
+    // Classic
+    expect(comp.getPresetButton()).toMatchObject(expected);
+
+    // Do not use presets
+    store.config.use_presets = false;
+    expect(comp.getPresetButton()).toBe(null);
+
+    // No preset selected
+    store.config.use_presets = true;
+    order.preset_id = false;
+    expect(comp.getPresetButton()).toBe(null);
+
+    // Pay after meal, not already ordered
+    order.preset_id = inPreset;
+    store.config.self_ordering_pay_after = "meal";
+    expect(comp.getPresetButton()).toMatchObject(expected);
+
+    // Pay after meal, already ordered
+    await comp.pay(); // --> Clear `order.uiState.lineChanges`
+    expect(comp.getPresetButton()).toBe(null);
+
+    // Pay after each, no unsent lines
+    store.config.self_ordering_pay_after = "each";
+    expect(comp.getPresetButton()).toBe(null);
+});
+
+test("getPayButton", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    const expected = {
+        position: "right",
+        severity: "primary",
+        extraClasses: "cart",
+    };
+
+    // Meal - checkout with changes
+    store.hasPaymentMethod = () => true;
+    store.config.self_ordering_pay_after = "meal";
+    expect(comp.getPayButton()).toMatchObject({ ...expected, label: "Order", disabled: false });
+
+    // Meal - from landing
+    history.pushState({ fromLanding: true }, "");
+    expect(comp.getPayButton()).toMatchObject({ ...expected, label: "Pay" });
+
+    // Meal - no payment method
+    store.hasPaymentMethod = () => false;
+    expect(comp.getPayButton()).toBe(null);
+
+    // Each - payment method available
+    store.config.self_ordering_pay_after = "each";
+    store.hasPaymentMethod = () => true;
+    expect(comp.getPayButton()).toMatchObject({ ...expected, label: "Pay" });
+
+    // Each - no payment method with unsent lines
+    store.hasPaymentMethod = () => false;
+    expect(comp.getPayButton()).toMatchObject({ ...expected, label: "Order" });
+
+    // Each - no payment method without unsent lines
+    const save = order.lines;
+    order.lines = [];
+    expect(comp.getPayButton()).toBe(null);
+    order.lines = save;
+
+    // Meal - checkout without changes
+    store.config.self_ordering_pay_after = "meal";
+    history.pushState({ fromLanding: true }, "");
+    store.hasPaymentMethod = () => true;
+    expect(comp.getPayButton()).toMatchObject({ ...expected, label: "Pay" });
+});
+
+test("orderWidgetProps", async () => {
+    await setupSelfPosEnv();
+    const comp = await mountWithCleanup(CartPage, {});
+
+    comp.getBackButton = () => ({ label: "Back" });
+    comp.getPresetButton = () => ({ label: "Preset" });
+    comp.getPayButton = () => ({ label: "Pay" });
+
+    expect(comp.orderWidgetProps).toMatchObject({
+        removeTopClasses: true,
+        buttons: [{ label: "Back" }, { label: "Preset" }, { label: "Pay" }],
+    });
+
+    comp.getPresetButton = () => null;
+    expect(comp.orderWidgetProps).toMatchObject({
+        removeTopClasses: true,
+        buttons: [{ label: "Back" }, { label: "Pay" }],
+    });
+});
+
+test("getLineDisplayQty", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const line = order.lines[0];
+    const comp = await mountWithCleanup(CartPage, {});
+
+    comp.getLineChangeQty = () => 10;
+    expect(comp.getLineDisplayQty(line)).toBe(10);
+
+    comp.getLineChangeQty = () => false;
+    expect(comp.getLineDisplayQty(line)).toBe(line.qty);
+
+    history.pushState({ fromLanding: true }, "");
+    order.uiState.lineChanges[line.uuid] = { qty: 10 };
+    expect(comp.getLineDisplayQty(line)).toBe(10);
+
+    delete order.uiState.lineChanges[line.uuid];
+    expect(comp.getLineDisplayQty(line)).toBe(line.qty);
+});
+
+test("lines", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+    const product12 = store.models["product.template"].get(12);
+
+    store.config.self_ordering_pay_after = "meal";
+    await comp.pay();
+    await store.addToCart(product12, 4);
+
+    const unsentLines = order.lines.filter((line) => line.product_id.id === 12);
+    expect(comp.lines).toEqual(unsentLines);
+
+    history.pushState({ fromLanding: true }, "");
+    const sentLines = order.lines.filter((line) => line.product_id.id !== 12);
+    expect(comp.lines).toEqual(sentLines);
+});

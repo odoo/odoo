@@ -2,10 +2,12 @@ import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
 import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
@@ -88,6 +90,76 @@ export class ProductListPage extends Component {
             this.selfOrder.currentCategory = this.state.selectedCategory;
             savedScrollTop = this.productListRef.el?.scrollTop || 0;
         });
+    }
+
+    getBackButton() {
+        const order = this.selfOrder.currentOrder;
+        const backTargetPage = this.selfOrder.hasPresets() ? "location" : "default";
+        if (Object.keys(order.changes).length === 0 || order.lines.length === 0) {
+            return {
+                position: "left",
+                label: _t("Back"),
+                onClick: () => this.router.navigate(backTargetPage),
+                severity: "secondary",
+                icon: "oi oi-chevron-left",
+                extraClasses: "btn-back",
+            };
+        }
+        return null;
+    }
+
+    getDiscardButton() {
+        return {
+            position: "left",
+            label: _t("Discard"),
+            onClick: () => {
+                this.dialog.add(CancelPopup, {
+                    title: _t("Cancel order"),
+                    confirm: () => {
+                        this.selfOrder.cancelOrder();
+                        this.router.navigate("default");
+                    },
+                });
+            },
+            severity: "secondary",
+            icon: "btn-close",
+            extraClasses: "btn-cancel",
+        };
+    }
+
+    getCheckoutButton() {
+        const order = this.selfOrder.currentOrder;
+        return {
+            position: "right",
+            label: _t("Checkout"),
+            onClick: () => this.review(),
+            severity: "primary",
+            extraClasses: "cart",
+            disabled: order.lines.length === 0 || order.unsentLines.length === 0,
+        };
+    }
+
+    getTotalProps() {
+        const orderLineNotSend = this.selfOrder.orderLineNotSend;
+        return {
+            count: orderLineNotSend.count,
+            price:
+                this.selfOrder.config.iface_tax_included === "total"
+                    ? orderLineNotSend.priceWithTax
+                    : orderLineNotSend.priceWithoutTax,
+            onClick: () => this.review(),
+        };
+    }
+
+    get orderWidgetProps() {
+        const total = this.getTotalProps();
+        const backButton = this.getBackButton();
+        const discardButton = this.getDiscardButton();
+        const checkoutButton = this.getCheckoutButton();
+        return {
+            total,
+            buttons: [backButton || discardButton, checkoutButton].filter(Boolean),
+        };
     }
 
     selectCategory(category) {
@@ -292,9 +364,9 @@ export class ProductListPage extends Component {
             wrapper.style.transform = `scale(${ANIMATION_CONFIG.initialScale})`;
             requestAnimationFrame(() => {
                 wrapper.style.transform = `
-                    translateY(${offsetTop}px) 
-                    translateX(${offsetLeft}px) 
-                    scale(${ANIMATION_CONFIG.finalScale}) 
+                    translateY(${offsetTop}px)
+                    translateX(${offsetLeft}px)
+                    scale(${ANIMATION_CONFIG.finalScale})
                     rotate(${ANIMATION_CONFIG.rotation})
                 `;
                 wrapper.style.opacity = "0";
