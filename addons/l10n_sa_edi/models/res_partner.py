@@ -1,4 +1,7 @@
 from odoo import fields, models, api
+from odoo.exceptions import ValidationError
+from odoo.addons.l10n_sa_edi.tools.partner_identifiers import SA_ADDITIONAL_IDENTIFIERS_METADATA
+
 
 COMPANY_SCHEMES = {'CRN', 'MOM', 'MLS', '700', 'SAG', 'OTH'}
 
@@ -79,3 +82,23 @@ class ResPartner(models.Model):
     def _address_fields(self):
         return super()._address_fields() + ['l10n_sa_edi_building_number',
                                             'l10n_sa_edi_plot_identification']
+
+    def _get_all_additional_identifiers_metadata(self):
+        return {
+            **super()._get_all_additional_identifiers_metadata(),
+            **SA_ADDITIONAL_IDENTIFIERS_METADATA,
+        }
+
+    def _clean_additional_identifiers(self, vals):
+        """Only one 'SA' additional identifier should be present in additional identifiers"""
+        super()._clean_additional_identifiers(vals)
+
+        identifiers = vals.get('additional_identifiers')
+        if not identifiers:
+            return vals
+
+        sa_keys = [k for k in identifiers if k.startswith('SA_')]
+        if len(sa_keys) > 1:
+            raise ValidationError(self.env._("Only one Saudi Arabia identifier can be set at a time."))
+
+        return vals
