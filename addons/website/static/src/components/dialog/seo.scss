@@ -159,6 +159,21 @@
         border: 1px solid map-get($grays, '300');
     }
 
+    .o-iframe-preview {
+        width: 70px;
+        height: 70px;
+        background: black;
+
+        iframe {
+            width: 350px;
+            height: 350px;
+            border: 1px solid map-get($grays, '300');
+            transform: scale(0.2);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+    }
+
     // We don't use a specific class here to highlight the fact that the
     // variable is tied to the bootstrap class.
     select.btn-outline-primary:focus option {

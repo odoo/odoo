@@ -10,6 +10,14 @@ import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
+import { Dailymotion } from "@html_editor/main/media/video/providers/dailymotion";
+import { Facebook } from "@html_editor/main/media/video/providers/facebook";
+import { GDriveVideo } from "@html_editor/main/media/video/providers/gdrive_video";
+import { Instagram } from "@html_editor/main/media/video/providers/instagram";
+import { Loom } from "@html_editor/main/media/video/providers/loom";
+import { Twitch } from "@html_editor/main/media/video/providers/twitch";
+import { Vimeo } from "@html_editor/main/media/video/providers/vimeo";
+import { Youtube } from "@html_editor/main/media/video/providers/youtube";
 import { WebsiteDialog } from "./dialog";
 import { Component, onMounted, onWillStart, proxy, useApp } from "@odoo/owl";
 import wUtils from "@website/js/utils";
@@ -27,6 +35,7 @@ export const seoContext = proxy({
     metaImage: "",
     defaultTitle: "",
     updatedAlts: [],
+    updatedTitles: [],
     brokenLinks: [],
 });
 
@@ -37,6 +46,42 @@ const LINK_CHECK_BASE_OPTIONS = {
 };
 const LINK_CHECK_MANUAL_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, redirect: "manual" };
 const LINK_CHECK_NO_CORS_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, mode: "no-cors" };
+const VIDEO_THUMBNAIL_FALLBACK = "/website/static/src/img/snippets_thumbs/s_video.svg";
+const VIDEO_PLATFORMS = [
+    Youtube,
+    Instagram,
+    Facebook,
+    GDriveVideo,
+    Dailymotion,
+    Vimeo,
+    Twitch,
+    Loom,
+];
+// Platforms rendered as a scaled-down iframe preview instead of a thumbnail image.
+const IFRAME_PREVIEW_PLATFORMS = new Set(["facebook", "instagram", "twitch", "gDrive"]);
+
+const getVideoThumbnailUrl = async (src) => {
+    if (!src) {
+        return VIDEO_THUMBNAIL_FALLBACK;
+    }
+    let url = src.trim();
+    if (url.startsWith("//")) {
+        url = `https:${url}`;
+    }
+    for (const platform of VIDEO_PLATFORMS) {
+        const urlMatch = platform.isValidVideoUrl(url);
+        if (!urlMatch) {
+            continue;
+        }
+        try {
+            const thumbnailUrl = await platform.getThumbnailUrl?.(urlMatch.groups?.id);
+            return thumbnailUrl || VIDEO_THUMBNAIL_FALLBACK;
+        } catch {
+            return VIDEO_THUMBNAIL_FALLBACK;
+        }
+    }
+    return VIDEO_THUMBNAIL_FALLBACK;
+};
 
 const inspectLink = async (url, options) => {
     try {
@@ -769,15 +814,20 @@ export class SeoChecks extends Component {
         this.object = seoObject || mainObject;
         this.state = proxy({
             altAttributes: [],
+            titleAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
             totalLinks: 0,
         });
         this.imgUpdated = this.imgUpdated.bind(this);
+        this.videoUpdated = this.videoUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            const { altAttributes, titleAttributes } = await this.getMediaAttributes();
+            this.state.altAttributes = altAttributes;
+            this.state.titleAttributes = titleAttributes;
             this.seoContext.updatedAlts = [];
+            this.seoContext.updatedTitles = [];
         });
         onMounted(() => {
             this.getBrokenLinks();
@@ -789,17 +839,24 @@ export class SeoChecks extends Component {
         this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }
 
-    async getAltAttributes() {
+    videoUpdated(video) {
+        video.updated = true;
+        this.seoContext.updatedTitles = this.state.titleAttributes.filter((video) => video.updated);
+    }
+
+    async getMediaAttributes() {
         const uniqueRecords = new Set();
 
-        // Select all relevant <img> elements in the editable page.
+        // Select all relevant <img> and <iframe> elements in the editable page.
         const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const videoEls =
+            this.website.pageDocument.documentElement.querySelectorAll(".media_iframe_video");
 
-        imgEls.forEach((el) => {
+        const collectMetadata = (el) => {
             // Find the closest ancestor element containing Odoo metadata.
             const recordEl = el.closest("[data-oe-model][data-oe-field][data-oe-id]");
             if (!recordEl) {
-                return; // Skip images without a proper metadata wrapper.
+                return; // Skip media without a proper metadata wrapper.
             }
 
             const model = recordEl.dataset.oeModel;
@@ -807,14 +864,16 @@ export class SeoChecks extends Component {
             const field = recordEl.dataset.oeField;
             const type = recordEl.dataset.oeType;
 
-            // Only include images that belong to static content definitions.
+            // Only include media that belong to static content definitions.
             if ((model !== "ir.ui.view" || field !== "arch") && type !== "html") {
                 return;
             }
 
             // Build a unique signature string to avoid duplicates.
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
-        });
+        };
+        imgEls.forEach(collectMetadata);
+        videoEls.forEach(collectMetadata);
 
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {
@@ -822,9 +881,35 @@ export class SeoChecks extends Component {
             return { model, id: parseInt(id), field, type };
         });
 
-        const results = await rpc("/website/get_alt_images", { models });
+        const results = await rpc("/website/get_media_elements", { models });
+        const parsed = JSON.parse(results);
+        const altAttributes = parsed.filter((el) => el.type === "img");
+        const titleAttributes = parsed.filter((el) => el.type === "video");
 
-        return JSON.parse(results);
+        // Mark videos that are better represented as a scaled iframe preview
+        // (platforms with no reliable public thumbnail API).
+        for (const video of titleAttributes) {
+            const src = video.src || "";
+            const url = src.startsWith("//") ? `https:${src}` : src;
+            for (const platform of VIDEO_PLATFORMS) {
+                if (IFRAME_PREVIEW_PLATFORMS.has(platform.id) && platform.isValidVideoUrl(url)) {
+                    video.use_iframe_preview = true;
+                    break;
+                }
+            }
+        }
+
+        await Promise.allSettled(
+            titleAttributes
+                .filter((video) => !video.use_iframe_preview)
+                .map(async (video) => {
+                    video.thumbnail_url = await getVideoThumbnailUrl(video.src);
+                })
+        );
+        return {
+            altAttributes,
+            titleAttributes,
+        };
     }
 
     async getBrokenLinks() {
@@ -1132,10 +1217,14 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
-        if (seoContext.updatedAlts?.length) {
+        if (seoContext.updatedAlts?.length || seoContext.updatedTitles?.length) {
+            const updatedMediaElements = [
+                ...(seoContext.updatedAlts || []),
+                ...(seoContext.updatedTitles || []),
+            ];
             rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
+                rpc("/website/update_media_elements", {
+                    elements: updatedMediaElements,
                 })
             );
         }

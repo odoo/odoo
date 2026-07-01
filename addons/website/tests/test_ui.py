@@ -818,3 +818,6 @@ class TestUi(HttpCaseWithWebsiteUser):
             },
         )
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'background_color_gradient_precedence', login='admin')
+
+    def test_seo_video_description_check(self):
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'seo_video_description_check', login='admin')
