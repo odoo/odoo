@@ -611,10 +611,7 @@ export class ListRenderer extends Component {
             return;
         }
         el.focus();
-        if (
-            ["text", "search", "url", "tel", "password", "textarea"].includes(el.type) &&
-            el.selectionStart === el.selectionEnd
-        ) {
+        if (["number"].includes(el.type) && el.selectionStart === el.selectionEnd) {
             el.selectionStart = 0;
             el.selectionEnd = el.value.length;
         }
