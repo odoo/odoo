@@ -6,14 +6,26 @@ class SurveyUserInput(models.Model):
 
     best_profile_id = fields.Many2one(
         'job.match.profile', string='Best Job Match',
-        compute='_compute_best_profile_id', store=True,
+        compute='_compute_job_match', store=True,
         help="Job profile that best matches this submission's answers.")
+    job_match_all_eliminated = fields.Boolean(
+        'No Matching Job', compute='_compute_job_match', store=True,
+        help="Set when the survey has job profiles configured but every one has "
+             "been disqualified by the participant's answers (hard requirements). "
+             "Drives the no-match screen and lets you report on unmatched participants.")
 
     @api.depends('user_input_line_ids.suggested_answer_id', 'state', 'survey_id.is_job_match')
-    def _compute_best_profile_id(self):
+    def _compute_job_match(self):
         for user_input in self:
             results = user_input._get_job_match_results()
             user_input.best_profile_id = results[0]['profile'] if results else False
+            # Profiles exist for this survey but every one was disqualified: an
+            # empty result set with configured profiles can only mean elimination
+            # (0-score profiles are still returned unless disqualified).
+            profiles_configured = bool(
+                user_input.survey_id.question_ids.suggested_answer_ids.match_weight_ids)
+            user_input.job_match_all_eliminated = bool(
+                user_input.survey_id.is_job_match and profiles_configured and not results)
 
     def _get_job_match_results(self):
         """ Compute the score per job profile for this submission.

@@ -57,6 +57,18 @@
                     </div>
                 </div>
             </t>
+
+            <!-- No-match screen: every profile eliminated by a hard requirement. -->
+            <t t-if="survey.is_job_match and answer.job_match_all_eliminated">
+                <div class="o_survey_job_match_no_match my-4">
+                    <div t-field="survey.job_match_no_match_message" class="mb-3"/>
+                    <a t-if="survey.job_match_jobs_url"
+                        role="button" class="btn btn-primary"
+                        t-att-href="survey.job_match_jobs_url" target="_blank">
+                        Browse our open roles <i class="fa fa-arrow-right ms-1" aria-hidden="true"/>
+                    </a>
+                </div>
+            </t>
         </xpath>
     </template>
 

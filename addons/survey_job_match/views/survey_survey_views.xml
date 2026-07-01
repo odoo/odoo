@@ -23,6 +23,10 @@
             <!-- Flag to turn the survey into a job-matching game -->
             <xpath expr="//field[@name='scoring_type'][@widget='radio']" position="before">
                 <field name="is_job_match"/>
+                <field name="job_match_jobs_url" widget="url"
+                    invisible="not is_job_match"/>
+                <field name="job_match_no_match_message" widget="html"
+                    invisible="not is_job_match"/>
             </xpath>
         </field>
     </record>
