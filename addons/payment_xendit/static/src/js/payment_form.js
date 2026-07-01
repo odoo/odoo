@@ -122,6 +122,7 @@ paymentForm.include({
                 // Allow reusing tokens when the transaction should be tokenized.
                 is_multiple_use: processingValues['should_tokenize'],
                 amount: processingValues['rounded_amount'],
+                currency: processingValues['currency'],
             },
             (err, token) =>  
                 {
@@ -134,6 +135,7 @@ paymentForm.include({
                     if (processingValues['should_tokenize']) {
                         Xendit.card.createAuthentication({
                             amount: processingValues['rounded_amount'],
+                            currency: processingValues['currency'],
                             token_id: token.id
                         }, (err, result) => {
                             this._xenditHandleResponse(err, result, processingValues, 'auth')
