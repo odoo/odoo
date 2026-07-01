@@ -38,9 +38,7 @@ class PaymentTransaction(models.Model):
             self._set_error(str(error))
             return {}
 
-        api_url = response_content[
-            "init_point" if self.provider_id.is_live else "sandbox_init_point"
-        ]
+        api_url = response_content['init_point']
         return {
             "api_url": api_url,
             "http_method": "get",
