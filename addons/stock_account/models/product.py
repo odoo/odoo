@@ -75,6 +75,17 @@ class ProductTemplate(models.Model):
             product_template.valuation = product_template.categ_id.with_company(
                 product_template.company_id).property_valuation or self.env.company.inventory_valuation
 
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.lot_valuated:
+            return {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("This product is valuated by lot/serial number. Changing the cost "
+                        "will update the cost of every lot/serial number in stock."),
+                }
+            }
+
     def write(self, vals):
         product_ids_to_update = set()
         lot_ids_to_update = set()
@@ -280,6 +291,17 @@ class ProductProduct(models.Model):
         products.with_context(valuation_date=datetime.min)._change_standard_price({product: 0 for product in products if product.standard_price})
         return products
 
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.lot_valuated:
+            return {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("This product is valuated by lot/serial number. Changing the cost "
+                        "will update the cost of every lot/serial number in stock."),
+                }
+            }
+
     def write(self, vals):
         old_price = False
         if 'standard_price' in vals and not self.env.context.get('disable_auto_revaluation'):
@@ -315,11 +337,11 @@ class ProductProduct(models.Model):
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
-        self.env['product.value'].sudo().create(product_values)
         if product_ids_lot_valuated:
             for (product, lots) in self.env['stock.lot']._read_group(
                     [('product_id', 'in', product_ids_lot_valuated)], ['product_id'], ['id:recordset']):
                 lots.with_context(disable_auto_revaluation=True).standard_price = product.standard_price
+        self.env['product.value'].sudo().create(product_values)
         return
 
     def _get_standard_price_at_date(self, date=None):
