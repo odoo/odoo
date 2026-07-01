@@ -1652,6 +1652,22 @@ test("Adjust view: switching between Tiled and Spotlight changes the meeting gri
     await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard", { count: 3 });
 });
 
+test("Change layout dialog closes when the call is removed by the server", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await contains(".o-discuss-ChangeLayoutDialog");
+    // Server ends the call while the dialog is still open: it must close itself, otherwise its
+    // layout actions would operate on the now-gone call and crash on the next click.
+    pyEnv["discuss.channel.rtc.session"].unlink([rtc.selfSession.id]);
+    await contains(".o-discuss-ChangeLayoutDialog", { count: 0 });
+});
+
 test("Auto layout switches to the sidebar while someone is presenting", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
