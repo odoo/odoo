@@ -445,6 +445,30 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
     expect(".o-main-components-container .o-dropdown-item:contains('Other')").toHaveCount(1);
 });
 
+test("Display currency on monetary field", async () => {
+    onRpc("get_authorized_fields", () => ({
+        value: {
+            name: "salary_expectation",
+            string: "Salary Expectation",
+            type: "monetary",
+            currency_field: "company_currency",
+            currency: "BEF",
+        },
+    }));
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+
+    await contains(":iframe section").click();
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+
+    await contains("button:contains('+ Field')").click();
+    await contains("#type_opt").click();
+    await contains("[role='menuitem'][data-action-value='value']").click();
+
+    await animationFrame();
+    expect(":iframe div[data-type='monetary'] .input-group-text").toHaveText("BEF");
+});
+
 test("Changing max files number option updates file input 'multiple' attribute", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(`

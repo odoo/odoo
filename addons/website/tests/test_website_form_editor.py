@@ -143,3 +143,39 @@ class TestWebsiteForm(TransactionCase):
         with self.assertRaises(ValidationError):
             self.test_field.unlink()
         self.assertTrue(self.test_field.exists())
+
+    def test_currency_authorized_fields(self):
+        """
+        Verify that get_authorized_fields correctly returns the currency
+        for monetary fields.
+        """
+        ir_model_env = self.env['ir.model']
+        authorized_fields = ir_model_env.get_authorized_fields('crm.lead', {})
+
+        self.assertEqual(authorized_fields['expected_revenue']['currency'], 'USD')
+
+        self.env.company.currency_id = self.env['res.currency'].create({'name': 'BEF', 'symbol': 'F'})
+
+        authorized_fields = ir_model_env.get_authorized_fields('crm.lead', {})
+        self.assertEqual(authorized_fields['expected_revenue']['currency'], 'BEF')
+
+    def test_currency_property_authorized_fields(self):
+        """
+        Verify that get_authorized_fields correctly returns the currency
+        for monetary fields.
+        """
+        definition = self.env['properties.base.definition']._get_definition_for_property_field(
+            'res.partner', 'properties'
+        )
+        definition.write({'properties_definition': [
+            {'name': 'monetary_amount', 'type': 'monetary'},
+        ]})
+
+        ir_model_env = self.env['ir.model']
+        authorized_fields = ir_model_env.get_authorized_fields('res.partner', {})
+        self.assertEqual(authorized_fields['monetary_amount']['currency'], 'USD')
+
+        self.env.company.currency_id = self.env['res.currency'].create({'name': 'BEF', 'symbol': 'F'})
+
+        authorized_fields = ir_model_env.get_authorized_fields('res.partner', {})
+        self.assertEqual(authorized_fields['monetary_amount']['currency'], 'BEF')

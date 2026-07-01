@@ -387,6 +387,11 @@
 
     <!-- Monetary Field -->
     <t t-name="website.form_field_monetary">
-        <t t-call="website.form_field_float" />
+        <t t-call="website.form_field">
+            <div class="input-group">
+                <input class="form-control s_website_form_input" step="any" t-att-id="field.id" t-att-name="field.name" t-att-placeholder="field.placeholder" t-att-required="field.required || field.modelRequired || None" t-attf-value="#{field.value}" type="number"/>
+                <span class="input-group-text" t-out="field.currency" />
+            </div>
+        </t>
     </t>
 </templates>
