@@ -3,13 +3,11 @@ import { registry } from "@web/core/registry";
 
 /**
  * @typedef { Object } MegaMenuOptionShared
- * @property { MegaMenuOptionPlugin['getTemplatePrefix'] } getTemplatePrefix
  */
 
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
     static dependencies = ["dropzone"];
-    static shared = ["getTemplatePrefix"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -32,11 +30,6 @@ export class MegaMenuOptionPlugin extends Plugin {
         },
     };
 
-
-    getTemplatePrefix() {
-        return "website.";
-    }
-
     async saveMegaMenuClasses() {
         const proms = [];
         for (const megaMenuEl of this.editable.querySelectorAll(
@@ -55,8 +48,6 @@ export class MegaMenuOptionPlugin extends Plugin {
                     mega_menu_classes: classes.join(" "),
                 })
             );
-            const selectors = this.dependencies.dropzone.getSelectors(megaMenuEl);
-            this.dependencies.dropzone.activateDropzones(selectors);
         }
 
         await Promise.all(proms);
