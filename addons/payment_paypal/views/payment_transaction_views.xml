@@ -6,11 +6,20 @@
         <field name="model">payment.transaction</field>
         <field name="inherit_id" ref="payment.payment_transaction_form"/>
         <field name="arch" type="xml">
-            <field name="provider_reference" position="after">
-                <field name="paypal_type"
-                       readonly="1"
-                       invisible="provider_code != 'paypal'"
-                       groups="base.group_no_one"/>
+            <field name="token_id" position="after">
+                <label
+                    for="paypal_type"
+                    string="PayPal Transaction Type"
+                    class="text-nowrap"
+                    invisible="provider_code != 'paypal'"
+                />
+                <field
+                    name="paypal_type"
+                    readonly="1"
+                    invisible="provider_code != 'paypal'"
+                    groups="base.group_no_one"
+                    nolabel="1"
+                />
             </field>
         </field>
     </record>

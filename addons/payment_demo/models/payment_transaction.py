@@ -2,15 +2,13 @@
 
 import logging
 
-from odoo import fields, models
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
-
-    capture_manually = fields.Boolean(related="provider_id.capture_manually")
 
     # === ACTION METHODS ===#
 

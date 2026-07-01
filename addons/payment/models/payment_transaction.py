@@ -35,6 +35,7 @@ class PaymentTransaction(models.Model):
         string="Provider", comodel_name="payment.provider", readonly=True, required=True, index=True
     )
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
+    capture_manually = fields.Boolean(related="provider_id.capture_manually")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others)
