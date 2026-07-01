@@ -42,6 +42,7 @@ export class ResPartner extends Record {
     is_company;
     /** @type {boolean} */
     is_public;
+    company_id = fields.One("res.company");
     main_user_id = fields.One("res.users");
     /** @type {string} */
     name;
@@ -91,6 +92,32 @@ export class ResPartner extends Record {
 
     get isBot() {
         return this.eq(this.store.odoobot);
+    }
+
+    /**
+     * Company-aware selector that picks the most appropriate user from
+     * user_ids. Priority: internal user of the active company → any user of
+     * that company → any internal user → user_ids[0].
+     */
+    get representativeUser() {
+        const users = this.user_ids;
+        if (!users.length) {
+            return undefined;
+        }
+        const activeCompany = this.store.self_user?.company_id;
+        if (activeCompany) {
+            let match = users.find(
+                (u) => u.share === false && u.company_ids?.some((c) => c.eq(activeCompany))
+            );
+            if (match) {
+                return match;
+            }
+            match = users.find((u) => u.company_ids?.some((c) => c.eq(activeCompany)));
+            if (match) {
+                return match;
+            }
+        }
+        return users.find((u) => u.share === false) || users[0];
     }
 }
 
