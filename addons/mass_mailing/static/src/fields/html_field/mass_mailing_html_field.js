@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
@@ -109,16 +109,16 @@ export class MassMailingHtmlField extends HtmlField {
             }
         });
 
-        useLayoutEffect(
-            () => {
-                if (!this.codeViewRef.el) {
-                    return;
-                }
-                // Set the initial textArea height.
-                this.codeViewRef.el.style.height = this.codeViewRef.el.scrollHeight + "px";
-            },
-            () => [this.codeViewRef.el]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (!this.codeViewRef.el) {
+        //             return;
+        //         }
+        //         // Set the initial textArea height.
+        //         this.codeViewRef.el.style.height = this.codeViewRef.el.scrollHeight + "px";
+        //     },
+        //     () => [this.codeViewRef.el]
+        // );
 
         useListener(window, "pointerdown", this.onPointerDown.bind(this));
     }
