@@ -8,7 +8,6 @@ from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, sql, unique
-from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
 from .commands import Command
@@ -64,19 +63,8 @@ class _Relational(Field[BaseModel]):
             try:
                 vals.append(field_cache[record_id])
             except KeyError:
-                if self.store and record_id and len(vals) < len(records) - PREFETCH_MAX:
-                    # a lot of missing records, just fetch that field
-                    remaining = records[len(vals):]
-                    remaining.fetch([self.name])
-                    # fetch does not raise MissingError, check value
-                    if record_id not in field_cache:
-                        raise MissingError("\n".join([
-                            env._("Record does not exist or has been deleted."),
-                            env._("(Record: %(record)s, User: %(user)s)", record=record_id, user=env.uid),
-                        ])) from None
-                else:
-                    remaining = records.__class__(env, (record_id,), records._prefetch_ids)
-                    super().__get__(remaining, owner)
+                remaining = records.__class__(env, (record_id,), records._prefetch_ids)
+                super().__get__(remaining, owner)
                 # we have the record now
                 vals.append(field_cache[record_id])
 

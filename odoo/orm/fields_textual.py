@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import collections.abc
-import itertools
 import typing
 from collections import defaultdict
 from difflib import unified_diff
@@ -15,7 +14,6 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
-from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
 from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate
@@ -228,10 +226,10 @@ class BaseString(Field[str | typing.Literal[False]]):
         if isinstance(value, StoredTranslations):
             return dict(value)
         complete_translations_types = (type(None), StoredTranslations)
-        records_to_fetch = record.browse(itertools.islice((
+        records_to_fetch = record.browse((
             id_ for id_ in expand_ids(record.id, record._prefetch_ids)
             if not isinstance(field_cache.get(id_, SENTINEL), complete_translations_types)
-        ), PREFETCH_MAX))
+        ))
         # refetch field values for all languages
         records_to_fetch.invalidate_recordset([self.name])
         records_to_fetch.with_context(prefetch_langs=True).fetch([self.name])

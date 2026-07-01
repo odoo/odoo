@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import functools
 import collections
-import itertools
 import logging
 import operator as pyoperator
 import re
@@ -18,7 +17,6 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, reset_cached_properties, sql
-from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
 
 from .domains import Domain
@@ -1682,7 +1680,7 @@ class Field[T]:
         ids = expand_ids(record.id, record._prefetch_ids)
         field_cache = self._get_cache(record.env)
         prefetch_ids = (id_ for id_ in ids if id_ not in field_cache)
-        return record.browse(itertools.islice(prefetch_ids, PREFETCH_MAX))
+        return record.browse(prefetch_ids)
 
     def _insert_cache(self, records: BaseModel, values: Iterable) -> None:
         """ Update the cache of the given records with the corresponding values,
@@ -1980,7 +1978,7 @@ class Field[T]:
         for record in records:
             if record.id in to_compute_ids:
                 ids = expand_ids(record.id, to_compute_ids)
-                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
+                recs = record.browse(ids)
                 try:
                     apply_except_missing(self.compute_value, recs)
                     continue
