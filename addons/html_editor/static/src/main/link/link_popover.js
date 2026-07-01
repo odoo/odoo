@@ -90,6 +90,7 @@ export class LinkPopover extends Component {
             // `.getAttribute("href")` instead of `.href` to keep relative url
             url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
+            description: linkElement.getAttribute("aria-label") || "",
             previewIcon: {
                 /** @type {'fa'|'imgSrc'|'mimetype'} */
                 type: "fa",
@@ -173,6 +174,7 @@ export class LinkPopover extends Component {
                 attributes[attribute] = value;
             }
         }
+        attributes["aria-label"] = this.state.description;
         return {
             label: this.state.label,
             attachmentId: this.state.attachmentId,

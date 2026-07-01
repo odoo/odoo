@@ -50,6 +50,18 @@
                                 t-on-input="this.onChange"/>
                         </div>
                         <div class="input-group mb-2">
+                            <label for="o_we_description_link" class="o_we_input_label">
+                                <span class="fa fa-eye" />
+                            </label>
+                            <input t-custom-ref="description"
+                                id="o_we_description_link"
+                                class="o_we_label_link border-dark-subtle form-control form-control-sm"
+                                t-model.proxy="this.state.description"
+                                title="Description"
+                                placeholder="Add a description if the label is not self-explanatory."
+                                t-on-input="this.onChange"/>
+                        </div>
+                        <div class="input-group mb-2">
                             <label for="o_linkpopover_url" class="o_we_input_label">
                                 <span class="fa fa-link"></span>
                             </label>
