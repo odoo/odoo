@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard">
-        <div t-if="this.hasAccrualAllocation or this.hasFutureAllocation"
-                class="row justify-content-center align-items-center border-bottom w-100 p-1">
-            Balance at the
-            <div class="p-1" style="max-width: 100px!important">
-                <DateTimeInput
-                    type="'date'"
-                    value="this.state.date"
-                    onChange="(date) => this.loadDashboardData(date)"
-                    minDate="this.state.today"
-                    placeholder.translate="Today"/>
-            </div>
-            <button class="o_timeoff_today_button btn btn-secondary" t-on-click="this.resetDate">Today</button>
-        </div>
         <div class="d-flex flex-row p-0 justify-content-around">
             <t t-foreach="this.state.holidays" t-as="holiday" t-key="holiday[3]">
                 <TimeOffCard
@@ -34,6 +21,17 @@
                             New Request
                         </a>
                     </div>
+                </div>
+            </div>
+            <div t-if="this.hasAccrualAllocation or this.hasFutureAllocation" class="o_timeoff_card text-primary">
+                <span class="text-danger o_timeoff_name">Balance at the</span>                
+                <div class="d-flex flex-column align-items-start justify-content-center o_timeoff_validity">
+                    <DateTimeInput
+                            type="'date'"
+                            value="this.state.date"
+                            onChange="(date) => this.loadDashboardData(date)"
+                            minDate="this.state.today"
+                            placeholder.translate="Today"/>
                 </div>
             </div>
         </div>
