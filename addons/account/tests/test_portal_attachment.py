@@ -3,6 +3,8 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.tests.common import tagged
 
+from datetime import datetime
+from freezegun import freeze_time
 import json
 
 from odoo.tools import file_open, mute_logger
@@ -168,18 +170,20 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             "model": "res.partner",
             "res_id": self.partner_a.id,
         })
-        res = self.url_open(
-            url=f'{self.invoice_base_url}/mail/attachment/delete',
-            json={
-                'params': {
-                    'attachment_id': attachment.id,
-                    "access_token": attachment._get_ownership_token(),
+        with freeze_time('2026-06-29 08:00'):
+            res = self.url_open(
+                url=f'{self.invoice_base_url}/mail/attachment/delete',
+                json={
+                    'params': {
+                        'attachment_id': attachment.id,
+                        "access_token": attachment._get_ownership_token(),
+                    },
                 },
-            },
-        )
+            )
         self.assertEqual(res.status_code, 200)
         self.assertFalse(attachment.exists())
         self.assertIn("o-mail-Message-edited", message.body)
+        self.assertEqual(message.write_date, datetime(2026, 6, 29, 8, 0, 0))
         message.sudo().unlink()
 
         # Test attachment can't be associated if no attachment token.

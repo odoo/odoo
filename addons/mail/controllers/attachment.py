@@ -75,7 +75,7 @@ class AttachmentController(ThreadController):
             store = Store().add(
                 attachment,
                 lambda res: (
-                    res.from_method("_store_attachment_fields"),
+                    res.from_method("_store_attachment_fields", chatter_fields=not request.env.user.share),
                     res.from_method("_store_ownership_fields"),
                 ),
             )
@@ -96,7 +96,7 @@ class AttachmentController(ThreadController):
             thread = request.env[message.model].browse(message.res_id)
             thread._message_update_content(message, body=message.body)  # marks the message edited
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
-        attachment.sudo()._delete_and_notify(message)
+        attachment.sudo()._delete_and_notify()
 
     @mail_route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
     def mail_attachment_get_zip(self, file_ids, zip_name, **kw):
