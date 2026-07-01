@@ -509,6 +509,9 @@ class ResPartner(models.Model):
             else:
                 partner.currency_id = self.env.company.currency_id
 
+    def _get_vat_label(self):
+        return self.env.company.account_fiscal_country_id.vat_label
+
     def _default_display_invoice_template_pdf_report_id(self):
         available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
         return available_templates_count > 1

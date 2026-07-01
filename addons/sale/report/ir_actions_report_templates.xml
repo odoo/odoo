@@ -8,7 +8,8 @@
             <div t-field="doc.partner_id"
                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
             <p t-if="doc.partner_id.vat">
-                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
+                <t t-set="vat_label" t-value="doc._get_vat_label()"/>
+                <t t-if="vat_label" t-out="vat_label" id="inv_tax_id_label"/>
                 <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
             </p>
         </t>
