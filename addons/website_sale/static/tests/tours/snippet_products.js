@@ -17,7 +17,16 @@ registerWebsitePreviewTour(
     () => {
         return [
             ...insertSnippet(productsSnippet),
+            {
+                content:
+                    "Verify that the `o_dynamic_snippet_carousel` class is present, as it renders two elements when the title is left & the content width is not max.",
+                trigger: ":iframe .o_dynamic_snippet_carousel",
+            },
             ...clickOnSnippet(productsSnippet),
+            {
+                content: "Verify section title top is selected by default",
+                trigger: "button[data-action-param='d-flex justify-content-between'].active",
+            },
             ...clickOnSave(),
             {
                 trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card button[name='add_to_cart']:not(:visible)",

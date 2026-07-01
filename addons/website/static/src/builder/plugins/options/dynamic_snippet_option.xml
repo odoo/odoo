@@ -58,12 +58,12 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
-        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
+        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'" action="'setSectionTitlePosition'">
             <t t-set="left">Left</t>
             <t t-set="right">Right</t>
-            <BuilderButton label.translate="Top" classAction="this.dynamicOptionParams.getSnippetTitleClasses('top')"/>
-            <BuilderButton label="this.env.langDir.content === 'ltr' ? left : right" classAction="this.dynamicOptionParams.getSnippetTitleClasses('left')"/>
-            <BuilderButton label.translate="None" title.translate="No title" classAction="this.dynamicOptionParams.getSnippetTitleClasses('none')"/>
+            <BuilderButton label.translate="Top" actionParam="this.dynamicOptionParams.getSnippetTitleClasses('top')"/>
+            <BuilderButton label="this.env.langDir.content === 'ltr' ? left : right" actionParam="this.dynamicOptionParams.getSnippetTitleClasses('left')"/>
+            <BuilderButton label.translate="None" title.translate="No title" actionParam="this.dynamicOptionParams.getSnippetTitleClasses('none')"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

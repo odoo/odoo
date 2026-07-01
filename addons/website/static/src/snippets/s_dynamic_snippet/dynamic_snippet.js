@@ -8,9 +8,10 @@ import { renderToFragment } from "@web/core/utils/render";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
 import { markup } from "@odoo/owl";
-
-const DEFAULT_NUMBER_OF_ELEMENTS = 4;
-const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
+import {
+    DEFAULT_NUMBER_OF_ELEMENTS,
+    DEFAULT_NUMBER_OF_ELEMENTS_SM,
+} from "@website/utils/constants";
 
 export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";
