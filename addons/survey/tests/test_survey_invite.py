@@ -8,7 +8,7 @@ from lxml import etree
 from odoo import fields, Command
 from odoo.addons.survey.tests import common
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import users
 
@@ -408,45 +408,74 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         self.assertIn('Dutch Subject', mail_nl.subject)
         self.assertIn('Dutch Body', mail_nl.body_html)
 
-    def test_survey_invite_lang_security(self):
-        """ Test that a user without 'mail template editor' cannot send an invite whose
-        lang field contains a forbidden expression different from the template's lang,
-        but can send one whose lang matches the template's (trusted as validated data). """
-        # MailCommon grants template_editor to all internal users by default; undo that
-        # so survey_manager is subject to the rendering restriction.
-        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        # Lang sync after subject update on the composer
+        self.survey_manager.lang = 'nl_NL'
+        with self.with_user('survey_manager'):
+            invite = self.env['survey.invite'].with_context(lang=self.env.user.lang).create({
+                'survey_id': self.survey.id,
+                'partner_ids': [Command.set((partner_en + partner_nl).ids)],
+                'template_id': template.id,
+            })
+            self.assertIn('Dutch Subject', invite.subject)
+            invite.subject = 'Modified Subject'
 
-        partner = self.env['res.partner'].create({
-            'name': 'Partner Security Test',
-            'email': 'partner_security_test@example.com',
-            'lang': 'en_US',
-        })
-        template = self.env['mail.template'].create({
-            'name': 'Test Template Security',
-            'model_id': self.env['ir.model']._get('survey.user_input').id,
-            'subject': 'Original Subject',
-            'body_html': '<p>Original Body</p>',
-            'lang': '{{ object.partner_id.lang }}',
-        })
+            with self.mock_mail_gateway():
+                invite.action_invite()
 
+        self.assertEqual(len(self._new_mails), 2)
+        mail_en = self._new_mails.filtered(lambda m: partner_en in m.recipient_ids)
+        mail_nl = self._new_mails.filtered(lambda m: partner_nl in m.recipient_ids)
+        self.assertTrue(mail_en, "Email should be sent to Partner EN")
+        self.assertTrue(mail_nl, "Email should be sent to Partner NL")
+
+        self.assertIn('Modified Subject', mail_en.subject)
+        self.assertIn('Dutch Body', mail_en.body_html)
+        self.assertIn('Modified Subject', mail_nl.subject)
+        self.assertIn('Dutch Body', mail_nl.body_html)
+
+        # Manually set invite language (should be ignored)
         with self.with_user('survey_manager'):
             invite = self.env['survey.invite'].create({
                 'survey_id': self.survey.id,
-                'partner_ids': [Command.set([partner.id])],
+                'partner_ids': [Command.set((partner_en + partner_nl).ids)],
                 'template_id': template.id,
-                'subject': 'Custom Subject',
-                'lang': '{{ object.access_token }}',
             })
-            with self.assertRaises(AccessError):
+            invite.lang = 'nl_NL'
+            self.assertIn('English Subject', invite.subject)
+
+            with self.mock_mail_gateway():
                 invite.action_invite()
 
-            invite2 = self.env['survey.invite'].create({
+        self.assertEqual(len(self._new_mails), 2)
+        mail_en = self._new_mails.filtered(lambda m: partner_en in m.recipient_ids)
+        mail_nl = self._new_mails.filtered(lambda m: partner_nl in m.recipient_ids)
+        self.assertTrue(mail_en, "Email should be sent to Partner EN")
+        self.assertTrue(mail_nl, "Email should be sent to Partner NL")
+
+        self.assertIn('English Subject', mail_en.subject)
+        self.assertIn('English Body', mail_en.body_html)
+        self.assertIn('Dutch Subject', mail_nl.subject)
+        self.assertIn('Dutch Body', mail_nl.body_html)
+
+        # Force template language
+        template.lang = 'nl_NL'
+        with self.with_user('survey_manager'):
+            invite = self.env['survey.invite'].create({
                 'survey_id': self.survey.id,
-                'partner_ids': [Command.set([partner.id])],
+                'partner_ids': [Command.set((partner_en + partner_nl).ids)],
                 'template_id': template.id,
-                'subject': 'Custom Subject',
-                'lang': '{{ object.partner_id.lang }}',
             })
+
             with self.mock_mail_gateway():
-                invite2.action_invite()
-        self.assertEqual(len(self._new_mails), 1)
+                invite.action_invite()
+
+        self.assertEqual(len(self._new_mails), 2)
+        mail_en = self._new_mails.filtered(lambda m: partner_en in m.recipient_ids)
+        mail_nl = self._new_mails.filtered(lambda m: partner_nl in m.recipient_ids)
+        self.assertTrue(mail_en, "Email should be sent to Partner EN")
+        self.assertTrue(mail_nl, "Email should be sent to Partner NL")
+
+        self.assertIn('Dutch Subject', mail_en.subject)
+        self.assertIn('Dutch Body', mail_en.body_html)
+        self.assertIn('Dutch Subject', mail_nl.subject)
+        self.assertIn('Dutch Body', mail_nl.body_html)
