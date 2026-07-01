@@ -45,16 +45,23 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     def action_create_project_from_so(self):
         """Create a project either from template or directly if no template is set."""
         self.ensure_one()
+        sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
         if self.template_id:
+            if (sale_order.commitment_date and not self.date_start and not self.template_has_dates and sale_order.state == 'sale'):
+                self.date_start = sale_order.date_order
+                self.date = sale_order.commitment_date
             project = self._create_project_from_template()
         else:
-            sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
             so_line = sale_order.order_line[:1]
             product = so_line.product_id
             values = {
                 'partner_id': sale_order.partner_id.id,
                 'company_id': sale_order.company_id.id,
             }
+            if sale_order.commitment_date and sale_order.state == 'sale':
+                values['date_start'] = sale_order.date_order
+                values['date'] = sale_order.commitment_date
+
             if len(sale_order.order_line) == 1:
                 values['name'] = (
                     f"{sale_order.name} - [{product.default_code}] {product.name}"

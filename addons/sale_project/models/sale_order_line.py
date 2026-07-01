@@ -194,6 +194,9 @@ class SaleOrderLine(models.Model):
         }
         if self.order_id.state != 'draft':
             values['sale_line_id'] = self.id
+        if self.order_id.commitment_date and not self.product_id.project_template_id.date_start:
+            values['date_start'] = self.order_id.date_order
+            values['date'] = self.order_id.commitment_date
         return values
 
     def _timesheet_create_project(self):
@@ -270,7 +273,7 @@ class SaleOrderLine(models.Model):
             title = self.product_id.display_name
             description = '<br/>'.join(sale_line_name_parts)
 
-        return {
+        vals = {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
@@ -281,6 +284,9 @@ class SaleOrderLine(models.Model):
             'company_id': project.company_id.id,
             'user_ids': False,  # force non assigned task, as created as sudo()
         }
+        if self.order_id.commitment_date:
+            vals['date_deadline'] = self.order_id.commitment_date
+        return vals
 
     @api.model
     def _get_product_service_policy(self):
@@ -297,13 +303,16 @@ class SaleOrderLine(models.Model):
                 and sol.product_id.service_policy in self._get_product_service_policy()
             )
 
-        return {
+        vals = {
             'name': '%s - %s' % (self.order_id.name, template.name),
             'allocated_hours': allocated_hours,
             'project_id': project.id,
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
         }
+        if not template.date_deadline and self.order_id.commitment_date:
+            vals['date_deadline'] = self.order_id.commitment_date
+        return vals
 
     def _get_sale_order_partner_id(self, project):
         return self.order_id.partner_id.id

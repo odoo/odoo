@@ -2102,3 +2102,236 @@ class TestSaleProject(TestSaleProjectCommon):
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+
+    def test_task_deadline_from_so_delivery_date(self):
+        """Test that the task deadline is set from the SO delivery date when the product is tracked by task."""
+        task_template_with_no_deadline = self.task_template.copy()
+        self.task_template.date_deadline = fields.Date.add(fields.Date.context_today(self), days=5)
+
+        product_1, product_2, product_3 = self.env['product.product'].create([{
+            'name': 'Test product 1 - task template with deadline',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'ordered_prepaid',
+        }, {
+            'name': 'Test product 2 - no task template',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'service_policy': 'ordered_prepaid',
+        }, {
+            'name': 'Test product 3 - task template without deadline',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': task_template_with_no_deadline.id,
+            'service_policy': 'ordered_prepaid',
+        }])
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'commitment_date': fields.Date.to_string(fields.Date.add(fields.Date.context_today(self), days=10)),
+        })
+        task_template_with_deadline, task_without_template, task_template_without_deadline = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': product_1.id},  # template with deadline
+            {'order_id': so.id, 'product_id': product_2.id},  # no template
+            {'order_id': so.id, 'product_id': product_3.id},  # template no deadline
+        ])
+        so.action_confirm()
+
+        # Case 1: Template HAS deadline → must NOT be overridden by SO delivery date
+        self.assertNotEqual(
+            task_template_with_deadline.task_id.date_deadline.date(),
+            so.commitment_date.date(),
+            "Task with template deadline should NOT be overridden by SO delivery date",
+        )
+
+        # Case 2: No template → deadline must equal SO delivery date
+        self.assertTrue(task_without_template.task_id.date_deadline, "Task Deadline should be set")
+        self.assertEqual(
+            task_without_template.task_id.date_deadline.date(),
+            so.commitment_date.date(),
+            "Task without template should get SO delivery date as deadline",
+        )
+
+        # Case 3: Template NO deadline → deadline must equal SO delivery date
+        self.assertTrue(task_template_without_deadline.task_id.date_deadline)
+        self.assertEqual(
+            task_template_without_deadline.task_id.date_deadline.date(),
+            so.commitment_date.date(),
+            "Task template with no deadline should get SO delivery date as deadline",
+        )
+
+        # Case 4: No SO delivery date → deadline must be empty
+        so_no_date = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol_no_date = self.env['sale.order.line'].create(
+            {'order_id': so_no_date.id, 'product_id': product_2.id, 'sequence': 1}
+        )
+        so_no_date.action_confirm()
+        self.assertFalse(
+            sol_no_date.task_id.date_deadline,
+            "Task deadline should be empty when SO has no delivery date",
+        )
+
+    def test_project_deadline_from_so_delivery_date(self):
+        """Test that the project deadline is set from the SO delivery date."""
+        project_template_without_deadline = self.project_template.copy({'is_template': True})
+        self.project_template.write({
+            'is_template': True,
+            'date_start': fields.Date.context_today(self),
+            'date': fields.Date.add(fields.Date.context_today(self), days=5),
+        })
+
+        product_1, product_2, product_3 = self.env['product.product'].create([{
+            'name': 'Test product 1 - no project template',
+            'type': 'service',
+            'service_tracking': 'project_only',
+        }, {
+            'name': 'Test product 2 - project template with deadline',
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': self.project_template.id,
+        }, {
+            'name': 'Test product 3 - project template without deadline',
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': project_template_without_deadline.id,
+        }])
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'commitment_date': fields.Date.add(fields.Date.context_today(self), days=10),
+        })
+
+        project_with_no_template, project_with_planned_date, project_without_planned_date = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': product_1.id},  # no template
+            {'order_id': so.id, 'product_id': product_2.id},  # template with deadline
+            {'order_id': so.id, 'product_id': product_3.id},  # template no deadline
+        ])
+        so.action_confirm()
+
+        # Case 1: No template → inherit SO delivery date
+        self.assertTrue(project_with_no_template.project_id.date, "Project deadline should be set")
+        self.assertTrue(project_with_no_template.project_id.date_start, "Project start date should be set")
+        self.assertEqual(
+            project_with_no_template.project_id.date,
+            so.commitment_date.date(),
+            "Project without template should inherit SO delivery date",
+        )
+
+        # Case 2: Template HAS deadline → must NOT be overridden
+        self.assertEqual(
+            project_with_planned_date.project_id.date,
+            self.project_template.date,
+            "Project template deadline should not be overridden",
+        )
+
+        # Case 3: Template NO deadline → inherit SO delivery date
+        self.assertTrue(project_without_planned_date.project_id.date)
+        self.assertEqual(
+            project_without_planned_date.project_id.date,
+            so.commitment_date.date(),
+            "Project template without deadline should inherit SO delivery date",
+        )
+
+        # Case 4: No SO delivery date → keep empty
+        so_no_date = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol_no_date = self.env['sale.order.line'].create({
+            'order_id': so_no_date.id,
+            'product_id': product_1.id,
+        })
+        so_no_date.action_confirm()
+
+        self.assertFalse(sol_no_date.project_id.date, "Project deadline should be empty when SO has no delivery date")
+        self.assertFalse(sol_no_date.project_id.date_start, "Project start date should be empty when SO has no delivery date")
+
+    def test_project_deadline_from_so_delivery_date_via_wizard(self):
+        """Test that the project deadline is set from the SO delivery date when project is created via wizard."""
+
+        project_template_without_dates = self.project_template.copy()
+        self.project_template.write({'date_start': fields.Date.context_today(self), 'date': fields.Date.add(fields.Date.context_today(self), days=5)})
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'commitment_date': fields.Date.add(fields.Date.context_today(self), days=10),
+            'order_line': [
+                Command.create({'product_id': self.product_order_service1.id}),
+            ],
+        })
+        so.action_confirm()
+
+        action = so.action_create_project()
+        view_id = self.env.ref('sale_project.sale_project_view_form_simplified_template').id
+
+        # # Case 1: No template → project deadline = SO delivery date
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard:
+            project_action = wizard.save().action_create_project_from_so()
+        project_no_template = self.env['project.project'].browse(project_action['context']['default_project_id'])
+
+        self.assertTrue(project_no_template.date, "Project deadline should be set")
+        self.assertTrue(project_no_template.date_start, "Project start date should be set")
+        self.assertEqual(
+            project_no_template.date,
+            so.commitment_date.date(),
+            "Project without template should get SO delivery date as deadline",
+        )
+
+        # Case 2: Template WITH dates → do not override, shift relative to today
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard:
+            wizard.template_id = self.project_template
+            project_action = wizard.save().action_create_project_from_so()
+        project_with_template = self.env['project.project'].browse(project_action['context']['default_project_id'])
+
+        self.assertNotEqual(
+            project_with_template.date,
+            so.commitment_date.date(),
+            "Project with template dates should NOT be overridden by SO delivery date",
+        )
+
+        # Case 3: Template WITHOUT dates → project deadline = SO delivery date
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard:
+            wizard.template_id = project_template_without_dates
+            project_action = wizard.save().action_create_project_from_so()
+        project_template_no_dates = self.env['project.project'].browse(project_action['context']['default_project_id'])
+
+        self.assertTrue(project_template_no_dates.date, "Project deadline should be set")
+        self.assertTrue(project_template_no_dates.date_start, "Project start date should be set")
+        self.assertEqual(
+            project_template_no_dates.date,
+            so.commitment_date.date(),
+            "Project template without dates should get SO delivery date as deadline",
+        )
+
+        # Case 4: No SO delivery date → deadline empty
+        so_no_date = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product_order_service1.id}),
+            ],
+        })
+
+        so_no_date.action_confirm()
+        action_no_date = so_no_date.action_create_project()
+        with Form(self.env[action_no_date['res_model']].with_context(action_no_date['context']), view=view_id) as wizard:
+            project_action = wizard.save().action_create_project_from_so()
+        project_no_date = self.env['project.project'].browse(project_action['context']['default_project_id'])
+
+        self.assertFalse(project_no_date.date, "Project deadline should be empty when SO has no delivery date")
+        self.assertFalse(project_no_date.date_start, "Project start date should be empty when SO has no delivery date")
+
+    def test_project_deadline_from_so_delivery_date_via_project_field(self):
+        """Test that the project deadline is set from the SO delivery date
+        when project is linked directly via the Project field on the SO form."""
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'commitment_date': fields.Date.add(fields.Date.context_today(self), days=10),
+            'project_id': self.project_global.id,
+        })
+        so.action_confirm()
+
+        self.assertTrue(so.project_id.date, "Project deadline should be set on SO confirmation")
+        self.assertTrue(so.project_id.date_start, "Project start date should be set on SO confirmation")
+        self.assertEqual(so.project_id.date, so.commitment_date.date(), "Project deadline should equal SO delivery date")
