@@ -1188,19 +1188,25 @@ registry
             ].flat(),
     });
 
-registry.category("web_tour.tours").add("test_only_existing_lots", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product with existing lots"),
-            ProductScreen.selectNthLotNumber(1),
-            ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
-            inLeftSide({
-                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
-            }),
-            Chrome.endTour(),
-        ].flat(),
+function existingLotsTour(expectedLot) {
+    return [
+        Chrome.startPoS(),
+        Dialog.confirm("Open Register"),
+        ProductScreen.clickDisplayedProduct("Product with existing lots"),
+        ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
+        inLeftSide({
+            trigger: `.order-container .orderline .lot-number:contains('Lot Number ${expectedLot}')`,
+        }),
+        Chrome.endTour(),
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("test_only_existing_lots_fifo", {
+    steps: () => existingLotsTour("1001"),
+});
+
+registry.category("web_tour.tours").add("test_only_existing_lots_lifo", {
+    steps: () => existingLotsTour("1002"),
 });
 
 registry.category("web_tour.tours").add("test_delete_line", {
