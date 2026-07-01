@@ -18,17 +18,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-05-09 04:14+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 08:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
 "stock/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -651,10 +651,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>1すべての商品を引当できませんでし"
-"た。 '在庫を確認' ボタンをクリックして、プロダクトの引当を試みてください。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1164,6 +1162,12 @@ msgid "Add a Product"
 msgstr "プロダクト追加"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1299,6 +1303,11 @@ msgstr "全カテゴリ"
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
 msgstr "すべての子梱包"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1824,6 +1833,11 @@ msgid "Bulk Weight"
 msgstr "バルク重量"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "ロット"
@@ -2030,12 +2044,6 @@ msgstr ""
 "含まれるデータを分離するために使用される文字。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "在庫を確認"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -2094,12 +2102,6 @@ msgid "Clear"
 msgstr "クリア"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "クリックまたはエンターキーを押して説明を追加します。"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "閉じる"
@@ -2149,100 +2151,6 @@ msgid "Compute shipping costs"
 msgstr "配送費用を計算"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "DHLで配送費用を計算し発送します"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"DHLで配送費用を計算し発送します<br/>\n"
-"                                    <strong>(ホーム&gt;アプリからインストール"
-"してください)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Easypostで配送費用計算し出荷"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Envia.comで送料を計算し、発送する"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "FedExで配送費用を計算し発送します"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"FedExで配送費用を計算し発送します<br/>\n"
-"                                    <strong>(ホーム&gt;アプリからインストール"
-"してください)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Sendcloudで配送費用計算し出荷"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "配送コストを計算し、Shiprocketで配送します。"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "送料を計算し、Starshipitで発送します。"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "UPSで配送費用を計算し発送します"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"UPSで配送費用を計算し発送します<br/>\n"
-"                                    <strong>(ホーム&gt;アプリからインストール"
-"してください)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "USPSで配送費用を計算し発送します"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"USPSで配送費用を計算し発送します<br/>\n"
-"                                    <strong>(ホーム&gt;アプリからインストール"
-"してください)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "bpostで配送費用を計算し発送します"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "移動を予約するタイミングを計算する"
@@ -2258,6 +2166,11 @@ msgstr "構成設定"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "設定"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2764,16 +2677,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "DHLコネクタ"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL Expressコネクター"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2920,11 +2823,6 @@ msgstr "デフォルト名"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "デフォルトOBTRETUバーコード"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "デフォルト返品名"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3162,11 +3060,6 @@ msgstr "要求"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "デモ住所および名前"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3513,7 +3406,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "本当に廃棄しますか?"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "ドキュメント"
@@ -3579,11 +3471,6 @@ msgstr "Dymo"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr "最短到着日"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypostコネクター"
 
 #. module: stock
 #. odoo-python
@@ -3669,11 +3556,6 @@ msgstr "倉庫の在庫可能品を追跡できるようにします。"
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
 msgstr "説明を入力"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com コネクタ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3769,15 +3651,14 @@ msgid "February"
 msgstr "2月"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedExコネクター"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "フィルタ済ロケーション"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3800,6 +3681,12 @@ msgstr "最初のシリアル番号/ロット"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
 msgstr "初めのシリアル番号"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -4038,6 +3925,12 @@ msgstr "ロット番号を生成する"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "シリアル番号を生成する"
@@ -4045,8 +3938,8 @@ msgstr "シリアル番号を生成する"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "シリアル/ロットを生成する"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4517,20 +4410,16 @@ msgstr "インポート"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "ロットをインポート"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "シリアルをインポートする"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "シリアル/ロットをインポートする"
 
 #. module: stock
 #. odoo-python
@@ -6056,6 +5945,12 @@ msgid "No allocation need found."
 msgstr "必要な割当が見つかりません。"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr "配送するものはありません!"
@@ -6171,12 +6066,6 @@ msgstr "メモ"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
 msgstr "ノート"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "在庫状況をチェックするものはありません。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -6299,6 +6188,14 @@ msgstr "ロット/シリアル番号につき1"
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
 msgstr "単位につき1"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -7056,13 +6953,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "会社用に倉庫を作成して下さい%s。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"このドキュメントを返送小包の中に入れてください。<br/>\n"
-"　　　　　　　　小包は以下の住所にお送り下さい："
 
 #. module: stock
 #. odoo-javascript
@@ -7776,7 +7669,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "消耗品またはサービスのクオンツを作成することはできません。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "以下の返品:"
 
@@ -8153,6 +8046,8 @@ msgstr "在庫引当方法"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8668,11 +8563,6 @@ msgid "Send email"
 msgstr "メールを送る"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloudコネクター"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8853,11 +8743,6 @@ msgid "Shipping"
 msgstr "配送"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "配送コネクター"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8884,11 +8769,6 @@ msgstr ""
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
 msgstr "出荷: Eメールで送信"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocketコネクタ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9161,11 +9041,6 @@ msgstr "%(original_picking_link)sから分割。"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "スター付き"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipitコネクタ"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9579,11 +9454,9 @@ msgstr "技術情報"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"\"在庫を確認\"  ボタンを表示するかどうかを計算するために使用される技術フィー"
-"ルド。"
 
 #. module: stock
 #. odoo-python
@@ -9911,6 +9784,12 @@ msgstr "この在庫移動を作成した在庫規則"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "元に戻す在庫調整はありません。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10449,6 +10328,11 @@ msgid "Transfer"
 msgstr "転送"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "以下へ転送:"
@@ -10557,18 +10441,6 @@ msgstr "タイプ"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "レコード上の例外の活動タイプ。"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPSコネクター"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPSコネクター"
 
 #. module: stock
 #. odoo-javascript
@@ -11016,18 +10888,6 @@ msgstr "警告"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "在庫に関する警告"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "ウェブサイト通信履歴"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11629,6 +11489,11 @@ msgid ""
 msgstr "ランチが届きました。お食事をお楽しみ下さい！"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11684,11 +11549,6 @@ msgstr "]<br/>最小:"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpostコネクター"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11907,6 +11767,157 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 出荷オーダ (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>1すべての商品を引当できませんでし"
+#~ "た。 '在庫を確認' ボタンをクリックして、プロダクトの引当を試みてください。"
+
+#~ msgid "Check Availability"
+#~ msgstr "在庫を確認"
+
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "クリックまたはエンターキーを押して説明を追加します。"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "DHLで配送費用を計算し発送します"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "DHLで配送費用を計算し発送します<br/>\n"
+#~ "                                    <strong>(ホーム&gt;アプリからインス"
+#~ "トールしてください)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Easypostで配送費用計算し出荷"
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "Envia.comで送料を計算し、発送する"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "FedExで配送費用を計算し発送します"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "FedExで配送費用を計算し発送します<br/>\n"
+#~ "                                    <strong>(ホーム&gt;アプリからインス"
+#~ "トールしてください)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Sendcloudで配送費用計算し出荷"
+
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "配送コストを計算し、Shiprocketで配送します。"
+
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "送料を計算し、Starshipitで発送します。"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "UPSで配送費用を計算し発送します"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "UPSで配送費用を計算し発送します<br/>\n"
+#~ "                                    <strong>(ホーム&gt;アプリからインス"
+#~ "トールしてください)</strong>"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "USPSで配送費用を計算し発送します"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "USPSで配送費用を計算し発送します<br/>\n"
+#~ "                                    <strong>(ホーム&gt;アプリからインス"
+#~ "トールしてください)</strong>"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "bpostで配送費用を計算し発送します"
+
+#~ msgid "DHL Connector"
+#~ msgstr "DHLコネクタ"
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL Expressコネクター"
+
+#~ msgid "Default Return Name"
+#~ msgstr "デフォルト返品名"
+
+#~ msgid "Demo Address and Name"
+#~ msgstr "デモ住所および名前"
+
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypostコネクター"
+
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com コネクタ"
+
+#~ msgid "FedEx Connector"
+#~ msgstr "FedExコネクター"
+
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "シリアル/ロットを生成する"
+
+#~ msgid "Import Serials/Lots"
+#~ msgstr "シリアル/ロットをインポートする"
+
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "在庫状況をチェックするものはありません。"
+
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "このドキュメントを返送小包の中に入れてください。<br/>\n"
+#~ "　　　　　　　　小包は以下の住所にお送り下さい："
+
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloudコネクター"
+
+#~ msgid "Shipping Connectors"
+#~ msgstr "配送コネクター"
+
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocketコネクタ"
+
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipitコネクタ"
+
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "\"在庫を確認\"  ボタンを表示するかどうかを計算するために使用される技術"
+#~ "フィールド。"
+
+#~ msgid "UPS Connector"
+#~ msgstr "UPSコネクター"
+
+#~ msgid "USPS Connector"
+#~ msgstr "USPSコネクター"
+
+#~ msgid "Website Messages"
+#~ msgstr "ウェブサイトメッセージ"
+
+#~ msgid "Website communication history"
+#~ msgstr "ウェブサイト通信履歴"
+
+#~ msgid "bpost Connector"
+#~ msgstr "bpostコネクター"
 
 #~ msgid "Demo Lot/SN"
 #~ msgstr "デモロット/シリアル番号"

@@ -4,21 +4,22 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-20 09:49+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 13:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "payment_demo/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -66,6 +67,14 @@ msgid "<small>Street 2</small>"
 msgstr "<small>Katu 2</small>"
 
 #. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid ""
+"<span class=\"badge rounded-pill text-bg-warning ms-1\">\n"
+"                                Test Mode\n"
+"                            </span>"
+msgstr ""
+
+#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "Valtuuta"
@@ -87,8 +96,9 @@ msgstr "Peruttu"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Cancelled"
-msgstr ""
+msgstr "Peruttu"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
@@ -137,8 +147,8 @@ msgstr "Demo Express Checkout"
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
-msgid "Demo providers should never be enabled."
-msgstr "Demo-tarjoajia ei pitäisi koskaan ottaa käyttöön."
+msgid "Demo providers must never be set in live mode."
+msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
@@ -154,11 +164,17 @@ msgid "Error"
 msgstr "Virhe"
 
 #. module: payment_demo
+#: model:payment.method,name:payment_demo.payment_method_unknown
+msgid "Express Checkout"
+msgstr ""
+
+#. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_demo
 #. odoo-javascript
@@ -247,8 +263,9 @@ msgstr ""
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/controllers/portal.py:0
+#, fuzzy
 msgid "Provider %s is not properly configured."
-msgstr ""
+msgstr "Palveluntarjoaja %s ei ole määritetty oikein."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -262,18 +279,14 @@ msgstr "Simuloitu tila"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Successful"
-msgstr ""
+msgstr "Onnistunut"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Successful payment"
 msgstr ""
-
-#. module: payment_demo
-#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
-msgid "Test Mode"
-msgstr "Testitila"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
@@ -306,3 +319,9 @@ msgstr "XXXX XXXX XXXX XXXX XXXX XXXX"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
 msgstr "Olet valinnut seuraavan demomaksutilanteen: %s"
+
+#~ msgid "Demo providers should never be enabled."
+#~ msgstr "Demo-tarjoajia ei pitäisi koskaan ottaa käyttöön."
+
+#~ msgid "Test Mode"
+#~ msgstr "Testitila"

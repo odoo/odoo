@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-01-16 05:40+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 05:57+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
 "hr_recruitment/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -600,6 +600,11 @@ msgid "Add to Pool"
 msgstr "إضافة إلى مجموعة المواهب"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Add to this Job"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
 msgid "Add/Remove Followers"
 msgstr "إضافة / إزالة المتابعين"
@@ -818,6 +823,7 @@ msgid "Applied on"
 msgstr "تم التقديم في"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Apply"
 msgstr ""
@@ -1469,6 +1475,11 @@ msgstr "طلبات التقديم المكررة"
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
 msgstr "عدد النسخ المكررة"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Duplicates the selected Talent profile(s) for the selected Job Position"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
@@ -2230,6 +2241,12 @@ msgid "Master Degree"
 msgstr "شهادة الماجستير"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "Matching Talents"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
 msgid "Maximum Salary"
 msgstr ""
@@ -2450,6 +2467,11 @@ msgstr "لم يتم تحديد أي قواعد."
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
 msgid "No talent pools yet"
 msgstr "لا توجد مجموعات مواهب بعد"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Non-Linked Talents"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -3371,6 +3393,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 msgid "Talents"
 msgstr "المواهب"
 
@@ -3673,18 +3696,6 @@ msgid "Want to analyse where applications come from ?"
 msgstr "أتود تحليل من أين تأتي طلبات التقديم؟"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع الإلكتروني"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع الإلكتروني"
-
-#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__weekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__weekly
 msgid "Week"
@@ -3910,3 +3921,9 @@ msgstr "مجموعة المواهب"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
 msgstr ""
+
+#~ msgid "Website Messages"
+#~ msgstr "رسائل الموقع الإلكتروني"
+
+#~ msgid "Website communication history"
+#~ msgstr "سجل تواصل الموقع الإلكتروني"

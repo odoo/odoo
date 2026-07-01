@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
-"PO-Revision-Date: 2026-04-14 09:05+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 10:19+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
 "hr_attendance/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -385,6 +385,7 @@ msgstr "Numero allegati"
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
@@ -765,7 +766,6 @@ msgstr "Colore"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_company
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__company_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__company_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__company_id
 msgid "Company"
@@ -925,6 +925,12 @@ msgstr "Monitoraggio dispositivo e posizione"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 msgid "Difference"
 msgstr "Differenza"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_attendances
+msgid "Display Attendances"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
@@ -2071,6 +2077,11 @@ msgid "Regenerate overtimes for this ruleset"
 msgstr "Rigenera straordinari per questo insieme di regole"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Regular Hours"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Remove"
 msgstr "Rimuovi"
@@ -2266,24 +2277,9 @@ msgid "Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s)."
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
-msgid "Start"
-msgstr "Inizio"
-
-#. module: hr_attendance
-#: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_line_overtime_start_before_end
-msgid "Starting time should be before end time."
-msgstr "L'ora di inizio deve precedere l'ora di fine."
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__status
 msgid "Status"
 msgstr "Stato"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_stop
-msgid "Stop"
-msgstr "Fine"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__sum
@@ -2386,11 +2382,6 @@ msgstr ""
 "dove figura come responsabile"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-msgid "Theoretical Hours"
-msgstr "Ore teoriche"
-
-#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
@@ -2428,6 +2419,13 @@ msgid ""
 msgstr ""
 "La presenza è stata creata automaticamente per coprire un'assenza non "
 "giustificata in quel giorno."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid ""
+"This will reset all manual edit on overtime period linked to those rules. Do "
+"you confirm ?"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__3
@@ -2606,16 +2604,6 @@ msgstr "Numero di versioni"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "View on Maps"
 msgstr "Mostra su Maps"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__website_message_ids
-msgid "Website Messages"
-msgstr "Messaggi sito web"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__website_message_ids
-msgid "Website communication history"
-msgstr "Cronologia comunicazioni sito web"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__2
@@ -2845,6 +2833,24 @@ msgstr "con un tasso di"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "con codice PIN opzionale"
+
+#~ msgid "Start"
+#~ msgstr "Inizio"
+
+#~ msgid "Starting time should be before end time."
+#~ msgstr "L'ora di inizio deve precedere l'ora di fine."
+
+#~ msgid "Stop"
+#~ msgstr "Fine"
+
+#~ msgid "Theoretical Hours"
+#~ msgstr "Ore teoriche"
+
+#~ msgid "Website Messages"
+#~ msgstr "Messaggi sito web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Cronologia comunicazioni sito web"
 
 #~ msgid ""
 #~ "Automatically Check-Out Employees based on their working schedule with an "

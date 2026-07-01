@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-05-04 13:45+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 17:45+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "hr_holidays/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -301,12 +301,6 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "(s)."
 msgstr "(s)."
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "(valid until"
-msgstr "(geldig t/m"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1083,8 +1077,10 @@ msgid "Approve"
 msgstr "Goedkeuren"
 
 #. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__approved
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__validate
@@ -1631,7 +1627,6 @@ msgstr "Dagelijks"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_days_off_dashboard_calendar
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -1878,7 +1873,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
@@ -1889,7 +1884,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, this leave no longer has the required "
 "amount of available allocation and has been set to refused. Please review "
@@ -1901,7 +1896,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
@@ -2193,6 +2188,12 @@ msgstr "Generiek"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__group_days_leave
 msgid "Group Time Off"
 msgstr "Groepeer verlof"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_version__hr_responsible_id
+msgid "HR Responsible"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -2544,7 +2545,6 @@ msgstr "Verlaten"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__leave_date_to
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
 msgid "Leave Date To"
 msgstr "Verlofdatum tot"
 
@@ -2803,7 +2803,13 @@ msgid "My Team"
 msgstr "Mijn team"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+msgid "My Time"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_report_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
@@ -2880,6 +2886,12 @@ msgstr "Nieuw groepsverlof"
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "New Milestone"
 msgstr "Nieuwe mijlpaal"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
+msgid "New Request"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3189,8 +3201,8 @@ msgstr "Overzicht"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-msgid "Pending Requests"
-msgstr "Lopende verzoeken"
+msgid "Pending Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3205,9 +3217,10 @@ msgid "Period"
 msgstr "Periode"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-msgid "Personal"
-msgstr "Privé"
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee__hr_responsible_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_version__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__planned
@@ -4207,6 +4220,7 @@ msgid "Time Off: Cancel invalid leaves"
 msgstr "Verlof: ongeldig verlof annuleren"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_work_entry_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__work_entry_type_id
@@ -4378,7 +4392,7 @@ msgstr "Tweemaal per jaar"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
 msgstr "Twee feestdagen mogen elkaar niet overlappen voor dezelfde werkuren."
@@ -4533,16 +4547,16 @@ msgid "Validate"
 msgstr "Bevestigen"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
-msgid "Validated"
-msgstr "Goedgekeurd"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 msgid "Validation Type"
 msgstr "Validatiesoort"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "Validity"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4603,18 +4617,6 @@ msgstr "Wacht op tweede goedkeuring"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Waiting for Approval"
 msgstr "Wachten op goedkeuring"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website Messages"
-msgstr "Websiteberichten"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatiegeschiedenis"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__2
@@ -4683,11 +4685,6 @@ msgstr "Wanneer wordt de tijd opgebouwd?"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
 msgstr "Waarom wil je dit goedgekeurde verlof annuleren?"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_work_entry_type
-msgid "Work Entry Type"
-msgstr "Type werkboeking"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_increases_duration
@@ -5101,6 +5098,11 @@ msgid "Your time off has been cancelled."
 msgstr "Je verlof is geannuleerd."
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
+msgid "__default__"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "allocation date"
@@ -5112,12 +5114,6 @@ msgstr "toewijzingsdatum"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "en de"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "available"
-msgstr "beschikbaar"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -5333,12 +5329,6 @@ msgid "start of the year"
 msgstr "begin van het jaar"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "taken"
-msgstr "opgenomen"
-
-#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "the accruated amount is insufficient for that duration."
@@ -5368,15 +5358,39 @@ msgid "undefined"
 msgstr "niet gedefinieerd"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "valid until"
-msgstr "geldig t/m"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "bevestigen"
+
+#~ msgid "(valid until"
+#~ msgstr "(geldig t/m"
+
+#~ msgid "Pending Requests"
+#~ msgstr "Lopende verzoeken"
+
+#~ msgid "Personal"
+#~ msgstr "Privé"
+
+#~ msgid "Validated"
+#~ msgstr "Goedgekeurd"
+
+#~ msgid "Website Messages"
+#~ msgstr "Websiteberichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website communicatiegeschiedenis"
+
+#~ msgid "Work Entry Type"
+#~ msgstr "Type werkboeking"
+
+#~ msgid "available"
+#~ msgstr "beschikbaar"
+
+#~ msgid "taken"
+#~ msgstr "opgenomen"
+
+#~ msgid "valid until"
+#~ msgstr "geldig t/m"
 
 #~ msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
 #~ msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"

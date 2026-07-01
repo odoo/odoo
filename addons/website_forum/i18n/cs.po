@@ -17,10 +17,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-01-31 12:47+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 23:51+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
 "website_forum/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1292,30 +1292,6 @@ msgid "Chief Commentator"
 msgstr "Hlavní komentátor"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click here to accept this answer."
-msgstr "Klikněte zde pro přijetí této odpovědi."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your answer."
-msgstr "Kliknutím odešlete odpověď."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your question."
-msgstr "Kliknutím vložte otázku"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to reply."
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "Close"
@@ -1487,12 +1463,6 @@ msgstr "Vytvořit datum"
 #: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr "Vytvořit nový příspěvek na fóru"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Create a new post in this forum by clicking on the button."
-msgstr "Vytvořte nový příspěvek na tomto fóru kliknutím na tlačítko."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1708,6 +1678,11 @@ msgstr "Hlasování pro snížení"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Drag blocks here to add them on all forum"
 msgstr ""
 
 #. module: website_forum
@@ -2031,6 +2006,9 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #: code:addons/website_forum/static/src/website_builder/forum_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
@@ -2052,12 +2030,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "Get notified when this tag is used"
 msgstr ""
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Give your post title."
-msgstr "Zadejte název příspěvku."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2281,12 +2253,6 @@ msgstr "Obrázek 512"
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
 msgstr "Nevhodná a nepřijatelná prohlášení"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Insert tags related to your question."
-msgstr "Vložte značky související s vaší otázkou."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2901,18 +2867,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
 msgstr "Učenec"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your answer here."
-msgstr "Zde odpovězte."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your question here."
-msgstr "Zde položte dotaz"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3848,21 +3802,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-msgid "Website Messages"
-msgstr "Webové zprávy"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Website URL"
 msgstr "URL webové stránky"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-msgid "Website communication history"
-msgstr "Webová historie komunikace"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -4339,3 +4283,33 @@ msgstr "vás životopis může být vidět jako nápověda"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "váš e-mail..."
+
+#~ msgid "Click here to accept this answer."
+#~ msgstr "Klikněte zde pro přijetí této odpovědi."
+
+#~ msgid "Click to post your answer."
+#~ msgstr "Kliknutím odešlete odpověď."
+
+#~ msgid "Click to post your question."
+#~ msgstr "Kliknutím vložte otázku"
+
+#~ msgid "Create a new post in this forum by clicking on the button."
+#~ msgstr "Vytvořte nový příspěvek na tomto fóru kliknutím na tlačítko."
+
+#~ msgid "Give your post title."
+#~ msgstr "Zadejte název příspěvku."
+
+#~ msgid "Insert tags related to your question."
+#~ msgstr "Vložte značky související s vaší otázkou."
+
+#~ msgid "Put your answer here."
+#~ msgstr "Zde odpovězte."
+
+#~ msgid "Put your question here."
+#~ msgstr "Zde položte dotaz"
+
+#~ msgid "Website Messages"
+#~ msgstr "Webové zprávy"
+
+#~ msgid "Website communication history"
+#~ msgstr "Webová historie komunikace"

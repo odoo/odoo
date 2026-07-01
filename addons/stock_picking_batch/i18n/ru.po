@@ -4,14 +4,15 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-10-22 11:28+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 01:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
 "stock_picking_batch/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -20,16 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "%s was removed from the batch, no quantity processed"
-msgstr ""
+msgstr "%s был удален из партии, количество не обработано"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr ""
 
@@ -58,8 +60,9 @@ msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "Подробности операции"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -140,8 +143,9 @@ msgstr "Оформление задачи-исключения"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Планы активностей"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -373,11 +377,6 @@ msgid "Categories to consider when grouping waves."
 msgstr "Категории, учитываемые при волновой группировке."
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Check Availability"
-msgstr "Проверить наличие"
-
-#. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Choose Labels Layout"
@@ -461,8 +460,9 @@ msgstr "Подробные операции"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_move_tree_inherited
+#, fuzzy
 msgid "Details"
-msgstr ""
+msgstr "Детали"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
@@ -639,8 +639,9 @@ msgstr "Список передач, связанных с данной парт
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Просмотр списка подробных операций"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
@@ -669,8 +670,9 @@ msgstr "Номер лота"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Лот/серийный номер"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -684,8 +686,9 @@ msgstr "Максимальное количество перемещений"
 
 #. module: stock_picking_batch
 #: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
+#, fuzzy
 msgid "Merge"
-msgstr ""
+msgstr "Объединить"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -710,8 +713,9 @@ msgstr "Строки перемещения"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Мои активности"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -726,8 +730,9 @@ msgstr "Мои переводы"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -751,8 +756,9 @@ msgstr "Следующий Тип Мероприятия"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__0
+#, fuzzy
 msgid "Normal"
-msgstr ""
+msgstr "Нормальный"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
@@ -804,8 +810,9 @@ msgstr "ID пакета"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "Packages"
-msgstr ""
+msgstr "Упаковки"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -860,8 +867,9 @@ msgstr "Печать этикеток"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__priority
+#, fuzzy
 msgid "Priority"
-msgstr ""
+msgstr "Приоритет"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
@@ -923,6 +931,11 @@ msgid ""
 msgstr ""
 "Объедините несколько заказов в одно задание на отбор и выполните "
 "консолидацию в зоне упаковки."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -998,19 +1011,21 @@ msgid "Show Allocation Button"
 msgstr "Кнопка \"Показать распределение"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid "Show Check Availability"
-msgstr "Показать Проверить наличие"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
 msgid "Show Lots Text"
 msgstr "Показать текст"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Показать все записи, для которых истекла дата выполнения следующего дела"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -1179,7 +1194,7 @@ msgstr "Сегодняшние Дела"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "Transfer"
 msgstr "Перевод"
 
@@ -1206,8 +1221,8 @@ msgstr "Передано"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Трансферы"
 
@@ -1229,8 +1244,9 @@ msgstr "Отменить бронирование"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__1
+#, fuzzy
 msgid "Urgent"
-msgstr ""
+msgstr "Срочно"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -1274,16 +1290,6 @@ msgstr "Волновые трансферы"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Wave transfers"
 msgstr "Волновые перемещения"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website Messages"
-msgstr "Веб-сайт сообщения"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website communication history"
-msgstr "История общений с сайта"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
@@ -1337,3 +1343,15 @@ msgstr "shipping_volume"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
 msgid "shipping_weight"
 msgstr "shipping_weight"
+
+#~ msgid "Check Availability"
+#~ msgstr "Проверить наличие"
+
+#~ msgid "Show Check Availability"
+#~ msgstr "Показать Проверить наличие"
+
+#~ msgid "Website Messages"
+#~ msgstr "Веб-сайт сообщения"
+
+#~ msgid "Website communication history"
+#~ msgstr "История общений с сайта"

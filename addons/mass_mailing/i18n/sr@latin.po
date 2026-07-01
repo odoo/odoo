@@ -12,18 +12,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-01-15 20:33+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 08:52+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
-"odoo-s19-1/mass_mailing/sr_Latn/>\n"
+"odoo-master/mass_mailing/sr_Latn/>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -110,6 +110,30 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s added"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s already subscribed"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s ignored (no email)"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s opted out"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 msgid "%(imported_count)s contacts have been imported."
 msgstr ""
@@ -126,6 +150,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/res_company.py:0
 msgid "%(key)s is not a valid social link field name, use `write` instead."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_contact.py:0
+msgid "%(record_name)s created from %(link)s"
 msgstr ""
 
 #. module: mass_mailing
@@ -723,6 +753,15 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.res_partner_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != "
+"1\">Mailing Contact</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
 msgstr ""
@@ -1251,6 +1290,11 @@ msgid "Add"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
+msgid "Add (Mailing) Contacts to Mailing List"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/schedule_option_plugin.js:0
 msgid "Add Activity"
@@ -1263,13 +1307,8 @@ msgid "Add Conditions"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
-msgid "Add Contacts to Mailing List"
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
-msgid "Add Contacts to a Mailing List"
+#: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
+msgid "Add Contacts to Mailing List results"
 msgstr ""
 
 #. module: mass_mailing
@@ -1279,20 +1318,40 @@ msgid "Add Custom Link"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
+msgid "Add Mailing Contacts to a Mailing List"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Add a great slogan."
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Add to List"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Add to Lists"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
+msgid "Add to Mailing List"
 msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 msgid "Add to favorite filters"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "Added to Mailing Lists"
 msgstr ""
 
 #. module: mass_mailing
@@ -2129,7 +2188,10 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_partner
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__partner_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__mailing_contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__mailing_contact_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_menu
 msgid "Contact"
@@ -2172,7 +2234,9 @@ msgid "Contact us"
 msgstr "Kontaktirajte nas"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__contact_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__partner_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__mailing_contact_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__mailing_contact_ids
 msgid "Contacts"
 msgstr "Kontakti"
 
@@ -3762,6 +3826,7 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_subscription.py:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__contact_ids
 msgid "Mailing Contacts"
 msgstr ""
 
@@ -3783,7 +3848,6 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__list_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3827,6 +3891,7 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__contact_list_ids
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_mailing_list_menu
@@ -4451,6 +4516,14 @@ msgstr ""
 msgid ""
 "Once you send these emails, they'll be making a grand entrance in all the "
 "inboxes, creating quite the buzz!"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_contact.py:0
+msgid ""
+"Oops! You can't add more than %(count)s contacts to a Mailing List at once.\n"
+"Please reduce your selection and try again."
 msgstr ""
 
 #. module: mass_mailing
@@ -5231,11 +5304,6 @@ msgid "Select a Target Model..."
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
-msgid "Select a list..."
-msgstr ""
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Select a record"
 msgstr ""
@@ -5243,6 +5311,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Select and delete blocks to remove features."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Select lists..."
 msgstr ""
 
 #. module: mass_mailing
@@ -5936,6 +6009,12 @@ msgid "This"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "This action should be used with a single kind of Contacts as input."
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/options_container.xml:0
 msgid "This block is outdated."
@@ -6287,6 +6366,8 @@ msgid "Video"
 msgstr "Video"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #: model:ir.model,name:mass_mailing.model_ir_ui_view
 msgid "View"
 msgstr ""
@@ -6361,18 +6442,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Website"
 msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__website_message_ids
-msgid "Website Messages"
-msgstr "Website poruke"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__website_message_ids
-msgid "Website communication history"
-msgstr "Istorija website komunikacije"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
@@ -6810,3 +6879,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr ""
+
+#~ msgid "Website Messages"
+#~ msgstr "Website poruke"
+
+#~ msgid "Website communication history"
+#~ msgstr "Istorija website komunikacije"

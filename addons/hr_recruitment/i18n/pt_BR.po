@@ -13,18 +13,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-05-08 12:51+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 02:04+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-3/hr_recruitment/pt_BR/>\n"
+"master/hr_recruitment/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -836,6 +836,11 @@ msgid "Add to Pool"
 msgstr "Adicionar ao banco"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Add to this Job"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
 msgid "Add/Remove Followers"
 msgstr "Adicionar/Remover seguidores"
@@ -1056,6 +1061,7 @@ msgid "Applied on"
 msgstr "Candidatou-se em"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Apply"
 msgstr ""
@@ -1715,6 +1721,11 @@ msgstr "Aplicativos duplicados"
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
 msgstr "Contagem de duplicatas"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Duplicates the selected Talent profile(s) for the selected Job Position"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
@@ -2492,6 +2503,12 @@ msgid "Master Degree"
 msgstr "Mestrado"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "Matching Talents"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
 msgid "Maximum Salary"
 msgstr "Salário máximo"
@@ -2712,6 +2729,11 @@ msgstr "Nenhuma regra foi definida."
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
 msgid "No talent pools yet"
 msgstr "Ainda não há bancos de talentos"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Non-Linked Talents"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -3641,6 +3663,7 @@ msgstr "O talento deve pertencer a pelo menos um Pool de Talentos."
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 msgid "Talents"
 msgstr "Talentos"
 
@@ -3951,18 +3974,6 @@ msgid "Want to analyse where applications come from ?"
 msgstr "Quer analisar de onde vêm as candidaturas?"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do site"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de comunicação do site"
-
-#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__weekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__weekly
 msgid "Week"
@@ -4188,3 +4199,9 @@ msgstr "banco de talentos"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
 msgstr "a<br/><span class=\"text-nowrap\">recrutar</span>"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do site"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de comunicação do site"

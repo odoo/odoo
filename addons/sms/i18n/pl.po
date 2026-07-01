@@ -30,11 +30,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
-"PO-Revision-Date: 2026-04-04 13:03+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/sms/pl/"
-">\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 13:09+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/sms/"
+"pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -279,11 +279,6 @@ msgid "Bad parameters"
 msgstr "Złe parametry"
 
 #. module: sms
-#: model:ir.model,name:sms.model_base
-msgid "Base"
-msgstr "Baza"
-
-#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
 msgstr "Na czarnej liście"
@@ -417,6 +412,14 @@ msgstr "Klient"
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
 msgstr "Klient: zautomatyzowany SMS"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/notification_model_patch.js:0
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_database_non_active
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_database_non_active
+msgid "Database non active"
+msgstr ""
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
@@ -574,6 +577,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:sms.field_gamification_badge_user__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_challenge__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_iap_account__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_ir_access__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_ir_actions_server__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_ir_cron__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_lunch_supplier__message_has_sms_error
@@ -1036,6 +1040,7 @@ msgstr "Kreator kodów weryfikacyjnych konta SMS"
 #: model:ir.model.fields,field_description:sms.field_gamification_badge_user__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_challenge__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_iap_account__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_ir_access__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_ir_cron__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_lunch_supplier__message_has_sms_error
@@ -1639,6 +1644,18 @@ msgstr "Twoje konto SMS zostało pomyślnie zarejestrowane."
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+msgid "Your country is not supported due to sender registration legislation"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your database is not activated"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
 #: code:addons/sms/wizard/sms_account_sender.py:0
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
@@ -1704,3 +1721,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "rekord:"
+
+#~ msgid "Base"
+#~ msgstr "Baza"

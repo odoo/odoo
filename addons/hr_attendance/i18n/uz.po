@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 18:21+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"hr_attendance/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -411,6 +413,7 @@ msgstr "Ilova soni"
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, fuzzy
@@ -837,7 +840,6 @@ msgstr "Rang"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_company
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__company_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__company_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__company_id
 #, fuzzy
@@ -1019,6 +1021,12 @@ msgstr "Qurilma va joylashuvni kuzatish"
 #, fuzzy
 msgid "Difference"
 msgstr "Farq"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_attendances
+msgid "Display Attendances"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
@@ -2311,6 +2319,11 @@ msgid "Regenerate overtimes for this ruleset"
 msgstr "Ushbu qoidalar to‘plami uchun qo‘shimcha vaqtlarni qayta tiklash"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Regular Hours"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Remove"
 msgstr ""
@@ -2530,28 +2543,10 @@ msgid "Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s)."
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
-#, fuzzy
-msgid "Start"
-msgstr "Boshlash"
-
-#. module: hr_attendance
-#: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_line_overtime_start_before_end
-#, fuzzy
-msgid "Starting time should be before end time."
-msgstr "Boshlanish vaqti tugash vaqtidan oldin bo‘lishi kerak"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__status
 #, fuzzy
 msgid "Status"
 msgstr "Holat"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_stop
-#, fuzzy
-msgid "Stop"
-msgstr "To‘xtatish"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__sum
@@ -2660,12 +2655,6 @@ msgstr ""
 "qaydlari va hisobotlariga kirish huquqiga ega bo‘ladi"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-#, fuzzy
-msgid "Theoretical Hours"
-msgstr "Ishlangan qo‘shimcha soatlar"
-
-#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
@@ -2704,6 +2693,13 @@ msgid ""
 msgstr ""
 "Bu davomat o‘sha kundagi asoslanmagan yo‘qlikni qoplash uchun avtomatik "
 "tarzda yaratildi."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid ""
+"This will reset all manual edit on overtime period linked to those rules. Do "
+"you confirm ?"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__3
@@ -2902,18 +2898,6 @@ msgstr ""
 #, fuzzy
 msgid "View on Maps"
 msgstr "Xaritalarda ko‘rish"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-saytdagi muloqot tarixi"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__2
@@ -3165,6 +3149,30 @@ msgstr "narxi bilan"
 #, fuzzy
 msgid "with optional PIN code"
 msgstr "ixtiyoriy PIN kodi bilan"
+
+#, fuzzy
+#~ msgid "Start"
+#~ msgstr "Boshlash"
+
+#, fuzzy
+#~ msgid "Starting time should be before end time."
+#~ msgstr "Boshlanish vaqti tugash vaqtidan oldin bo‘lishi kerak"
+
+#, fuzzy
+#~ msgid "Stop"
+#~ msgstr "To‘xtatish"
+
+#, fuzzy
+#~ msgid "Theoretical Hours"
+#~ msgstr "Ishlangan qo‘shimcha soatlar"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-saytdagi muloqot tarixi"
 
 #, fuzzy
 #~ msgid ""

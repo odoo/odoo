@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"website_sale/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -32,8 +34,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"%(product_name)s has not been added to your cart since it is not available."
+msgid "%(product_name)s was not added to your cart because it is unavailable."
 msgstr ""
 
 #. module: website_sale
@@ -894,13 +895,6 @@ msgid "<strong>Total</strong>"
 msgstr "<strong>Jami</strong>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-#, fuzzy
-msgid "<strong>Warning!</strong>"
-msgstr "<strong>Diqqat!</strong>"
-
-#. module: website_sale
 #: model:mail.template,body_html:website_sale.email_template_back_in_stock
 msgid ""
 "<t t-set=\"website\" t-value=\"object.website_id or "
@@ -1537,7 +1531,7 @@ msgstr "Bitta qo‘shish"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product/product.xml:0
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #, fuzzy
@@ -1585,16 +1579,18 @@ msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_address
 #: model:website.checkout.step,name:website_sale.checkout_step_delivery
 #, fuzzy
 msgid "Address"
 msgstr "Manzil"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
-#, fuzzy
-msgid "Address Autocomplete"
-msgstr "Manzilni avtomatik to‘ldirish"
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__alerts
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__alerts
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__alerts
+msgid "Alerts"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__align_category_content
@@ -2066,7 +2062,7 @@ msgstr "Tugmalar"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #, fuzzy
 msgid "Buy Now"
@@ -2358,6 +2354,12 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click here to go back to block tab."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, fuzzy
 msgid "Click here to open the reporting menu"
 msgstr "Hisobot menyusini ochish uchun shu yerni bosing"
@@ -2368,6 +2370,18 @@ msgstr "Hisobot menyusini ochish uchun shu yerni bosing"
 #, fuzzy
 msgid "Click on <em>Save</em> to create the product."
 msgstr "Mahsulotni yaratish uchun <em>Saqlash</em> tugmasini bosing."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Content</b> category."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Text - Image</b> building block."
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2384,6 +2398,8 @@ msgid "Clickable items"
 msgstr "Bosiladigan elementlar"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/components/alert_banner/alert_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
@@ -2464,7 +2480,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 #, fuzzy
 msgid "Company Name"
 msgstr "Kompaniya nomi"
@@ -2940,6 +2956,11 @@ msgid "Delete Ribbon"
 msgstr "Tasmani o‘chirish"
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
+msgid "Deliveries"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2978,12 +2999,6 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_delivery_carrier
 msgid "Delivery Method"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
-#, fuzzy
-msgid "Delivery Methods"
-msgstr "Yetkazib berish usullari"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
@@ -3155,7 +3170,6 @@ msgstr "Ko‘rsatish"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__display_name
@@ -3181,6 +3195,7 @@ msgstr "Ko‘rsatish"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
@@ -3421,12 +3436,6 @@ msgid "Email"
 msgstr "Elektron pochta"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
-#, fuzzy
-msgid "Embed Code"
-msgstr "Joylashtirish kodi"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 #, fuzzy
@@ -3563,6 +3572,16 @@ msgstr "Fayl tortmalari"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by in stock products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by on sale products"
 msgstr ""
 
 #. module: website_sale
@@ -3841,25 +3860,6 @@ msgid "Go to Products Manager"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#, fuzzy
-msgid "Go to cart"
-msgstr "Savatga o‘tish"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/wishlist_tour_utils.js:0
-msgid "Go to wishlist"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#, fuzzy
-msgid "Google Address Validation"
-msgstr "Google manzilni tasdiqlash"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
 #: model:ir.model.fields.selection,name:website_sale.selection__product_feed__target__gmc
 #, fuzzy
@@ -4005,7 +4005,6 @@ msgstr "Men rozilik bildiraman"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__id
@@ -4031,6 +4030,7 @@ msgstr "Men rozilik bildiraman"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__id
 #: model:ir.model.fields,field_description:website_sale.field_website__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__id
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_page__id
@@ -4186,6 +4186,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "In accordion"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "In stock"
 msgstr ""
 
 #. module: website_sale
@@ -4892,14 +4897,6 @@ msgstr "Tashlab ketilgan savatlar topilmadi"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"No delivery method is available for your current order and shipping address. "
-"Please contact us for more information."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "No delivery method is selected."
 msgstr ""
@@ -5075,6 +5072,11 @@ msgstr "Mahsulot kartochkalarida"
 #, fuzzy
 msgid "On Sale"
 msgstr "Chegirmada"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "On sale"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -5384,39 +5386,15 @@ msgid "Payment"
 msgstr "To‘lov"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
-#, fuzzy
-msgid "Payment Methods"
-msgstr "To‘lov usullari"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
-#, fuzzy
-msgid "Payment Providers"
-msgstr "To‘lov provayderlari"
+#: model:website.checkout.step,name:website_sale.checkout_step_confirmation
+msgid "Payment Confirmation"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_token
 #, fuzzy
 msgid "Payment Token"
 msgstr "To‘lov belgisi"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
-#, fuzzy
-msgid "Payment Tokens"
-msgstr "To‘lov belgilari"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_payment_transaction
-msgid "Payment Transaction"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
-#, fuzzy
-msgid "Payment Transactions"
-msgstr "To‘lov operatsiyalari"
 
 #. module: website_sale
 #. odoo-python
@@ -5432,6 +5410,11 @@ msgid "Payment was not successful, please try again."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
+msgid "Payments"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, fuzzy
@@ -5440,7 +5423,7 @@ msgstr "Pedalli ochish tizimi"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 #, fuzzy
 msgid "Phone Number"
 msgstr "Telefon raqami"
@@ -5602,6 +5585,12 @@ msgstr ""
 #, fuzzy
 msgid "Pricelists"
 msgstr "Narxlar ro‘yxatlari"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Prices have changed. Please review your cart."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -6739,6 +6728,7 @@ msgstr "Yetkazib berish"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/product_template.py:0
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6889,6 +6879,11 @@ msgstr "Tavsifni ko‘rsatish"
 #, fuzzy
 msgid "Show Empty"
 msgstr "Bo‘sh holatni ko‘rsatish"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__show_in_breadcrumb
+msgid "Show In Breadcrumb"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__available_threshold
@@ -7068,13 +7063,6 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, fuzzy
-msgid "Sorry, we are unable to ship your order."
-msgstr "Kechirasiz, buyurtmangizni yetkazib bera olmaymiz."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -7390,7 +7378,9 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid "The delivery method is not compatible with your delivery address."
+msgid ""
+"The estimated delivery date was no longer possible. We apologize for any "
+"inconvenience."
 msgstr ""
 
 #. module: website_sale
@@ -7499,9 +7489,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The selected delivery date is no longer available. Please pick another "
+"The selected delivery date was no longer available. Please pick another "
 "delivery date."
 msgstr ""
 
@@ -7613,6 +7603,8 @@ msgid "This product has no valid combination."
 msgstr "Bu mahsulotning yaroqli kombinatsiyasi yo‘q"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 #, fuzzy
 msgid "This product is no longer available."
@@ -7810,6 +7802,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Unfortunately, the delivery method that you selected is no longer available. "
+"Please update your choice. We apologize for any inconvenience."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Unfortunately, there is no longer enough stock to fulfill your order."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
 msgid "Unfulfilled Orders"
 msgstr ""
@@ -7861,12 +7867,6 @@ msgstr "Mahalliy kutubxonangizdan fayl yuklang"
 #, fuzzy
 msgid "Url"
 msgstr "Havola"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#, fuzzy
-msgid "Use Google Places API to validate addresses"
-msgstr "Manzillarni tasdiqlash uchun Google Places API-dan foydalaning"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8037,15 +8037,6 @@ msgid "Wardrobes"
 msgstr "Shkaflar"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-#, fuzzy
-msgid "Warning"
-msgstr "Ogohlantirish"
-
-#. module: website_sale
 #: model:product.template,name:website_sale.product_product_1_product_template
 #, fuzzy
 msgid "Warranty"
@@ -8124,6 +8115,11 @@ msgid "Website Category"
 msgstr "Veb-sayt turkumi"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_alert_mixin
+msgid "Website Checkout Alert Mixin"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 #, fuzzy
 msgid "Website Checkout Step"
@@ -8134,13 +8130,6 @@ msgstr "Veb-saytda to‘lov qilish bosqichi"
 #, fuzzy
 msgid "Website Menu"
 msgstr "Veb-sayt menyusi"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -8190,13 +8179,6 @@ msgstr "Veb-sayt URL manzili"
 #, fuzzy
 msgid "Website Visitor"
 msgstr "Veb-saytga tashrif buyuruvchi"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-saytdagi muloqot tarixi"
 
 #. module: website_sale
 #. odoo-python
@@ -8371,21 +8353,6 @@ msgstr ""
 "address_type=billing\">yangi manzil yarating</a>."
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order_line.py:0
-msgid ""
-"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
-"available"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is available."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "You can compare up to 4 products at a time."
@@ -8412,6 +8379,22 @@ msgid "You don't have any order to invoice from the website"
 msgstr "Veb-saytdan hisob-faktura qilish uchun hech qanday buyurtmangiz yo‘q"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid ""
+"You requested %(desired)g %(product_name)s, but only %(available)g are "
+"available in stock."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available "
+"in stock."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 #, fuzzy
 msgid ""
@@ -8431,21 +8414,28 @@ msgstr "YouTube"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 #, fuzzy
 msgid "Your Email"
 msgstr "Elektron pochtangiz"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 #, fuzzy
 msgid "Your Name"
 msgstr "Ismingiz"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your billing address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
 #, fuzzy
 msgid "Your cart is empty!"
 msgstr "Savatchangiz bo‘sh!"
@@ -8458,16 +8448,16 @@ msgid "Your cart is empty."
 msgstr "Savatchangiz bo‘sh."
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-#, fuzzy
-msgid "Your cart is not ready to be paid, please verify previous steps."
-msgstr ""
-"Savatchangiz to‘lovga tayyor emas, iltimos, oldingi bosqichlarni tekshiring."
-
-#. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "Your cart is waiting"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your delivery address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
 msgstr ""
 
 #. module: website_sale
@@ -8741,6 +8731,11 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "slide"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 #, fuzzy
 msgid "terms &amp; conditions"
@@ -8766,6 +8761,72 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#, fuzzy
+#~ msgid "<strong>Warning!</strong>"
+#~ msgstr "<strong>Diqqat!</strong>"
+
+#, fuzzy
+#~ msgid "Address Autocomplete"
+#~ msgstr "Manzilni avtomatik to‘ldirish"
+
+#, fuzzy
+#~ msgid "Delivery Methods"
+#~ msgstr "Yetkazib berish usullari"
+
+#, fuzzy
+#~ msgid "Embed Code"
+#~ msgstr "Joylashtirish kodi"
+
+#, fuzzy
+#~ msgid "Go to cart"
+#~ msgstr "Savatga o‘tish"
+
+#, fuzzy
+#~ msgid "Google Address Validation"
+#~ msgstr "Google manzilni tasdiqlash"
+
+#, fuzzy
+#~ msgid "Payment Methods"
+#~ msgstr "To‘lov usullari"
+
+#, fuzzy
+#~ msgid "Payment Providers"
+#~ msgstr "To‘lov provayderlari"
+
+#, fuzzy
+#~ msgid "Payment Tokens"
+#~ msgstr "To‘lov belgilari"
+
+#, fuzzy
+#~ msgid "Payment Transactions"
+#~ msgstr "To‘lov operatsiyalari"
+
+#, fuzzy
+#~ msgid "Sorry, we are unable to ship your order."
+#~ msgstr "Kechirasiz, buyurtmangizni yetkazib bera olmaymiz."
+
+#, fuzzy
+#~ msgid "Use Google Places API to validate addresses"
+#~ msgstr "Manzillarni tasdiqlash uchun Google Places API-dan foydalaning"
+
+#, fuzzy
+#~ msgid "Warning"
+#~ msgstr "Ogohlantirish"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-saytdagi muloqot tarixi"
+
+#, fuzzy
+#~ msgid "Your cart is not ready to be paid, please verify previous steps."
+#~ msgstr ""
+#~ "Savatchangiz to‘lovga tayyor emas, iltimos, oldingi bosqichlarni "
+#~ "tekshiring."
 
 #, fuzzy
 #~ msgid "Invalid category."

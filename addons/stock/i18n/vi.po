@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-03-20 07:01+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 04:52+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
 "stock/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -608,11 +608,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                Không thể đặt trước tất cả sản phẩm. Hãy bấm "
-"nút \"Kiểm tra tình trạng còn hàng\" để đặt trước các sản phẩm."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1119,6 +1116,12 @@ msgid "Add a Product"
 msgstr "Thêm một sản phẩm"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1256,6 +1259,11 @@ msgstr "Tất cả danh mục"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
 msgstr ""
 
 #. module: stock
@@ -1787,6 +1795,11 @@ msgid "Bulk Weight"
 msgstr "Khối lượng hàng rời"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "Theo lô"
@@ -1992,12 +2005,6 @@ msgstr ""
 "(tức là mã vạch chứa nhiều mã vạch khác)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "Kiểm tra tình trạng còn hàng"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -2055,12 +2062,6 @@ msgid "Clear"
 msgstr "Xoá"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "Nhấp hoặc nhấn enter để thêm mô tả"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "Đóng"
@@ -2110,88 +2111,6 @@ msgid "Compute shipping costs"
 msgstr "Tính chi phí giao hàng"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Tính toán phí giao hàng và giao bằng DHL"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Tính toán phí giao hàng và giao bằng Easypost"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Tính toán phí giao hàng và giao bằng Envia.com"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Tính toán phí giao hàng và giao bằng FedEx"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Tính toán phí giao hàng và giao bằng Sendcloud"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Tính toán phí giao hàng và giao bằng Shiprocket"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Tính toán phí vận chuyển và vận chuyển bằng Starshipit"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Tính toán phí giao hàng và giao bằng UPS"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Tính toán phí giao hàng và giao bằng USPS"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Tính toán phí giao hàng và giao bằng bpost"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "Tính toán thời điểm nên đặt trước cho một điều chuyển"
@@ -2207,6 +2126,11 @@ msgstr "Cài đặt cấu hình"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "Cấu hình"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2716,16 +2640,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "Đơn vị vận chuyển DHL"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "Đơn vị vận chuyển DHL Express"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2875,11 +2789,6 @@ msgstr "Tên mặc định"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "Mã vạch OBTRETU mặc định"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "Tên phiếu trả hàng mặc định"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3121,11 +3030,6 @@ msgstr "Nhu cầu"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "Tên và địa chỉ demo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3474,7 +3378,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "Bạn có xác nhận muốn loại bỏ"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Tài liệu"
@@ -3540,11 +3443,6 @@ msgstr "Dymo"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Đơn vị vận chuyển Easypost"
 
 #. module: stock
 #. odoo-python
@@ -3630,11 +3528,6 @@ msgstr ""
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
 msgstr "Nhập mô tả"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Đơn vị vận chuyển Envia.com"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3731,15 +3624,14 @@ msgid "February"
 msgstr "Tháng 2"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "Đơn vị vận chuyển FedEx"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "Vị trí đã lọc"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3762,6 +3654,12 @@ msgstr "Số lô/sê-ri đầu tiên"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
 msgstr "Số sê-ri đầu tiên"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -4001,6 +3899,12 @@ msgstr "Tạo số lô"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "Tạo số sê-ri"
@@ -4008,8 +3912,8 @@ msgstr "Tạo số sê-ri"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "Tạo sê-ri/lô"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4484,20 +4388,16 @@ msgstr "Nhập"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "Nhập lô"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "Nhập sê-ri"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "Nhập lô/sê-ri"
 
 #. module: stock
 #. odoo-python
@@ -6029,6 +5929,12 @@ msgid "No allocation need found."
 msgstr "Không tìm thấy nhu cầu phân bổ nào."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr "Không có lệnh giao hàng nào cần thực hiện!"
@@ -6145,12 +6051,6 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
 msgstr "Ghi chú"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "Không có gì để kiểm tra tình trạng còn hàng."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -6273,6 +6173,14 @@ msgstr "Một trên mỗi số lô/sê-ri"
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
 msgstr "Một trên mỗi đơn vị"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -7034,13 +6942,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "Vui lòng tạo một kho hàng cho công ty %s."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"Vui lòng đặt tài liệu này vào trong bưu kiện trả hàng của bạn.<br/>\n"
-"                                Bưu kiện phải được gửi về địa chỉ này:"
 
 #. module: stock
 #. odoo-javascript
@@ -7760,7 +7664,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "Không thể tạo quant cho hàng tiêu dùng hoặc dịch vụ."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "TRẢ HÀNG CỦA"
 
@@ -8137,6 +8041,8 @@ msgstr "Phương thức dự trữ"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8660,11 +8566,6 @@ msgid "Send email"
 msgstr "Gửi email"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Đơn vị vận chuyển Sendcloud"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8848,11 +8749,6 @@ msgid "Shipping"
 msgstr "Vận chuyển"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "Đơn vị vận chuyển"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8879,11 +8775,6 @@ msgstr ""
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
 msgstr "Vận chuyển: Gửi bằng email"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Đơn vị vận chuyển Shiprocket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9154,11 +9045,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "Được gắn sao"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Đơn vị vận chuyển Starshipit"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9571,11 +9457,9 @@ msgstr "Thông tin kỹ thuật"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"Trường kỹ thuật được sử dụng để tính toán xem nút \"Kiểm tra tình trạng còn "
-"hàng\" có được hiển thị hay không."
 
 #. module: stock
 #. odoo-python
@@ -9913,6 +9797,12 @@ msgstr "Quy tắc tồn kho đã tạo ra điều chuyển tồn kho này"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "Không có điều chỉnh tồn kho nào để đảo lại."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10467,6 +10357,11 @@ msgid "Transfer"
 msgstr "Lệnh chuyển hàng"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "Lệnh chuyển hàng tới"
@@ -10578,18 +10473,6 @@ msgstr "Loại"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Loại hoạt động ngoại lệ trong bản ghi."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "Đơn vị vận chuyển UPS"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "Đơn vị vận chuyển USPS"
 
 #. module: stock
 #. odoo-javascript
@@ -11035,18 +10918,6 @@ msgstr "Cảnh báo"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "Cảnh báo tồn kho"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "Thông báo trên trang web"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "Lịch sử trao đổi qua trang web"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11665,6 +11536,11 @@ msgstr ""
 "Chúc bạn ngon miệng!"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11719,11 +11595,6 @@ msgstr "]<br/>tối thiểu:"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "Đơn vị vận chuyển bpost"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11945,6 +11816,122 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Lệnh giao hàng (Mã {{ object.name or 'không "
 "có' }})"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                Không thể đặt trước tất cả sản phẩm. Hãy "
+#~ "bấm nút \"Kiểm tra tình trạng còn hàng\" để đặt trước các sản phẩm."
+
+#~ msgid "Check Availability"
+#~ msgstr "Kiểm tra tình trạng còn hàng"
+
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "Nhấp hoặc nhấn enter để thêm mô tả"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Tính toán phí giao hàng và giao bằng DHL"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Tính toán phí giao hàng và giao bằng Easypost"
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "Tính toán phí giao hàng và giao bằng Envia.com"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Tính toán phí giao hàng và giao bằng FedEx"
+
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Tính toán phí giao hàng và giao bằng Sendcloud"
+
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "Tính toán phí giao hàng và giao bằng Shiprocket"
+
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "Tính toán phí vận chuyển và vận chuyển bằng Starshipit"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Tính toán phí giao hàng và giao bằng UPS"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Tính toán phí giao hàng và giao bằng USPS"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Tính toán phí giao hàng và giao bằng bpost"
+
+#~ msgid "DHL Connector"
+#~ msgstr "Đơn vị vận chuyển DHL"
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "Đơn vị vận chuyển DHL Express"
+
+#~ msgid "Default Return Name"
+#~ msgstr "Tên phiếu trả hàng mặc định"
+
+#~ msgid "Demo Address and Name"
+#~ msgstr "Tên và địa chỉ demo"
+
+#~ msgid "Easypost Connector"
+#~ msgstr "Đơn vị vận chuyển Easypost"
+
+#~ msgid "Envia.com Connector"
+#~ msgstr "Đơn vị vận chuyển Envia.com"
+
+#~ msgid "FedEx Connector"
+#~ msgstr "Đơn vị vận chuyển FedEx"
+
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Tạo sê-ri/lô"
+
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Nhập lô/sê-ri"
+
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Không có gì để kiểm tra tình trạng còn hàng."
+
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Vui lòng đặt tài liệu này vào trong bưu kiện trả hàng của bạn.<br/>\n"
+#~ "                                Bưu kiện phải được gửi về địa chỉ này:"
+
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Đơn vị vận chuyển Sendcloud"
+
+#~ msgid "Shipping Connectors"
+#~ msgstr "Đơn vị vận chuyển"
+
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Đơn vị vận chuyển Shiprocket"
+
+#~ msgid "Starshipit Connector"
+#~ msgstr "Đơn vị vận chuyển Starshipit"
+
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "Trường kỹ thuật được sử dụng để tính toán xem nút \"Kiểm tra tình trạng "
+#~ "còn hàng\" có được hiển thị hay không."
+
+#~ msgid "UPS Connector"
+#~ msgstr "Đơn vị vận chuyển UPS"
+
+#~ msgid "USPS Connector"
+#~ msgstr "Đơn vị vận chuyển USPS"
+
+#~ msgid "Website Messages"
+#~ msgstr "Thông báo trên trang web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Lịch sử trao đổi qua trang web"
+
+#~ msgid "bpost Connector"
+#~ msgstr "Đơn vị vận chuyển bpost"
 
 #~ msgid "Demo Lot/SN"
 #~ msgstr "Số lô/sê-ri demo"

@@ -9,22 +9,22 @@
 # JanisJanis <jbojars@gmail.com>, 2022
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2025-11-16 15:33+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 07:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-19/calendar/"
-"lv/>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-master/"
+"calendar/lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -35,36 +35,43 @@ msgstr "Tikšanās sk."
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s%(time_start)s līdz\n"
+"%(date_end)s%(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s (%(start)s līdz %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
+#, fuzzy
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%s pieņēma ielūgumu"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
+#, fuzzy
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%s noraidīja ielūgumu"
 
 #. module: calendar
 #. odoo-javascript
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.js:0
+#, fuzzy
 msgid "%s others"
-msgstr ""
+msgstr "%s citi"
 
 #. module: calendar
 #. odoo-javascript
@@ -87,7 +94,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
@@ -127,9 +134,9 @@ msgid ""
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Your appointment <strong t-"
-"out=\"object.event_id.appointment_type_id.name or ''\"/> <t t-"
-"if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name or "
-"''\">Colleen Diaz</t>\n"
+"out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</"
+"strong> <t t-if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name "
+"or ''\">Colleen Diaz</t>\n"
 "            is now scheduled for <t t-"
 "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
 "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
@@ -146,10 +153,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -253,7 +260,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -278,7 +285,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
 "\"/>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
@@ -317,7 +324,7 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
+"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" "
 "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
 "#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
 "3px;\">\n"
@@ -424,7 +431,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -449,7 +456,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
 "object.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -563,7 +570,7 @@ msgid ""
 "        <div t-if=\"len(object.attendee_ids) &gt; max_shown_attendees\" "
 "style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
@@ -588,7 +595,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -608,10 +615,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -718,7 +725,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -743,7 +750,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
 "ctx.get('mail_tz')\"/>\n"
 "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
@@ -824,9 +831,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
-"hidden=\"true\"/>"
+msgid "<i class=\"fa fa-calendar\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: calendar
@@ -895,21 +900,27 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Atkārtot</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Google kalendārs</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Outlook kalendārs</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -934,14 +945,18 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Saglabājiet</strong> šo lapu un atgriezieties šeit, lai iestatītu šo "
+"funkciju."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
+#, fuzzy
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Lietotājam nevar būt viena un tā pati kontaktpersona divas reizes."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -951,8 +966,9 @@ msgstr "Apstiprināt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
+#, fuzzy
 msgid "Accepted Count"
-msgstr ""
+msgstr "Apstiprināto skaits"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -993,8 +1009,9 @@ msgstr "Aktivitāte"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Aktivitātes izņēmuma noformējums"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
@@ -1003,13 +1020,15 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitāšu plāni"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid "Activity State"
-msgstr ""
+msgstr "Aktivitātes stāvoklis"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1018,8 +1037,9 @@ msgstr "Aktivitātes tips"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Aktivitātes tipa ikona"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
@@ -1033,8 +1053,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Add description"
-msgstr ""
+msgstr "Pievienot aprakstu"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1043,14 +1064,16 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
+#, fuzzy
 msgid "Additional Message"
-msgstr ""
+msgstr "Papildus ziņojums"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
+#, fuzzy
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "Papildus ziņojums, kas tiks nosūtīts kopā ar atgādinājuma paziņojumu"
 
 #. module: calendar
 #. odoo-javascript
@@ -1067,20 +1090,23 @@ msgstr ""
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Visu dienu, %(day)s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "All day"
-msgstr ""
+msgstr "Visu dienu"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
+#, fuzzy
 msgid "All events"
-msgstr ""
+msgstr "Visi notikumi"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1106,13 +1132,15 @@ msgstr "Dalībnieki"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
+#, fuzzy
 msgid "Attendees Count"
-msgstr ""
+msgstr "Dalībnieku skaits"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
+#, fuzzy
 msgid "Attending?"
-msgstr ""
+msgstr "Piedalīsies?"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -1122,8 +1150,9 @@ msgstr "Pieejams"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
+#, fuzzy
 msgid "Available/Busy"
-msgstr ""
+msgstr "Pieejams / Aizņemts"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1132,18 +1161,21 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
+#, fuzzy
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Gaidošo skaits"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
+#, fuzzy
 msgid "Base Event"
-msgstr ""
+msgstr "Pamata notikums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+#, fuzzy
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Pamata saturs ir tāds pats kā veidnē"
 
 #. module: calendar
 #. odoo-python
@@ -1163,8 +1195,9 @@ msgstr "Pēc dienas"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+#, fuzzy
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Atā-atā, ierakst!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1179,8 +1212,9 @@ msgstr "Kalendārs"
 #: model:ir.ui.menu,name:calendar.menu_calendar_alarm
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
+#, fuzzy
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Kalendāra paziņojums"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -1213,8 +1247,9 @@ msgstr "Kalendāra ielūgums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
+#, fuzzy
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "Kalendāra tikšanās"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
@@ -1223,13 +1258,15 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
+#, fuzzy
 msgid "Calendar Provider Configuration Wizard"
-msgstr ""
+msgstr "Kalendāra nodrošinātāja konfigurācijas vednis"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Kalendāra uzstādījumi"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1238,8 +1275,9 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
+#, fuzzy
 msgid "Calendar: Date Updated"
-msgstr ""
+msgstr "Kalendārs - mainīts datums"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
@@ -1248,63 +1286,84 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
+#, fuzzy
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "Kalendārs - Notikuma atgādinājums"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
+#, fuzzy
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Kalendārs - Notikums mainīts"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
+#, fuzzy
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Kalendārs - Uzaicinājums uz tikšanos"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
+#, fuzzy
 msgid "Calendar: Reminder"
+msgstr "Kalendārs - Atgādinājums"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Calendars"
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+#, fuzzy
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Var rediģēt pamattekstu"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
+#, fuzzy
 msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the "
 "only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Pārbaudiet, vai organizators pasākumā ir viens, t.i., vai organizators ir "
+"vienīgais, kurš nav noraidījis\n"
+"        pasākumu (tikai tad, ja organizators nav vienīgais dalībnieks)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
+#, fuzzy
 msgid "Checked"
-msgstr ""
+msgstr "Pārbaudīts"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
+#, fuzzy
 msgid "Choose an external calendar to configure"
-msgstr ""
+msgstr "Izvēlieties ārējo kalendāru, ko konfigurēt"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
+#, fuzzy
 msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Izvēlieties, ko darīt ar citiem periodiskajiem notikumiem. Visu notikumu "
+"mainīšana nav atļauta, ja tiek mainīti datumi vai laiks."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "Client ID"
-msgstr ""
+msgstr "Klienta ID"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "Client Secret"
-msgstr ""
+msgstr "Klienta noslēpums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -1324,8 +1383,9 @@ msgstr "Uzstādījumi"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#, fuzzy
 msgid "Confirm"
-msgstr ""
+msgstr "Apstiprināt"
 
 #. module: calendar
 #. odoo-javascript
@@ -1347,19 +1407,28 @@ msgstr "Kontakts"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "Contact Attendees"
-msgstr ""
+msgstr "Sazinieties ar dalībniekiem"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "Contact Details"
+msgstr "Kontakta informācija"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "Contact created through Calendar sync."
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+#, fuzzy
 msgid "Contents"
-msgstr ""
+msgstr "Saturs"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -1368,8 +1437,9 @@ msgstr "Skaits"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Izveidot klientu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -1397,8 +1467,9 @@ msgstr "Izveidots"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
+#, fuzzy
 msgid "Current Attendee"
-msgstr ""
+msgstr "Pašreiz piedalās"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1408,8 +1479,9 @@ msgstr "Pielāgots"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
+#, fuzzy
 msgid "Daily"
-msgstr ""
+msgstr "Ikdienas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1426,8 +1498,9 @@ msgstr "Mēneša datums"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "Dates"
-msgstr ""
+msgstr "Datumi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
@@ -1460,8 +1533,9 @@ msgstr "Noraidīt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
+#, fuzzy
 msgid "Declined Count"
-msgstr ""
+msgstr "Noraidīto skaits"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1486,23 +1560,27 @@ msgstr "Izdzēst"
 #: code:addons/calendar/models/calendar_event.py:0
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#, fuzzy
 msgid "Delete Event"
-msgstr ""
+msgstr "Izdzēst notikumu"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
+#, fuzzy
 msgid "Delete all the events"
-msgstr ""
+msgstr "Izdzēst visus notikumus"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
+#, fuzzy
 msgid "Delete this and following events"
-msgstr ""
+msgstr "Izdzēst šo un sekojošos notikumus"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
+#, fuzzy
 msgid "Delete this event"
-msgstr ""
+msgstr "Izdzēst šo notikumu"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
@@ -1528,18 +1606,21 @@ msgstr "Saziņa"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
+#, fuzzy
 msgid "Discuss Channel"
-msgstr ""
+msgstr "Saziņas kanāls"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_discuss_channel
+#, fuzzy
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Diskusiju kanāls"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
+#, fuzzy
 msgid "Display Description"
-msgstr ""
+msgstr "Attēlotais apraksts"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -1570,8 +1651,9 @@ msgstr "Dokumenta ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
+#, fuzzy
 msgid "Document Model"
-msgstr ""
+msgstr "Dokumenta modelis"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1591,24 +1673,28 @@ msgstr "Ilgums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
+#, fuzzy
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Ilgums minūtēs"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "EMAIL"
-msgstr ""
+msgstr "E-PASTS"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#, fuzzy
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Labot periodisko notikumu"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Edit recurring event"
-msgstr ""
+msgstr "Labot periodisko notikumu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__effective_privacy
@@ -1623,13 +1709,15 @@ msgstr "E-pasts"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
+#, fuzzy
 msgid "Email - 3 Hours"
-msgstr ""
+msgstr "E-pasts - 3 stundas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
+#, fuzzy
 msgid "Email - 6 Hours"
-msgstr ""
+msgstr "E-pasts - 6 stundas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
@@ -1649,8 +1737,9 @@ msgstr "Beigu datums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
+#, fuzzy
 msgid "End Type"
-msgstr ""
+msgstr "Noslēgšanas veids"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1665,8 +1754,9 @@ msgstr "Notikuma atgadinājums"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
+#, fuzzy
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Notikumu atgādinājumu pārvaldnieks"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
@@ -1675,13 +1765,15 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
+#, fuzzy
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "Notikuma tikšanās veids"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
+#, fuzzy
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "Notikuma atkārtošanās noteikums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -1691,44 +1783,51 @@ msgstr "Notikuma laiks"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Katru %(interval)s dienu"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "Katru %(interval)s dienu līdz %(count)s notikumiem"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "Katru %(interval)s dienu līdz %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "Katru %(interval)s mēneša dienu %(day)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "Katru %(interval)s mēneša dienu %(day)s līdz %(count)s notikumiem"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "Katru %(interval)s mēneša dienu %(day)s līdz %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "Katru %(interval)s mēnesi %(position)s%(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1801,8 +1900,9 @@ msgstr "Vispirms norādiet ielūguma datumu."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
+#, fuzzy
 msgid "Follow Recurrence"
-msgstr ""
+msgstr "Sekot atkārtojumam"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1816,8 +1916,9 @@ msgstr "Sekotāji (Partneri)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Fonts awesome ikona, piem., fa-tasks"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1850,8 +1951,9 @@ msgstr "Piektdiena"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Future Activities"
-msgstr ""
+msgstr "Nākotnes aktivitātes"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1862,33 +1964,39 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
+#, fuzzy
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Calendar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "Google Calendar icon"
-msgstr ""
+msgstr "Google kalendāra ikona"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
+#, fuzzy
 msgid "Google Client_id"
-msgstr ""
+msgstr "Google Client_id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
+#, fuzzy
 msgid "Google Client_key"
-msgstr ""
+msgstr "Google Client_key"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
+#, fuzzy
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Google sinhronizācija apturēta"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1929,13 +2037,15 @@ msgstr "ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "Ikona"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona izņēmuma aktivitātes identificēšanai."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -1958,6 +2068,7 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
+#, fuzzy
 msgid ""
 "If the time is shown as 'busy', this event will be visible to other people "
 "with either the full         information or simply 'busy' written depending "
@@ -1966,6 +2077,12 @@ msgid ""
 " If the event is shown as 'free', other users know         that you are "
 "available during that period of time."
 msgstr ""
+"Ja laiks tiek rādīts kā 'aizņemts', šis notikums būs redzams citiem "
+"cilvēkiem ar pilnu informāciju vai vienkārši 'aizņemts' atkarībā no tā "
+"konfidencialitātes. Izmantojiet šo opciju, lai informētu citus cilvēkus, ka "
+"šajā laika periodā neesat pieejams. \n"
+"Ja pasākums tiek rādīts kā 'brīvs', citiem lietotājiem būs redzams, ka esat "
+"pieejams šajā laika periodā."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
@@ -1979,8 +2096,9 @@ msgstr "Intervāls"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
+#, fuzzy
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "Nederīga e-pasta kontaktpersona"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1990,8 +2108,9 @@ msgstr "Ielūgums"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__access_token
+#, fuzzy
 msgid "Invitation Token"
-msgstr ""
+msgstr "Ielūguma kods"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2000,13 +2119,15 @@ msgstr "Ielūguma sīkāka informācija"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
+#, fuzzy
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "Uzaicinājuma e-pasts jauniem dalībniekiem"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
 msgid "Invitation for"
-msgstr ""
+msgstr "Ielūgums priekš"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
@@ -2020,8 +2141,9 @@ msgstr "Ielūgumi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+#, fuzzy
 msgid "Is Editor"
-msgstr ""
+msgstr "Ir redaktors"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
@@ -2030,18 +2152,21 @@ msgstr "Ir sekotājs"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
+#, fuzzy
 msgid "Is the Event Highlighted"
-msgstr ""
+msgstr "Vai notikums ir izcelts"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
+#, fuzzy
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "Vai organizators ir viens"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "Valoda"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -2076,13 +2201,15 @@ msgstr "Pēdējoreiz atjaunots"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
+#, fuzzy
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Pēdējais paziņojums atzīmēts kā izlasīts no bāzes kalendāra"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Late Activities"
-msgstr ""
+msgstr "Pēdējās aktivitātes"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -2108,21 +2235,24 @@ msgstr "Logotips"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+#, fuzzy
 msgid "Mail Template"
-msgstr ""
+msgstr "Ziņojuma veidne"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
+#, fuzzy
 msgid "Mail Tz"
-msgstr ""
+msgstr "Ziņojuma laika zon"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Maybe"
-msgstr ""
+msgstr "Iespējams"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -2154,8 +2284,9 @@ msgstr "Tikšanās tipi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
+#, fuzzy
 msgid "Meeting URL"
-msgstr ""
+msgstr "Tikšanās URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -2188,8 +2319,9 @@ msgstr "Ziņojumi"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#, fuzzy
 msgid "Microsoft Outlook icon"
-msgstr ""
+msgstr "Microsoft Outlook ikona"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -2198,8 +2330,9 @@ msgstr "Minūtes"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_name
+#, fuzzy
 msgid "Model Description"
-msgstr ""
+msgstr "Model Description"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
@@ -2215,13 +2348,15 @@ msgstr "Pirmdiena"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
+#, fuzzy
 msgid "Month By"
-msgstr ""
+msgstr "Mēnesis līdz"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
+#, fuzzy
 msgid "Monthly"
-msgstr ""
+msgstr "Ikmēneša"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
@@ -2239,13 +2374,15 @@ msgstr "Vairāk iespēju"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Manas aktivitātes"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__my_activity_date_deadline
+#, fuzzy
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Manas aktivitātes izpildes termiņš"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2282,18 +2419,21 @@ msgstr "Nākamais aktivitāšu kalendāra pasākums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_date_deadline
+#, fuzzy
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Nākamās aktivitātes beigu termiņš"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_summary
+#, fuzzy
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Nākamās darbības kopsavilkums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_id
+#, fuzzy
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Nākamās darbības veids"
 
 #. module: calendar
 #. odoo-javascript
@@ -2306,8 +2446,9 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "No"
-msgstr ""
+msgstr "Numurs"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2322,13 +2463,15 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
 msgid "No feedback yet"
-msgstr ""
+msgstr "Pagaidām nav atsauksmju"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+#, fuzzy
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "Neviena tikšanās netika atrasta. Ieplānosim kādu!"
 
 #. module: calendar
 #. odoo-javascript
@@ -2340,8 +2483,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "Notes"
-msgstr ""
+msgstr "Piezīmes"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -2350,28 +2494,33 @@ msgstr "Paziņojums"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
+#, fuzzy
 msgid "Notification - 1 Days"
-msgstr ""
+msgstr "Paziņojums - 1 diena"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
+#, fuzzy
 msgid "Notification - 1 Hours"
-msgstr ""
+msgstr "Paziņojums - 1 stunda"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
+#, fuzzy
 msgid "Notification - 15 Minutes"
-msgstr ""
+msgstr "Paziņojums - 15 minūtes"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
+#, fuzzy
 msgid "Notification - 2 Hours"
-msgstr ""
+msgstr "Paziņojums - 2 stundas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
+#, fuzzy
 msgid "Notification - 30 Minutes"
-msgstr ""
+msgstr "Paziņojums - 30 minūtes"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
@@ -2393,8 +2542,9 @@ msgstr "Darbību skaits"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
+#, fuzzy
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "Atkārtojumu skaits"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -2403,8 +2553,9 @@ msgstr "Kļūdu skaits"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -2426,25 +2577,29 @@ msgstr "Labi"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "Online"
-msgstr ""
+msgstr "Tiešsaistē"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Online Meeting"
-msgstr ""
+msgstr "Tiešsaistes tikšanās"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Tikai iekšējie lietotāji"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
+#, fuzzy
 msgid "Only internal users"
-msgstr ""
+msgstr "Tikai iekšējie lietotāji"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2486,23 +2641,27 @@ msgstr "Outlook"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook kalendārs"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
+#, fuzzy
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Outlook Client Id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
+#, fuzzy
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook Client Secret"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
+#, fuzzy
 msgid "Outlook Synchronization Paused"
-msgstr ""
+msgstr "Outlook sinhronizācija apturēta"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2511,8 +2670,9 @@ msgstr "Dalībnieks"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "Participants"
-msgstr ""
+msgstr "Dalībnieki"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
@@ -2521,8 +2681,9 @@ msgstr "Partner-related data of the user"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
+#, fuzzy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Personas, kurām šis pasākums būs redzams."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -2569,8 +2730,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+#, fuzzy
 msgid "Recipients"
-msgstr ""
+msgstr "Saņēmēji"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
@@ -2580,8 +2742,9 @@ msgstr "Atkārtošana"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
+#, fuzzy
 msgid "Recurrence Rule"
-msgstr ""
+msgstr "Atkārtojuma noteikums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -2606,8 +2769,9 @@ msgstr "Atkārtošanas noteikums"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
+#, fuzzy
 msgid "Remind Before"
-msgstr ""
+msgstr "Atgādināt pirms"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -2617,8 +2781,9 @@ msgstr "Atgādinājumi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+#, fuzzy
 msgid "Rendering Model"
-msgstr ""
+msgstr "Renderēšanasd modelis"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
@@ -2627,8 +2792,9 @@ msgstr "Atkārtot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
+#, fuzzy
 msgid "Repeat On"
-msgstr ""
+msgstr "Atkārtot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -2637,8 +2803,9 @@ msgstr "Atkārtot līdz"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Repeat every"
-msgstr ""
+msgstr "Atkārtot katru"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -2653,8 +2820,9 @@ msgstr "Atkārtot x reizes"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Reschedule"
-msgstr ""
+msgstr "Pārplānot"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2663,8 +2831,9 @@ msgstr "Atbildīgais"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
+#, fuzzy
 msgid "Responsible User"
-msgstr ""
+msgstr "Atbildīgie lietotāji"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -2696,19 +2865,21 @@ msgstr "Sestdiena"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+#, fuzzy
 msgid "Schedule"
-msgstr ""
+msgstr "Grafiks"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting in your calendar"
+msgid "Schedule a meeting"
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
+#, fuzzy
 msgid "Scheduled by"
-msgstr ""
+msgstr "Ieplānots pēc"
 
 #. module: calendar
 #. odoo-python
@@ -2736,13 +2907,15 @@ msgstr "Atlasīt dalībniekus..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Sūtīt e-pastu dalībniekiem"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Send Invitations"
-msgstr ""
+msgstr "Sūtīt ielūgumus"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2756,8 +2929,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Send email"
-msgstr ""
+msgstr "Sūtīt e-pastu"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -2766,8 +2940,9 @@ msgstr "Ja ir iestatīts atgādinājums, tiek nosūtīts visiem apmeklētājiem"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
+#, fuzzy
 msgid "Sent to all attendees if the schedule change"
-msgstr ""
+msgstr "Ja grafiks mainās, tiek nosūtīts visiem apmeklētājiem"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2780,8 +2955,9 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
 #: model:ir.ui.menu,name:calendar.menu_calendar_settings
+#, fuzzy
 msgid "Settings"
-msgstr ""
+msgstr "Uzstādījumi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
@@ -2795,13 +2971,15 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
-msgstr ""
+msgstr "Show all opportunities for which the next action date is before today"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
+#, fuzzy
 msgid "Show as"
-msgstr ""
+msgstr "Parādīt kā"
 
 #. module: calendar
 #. odoo-javascript
@@ -2833,17 +3011,23 @@ msgstr "Statuss"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Statuss balstīts uz darbībām\n"
+"Kavēts: termiņš jauy ir pagājis\n"
+"Šodien: darbības datums ir šodien\n"
+"Plānots: nākotnes aktivitātes."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Status:"
-msgstr ""
+msgstr "Statuss:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -2851,15 +3035,15 @@ msgid "Stop"
 msgstr "Apturēt"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Stop Sync"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
 msgstr "Notikuma beigu datums, visas dienas notikumiem - bez konkrēta laika"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Stop synchro"
-msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -2888,7 +3072,19 @@ msgstr "Svētdiena"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchro is paused"
+msgid "Sync in progress..."
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync is paused"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync unsuccessful"
 msgstr ""
 
 #. module: calendar
@@ -2921,13 +3117,15 @@ msgstr "Birkas"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
+#, fuzzy
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Ziņojuma atgādinājuma satura renderēšanai izmantotā veidne."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
 msgid "Tentative"
-msgstr ""
+msgstr "Pagaidu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
@@ -2947,16 +3145,22 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+#, fuzzy
 msgid ""
 "The calendar is shared between employees and fully integrated with\n"
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"Kalendārs tiek koplietots starp darbiniekiem un pilnībā integrēts ar citām\n"
+"             lietotnēm, piemēram, darbinieku atvaļinājumiem vai "
+"uzņēmējdarbības\n"
+"             iespējām."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+#, fuzzy
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "Dienai jābūt no 1 līdz 31"
 
 #. module: calendar
 #. odoo-python
@@ -2977,8 +3181,9 @@ msgstr ""
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "The interval cannot be negative."
-msgstr ""
+msgstr "Intervāls nevar būt negatīvs."
 
 #. module: calendar
 #. odoo-python
@@ -2989,8 +3194,9 @@ msgstr "Atkārtojumu skaits nevar būt negatīvs."
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Šajos pasākumos nav neviena dalībnieka"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -3002,14 +3208,22 @@ msgstr "Trešais"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#, fuzzy
 msgid "This and following events"
-msgstr ""
+msgstr "Šis un turpmākie notikumi"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#, fuzzy
 msgid "This event"
+msgstr "Šis notikums"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "This may take some time"
 msgstr ""
 
 #. module: calendar
@@ -3032,30 +3246,41 @@ msgstr "Timezone"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
+#, fuzzy
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "Laika josla, ko izmanto, lai parādītu laiku ziņojuma veidnē"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Šodien"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Today Activities"
-msgstr ""
+msgstr "Šodienas aktivitātes"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Tomorrow"
-msgstr ""
+msgstr "Rīt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
+#, fuzzy
 msgid "Trigger"
+msgstr "Ierosinātājs"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Try again"
 msgstr ""
 
 #. module: calendar
@@ -3077,8 +3302,9 @@ msgstr "Veids"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Reģistrētās izņēmuma aktivitātes tips."
 
 #. module: calendar
 #. odoo-python
@@ -3132,13 +3358,15 @@ msgstr "Lietotājs"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
+#, fuzzy
 msgid "User Can Edit"
-msgstr ""
+msgstr "Lietotāji var labot"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
+#, fuzzy
 msgid "User Settings"
-msgstr ""
+msgstr "Lietotāja uzstādījumi"
 
 #. module: calendar
 #. odoo-python
@@ -3153,14 +3381,16 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
+#, fuzzy
 msgid "Videocall Source"
-msgstr ""
+msgstr "Videozvana avots"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Skatīt"
 
 #. module: calendar
 #. odoo-javascript
@@ -3189,8 +3419,9 @@ msgstr "Nedēļas diena"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__weekly
+#, fuzzy
 msgid "Weekly"
-msgstr ""
+msgstr "Reizi nedēļā"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
@@ -3214,8 +3445,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
+#, fuzzy
 msgid "Yearly"
-msgstr ""
+msgstr "Ik gadu"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
@@ -3228,8 +3460,9 @@ msgstr "Gadi"
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Yes"
-msgstr ""
+msgstr "Jā"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -3247,8 +3480,9 @@ msgstr ""
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Atkārtotu notikumu bez pamata notikuma nevar mainīt."
 
 #. module: calendar
 #. odoo-python
@@ -3259,37 +3493,43 @@ msgstr "Kalendāra dalībniekus nevar dublēt."
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
+#, fuzzy
 msgid "You have to choose at least one day in the week"
-msgstr ""
+msgstr "Jums ir jāizvēlas vismaz viena diena nedēļā"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
+#, fuzzy
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Jūs esat viens pats šajā sapulcē"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "accepted"
-msgstr ""
+msgstr "apstiprināja"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "attendees"
-msgstr ""
+msgstr "dalībnieki"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "declined"
-msgstr ""
+msgstr "noraidīja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "piem. Biznesa pusdienas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3304,8 +3544,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "vairāk"
 
 #. module: calendar
 #. odoo-javascript
@@ -3321,15 +3562,18 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
+#, fuzzy
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} — atgādinājums"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
+#, fuzzy
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: mainīts datums"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
+#, fuzzy
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: notikums mainīts"

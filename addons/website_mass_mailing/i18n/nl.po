@@ -9,22 +9,22 @@
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-04 13:07+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 23:47+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "website_mass_mailing/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -64,6 +64,7 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
+#, fuzzy
 msgid ""
 "<span class=\"s_website_form_field_description small form-text text-"
 "muted\">\n"
@@ -72,9 +73,16 @@ msgid ""
 "time.\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"s_website_form_field_description small form-text text-"
+"muted\">\n"
+"                                        We sturen één wekelijkse nieuwsbrief "
+"per lijst en proberen deze altijd interessant te maken. Je kunt je op elk "
+"moment uitschrijven.\n"
+"                                   </span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
+#, fuzzy
 msgid ""
 "<span class=\"s_website_form_field_description small form-text text-"
 "muted\">\n"
@@ -82,6 +90,12 @@ msgid ""
 "and always try to keep it interesting. You can unsubscribe at any time.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"s_website_form_field_description small form-text text-"
+"muted\">\n"
+"                                        We sturen één wekelijkse nieuwsbrief "
+"per lijst en proberen deze altijd interessant te maken. Je kunt je op elk "
+"moment uitschrijven.\n"
+"                                   </span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
@@ -160,6 +174,11 @@ msgid "Always <b>First</b>."
 msgstr "Altijd als <b>eerste</b>."
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Avatars"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
 msgid "Be the first to find out all the latest new, products and trends."
 msgstr "Ontdek als eerste de nieuwste producten, trends en het laatste nieuws."
@@ -170,6 +189,13 @@ msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 "Wees de eerste die het laatste nieuws,<br/> producten en trends ontdekt."
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid ""
+"Be the first to know when we launch.<br/>Leave your email and we'll notify "
+"you at launch."
+msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -231,6 +257,12 @@ msgstr ""
 "bedrijf direct in je inbox."
 
 #. module: website_mass_mailing
+#. odoo-python
+#: code:addons/website_mass_mailing/controllers/main.py:0
+msgid "Invalid subscription type"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "John Smith"
@@ -244,6 +276,11 @@ msgid ""
 msgstr ""
 "Schrijf je in voor onze mailinglijst om zorgvuldig geselecteerde bronnen, "
 "tips en updates rechtstreeks in je inbox te ontvangen."
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Join the waitlist."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -364,7 +401,7 @@ msgstr "Schrijf je in voor updates, aanbiedingen <br/>en inzichten!"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Subscribe to"
 msgstr "Abonneren op"
 
@@ -406,6 +443,11 @@ msgid "This block is not linked to an active Newsletter."
 msgstr "Dit blok is niet gekoppeld aan een actieve nieuwsbrief."
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Waiting List"
+msgstr ""
+
+#. module: website_mass_mailing
 #. odoo-python
 #: code:addons/website_mass_mailing/controllers/website_form.py:0
 msgid "You cannot subscribe to the following list anymore : %s"
@@ -419,22 +461,25 @@ msgstr "Je wordt nu op de hoogte gehouden van het laatste nieuws."
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Email"
 msgstr "Je e-mail"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Name"
 msgstr "Je naam"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
 msgid ""
 "form, updates, digest, bulletin, announcements, notifications, "
 "communication, email, prompt, subscription"
 msgstr ""
+"formulier, updates, overzicht, bulletin, aankondigingen, meldingen, "
+"communicatie, e-mail, prompt, abonnement"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
@@ -443,27 +488,51 @@ msgid "johnsmith@example.com"
 msgstr "johnsmith@example.com"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
-msgid ""
-"updates, digest, bulletin, announcements, notifications, communication, "
-"promotional, email, prompt, subscription, subscribe, mailing-list, news"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "people on the waitlist."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"email, prompt, subscription, subscribe, mailing-list, news, waitlist, "
+"waiting, signup, hero, jumbotron, headline, header, introduction, home"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, prompt, subscription, subscribe, mailing-list, news"
+msgstr ""
+"updates, overzicht, bulletin, aankondigingen, meldingen, communicatie, "
+"promotioneel, e-mail, prompt, abonnement, abonneren, mailinglijst, nieuws"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
 msgid ""
 "updates, digest, bulletin, announcements, notifications, communication, "
 "promotional, email, prompt, subscription, subscribe, mailing-list, news, "
 "box, image, picture"
 msgstr ""
+"updates, overzicht, bulletin, aankondigingen, meldingen, communicatie, "
+"promotioneel, e-mail, prompt, abonnement, inschrijven, mailinglijst, nieuws, "
+"inbox, afbeelding, foto"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
 msgid ""
 "updates, digest, bulletin, announcements, notifications, communication, "
 "promotional, email, prompt, subscription, subscribe, mailing-list, news, "
 "grid, image, picture"
 msgstr ""
+"updates, overzicht, bulletin, aankondigingen, meldingen, communicatie, "
+"promotioneel, e-mail, prompt, abonnement, inschrijven, mailinglijst, nieuws, "
+"raster, afbeelding, foto"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets

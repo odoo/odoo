@@ -17,17 +17,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-01-13 16:08+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-s19-1/stock/"
-"lv/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 12:08+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-master/"
+"stock/lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -524,7 +524,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
 
 #. module: stock
@@ -1019,6 +1019,12 @@ msgid "Add a Product"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1144,6 +1150,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
 msgstr ""
 
 #. module: stock
@@ -1651,6 +1662,11 @@ msgid "Bulk Weight"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr ""
@@ -1836,12 +1852,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -1899,12 +1909,6 @@ msgid "Clear"
 msgstr "Notīrīt"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "Aizvērt"
@@ -1954,88 +1958,6 @@ msgid "Compute shipping costs"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Compute shipping costs and ship with DHL"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Compute shipping costs and ship with FedEx"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Compute shipping costs and ship with UPS"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Compute shipping costs and ship with USPS"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Compute shipping costs and ship with bpost"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr ""
@@ -2051,6 +1973,11 @@ msgstr "Konfigurācijas uzstādījumi"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "Uzstādījumi"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2533,16 +2460,6 @@ msgid "DEMO_UOM"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr ""
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2683,11 +2600,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
 msgstr ""
 
 #. module: stock
@@ -2901,11 +2813,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
 msgstr ""
 
 #. module: stock
@@ -3251,7 +3158,6 @@ msgid "Do you confirm you want to scrap"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr ""
@@ -3314,11 +3220,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
 msgstr ""
 
 #. module: stock
@@ -3396,11 +3297,6 @@ msgstr "Nodrošiniet uzglabājamā produkta izsekojamību savā noliktavā."
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
 msgstr ""
 
 #. module: stock
@@ -3490,14 +3386,13 @@ msgid "February"
 msgstr "Februāris"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
+msgid "Filtered Location"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
-msgid "Filtered Location"
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
 msgstr ""
 
 #. module: stock
@@ -3520,6 +3415,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
 msgstr ""
 
 #. module: stock
@@ -3752,6 +3653,12 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr ""
@@ -3759,7 +3666,7 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
+msgid "Generate Serials"
 msgstr ""
 
 #. module: stock
@@ -4185,19 +4092,15 @@ msgstr "Importēt"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr ""
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
-msgid "Import Serials"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
+msgid "Import Serials"
 msgstr ""
 
 #. module: stock
@@ -5699,6 +5602,12 @@ msgid "No allocation need found."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr ""
@@ -5814,12 +5723,6 @@ msgid "Notes"
 msgstr "Piezīmes"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
 msgid "November"
 msgstr "Novembris"
@@ -5931,6 +5834,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
 msgstr ""
 
 #. module: stock
@@ -6681,10 +6592,8 @@ msgid "Please create a warehouse for company %s."
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
 
 #. module: stock
@@ -7380,7 +7289,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr ""
 
@@ -7752,6 +7661,8 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8249,11 +8160,6 @@ msgid "Send email"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr ""
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8413,11 +8319,6 @@ msgid "Shipping"
 msgstr "Piegāde"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8440,11 +8341,6 @@ msgstr ""
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
 msgstr ""
 
 #. module: stock
@@ -8716,11 +8612,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "Atzīmēts ar zvaigznīti"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9119,8 +9010,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
 
 #. module: stock
@@ -9412,6 +9303,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
 msgstr ""
 
 #. module: stock
@@ -9900,6 +9797,11 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr ""
@@ -10005,18 +9907,6 @@ msgstr "Veids"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Reģistrētās izņēmuma aktivitātes veids."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -10453,18 +10343,6 @@ msgstr "Brīdinājumi"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "Tīmekļa vietnes ziņojumi"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "Tīmekļa vietnes saziņas vēsture"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -10988,6 +10866,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11041,11 +10924,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
 msgstr ""
 
 #. module: stock
@@ -11264,3 +11142,24 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Compute shipping costs and ship with DHL"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Compute shipping costs and ship with FedEx"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Compute shipping costs and ship with UPS"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Compute shipping costs and ship with USPS"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Compute shipping costs and ship with bpost"
+
+#~ msgid "Website Messages"
+#~ msgstr "Tīmekļa vietnes ziņojumi"
+
+#~ msgid "Website communication history"
+#~ msgstr "Tīmekļa vietnes saziņas vēsture"

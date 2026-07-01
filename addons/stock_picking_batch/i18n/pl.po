@@ -26,14 +26,15 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-04 13:04+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 05:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
 "stock_picking_batch/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +43,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -51,7 +52,7 @@ msgid "%s was removed from the batch, no quantity processed"
 msgstr "Z partii usunięto %s, żadna ilość nie została przetworzona"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr "<i class=\"fa fa-calendar text-primary me-2\" title=\"Kalendarz\"/>"
 
@@ -395,11 +396,6 @@ msgstr "Nie można utworzyć transferów falowych"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
 msgid "Categories to consider when grouping waves."
 msgstr "Kategorie, które należy wziąć pod uwagę podczas grupowania falowego."
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Check Availability"
-msgstr "Sprawdź dostępność"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -750,8 +746,9 @@ msgstr "Moje transfery"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "Nowe"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -949,6 +946,11 @@ msgstr ""
 "strefie pakowania."
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
@@ -1022,14 +1024,14 @@ msgid "Show Allocation Button"
 msgstr "Pokaż przycisk alokacji"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid "Show Check Availability"
-msgstr "Pokaż \"Sprawdź dostępność\""
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
 msgid "Show Lots Text"
 msgstr "Pokaż tekst partii"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -1203,7 +1205,7 @@ msgstr "Dzisiejsze aktywności"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "Transfer"
 msgstr "Transfer"
 
@@ -1230,8 +1232,8 @@ msgstr "Transferowane przez"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Transfery"
 
@@ -1300,16 +1302,6 @@ msgid "Wave transfers"
 msgstr "Transfery falowe"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website communication history"
-msgstr "Historia komunikacji"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
 msgstr ""
@@ -1363,3 +1355,15 @@ msgstr "shipping_volume"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
 msgid "shipping_weight"
 msgstr "shipping_weight"
+
+#~ msgid "Check Availability"
+#~ msgstr "Sprawdź dostępność"
+
+#~ msgid "Show Check Availability"
+#~ msgstr "Pokaż \"Sprawdź dostępność\""
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia komunikacji"

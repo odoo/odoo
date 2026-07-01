@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
-"PO-Revision-Date: 2026-04-18 13:45+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 06:56+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/website_event/zh_Hant/>\n"
+"projects/odoo-master/website_event/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -108,7 +108,7 @@ msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/> 已登記"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr "<i class=\"fa fa-check me-2\"/> 已報名"
 
@@ -132,7 +132,7 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"網站\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
 msgstr ""
 
@@ -255,25 +255,20 @@ msgstr ""
 "class=\"o_countdown_metric\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid ""
+"<span class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold "
+"Out\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_badge
 msgid ""
 "<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-msgid ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
-"class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold "
-"Out\n"
-"                                    </span>"
-msgstr ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
-"class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>售罄\n"
-"                                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -549,7 +544,7 @@ msgid "Can Publish"
 msgstr "可以發佈"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -558,6 +553,18 @@ msgstr "已取消"
 #: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
 msgid "Card design"
 msgstr "卡片設計"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+msgid "Click on the <b>Content</b> category."
+msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+msgid "Click on the <b>Image - Text</b> building block."
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -767,7 +774,7 @@ msgid "Event Info"
 msgstr "活動資訊"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
 
@@ -946,7 +953,7 @@ msgid "Footer Visible"
 msgstr "頁尾可見"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
 
@@ -1455,17 +1462,17 @@ msgid "Registrations"
 msgstr "報名"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations Closed"
 msgstr "報名已關閉"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not open"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not yet open"
 msgstr "尚未開放報名"
 
@@ -1548,7 +1555,7 @@ msgid "Scheduled Events"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Scheduled for"
 msgstr ""
 
@@ -1644,8 +1651,8 @@ msgid "Social Media"
 msgstr "社交媒體"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sold Out"
 msgstr "已售完"
@@ -2003,3 +2010,16 @@ msgstr "w-100"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "w-100 py-sm-3 mt-sm-2"
 msgstr "w-100 py-sm-3 mt-sm-2"
+
+#~ msgid ""
+#~ "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
+#~ "class=\"text-danger\">\n"
+#~ "                                        <i class=\"fa fa-ban me-2\"/>Sold "
+#~ "Out\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
+#~ "class=\"text-danger\">\n"
+#~ "                                        <i class=\"fa fa-ban me-2\"/>售"
+#~ "罄\n"
+#~ "                                    </span>"

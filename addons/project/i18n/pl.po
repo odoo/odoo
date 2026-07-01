@@ -40,10 +40,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-04-30 07:33+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 20:08+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
 "project/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -582,7 +582,7 @@ msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
 msgstr "<i class=\"oi oi-arrow-right me-1\"/>Powrót do trybu edycji"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
 msgstr "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
 
@@ -602,12 +602,12 @@ msgid "<small class=\"text-muted\">Customer</small>"
 msgstr "<small class=\"text-muted\">Klient</small>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
 msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Daty\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
@@ -626,7 +626,7 @@ msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 msgstr ""
@@ -732,12 +732,12 @@ msgid "<span>@</span>"
 msgstr "<span>@</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span>Reporting</span>"
 msgstr "<span>Raportowanie</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "<span>View</span>"
 msgstr "<span>Podgląd</span>"
 
@@ -1313,20 +1313,20 @@ msgid "Average Rating (1-5)"
 msgstr "Średnia ocena (1-5)"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Happy"
 msgstr "Średnia ocena: Zadowolony"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Neutral"
 msgstr "Średnia ocena: Neutralny"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Average Rating: Unhappy"
 msgstr "Średnia ocena: Niezadowolony"
 
@@ -1392,7 +1392,7 @@ msgstr "Błąd"
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Burndown Chart"
 msgstr "Wykres burndown"
 
@@ -1816,7 +1816,7 @@ msgstr "Adres URL portalu klienta"
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Customer Ratings"
 msgstr "Oceny klienta"
 
@@ -2164,7 +2164,7 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Duplicate"
 msgstr "Duplikuj"
 
@@ -2451,8 +2451,8 @@ msgid "Handoff"
 msgstr "Przekazanie"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Happy face"
 msgstr "Zadowolona twarz"
 
@@ -3069,7 +3069,7 @@ msgstr "Kamień Milowy"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_milestones
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_milestones
 #: model:ir.model.fields,field_description:project.field_project_project__allow_milestones
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Milestones"
 msgstr "Kamienie Milowe"
 
@@ -3117,6 +3117,7 @@ msgstr "Moje projekty"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_my_task
 #: model:ir.ui.menu,name:project.menu_project_management_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
@@ -3158,8 +3159,8 @@ msgstr ""
 "sprinty itp."
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Neutral face"
 msgstr "Neutralna twarz"
 
@@ -4481,7 +4482,7 @@ msgid "Security Token"
 msgstr "Token uprawnień"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "See Parent Task"
 msgstr "Zobacz zadanie nadrzędne"
 
@@ -4519,7 +4520,7 @@ msgid "Sequence"
 msgstr "Sekwencja"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Set Cover Image"
 msgstr "Ustaw okładkę"
 
@@ -4563,7 +4564,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Settings"
 msgstr "Ustawienia"
 
@@ -4578,14 +4579,14 @@ msgstr "Udostępnij link"
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model:ir.actions.server,name:project.action_server_share_project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "Share Project"
 msgstr "Udostępnij projekt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model:ir.actions.server,name:project.action_server_share_task
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Share Task"
 msgstr "Udostępnij Zadanie"
 
@@ -5052,7 +5053,7 @@ msgstr "Zadanie:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_calendar
@@ -5065,7 +5066,7 @@ msgstr "Zadania"
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.model,name:project.model_report_project_task_user
 #: model:ir.ui.menu,name:project.menu_project_report_task_analysis
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_graph
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -5638,8 +5639,8 @@ msgid "Unfollow"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Unhappy face"
 msgstr "Niezadowolona twarz"
 
@@ -5677,7 +5678,7 @@ msgstr "Zaktualizuj etap"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_updates
-#: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
+#: model_terms:ir.ui.view,arch_db:project.project_view_card_inherit_project
 msgid "Updates"
 msgstr "Aktualizacje"
 
@@ -5800,7 +5801,7 @@ msgid "User can user the your employees' schedule"
 msgstr "Użytkownik może korzystać z planu Twoich pracowników"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "View"
 msgstr "Widok"
 
@@ -5854,25 +5855,10 @@ msgstr ""
 "zaczyna się tutaj.</i>"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
-#: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
-#: model:ir.model.fields,field_description:project.field_project_update__website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Website Redesign"
 msgstr "Przebudowa strony"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
-#: model:ir.model.fields,help:project.field_project_project__website_message_ids
-#: model:ir.model.fields,help:project.field_project_task__website_message_ids
-#: model:ir.model.fields,help:project.field_project_update__website_message_ids
-msgid "Website communication history"
-msgstr "Historia komunikacji"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__weekly
@@ -6146,7 +6132,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_card
 msgid "assignees"
 msgstr "wykonawcy"
 
@@ -6325,7 +6311,7 @@ msgstr ""
 "satysfakcji"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "{{0}} Milestones reached out of {{1}}"
 msgstr "Osiągnięto {{0}} z {{1}} kamieni milowych"
 
@@ -6341,6 +6327,12 @@ msgstr "👤 Nieprzypisany"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Prywatne"
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia komunikacji"
 
 #~ msgid "Communication history"
 #~ msgstr "Historia komunikacji"

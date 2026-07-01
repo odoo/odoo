@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_calendar
+# * google_calendar
 #
 # Translators:
 # Algo Kärp <algokarp@gmail.com>, 2022
@@ -12,20 +12,22 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # JanaAvalah, 2022
 # Anna, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Anna, 2023\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-21 01:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/"
+"google_calendar/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: google_calendar
 #. odoo-python
@@ -140,13 +142,14 @@ msgstr "Seadistus"
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "Seadista"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Confirm"
-msgstr "Kinnita"
+msgid "Continue"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
@@ -159,18 +162,8 @@ msgid "Created on"
 msgstr "Loomise kuupäev"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
-msgid "Delete from Odoo"
-msgstr "Kustuta Odoo'st"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
-msgid "Delete from both"
-msgstr "Kustuta mõlemast"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
-msgid "Delete from the current Google Calendar account"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_events
+msgid "Delete synced events from Odoo"
 msgstr ""
 
 #. module: google_calendar
@@ -181,6 +174,11 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_google_disable_auto_videocall_link
 msgid "Disable videocall generation"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
+msgid "Disconnect Google Calendar"
 msgstr ""
 
 #. module: google_calendar
@@ -204,8 +202,9 @@ msgstr "E-post"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_alarm_manager
+#, fuzzy
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Ürituste juht"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -224,10 +223,15 @@ msgid "Google Calendar"
 msgstr "Google'i kalender"
 
 #. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
 msgstr "Google Calendar konto lähtestamine"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_account_email
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_account_email
+msgid "Google Calendar Email"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -247,13 +251,15 @@ msgstr "Google Calendar: sünkroniseerimine"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
+#, fuzzy
 msgid "Google Meet"
-msgstr ""
+msgstr "Google Meet"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
+#, fuzzy
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Google sünkroniseerimine on peatatud"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
@@ -264,8 +270,9 @@ msgstr "Google sünkroniseerimine on peatatud"
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
+#, fuzzy
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google andis järgmise selgituse:  %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
@@ -324,27 +331,18 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
-msgid "Leave them untouched"
-msgstr "Jäta need puutumata"
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
+#, fuzzy
 msgid "Need Sync"
-msgstr ""
+msgstr "Vajab sünkroniseerimist"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
 msgid "Next Sync Token"
 msgstr "Järgmise sünkroniseerimise token:"
-
-#. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
-msgid "Next Synchronization"
-msgstr "Järgmine sünkroniseerimine"
 
 #. module: google_calendar
 #. odoo-python
@@ -354,8 +352,9 @@ msgstr "Teavitused"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Peata sünkroonimine"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -369,24 +368,10 @@ msgid "Reset Account"
 msgstr "Lähtesta konto"
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Reset Google Calendar Account"
-msgstr ""
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
+#, fuzzy
 msgid "Synchronize a record with Google Calendar"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
-msgid "Synchronize all existing events"
-msgstr "Sünkroniseeri kõik olemasolevad sündmused"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
-msgid "Synchronize only new events"
-msgstr "Sünkroniseeri ainult uued sündmused"
+msgstr "Sünkroniseeri antud kirje Google kalendriga"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -411,7 +396,7 @@ msgid "The following event could not be synced with Google Calendar."
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
 msgid "This will only affect events for which the user is the owner"
 msgstr "See mõjutab ainult sündmusi, mille omanik on kasutaja"
 
@@ -429,8 +414,9 @@ msgstr "Kasutaja"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
+#, fuzzy
 msgid "User Settings"
-msgstr ""
+msgstr "Kasutaja seaded"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
@@ -439,24 +425,51 @@ msgid "User token"
 msgstr "Kasutaja tokenid"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
-msgid "User's Existing Events"
-msgstr "Kasutajate olemasolevad sündmused"
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
+#, fuzzy
 msgid "Videocall Source"
+msgstr "Videokõne allikas"
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "What should happen to previously synced events?"
 msgstr ""
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
+#, fuzzy
 msgid "undefined time"
-msgstr ""
+msgstr "määratlemata aeg"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
+#, fuzzy
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "sul ei paista olevat luba selle sündmuse muutmiseks Google Kalendris. "
+
+#~ msgid "Confirm"
+#~ msgstr "Kinnita"
+
+#~ msgid "Delete from Odoo"
+#~ msgstr "Kustuta Odoo'st"
+
+#~ msgid "Delete from both"
+#~ msgstr "Kustuta mõlemast"
+
+#~ msgid "Leave them untouched"
+#~ msgstr "Jäta need puutumata"
+
+#~ msgid "Next Synchronization"
+#~ msgstr "Järgmine sünkroniseerimine"
+
+#~ msgid "Synchronize all existing events"
+#~ msgstr "Sünkroniseeri kõik olemasolevad sündmused"
+
+#~ msgid "Synchronize only new events"
+#~ msgstr "Sünkroniseeri ainult uued sündmused"
+
+#~ msgid "User's Existing Events"
+#~ msgstr "Kasutajate olemasolevad sündmused"

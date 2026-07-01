@@ -19,22 +19,22 @@
 # Martin Trigaux, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/calendar/"
-"sv/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-22 00:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-master/"
+"calendar/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -99,7 +99,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
@@ -139,9 +139,9 @@ msgid ""
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Your appointment <strong t-"
-"out=\"object.event_id.appointment_type_id.name or ''\"/> <t t-"
-"if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name or "
-"''\">Colleen Diaz</t>\n"
+"out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</"
+"strong> <t t-if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name "
+"or ''\">Colleen Diaz</t>\n"
 "            is now scheduled for <t t-"
 "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
 "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
@@ -158,10 +158,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -265,7 +265,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -290,7 +290,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
 "\"/>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
@@ -329,7 +329,7 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
+"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" "
 "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
 "#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
 "3px;\">\n"
@@ -436,7 +436,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -461,7 +461,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
 "object.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -575,7 +575,7 @@ msgid ""
 "        <div t-if=\"len(object.attendee_ids) &gt; max_shown_attendees\" "
 "style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
@@ -600,7 +600,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -620,10 +620,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -730,7 +730,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -755,7 +755,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
 "ctx.get('mail_tz')\"/>\n"
 "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
@@ -836,9 +836,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
-"hidden=\"true\"/>"
+msgid "<i class=\"fa fa-calendar\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: calendar
@@ -1010,8 +1008,9 @@ msgstr "Aktivitet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Aktivitet undantaget dekoration"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
@@ -1020,13 +1019,15 @@ msgstr "Aktivitets Mixin"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Verksamhetsplaner"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid "Activity State"
-msgstr ""
+msgstr "Aktivitetstillstånd"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1035,8 +1036,9 @@ msgstr "Aktivitetstyp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikon för aktivitetstyp"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
@@ -1090,8 +1092,9 @@ msgstr "Heldag, %(day)s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "All day"
-msgstr ""
+msgstr "Hela dagen"
 
 #. module: calendar
 #. odoo-javascript
@@ -1285,6 +1288,11 @@ msgid "Calendar: Reminder"
 msgstr "Kalender: Påminnelse"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Calendars"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 msgid "Can Edit Body"
 msgstr "Kan redigera stycket"
@@ -1347,8 +1355,9 @@ msgstr "Konfiguration"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#, fuzzy
 msgid "Confirm"
-msgstr ""
+msgstr "Bekräfta"
 
 #. module: calendar
 #. odoo-javascript
@@ -1378,6 +1387,12 @@ msgstr "Kontakta deltagare"
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Contact Details"
 msgstr "Kontaktuppgifter"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "Contact created through Calendar sync."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
@@ -1844,8 +1859,9 @@ msgstr "Följare (kontakter)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font Awesome-ikon t.ex. fa-tasks"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1878,8 +1894,9 @@ msgstr "fredag"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Future Activities"
-msgstr ""
+msgstr "Framtida aktiviteter"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1957,13 +1974,15 @@ msgstr "ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "Ikon"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon för att indikera en undantagsaktivitet."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -2115,8 +2134,9 @@ msgstr "Sista notifikationen markerad som läst från baskalendern"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Late Activities"
-msgstr ""
+msgstr "Sena aktiviteter"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -2126,8 +2146,9 @@ msgstr "Låt händelsen återkomma automatiskt med det intervallet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
+#, fuzzy
 msgid "Linked to"
-msgstr ""
+msgstr "Länkad till"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -2273,13 +2294,15 @@ msgstr "Fler alternativ"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Mina aktivieteter"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__my_activity_date_deadline
+#, fuzzy
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mina aktiviteters sluttid"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2316,24 +2339,28 @@ msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_date_deadline
+#, fuzzy
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Nästa slutdatum för aktivitet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_summary
+#, fuzzy
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Nästa aktivitetssammanställning"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_id
+#, fuzzy
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Nästa aktivitetstyp"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Next Week"
-msgstr ""
+msgstr "Nästa vecka"
 
 #. module: calendar
 #. odoo-javascript
@@ -2459,8 +2486,9 @@ msgstr "OK"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "Online"
-msgstr ""
+msgstr "Uppkopplad"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2700,8 +2728,9 @@ msgstr "Ansvarig"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
+#, fuzzy
 msgid "Responsible User"
-msgstr ""
+msgstr "Ansvarig användare"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -2739,7 +2768,7 @@ msgstr "Schemalägg"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting in your calendar"
+msgid "Schedule a meeting"
 msgstr ""
 
 #. module: calendar
@@ -2834,8 +2863,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
-msgstr ""
+msgstr "Visa alla möjligheter för vilka nästa åtgärdsdatum är före idag"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2872,12 +2902,17 @@ msgstr "Status"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status baserad på aktiviteter\n"
+"Försenade: Leveranstidpunkten har passerat\n"
+"Idag: Aktivitetsdatum är idag\n"
+"Kommande: Framtida aktiviteter."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2890,15 +2925,15 @@ msgid "Stop"
 msgstr "Stoppa"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Stop Sync"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
 msgstr "Slutdatum för en händelse, utan tid för heldags händelser"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Stop synchro"
-msgstr "Stoppa synkrot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -2927,8 +2962,20 @@ msgstr "Söndag"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchro is paused"
-msgstr "Synchro är pausad"
+msgid "Sync in progress..."
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync is paused"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync unsuccessful"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -3058,6 +3105,12 @@ msgid "This event"
 msgstr "Denna händelse"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "This may take some time"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
 msgid "Thu"
@@ -3084,24 +3137,33 @@ msgstr "Tidszon som används för att visa tid i e-postmallen"
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Idag"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Today Activities"
-msgstr ""
+msgstr "Dagens aktiviteter"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Tomorrow"
-msgstr ""
+msgstr "Imorgon"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
 msgid "Trigger"
 msgstr "Utlösare"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Try again"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -3122,8 +3184,9 @@ msgstr "Typ"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ av undantagsaktivitet som har registrerats."
 
 #. module: calendar
 #. odoo-python
@@ -3134,8 +3197,9 @@ msgstr "Kan inte spara återkommande med \"Denna händelse\""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
+#, fuzzy
 msgid "Unavailable"
-msgstr ""
+msgstr "Otillgänglig"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
@@ -3204,8 +3268,9 @@ msgstr "Källa för videosamtal"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Visa"
 
 #. module: calendar
 #. odoo-javascript
@@ -3318,20 +3383,23 @@ msgstr "Du är ensam i det här mötet"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "accepted"
-msgstr ""
+msgstr "godkänd"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "attendees"
-msgstr ""
+msgstr "deltagare"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "declined"
-msgstr ""
+msgstr "avvisad"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3345,14 +3413,16 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "guests"
-msgstr ""
+msgstr "gäster"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "mer"
 
 #. module: calendar
 #. odoo-javascript
@@ -3363,8 +3433,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+#, fuzzy
 msgid "uncertain"
-msgstr ""
+msgstr "osäker"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -3380,6 +3451,12 @@ msgstr "{{ object.event_id.name }}: Datum för uppdatering"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Uppdatering av händelse"
+
+#~ msgid "Stop synchro"
+#~ msgstr "Stoppa synkrot"
+
+#~ msgid "Synchro is paused"
+#~ msgstr "Synchro är pausad"
 
 #~ msgid "Today's Meetings"
 #~ msgstr "Dagens möten"

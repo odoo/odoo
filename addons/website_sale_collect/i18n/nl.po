@@ -8,23 +8,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:48+0000\n"
-"PO-Revision-Date: 2026-05-08 09:03+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 01:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "website_sale_collect/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/models/sale_order.py:0
-msgid "%(available_qty)s/%(line_qty)s available at this location"
-msgstr "%(available_qty)s/%(line_qty)s beschikbaar op deze locatie"
+#: code:addons/website_sale_collect/models/sale_order_line.py:0
+msgid "%(available_quantity)g/%(desired_quantity)g available at this location."
+msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -102,11 +102,13 @@ msgstr "Leveringsmethode"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__display_name
 msgid "Display Name"
@@ -114,11 +116,13 @@ msgstr "Schermnaam"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order_line__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__id
 msgid "ID"
@@ -130,8 +134,15 @@ msgid "In-store Delivery Method"
 msgstr "Leveringsmethode in de winkel"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "No in-store delivery methods available"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
@@ -158,6 +169,11 @@ msgid "Pay on site"
 msgstr "Betaal ter plaatse"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
 msgstr "Betaalprovider"
@@ -176,7 +192,7 @@ msgstr "Afhalen in de winkel"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
+#: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Please choose a store to collect your order."
 msgstr "Kies een winkel om je order af te halen."
 
@@ -208,6 +224,11 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
 msgid "Same as contact details"
@@ -232,16 +253,9 @@ msgstr "Sommige producten zijn niet verkrijgbaar bij"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
 msgstr "Sommige producten zijn niet verkrijgbaar in de geselecteerde winkel."
-
-#. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
-msgid "Sorry, we are unable to ship your order."
-msgstr "Sorry, het is niet mogelijk om je order te verzenden."
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
@@ -269,6 +283,14 @@ msgstr ""
 msgid "This address may require to recompute taxes."
 msgstr ""
 "Voor dit adres moeten mogelijk de btw-bedragen opnieuw worden berekend."
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid ""
+"Unfortunately, we can not deliver this order with the selected delivery "
+"method. Please update your choice and try again."
+msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -306,8 +328,7 @@ msgid "Your order will be ready on %s."
 msgstr ""
 
 #. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/models/payment_transaction.py:0
+#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
 msgstr ""
 
@@ -327,19 +348,20 @@ msgid "Your payment has been processed but is waiting for approval."
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
-msgid "Your payment has been processed."
-msgstr "Je betaling is verwerkt."
-
-#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "in stock"
 msgstr "op voorraad"
 
-#. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/models/payment_provider.py:0
-msgid "no in-store delivery methods available"
-msgstr "geen leveringsmethoden in de winkel beschikbaar"
+#~ msgid "%(available_qty)s/%(line_qty)s available at this location"
+#~ msgstr "%(available_qty)s/%(line_qty)s beschikbaar op deze locatie"
+
+#~ msgid "Sorry, we are unable to ship your order."
+#~ msgstr "Sorry, het is niet mogelijk om je order te verzenden."
+
+#~ msgid "Your payment has been processed."
+#~ msgstr "Je betaling is verwerkt."
+
+#~ msgid "no in-store delivery methods available"
+#~ msgstr "geen leveringsmethoden in de winkel beschikbaar"

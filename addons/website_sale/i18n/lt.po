@@ -29,10 +29,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-01-13 16:08+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 20:56+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
 "website_sale/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
 "1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -51,8 +51,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"%(product_name)s has not been added to your cart since it is not available."
+msgid "%(product_name)s was not added to your cart because it is unavailable."
 msgstr ""
 
 #. module: website_sale
@@ -807,12 +806,6 @@ msgid "<strong>Total</strong>"
 msgstr "<strong>Suma</strong>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-msgid "<strong>Warning!</strong>"
-msgstr "<strong>Įspėjimas!</strong>"
-
-#. module: website_sale
 #: model:mail.template,body_html:website_sale.email_template_back_in_stock
 msgid ""
 "<t t-set=\"website\" t-value=\"object.website_id or "
@@ -1419,7 +1412,7 @@ msgstr "Pridėti vieną"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product/product.xml:0
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "Add to Cart"
@@ -1464,14 +1457,17 @@ msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_address
 #: model:website.checkout.step,name:website_sale.checkout_step_delivery
 msgid "Address"
 msgstr "Adresas"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
-msgid "Address Autocomplete"
-msgstr "Automatinė adreso užbaigimo funkcija"
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__alerts
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__alerts
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__alerts
+msgid "Alerts"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__align_category_content
@@ -1881,7 +1877,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Buy Now"
 msgstr "Pirkti dabar"
@@ -2136,6 +2132,12 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click here to go back to block tab."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
 msgstr ""
 
@@ -2143,6 +2145,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on <em>Save</em> to create the product."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Content</b> category."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Text - Image</b> building block."
 msgstr ""
 
 #. module: website_sale
@@ -2158,6 +2172,8 @@ msgid "Clickable items"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/components/alert_banner/alert_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
@@ -2226,7 +2242,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Company Name"
 msgstr "Įmonės pavadinimas"
 
@@ -2637,6 +2653,11 @@ msgid "Delete Ribbon"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
+msgid "Deliveries"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2672,11 +2693,6 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_delivery_carrier
 msgid "Delivery Method"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
-msgid "Delivery Methods"
-msgstr "Pristatymo būdai"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
@@ -2829,7 +2845,6 @@ msgstr "Vaizdavimas"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__display_name
@@ -2855,6 +2870,7 @@ msgstr "Vaizdavimas"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
@@ -3061,11 +3077,6 @@ msgid "Email"
 msgstr "El. paštas"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
-msgid "Embed Code"
-msgstr "Įterptas kodas"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
@@ -3184,6 +3195,16 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by in stock products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by on sale products"
 msgstr ""
 
 #. module: website_sale
@@ -3432,23 +3453,6 @@ msgid "Go to Products Manager"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-msgid "Go to cart"
-msgstr "Eiti į krepšelį"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/wishlist_tour_utils.js:0
-msgid "Go to wishlist"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Google Address Validation"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
 #: model:ir.model.fields.selection,name:website_sale.selection__product_feed__target__gmc
 msgid "Google Merchant Center"
@@ -3576,7 +3580,6 @@ msgstr "Sutinku su"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__id
@@ -3602,6 +3605,7 @@ msgstr "Sutinku su"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__id
 #: model:ir.model.fields,field_description:website_sale.field_website__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__id
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_page__id
@@ -3736,6 +3740,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "In accordion"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "In stock"
 msgstr ""
 
 #. module: website_sale
@@ -4356,14 +4365,6 @@ msgstr "Nerasta paliktų krepšelių"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"No delivery method is available for your current order and shipping address. "
-"Please contact us for more information."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "No delivery method is selected."
 msgstr ""
@@ -4517,6 +4518,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__sale
 msgid "On Sale"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "On sale"
 msgstr ""
 
 #. module: website_sale
@@ -4784,34 +4790,14 @@ msgid "Payment"
 msgstr "Mokėjimas"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
-msgid "Payment Methods"
-msgstr "Mokėjimo būdai"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
-msgid "Payment Providers"
-msgstr "Mokėjimo paslaugos tiekėjas"
+#: model:website.checkout.step,name:website_sale.checkout_step_confirmation
+msgid "Payment Confirmation"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_token
 msgid "Payment Token"
 msgstr "Mokėjimo raktas"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
-msgid "Payment Tokens"
-msgstr "Mokėjimo raktai"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_payment_transaction
-msgid "Payment Transaction"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
-msgid "Payment Transactions"
-msgstr "Mokėjimo operacijos"
 
 #. module: website_sale
 #. odoo-python
@@ -4826,6 +4812,11 @@ msgid "Payment was not successful, please try again."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
+msgid "Payments"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
@@ -4833,7 +4824,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Phone Number"
 msgstr "Telefono numeris"
 
@@ -4976,6 +4967,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
 msgstr "Kainoraščiai"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Prices have changed. Please review your cart."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5969,6 +5966,7 @@ msgstr "Pristatymas"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/product_template.py:0
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6099,6 +6097,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Show Empty"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__show_in_breadcrumb
+msgid "Show In Breadcrumb"
 msgstr ""
 
 #. module: website_sale
@@ -6259,12 +6262,6 @@ msgstr ""
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Sorry, we are unable to ship your order."
 msgstr ""
 
 #. module: website_sale
@@ -6535,7 +6532,9 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid "The delivery method is not compatible with your delivery address."
+msgid ""
+"The estimated delivery date was no longer possible. We apologize for any "
+"inconvenience."
 msgstr ""
 
 #. module: website_sale
@@ -6623,9 +6622,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The selected delivery date is no longer available. Please pick another "
+"The selected delivery date was no longer available. Please pick another "
 "delivery date."
 msgstr ""
 
@@ -6723,6 +6722,8 @@ msgid "This product has no valid combination."
 msgstr "Šis produktas neturi galimų kombinacijų."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
 msgstr "Šis produktas nebepasiekiamas."
@@ -6893,6 +6894,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Unfortunately, the delivery method that you selected is no longer available. "
+"Please update your choice. We apologize for any inconvenience."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Unfortunately, there is no longer enough stock to fulfill your order."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
 msgid "Unfulfilled Orders"
 msgstr ""
@@ -6938,11 +6953,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__url
 msgid "Url"
 msgstr "URL"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Use Google Places API to validate addresses"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -7089,14 +7099,6 @@ msgid "Wardrobes"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-msgid "Warning"
-msgstr "Įspėjimas"
-
-#. module: website_sale
 #: model:product.template,name:website_sale.product_product_1_product_template
 msgid "Warranty"
 msgstr "Garantija"
@@ -7165,6 +7167,11 @@ msgid "Website Category"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_alert_mixin
+msgid "Website Checkout Alert Mixin"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
 msgstr ""
@@ -7173,12 +7180,6 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
 msgstr "Svetainės meniu"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Interneto svetainės žinutės"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -7221,12 +7222,6 @@ msgstr "Svetainės nuoroda"
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
 msgstr "Svetainės lankytojas"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Svetainės komunikacijos istorija"
 
 #. module: website_sale
 #. odoo-python
@@ -7380,21 +7375,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order_line.py:0
-msgid ""
-"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
-"available"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is available."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "You can compare up to 4 products at a time."
@@ -7418,6 +7398,22 @@ msgid "You don't have any order to invoice from the website"
 msgstr "Neturite užsakymų iš svetainės sąskaitos pateikimui"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid ""
+"You requested %(desired)g %(product_name)s, but only %(available)g are "
+"available in stock."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available "
+"in stock."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
@@ -7434,19 +7430,26 @@ msgstr "YouTube"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Your Email"
 msgstr "Jūsų el. pašto adresas"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Your Name"
 msgstr "Jūsų vardas"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your billing address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
 msgid "Your cart is empty!"
 msgstr "Jūsų krepšelis tuščias!"
 
@@ -7457,14 +7460,16 @@ msgid "Your cart is empty."
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "Your cart is not ready to be paid, please verify previous steps."
+#: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
+msgid "Your cart is waiting"
 msgstr ""
 
 #. module: website_sale
-#: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
-msgid "Your cart is waiting"
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your delivery address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
 msgstr ""
 
 #. module: website_sale
@@ -7721,6 +7726,11 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "slide"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "Taisyklės ir sąlygos:"
@@ -7745,6 +7755,42 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "<strong>Warning!</strong>"
+#~ msgstr "<strong>Įspėjimas!</strong>"
+
+#~ msgid "Address Autocomplete"
+#~ msgstr "Automatinė adreso užbaigimo funkcija"
+
+#~ msgid "Delivery Methods"
+#~ msgstr "Pristatymo būdai"
+
+#~ msgid "Embed Code"
+#~ msgstr "Įterptas kodas"
+
+#~ msgid "Go to cart"
+#~ msgstr "Eiti į krepšelį"
+
+#~ msgid "Payment Methods"
+#~ msgstr "Mokėjimo būdai"
+
+#~ msgid "Payment Providers"
+#~ msgstr "Mokėjimo paslaugos tiekėjas"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "Mokėjimo raktai"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "Mokėjimo operacijos"
+
+#~ msgid "Warning"
+#~ msgstr "Įspėjimas"
+
+#~ msgid "Website Messages"
+#~ msgstr "Interneto svetainės žinutės"
+
+#~ msgid "Website communication history"
+#~ msgstr "Svetainės komunikacijos istorija"
 
 #~ msgid "Add To Cart Action"
 #~ msgstr "Įdėti į krepšelį veiksmas"

@@ -10,21 +10,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2018\n"
-"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 09:06+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-master/"
+"sale_management/bs/>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
 msgid "Active"
 msgstr "Aktivan"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "Add Section"
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -37,8 +45,6 @@ msgid "Add a product"
 msgstr ""
 
 #. module: sale_management
-#. odoo-javascript
-#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
 msgstr ""
@@ -87,11 +93,6 @@ msgid "Company"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model,name:sale_management.model_res_config_settings
-msgid "Config Settings"
-msgstr ""
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Confirmation"
 msgstr ""
@@ -99,11 +100,6 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Create standardized offers with default products"
 msgstr ""
 
 #. module: sale_management
@@ -124,6 +120,11 @@ msgid "Created on"
 msgstr "Kreirano"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
@@ -141,8 +142,17 @@ msgid "Digest"
 msgstr ""
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Disc %"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
+msgid "Discount (%)"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
@@ -166,6 +176,11 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__has_productless_lines
+msgid "Has Productless Lines"
+msgstr ""
+
+#. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Hidden Composition Section"
@@ -179,7 +194,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
@@ -204,6 +218,11 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Invoicing"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__mandatory_product
+msgid "Is Product Mandatory"
 msgstr ""
 
 #. module: sale_management
@@ -236,7 +255,7 @@ msgstr "Retci"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
-msgid "Missing required product and UoM on accountable sale quote line."
+msgid "Missing required UoM on accountable sale quote line."
 msgstr ""
 
 #. module: sale_management
@@ -292,7 +311,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
-#: model:res.groups,name:sale_management.group_sale_order_template
 msgid "Order Templates"
 msgstr ""
 
@@ -353,8 +371,6 @@ msgid "Quotation Template Reference"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__group_sale_order_template
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Quotation Templates"
 msgstr ""
@@ -413,6 +429,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Save as Template"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.actions.server,name:sale_management.model_sale_order_action_create_quotation_template
+msgid "Save as template"
 msgstr ""
 
 #. module: sale_management
@@ -491,9 +512,20 @@ msgid "Subsection"
 msgstr ""
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
 msgid "Template"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order.py:0
+msgid "Template from %s"
 msgstr ""
 
 #. module: sale_management
@@ -553,6 +585,11 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 msgid "Unit"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
+msgid "Unit Price"
 msgstr ""
 
 #. module: sale_management

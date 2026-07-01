@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-05-08 13:48+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-21 05:45+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-3/microsoft_calendar/pt_BR/>\n"
+"master/microsoft_calendar/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -97,11 +97,6 @@ msgid "Client ID"
 msgstr "ID do cliente"
 
 #. module: microsoft_calendar
-#: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
-msgid "Client Secret"
-msgstr "Segredo do cliente"
-
-#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configurações"
@@ -120,8 +115,8 @@ msgstr "Configurar"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
-msgid "Confirm"
-msgstr "Confirmar"
+msgid "Continue"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
@@ -134,19 +129,14 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
-msgid "Delete from Odoo"
-msgstr "Excluir do Odoo"
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_events
+msgid "Delete synced events from Odoo"
+msgstr ""
 
 #. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_both
-msgid "Delete from both"
-msgstr "Excluir de ambos"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
-msgid "Delete from the current Microsoft Calendar account"
-msgstr "Excluir da conta atual do Calendário Microsoft"
+#: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
+msgid "Disconnect Outlook Calendar"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__display_name
@@ -300,15 +290,15 @@ msgid "Last synchronization date with Outlook Calendar"
 msgstr "Data da última sincronização com o Calendário do Outlook"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
-msgid "Leave them untouched"
-msgstr "Não mexer"
-
-#. module: microsoft_calendar
-#: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_account_reset
 msgid "Microsoft Calendar Account Reset"
 msgstr "Redefinir conta do Calendário Microsoft"
+
+#. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_account_email
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_account_email
+msgid "Microsoft Calendar Email"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_id
@@ -352,11 +342,6 @@ msgstr "Necessita sincronização M"
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Next Sync Token"
 msgstr "Token da próxima sincronização"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy
-msgid "Next Synchronization"
-msgstr "Próxima sincronização"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -432,24 +417,9 @@ msgid "Reset Account"
 msgstr "Redefinir conta"
 
 #. module: microsoft_calendar
-#: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
-msgid "Reset Outlook Calendar Account"
-msgstr "Redefinir conta do Calendário Outlook"
-
-#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
 msgstr "Sincronize um registro com o Calendário Microsoft"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
-msgid "Synchronize all existing events"
-msgstr "Sincronizar todos os eventos existentes"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__new
-msgid "Synchronize only new events"
-msgstr "Sincronizar apenas novos eventos"
 
 #. module: microsoft_calendar
 #. odoo-javascript
@@ -462,7 +432,7 @@ msgstr ""
 "la. Deseja fazer isso agora?"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
+#: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_events
 msgid "This will only affect events for which the user is the owner"
 msgstr "Isso afetará apenas os eventos dos quais o usuário é o proprietário"
 
@@ -495,6 +465,44 @@ msgid "User Token"
 msgstr "Token do usuário"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
-msgid "User's Existing Events"
-msgstr "Eventos existentes do usuário"
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
+msgid "Value"
+msgstr ""
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
+msgid "What should happen to previously synced events?"
+msgstr ""
+
+#~ msgid "Client Secret"
+#~ msgstr "Segredo do cliente"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmar"
+
+#~ msgid "Delete from Odoo"
+#~ msgstr "Excluir do Odoo"
+
+#~ msgid "Delete from both"
+#~ msgstr "Excluir de ambos"
+
+#~ msgid "Delete from the current Microsoft Calendar account"
+#~ msgstr "Excluir da conta atual do Calendário Microsoft"
+
+#~ msgid "Leave them untouched"
+#~ msgstr "Não mexer"
+
+#~ msgid "Next Synchronization"
+#~ msgstr "Próxima sincronização"
+
+#~ msgid "Reset Outlook Calendar Account"
+#~ msgstr "Redefinir conta do Calendário Outlook"
+
+#~ msgid "Synchronize all existing events"
+#~ msgstr "Sincronizar todos os eventos existentes"
+
+#~ msgid "Synchronize only new events"
+#~ msgstr "Sincronizar apenas novos eventos"
+
+#~ msgid "User's Existing Events"
+#~ msgstr "Eventos existentes do usuário"

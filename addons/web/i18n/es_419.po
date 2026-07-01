@@ -11,17 +11,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
-"PO-Revision-Date: 2026-05-09 01:13+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 05:34+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-3/web/es_419/>\n"
+"odoo-master/web/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -672,6 +672,12 @@ msgstr "Activar modo de desarrollador (con activos de prueba)"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Active"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Activities"
 msgstr "Actividades"
@@ -942,6 +948,7 @@ msgstr "Acuario"
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Archive"
@@ -962,6 +969,7 @@ msgstr "¿De verdad quieres archivar todos los registros seleccionados?"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 msgid "Are you sure that you want to archive this record?"
 msgstr "¿De verdad quieres archivar este registro?"
@@ -1063,6 +1071,7 @@ msgstr "Adjuntar"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: model:ir.model,name:web.model_ir_attachment
 msgid "Attachment"
 msgstr "Archivo adjunto"
 
@@ -1402,6 +1411,12 @@ msgstr "Capricornio"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
+msgid "Card: no action for type: %(type)s"
 msgstr ""
 
 #. module: web
@@ -1750,8 +1765,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.check_identity
 msgid "Confirm access"
 msgstr "Confirmar acceso"
@@ -1918,6 +1931,12 @@ msgstr "Contar límite"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "Count LoC"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Count lines of code (%s billable)"
 msgstr "Contar líneas de código (%s facturable)"
 
@@ -2019,12 +2038,6 @@ msgstr "Moneda"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
 msgstr "Campo de moneda"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
-msgid "Custom"
-msgstr "Personalizada"
 
 #. module: web
 #. odoo-javascript
@@ -2342,6 +2355,12 @@ msgstr "Herramientas de desarrollador"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Dial Field"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
 msgid "Digits"
@@ -2437,6 +2456,7 @@ msgstr "Descartar cambios sin conexión"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
@@ -2816,6 +2836,8 @@ msgid "Enter your email"
 msgstr "Escribe tu correo"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Enter your password"
 msgstr "Escribe tu contraseña"
@@ -3189,6 +3211,12 @@ msgstr ""
 "por ejemplo, separadores de miles, redondeo, etc."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Formatted Field"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
 msgstr "Marcos"
@@ -3325,12 +3353,6 @@ msgid "Handle"
 msgstr "Manija"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Having problems ?"
-msgstr "¿Tienes algún problema?"
-
-#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Texto de encabezado en la parte superior de todos los reportes."
@@ -3465,12 +3487,6 @@ msgstr "Cómo obtener la aplicación"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Hue"
-msgstr "Tono"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "I want to update data (import-compatible export)"
 msgstr ""
@@ -3479,6 +3495,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_attachment__id
 #: model:ir.model.fields,field_description:web.field_ir_http__id
 #: model:ir.model.fields,field_description:web.field_ir_model__id
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
@@ -4047,12 +4064,6 @@ msgstr "Ejemplos de kanban"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record.js:0
-msgid "Kanban: no action for type: %(type)s"
-msgstr "Kanban: no hay acción para el tipo: %(type)s"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Label"
 msgstr "Etiqueta"
@@ -4595,12 +4606,6 @@ msgstr "Modo"
 #: model:ir.model,name:web.model_ir_model
 msgid "Model"
 msgstr "Modelo"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Model Record Rules"
-msgstr "Reglas de registro del modelo"
 
 #. module: web
 #. odoo-javascript
@@ -5343,12 +5348,6 @@ msgstr "No puedes editar %(parentFieldLabel)s de \"%(parentName)s\"."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Opacity"
-msgstr "Opacidad"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Open"
@@ -5940,12 +5939,6 @@ msgstr "Registro"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Record Rules"
-msgstr "Reglas de registro"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
 msgstr "Memoria del registro"
@@ -6148,12 +6141,6 @@ msgstr "Obligatorio:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Reset"
-msgstr "Restablecer"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/offline_action_helper.xml:0
 msgid "Reset Filters"
 msgstr ""
@@ -6275,18 +6262,6 @@ msgstr "Santa Claus"
 #: code:addons/web/static/src/views/widgets/week_days/week_days.js:0
 msgid "Sat"
 msgstr "Sáb"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Saturation and brightness color picker."
-msgstr "Selector de color de saturación y brillo."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.js:0
-msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-msgstr "Saturación: %(saturationLvl)s % / Brillo: %(brightnessLvl)s %"
 
 #. module: web
 #. odoo-javascript
@@ -6786,12 +6761,6 @@ msgstr "Firma"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Signed in as"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
 msgstr "Fecha única"
@@ -6817,12 +6786,6 @@ msgstr "Pequeño"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Smileys & Emotion"
 msgstr "Smileys y emoción"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
-msgid "Solid"
-msgstr "Sólido"
 
 #. module: web
 #. odoo-javascript
@@ -7395,6 +7358,12 @@ msgstr "Tiempo"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Time interval"
 msgstr "Intervalo de tiempo"
@@ -7535,6 +7504,12 @@ msgstr "Viajes y lugares"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Triton"
 msgstr "Tritón"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Trouble signing in?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7872,19 +7847,6 @@ msgstr "Utilice este filtro de forma predeterminada al abrir esta vista"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid ""
-"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
-"keys to adapt the saturation. Press the Control or Command key at the same "
-"time to have finer control."
-msgstr ""
-"Usa las teclas de flecha arriba y abajo para ajustar el brillo. Usa las "
-"teclas de flecha izquierda y derecha para ajustar la saturación. Mantén "
-"presionada la tecla Control o Command al mismo tiempo para tener mejor "
-"control."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Use your password"
 msgstr "Usa tu contraseña"
@@ -7989,6 +7951,12 @@ msgstr "Valores"
 #: code:addons/web/static/src/views/form/setting/setting.xml:0
 msgid "Values set here are company-specific."
 msgstr "Los valores establecidos aquí son específicos de la empresa."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Verify your identity"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -15581,12 +15549,6 @@ msgstr "héroe"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "heroine"
 msgstr "heroina"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "hex"
-msgstr "hex"
 
 #. module: web
 #. odoo-javascript
@@ -27447,6 +27409,52 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
+
+#~ msgid "Custom"
+#~ msgstr "Personalizada"
+
+#~ msgid "Having problems ?"
+#~ msgstr "¿Tienes algún problema?"
+
+#~ msgid "Hue"
+#~ msgstr "Tono"
+
+#~ msgid "Kanban: no action for type: %(type)s"
+#~ msgstr "Kanban: no hay acción para el tipo: %(type)s"
+
+#~ msgid "Model Record Rules"
+#~ msgstr "Reglas de registro del modelo"
+
+#~ msgid "Opacity"
+#~ msgstr "Opacidad"
+
+#~ msgid "Record Rules"
+#~ msgstr "Reglas de registro"
+
+#~ msgid "Reset"
+#~ msgstr "Restablecer"
+
+#~ msgid "Saturation and brightness color picker."
+#~ msgstr "Selector de color de saturación y brillo."
+
+#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
+#~ msgstr "Saturación: %(saturationLvl)s % / Brillo: %(brightnessLvl)s %"
+
+#~ msgid "Solid"
+#~ msgstr "Sólido"
+
+#~ msgid ""
+#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
+#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
+#~ "the same time to have finer control."
+#~ msgstr ""
+#~ "Usa las teclas de flecha arriba y abajo para ajustar el brillo. Usa las "
+#~ "teclas de flecha izquierda y derecha para ajustar la saturación. Mantén "
+#~ "presionada la tecla Control o Command al mismo tiempo para tener mejor "
+#~ "control."
+
+#~ msgid "hex"
+#~ msgstr "hex"
 
 #~ msgid "Autosave"
 #~ msgstr "Guardar automáticamente"

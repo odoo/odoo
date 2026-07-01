@@ -6,23 +6,23 @@
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2025-11-16 15:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-19/calendar/"
-"bs/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 12:47+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-master/"
+"calendar/bs/>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -61,8 +61,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.js:0
+#, fuzzy
 msgid "%s others"
-msgstr ""
+msgstr "%s ostali"
 
 #. module: calendar
 #. odoo-javascript
@@ -85,7 +86,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
@@ -125,9 +126,9 @@ msgid ""
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Your appointment <strong t-"
-"out=\"object.event_id.appointment_type_id.name or ''\"/> <t t-"
-"if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name or "
-"''\">Colleen Diaz</t>\n"
+"out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</"
+"strong> <t t-if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name "
+"or ''\">Colleen Diaz</t>\n"
 "            is now scheduled for <t t-"
 "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
 "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
@@ -144,10 +145,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -251,7 +252,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -276,7 +277,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
 "\"/>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
@@ -315,7 +316,7 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
+"token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" "
 "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
 "#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
 "3px;\">\n"
@@ -422,7 +423,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -447,7 +448,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
 "object.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -561,7 +562,7 @@ msgid ""
 "        <div t-if=\"len(object.attendee_ids) &gt; max_shown_attendees\" "
 "style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
@@ -586,7 +587,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
 "object.event_id and object.event_id.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
@@ -606,10 +607,10 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
-"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-"
-"attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -716,7 +717,7 @@ msgid ""
 "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
 "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
 "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
-"max_shown_attendees\"/> more\n"
+"max_shown_attendees\">2</t> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
@@ -741,7 +742,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
 msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
 "ctx.get('mail_tz')\"/>\n"
 "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
@@ -822,9 +823,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
-"hidden=\"true\"/>"
+msgid "<i class=\"fa fa-calendar\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: calendar
@@ -932,9 +931,11 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Spremi</strong> ovu stranicu i osvježi da bi omogućio ovu značajku."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -964,10 +965,13 @@ msgstr "Potrebna akcija"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+#, fuzzy
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Akcije mogu pokrenuti specifično ponašanje kao npr. otvaranje pregleda "
+"kalendara ili automatski označiti kao dovršeno kad je dokument učitan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -989,23 +993,27 @@ msgstr "Aktivnost"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Oznaka izuzetka aktivnosti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
+#, fuzzy
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Activity Mixin"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planovi aktivnosti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid "Activity State"
-msgstr ""
+msgstr "Status aktivnosti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1014,13 +1022,15 @@ msgstr "Tip aktivnosti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
+#, fuzzy
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Čarobnjak za zakazivanje i planiranje aktivnosti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1068,8 +1078,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "All day"
-msgstr ""
+msgstr "Cijeli dan"
 
 #. module: calendar
 #. odoo-javascript
@@ -1138,8 +1149,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+#, fuzzy
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Sadržaj tijela je identičan kao i predložak"
 
 #. module: calendar
 #. odoo-python
@@ -1159,8 +1171,9 @@ msgstr "Po danu"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+#, fuzzy
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Pa-pa, zapisu!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1194,8 +1207,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__calendar_event_ids
+#, fuzzy
 msgid "Calendar Event"
-msgstr ""
+msgstr "Događaj na kalendaru"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1263,9 +1277,15 @@ msgid "Calendar: Reminder"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
-msgid "Can Edit Body"
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Calendars"
 msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+#, fuzzy
+msgid "Can Edit Body"
+msgstr "Može uređivati sadržaj"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1320,8 +1340,9 @@ msgstr "Konfiguracija"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#, fuzzy
 msgid "Confirm"
-msgstr ""
+msgstr "Portvrdi"
 
 #. module: calendar
 #. odoo-javascript
@@ -1349,23 +1370,33 @@ msgstr ""
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
+#, fuzzy
 msgid "Contact Details"
+msgstr "Detalji kontakta"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "Contact created through Calendar sync."
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+#, fuzzy
 msgid "Contents"
-msgstr ""
+msgstr "Sadržaji"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
+#, fuzzy
 msgid "Count"
-msgstr ""
+msgstr "Broj"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Kreirajte klijenta"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -1404,8 +1435,9 @@ msgstr "Prilagođeno"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
+#, fuzzy
 msgid "Daily"
-msgstr ""
+msgstr "Dnevno"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1422,8 +1454,9 @@ msgstr "Dan u mjesecu"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "Dates"
-msgstr ""
+msgstr "Datumi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
@@ -1519,8 +1552,9 @@ msgstr "Detalji"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
+#, fuzzy
 msgid "Discuss"
-msgstr ""
+msgstr "Rasprava"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
@@ -1529,8 +1563,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_discuss_channel
+#, fuzzy
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Kanal za diskusiju"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1566,8 +1601,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
+#, fuzzy
 msgid "Document Model"
-msgstr ""
+msgstr "Model dokumenta"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1812,14 +1848,16 @@ msgstr "Pratioci (Partneri)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
+#, fuzzy
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
+#, fuzzy
 msgid "Forever"
-msgstr ""
+msgstr "Zauvijek"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
@@ -1846,8 +1884,9 @@ msgstr "Petak"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Future Activities"
-msgstr ""
+msgstr "Buduće aktivnosti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1863,8 +1902,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google kalendar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1888,13 +1928,15 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
+#, fuzzy
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP rutiranje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
+#, fuzzy
 msgid "Has Message"
-msgstr ""
+msgstr "Ima poruku"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -1925,13 +1967,15 @@ msgstr "ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "Znak"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz aktivnosti izuzetka."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -1940,8 +1984,9 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+#, fuzzy
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -2014,8 +2059,9 @@ msgstr "Pozivnice"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+#, fuzzy
 msgid "Is Editor"
-msgstr ""
+msgstr "Je editor"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
@@ -2034,8 +2080,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "Jezik"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -2075,8 +2122,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Late Activities"
-msgstr ""
+msgstr "Aktivnosti u kašnjenju"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -2086,8 +2134,9 @@ msgstr "Neka se događaj automatski ponavlja u ovim intervalima"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
+#, fuzzy
 msgid "Linked to"
-msgstr ""
+msgstr "Povezano sa"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -2102,8 +2151,9 @@ msgstr "Logo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+#, fuzzy
 msgid "Mail Template"
-msgstr ""
+msgstr "Predložak maila"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
@@ -2172,8 +2222,9 @@ msgstr "Sastanci"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+#, fuzzy
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -2192,8 +2243,9 @@ msgstr "Minute"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_name
+#, fuzzy
 msgid "Model Description"
-msgstr ""
+msgstr "Opis modela"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
@@ -2214,8 +2266,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
+#, fuzzy
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
@@ -2233,13 +2286,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__my_activity_date_deadline
+#, fuzzy
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Rok za moju aktivnost"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2271,37 +2326,43 @@ msgstr "Novi"
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
+#, fuzzy
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Događaj sljedećeg kalendara aktivnosti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_date_deadline
+#, fuzzy
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Krajnji rok za sljedeću aktivnost"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_summary
+#, fuzzy
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Pregled sljedeće aktivnosti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_id
+#, fuzzy
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip sljedeće aktivnosti"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Next Week"
-msgstr ""
+msgstr "Sljedeći sedmica"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "No"
-msgstr ""
+msgstr "Ne"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2327,15 +2388,17 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+#, fuzzy
 msgid "No, keep it"
-msgstr ""
+msgstr "Ne, zadržite to"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "Notes"
-msgstr ""
+msgstr "Zabilješke"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -2391,18 +2454,21 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+#, fuzzy
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju radnju"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+#, fuzzy
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
@@ -2419,8 +2485,9 @@ msgstr "OK"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "Online"
-msgstr ""
+msgstr "Na mreži"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2446,12 +2513,17 @@ msgstr "Opcija"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
+#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Opcioni jezik prijevoda (ISO kod) za odabir prilikom slanja e-pošte. Ako "
+"nije podešen, koristit će se jezik glavnog partnera. Ovo bi obično trebao "
+"biti izraz čuvara mjesta koji pruža odgovarajući jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2467,8 +2539,9 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#, fuzzy
 msgid "Organizer"
-msgstr ""
+msgstr "Organizator"
 
 #. module: calendar
 #. odoo-javascript
@@ -2479,8 +2552,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook Kalendar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
@@ -2539,8 +2613,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 #: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Private"
-msgstr ""
+msgstr "Privatni"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
@@ -2552,8 +2627,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 #: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__public
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Public"
-msgstr ""
+msgstr "Javni"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
@@ -2562,13 +2638,15 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+#, fuzzy
 msgid "Recipients"
-msgstr ""
+msgstr "Primaoci"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
+#, fuzzy
 msgid "Recurrence"
-msgstr ""
+msgstr "Ponavljanje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -2610,8 +2688,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+#, fuzzy
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model renderiranja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
@@ -2630,8 +2709,9 @@ msgstr "Ponavljaj do"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Repeat every"
-msgstr ""
+msgstr "Ponavljaj svakih"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -2646,8 +2726,9 @@ msgstr "Ponovi x puta"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Reschedule"
-msgstr ""
+msgstr "Ponovo zakaži"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2656,8 +2737,9 @@ msgstr "Odgovoran"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
+#, fuzzy
 msgid "Responsible User"
-msgstr ""
+msgstr "Odgovorni korisnik"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -2689,13 +2771,14 @@ msgstr "Subota"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+#, fuzzy
 msgid "Schedule"
-msgstr ""
+msgstr "Zakaži"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting in your calendar"
+msgid "Schedule a meeting"
 msgstr ""
 
 #. module: calendar
@@ -2739,8 +2822,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#, fuzzy
 msgid "Send Mail"
-msgstr ""
+msgstr "Pošalji email"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
@@ -2749,8 +2833,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Send email"
-msgstr ""
+msgstr "Pošalji email"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -2773,8 +2858,9 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
 #: model:ir.ui.menu,name:calendar.menu_calendar_settings
+#, fuzzy
 msgid "Settings"
-msgstr ""
+msgstr "Postavke"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
@@ -2788,8 +2874,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
-msgstr ""
+msgstr "Prikaži sve potencijale za koje je sljedeći datum akcije prije danas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2799,8 +2886,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
+#, fuzzy
 msgid "Snooze"
-msgstr ""
+msgstr "Odgodi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -2826,12 +2914,17 @@ msgstr "Status"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2844,14 +2937,14 @@ msgid "Stop"
 msgstr "Zaustavi"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event__stop
-msgid "Stop date of an event, without time for full days events"
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Stop Sync"
 msgstr ""
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Stop synchro"
+#: model:ir.model.fields,help:calendar.field_calendar_event__stop
+msgid "Stop date of an event, without time for full days events"
 msgstr ""
 
 #. module: calendar
@@ -2881,7 +2974,19 @@ msgstr "Nedjelja"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchro is paused"
+msgid "Sync in progress..."
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync is paused"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Sync unsuccessful"
 msgstr ""
 
 #. module: calendar
@@ -2904,8 +3009,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
+#, fuzzy
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Naziv oznake već postoji !"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -3006,6 +3112,12 @@ msgid "This event"
 msgstr ""
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "This may take some time"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
 msgid "Thu"
@@ -3020,8 +3132,9 @@ msgstr "Četvrtak"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
+#, fuzzy
 msgid "Timezone"
-msgstr ""
+msgstr "Vremenska zona"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
@@ -3032,23 +3145,33 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Danas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Today Activities"
-msgstr ""
+msgstr "Današnje aktivnosti"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Tomorrow"
-msgstr ""
+msgstr "Sutra"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
+#, fuzzy
 msgid "Trigger"
+msgstr "Okidač"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Try again"
 msgstr ""
 
 #. module: calendar
@@ -3070,8 +3193,9 @@ msgstr "Tip"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: calendar
 #. odoo-python
@@ -3082,8 +3206,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
+#, fuzzy
 msgid "Unavailable"
-msgstr ""
+msgstr "Nedostupno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
@@ -3130,8 +3255,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
+#, fuzzy
 msgid "User Settings"
-msgstr ""
+msgstr "Korisničke postavke"
 
 #. module: calendar
 #. odoo-python
@@ -3152,8 +3278,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Pregled"
 
 #. module: calendar
 #. odoo-javascript
@@ -3182,8 +3309,9 @@ msgstr "Dan u sedmici"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__weekly
+#, fuzzy
 msgid "Weekly"
-msgstr ""
+msgstr "Sedmično"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
@@ -3207,22 +3335,25 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
+#, fuzzy
 msgid "Yearly"
-msgstr ""
+msgstr "Godišnje"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__yearly
+#, fuzzy
 msgid "Years"
-msgstr ""
+msgstr "Godine"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "Yes"
-msgstr ""
+msgstr "Da"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -3297,8 +3428,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "više"
 
 #. module: calendar
 #. odoo-javascript

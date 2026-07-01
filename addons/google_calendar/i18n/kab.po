@@ -4,19 +4,22 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
-"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-19 00:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Kabyle <https://translate.odoo.com/projects/odoo-master/"
+"google_calendar/kab/>\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: google_calendar
 #. odoo-python
@@ -60,8 +63,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__active
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__active
+#, fuzzy
 msgid "Active"
-msgstr ""
+msgstr "Urmid"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -88,8 +92,9 @@ msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
+#, fuzzy
 msgid "Calendar Event"
-msgstr ""
+msgstr "Tadyant n Tasawast"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
@@ -119,49 +124,44 @@ msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Sefrek aɣewwaṛ"
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, fuzzy
 msgid "Configuration"
-msgstr ""
+msgstr "Tawila"
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "Swel"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Confirm"
+msgid "Continue"
 msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Yerna-t"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Yerna di"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
-msgid "Delete from Odoo"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
-msgid "Delete from both"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
-msgid "Delete from the current Google Calendar account"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_events
+msgid "Delete synced events from Odoo"
 msgstr ""
 
 #. module: google_calendar
@@ -175,6 +175,11 @@ msgid "Disable videocall generation"
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
+msgid "Disconnect Google Calendar"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
@@ -184,14 +189,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Isem n Ubeqqeḍ"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
+#, fuzzy
 msgid "Email"
-msgstr ""
+msgstr "Imayl"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_alarm_manager
@@ -215,9 +222,14 @@ msgid "Google Calendar"
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_account_email
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_account_email
+msgid "Google Calendar Email"
 msgstr ""
 
 #. module: google_calendar
@@ -304,18 +316,15 @@ msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "Aleqqem aneggaru sɣuṛ"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
-msgid "Leave them untouched"
-msgstr ""
+msgstr "Aleqqem aneggaru di"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
@@ -328,11 +337,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
 msgid "Next Sync Token"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
-msgid "Next Synchronization"
 msgstr ""
 
 #. module: google_calendar
@@ -358,23 +362,8 @@ msgid "Reset Account"
 msgstr ""
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Reset Google Calendar Account"
-msgstr ""
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
-msgid "Synchronize all existing events"
-msgstr ""
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
-msgid "Synchronize only new events"
 msgstr ""
 
 #. module: google_calendar
@@ -400,7 +389,7 @@ msgid "The following event could not be synced with Google Calendar."
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
 
@@ -413,8 +402,9 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
+#, fuzzy
 msgid "User"
-msgstr ""
+msgstr "Aseqdac"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
@@ -428,13 +418,13 @@ msgid "User token"
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
-msgid "User's Existing Events"
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
+msgid "Videocall Source"
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
-msgid "Videocall Source"
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "What should happen to previously synced events?"
 msgstr ""
 
 #. module: google_calendar
@@ -449,3 +439,7 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Confirm"
+#~ msgstr "Sentem"

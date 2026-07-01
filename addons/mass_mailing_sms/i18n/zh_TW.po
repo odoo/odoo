@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-01-15 21:50+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 20:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/mass_mailing_sms/zh_Hant/>\n"
+"projects/odoo-master/mass_mailing_sms/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -42,6 +42,12 @@ msgstr " （包括連結追蹤器）"
 #: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
 msgid " (including opt-out link)"
 msgstr " （包括選擇退出連結）"
+
+#. module: mass_mailing_sms
+#. odoo-python
+#: code:addons/mass_mailing_sms/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s ignored (no email/phone)"
+msgstr ""
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -191,6 +197,11 @@ msgid "Action Needed"
 msgstr "需要採取行動"
 
 #. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_contact_to_list
+msgid "Add (Mailing) Contacts to Mailing List"
+msgstr ""
+
+#. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 msgid "An error occurred."
@@ -300,6 +311,11 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
 msgstr "不支援國家/地區"
@@ -308,6 +324,11 @@ msgstr "不支援國家/地區"
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
 msgstr "需要有該國特定註冊"
+
+#. module: mass_mailing_sms
+#: model:ir.model,website_form_label:mass_mailing_sms.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -342,10 +363,12 @@ msgstr "日期"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_partner__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__display_name
@@ -434,10 +457,12 @@ msgstr "最高點擊率"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_partner__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__id
@@ -1075,16 +1100,6 @@ msgid "Valid SMS Recipients"
 msgstr "有效的簡訊接收者"
 
 #. module: mass_mailing_sms
-#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
-msgid "Website Messages"
-msgstr "網站資訊"
-
-#. module: mass_mailing_sms
-#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
-msgid "Website communication history"
-msgstr "網站溝通記錄"
-
-#. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Winner Selection"
 msgstr "選出優勝者"
@@ -1124,3 +1139,9 @@ msgstr "已成功移除從"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_tree
 msgid "📵 Blacklisted"
 msgstr ""
+
+#~ msgid "Website Messages"
+#~ msgstr "網站資訊"
+
+#~ msgid "Website communication history"
+#~ msgstr "網站溝通記錄"

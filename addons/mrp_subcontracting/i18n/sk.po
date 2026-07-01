@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp_subcontracting
+# * mrp_subcontracting
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-11-07 18:36+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-19 00:08+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/"
+"mrp_subcontracting/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -29,15 +32,23 @@ msgid "%(name)s Sequence subcontracting"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
-msgid "/my/productions"
+#. odoo-python
+#: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+msgid "%(qty)s To %(route)s"
 msgstr ""
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
+#, fuzzy
+msgid "/my/productions"
+msgstr "/my/productions"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
+#, fuzzy
 msgid "All"
-msgstr ""
+msgstr "Všetko"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
@@ -45,62 +56,73 @@ msgid "Assign serial numbers to production order"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
-msgid "BOM Overview Report"
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Availabilities on subcontract location."
 msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
+#, fuzzy
+msgid "BOM Overview Report"
+msgstr "Rozpad kusovníka"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
+#, fuzzy
 msgid "Bill of Material"
-msgstr ""
+msgstr "Kusovník materiálu"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
+#, fuzzy
 msgid "BoM Type"
-msgstr ""
+msgstr "Typ kusovníka"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
+#, fuzzy
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr ""
+msgstr "Kusovníky, pre ktoré je partner jedným zo subdodávateľov"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
+#, fuzzy
 msgid "Bom Product"
-msgstr ""
+msgstr "Kusovníky produktu"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
+#, fuzzy
 msgid "Change Production Qty"
-msgstr ""
-
-#. module: mrp_subcontracting
-#. odoo-javascript
-#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
-msgid "Check Availability"
-msgstr ""
+msgstr "Zmena množstva výroby"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+#, fuzzy
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
+"Vyberte dodávateľa typu subdodávateľ, ak chcete výrobok zadať do kooperácie"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Spoločnosť"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+#, fuzzy
 msgid "Consumed"
-msgstr ""
+msgstr "Spotrebované"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
@@ -110,33 +132,39 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Vytvoriť zákazníka"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Deadline Date"
-msgstr ""
+msgstr "Termín"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Demand"
-msgstr ""
+msgstr "Požiadavka"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
+#, fuzzy
 msgid "Detail Component"
-msgstr ""
+msgstr "Detaily komponentov"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Details"
-msgstr ""
+msgstr "Podrobnosti"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_change_production_qty__display_name
@@ -156,24 +184,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Done"
-msgstr ""
+msgstr "Hotové"
 
 #. module: mrp_subcontracting
 #: model:portal.entry,description:mrp_subcontracting.portal_manufacturing_orders
+#, fuzzy
 msgid "Follow manufacturing orders you have to fulfill"
+msgstr "Sledujte výrobné objednávky, ktoré musíte splniť"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Free to Use / On Hand"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
-msgid "Has been recorded?"
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
+msgid ""
+"Free to Use / On Hand<br/>\n"
+"                subcontractor location"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -194,90 +233,111 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, fuzzy
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
+"Na správne riadenie zásob musia byť subdodávateľské miesta typu Interné, "
+"prepojené s príslušnou spoločnosťou."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
+#, fuzzy
 msgid "Incoming transfer"
-msgstr ""
+msgstr "Prichádzajúci presun"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
+#, fuzzy
 msgid "Inventory Location"
-msgstr ""
+msgstr "Umiestnenie inventúry"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
+#, fuzzy
 msgid "Is Subcontract"
-msgstr ""
+msgstr "Je kooperácia"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
+#, fuzzy
 msgid ""
 "List of Products used in the BoM, used to filter the list of products in the "
 "subcontracting portal view"
 msgstr ""
+"Zoznam produktov použitých v kusovníku, ktorý sa používa na filtrovanie "
+"zoznamu produktov v zobrazení subdodávateľského portálu"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
+#, fuzzy
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr ""
+msgstr "Výrobné objednávky, pre ktoré je partner subdodávateľom"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, fuzzy
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"Uistite sa, že ste potvrdili alebo prispôsobili súvisiace vychystávanie "
+"zásob subdodávateľovi, aby ste sa vyhli nezrovnalostiam v zásobách."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
+#, fuzzy
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Výrobná objednávka"
 
 #. module: mrp_subcontracting
 #: model:portal.entry,name:mrp_subcontracting.portal_manufacturing_orders
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Výrobné objednávky"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "Výrobná referencia"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
+#, fuzzy
 msgid "Newest"
-msgstr ""
+msgstr "Najnovšie"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "Operácie"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Order"
-msgstr ""
+msgstr "Poradie"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -289,104 +349,130 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
+"Používatelia portálu nemôžu vytvoriť skladový pohyb so stavom „Hotovo“ alebo "
+"zmeniť aktuálny stav na „Hotovo“."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
+#, fuzzy
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Pohyby produktu (riadok skladového pohybu)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
+#, fuzzy
 msgid "Product Variant"
-msgstr ""
+msgstr "Varianta produktu"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Productions"
-msgstr ""
+msgstr "Výroby"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
+#, fuzzy
 msgid "Quant"
-msgstr ""
+msgstr "Množstvo"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
+#, fuzzy
 msgid "Ready"
-msgstr ""
+msgstr "Pripravené"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "Registrovať komponenty pre subdodávaný výrobok"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, fuzzy
 msgid "Replenish on Order (MTO)"
+msgstr "Doplnenie na zákazku (MTO)"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Reserve"
 msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
+#, fuzzy
 msgid "Resupply Subcontractor"
-msgstr ""
+msgstr "Doplnenie pre subdodávateľa"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
+#, fuzzy
 msgid "Resupply Subcontractor on Order"
-msgstr ""
+msgstr "Doplnenie subdodávateľa na zakázku"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
+#, fuzzy
 msgid "Resupply Subcontractors"
-msgstr ""
+msgstr "Doplnenie subdodávateľov"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Naplánovaný dátum"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__show_subcontracting_details_visible
+#, fuzzy
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "Zviditeľniť detaily subdodávky"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Source Document"
-msgstr ""
+msgstr "Zdrojový dokument"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "State"
-msgstr ""
+msgstr "Štát"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
+#, fuzzy
 msgid "Stock Move"
-msgstr ""
+msgstr "Skladový pohyb"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
+#, fuzzy
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr ""
+msgstr "Skladové pohyby, pre ktoré je partner subdodávateľom"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
+#, fuzzy
 msgid "Stock Rule"
-msgstr ""
+msgstr "Skladové pravidlo"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -396,26 +482,30 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, fuzzy
 msgid "Subcontracted manufacturing orders cannot be merged."
-msgstr ""
+msgstr "Subdodávateľské výrobné objednávky nie je možné zlúčiť."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/res_company.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
+#, fuzzy
 msgid "Subcontracting"
-msgstr ""
+msgstr "Kooperácia"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
+#, fuzzy
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "Lokácia subdodávok"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
+#, fuzzy
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "Lokácie subdodávok"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -426,23 +516,27 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
+#, fuzzy
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "Pravidlo Subdodávka na objednávku (MTO)"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
+#, fuzzy
 msgid "Subcontracting MTS Rule"
-msgstr ""
+msgstr "Pravidlo Subdodávka na sklad (MTS)"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
+#, fuzzy
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "Typ operácie subdodávky"
 
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
+#, fuzzy
 msgid "Subcontracting Portal"
-msgstr ""
+msgstr "Portál pre subdodávky"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
@@ -451,58 +545,69 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
+#, fuzzy
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "Typ operácie doplnenia subdodávok"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, fuzzy
 msgid "Subcontracting:"
-msgstr ""
+msgstr "Subdodávky:"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+#, fuzzy
 msgid "Subcontracting: %s"
-msgstr ""
+msgstr "Subdodávka: %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontractor_id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
+#, fuzzy
 msgid "Subcontractor"
-msgstr ""
+msgstr "Subdodávateľ"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
+#, fuzzy
 msgid "Subcontractor Location"
-msgstr ""
+msgstr "Lokácia subdodávok"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
+#, fuzzy
 msgid "Subcontractors"
-msgstr ""
+msgstr "Subdodávatelia"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
+#, fuzzy
 msgid "Supplier Pricelist"
-msgstr ""
+msgstr "Cenník dodávateľa"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
+#, fuzzy
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "Tento skladový pohyb je príjmom od subdodávateľa"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
+#, fuzzy
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+"Skladová lokácia použitá ako zdroj a cieľové miesto pri odosielaní tovaru "
+"tomuto kontaktu počas subdodávateľského procesu."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -512,42 +617,53 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "There are currently no productions for your account."
-msgstr ""
+msgstr "Pre váš účet momentálne neevidujeme žiadnu výrobu."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
+#, fuzzy
 msgid "Total Consumed"
-msgstr ""
+msgstr "Spotrebované celkom"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
+#, fuzzy
 msgid "Transfer"
-msgstr ""
+msgstr "Prevod"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
+#, fuzzy
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
+"Slúži na obmedzenie prístupu pre užívateľov portálu prostredníctvom "
+"pravidiel záznamu (Record Rules)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
+#, fuzzy
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_workorder
+#, fuzzy
 msgid "Work Order"
-msgstr ""
+msgstr "Pracovná objednávka"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, fuzzy
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
+"Kusovník s operáciami alebo riadkom vedľajšieho produktu nemôžete nastaviť "
+"ako subdodávku."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -558,22 +674,36 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, fuzzy
 msgid "You cannot alter the company's subcontracting location"
-msgstr ""
+msgstr "You cannot alter the company's subcontracting location"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, fuzzy
 msgid "You cannot write on fields %s in mrp.production."
-msgstr ""
+msgstr "You cannot write on fields %s výrobnej objednávky."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "napr. PO0032"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
+#, fuzzy
 msgid "state"
+msgstr "stav"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "subcontractor location"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Check Availability"
+#~ msgstr "Kontrola dostupnosti"
