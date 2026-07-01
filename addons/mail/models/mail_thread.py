@@ -3805,8 +3805,7 @@ class MailThread(models.AbstractModel):
         lang = force_email_lang if force_email_lang else self.env.lang
         record_wlang = self.with_context(lang=lang)
 
-        author = message.author_id
-        author_user = author.main_user_id
+        author_user = message.create_uid if message.create_uid.partner_id == message.author_id else self.env['res.users']
         signature, email_add_signature = '', False
 
         if author_user:
