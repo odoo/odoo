@@ -16,7 +16,6 @@ import { ImagePlugin } from "./image_plugin";
 import { IconPlugin } from "./icon_plugin";
 import { CoreBuilderActionPlugin } from "./core_builder_action_plugin";
 import { CompositeActionPlugin } from "./composite_action_plugin";
-import { CustomizeTabPlugin } from "./customize_tab_plugin";
 import { DisableSnippetsPlugin } from "./disable_snippets_plugin";
 import { DragAndDropPlugin } from "./drag_and_drop_plugin";
 import { DropZonePlugin } from "./drop_zone_plugin";
@@ -73,7 +72,6 @@ export const MAIN_PLUGINS = [
     IconPlugin,
     CompositeActionPlugin,
     CoreBuilderActionPlugin,
-    CustomizeTabPlugin,
     DisableSnippetsPlugin,
     DropZonePlugin,
     DropZoneSelectorPlugin,

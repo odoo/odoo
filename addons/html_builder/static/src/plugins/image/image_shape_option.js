@@ -10,14 +10,13 @@ import { props, t } from "@odoo/owl";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
-    static dependencies = ["customizeTab", "imageShapeOption"];
+    static dependencies = ["imageShapeOption"];
     props = props({
         withAnimatedShapes: t.boolean().optional(true),
     });
     static components = { ShapeSelector };
     setup() {
         super.setup();
-        this.customizeTabPlugin = this.dependencies.customizeTab;
         this.imageShapeOption = this.dependencies.imageShapeOption;
         this.ratioValueConverter = ratioValueConverter();
         this.state = useDomState(async (editingElement) => {

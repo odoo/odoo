@@ -182,11 +182,6 @@ export class Builder extends Component {
                         Component: InvisibleElementsPanel,
                         props: this.invisibleElementsPanelState,
                     }),
-                    is_node_splittable_predicates: (/** @type {Node} */ node) => {
-                        if (node.querySelector?.("[data-oe-translation-source-sha]")) {
-                            return false;
-                        }
-                    },
                     are_inlines_allowed_at_root_predicates: (el) =>
                         ONLY_ALLOW_INLINE_TAGS.has(el.tagName.toLowerCase()) || undefined,
                 },

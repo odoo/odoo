@@ -11,11 +11,7 @@
         </t>
         <t t-else="">
             <div t-custom-ref="content" class="d-flex flex-column h-100">
-                <CustomizeComponent t-if="this.customizeComponent.component"
-                    editingElements="this.customizeComponent.editingEls"
-                    comp="this.customizeComponent.component"
-                    compProps="this.customizeComponent.props"/>
-                <t t-else="" t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <t t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
                         toggleOverlayPreview.bind="this.toggleOverlayPreview"
                         folded="optionsContainer.folded"
