@@ -75,15 +75,25 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
 
     def test_avatar_comment(self):
-        mail_message = self.env['mail.message'].create({
+        self.env['mail.message'].create({
             'author_id': self.user_public.partner_id.id,
+            'body': 'test',
             'model': self.test_blog_post._name,
             'res_id': self.test_blog_post.id,
             'subtype_id': self.ref('mail.mt_comment'),
         })
-        portal_message = mail_message.portal_message_format()
+        route_params = {
+            "thread_model": self.test_blog_post._name,
+            "thread_id": self.test_blog_post.id,
+            "share_only": True,
+        }
+        res = self.make_jsonrpc_request(
+            route="/mail/store",
+            params={"fetch_params": [["/mail/thread/messages", route_params]]},
+        )
+        message_author = res["res.partner"][0]
         response = self.url_open(
-            f"/web/image/res.partner/{self.user_public.partner_id.id}/avatar_128?access_token={portal_message[0]['author_id']['avatar_128_access_token']}",
+            f"/web/image/res.partner/{self.user_public.partner_id.id}/avatar_128?access_token={message_author['avatar_128_access_token']}",
         )
         # Ensure that the avatar is visible
         self.assertEqual(response.status_code, 200)
