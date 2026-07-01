@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -22,9 +22,9 @@ class ProductUom(models.Model):
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
-        domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
+        domain = [('barcode', 'in', self.mapped('barcode'))]
         if self.env['product.product'].search_count(domain, limit=1):
-            raise ValidationError(_("A product already uses the barcode"))
+            raise ValidationError(self.env._("A product already uses the barcode"))
 
     @api.depends('product_id')
     @api.depends_context('active_model')

@@ -17,6 +17,7 @@ from odoo.tools.misc import clean_context
 
 class StockPickingType(models.Model):
     _name = 'stock.picking.type'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Picking Type"
     _explanation = "Defines the type of stock operation (e.g., Receipts, Deliveries, Internal Transfers) and contains configuration for how these operations should behave in the warehouse."
     _order = 'is_favorite desc, sequence, id'
@@ -159,6 +160,11 @@ class StockPickingType(models.Model):
         ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')], 'Shipping Policy',
         default=lambda self: self.env.company.picking_policy, required=True,
         help="It specifies goods to be transferred partially or all at once")
+
+    _barcode_company_uniq = models.Constraint(
+        'unique (barcode,company_id)',
+        'The barcode for an operation type must be unique per company!',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

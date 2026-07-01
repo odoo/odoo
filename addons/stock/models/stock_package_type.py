@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class StockPackageType(models.Model):
     _name = 'stock.package.type'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Stock package type"
     _order = "sequence, id"
 
@@ -124,6 +125,12 @@ class StockPackageType(models.Model):
             if seq_to_todo_ids:
                 self.env['ir.sequence'].browse(list(seq_to_todo_ids)).sudo().write(seq_vals)
         return super().write(vals)
+
+    def _group_barcodes_by_company(self):
+        return [(False, [b for b in self.mapped('barcode') if b])]
+
+    def _get_duplicate_barcode_domain(self, field_name, barcodes, company_id):
+        return [(field_name, 'in', barcodes)]
 
     def _get_next_name_by_sequence(self):
         if len(self) == 1 and self.sequence_id:

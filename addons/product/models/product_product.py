@@ -320,7 +320,7 @@ class ProductProduct(models.Model):
         return _(
             "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
             barcode=barcode,
-            product_list=duplicate_products.mapped('display_name'),
+            product_list=duplicate_products.sudo(False)._filtered_access('read').mapped('display_name'),
         )
 
     def _build_duplicate_barcode_error_note(self):
@@ -329,7 +329,7 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
         domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        products_by_barcode = self.sudo()._read_group(
+        products_by_barcode = self._read_group(
             domain, ['barcode'], ['id:recordset'], having=[('__count', '>', 1)],
         )
 
@@ -344,7 +344,7 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
+        if self.env['product.uom'].search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
     @api.constrains('barcode')
