@@ -16,7 +16,7 @@ from odoo import models, fields, api, exceptions, _
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import convert, format_duration, format_time, format_datetime
+from odoo.tools import convert, float_is_zero, format_duration, format_time, format_datetime
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
@@ -657,7 +657,7 @@ class HrAttendance(models.Model):
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
-        to_unlink = technical_attendances.filtered(lambda a: a.overtime_hours == 0)
+        to_unlink = technical_attendances.filtered(lambda a: float_is_zero(a.overtime_hours, 3))
 
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances - to_unlink:
