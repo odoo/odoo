@@ -1234,20 +1234,33 @@ class Website(models.CachedModel):
         home_menu.page_id = homepage_page
 
     def copy_menu_hierarchy(self, top_menu):
-        def copy_menu(menu, t_menu):
+        IrModelData = self.env['ir.model.data']
+
+        def register_copy(default_menu, copy, website):
+            xml_id = default_menu.get_external_id().get(default_menu.id)
+            if xml_id:
+                IrModelData._update_xmlids([{
+                    'xml_id': '%s_website_%s' % (xml_id, website.id),
+                    'record': copy,
+                    'noupdate': True,
+                }])
+
+        def copy_menu(menu, t_menu, website):
             new_menu = menu.copy({
                 'parent_id': t_menu.id,
                 'website_id': self.id,
             })
+            register_copy(menu, new_menu, website)
             for submenu in menu.child_id:
-                copy_menu(submenu, new_menu)
+                copy_menu(submenu, new_menu, website)
         for website in self:
             new_top_menu = top_menu.copy({
                 'name': _('Top Menu for Website %s', website.id),
                 'website_id': website.id,
             })
+            register_copy(top_menu, new_top_menu, website)
             for submenu in top_menu.child_id:
-                copy_menu(submenu, new_top_menu)
+                copy_menu(submenu, new_top_menu, website)
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):

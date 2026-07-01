@@ -83,7 +83,7 @@ class WebsiteMenu(models.Model):
 
         Rules enforced:
         - Menus must not exceed two levels of nesting.
-        - A mega menu must not have a parent or child.
+        - A mega menu must not have a grandparent or child.
         - Menus with children cannot be added as a submenu under another menu.
         """
         for record in self:
@@ -118,47 +118,60 @@ class WebsiteMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        ''' In case a menu without a website_id is trying to be created, we duplicate
-            it for every website.
-            Note: Particularly useful when installing a module that adds a menu like
-                  /shop. So every website has the shop menu.
-                  Be careful to return correct record for ir.model.data xml_id in case
-                  of default main menus creation.
-        '''
         self.env.transaction.invalidate_ormcache('templates')
-        # Only used when creating website_data.xml default menu
-        menus = self.env['website.menu']
         for vals in vals_list:
-            if vals.get('url') == '/default-main-menu':
-                menus |= super().create(vals)
+            if 'website_id' not in vals and self.env.context.get('website_id'):
+                vals['website_id'] = self.env.context['website_id']
+        return super().create(vals_list)
+
+    def _load_records(self, data_list, update=False):
+        """ Mirror default menus on every website.
+
+            Menus declared in data files without a ``website_id`` (e.g. ``/shop``
+            added when installing ``website_sale``) are "default" menus stored
+            under :ref:`website.main_menu`. Each of them must be copied to every
+            existing website while preserving the hierarchy.
+
+            Instead of storing the link between a default menu and its website
+            copies on the records, we derive a unique external identifier for each
+            copy (``<module>.<name>_website_<website_id>``). This keeps the copies
+            managed as regular data records: they are updated on module upgrade and
+            removed on uninstall, and the parent of a copy can be resolved from the
+            parent's own copy external identifier.
+        """
+        records = super()._load_records(data_list, update)
+        main_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        websites = self.env['website'].search([])
+        if not main_menu or not websites:
+            return records
+        for data, menu in zip(data_list, records):
+            xml_id = data.get('xml_id')
+            if not xml_id or menu.website_id or menu == main_menu:
                 continue
-            if 'website_id' in vals:
-                menus |= super().create(vals)
-                continue
-            elif self.env.context.get('website_id'):
-                vals['website_id'] = self.env.context.get('website_id')
-                menus |= super().create(vals)
-                continue
-            else:
-                # if creating a default menu, we should also save it as such
-                default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-                # create for every site
-                w_vals = []
-                for website in self.env["website"].search([]):
-                    parent_id = vals.get("parent_id")
-                    if not parent_id or (default_menu and parent_id == default_menu.id):
-                        parent_id = website.menu_id.id
-                    w_vals.append({
-                        **vals,
-                        'website_id': website.id,
-                        'parent_id': parent_id,
-                    })
-                new_menu = super().create(w_vals)[-1:]  # take the last record
-                if default_menu and vals.get('parent_id') == default_menu.id:
-                    new_menu = super().create(vals)
-                menus |= new_menu
-        # Only one record per vals is returned but multiple could have been created
-        return menus
+            module, name = xml_id.split('.', 1)
+            for website in websites:
+                if not website.menu_id:
+                    # The website has not been bootstrapped yet
+                    continue
+                parent = menu.parent_id
+                if not parent or parent == main_menu:
+                    w_parent = website.menu_id
+                else:
+                    parent_xml_id = parent.get_external_id().get(parent.id)
+                    w_parent = parent_xml_id and self.env.ref(
+                        '%s_website_%s' % (parent_xml_id, website.id),
+                        raise_if_not_found=False,
+                    ) or website.menu_id
+                super()._load_records([{
+                    'xml_id': '%s.%s_website_%s' % (module, name, website.id),
+                    'noupdate': data.get('noupdate', False),
+                    'values': dict(
+                        data['values'],
+                        website_id=website.id,
+                        parent_id=w_parent.id,
+                    ),
+                }], update)
+        return records
 
     def write(self, vals):
         if any(self._ids):
@@ -172,12 +185,19 @@ class WebsiteMenu(models.Model):
 
     def unlink(self):
         self.env.transaction.invalidate_ormcache('templates')
-        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        imd = self.env['ir.model.data'].sudo()
         menus_to_remove = self
-        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
-                                                                ('website_id', '!=', False),
-                                                                ('id', '!=', menu.id)])
+        for menu in self.filtered(lambda m: not m.website_id):
+            xml_id = menu.get_external_id().get(menu.id)
+            if not xml_id:
+                continue
+            module, name = xml_id.split('.', 1)
+            prefix = '%s_website_' % name
+            copies = imd.search([
+                ('model', '=', 'website.menu'),
+                ('module', '=', module),
+            ]).filtered(lambda d: d.name.startswith(prefix))
+            menus_to_remove |= self.browse(copies.mapped('res_id'))
         return super(WebsiteMenu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
