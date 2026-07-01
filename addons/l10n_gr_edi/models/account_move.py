@@ -68,6 +68,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_gr_edi_inv_type',
         store=True,
         readonly=False,
+        copy=False,
     )
     l10n_gr_edi_payment_method = fields.Selection(
         selection=PAYMENT_METHOD_SELECTION,
@@ -194,13 +195,15 @@ class AccountMove(models.Model):
                     # If we have previously calculated the inv_type, reuse it here.
                     # For entry moves, we want the inv_type to be False. (we don't send anything to myDATA on entry moves)
                     move.l10n_gr_edi_inv_type = move.l10n_gr_edi_inv_type
-                elif move.move_type in ('out_refund', 'in_refund'):
-                    # inv_type specific for credit notes
+                elif move.move_type == 'out_refund':
+                    # inv_type specific for client credit notes
                     if move.l10n_gr_edi_correlation_id:
                         # when possible, we must add the associate invoice/bill mark (id)
                         move.l10n_gr_edi_inv_type = '5.1'
                     else:
                         move.l10n_gr_edi_inv_type = '5.2'
+                elif move.move_type == 'in_refund':
+                    move.l10n_gr_edi_inv_type = '11.4'
                 else:  # move.move_type in ('out_invoice', 'in_invoice', 'out_receipt', 'in_receipt')
                     inv_type = '1.1' if move.move_type == 'out_invoice' else '13.1'
                     preferred_clss = move.fiscal_position_id.l10n_gr_edi_preferred_classification_ids.filtered(
@@ -282,7 +285,7 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_gr_edi_generate_xml_content(self, xml_template, xml_vals):
         xml_content = self.env['ir.qweb']._render(xml_template, xml_vals)
-        return etree.tostring(element_or_tree=cleanup_xml_node(xml_content), encoding='ISO-8859-7', standalone='yes')
+        return etree.tostring(element_or_tree=cleanup_xml_node(xml_content), encoding='UTF-8', standalone='yes')
 
     def _l10n_gr_edi_eligible_for_mydata(self):
         """Shorthand for getting the eligibility of the current move to send to myDATA."""
@@ -365,9 +368,9 @@ class AccountMove(models.Model):
 
         if issuer_not_from_greece:
             values.update({
-                'issuer_name': self.company_id.name.encode('ISO-8859-7'),
+                'issuer_name': self.company_id.name,
                 'issuer_postal_code': self.company_id.zip,
-                'issuer_city': (self.company_id.city or "").encode('ISO-8859-7') or None,
+                'issuer_city': (self.company_id.city or "") or None,
             })
 
         if inv_type_allows_counterpart:
@@ -377,12 +380,12 @@ class AccountMove(models.Model):
                 'counterpart_branch': (self.commercial_partner_id.l10n_gr_edi_branch_number or 0),
             })
             if partner_not_from_greece:
-                values['counterpart_name'] = self.commercial_partner_id.name.encode('ISO-8859-7')
+                values['counterpart_name'] = self.commercial_partner_id.name
 
         if inv_type_require_counterpart or (inv_type_allows_counterpart and partner_not_from_greece):
             values.update({
                 'counterpart_postal_code': self.commercial_partner_id.zip,
-                'counterpart_city': (self.commercial_partner_id.city or "").encode('ISO-8859-7') or None,
+                'counterpart_city': (self.commercial_partner_id.city or "") or None,
             })
 
     def _l10n_gr_edi_add_payment_method_vals(self, values):
@@ -633,7 +636,7 @@ class AccountMove(models.Model):
                 'message': _("Partner must be filled to be able to send to myDATA."),
             }
         if self.commercial_partner_id:
-            if not self.commercial_partner_id.vat:
+            if not self.commercial_partner_id.vat and self.l10n_gr_edi_inv_type not in TYPES_WITH_FORBIDDEN_COUNTERPART:
                 errors['l10n_gr_edi_partner_no_vat'] = {
                     'message': _("Missing VAT on partner %s.", self.commercial_partner_id.name),
                     **error_action_partner,

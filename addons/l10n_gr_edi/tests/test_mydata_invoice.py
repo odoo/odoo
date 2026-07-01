@@ -260,3 +260,78 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         invoice.with_context(skip_readonly_check=True).invoice_line_ids.l10n_gr_edi_tax_exemption_category = False
         invoice.l10n_gr_edi_try_send_invoices()
         self.assert_mydata_error(invoice, 'Missing myDATA Tax Exemption Category for line 1.')
+
+    def _reverse_move(self, move):
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=move.ids,
+        ).create({'journal_id': move.journal_id.id})
+        action = wizard.refund_moves()
+        return self.env['account.move'].browse(action['res_id'])
+
+    def test_mydata_credit_note_inv_type_out_refund_no_correlation(self):
+        """An un-sent out_invoice reversed into a credit note should land on inv_type 5.2."""
+        invoice = self._create_mydata_invoice(inv_type='1.1', paid=False)
+        refund = self._reverse_move(invoice)
+        self.assertEqual(refund.move_type, 'out_refund')
+        self.assertFalse(refund.l10n_gr_edi_correlation_id)
+        self.assertEqual(refund.l10n_gr_edi_inv_type, '5.2')
+
+    def test_mydata_credit_note_inv_type_out_refund_with_correlation(self):
+        """A sent out_invoice (has a myDATA mark) reversed into a credit note should land on
+        inv_type 5.1 with the original move set as correlation."""
+        invoice = self._create_mydata_invoice(inv_type='1.1', paid=False)
+        self.env['l10n_gr_edi.document'].create({
+            'move_id': invoice.id,
+            'mydata_mark': '400001924190892',
+            'state': 'invoice_sent',
+        })
+        self.assertTrue(invoice.l10n_gr_edi_mark)
+        refund = self._reverse_move(invoice)
+        self.assertEqual(refund.move_type, 'out_refund')
+        self.assertEqual(refund.l10n_gr_edi_correlation_id, invoice)
+        self.assertEqual(refund.l10n_gr_edi_inv_type, '5.1')
+
+    def test_mydata_credit_note_inv_type_in_refund(self):
+        """Reversing a vendor bill should land on inv_type 11.4 regardless of correlation -
+        the previous compute grouped in_refund with out_refund and produced 5.1/5.2."""
+        bill = self._create_mydata_bill(inv_type='13.1', paid=False)
+        # _create_mydata_bill attaches a bill_fetched document, so the wizard sets correlation_id.
+        self.assertTrue(bill.l10n_gr_edi_mark)
+        refund = self._reverse_move(bill)
+        self.assertEqual(refund.move_type, 'in_refund')
+        self.assertEqual(refund.l10n_gr_edi_inv_type, '11.4')
+
+    def test_mydata_pre_error_b2c_no_vat_allowed(self):
+        """Retail invoice types (11.x) should not error when the partner has no VAT - the
+        counterpart block is suppressed for those types so VAT is not needed."""
+        self.partner_a.vat = False
+        invoice = self._create_mydata_invoice(
+            inv_type='11.1', cls_category='category1_1', cls_type='E3_561_003', paid=False,
+        )
+        errors = invoice._l10n_gr_edi_get_pre_error_dict()
+        self.assertNotIn('l10n_gr_edi_partner_no_vat', errors)
+
+    def test_mydata_product_preferred_classification_refreshes_on_product_change(self):
+        """Changing the product on an existing line must retrigger the available-categories
+        compute so the new product's preferred classification kicks in. Regression for the
+        missing `product_id` entry in `_compute_l10n_gr_edi_available_cls_category`'s depends."""
+        self.product_a.l10n_gr_edi_preferred_classification_ids = [Command.create({
+            'l10n_gr_edi_inv_type': '1.1',
+            'l10n_gr_edi_cls_category': 'category1_8',
+            'l10n_gr_edi_cls_type': 'E3_561_007',
+        })]
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-01-01',
+            'date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_b.id,
+                'tax_ids': [Command.set(self.tax_24.ids)],
+            })],
+        })
+        line = invoice.invoice_line_ids
+        self.assertNotEqual(line.l10n_gr_edi_cls_category, 'category1_8')
+        line.product_id = self.product_a
+        self.assertEqual(line.l10n_gr_edi_cls_category, 'category1_8')
+        self.assertEqual(line.l10n_gr_edi_cls_type, 'E3_561_007')

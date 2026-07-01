@@ -79,6 +79,7 @@ class AccountMoveLine(models.Model):
         'move_id.l10n_gr_edi_inv_type',
         'move_id.l10n_gr_edi_correlation_id',
         'l10n_gr_edi_detail_type',
+        'product_id',
     )
     def _compute_l10n_gr_edi_available_cls_category(self):
         for line in self:
@@ -102,8 +103,13 @@ class AccountMoveLine(models.Model):
                 and (not line.l10n_gr_edi_detail_type or line.l10n_gr_edi_detail_type == '2')
             )
 
-            line.l10n_gr_edi_available_cls_category = self.env['l10n_gr_edi.preferred_classification']._get_l10n_gr_edi_available_cls_category(
+            available = self.env['l10n_gr_edi.preferred_classification']._get_l10n_gr_edi_available_cls_category(
                 inv_type=inv_type, category_type='1' if is_income else '2')
+
+            product_cats = line.product_id.product_tmpl_id.l10n_gr_edi_preferred_classification_ids.filtered(
+                lambda p: p.l10n_gr_edi_inv_type == inv_type
+            ).mapped('l10n_gr_edi_cls_category')
+            line.l10n_gr_edi_available_cls_category = ','.join(sorted({*available.split(','), *product_cats} - {''}))
 
     @api.depends('l10n_gr_edi_cls_category', 'move_id.l10n_gr_edi_correlation_id')
     def _compute_l10n_gr_edi_available_cls_type(self):
