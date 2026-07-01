@@ -1153,6 +1153,8 @@ class ProjectProject(models.Model):
             'costs': profitability_items['costs'],
             'revenues': profitability_items['revenues'],
             'expected_percentage': expected_percentage,
+            'to_bill_to_invoice': to_bill_to_invoice,
+            'billed_invoiced': billed_invoiced,
             'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
             'billed_invoiced_percentage': billed_invoiced_percentage,
             'total': {
