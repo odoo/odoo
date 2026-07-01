@@ -180,3 +180,28 @@ class TestWebsiteForm(TransactionCase):
             })
             other_test_field.unlink()
             self.assertFalse(other_test_field.exists())
+
+    def test_reference_field_not_offered_in_form_builder(self):
+        """
+        Reference-type fields have no input template in the website form
+        builder, so they must not appear in the field list it offers
+        """
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_test_website_form_ref",
+                "field_description": "Test Reference",
+                "model_id": self.env["ir.model"]._get("res.partner").id,
+                "ttype": "reference",
+                "selection_ids": [(0, 0, {"value": "res.partner", "name": "Contact"})],
+            },
+        )
+
+        authorized_fields = self.env["ir.model"].get_authorized_fields(
+            "res.partner",
+            [],
+        )
+        self.assertNotIn(
+            "x_test_website_form_ref",
+            authorized_fields,
+            "Reference fields must not be offered in the website form builder.",
+        )
