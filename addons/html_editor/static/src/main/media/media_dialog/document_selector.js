@@ -41,6 +41,10 @@ export class DocumentSelector extends FileSelector {
         await this.props.save();
     }
 
+    selectInitialMedia() {
+        return super.selectInitialMedia() && this.props.media.classList.contains("o_file_box");
+    }
+
     async fetchAttachments(...args) {
         const attachments = await super.fetchAttachments(...args);
 
@@ -48,7 +52,7 @@ export class DocumentSelector extends FileSelector {
             for (const attachment of attachments) {
                 if (
                     `/web/content/${attachment.id}` ===
-                    this.props.media.querySelector("a").getAttribute("href").replace(/[?].*/, "")
+                    this.props.media.querySelector("a")?.getAttribute("href")?.replace(/[?].*/, "")
                 ) {
                     this.selectAttachment(attachment);
                 }
