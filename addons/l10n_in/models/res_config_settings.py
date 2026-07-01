@@ -78,6 +78,7 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_reports = fields.Boolean("GST E-Filing & Matching")
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
+    module_l10n_in_boe = fields.Boolean("Indian Import-Export")
 
     def set_values(self):
         super().set_values()
@@ -102,6 +103,8 @@ class ResConfigSettings(models.TransientModel):
                 self._update_l10n_in_feature("l10n_in_edi_feature")
             if self.module_l10n_in_ewaybill:
                 self._update_l10n_in_feature("l10n_in_ewaybill_feature")
+            if self.module_l10n_in_boe:
+                self._update_l10n_in_feature("l10n_in_boe_feature")
 
     def _update_l10n_in_feature(self, column):
         """ This way, after installing the module, the field will already be set for the active company. """

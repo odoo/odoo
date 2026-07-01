@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_boe" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.boe</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_in_open_boe_wizard" string="Bill Of Entry"
+                    type="object" class="btn btn-secondary float-end"
+                    invisible="country_code != 'IN' or move_type != 'in_invoice' or state != 'posted' or not l10n_in_boe_feature_enabled or l10n_in_gst_treatment not in ['overseas', 'special_economic_zone', 'deemed_export']" />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

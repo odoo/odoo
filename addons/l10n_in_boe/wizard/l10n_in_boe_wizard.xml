@@ -1,0 +1,52 @@
+<odoo>
+    <record id="boe_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.boe.wizard.view.form</field>
+        <field name="model">l10n_in.boe.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bill of Entry">
+                <sheet>
+                    <field name="currency_id" invisible="1"/> <!-- for monetary fields -->
+
+                    <group col="2">
+                        <group>
+                            <field name="move_id" string="Referance" readonly="1" />
+                            <field name="partner_id"/>
+                            <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+
+                        <group>
+                            <field name="l10n_in_shipping_bill_number" string="Bill of Entry Number" />
+                            <field name="l10n_in_shipping_bill_date" string="Bill of Entry Date" />
+                            <field name="l10n_in_shipping_port_code_id" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="assessable_value"/>
+                                    <field name="custom_duty"/>
+                                    <field name="tax_id"/>
+                                    <field name="taxable_amount"/>
+                                    <field name="tax_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
+                     <group class="oe_subtotal_footer">
+                        <field name="total_custom_duty"/>
+                        <field name="total_tax"/>
+                        <field name="total_amount"/>
+                     </group>
+                </sheet>
+                <footer>
+                        <button string="Confirm" name="action_on_submit_boe" type="object" class="oe_highlight"/>
+                        <button class="btn btn-secondary" special="cancel"/>
+                    </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
