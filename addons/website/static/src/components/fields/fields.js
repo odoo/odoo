@@ -5,7 +5,7 @@ import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
-import { Component, props, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, props, t } from "@odoo/owl";
 import { charField, CharField } from "@web/views/fields/char/char_field";
 
 /**
@@ -30,35 +30,45 @@ class PageUrlField extends UrlField {
         this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
-        // parameters as soon as the user t.
+        // parameters as soon as the user types.
         // TODO should find a way to do this more automatically (and option in
         // the framework? or at least a t-on-input?)
-        // useLayoutEffect(
-        //     (inputEl) => {
-        //         if (inputEl) {
-        //             const originalValue = inputEl.value;
-        //             let previousValueChanged = false;
-        //             const fireChangeEvent = debounce(() => {
-        //                 const currentValue = inputEl.value;
-        //                 const valueChanged = currentValue !== originalValue;
-        //                 if (valueChanged !== previousValueChanged) {
-        //                     if (currentValue[0] !== "/") {
-        //                         inputEl.value = `/${currentValue}`;
-        //                     }
-        //                     inputEl.dispatchEvent(new Event("change"));
-        //                     inputEl.value = currentValue;
-        //                     previousValueChanged = valueChanged;
-        //                 }
-        //             }, 100);
-        //
-        //             inputEl.addEventListener("input", fireChangeEvent);
-        //             return () => {
-        //                 inputEl.removeEventListener("input", fireChangeEvent);
-        //             };
-        //         }
-        //     },
-        //     () => [this.inputRef.el]
-        // );
+        let cleanup;
+        let listenedEl;
+        const setupInputListener = () => {
+            const inputEl = this.inputRef.el;
+            if (inputEl === listenedEl) {
+                return;
+            }
+            if (cleanup) {
+                cleanup();
+                cleanup = undefined;
+            }
+            listenedEl = inputEl;
+            if (inputEl) {
+                const originalValue = inputEl.value;
+                let previousValueChanged = false;
+                const fireChangeEvent = debounce(() => {
+                    const currentValue = inputEl.value;
+                    const valueChanged = currentValue !== originalValue;
+                    if (valueChanged !== previousValueChanged) {
+                        if (currentValue[0] !== "/") {
+                            inputEl.value = `/${currentValue}`;
+                        }
+                        inputEl.dispatchEvent(new Event("change"));
+                        inputEl.value = currentValue;
+                        previousValueChanged = valueChanged;
+                    }
+                }, 100);
+                inputEl.addEventListener("input", fireChangeEvent);
+                cleanup = () => {
+                    inputEl.removeEventListener("input", fireChangeEvent);
+                };
+            }
+        };
+        onMounted(setupInputListener);
+        onPatched(setupInputListener);
+        onWillUnmount(() => cleanup && cleanup());
     }
 
     get value() {
