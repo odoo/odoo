@@ -1,18 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-
 /**
  * @typedef { Object } WebsiteBridgeShared
  * @property { WebsiteBridgePlugin['getRegistry'] } getRegistry
  * @property { WebsiteBridgePlugin['getWebsiteContextLang'] } getWebsiteContextLang
  * @property { WebsiteBridgePlugin['getSession'] } getSession
+ * @property { WebsiteBridgePlugin['renderToElement'] } renderToElement
  * @property { WebsiteBridgePlugin['_t'] } _t
  */
 export class WebsiteBridgePlugin extends Plugin {
     static id = "websiteBridge";
     static dependencies = [];
-    static shared = ["getRegistry", "getWebsiteContextLang", "_t", "getSession"];
+    static shared = ["getRegistry", "getWebsiteContextLang", "_t", "getSession", "renderToElement"];
     ensureModuleLoader() {
         if (!this.moduleLoader) {
             this.moduleLoader = this.window.odoo.loader;
@@ -26,6 +26,7 @@ export class WebsiteBridgePlugin extends Plugin {
         return this.getModule("@web/core/registry").registry;
     }
     get _t() {
+        // To ensure terms are exported, they must use the `_t` function (avoid renaming)
         return this.getModule("@web/core/l10n/translation")._t;
     }
     getWebsiteContextLang() {
@@ -35,6 +36,9 @@ export class WebsiteBridgePlugin extends Plugin {
     }
     getSession() {
         return this.getModule("@web/session").session;
+    }
+    renderToElement(template, context) {
+        return this.getModule("@web/core/utils/render").renderToElement(template, context);
     }
 }
 registry.category("website-plugins").add(WebsiteBridgePlugin.id, WebsiteBridgePlugin);

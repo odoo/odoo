@@ -694,7 +694,7 @@ export class DomPlugin extends Plugin {
                 (isCollapsed || block !== lastTargetedNode) &&
                 this.isRetaggingSafe(block) &&
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable
+                block.parentElement?.isContentEditable
         );
     }
 

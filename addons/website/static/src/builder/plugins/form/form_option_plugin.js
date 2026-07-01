@@ -236,8 +236,6 @@ export class FormOptionPlugin extends Plugin {
             this._getVisibilityConditionCachedRecords.bind(this),
             JSON.stringify
         );
-        this.website_t = this.dependencies.websiteBridge._t;
-        this.website_registry = this.dependencies.websiteBridge.getRegistry();
     }
     destroy() {
         super.destroy();
@@ -320,7 +318,8 @@ export class FormOptionPlugin extends Plugin {
         return field.records;
     }
     getRegistryFormInfo(formKey) {
-        const formInfo = this.website_registry
+        const formInfo = this.dependencies.websiteBridge
+            .getRegistry()
             ?.category("website.form_editor_actions")
             .get(formKey, null);
         const builderFormInfo = registry.category("builder.form_editor_actions").get(formKey, {});
@@ -526,7 +525,7 @@ export class FormOptionPlugin extends Plugin {
         });
     }
     addFieldToForm(formEl) {
-        const field = getCustomField("char", this.website_t("Custom Text"));
+        const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
         let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
@@ -542,7 +541,7 @@ export class FormOptionPlugin extends Plugin {
         let newSnippetEl = null;
         const formEl = fieldEl.closest("form");
         if (snippet.id === "field") {
-            const field = getCustomField("char", this.website_t("Custom Text"));
+            const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
             field.formatInfo = getFieldFormat(fieldEl);
             field.formatInfo.requiredMark = isRequiredMark(formEl);
             field.formatInfo.optionalMark = isOptionalMark(formEl);

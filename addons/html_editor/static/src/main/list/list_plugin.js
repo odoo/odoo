@@ -244,7 +244,7 @@ export class ListPlugin extends Plugin {
         return targetedBlocks.filter(
             (block) =>
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable &&
+                block.parentElement.isContentEditable &&
                 !["OL", "UL"].includes(block.tagName)
         );
     }

@@ -159,6 +159,12 @@ export class DropZonePlugin extends Plugin {
             }
         });
 
+        // Remove non-editable zone
+        selectorSiblings = selectorSiblings.filter((el) => el.parentElement.isContentEditable);
+        selectorChildren = selectorChildren.filter(
+            (el) => el.isContentEditable || el.matches("[data-oe-field='arch'].o_savable:empty")
+        );
+
         // Remove the dragged element from the selectors.
         selectorSiblings = selectorSiblings.filter((el) => !snippetEl.contains(el));
         selectorChildren = selectorChildren.filter((el) => !snippetEl.contains(el));
@@ -228,7 +234,9 @@ export class DropZonePlugin extends Plugin {
         if (withGrids) {
             const filterGrids = (potentialGridEl) => {
                 if (potentialGridEl.matches(".o_grid_mode")) {
-                    selectorGrids.add(potentialGridEl);
+                    if (potentialGridEl.isContentEditable) {
+                        selectorGrids.add(potentialGridEl);
+                    }
                     return false;
                 }
                 return true;

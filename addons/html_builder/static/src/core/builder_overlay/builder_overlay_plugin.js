@@ -116,9 +116,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 history: this.dependencies.history,
-                hasOverlayOptions:
-                    this.dependencies.builderOptions.checkElement(option.element, {}) &&
-                    option.hasOverlayOptions,
+                hasOverlayOptions: option.hasOverlayOptions,
                 next: this.dependencies.operation.next,
                 isMobileView: this.config.isMobileView,
                 mobileBreakpoint: this.config.mobileBreakpoint,

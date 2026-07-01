@@ -2,7 +2,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { generateGMapLink } from "@website/js/utils";
-import { renderToElement } from "@web/core/utils/render";
 
 export class MapOptionPlugin extends Plugin {
     static id = "mapOption";
@@ -11,8 +10,6 @@ export class MapOptionPlugin extends Plugin {
         so_content_addition_selectors: [".s_map"],
         builder_actions: {
             MapUpdateSrcAction,
-            MapDescriptionAction,
-            MapDescriptionTextAction,
         },
         // TODO remove when the snippet will have a "Height" option.
         should_keep_overlay_options_predicates: (el) => {
@@ -32,7 +29,7 @@ export class MapOptionPlugin extends Plugin {
         // This is for pages which already existed before the plugin was created.
         const mapSnippetEls = this.document.querySelectorAll(".s_map");
         mapSnippetEls.forEach((mapSnippetEl) => {
-            mapSnippetEl.classList.add("o_not_editable");
+            mapSnippetEl.classList.remove("o_not_editable");
             mapSnippetEl.dataset.vxml = "001";
             mapSnippetEl.querySelector(".map_container").classList.remove("o_not_editable");
         });
@@ -56,30 +53,6 @@ export class MapUpdateSrcAction extends BuilderAction {
         editingElement
             .querySelector(".missing_option_warning")
             .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
-    }
-}
-export class MapDescriptionAction extends BuilderAction {
-    static id = "mapDescription";
-    isApplied({ editingElement }) {
-        return !!editingElement.querySelector(".description");
-    }
-    apply({ editingElement }) {
-        editingElement.append(renderToElement("website.MapsDescription"));
-    }
-    clean({ editingElement }) {
-        editingElement.querySelector(".description").remove();
-    }
-}
-export class MapDescriptionTextAction extends BuilderAction {
-    static id = "mapDescriptionTextValue";
-    getValue({ editingElement }) {
-        return (
-            editingElement.querySelector(".description")?.textContent.trim().replace(/\s+/g, " ") ||
-            ""
-        );
-    }
-    apply({ editingElement, value }) {
-        return (editingElement.querySelector(".description").textContent = value);
     }
 }
 
