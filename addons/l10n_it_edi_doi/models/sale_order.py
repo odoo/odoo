@@ -165,9 +165,10 @@ class SaleOrder(models.Model):
             declaration_tax_lines = order.order_line.filtered(
                 lambda line: declaration_of_intent_tax in line.tax_ids
             )
-            if declaration_tax_lines and not order.l10n_it_edi_doi_id:
-                errors.append(_('Given the tax %s is applied, there should be a Declaration of Intent selected.',
-                                declaration_of_intent_tax.name))
+            # No declaration yet is fine here: the DOI often arrives after the
+            # order, and confirming sends nothing to SdI. `account.move._post()`
+            # still blocks a tax line with no declaration at invoice time, the
+            # point where Italian law requires it.
             if any(line.tax_ids != declaration_of_intent_tax for line in declaration_tax_lines):
                 errors.append(_('A line using tax %s should not contain any other taxes',
                                 declaration_of_intent_tax.name))

@@ -146,6 +146,34 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                     "Invoiced: 0.00\xa0€; Not Yet Invoiced: 6,000.00\xa0€"
                 )
 
+    def test_sale_order_confirm_without_declaration(self):
+        """
+        Confirming a sale order with the DOI tax but no declaration must not
+        raise: the DOI often arrives after the order, and confirming sends
+        nothing to SdI. `account.move._post()` still blocks this case at
+        invoice time.
+        """
+        declaration_tax = self.company.l10n_it_edi_doi_tax_id
+
+        order = self.env['sale.order'].create({
+            'company_id': self.company.id,
+            'partner_id': self.italian_partner_b.id,
+            'pricelist_id': self.pricelist.id,
+            'order_line': [
+                Command.create({
+                    'name': 'declaration line',
+                    'product_id': self.product_1.id,
+                    'price_unit': 100.0,
+                    'product_uom_qty': 1,
+                    'tax_ids': [Command.set(declaration_tax.ids)],
+                }),
+            ],
+        })
+        self.assertFalse(order.l10n_it_edi_doi_id)
+
+        order.action_confirm()
+        self.assertEqual(order.state, 'sale')
+
     def test_invoice(self):
         """
         Ensure the amounts and warnings are computed correctly in the following flow:
