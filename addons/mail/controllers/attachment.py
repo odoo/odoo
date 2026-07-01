@@ -86,15 +86,17 @@ class AttachmentController(ThreadController):
 
     @mail_route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):
+        # TDE note: should probably get thread with access
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment or not attachment._has_attachments_ownership([access_token]):
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
+        # update potentially linked message, set as edited, even if no ownership on it (which implies some sudo)
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
         if message:
-            thread = request.env[message.model].browse(message.res_id)
-            thread._message_update_content(message, body=message.body)  # marks the message edited
+            thread_su = request.env[message.model].browse(message.res_id).sudo()
+            thread_su._message_update_content(message, body=message.body)
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 

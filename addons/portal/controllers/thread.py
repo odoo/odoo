@@ -12,9 +12,9 @@ from odoo.addons.portal.utils import get_portal_partner
 
 
 class PortalThreadController(ThreadController):
-    def _prepare_message_data(self, post_data, *, thread, **kwargs):
-        post_data = super()._prepare_message_data(post_data, thread=thread, **kwargs)
-        if kwargs.get("from_create") and request.env.user._is_public():
+    def _prepare_message_data(self, post_data, *, thread, from_create=True, **kwargs):
+        post_data = super()._prepare_message_data(post_data, thread=thread, from_create=from_create, **kwargs)
+        if from_create and request.env.user._is_public():
             if partner := get_portal_partner(
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
             ):
@@ -22,13 +22,13 @@ class PortalThreadController(ThreadController):
         return post_data
 
     @classmethod
-    def _can_edit_message(cls, message, hash=None, pid=None, token=None, **kwargs):
-        if message.model and message.res_id and message.env.user._is_public():
-            thread = request.env[message.model].browse(message.res_id)
-            partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
-            if partner and message.author_id == partner:
-                return True
-        return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)
+    def _can_edit_message(cls, message, thread, hash=None, pid=None, token=None, **kwargs):
+        if (hash or pid or token) and request.env.user._is_public():
+            portal_partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
+            request.update_context(
+                portal_data={"portal_partner": portal_partner, "portal_thread": thread.sudo()},
+            )
+        return super()._can_edit_message(message, thread, hash=hash, pid=pid, token=token, **kwargs)
 
 
 class PortalWebClientController(WebclientController):
@@ -114,9 +114,7 @@ class PortalWebClientController(WebclientController):
         def can_react(thread):
             thread_mode = False
             # sudo: mail.thread - can read thread to build _mail_get_operation_for_mail_message_operation
-            for domain, operation in thread.sudo()._mail_get_operation_for_mail_message_operation(
-                getattr(thread, "_mail_message_reaction_access", "create"),
-            ):
+            for domain, operation in thread.sudo()._mail_get_operation_for_mail_message_operation("read"):
                 # sudo: mail.thread - can read thread to filter on access domain
                 if thread.sudo().filtered_domain(domain):
                     thread_mode = operation

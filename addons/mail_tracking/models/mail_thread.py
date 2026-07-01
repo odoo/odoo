@@ -13,7 +13,7 @@ class MailThread(models.AbstractModel):
           * if no tracking;
         """
         super()._check_can_update_message_content(messages)
-        if messages.tracking_value_ids:
+        if messages.sudo().tracking_value_ids:
             raise UserError(self.env._("Messages with tracking values cannot be modified"))
 
     def _message_create(self, values_list):

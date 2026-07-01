@@ -7556,7 +7556,8 @@ class AccountMove(models.Model):
                 attachment_records = self._from_files_data(file_data_group)
                 if invoice == self:
                     attachment_records |= self._from_files_data(extra_files_data)
-                    new_message.attachment_ids = [Command.set(attachment_records.ids)]
+                    # sudo: creation rights already checked, just technical update
+                    new_message.sudo().attachment_ids = [Command.set(attachment_records.ids)]
                     res = super(AccountMove, self.with_context(no_document=True))._message_post_after_hook(new_message)
                 else:
                     sub_new_message = new_message.copy({

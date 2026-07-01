@@ -616,7 +616,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             # forbidden
             (self.record_public.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
-            }, True, 'Note cannot be read by public users'),
+            }, True, 'Public = never'),
             (self.record_public.message_ids[0], {
                 'is_internal': True,
             }, True, 'Internal message cannot be read by public users'),

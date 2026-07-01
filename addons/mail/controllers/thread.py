@@ -5,7 +5,7 @@ from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
 
@@ -146,12 +146,20 @@ class ThreadController(StoreController):
             ).ids,
         }
 
-    def _prepare_message_data(self, post_data, *, thread, **kwargs):
-        res = {
-            key: value
-            for key, value in post_data.items()
-            if key in thread._get_allowed_message_params()
-        }
+    def _prepare_message_data(self, post_data, *, thread, from_create=True, **kwargs):
+        if from_create:
+            res = {
+                key: value
+                for key, value in post_data.items()
+                if key in thread._get_allowed_message_post_params()
+            }
+            res.setdefault("message_type", "comment")
+        else:
+            res = {
+                key: value
+                for key, value in post_data.items()
+                if key in thread._get_message_update_valid_field_names()
+            }
         if (attachment_ids := post_data.get("attachment_ids")) is not None:
             attachments = request.env["ir.attachment"].browse(map(int, attachment_ids))
             if not attachments._has_attachments_ownership(post_data.get("attachment_tokens")):
@@ -200,7 +208,6 @@ class ThreadController(StoreController):
                         )
                     ),
                 ).ids
-        res.setdefault("message_type", "comment")
         return res
 
     @mail_route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
@@ -238,7 +245,12 @@ class ThreadController(StoreController):
     @mail_route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_update_content(self, message_id, update_data, **kwargs):
         message = self._get_message_with_access(message_id, mode="write", **kwargs)
-        if not message or not self._can_edit_message(message, **kwargs):
+        if message:
+            message = message.sudo()
+            thread = request.env[message.model].browse(message.res_id)
+        else:
+            thread = None
+        if not message or not thread or not self._can_edit_message(message, thread, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _can_edit_message
         message = message.sudo()
@@ -253,8 +265,11 @@ class ThreadController(StoreController):
     # ------------------------------------------------------------
 
     @classmethod
-    def _can_edit_message(cls, message, **kwargs):
-        return message.sudo().is_current_user_or_guest_author or request.env.user._is_admin()
+    def _can_edit_message(cls, message, thread, **kwargs):
+        try:
+            thread._check_can_update_message_content(message)
+        except AccessError:
+            return False
 
     @mail_route("/mail/thread/unsubscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):

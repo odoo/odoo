@@ -653,7 +653,8 @@ class DiscussChannelMember(models.Model):
             ("res_id", "=", self.channel_id.id),
             ("id", "<=", last_message_id),
         ]
-        last_message = self.env['mail.message'].search(domain, order="id DESC", limit=1)
+        # sudo: access on mail.message not granted for public
+        last_message = self.env['mail.message'].sudo().search(domain, order="id DESC", limit=1)
         if not last_message:
             return
         self._set_last_seen_message(last_message)

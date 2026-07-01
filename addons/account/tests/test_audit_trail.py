@@ -95,7 +95,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 ],
             }
         )
-        with self.assertRaisesRegex(UserError, "Messages with tracking values cannot be modified"):
+        with self.assertRaisesRegex(UserError, "Only 'comment' or 'notification' messagess can be updated."):
             self.move._message_update_content(audit_trail, body="")
         with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             audit_trail.write({'body': 'Remove tracking'})

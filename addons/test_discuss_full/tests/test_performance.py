@@ -306,7 +306,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             self.message_0.id,
         )
         # add bookmark
-        self.message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
+        self.message_0.sudo().bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
         self.env.company.sudo().name = 'YourCompany'
         # add unread messages
         self.channel_channel_group_3.with_user(self.users[2]).message_post(
