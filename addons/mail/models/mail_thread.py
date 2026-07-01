@@ -573,8 +573,11 @@ class MailThread(models.AbstractModel):
         description (if set) and tracking values that make the core content of
         tracking message. """
         body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
+        print("those are the body values froml the original function")
+        print(body_values)
         for id_ in self.ids:
             body_values[id_] = message
+        print(body_values)
 
     def _track_set_log_message_for_target(self, message: str | Markup, track_records: BaseModel):
         """ Link tracking to a message logged as body, in addition to subtype
@@ -596,6 +599,7 @@ class MailThread(models.AbstractModel):
             author: BaseModel | None = None,
             body: str | Markup | None = None,
         ):
+        print("pass inside the track add values")
         # override to add log info
         super()._track_add(initial_values, end_values=end_values, fields_info=fields_info, author=author, body=body)
         # set log author and message if given
@@ -685,6 +689,7 @@ class MailThread(models.AbstractModel):
         :return: message, used a body to log when these changes happen for this record;
         :rtype: str | Markup
         """
+        print("pass insdie the track default body")
         self.ensure_one()
         return ''
 

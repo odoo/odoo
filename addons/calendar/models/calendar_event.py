@@ -437,6 +437,16 @@ class CalendarEvent(models.Model):
                 meeting.start_date = False
                 meeting.stop_date = False
 
+    def add_notified_attendee_log_message(self, log_message):
+        self.ensure_one()
+        print(self.env.cr.precommit.data)
+        if self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {}):
+            print("yes it find the track")
+            self._track_set_log_message(log_message)
+        else:
+            print("there is no track")
+            self._message_log(body=log_message)
+
     @api.depends('stop', 'start')
     def _compute_duration(self):
         for event in self:

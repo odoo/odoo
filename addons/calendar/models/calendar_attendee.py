@@ -116,6 +116,7 @@ class CalendarAttendee(models.Model):
     def _send_invitation_emails(self):
         """ Hook to be able to override the invitation email sending process.
          Notably inside appointment to use a different mail template from the appointment type. """
+        print("pass inside the invitation")
         now = fields.Datetime.now()
         self.filtered(lambda attendee: attendee.event_id.start > now)._notify_attendees(
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
@@ -216,7 +217,8 @@ class CalendarAttendee(models.Model):
         if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
             for event, attendees in notified_attendees_per_event.items():
-                event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
+                test = event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
+                print(test)
 
     @api.model
     def _generate_notified_attendees_html_list(self, attendees):
