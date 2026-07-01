@@ -42,10 +42,12 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
+    plugin,
     props,
     proxy,
     t,
 } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
@@ -164,7 +166,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -294,12 +296,12 @@ export class FormController extends Component {
         usePager(() => {
             if (!this.model.root.isNew) {
                 let resIds = this.model.root.resIds;
-                if (this.offlineService.offline) {
+                if (this.offlinePlugin.isOffline()) {
                     const actionId = this.env.config.actionId;
                     resIds = resIds.filter(
                         (resId) =>
                             resId === this.model.root.resId ||
-                            this.offlineService.isAvailableOffline(actionId, "form", resId)
+                            this.offlinePlugin.isAvailableOffline(actionId, "form", resId)
                     );
                 }
                 return {
@@ -422,7 +424,7 @@ export class FormController extends Component {
     }
 
     get isNewButtonAvailableOffline() {
-        if (this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)) {
+        if (this.offlinePlugin.isAvailableOffline(this.env.config.actionId, "form", false)) {
             return true;
         }
         return false;

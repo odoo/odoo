@@ -9,12 +9,13 @@ import {
     getService,
     mountWithCleanup,
     mockOffline,
-    mockService,
+    patchWithCleanup,
     useTestClientAction,
     serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { WebClient } from "@web/webclient/webclient";
 
 defineMenus([
@@ -66,7 +67,7 @@ test("displays only apps if the search value is '/'", async () => {
 test.tags("desktop");
 test(`[Offline] disable unavailable menus when offline`, async () => {
     const setOffline = mockOffline();
-    mockService("offline", {
+    patchWithCleanup(OfflinePlugin.prototype, {
         isAvailableOffline(actionId) {
             return actionId === 1001;
         },

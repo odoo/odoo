@@ -6,7 +6,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, plugin, props, proxy, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
@@ -53,7 +54,7 @@ export class ActionMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.offline = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.state = proxy({ printItems: [] });
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);

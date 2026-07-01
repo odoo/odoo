@@ -33,6 +33,7 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillStart,
+    plugin,
     props,
     signal,
     status,
@@ -40,6 +41,7 @@ import {
     t,
     useListener,
 } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -139,7 +141,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();
@@ -994,12 +996,8 @@ export class ListRenderer extends Component {
 
     isRecordAvailable(record) {
         return (
-            !this.offlineService.offline ||
-            this.offlineService.isAvailableOffline(
-                this.env.config.actionId,
-                "form",
-                record.resId
-            ) ||
+            !this.offlinePlugin.isOffline() ||
+            this.offlinePlugin.isAvailableOffline(this.env.config.actionId, "form", record.resId) ||
             this.isInlineEditable(record)
         );
     }

@@ -2,6 +2,8 @@ import { Component, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+
 import { advanceTime, animationFrame, expect, runAllTimers, test, tick } from "@odoo/hoot";
 import {
     getService,
@@ -17,12 +19,12 @@ test("RPC:RESPONSE: rpc returning a status 502", async () => {
 
     onRpc("/rpc/offline", () => new Response("", { status: 502 }), { pure: true });
 
-    const env = await makeMockEnv();
-    expect(env.services.offline.offline).toBe(false);
+    await makeMockEnv();
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     rpc("/rpc/offline");
     await animationFrame();
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     expect.verifyErrors([
         `Error: Connection to "/rpc/offline" couldn't be established or was interrupted`,
@@ -32,13 +34,13 @@ test("RPC:RESPONSE: rpc returning a status 502", async () => {
 test("RPC:RESPONSE: any succesfull rpc turns offline off", async () => {
     onRpc("/rpc/thatworks", () => true);
 
-    const env = await makeMockEnv();
-    env.services.offline.offline = true;
+    await makeMockEnv();
+    getService(OfflinePlugin).setOffline(true);
     await tick();
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     await rpc("/rpc/thatworks");
-    expect(env.services.offline.offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 });
 
 test("'offline' and 'online' events fired on window", async () => {
@@ -55,40 +57,40 @@ test("'offline' and 'online' events fired on window", async () => {
         { pure: true }
     );
 
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     offline = true;
     browser.dispatchEvent(new Event("offline"));
     await tick();
     expect.verifySteps(["version_info"]);
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     offline = false;
     browser.dispatchEvent(new Event("online"));
     await tick();
     expect.verifySteps(["version_info"]);
-    expect(env.services.offline.offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 });
 
 test("'offline' and 'online' events fired on window (false positive)", async () => {
     onRpc("/web/webclient/version_info", () => expect.step("version_info"));
 
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     // "online" event triggered when we're online
     browser.dispatchEvent(new Event("online"));
     await tick();
     expect.verifySteps([]);
-    expect(env.services.offline.offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     // "offline" event triggered when we're already offline
-    env.services.offline.offline = true;
+    getService(OfflinePlugin).setOffline(true);
     await tick();
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
     browser.dispatchEvent(new Event("offline"));
     await tick();
     expect.waitForSteps([]);
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 });
 
 test("offlineUI: disable interactive elements except [data-available-offline]", async () => {
@@ -106,13 +108,13 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
 
-    getService("offline").offline = true;
+    getService(OfflinePlugin).setOffline(true);
     expect(`.button_to_disable`).toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.button_to_disable`).toHaveClass("o_disabled_offline");
     expect(`.button_available_offline`).not.toHaveClass("o_disabled_offline");
 
-    getService("offline").offline = false;
+    getService(OfflinePlugin).setOffline(false);
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
 });
@@ -132,13 +134,13 @@ test("offlineUI: don't disable already disabled elements", async () => {
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
 
-    getService("offline").offline = true;
+    getService(OfflinePlugin).setOffline(true);
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
     expect(`.button`).not.toHaveClass("o_disabled_offline");
     expect(`.checkbox`).not.toHaveClass("o_disabled_offline");
 
-    getService("offline").offline = false;
+    getService(OfflinePlugin).setOffline(false);
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
 });
@@ -171,7 +173,7 @@ test("offlineUI: react to [data-available-offline] attribute changes", async () 
     expect(".btn1").not.toHaveAttribute("disabled");
     expect(".btn2").not.toHaveAttribute("disabled");
 
-    getService("offline").offline = true;
+    getService(OfflinePlugin).setOffline(true);
     expect(".btn1").not.toHaveAttribute("disabled");
     expect(".btn2").toHaveAttribute("disabled");
 
@@ -199,47 +201,47 @@ test("Repeatedly check connection when going offline", async () => {
     };
     onRpc("/web/webclient/version_info", mockVersionInfoRpc, { pure: true });
 
-    const env = await makeMockEnv();
-    expect(env.services.offline.offline).toBe(false);
+    await makeMockEnv();
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     // go offline
-    env.services.offline.offline = true;
+    getService(OfflinePlugin).setOffline(true);
     await tick();
 
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
     await advanceTime(2000); // first version_info check
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
     await advanceTime(3500); // second version_info check
-    expect(env.services.offline.offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
     expect.verifySteps(["version_info", "version_info"]);
 });
 
 test("isAvailableOffline", async () => {
-    const env = await makeMockEnv();
-    expect(env.services.offline.offline).toBe(false);
+    await makeMockEnv();
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
-    await env.services.offline.setAvailableOffline(1, "list", { search: { key: 1 } });
-    await env.services.offline.setAvailableOffline(1, "form", { resId: 1 });
+    await getService(OfflinePlugin).setAvailableOffline(1, "list", { search: { key: 1 } });
+    await getService(OfflinePlugin).setAvailableOffline(1, "form", { resId: 1 });
 
     // go offline
-    env.services.offline.offline = true;
+    getService(OfflinePlugin).setOffline(true);
     await tick();
-    expect(env.services.offline.offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
-    expect(env.services.offline.isAvailableOffline(1)).toBe(true);
-    expect(env.services.offline.isAvailableOffline(4)).toBe(false);
+    expect(getService(OfflinePlugin).isAvailableOffline(1)).toBe(true);
+    expect(getService(OfflinePlugin).isAvailableOffline(4)).toBe(false);
 
-    expect(env.services.offline.isAvailableOffline(1, "list")).toBe(true);
-    expect(env.services.offline.isAvailableOffline(1, "kanban")).toBe(false);
+    expect(getService(OfflinePlugin).isAvailableOffline(1, "list")).toBe(true);
+    expect(getService(OfflinePlugin).isAvailableOffline(1, "kanban")).toBe(false);
 
-    expect(env.services.offline.isAvailableOffline(1, "list", 1)).toBe(true);
-    expect(env.services.offline.isAvailableOffline(1, "kanban", 3)).toBe(false);
+    expect(getService(OfflinePlugin).isAvailableOffline(1, "list", 1)).toBe(true);
+    expect(getService(OfflinePlugin).isAvailableOffline(1, "kanban", 3)).toBe(false);
 });
 
 test("getAvailableSearches", async () => {
-    const env = await makeMockEnv();
-    const offline = env.services.offline;
-    expect(offline.offline).toBe(false);
+    await makeMockEnv();
+    const offline = getService(OfflinePlugin);
+    expect(offline.isOffline()).toBe(false);
 
     await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
     await offline.setAvailableOffline(1, "list", { search: { key: "2" } });
@@ -247,9 +249,9 @@ test("getAvailableSearches", async () => {
     await offline.setAvailableOffline(2, "kanban", { search: { key: "8" } });
 
     // go offline
-    offline.offline = true;
+    offline.setOffline(true);
     await tick();
-    expect(offline.offline).toBe(true);
+    expect(offline.isOffline()).toBe(true);
 
     expect(await offline.getAvailableSearches(1, "list")).toEqual([{ key: "2" }, { key: "1" }]);
     expect(await offline.getAvailableSearches(1, "kanban")).toEqual([{ key: "oui" }]);
@@ -257,9 +259,9 @@ test("getAvailableSearches", async () => {
 });
 
 test("getAvailableSearches (searches order)", async () => {
-    const env = await makeMockEnv();
-    const offline = env.services.offline;
-    expect(offline.offline).toBe(false);
+    await makeMockEnv();
+    const offline = getService(OfflinePlugin);
+    expect(offline.isOffline()).toBe(false);
 
     await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
     await offline.setAvailableOffline(1, "list", { search: { key: "2" } });
@@ -272,9 +274,9 @@ test("getAvailableSearches (searches order)", async () => {
     await offline.setAvailableOffline(1, "list", { search: { key: "5" } });
 
     // go offline
-    offline.offline = true;
+    offline.setOffline(true);
     await tick();
-    expect(offline.offline).toBe(true);
+    expect(offline.isOffline()).toBe(true);
 
     expect(await offline.getAvailableSearches(1, "list")).toEqual([
         { key: "1" }, // accessed 3 times
@@ -289,14 +291,14 @@ test("scheduleORM", async () => {
     onRpc("partner", "modify", ({ model, method, args, kwargs }) => {
         expect.step({ model, method, args, kwargs: JSON.stringify(kwargs) });
     });
-    const env = await makeMockEnv();
-    const offline = env.services.offline;
-    expect(offline.offline).toBe(false);
+    await makeMockEnv();
+    const offline = getService(OfflinePlugin);
+    expect(offline.isOffline()).toBe(false);
 
     // go offline
-    offline.offline = true;
+    offline.setOffline(true);
     await tick();
-    expect(offline.offline).toBe(true);
+    expect(offline.isOffline()).toBe(true);
 
     await offline.scheduleORM("partner", "create", [22, 13], { arg1: true, arg2: false }, {});
     await offline.scheduleORM(
@@ -308,7 +310,7 @@ test("scheduleORM", async () => {
     );
 
     expect(offline.hasScheduledCalls).toBe(true);
-    expect(offline.scheduledORM).toEqual({
+    expect(offline._ormToSync()).toEqual({
         22: {
             key: 22,
             value: {
@@ -339,7 +341,7 @@ test("scheduleORM", async () => {
     });
 
     offline.removeScheduledORM("7b1d3bb0");
-    expect(offline.scheduledORM).toEqual({
+    expect(offline._ormToSync()).toEqual({
         22: {
             key: 22,
             value: {
@@ -357,9 +359,9 @@ test("scheduleORM", async () => {
     });
 
     // go online
-    offline.offline = false;
+    offline.setOffline(false);
     await tick();
-    expect(offline.offline).toBe(false);
+    expect(offline.isOffline()).toBe(false);
 
     //SyncORM !
     await expect.waitForSteps([
@@ -389,20 +391,20 @@ test("syncORM ConnectionLost", async () => {
     });
 
     await makeMockEnv();
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     // go offline
     await setOffline(true);
-    expect(getService("offline").offline).toBe(true);
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
-    await getService("offline").scheduleORM(
+    await getService(OfflinePlugin).scheduleORM(
         "partner",
         "create",
         [22, 13],
         { arg1: true, arg2: false },
         { extras: { timeStamp: 11 } }
     );
-    await getService("offline").scheduleORM(
+    await getService(OfflinePlugin).scheduleORM(
         "partner",
         "modify",
         [22, 13],
@@ -412,9 +414,9 @@ test("syncORM ConnectionLost", async () => {
 
     // go online
     await setOffline(false);
-    expect(getService("offline").offline).toBe(false);
+    expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
-    expect(getService("offline").syncingORM).toBe(true);
+    expect(getService(OfflinePlugin).syncingORM()).toBe(true);
 
     //go offline Again
     await setOffline(true);
@@ -426,10 +428,10 @@ test("syncORM ConnectionLost", async () => {
     // Only the first should be try to be sync, as we go offline in the middle of the first sync
     await expect.waitForSteps(["partner create was called: returned connection lost"]);
 
-    expect(getService("offline").syncingORM).toBe(false);
+    expect(getService(OfflinePlugin).syncingORM()).toBe(false);
 
     // Neither of the scheduledORM should be in error !
-    expect(getService("offline").scheduledORM).toEqual({
+    expect(getService(OfflinePlugin)._ormToSync()).toEqual({
         22: {
             key: "22",
             value: {

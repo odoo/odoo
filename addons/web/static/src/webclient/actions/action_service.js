@@ -16,6 +16,7 @@ import { UPDATE_METHODS } from "@web/core/orm_plugin";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 import {
     Component,
@@ -25,6 +26,7 @@ import {
     onWillUnmount,
     proxy,
     status,
+    plugin,
     xml,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
@@ -133,6 +135,8 @@ const EMBEDDED_ACTIONS_CTX_KEYS = [
 const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
+    const offlinePlugin = plugin(OfflinePlugin);
+
     const breadcrumbCache = {};
     const keepLast = new KeepLast();
     let id = 0;
@@ -1264,15 +1268,15 @@ export function makeActionManager(env, router = _router) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
         if (
-            env.services.offline.offline &&
-            !env.services.offline.isAvailableOffline(
+            offlinePlugin.isOffline() &&
+            !offlinePlugin.isAvailableOffline(
                 action.id,
                 view.type,
                 options.props?.resId || action.res_id || false
             )
         ) {
             view =
-                views.find((v) => env.services.offline.isAvailableOffline(action.id, v.type)) ||
+                views.find((v) => offlinePlugin.isAvailableOffline(action.id, v.type)) ||
                 view;
         }
 
@@ -1932,7 +1936,7 @@ export function makeActionManager(env, router = _router) {
 }
 
 export const actionService = {
-    dependencies: ["dialog", "effect", "localization", "notification", "offline", "title", "ui"],
+    dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

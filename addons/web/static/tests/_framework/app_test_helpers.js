@@ -1,4 +1,5 @@
 import { after, afterEach, animationFrame, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { App } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
@@ -127,12 +128,35 @@ export function getMockEnv() {
 }
 
 /**
+ * Retrieves a service by its registered name, or a plugin by its class.
+ *
+ * Passing a string returns the matching entry from the "services" registry
+ * (this includes legacy compatibility services such as "offline"). Passing a
+ * plugin class returns the running instance of that plugin from the plugin
+ * manager, which is the preferred way to access converted plugins in tests
+ * (e.g. `getService(OfflinePlugin)` instead of `getService("offline")`).
+ *
+ * @overload
  * @template {keyof Services} T
- * @param {T} name
+ * @param {T} name service name
  * @returns {Services[T]}
  */
+/**
+ * @template T
+ * @overload
+ * @param {new (...args: any[]) => T} PluginClass plugin class
+ * @returns {T}
+ */
+/**
+ * @param {string | Function} name
+ * @returns {any}
+ */
 export function getService(name) {
-    return currentEnvs[0]?.services[name];
+    if (typeof name === "string") {
+        return currentEnvs[0]?.services[name];
+    } else {
+        return currentApp.pluginManager.getPlugin(name);
+    }
 }
 
 /**
@@ -295,7 +319,7 @@ export function mockOffline() {
      */
     function setOffline(offline) {
         _offline = offline;
-        getService("offline").offline = _offline;
+        getService(OfflinePlugin).setOffline(_offline);
         return animationFrame();
     }
 

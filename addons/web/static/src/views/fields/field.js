@@ -7,8 +7,8 @@ import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-import { Component, t, xml } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, plugin, t, xml } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const isSmall = utils.isSmall;
 
@@ -351,7 +351,7 @@ export class Field extends Component {
     };
 
     setup() {
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
@@ -409,7 +409,7 @@ export class Field extends Component {
         // Disable edition in offline mode, except for a some fields
         let readonly =
             this.props.readonly ||
-            (this.offlineService.offline &&
+            (this.offlinePlugin.isOffline() &&
                 !validFieldTypes[this.props.record.fields[this.props.name].type]
                     .availableOffline) ||
             false;

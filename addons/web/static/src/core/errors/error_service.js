@@ -2,6 +2,7 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
 import { isBrowserFirefox, isBrowserChrome } from "@web/core/browser/feature_detection";
+import { useScope } from "@odoo/owl";
 
 export class HTMLElementLoadingError extends Error {
     static message = "Error loading an HTML Element";
@@ -48,6 +49,7 @@ export class ThirdPartyScriptError extends UncaughtError {
 
 export const errorService = {
     start(env) {
+        const scope = useScope();
         function handleError(uncaughtError, retry = true) {
             function shouldLogError() {
                 // Only log errors that are relevant business-wise, following the heuristics:
@@ -64,23 +66,25 @@ export const errorService = {
             while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
             }
-            for (const [name, handler] of registry.category("error_handlers").getEntries()) {
-                try {
-                    if (handler(env, uncaughtError, originalError)) {
-                        break;
+            scope.run(() => {
+                for (const [name, handler] of registry.category("error_handlers").getEntries()) {
+                    try {
+                        if (handler(env, uncaughtError, originalError)) {
+                            break;
+                        }
+                    } catch (e) {
+                        if (shouldLogError()) {
+                            uncaughtError.event.preventDefault();
+                            console.error(
+                                `@web/core/error_service: handler "${name}" failed with "${
+                                    e.cause || e
+                                }" while trying to handle:\n` + uncaughtError.traceback
+                            );
+                        }
+                        return;
                     }
-                } catch (e) {
-                    if (shouldLogError()) {
-                        uncaughtError.event.preventDefault();
-                        console.error(
-                            `@web/core/error_service: handler "${name}" failed with "${
-                                e.cause || e
-                            }" while trying to handle:\n` + uncaughtError.traceback
-                        );
-                    }
-                    return;
                 }
-            }
+            });
             if (shouldLogError()) {
                 // Log the full traceback instead of letting the browser log the incomplete one
                 uncaughtError.event.preventDefault();

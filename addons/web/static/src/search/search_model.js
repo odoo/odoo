@@ -1,4 +1,4 @@
-import { EventBus, toRaw } from "@odoo/owl";
+import { EventBus, toRaw, plugin } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
@@ -22,6 +22,7 @@ import {
     rankInterval,
     yearSelected,
 } from "./utils/dates";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
 import { hashCode } from "@web/core/utils/strings";
 
@@ -192,10 +193,10 @@ export class SearchModel extends EventBus {
 
     setup(services) {
         // services
-        const { field: fieldService, offline, orm, view, dialog, treeProcessor } = services;
+        this.offlinePlugin = plugin(OfflinePlugin);
+        const { field: fieldService, orm, view, dialog, treeProcessor } = services;
         this.orm = orm;
         this.fieldService = fieldService;
-        this.offlineService = toRaw(offline);
         this.viewService = view;
         this.treeProcessor = treeProcessor;
         this.dialog = dialog;
@@ -711,7 +712,7 @@ export class SearchModel extends EventBus {
      * @returns Search
      */
     getCurrentSearch() {
-        if (!this.offlineService.offline) {
+        if (!this.offlinePlugin.isOffline()) {
             delete this._appliedSearch;
         } else if (this._appliedSearch) {
             return this._appliedSearch;

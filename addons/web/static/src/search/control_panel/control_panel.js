@@ -10,7 +10,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, plugin, props, proxy, t } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
 const STICKY_CLASS = "o_mobile_sticky";
@@ -36,7 +37,7 @@ export class ControlPanel extends Component {
     setup() {
         this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = plugin(OfflinePlugin);
         this.pagerProps = this.env.config.pagerProps
             ? proxy(this.env.config.pagerProps)
             : undefined;
@@ -148,8 +149,8 @@ export class ControlPanel extends Component {
 
     isViewAvailable(view) {
         return (
-            !this.offlineService.offline ||
-            this.offlineService.isAvailableOffline(this.env.config.actionId, view.type)
+            !this.offlinePlugin.isOffline() ||
+            this.offlinePlugin.isAvailableOffline(this.env.config.actionId, view.type)
         );
     }
 
