@@ -8,7 +8,9 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = ('product.group_product_manager',)
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

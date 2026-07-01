@@ -9,6 +9,12 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 @tagged('post_install', '-at_install')
 class TestUpdateProductAttributeValueWizard(ProductVariantsCommon):
 
+    _test_user_groups = (
+        'product.group_product_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_add_to_products(self):
         product_template_shirt = self.env['product.template'].create({
             'name': 'Shirt',

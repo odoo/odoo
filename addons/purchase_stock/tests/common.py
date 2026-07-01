@@ -7,8 +7,12 @@ from odoo import tools
 
 
 class PurchaseTestCommon(TestStockValuationCommon):
+    _test_user_groups = (
+        'stock.group_stock_user',
+        'purchase.group_purchase_user',
+    )
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_name = 'Test Purchase & Stock User'
 
     def _create_bill(self, product=None, quantity=None, price_unit=None, post=True, **kwargs):
         if 'purchase_order' not in kwargs:
@@ -77,6 +81,14 @@ class PurchaseTestCommon(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # TestStockValuationCommon creates its own `cls.company` after
+        # BaseCommon has already built `cls._test_user` (bound to the original
+        # env company) and sets `allowed_company_ids=[cls.company.id]`. The
+        # restricted test user must therefore be granted access to that company,
+        # otherwise `env.company`/`env.companies` raises "Access to unauthorized
+        # or invalid companies." on the first access check. Setup master-data -> sudo.
+        if cls._test_user:
+            cls._test_user.sudo().company_ids = [(4, cls.company.id)]
         cls.purchase_user = cls._create_new_internal_user(name='Purchase User', login='purchase_user', groups='purchase.group_purchase_user')
         cls.route_buy = cls.warehouse.buy_pull_id.route_id
 

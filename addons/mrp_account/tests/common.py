@@ -6,8 +6,9 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 @tagged('-at_install', 'post_install')
 class TestBomPriceCommon(TestStockValuationCommon):
+    _test_user_groups = ('mrp.group_mrp_user',)
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_name = 'Test MRP User'
 
     @classmethod
     def _create_product(cls, name, price, quantity=100, category=None):
@@ -54,6 +55,14 @@ class TestBomPriceCommon(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # TestStockValuationCommon creates its own `cls.company` after
+        # BaseCommon has already built `cls._test_user` (bound to the original
+        # env company) and sets `allowed_company_ids=[cls.company.id]`. The
+        # restricted test user must therefore be granted access to that company,
+        # otherwise `env.companies` raises "Access to unauthorized or invalid
+        # companies." on the first access check. Setup master-data -> sudo.
+        if cls._test_user:
+            cls._test_user.sudo().company_ids = [(4, cls.company.id)]
         # Required for `uom_id ` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
         # Required for `product_id ` to be visible in the view
@@ -142,7 +151,9 @@ class TestBomPriceCommon(TestStockValuationCommon):
 
 class TestBomPriceOperationCommon(TestBomPriceCommon):
     """ Common bom setup with workorder operations"""
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = ('mrp.group_mrp_user',)
+
+    _test_user_name = 'Test MRP User'
 
     @classmethod
     def setUpClass(cls):

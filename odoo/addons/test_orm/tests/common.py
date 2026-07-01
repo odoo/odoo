@@ -5,7 +5,9 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestOrmPartnerCommon(BaseCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = ('base.group_user',)
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def _load_partners_set(cls):

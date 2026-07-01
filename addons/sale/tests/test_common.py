@@ -7,6 +7,10 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleCommon(SaleCommon):
+    _test_user_groups = ('sales_team.group_sale_salesman',)
+
+    _test_user_name = 'Test Sales User'
+
     def test_common(self):
         empty_order = self._create_so(order_line=[])
         self.assertFalse(empty_order.order_line)

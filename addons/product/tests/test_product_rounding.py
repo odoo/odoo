@@ -11,6 +11,12 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('post_install', '-at_install')
 class TestProductRounding(ProductCommon):
 
+    _test_user_groups = (
+        'product.group_product_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

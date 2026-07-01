@@ -10,6 +10,12 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('post_install', '-at_install')
 class TestPricelistReport(ProductCommon):
 
+    _test_user_groups = (
+        'product.group_product_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_product_template_pricelist_report(self):
         """Load report for `product.template` records."""
         self.env['report.product.report_pricelist'].get_html(data={
@@ -42,6 +48,12 @@ class TestPricelistReport(ProductCommon):
 
 @tagged('post_install', '-at_install')
 class TestPricelistReportController(ProductCommon, HttpCase):
+
+    _test_user_groups = (
+        'product.group_product_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

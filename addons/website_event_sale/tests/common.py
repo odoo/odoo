@@ -8,8 +8,9 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
+    _test_user_groups = ('sales_team.group_sale_salesman',)
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_name = 'Test Sales User'
 
     @classmethod
     def setUpClass(cls):
@@ -60,7 +61,7 @@ class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
                 'website_published': True,
             }
         ])
-        cls.ticket, cls.ticket_2 = cls.env['event.event.ticket'].create([
+        cls.ticket, cls.ticket_2 = cls.env['event.event.ticket'].sudo().create([
             {
                 'event_id': cls.event.id,
                 'name': 'Standard',

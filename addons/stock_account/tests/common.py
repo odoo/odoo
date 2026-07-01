@@ -11,8 +11,12 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestStockValuationCommon(BaseCommon):
-    # Override
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'stock.group_stock_user',
+        'account.group_account_invoice',
+    )
+
+    _test_user_name = 'Test Stock User & Accountant'
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -74,7 +78,8 @@ class TestStockValuationCommon(BaseCommon):
         return action['res_id'] and self.env['account.move'].browse(action['res_id'])
 
     def _use_price_diff(self):
-        self.account_price_diff = self.env['account.account'].create({
+        # SETUP: account.account master-data -> sudo
+        self.account_price_diff = self.env['account.account'].sudo().create({
             'name': 'Price Difference Account',
             'code': '100102',
             'account_type': 'asset_current',
@@ -109,7 +114,8 @@ class TestStockValuationCommon(BaseCommon):
         })
 
     def _use_inventory_location_accounting(self):
-        self.account_inventory = self.env['account.account'].create({
+        # SETUP: account.account master-data -> sudo
+        self.account_inventory = self.env['account.account'].sudo().create({
             'name': 'Inventory Account',
             'code': '100101',
             'account_type': 'asset_current',
@@ -357,6 +363,10 @@ class TestStockValuationCommon(BaseCommon):
             'company_id': cls.company.id,
             'company_ids': cls.company.ids,
         })
+        # The restricted test_user (see BaseCommon) is only a member of the main
+        # company; the tests here run in cls.company, so grant it access too.
+        if cls._test_user:
+            cls._test_user.company_ids |= cls.company
         cls.inventory_user = cls._create_new_internal_user(name='Inventory User',
                                                            login='inventory_user',
                                                            groups='stock.group_stock_user',
@@ -386,6 +396,11 @@ class TestStockValuationCommon(BaseCommon):
         })
         cls.other_company = cls._create_company(name="Other Company")
         cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
+        # Several tests operate cross-company (other_company / branch); grant the
+        # restricted test_user access to those companies too, otherwise the ORM
+        # raises "Access to unauthorized or invalid companies."
+        if cls._test_user:
+            cls._test_user.company_ids |= cls.other_company | cls.branch
 
         # Stock account
         cls.account_expense = cls.company.expense_account_id

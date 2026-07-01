@@ -10,6 +10,13 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     def request_get_values(self, product_template, ptav_ids=None):
         base_url = product_template.get_base_url()
         response = self.url_open(
@@ -106,7 +113,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.product_template_sofa.attribute_line_ids.value_ids -= self.color_attribute_red
         self.assertEqual(len(self.product_template_sofa.product_variant_ids.filtered("active")), 2)
 
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         result = self.request_get_values(self.product_template_sofa)
 
         # Make sure the inactive ptav was removed from the loaded attributes
@@ -128,7 +135,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         product_template.attribute_line_ids[0].unlink()
         self.assertEqual(len(product_template.product_variant_ids), 2)
 
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         result = self.request_get_values(product_template)
 
         # Make sure archived combinations with inactive ptav are not loaded as it's useless to
@@ -168,7 +175,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 lambda ptav: ptav.product_attribute_value_id == self.size_attribute_l
             ).id,
         ]
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         result = self.request_get_values(product_template, variant_ptav_ids)
         archived_ptav = archived_variants.product_template_attribute_value_ids.filtered(
             lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
@@ -194,7 +201,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         ptav_with_exclusion.write({"excluded_value_ids": [Command.link(ptav_excluded.id)]})
         self.assertEqual(len(product_template.product_variant_ids), 3)
 
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         result = self.request_get_values(product_template)
         # The PTAVs should be mutually excluded
         self.assertEqual(
@@ -234,7 +241,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         """
         product_template = self.create_product_template_with_attribute_no_variant()
 
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
 
         ptav_red = product_template.attribute_line_ids.product_template_value_ids.filtered(
             lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
@@ -280,7 +287,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
             ).id
         ]
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         result = self.request_get_values(product_template, variant_ptav_ids)
         selected_values = [
             selected_value
@@ -406,7 +413,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             ],
         })
 
-        self.authenticate("demo", "demo")
+        self.authenticate('test_user', 'test_user')
         # This should not raise a KeyError
         result = self.request_get_values(product_template)
 

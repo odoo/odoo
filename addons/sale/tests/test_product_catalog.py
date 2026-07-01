@@ -8,6 +8,13 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestProductCatalog(HttpCase, SaleCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -129,7 +136,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def test_data_with_discounted_lines(self):
         self._create_pricelist_discount_rules()
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             # Discounts included in price
             "group_product_pricelist": True,
             "group_discount_per_so_line": True,
@@ -223,7 +230,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
         )
 
         # Enable discounts, add item --> discount should be on discount field
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             # Discounts included in price
             "group_product_pricelist": True,
             "group_discount_per_so_line": True,

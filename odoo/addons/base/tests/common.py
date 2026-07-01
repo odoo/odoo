@@ -15,7 +15,6 @@ DISABLED_MAIL_CREATE_CONTEXT = {
 
 
 class BaseCommon(TransactionCase):
-
     _test_user_groups = ('base.group_user',)
 
     _test_user_name = 'Test User'
@@ -49,7 +48,6 @@ class BaseCommon(TransactionCase):
         else:
             cls.setup_main_company()
 
-        cls._test_user = None
         if cls._test_user_groups:
             cls._test_user = new_test_user(
                 cls.env,
@@ -69,6 +67,8 @@ class BaseCommon(TransactionCase):
                 company_id=company.id,
                 company_ids=[Command.set(company.ids)],
             )
+        else:
+            cls._test_user = cls.env.user
 
         # Make sure all class variables have the same env.
         # Do not specify any class variables before the env changes.
@@ -100,6 +100,8 @@ class BaseCommon(TransactionCase):
                 setattr(self, key, value.with_env(self.env))
 
         self.patch(self.env.transaction, "default_env", self.env)
+
+        self.env.invalidate_all()
 
     @classmethod
     def default_env_context(cls):

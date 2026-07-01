@@ -11,6 +11,13 @@ from odoo.addons.delivery.tests.common import DeliveryCommon
 
 @tagged("post_install", "-at_install")
 class TestDeliveryCost(DeliveryCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -49,7 +56,7 @@ class TestDeliveryCost(DeliveryCommon):
         })
         # I add delivery cost in Sales order
 
-        self.a_sale = self.env["account.account"].create({
+        self.a_sale = self.env["account.account"].sudo().create({
             "code": "X2020",
             "name": "Product Sales - (test)",
             "account_type": "income",
@@ -142,7 +149,7 @@ class TestDeliveryCost(DeliveryCommon):
         )
 
         # I set default delivery policy
-        self.env["res.config.settings"].create({}).execute()
+        self.env["res.config.settings"].sudo().create({}).execute()
 
     def test_01_delivery_cost_from_pricelist(self):
         """This test aims to validate the use of a pricelist to compute the delivery cost in the
@@ -247,12 +254,12 @@ class TestDeliveryCost(DeliveryCommon):
     def test_01_taxes_on_delivery_cost(self):
         # Creating taxes and fiscal position
 
-        self.env.ref("base.group_user").write({
+        self.env.ref("base.group_user").sudo().write({
             "implied_ids": [(4, self.env.ref("product.group_product_pricelist").id)]
         })
 
-        fiscal_position = self.env["account.fiscal.position"].create({"name": "fiscal_pos_a"})
-        tax_price_include, tax_price_exclude = self.env["account.tax"].create([
+        fiscal_position = self.env["account.fiscal.position"].sudo().create({"name": "fiscal_pos_a"})
+        tax_price_include, tax_price_exclude = self.env["account.tax"].sudo().create([
             {
                 "name": "10% inc",
                 "type_tax_use": "sale",
@@ -430,17 +437,18 @@ class TestDeliveryCost(DeliveryCommon):
         Taxes from the branch company should be taken with a fallback on parent company.
         """
         company = self.env.company
-        branch = self.env["res.company"].create({
+        branch = self.env["res.company"].sudo().create({
             "name": "Branch",
             "country_id": company.country_id.id,
             "parent_id": company.id,
         })
+        self.env.user.company_ids += branch
         # create taxes for the parent company and its branch
-        tax_groups = self.env["account.tax.group"].create([
+        tax_groups = self.env["account.tax.group"].sudo().create([
             {"name": "Tax Group A", "company_id": company.id},
             {"name": "Tax Group B", "company_id": branch.id},
         ])
-        tax_a = self.env["account.tax"].create({
+        tax_a = self.env["account.tax"].sudo().create({
             "name": "Tax A",
             "type_tax_use": "sale",
             "amount_type": "percent",
@@ -448,7 +456,7 @@ class TestDeliveryCost(DeliveryCommon):
             "tax_group_id": tax_groups[0].id,
             "company_id": company.id,
         })
-        tax_b = self.env["account.tax"].create({
+        tax_b = self.env["account.tax"].sudo().create({
             "name": "Tax B",
             "type_tax_use": "sale",
             "amount_type": "percent",
@@ -552,15 +560,16 @@ class TestDeliveryCost(DeliveryCommon):
         is converted from the main's company's currency to the current company's on SOs.
         """
         # Create a company that uses a different currency
-        currency_bells = self.env["res.currency"].create({"name": "Bell", "symbol": "C"})
+        currency_bells = self.env["res.currency"].sudo().create({"name": "Bell", "symbol": "C"})
 
-        nook_inc = self.env["res.company"].create({
+        nook_inc = self.env["res.company"].sudo().create({
             "name": "Nook inc.",
             "currency_id": currency_bells.id,
         })
+        self.env.user.company_ids += nook_inc
 
         with freeze_time("2000-01-01"):  # Make sure the rate is in the past
-            self.env["res.currency.rate"].with_company(nook_inc).create({
+            self.env["res.currency.rate"].sudo().with_company(nook_inc).create({
                 "currency_id": currency_bells.id,
                 "company_rate": 0.5,
                 "inverse_company_rate": 2,

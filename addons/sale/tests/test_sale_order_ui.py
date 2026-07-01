@@ -8,6 +8,13 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleOrderUI(HttpCase, ProductVariantsCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     def test_sale_order_keep_uom_on_variant_wizard_quantity_change(self):
         so = self.env["sale.order"].create({
             "partner_id": self.partner.id,
@@ -23,7 +30,7 @@ class TestSaleOrderUI(HttpCase, ProductVariantsCommon):
         self.start_tour(
             f"/odoo/sales/{so.id}",
             "sale_order_keep_uom_on_variant_wizard_quantity_change",
-            login="admin",
+            login=self.env.user.login,
         )
 
         sol = so.order_line[0]

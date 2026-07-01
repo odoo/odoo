@@ -5,6 +5,9 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class UomCommon(BaseCommon):
+    _test_user_groups = ('base.group_user',)
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(cls):

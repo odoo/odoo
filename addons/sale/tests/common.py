@@ -11,6 +11,10 @@ class SaleCommon(
     ProductCommon,  # BaseCommon, UomCommon
     SalesTeamCommon,
 ):
+    _test_user_groups = ('sales_team.group_sale_salesman',)
+
+    _test_user_name = 'Test Sales User'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,6 +26,7 @@ class SaleCommon(
             (cls.product + cls.service_product).write({"taxes_id": [Command.clear()]})
         cls.sale_order = cls.env["sale.order"].create([
             {
+                "user_id": cls._test_user.id,
                 "partner_id": cls.partner.id,
                 "order_line": [
                     Command.create({"product_id": cls.product.id, "product_uom_qty": 5.0}),
