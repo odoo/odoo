@@ -69,6 +69,12 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             }),
         on_snippet_dropped_handlers: ({ snippetEl }) => this.handleBgColorUpdated(snippetEl),
         on_cloned_handlers: ({ cloneEl }) => this.handleBgColorUpdated(cloneEl),
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+        on_website_color_updated_handlers: this.syncShapeColorsWithTheme.bind(this),
+=======
+        on_website_color_updated_handlers: this.syncBackgroundShapeColorsWithTheme.bind(this),
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
     };
     static shared = [
         "getShapeStyleUrl",
@@ -205,6 +211,61 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         return shapeInfo.subgroup === "connections";
     }
     /**
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String} updatedColorVariable - Updated theme color variable
+     * like 'o-color-*'.
+     */
+    syncShapeColorsWithTheme(updatedColorVariable) {
+        if (!updatedColorVariable.startsWith("o-color-")) {
+            return;
+        }
+        const selector = `[data-oe-shape-data*='"${updatedColorVariable}"'] .o_we_shape[style*="background-image"]`;
+        this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+        this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
+            this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
+        });
+    }
+    refreshBgShapes(shapeEls) {
+        for (const shapeEl of shapeEls) {
+            shapeEl.style.setProperty(
+                "background-image",
+                `url("${this.getShapeSrc(this.getShapeData(shapeEl.parentElement))}")`
+            );
+        }
+    }
+    /**
+=======
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String[]} updatedColorVariables - Updated theme color variables.
+     */
+    syncBackgroundShapeColorsWithTheme(updatedColorVariables) {
+        for (const colorVar of updatedColorVariables) {
+            if (!colorVar.startsWith("o-color-")) {
+                continue;
+            }
+            const selector = `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape[style*="background-image"]`;
+            this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+            this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
+                this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
+            });
+        }
+    }
+    refreshBgShapes(shapeEls) {
+        for (const shapeEl of shapeEls) {
+            shapeEl.style.setProperty(
+                "background-image",
+                `url("${this.getShapeSrc(this.getShapeData(shapeEl.parentElement))}")`
+            );
+        }
+    }
+    /**
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
      * Handles everything related to saving state before preview and restoring
      * it after a preview or locking in the changes when not in preview.
      *

@@ -116,6 +116,12 @@ export class ImageShapeOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             this.addShapeColorAttribute(snippetEl);
         },
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+        on_website_color_updated_handlers: this.syncShapeColorsWithTheme.bind(this),
+=======
+        on_website_color_updated_handlers: this.syncImageShapeColorsWithTheme.bind(this),
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -163,7 +169,97 @@ export class ImageShapeOptionPlugin extends Plugin {
         };
         await handleImagesIfDataset(elements, node, "shape", callback);
     }
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
     getShapeCategory(img) {
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+    /**
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String} updatedColorVariable - Updated theme color variable value
+     * like 'o-color-*'.
+     */
+    async syncShapeColorsWithTheme(updatedColorVariable) {
+        if (!updatedColorVariable.startsWith("o-color-")) {
+            return;
+        }
+        const selector = `img[data-shape][data-shape-colors*="${updatedColorVariable};"], img[data-shape][data-shape-colors$="${updatedColorVariable}"]`;
+        await this.refreshImgShapes([...this.document.querySelectorAll(selector)]);
+        await this.config.snippetModel.updateContent("snippet_custom", async (snippetContent) => {
+            await this.refreshImgShapes([...snippetContent.querySelectorAll(selector)]);
+        });
+    }
+    async refreshImgShapes(shapeEls) {
+        // Promise.allSettled is used here to ensure that all shapes are
+        // processed, even if some fail to refresh. This prevents a single
+        // failure from blocking updates to the remaining shapes.
+        await Promise.allSettled(
+            shapeEls.map(async (imgEl) => {
+                const updateImageAttributes = await this.loadShape(imgEl, {
+                    shapeColors: imgEl.dataset.shapeColors,
+                });
+                updateImageAttributes();
+            })
+        );
+    }
+    async canHaveHoverEffect(imgEl) {
+        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        const isImageSupportedForShapes = await this.asyncIsImageSupportedForShapes(imgEl, dataset);
+        return (
+            imgEl.tagName === "IMG" &&
+            !this.isDeviceShape(imgEl) &&
+            !this.isAnimableShape(dataset.shape) &&
+            isImageSupportedForShapes
+        );
+    }
+    isDeviceShape(img) {
+=======
+    /**
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String[]} updatedColorVariables - Updated theme color variables.
+     */
+    async syncImageShapeColorsWithTheme(updatedColorVariables) {
+        for (const colorVar of updatedColorVariables) {
+            if (!colorVar.startsWith("o-color-")) {
+                continue;
+            }
+            const selector = `img[data-shape][data-shape-colors*="${colorVar};"], img[data-shape][data-shape-colors$="${colorVar}"]`;
+            await this.refreshImgShapes([...this.document.querySelectorAll(selector)]);
+            await this.config.snippetModel.updateContent(
+                "snippet_custom",
+                async (snippetContent) => {
+                    await this.refreshImgShapes([...snippetContent.querySelectorAll(selector)]);
+                }
+            );
+        }
+    }
+    async refreshImgShapes(shapeEls) {
+        // Promise.allSettled is used here to ensure that all shapes are
+        // processed, even if some fail to refresh. This prevents a single
+        // failure from blocking updates to the remaining shapes.
+        await Promise.allSettled(
+            shapeEls.map(async (imgEl) => {
+                const updateImageAttributes = await this.loadShape(imgEl, {
+                    shapeColors: imgEl.dataset.shapeColors,
+                });
+                updateImageAttributes();
+            })
+        );
+    }
+    async canHaveHoverEffect(imgEl) {
+        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        const isImageSupportedForShapes = await this.asyncIsImageSupportedForShapes(imgEl, dataset);
+        return (
+            imgEl.tagName === "IMG" &&
+            !this.isDeviceShape(imgEl) &&
+            !this.isAnimableShape(dataset.shape) &&
+            isImageSupportedForShapes
+        );
+    }
+    isDeviceShape(img) {
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
         const shapeName = img.dataset.shape;
         return shapeName?.split("/")[1];
     }

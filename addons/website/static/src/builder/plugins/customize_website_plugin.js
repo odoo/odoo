@@ -37,6 +37,18 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
  */
 
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+/**
+ * @typedef {((color: string) => void)[]} on_website_color_updated_handlers
+ */
+
+=======
+/**
+ * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
+ */
+
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
@@ -1073,6 +1085,16 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             );
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
+<<<<<<< 0bc06aa88cbf83345ca7d266df4822430d691a5b
+||||||| f5bf4777f787aa7512f010a94ba2ebb29e48b7d5
+        await Promise.allSettled(
+            this.getResource("on_website_color_updated_handlers").map((handler) => handler(color))
+        );
+=======
+        await Promise.allSettled(
+            this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
+        );
+>>>>>>> 3df98d7f321a037c9483c24c71991c5bca5e3c26
     }
 }
 
