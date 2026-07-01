@@ -742,6 +742,7 @@ class ResCompany(models.Model):
         """ Returns the unaffected earnings account for this company, creating one
         if none has yet been defined.
         """
+        self = self.filtered(lambda x: x.active)
         unaffected_earnings_type = "equity_unaffected"
         account = self.env['account.account'].with_company(self).search([
             *self.env['account.account']._check_company_domain(self),
