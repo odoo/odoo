@@ -8,7 +8,7 @@
                 t-out="this.props.attributes.urlInputLabel"
             />
             <input
-                t-custom-model="this.state.url"
+                t-model.proxy="this.state.url"
                 t-att-id="this.props.attributes.urlInputName"
                 t-att-name="this.props.attributes.urlInputName"
                 class="form-control"
@@ -84,7 +84,7 @@
                     t-out="this.props.attributes.urlInputLabel"
                 />
                 <input
-                    t-custom-model="this.state.url"
+                    t-model.proxy="this.state.url"
                     t-att-id="this.props.attributes.urlInputName"
                     t-att-name="this.props.attributes.urlInputName"
                     class="form-control h-100"

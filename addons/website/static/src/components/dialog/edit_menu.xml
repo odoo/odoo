@@ -8,7 +8,7 @@
                 Title
             </label>
             <div class="col-md-9">
-                <input type="text" t-on-input="this.onTitleInput" t-custom-model="this.state.name"
+                <input type="text" t-on-input="this.onTitleInput" t-model.proxy="this.state.name"
                     class="form-control" t-att-class="{ 'is-invalid': this.state.invalidName }" t-ref="this.autofocusRef"/>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="col-md-9">
                 <div class="position-relative" t-att-class="{ 'o_page_not_found': this.state.pageNotFound }">
                     <input id="url_input" t-on-input="this.onUrlInput" t-ref="this.urlInputRef" type="text"
-                        t-custom-model="this.state.url" class="form-control" t-att-class="{ 'is-invalid': this.state.invalidUrl }" autocomplete="off"/>
+                        t-model.proxy="this.state.url" class="form-control" t-att-class="{ 'is-invalid': this.state.invalidUrl }" autocomplete="off"/>
                     <i t-if="this.state.pageNotFound and !this.state.invalidUrl"
                         class="oi text-warning position-absolute top-50 end-0 translate-middle-y me-2"
                         data-icon="info"
