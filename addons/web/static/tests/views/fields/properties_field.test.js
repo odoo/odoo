@@ -598,6 +598,55 @@ test("properties: selection", async () => {
     expect(getOptionsValues()).toEqual(["New option", "", "C", "New option 2", "A"]);
 });
 
+test("properties: selection option keys are generated from labels and handle duplicates", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await animationFrame();
+
+    const getOptionNames = () =>
+        queryAll(".o_property_field_popover .o_field_property_selection_option").map((option) =>
+            option.getAttribute("option-name")
+        );
+    const getOptionLabels = () =>
+        queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
+
+    await click(".o_field_property_selection .fa-plus");
+    await animationFrame();
+    await click(".o_property_field_popover .o_field_property_selection_option:last-of-type input");
+    await edit("New option");
+    await click(".o_field_property_selection .fa-plus");
+    await animationFrame();
+    await click(".o_property_field_popover .o_field_property_selection_option:last-of-type input");
+    await edit("New option");
+    const input = queryFirst(
+        ".o_property_field_popover .o_field_property_selection_option:last-of-type input"
+    );
+    input.blur();
+    await animationFrame();
+
+    expect(getOptionLabels()).toEqual(["A", "B", "C", "New option", "New option"]);
+    expect(getOptionNames()).toEqual(["a", "b", "c", "New option", "New option_1"]);
+});
+
 /**
  * Test the float and the integer property.
  */
