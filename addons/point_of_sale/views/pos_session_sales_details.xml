@@ -15,13 +15,22 @@
                             </div>
                         </div>
                         <div class="col-6 text-center">
+                            <h2 t-if="state == 'multiple'">Sales Details</h2>
                             <h2 t-if="state == 'closed' or state == 'opened'" id="daily_report_title">Daily Sales Report
                                 <t t-if="state == 'closed'">Z</t>
                                 <t t-else="">X</t>
                             </h2>
                             <t t-if="session_name">
-                                Session ID: <span t-out="session_name">987657</span>
+                                Session ID: <span t-out="session_name"/>
                             </t>
+                            <div t-if="state == 'opened'">
+                                Opening Date: <t t-out="date_start" t-options="{'widget': 'datetime'}"/>
+                            </div>
+                            <div t-if="date_start and date_stop" id="report_period" style="white-space: nowrap;">
+                                <t t-if="state == 'multiple'">Period: </t>
+                                <t t-elif="state == 'closed'">Session: </t>
+                                <span t-out="date_start" t-options="{'widget': 'datetime'}"/> - <span t-out="date_stop" t-options="{'widget': 'datetime'}"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -35,18 +44,8 @@
                     </div>
                 </div>
                 <div class="text-center" style="break-inside: avoid;">
-                    <t t-if="state == 'multiple'">
-                        <h2>Sales Details</h2>
-                        <div class="oe_structure"></div>
-                        <t t-if="config_names">
-                            <strong>Config names</strong>
-                            <t t-foreach="config_names" t-as="name">
-                                <span t-out="name">Sample Config Name</span>,
-                            </t>
-                        </t>
-                    </t>
-                    <t t-if="date_start and date_stop">
-                        <span t-out="date_start" t-options="{'widget': 'datetime'}">2-03-2000 9:00 AM</span> - <span t-out="date_stop" t-options="{'widget': 'datetime'}">Demo 3-03-2000 5:00 PM</span>
+                    <t t-if="state == 'multiple' and config_names">
+                        <strong>Config names: </strong><t t-out="', '.join(config_names)"/>
                     </t>
                 </div>
                 <br/>
