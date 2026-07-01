@@ -111,7 +111,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             this.addShapeColorAttribute(snippetEl);
         },
-        on_website_color_updated_handlers: this.syncShapeColorsWithTheme.bind(this),
+        on_website_color_updated_handlers: this.syncImageShapeColorsWithTheme.bind(this),
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -163,18 +163,22 @@ export class ImageShapeOptionPlugin extends Plugin {
      * Update the shape color (when a theme color is selected) whenever the
      * theme preset color changes.
      *
-     * @param {String} updatedColorVariable - Updated theme color variable value
-     * like 'o-color-*'.
+     * @param {String[]} updatedColorVariables - Updated theme color variables.
      */
-    async syncShapeColorsWithTheme(updatedColorVariable) {
-        if (!updatedColorVariable.startsWith("o-color-")) {
-            return;
+    async syncImageShapeColorsWithTheme(updatedColorVariables) {
+        for (const colorVar of updatedColorVariables) {
+            if (!colorVar.startsWith("o-color-")) {
+                continue;
+            }
+            const selector = `img[data-shape][data-shape-colors*="${colorVar};"], img[data-shape][data-shape-colors$="${colorVar}"]`;
+            await this.refreshImgShapes([...this.document.querySelectorAll(selector)]);
+            await this.config.snippetModel.updateContent(
+                "snippet_custom",
+                async (snippetContent) => {
+                    await this.refreshImgShapes([...snippetContent.querySelectorAll(selector)]);
+                }
+            );
         }
-        const selector = `img[data-shape][data-shape-colors*="${updatedColorVariable};"], img[data-shape][data-shape-colors$="${updatedColorVariable}"]`;
-        await this.refreshImgShapes([...this.document.querySelectorAll(selector)]);
-        await this.config.snippetModel.updateContent("snippet_custom", async (snippetContent) => {
-            await this.refreshImgShapes([...snippetContent.querySelectorAll(selector)]);
-        });
     }
     async refreshImgShapes(shapeEls) {
         // Promise.allSettled is used here to ensure that all shapes are
