@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from http import HTTPStatus
 from os.path import basename
 from os.path import join as opj
@@ -587,7 +587,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self):
-        one_week_away = int((datetime.now(timezone.utc) + timedelta(weeks=1)).timestamp())
+        one_week_away = int((datetime.now(UTC) + timedelta(weeks=1)).timestamp())
 
         res1 = self.nodb_url_open('/test_http/static/src/img/gizeh.png')
         res1.raise_for_status()
@@ -598,13 +598,13 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertIn('ETag', res1.headers)
 
         res_etag = self.nodb_url_open('/test_http/static/src/img/gizeh.png', headers={
-            'If-None-Match': res1.headers['ETag']
+            'If-None-Match': res1.headers['ETag'],
         })
         res_etag.raise_for_status()
         self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")
 
         res_last_modified = self.nodb_url_open('/test_http/static/src/img/gizeh.png', headers={
-            'If-Modified-Since': datetime.now(timezone.utc).strftime(HTTP_DATETIME_FORMAT),
+            'If-Modified-Since': datetime.now(UTC).strftime(HTTP_DATETIME_FORMAT),
         })
         res_last_modified.raise_for_status()
         self.assertEqual(res_last_modified.status_code, 304, "We should not download the file again.")
@@ -614,7 +614,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         # Wed, 21 Oct 2015 07:28:00 GMT
         # The timezone should be %Z (instead of 'GMT' hardcoded) but
         # somehow strftime doesn't set it.
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         one_year_away = int((now + timedelta(days=365)).timestamp())
 
         res1 = self.assertDownloadGizeh('/web/image/test_http.gizeh_png?unique=1')
@@ -624,7 +624,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertIn('ETag', res1.headers)
 
         res_etag = self.db_url_open('/web/image/test_http.gizeh_png?unique=1', headers={
-            'If-None-Match': res1.headers['ETag']
+            'If-None-Match': res1.headers['ETag'],
         })
         res_etag.raise_for_status()
         self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")

@@ -15,6 +15,7 @@ from . import request
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
+
     from odoo.api import Environment
 
 _logger = logging.getLogger('odoo.http')

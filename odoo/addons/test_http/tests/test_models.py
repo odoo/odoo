@@ -2,13 +2,13 @@
 import logging
 from http import HTTPStatus
 
-from odoo.tests import tagged, get_db_name
-from odoo.tests.common import new_test_user, Like
+from odoo.tests import get_db_name, tagged
+from odoo.tests.common import Like, new_test_user
 from odoo.tools import mute_logger
 from odoo.tools.misc import submap
-from odoo.addons.test_http.utils import HtmlTokenizer
 
 from .test_common import TestHttpBase
+from odoo.addons.test_http.utils import HtmlTokenizer
 
 
 @tagged('post_install', '-at_install')
@@ -37,7 +37,7 @@ class TestHttpModels(TestHttpBase):
                     <li><a href="/test_http/1/2">Abydos (P2X-125)</a></li>
                     <li><a href="/test_http/1/3">Dakara (P5C-113)</a></li>
                 </ul>
-                ''')
+                '''),
             )
 
     @mute_logger('odoo.http')

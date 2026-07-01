@@ -25,14 +25,19 @@ from werkzeug.utils import redirect
 from odoo.tools import consteq, json_default
 
 from . import request
+from ._facade import (  # noqa: F401
+    DEFAULT_MAX_CONTENT_LENGTH,
+    MAX_FORM_SIZE,
+    HTTPRequest,
+)
 from .dispatcher import HttpDispatcher
 from .geoip import GeoIP
 from .response import FutureResponse, Response
 from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session
 
-from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE, HTTPRequest  # noqa: F401
 if typing.TYPE_CHECKING:
-    from collections.abc import Iterable, Set as AbstractSet, Mapping
+    from collections.abc import Iterable, Mapping
+    from collections.abc import Set as AbstractSet
 
     from odoo.api import Environment
     from odoo.models import BaseModel

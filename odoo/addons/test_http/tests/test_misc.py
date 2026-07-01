@@ -43,7 +43,7 @@ class TestHttpMisc(TestHttpBase):
             'Host': '',
             'X-Forwarded-For': client_ip,
             'X-Forwarded-Host': host,
-            'X-Forwarded-Proto': 'https'
+            'X-Forwarded-Proto': 'https',
         }
 
         # Don't trust client-sent forwarded headers
@@ -103,8 +103,8 @@ class TestHttpMisc(TestHttpBase):
 
         payload = json.dumps({'jsonrpc': '2.0', 'method': 'call', 'id': None, 'params': {
             'service': 'object', 'method': 'execute', 'args': [
-                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id
-            ]
+                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id,
+            ],
         }})
 
         for method in (self.db_url_open, self.nodb_url_open):
@@ -135,7 +135,7 @@ class TestHttpMisc(TestHttpBase):
             'Host': '',
             'X-Forwarded-For': TEST_IP,
             'X-Forwarded-Host': 'odoo.com',
-            'X-Forwarded-Proto': 'https'
+            'X-Forwarded-Proto': 'https',
         }
         with patch.dict(config.options, {'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/geoip', headers=headers)

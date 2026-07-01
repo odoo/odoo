@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 from werkzeug.datastructures import ResponseCacheControl
@@ -61,4 +61,4 @@ class TestHttpBase(HttpCaseWithUserDemo):
         )
 
     def parse_http_expires(self, expires):
-        return datetime.strptime(expires, HTTP_DATETIME_FORMAT).replace(tzinfo=timezone.utc)
+        return datetime.strptime(expires, HTTP_DATETIME_FORMAT).replace(tzinfo=UTC)
