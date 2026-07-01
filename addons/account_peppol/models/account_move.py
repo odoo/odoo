@@ -24,11 +24,6 @@ class AccountMove(models.Model):
     )
     peppol_is_sent = fields.Boolean(compute='_compute_peppol_is_sent')
 
-    def action_send_and_print(self):
-        for move in self:
-            move.commercial_partner_id.button_account_peppol_check_partner_endpoint(company=move.company_id)
-        return super().action_send_and_print()
-
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done/has been replied to
         # then it means it has been already sent to peppol proxy and we can't cancel
