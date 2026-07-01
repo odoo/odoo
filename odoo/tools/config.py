@@ -40,6 +40,7 @@ DEFAULT_COLOR_SPEC = {
     'http_response_body': 'auto',
     'perf': 'auto',
     'cursor_mode': 'auto',
+    'sql': 'auto',
 }
 
 
