@@ -33,6 +33,7 @@
                                     class="'text-truncate'"
                                     description="item.description"
                                     selected="item.isActive"
+                                    open="this.hasActiveRelativeFilter(item)"
                                     onWillToggle="() => this.onToggle({ itemId: item.id, optionsParams: item.optionsParams })"
                                 >
                                     <!-- TODO cleanup -->
