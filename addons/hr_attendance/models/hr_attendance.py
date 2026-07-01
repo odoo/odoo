@@ -192,6 +192,12 @@ class HrAttendance(models.Model):
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 attendance.worked_hours = attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
+            elif not attendance.check_out and attendance.check_in and attendance.employee_id:
+                now_tz = fields.Datetime.now().replace(tzinfo=UTC).astimezone(ZoneInfo(attendance.employee_id.tz or 'UTC'))
+                now_naive = now_tz.astimezone(UTC).replace(tzinfo=None)
+                start_naive = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(UTC).replace(tzinfo=None)
+                delta = (attendance.check_out or now_naive) - max(attendance.check_in, start_naive)
+                attendance.worked_hours = delta.total_seconds() / 3600.0
             else:
                 attendance.worked_hours = False
 
