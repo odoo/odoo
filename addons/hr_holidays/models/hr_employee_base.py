@@ -93,6 +93,8 @@ class HrEmployeeBase(models.AbstractModel):
         This method won't call `_get_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
         the`number_of_days` of the allocation, alias `number_of_hours_display`)
         """
+        if self.env.context.get('_future_leaves_on_cache') is None:
+            self = self.with_context(_future_leaves_on_cache={})
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('holiday_status_id', 'in', leave_types.ids),
