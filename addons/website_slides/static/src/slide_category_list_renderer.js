@@ -1,4 +1,4 @@
-// import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onPatched } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
@@ -9,14 +9,14 @@ export class SlideCategoryListRenderer extends ListRenderer {
         this.discriminant = "is_category";
         this.titleField = "name";
 
-        // useLayoutEffect(
-        //     (table) => {
-        //         if (table) {
-        //             table.classList.add("o_section_list_view");
-        //         }
-        //     },
-        //     () => [this.tableRef.el]
-        // );
+        const addSectionClass = () => {
+            const table = this.tableRef.el;
+            if (table) {
+                table.classList.add("o_section_list_view");
+            }
+        };
+        onMounted(addSectionClass);
+        onPatched(addSectionClass);
     }
 
     add(params) {
