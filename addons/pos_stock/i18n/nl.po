@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-05-04 13:46+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -174,6 +174,11 @@ msgid "Failed Pickings"
 msgstr "Mislukte leveringen"
 
 #. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr ""
+
+#. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__id
 #: model:ir.model.fields,field_description:pos_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__id
@@ -287,6 +292,8 @@ msgstr "Partij/Serienummer"
 
 #. module: pos_stock
 #. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "Lot:"
 msgstr "Partij:"
@@ -443,6 +450,8 @@ msgstr "SN"
 
 #. module: pos_stock
 #. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "SN:"
 msgstr "SN:"
@@ -655,6 +664,3 @@ msgstr "beschikbaar,"
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
 msgstr "voorspeld"
-
-#~ msgid "Select Date:"
-#~ msgstr "Datum selecteren:"
