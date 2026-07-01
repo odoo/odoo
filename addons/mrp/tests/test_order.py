@@ -3650,6 +3650,35 @@ class TestMrpOrder(TestMrpCommon):
             ('state', '=', 'draft'),
         ]))
 
+    @freeze_time('2005-06-07 08:09')
+    def test_retroactive_component_addition(self):
+        """Test that adding a new component move to a finished MO works as intended,
+        yielding finished moves that were done on the date of the MO."""
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.productA
+            with mo_form.move_raw_ids.new() as component:
+                component.product_id = self.productB
+                component.product_uom_qty = 1
+            mo = mo_form.save()
+
+        mo.button_mark_done()
+        mo.action_toggle_is_locked()
+
+        with freeze_time('2009-08-07 06:05'), Form(mo) as mo_form:
+            with mo_form.move_raw_ids.new() as component:
+                component.product_id = self.productC
+                component.quantity = 1
+            mo = mo_form.save()
+
+            self.assertRecordValues(mo.move_raw_ids, [
+                {'product_id': self.productB.id, 'picked': True, 'state': 'done', 'date': mo.date_finished},
+                {'product_id': self.productC.id, 'picked': True, 'state': 'done', 'date': mo.date_finished},
+            ])
+            self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+                {'product_id': self.productB.id, 'picked': True, 'state': 'done', 'date': mo.date_finished},
+                {'product_id': self.productC.id, 'picked': True, 'state': 'done', 'date': mo.date_finished},
+            ])
+
     def test_compute_picking_type_id(self):
         """
         Test that the operation type set on the bom is set in the manufacturing order

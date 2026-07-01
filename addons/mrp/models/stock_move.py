@@ -267,8 +267,11 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.production_location_id.id
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
-                    if mo.state in ['progress', 'to_close'] and mo.qty_producing > 0:
+                    if mo.state in ('progress', 'to_close', 'done') and mo.qty_producing > 0:
                         values['picked'] = True
+                    if mo.state == 'done':
+                        values['state'] = 'done'
+                        values['date'] = mo.date_finished
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
