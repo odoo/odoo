@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_bundle_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="priority">90</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <footer position="replace"/>
+        </field>
+    </record>
+
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+
+            <label for="amount" position="attributes">
+                <attribute name="invisible">is_main_payment</attribute>
+            </label>
+            <div name="amount_div" position="attributes">
+                <attribute name="invisible">is_main_payment</attribute>
+            </div>
+            <div name="amount_div" position="after">
+                <label for="payment_total" invisible="not is_main_payment"/>
+                <div name="payment_total_div" class="o_row" invisible="not is_main_payment">
+                    <field name="payment_total"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                </div>
+            </div>
+            <group>
+                <notebook name="payment_notebook">
+                    <page name="link_payment_ids" string="Payments"  invisible="not can_edit_wizard or (can_group_payments and not group_payment) or not is_main_payment">
+                        <field name="link_payment_ids" context="{'form_view_ref': 'account_payment_bundle.view_account_payment_bundle_register_form'}">
+                            <list>
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="journal_id"/>
+                                <field name="payment_method_line_id"/>
+                                <field name="amount"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </group>
+        </field>
+    </record>
+</odoo>
