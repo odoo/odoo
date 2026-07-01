@@ -61,19 +61,22 @@ class ProductTemplate(models.Model):
     @api.depends('categ_id.property_cost_method')
     def _compute_cost_method(self):
         for product_template in self:
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
             product_template.cost_method = (
-                product_template.categ_id.with_company(
-                    product_template.company_id
-                ).property_cost_method
-                or (product_template.company_id or self.env.company).cost_method
+                product_template.categ_id.with_company(company).property_cost_method
+                or company.cost_method
             )
 
     @api.depends_context('company')
     @api.depends('categ_id.property_valuation')
     def _compute_valuation(self):
         for product_template in self:
-            product_template.valuation = product_template.categ_id.with_company(
-                product_template.company_id).property_valuation or self.env.company.inventory_valuation
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
+            product_template.valuation = product_template.categ_id.with_company(company).property_valuation or company.inventory_valuation
 
     def write(self, vals):
         product_ids_to_update = set()
