@@ -2295,7 +2295,7 @@ class MrpProduction(models.Model):
         return True
 
     def do_unreserve(self):
-        (self.move_finished_ids | self.move_raw_ids).filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
+        (self.move_finished_ids | self.move_raw_ids).filtered(lambda m: m.state not in ('done', 'cancel') and not m.byproduct_id)._do_unreserve()
 
     def button_scrap(self):
         self.ensure_one()
