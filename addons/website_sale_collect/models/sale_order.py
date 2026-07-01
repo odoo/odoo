@@ -33,8 +33,11 @@ class SaleOrder(models.Model):
         )
         super()._set_delivery_method(delivery_method, rate=rate)
         if was_in_store_order:
+            fiscal_position_before = self.fiscal_position_id
             self._compute_warehouse_id()
             self._compute_fiscal_position_id()
+            if fiscal_position_before != self.fiscal_position_id:
+                self._recompute_taxes()
 
     def _set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
@@ -45,6 +48,7 @@ class SaleOrder(models.Model):
         if self.carrier_id.delivery_type != 'in_store':
             return res
 
+        fiscal_position_before = self.fiscal_position_id
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
@@ -54,6 +58,8 @@ class SaleOrder(models.Model):
             )
         else:
             self._compute_warehouse_id()
+        if fiscal_position_before != self.fiscal_position_id:
+            self._recompute_taxes()
 
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """ Override of `website_sale` to ensure that a country is provided when there is a zip
