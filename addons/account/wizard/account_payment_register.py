@@ -46,7 +46,7 @@ class AccountPaymentRegister(models.TransientModel):
     )
     partner_bank_id = fields.Many2one(
         comodel_name='res.partner.bank',
-        string="Recipient Bank Account",
+        string="Recipient Account",
         readonly=False,
         store=True,
         compute='_compute_partner_bank_id',
@@ -130,7 +130,8 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False, store=True,
         compute='_compute_payment_method_line_id',
         domain="[('id', 'in', available_payment_method_line_ids)]",
-        help="Manual: Pay or Get paid by any method outside of Odoo.\n"
+        help="Bank Connection: Pay directly via your connected bank. Module account_online_payment is necessary.\n"
+        "Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
@@ -138,6 +139,7 @@ class AccountPaymentRegister(models.TransientModel):
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
     available_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_payment_method_line_fields')
     payment_method_code = fields.Char(related='payment_method_line_id.code')
+    hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method')
 
     # == Payment difference fields ==
     payment_difference = fields.Monetary(
@@ -573,6 +575,11 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.available_payment_method_line_ids = False
 
+    @api.depends('available_payment_method_line_ids')
+    def _compute_hide_payment_method(self):
+        for wizard in self:
+            wizard.hide_payment_method = len(wizard.available_payment_method_line_ids) <= 1
+
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
         for wizard in self:
@@ -611,13 +618,13 @@ class AccountPaymentRegister(models.TransientModel):
             actionable_errors = {}
             if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
                 actionable_errors['unreconciled_matched_payments'] = {
-                    'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
+                    'message': self.env._("%(amount).2f %(currency)s already paid.",
                         amount=wizard.unreconciled_paid_amount,
                         currency=wizard.currency_id.symbol,
                     ),
-                    'action_text': self.env._("Check payments"),
+                    'action_text': self.env._("View payments"),
                     'action': unreconciled_matched_payments._get_records_action(name=self.env._("Payments")),
-                    'level': 'warning',
+                    'level': 'info',
                 }
             wizard.actionable_errors = actionable_errors
 

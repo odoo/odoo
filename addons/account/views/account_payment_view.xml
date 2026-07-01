@@ -103,11 +103,9 @@
                     <separator/>
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Paid" name="state_paid" domain="[('state', '=', 'paid')]"/>
+                    <filter string="Rejected" name="state_rejected" domain="[('state', '=', 'rejected')]"/>
                     <separator/>
-                    <filter string="Sent" name="state_sent" domain="[('is_sent', '=', True)]"/>
-                    <filter string="Not Sent" name="state_sent" domain="[('is_sent', '=', False)]"/>
-                    <filter string="No Bank Matching" name="unmatched" domain="[('is_matched', '=', False)]"/>
-                    <filter string="Reconciled" name="reconciled" domain="[('is_reconciled', '=', True)]"/>
+                    <filter string="Outstanding" name="outstanding" domain="[('is_matched', '=', False)]"/>
                     <separator/>
                     <filter string="Payment Date" name="date" date="date"/>
                     <separator/>
@@ -242,6 +240,7 @@
                                 tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 
                         <div class="oe_title">
+                            <widget name="web_ribbon" title="Sent" invisible="not is_sent or state in ('rejected', 'canceled')"/>
                             <h1 invisible="state != 'draft'"><span>Draft</span></h1>
                             <h1 invisible="state == 'draft'"><field name="name" readonly="1"/></h1>
                         </div>
