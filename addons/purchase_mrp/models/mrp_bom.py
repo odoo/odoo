@@ -42,7 +42,7 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         product = self.env.context.get('bom_variant_id', self.env['product.product'])
-        cache = self.env.context.get('bom_cost_share_cache', {})
+        cache = self.env.cr.cache.get('bom_cost_share_cache', {})
         variant_cache_key = (self.bom_id.id, product.id)
         if variant_cache_key not in cache:
             variant_bom_lines = self.bom_id.bom_line_ids.filtered(
