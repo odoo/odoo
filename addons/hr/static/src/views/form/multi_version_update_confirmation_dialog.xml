@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.FormView.MultiVersionUpdateConfirmation">
+        <Dialog size="'md'" title="this.props.title">
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this._confirm" t-custom-ref="autofocus">
+                Update
+                </button>
+                <button t-if="this.props.cancel" class="btn btn-secondary" t-on-click="this._cancel">
+                Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
