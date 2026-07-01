@@ -689,3 +689,52 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertIn(
             promo_code_program.reward_ids.id, reward_wizard_action["context"]["default_reward_ids"]
         )
+
+    def test_apply_multiple_different_rewards_from_same_coupon(self):
+        """Test applying both a free product reward and a discount reward from the
+        same coupon program when the coupon has sufficient points.
+        """
+        program = self.discount_with_multi_rewards
+        program.write({
+            "reward_ids": [
+                Command.clear(),
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                }),
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.product_B.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                }),
+            ]
+        })
+
+        self.env["loyalty.generate.wizard"].with_context(active_id=program.id).create({
+            "coupon_qty": 1,
+            "points_granted": 2,
+        }).generate_coupons()
+        coupon = program.coupon_ids
+
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                })
+            ]
+        )
+        rewards = self._apply_promo_code(order, coupon.code)
+        self.assertEqual(len(rewards), 2)
+
+        discount_reward = rewards.filtered(lambda r: r.reward_type == "discount")
+        order._apply_program_reward(discount_reward, coupon)
+        self.assertEqual(len(order.order_line), 2)
+
+        self._apply_promo_code(order, coupon.code)
+        self.assertEqual(len(order.order_line), 3)
