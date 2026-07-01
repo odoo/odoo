@@ -148,18 +148,23 @@ class StockMove(models.Model):
         return {self.env['stock.lot']: price_unit}
 
     def _get_qty_received_without_self(self):
-        qty_received = self.purchase_line_id.qty_received
+        line = self.purchase_line_id
+        qty_received = line.qty_received
         if self.state == 'done':
             qty_received -= self.product_uom._compute_quantity(
-                self.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+                self.quantity, line.product_uom_id, rounding_method='HALF-UP'
             )
             batch_moves = self._get_batch_moves()
-            same_product_moves = self.picking_id.move_ids.filtered(lambda m: m.product_id == self.product_id)
+            picking = self.picking_id
+            product = self.product_id
+            same_product_moves = line.move_ids.filtered(
+                lambda m: m.picking_id == picking and m.product_id == product
+            )
             for move in (batch_moves | same_product_moves):
-                if move == self or move.state != 'done' or move.purchase_line_id != self.purchase_line_id:
+                if move == self or move.state != 'done' or move.purchase_line_id != line:
                     continue
                 qty_received -= move.product_uom._compute_quantity(
-                    move.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+                    move.quantity, line.product_uom_id, rounding_method='HALF-UP'
                 )
         return qty_received
 
