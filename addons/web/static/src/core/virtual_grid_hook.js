@@ -148,13 +148,7 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
         current.scroll.top = ev.target.scrollTop;
         throttledCompute();
     };
-    // useLayoutEffect(
-    //     (el) => {
-    //         el?.addEventListener("scroll", scrollListener);
-    //         return () => el?.removeEventListener("scroll", scrollListener);
-    //     },
-    //     () => [scrollableRef.el]
-    // );
+    useListener(() => scrollableRef.el, "scroll", scrollListener);
     useListener(window, "resize", () => throttledCompute());
     return {
         get columnsIndexes() {
