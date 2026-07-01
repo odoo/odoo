@@ -1972,3 +1972,31 @@ test("Copy Message Link", async () => {
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });
+
+test("Notification sent for nameless partner", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create(
+        {
+            type: 'invoice',
+            email: 'invoice@test.example.com',
+            parent_id: serverState.partnerId,
+        }
+    );
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "res.partner",
+        partner_ids: [partnerId],
+        res_id: serverState.partnerId,
+        message_type: "comment",
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "email",
+        res_partner_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover", { text: "Mitchell Admin, Invoice Address" });
+});
