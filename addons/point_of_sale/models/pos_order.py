@@ -136,8 +136,14 @@ class PosOrder(models.Model):
             if order.get(field):
                 existing_ids = set(pos_order[field].ids)
                 existing_line_ids = {line.uuid: line.id for line in pos_order[field]}
+                commands = []
                 for line in order[field]:
+                    # An already paid order can be synced twice, replaying the same commands.
+                    # Skip update/delete/unlink of records that no longer exist to stay idempotent.
+                    if len(line) >= 2 and line[0] in (Command.UPDATE, Command.DELETE, Command.UNLINK) and line[1] not in existing_ids:
+                        continue
                     if len(line) < 3:
+                        commands.append(line)
                         continue
                     line_vals = line[2]
                     if line[0] == Command.CREATE and line_vals.get('uuid') in existing_line_ids:
@@ -146,7 +152,8 @@ class PosOrder(models.Model):
                         # into an update (line[0] = Command.UPDATE) of the existing line.
                         line[0] = Command.UPDATE
                         line[1] = existing_line_ids[line_vals.get('uuid')]
-                pos_order.write({field: order[field]})
+                    commands.append(line)
+                pos_order.write({field: commands})
                 added_ids = set(pos_order[field].ids) - existing_ids
                 if added_ids:
                     _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
@@ -206,6 +213,10 @@ class PosOrder(models.Model):
 
         # Recompute amount paid because we don't trust the client
         order.write({'amount_paid': order._compute_amount_paid()})
+
+        # The change payment has no uuid, so it isn't deduplicated by _update_lines.
+        # Remove the old one before recomputing to avoid duplicates on re-sync/edit.
+        order.payment_ids.filtered('is_change').unlink()
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
