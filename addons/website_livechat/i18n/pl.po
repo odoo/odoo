@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-01-08 10:51+0000\n"
+"PO-Revision-Date: 2026-06-06 12:54+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_livechat/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -32,12 +32,12 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
-msgstr "# Sesje"
+msgstr "# Sesji"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -63,7 +63,7 @@ msgstr "Nazwa kanału"
 #. odoo-python
 #: code:addons/website_livechat/models/im_livechat_channel.py:0
 msgid "Channel created: %(name)s"
-msgstr ""
+msgstr "Kanał utworzony: %(name)s"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -90,13 +90,13 @@ msgstr "Czaty"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Conversation ongoing"
-msgstr ""
+msgstr "Trwająca rozmowa"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
@@ -148,6 +148,8 @@ msgid ""
 "Live chat conversation closed automatically: the visitor started a new "
 "conversation with another agent."
 msgstr ""
+"Rozmowa na czacie na żywo została zamknięta automatycznie: gość rozpoczął "
+"nową rozmowę z innym konsultantem."
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -181,13 +183,13 @@ msgstr "Strona"
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent conversations"
-msgstr ""
+msgstr "Niedawne konwersacje"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent page views"
-msgstr ""
+msgstr "Niedawne odwiedziny strony"
 
 #. module: website_livechat
 #. odoo-python
@@ -228,46 +230,46 @@ msgstr "Test"
 #. odoo-python
 #: code:addons/website_livechat/controllers/chatbot.py:0
 msgid "Test %s"
-msgstr ""
+msgstr "Test %s"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
 msgid "Visitor"
-msgstr "Osoba odwiedzająca"
+msgstr "Gość"
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor #%(id)d left the conversation."
-msgstr ""
+msgstr "Gość #%(id)d opuścił konwersację."
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "Visitor #%d"
-msgstr ""
+msgstr "Gość #%d"
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
-msgstr "Odwiedzający opuścił konwersację."
+msgstr "Gość opuścił konwersację."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
-msgstr "Sesje odwiedzającego"
+msgstr "Sesje gościa"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__discuss_channel_ids
 msgid "Visitor's livechat channels"
-msgstr "Kanały czatu odwiedzającego"
+msgstr "Kanały czatu gościa"
 
 #. module: website_livechat
 #: model:ir.ui.menu,name:website_livechat.website_livechat_visitor_menu
 msgid "Visitors"
-msgstr "Odwiedzający"
+msgstr "Goście"
 
 #. module: website_livechat
 #. odoo-javascript
@@ -299,3 +301,5 @@ msgid ""
 "When created from an operator, whether the channel is yet to be opened on "
 "the visitor side."
 msgstr ""
+"W przypadku utworzenia przez operatora, niezależnie od tego, czy kanał ma "
+"zostać jeszcze otwarty po stronie odwiedzającego."

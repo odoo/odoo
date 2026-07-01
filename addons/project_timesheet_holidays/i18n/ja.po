@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:29+0000\n"
+"PO-Revision-Date: 2026-05-16 14:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "project_timesheet_holidays/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -109,6 +109,8 @@ msgid ""
 "The default project used when automatically generating timesheets via time "
 "off requests. You can specify another project on each time type individually."
 msgstr ""
+"休暇申請でタイムシートを自動生成する際に使用されるデフォルトのプロジェクトで"
+"す。各休暇タイプで個別に別のプロジェクトを指定することができます。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -116,6 +118,8 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time type individually."
 msgstr ""
+"休暇申請でタイムシートを自動生成する際に使用されるデフォルトのプロジェクトで"
+"す。各休暇タイプで個別に別のタスクを指定することができます。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -142,19 +146,19 @@ msgstr "休暇タスク"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Types Count"
-msgstr ""
+msgstr "時間単位のカウント"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "Timesheets linked to public holidays cannot be deleted."
-msgstr ""
+msgstr "祝日にリンクされたタイムシートは削除できません。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "Timesheets linked to public holidays cannot be modified."
-msgstr ""
+msgstr "祝日に関連付けられたタイムシートは変更できません。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -163,6 +167,8 @@ msgid ""
 "Timesheets related to time off cannot be created or modified. Please manage "
 "your requests in the Time Off app instead."
 msgstr ""
+"休暇に関連するタイムシートは作成または変更できません。休暇申請については、代"
+"わりに休暇アプリで管理してください。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name

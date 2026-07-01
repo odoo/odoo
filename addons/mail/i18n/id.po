@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-07 10:01+0000\n"
+"PO-Revision-Date: 2026-06-20 14:06+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
 "mail/id/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -886,20 +886,20 @@ msgstr ""
 "                                        Pesan akan dikirim sebagai email ke "
 "penerima\n"
 "                                        templat dan tidak akan muncul di "
-"sejarah pesan.\n"
+"riwayat pesan.\n"
 "                                    </span>\n"
 "                                    <span invisible=\"mail_post_method != "
 "'note'\">\n"
 "                                        Pesan akan diposting sebagai catatan "
 "internal yang terlihat untuk user\n"
-"                                        internal di sejarah pesan.\n"
+"                                        internal di riwayat pesan.\n"
 "                                    </span>\n"
 "                                    <span invisible=\"mail_post_method != "
 "'comment'\">\n"
 "                                        Pesan akan dipost sebagai pesan di "
 "rekaman,\n"
 "                                        menotifikasi semua pengikut. Pesan "
-"akan muncul di sejarah pesan.\n"
+"akan muncul di riwayat pesan.\n"
 "                                    </span>"
 
 #. module: mail
@@ -2682,17 +2682,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr "Sejarah Panggilan"
+msgstr "Riwayat Panggilan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr "Sejarah panggilan harus memiliki channel"
+msgstr "Riwayat panggilan harus memiliki channel"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr "Sejarah panggilan harus memiliki tanggal mulai"
+msgstr "Riwayat panggilan harus memiliki tanggal mulai"
 
 #. module: mail
 #. odoo-javascript
@@ -4099,7 +4099,7 @@ msgstr "Hari"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr "Hari-Hari Membusuk"
+msgstr "Hari Membusuk"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -4404,8 +4404,7 @@ msgstr "Tentukan bila tanggapan otomatis dapat diedit oleh user saat ini"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr ""
-"Tentukan bila canned_response saat ini dibagikan dengan user-user lainnya"
+msgstr "Tentukan bila canned_response saat ini dibagikan dengan user lainnya"
 
 #. module: mail
 #. odoo-javascript
@@ -7264,7 +7263,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr "Simpan sejarah panggilan"
+msgstr "Simpan riwayat panggilan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8308,7 +8307,7 @@ msgstr "Cari pesan"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr "Pesan hanya dapat dihubungkan ke satu sejarah panggilan"
+msgstr "Pesan hanya dapat dihubungkan ke satu riwayat panggilan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -8765,7 +8764,7 @@ msgstr "Tidak ada dokumen yang ditemukan untuk record terpilih."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
-msgstr "Tidak ada sejarah pesan"
+msgstr "Tidak ada riwayat pesan"
 
 #. module: mail
 #. odoo-python
@@ -9374,7 +9373,7 @@ msgstr "Hanya user internal yang dapat menerima notifikasi di Odoo"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure a personal mail server."
-msgstr "Hanya user-user internal dapat mengonfigurasi server email pribadi."
+msgstr "Hanya user internal dapat mengonfigurasi server email pribadi."
 
 #. module: mail
 #. odoo-python
@@ -10288,7 +10287,7 @@ msgstr "Akses Portal Ditarik Kembali"
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Portal users can only filter threads by themselves as followers."
 msgstr ""
-"User-user portal hanya dapat memfilter thread dengan mereka sendiri sebagai "
+"User portal hanya dapat memfilter thread dengan mereka sendiri sebagai "
 "pengikut."
 
 #. module: mail
@@ -13781,7 +13780,7 @@ msgstr "Batalkan Penugasan dari saya"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
-msgstr "Kegiatan-Kegiatan yang Belum Ditugaskan"
+msgstr "Aktivitas yang Belum Ditugaskan"
 
 #. module: mail
 #. odoo-python
@@ -14352,7 +14351,7 @@ msgid ""
 "Users are notified whenever one of their roles is @-mentioned in a "
 "conversation."
 msgstr ""
-"User-user dinotifikasi kapan pun satu dari peran mereka di-mention @ di "
+"User dinotifikasi kapan pun satu dari peran mereka di-mention @ di "
 "percakapan."
 
 #. module: mail
@@ -14368,7 +14367,7 @@ msgid ""
 "However only Mail Template Editors will be able to create new dynamic "
 "templates or modify existing ones."
 msgstr ""
-"User-user akan masih dapat me-render templat.\n"
+"User akan masih dapat me-render templat.\n"
 "Namun hanya Editor Templat Email yang dapat membuat templat dinamik baru "
 "atau memodifikasi templat dinamik saat ini."
 
