@@ -293,14 +293,19 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         total_real_cost = 0.0
         for index, workorder in enumerate(production.workorder_ids):
             estimate_cost = workorder._should_estimate_cost()
-            wo_duration = workorder.duration_expected if estimate_cost else workorder.get_duration()
-            mo_cost = workorder._compute_expected_operation_cost()
+            if float_is_zero(workorder.duration_expected, precision_digits=2):
+                wo_duration = workorder.get_duration()
+                mo_cost = workorder._compute_current_operation_cost()
+                real_cost = mo_cost
+            else:
+                wo_duration = workorder.duration_expected if estimate_cost else workorder.get_duration()
+                mo_cost = workorder._compute_expected_operation_cost()
+                real_cost = mo_cost if estimate_cost else workorder._compute_current_operation_cost()
             bom_cost = self._get_bom_operation_cost(workorder, production, kit_operation=self._get_kit_operations(production.bom_id))
-            real_cost = mo_cost if estimate_cost else workorder._compute_current_operation_cost()
             real_cost_decorator = False
             mo_cost_decorator = False
             if self._is_production_started(production):
-                mo_cost = mo_cost if workorder.duration_expected else workorder._get_current_theoretical_operation_cost()
+                mo_cost = mo_cost if workorder.duration_expected else workorder._compute_current_operation_cost()
                 real_cost_decorator = self._get_comparison_decorator(mo_cost, real_cost, 0.01)
             elif production.state == "confirmed":
                 if workorder.operation_id not in production.bom_id.operation_ids:
@@ -323,7 +328,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'quantity': workorder.duration_expected if float_is_zero(wo_duration, precision_digits=2) else wo_duration,
                 'uom_name': "",
                 'production_id': production.id,
-                'unit_cost': mo_cost / (workorder.duration_expected or 1),
+                'unit_cost': mo_cost / (workorder.duration_expected or wo_duration or 1),
                 'mo_cost': mo_cost,
                 'mo_cost_decorator': mo_cost_decorator,
                 'bom_cost': bom_cost,
@@ -380,10 +385,14 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         for index, workorder in enumerate(production.workorder_ids):
             estimate_cost = workorder._should_estimate_cost()
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
-            duration = (workorder.duration_expected if estimate_cost else workorder.get_duration()) / 60
+            if float_is_zero(workorder.duration_expected, precision_digits=2):
+                duration = workorder.get_duration() / 60
+                mo_cost = duration * hourly_cost
+            else:
+                duration = (workorder.duration_expected if estimate_cost else workorder.get_duration()) / 60
+                mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True)
+
             operation_cost = duration * hourly_cost
-            mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True) if workorder.duration_expected\
-                        else workorder._get_current_theoretical_operation_cost(without_employee_cost=True)
             bom_cost = self._get_bom_operation_cost(workorder, production)
             total_duration += duration
             total_duration_expected += workorder.duration_expected
