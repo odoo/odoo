@@ -56,7 +56,10 @@ class HrEmployee(models.Model):
     total_overtime = fields.Float(compute='_compute_total_overtime')
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
-
+    attendance_break_management = fields.Boolean(
+        related='company_id.attendance_break_management',
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
+    )
     ruleset_id = fields.Many2one(readonly=False, related="version_id.ruleset_id", inherited=True, groups="hr.group_hr_manager")
 
     @api.model_create_multi
@@ -186,8 +189,20 @@ class HrEmployee(models.Model):
                 worked_hours = 0
                 attendance_worked_hours = 0
                 for attendance in attendances:
-                    delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
-                    attendance_worked_hours = delta.total_seconds() / 3600.0
+                    interval_start = max(attendance.check_in, start_naive)
+                    interval_end = min(attendance.check_out or now, now)
+                    if interval_end <= interval_start:
+                        attendance_worked_hours = 0.0
+                    else:
+                        attendance_worked_hours = (interval_end - interval_start).total_seconds() / 3600.0
+                        total_duration = (
+                            (attendance.check_out - attendance.check_in).total_seconds() / 3600.0
+                            if attendance.check_out
+                            else 0.0
+                        )
+                        if attendance.break_duration and total_duration > 0:
+                            break_duration = attendance.break_duration * attendance_worked_hours / total_duration
+                            attendance_worked_hours = max(attendance_worked_hours - break_duration, 0.0)
                     worked_hours += attendance_worked_hours
                     hours_previously_today += attendance_worked_hours
                 employee.last_attendance_worked_hours = attendance_worked_hours
@@ -230,12 +245,14 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
-    def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
+    def _attendance_action_change(self, geo_information=None, check_in_image_data=None, break_duration=None):
         """ Check In/Check Out action
             Check In: create a new attendance record and attach check-in image to it, if available
             Check Out: modify check_out field of appropriate attendance record
         """
         self.ensure_one()
+        if break_duration is not None and not self.company_id.attendance_break_management:
+            break_duration = None
         action_date = fields.Datetime.now()
         notification = False
 
@@ -278,15 +295,12 @@ class HrEmployee(models.Model):
                 if self.env.context.get('is_from_systray_check_in_out', False):  # throw user error if user tries to checkout from systray.
                     raise exceptions.UserError(self.env._("You've already checked in."))
                 return notification  # no need to checkout the user if single checkin enabled.
+            vals = {'check_out': action_date}
             if geo_information:
-                attendance.write({
-                    'check_out': action_date,
-                    **{'out_%s' % key: geo_information[key] for key in geo_information}
-                })
-            else:
-                attendance.write({
-                    'check_out': action_date
-                })
+                vals.update({'out_%s' % key: geo_information[key] for key in geo_information})
+            if break_duration is not None:
+                vals['break_duration'] = break_duration
+            attendance.write(vals)
             self._notify_employee_presence_status()
         else:
             raise exceptions.UserError(_(

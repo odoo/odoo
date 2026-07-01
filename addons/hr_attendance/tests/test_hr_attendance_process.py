@@ -5,8 +5,10 @@ from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase, freeze_time
+from odoo.addons.hr_attendance.controllers.main import HrAttendance
 
 
 @tagged('attendance_process')
@@ -128,6 +130,56 @@ class TestHrAttendance(TransactionCase):
             self.test_employee.action_archive()
             self.assertEqual(test_attendance.check_out, fields.Datetime.now())
             self.assertEqual(test_attendance.worked_hours, 8.0)
+
+    def test_break_duration_updates_worked_hours(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-01 08:00:00',
+            'check_out': '2024-01-01 17:00:00',
+        })
+        initial_hours = attendance.worked_hours
+        attendance.break_duration = 1.0
+        self.assertAlmostEqual(attendance.worked_hours, max(initial_hours - 1.0, 0.0))
+        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 18, 0, 0)):
+            self.assertAlmostEqual(self.test_employee.hours_today, attendance.worked_hours)
+        with self.assertRaises(ValidationError):
+            attendance.break_duration = -1
+        with self.assertRaises(ValidationError):
+            attendance.break_duration = 12
+
+    def test_break_duration_edit_triggers_overtime_recompute(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-03 08:00:00',
+            'check_out': '2024-01-03 16:00:00',
+        })
+        with patch('odoo.addons.hr_attendance.models.hr_attendance.HrAttendance._update_overtime') as mocked_update:
+            attendance.write({'break_duration': 1.0})
+        self.assertTrue(mocked_update.called)
+
+    def test_break_duration_checkout_action(self):
+        self.test_employee.company_id.attendance_break_management = True
+        with freeze_time("2024-01-02 08:00:00"):
+            self.test_employee._attendance_action_change()
+        with freeze_time("2024-01-02 17:00:00"):
+            self.test_employee._attendance_action_change(break_duration=0.5)
+        self.assertAlmostEqual(self.test_employee.last_attendance_id.break_duration, 0.5)
+
+    def test_break_duration_ignored_when_management_disabled(self):
+        self.test_employee.company_id.attendance_break_management = False
+        with freeze_time("2024-01-02 08:00:00"):
+            self.test_employee._attendance_action_change()
+        with freeze_time("2024-01-02 17:00:00"):
+            self.test_employee._attendance_action_change(break_duration=0.75)
+        self.assertFalse(self.test_employee.last_attendance_id.break_duration)
+
+    def test_barcode_preview_payload_is_limited(self):
+        payload = HrAttendance._get_break_preview_payload(self.test_employee)
+        self.assertEqual(payload['employee_name'], self.test_employee.name)
+        self.assertEqual(payload['attendance_state'], self.test_employee.attendance_state)
+        self.assertIn('break_management_enabled', payload)
+        self.assertFalse(payload['attendance'])
+        self.assertNotIn('employee_avatar', payload)
 
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):

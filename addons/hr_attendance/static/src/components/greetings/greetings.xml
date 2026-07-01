@@ -14,54 +14,78 @@
         <t t-if="this.attendance">
             <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
                 <div class="o_hr_attendance_kiosk_card card rounded-3">
-                    <div class="card-body rounded-3">
-                        <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column align-items-center justify-content-center">
-                            <div class="o_hr_attendance_kiosk_card_main p-3 mx-3 mx-xl-0 text-center">
-                                <t t-call="hr_attendance.EmployeeBadge" employeeAvatar="this.employeeAvatar"/>
-                                <h5 class="text-muted mt-2 mb-0">
-                                    <t t-if="this.attendance.check_out" >Goodbye</t>
-                                    <t t-else="">Welcome</t>
-                                </h5>
-                                <h2><t t-out="this.employeeName"/></h2>
+                    <div class="card-body rounded-3 p-3">
+                        <div
+                            class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column
+                                   align-items-center justify-content-center">
+                            <div class="o_hr_attendance_kiosk_card_main p-2 mx-3 mx-xl-0 text-center">
+                                <t t-call="hr_attendance.EmployeeBadge"
+                                    employeeAvatar="this.employeeAvatar"
+                                    employeeAvatarHeight="'88'"
+                                />
+                                <div class="d-flex flex-column gap-1 mt-2">
+                                    <h2 class="display-5 lh-1 fw-medium mb-1">
+                                        <t t-out="this.greetingTitle"/>
+                                    </h2>
+                                    <div class="fs-2 lh-sm text-muted">
+                                        <t t-out="this.employeeName"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="o_hr_attendance_kiosk_card_bottom d-flex flex-column w-100">
-                                <div class="alert alert-info text-center p-3" role="status">
-                                    <t t-if="this.attendance.check_out">
-                                        Checked out at <strong><t t-out="this.check_out_time"/></strong>
+                            <div class="o_hr_attendance_kiosk_card_bottom d-flex flex-column w-100 gap-2">
+                                <div
+                                    t-attf-class="alert {{ this.statusAlertClass }} text-center mb-0 p-2"
+                                    role="status">
+                                    <strong><t t-out="this.statusMessage"/></strong>
+                                </div>
+                                <div
+                                    t-if="this.hoursToday != '00:00'"
+                                    class="alert alert-info text-center mb-0 p-2"
+                                    role="status">
+                                    <t t-if="this.isEmployeeSingleCheckIn and !this.attendance.check_out">
+                                        You’ve already checked in.
                                     </t>
                                     <t t-else="">
-                                        Checked in at <strong><t t-out="this.check_in_time"/></strong>
+                                        <t t-out="this.secondarySummaryLabel"/>:
+                                        <strong><t t-out="this.hoursToday"/></strong>
                                     </t>
                                 </div>
-                                <div class="d-flex flex-column w-100">
-                                    <div
-                                        class="alert alert-info text-center p-3"
-                                        t-if="this.hoursToday != '00:00'"
-                                        role="status">
-                                        <t t-if="this.isEmployeeSingleCheckIn and !this.attendance.check_out">
-                                            You’ve already checked in.
-                                        </t>
-                                        <t t-elif="this.attendance.check_out">
-                                            Hours Today: <strong><t t-out="this.hoursToday"/></strong>
-                                        </t>
-                                        <t t-else="">
-                                            Hours Previously Today: <strong><t t-out="this.hoursToday"/></strong>
-                                        </t>
+                                <div
+                                    t-if="this.attendance.check_out and this.overtimeToday"
+                                    class="alert alert-warning d-flex flex-column gap-2 mb-0
+                                           p-2 p-xl-2 border border-warning text-center">
+                                    <div class="small fw-bolder text-uppercase">
+                                        Extra hours
                                     </div>
-                                    <div t-if="this.attendance.check_out and this.overtimeToday" class="alert alert-warning d-flex flex-column gap-2 mb-0 p-2 p-xl-3 border border-warning text-center">
-                                        <div class="small fw-bolder text-uppercase">
-                                            Extra hours
+                                    <div class="d-flex gap-2">
+                                        <div class="d-flex flex-column w-100 mb-0 ">
+                                            <span class="text-nowrap">Today</span>
+                                            <span class="fs-6"><strong><t t-out="this.overtimeToday"/></strong></span>
                                         </div>
-                                        <div class="d-flex gap-2">
-                                            <div class="d-flex flex-column w-100 mb-0 ">
-                                                <span class="text-nowrap">Today</span>
-                                                <span class="fs-6"><strong><t t-out="this.overtimeToday"/></strong></span>
-                                            </div>
-                                            <div t-if="this.totalOvertime" class="d-flex flex-column w-100 mb-0 ">
-                                                <span class="text-nowrap">Total</span>
-                                                <span class="fs-6"><strong><t t-out="this.totalOvertime"/></strong></span>
-                                            </div>
+                                        <div t-if="this.totalOvertime" class="d-flex flex-column w-100 mb-0 ">
+                                            <span class="text-nowrap">Total</span>
+                                            <span class="fs-6"><strong><t t-out="this.totalOvertime"/></strong></span>
                                         </div>
+                                    </div>
+                                </div>
+                                <div
+                                    t-if="this.showContinueOptions"
+                                    class="bg-secondary-subtle d-flex flex-column align-items-center gap-2 mb-0 p-2 rounded-3"
+                                    role="group">
+                                    <div class="small text-muted">Continue as</div>
+                                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 w-100">
+                                        <button
+                                            type="button"
+                                            class="btn btn-warning rounded-pill px-4 fw-semibold"
+                                            t-on-click="this.continueBreak">
+                                            Break time
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-warning rounded-pill px-4 fw-semibold"
+                                            t-on-click="this.props.kioskReturn">
+                                            Out of office
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -69,9 +93,11 @@
                     </div>
                 </div>
             </div>
-            <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
-                <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
-                    OK
+            <div class="o_hr_kiosk_mode_bottom my-2 mx-auto flex-shrink-0">
+                <button
+                    class="btn btn-secondary btn-lg rounded-pill px-5"
+                    t-on-click="this.props.kioskReturn">
+                    Next
                 </button>
             </div>
         </t>

@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
+<t t-name="hr_attendance.AttendanceReviewBlock">
+    <div t-if="attendanceReviewDetails" class="pt-2 w-100">
+        <t t-set="isEditingAttendance" t-value="this.isEditing(attendanceReviewDetails)"/>
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+            <div>
+                <div class="text-uppercase small fw-semibold text-muted">Attendance Review</div>
+                <div class="small text-muted">
+                    <t t-out="attendanceReviewDetails.dateLabel"/>
+                </div>
+            </div>
+            <t t-if="isEditingAttendance">
+                <div class="d-flex gap-2 flex-shrink-0">
+                    <button class="btn btn-primary btn-sm"
+                            t-att-disabled="attendanceReviewState.savingAttendance"
+                            t-on-click="this.saveInlineEdit">
+                        Save
+                    </button>
+                    <button class="btn btn-secondary btn-sm"
+                            t-att-disabled="attendanceReviewState.savingAttendance"
+                            t-on-click="this.cancelInlineEdit">
+                        Cancel
+                    </button>
+                </div>
+            </t>
+            <button t-elif="attendanceReviewDetails.canEdit"
+                    class="btn btn-link btn-sm p-0 text-decoration-none"
+                    t-on-click="() => this.startInlineEdit(attendanceReviewDetails.id)">
+                Edit
+            </button>
+        </div>
+
+        <div class="row g-2 mb-2">
+            <div t-foreach="attendanceReviewDetails.entries" t-as="entry" t-key="entry.key" class="col-6">
+                <div class="list-group-item h-100 border rounded-2 p-2 d-flex flex-column text-center">
+                    <div class="small text-uppercase fw-semibold text-muted mb-2">
+                        <t t-out="entry.label"/>
+                    </div>
+                    <t t-if="isEditingAttendance and entry.key === 'check_in'">
+                        <TimePicker inputCssClass="'form-control-sm'"
+                                    value="this._getInlineTimeValue(attendanceReviewState.editDraft.checkIn)"
+                                    onChange="(value) => this.updateInlineDateTimeDraft('checkIn', value)"
+                                    onInvalid="() => this.updateInlineDateTimeDraft('checkIn', null)"
+                                    showSeconds="false"
+                                    minutesRounding="1"/>
+                    </t>
+                    <t t-elif="isEditingAttendance and entry.key === 'check_out'">
+                        <TimePicker inputCssClass="'form-control-sm'"
+                                    value="this._getInlineTimeValue(attendanceReviewState.editDraft.checkOut)"
+                                    onChange="(value) => this.updateInlineDateTimeDraft('checkOut', value)"
+                                    onInvalid="() => this.updateInlineDateTimeDraft('checkOut', null)"
+                                    showSeconds="false"
+                                    minutesRounding="1"/>
+                        <div t-if="attendanceReviewDetails.showBreakSummary and attendanceReviewState.editDraft.checkOut"
+                            class="mt-2 d-flex flex-column">
+                            <label class="small text-uppercase fw-semibold text-muted mb-1">
+                                Break duration
+                            </label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control"
+                                    type="text"
+                                    inputmode="numeric"
+                                    t-att-value="attendanceReviewState.editDraft.breakDuration"
+                                    t-on-input="(ev) => attendanceReviewState.editDraft.breakDuration = ev.target.value"
+                                    t-att-disabled="attendanceReviewState.savingAttendance || !attendanceReviewState.editDraft.checkOut"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="fs-4 fw-semibold lh-sm" t-att-class="entry.pending ? 'text-muted' : ''">
+                            <t t-out="entry.time"/>
+                        </div>
+                    </t>
+                    <div class="small text-muted text-break" t-if="entry.location">
+                        <t t-out="entry.location"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div t-if="attendanceReviewDetails.sessions and attendanceReviewDetails.sessions.length"
+            class="list-group rounded-2 overflow-hidden mb-2">
+            <div t-foreach="attendanceReviewDetails.sessions"
+                 t-as="session"
+                 t-key="session.id"
+                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-3"
+                 t-on-click="() => this.selectAttendance(session.id)">
+                <span class="text-truncate">
+                    <t t-out="session.rangeLabel"/>
+                </span>
+                <strong class="text-nowrap">
+                    <t t-out="session.durationLabel"/>
+                </strong>
+            </div>
+            <div class="list-group-item bg-transparent p-0">
+                <div class="row g-0 text-center">
+                    <div t-if="attendanceReviewDetails.showBreakSummary" class="col p-2 border-end">
+                        <strong class="fs-6">
+                            <t t-out="this.breakDisplay(attendanceReviewDetails)"/>
+                        </strong>
+                        <span class="d-block small text-muted text-uppercase">Breaks</span>
+                    </div>
+                    <div t-att-class="attendanceReviewDetails.showBreakSummary ? 'col p-2' : 'col-12 p-2'">
+                        <strong class="fs-6">
+                            <t t-out="this.totalDisplay(attendanceReviewDetails)"/>
+                        </strong>
+                        <span class="d-block small text-muted text-uppercase">Total hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div t-else="" class="row g-2 mb-2">
+            <div t-if="attendanceReviewDetails.showBreakSummary" class="col">
+                <div class="list-group-item h-100 border rounded-2 p-2 text-center">
+                    <strong class="fs-6">
+                        <t t-out="this.breakDisplay(attendanceReviewDetails)"/>
+                    </strong>
+                    <span class="d-block small text-muted text-uppercase">Breaks</span>
+                </div>
+            </div>
+            <div t-att-class="attendanceReviewDetails.showBreakSummary ? 'col' : 'col-12'">
+                <div class="list-group-item h-100 border rounded-2 p-2 text-center">
+                    <strong class="fs-6">
+                        <t t-out="this.totalDisplay(attendanceReviewDetails)"/>
+                    </strong>
+                    <span class="d-block small text-muted text-uppercase">Total hours</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
 <t t-name="hr_attendance.attendance_menu">
     <t t-if="this.state.isDisplayed">
         <Dropdown position="'bottom-end'"
@@ -17,13 +149,13 @@
             <t t-set-slot="content">
                 <div class="att_container d-flex flex-column">
                     <div>
-                        <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
+                        <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-2">
                             <h3 class="mb-0 ps-1">
                                 <t t-if="this.hasCheckedInToday">
-                                    <small>Welcome back</small> <span class="d-block"><t t-out="this.employeeName"/>!</span>
+                                    <small>Welcome back</small> <span class="d-block"><t t-out="this.state.employee?.name || ''"/>!</span>
                                 </t>
                                 <t t-else="">
-                                    <small>Welcome,</small> <span class="d-block"><t t-out="this.employeeName"/>.</span>
+                                    <small>Welcome,</small> <span class="d-block"><t t-out="this.state.employee?.name || ''"/>.</span>
                                 </t>
                             </h3>
                         </div>
@@ -36,48 +168,23 @@
                             />
                         </div>
                     </div>
-                    <div class="o_att_today_wrap px-3">
-                        <table class="table table-sm table-borderless">
-                            <tbody>
-                                <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
-                                    <td>
-                                        <t t-set="start" t-value="this.splitTime(attendance.start)"/>
-                                        <t t-out="start.h"/>:<span class="text-muted"><t t-out="start.m"/></span>
-                                    </td>
-                                    <td class="px-0">–</td>
-                                    <td>
-                                        <t t-if="attendance.end">
-                                            <t t-set="end" t-value="this.splitTime(attendance.end)"/>
-                                            <t t-out="end.h"/>:<span class="text-muted"><t t-out="end.m"/></span>
-                                        </t>
-                                        <t t-else="">
-                                            Now
-                                        </t>
-                                    </td>
-                                    <td class="ps-4 text-end">
-                                        <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
-                                        <t t-out="duration.h"/>h<span class="text-muted"><t t-out="duration.m"/></span>
-                                    </td>
-                                </tr>
-                                <tr class="border-top">
-                                    <td colspan="3">
-                                        Today
-                                    </td>
-                                    <td class="ps-4 text-end">
-                                        <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
-                                        <t t-out="total.h"/>h<span class="text-muted"><t t-out="total.m"/></span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                    <div class="o_att_today_wrap px-2">
+                        <t t-set="attendanceReviewDetails" t-value="this.attendanceDetails"/>
+                        <t t-set="attendanceReviewState" t-value="this.state"/>
+                        <t t-call="hr_attendance.AttendanceReviewBlock"/>
                     </div>
 
-                    <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 pt-0 z-2">
+                    <div class="o_wrap_btn_sign_out d-flex gap-3 align-items-stretch bottom-0 p-2 z-2">
                         <button t-on-click="() => this.signInOut()"
-                                t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
+                                class="btn btn-warning flex-grow-1">
                             <span t-if="!this.state.checkedIn">Check in</span>
                             <span t-else="">Check out</span>
                             <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
+                        </button>
+                        <button t-on-click="() => this.dropdown.close()"
+                                class="btn btn-secondary border">
+                            Discard
                         </button>
                     </div>
                 </div>

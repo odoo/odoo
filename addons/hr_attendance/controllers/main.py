@@ -29,12 +29,30 @@ class HrAttendance(http.Controller):
     def _get_user_attendance_data(employee):
         response = {}
         if employee:
+            last_attendance = employee.last_attendance_id.read([
+                'check_in',
+                'check_out',
+                'worked_hours',
+                'break_duration',
+                'can_edit',
+                'in_location',
+                'out_location',
+            ])[0] if employee.last_attendance_id else False
             response = {
                 'id': employee.id,
                 'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
-                'today_attendance_ids': employee.today_attendance_ids.read(['check_in', 'check_out', 'worked_hours']),
+                'today_attendance_ids': employee.today_attendance_ids.read([
+                    'check_in',
+                    'check_out',
+                    'worked_hours',
+                    'break_duration',
+                    'can_edit',
+                    'in_location',
+                    'out_location',
+                ]),
+                'last_attendance': last_attendance,
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
@@ -42,6 +60,7 @@ class HrAttendance(http.Controller):
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'capture_check_in_image': employee.company_id.attendance_capture_check_in,
                 'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                'break_management_enabled': employee.company_id.attendance_break_management,
             }
         return response
 
@@ -63,6 +82,16 @@ class HrAttendance(http.Controller):
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'is_employee_single_checkin': not employee.version_id.is_flexible and employee.company_id.single_check_in,
+                'break_management_enabled': employee.company_id.attendance_break_management,
+                'break_duration': float_round(
+                    employee.last_attendance_id.break_duration or 0.0,
+                    precision_digits=2,
+                ),
+                'attendance_worked_hours': float_round(
+                    employee.last_attendance_id.worked_hours or 0.0,
+                    precision_digits=2,
+                ),
+                'has_timesheet': 'has_timesheet' in employee._fields and bool(employee.has_timesheet),
             }
         return response
 
@@ -93,6 +122,33 @@ class HrAttendance(http.Controller):
         })
 
         return response
+
+    @staticmethod
+    def _get_break_preview_payload(employee):
+        if not employee:
+            return {}
+        attendance = employee.last_attendance_id
+        return {
+            'employee_name': employee.name,
+            'attendance_state': employee.attendance_state,
+            'break_management_enabled': employee.company_id.attendance_break_management,
+            'attendance': attendance and {
+                'check_in': attendance.check_in,
+                'check_out': attendance.check_out,
+            },
+        }
+
+    @staticmethod
+    def _normalize_break_duration(break_duration):
+        if break_duration in (None, False, ''):
+            return None
+        try:
+            duration = float(break_duration)
+        except (TypeError, ValueError):
+            return None
+        if duration < 0.0:
+            return None
+        return duration
 
     @staticmethod
     def _get_validated_check_in_image_and_type(check_in_image, capture_check_in_image):
@@ -248,6 +304,7 @@ class HrAttendance(http.Controller):
                         'barcode_source': company.attendance_barcode_source,
                         'device_tracking_enabled': company.attendance_device_tracking,
                         'capture_check_in_image': company.attendance_capture_check_in,
+                        'break_management_enabled': company.attendance_break_management,
                         'lang': py_to_js_locale(company.partner_id.lang or company.env.lang),
                         'server_version_info': odoo.release.version_info,
                     },
@@ -263,21 +320,41 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
+    @http.route('/hr_attendance/attendance_barcode_preview', type="jsonrpc", auth="public")
+    def attendance_barcode_preview(self, token, barcode):
+        company = self._get_company(token)
+        if not company:
+            return {}
+        employee = request.env['hr.employee'].sudo().search([
+            ('barcode', '=', barcode),
+            ('company_id', '=', company.id),
+        ], limit=1)
+        if not employee:
+            return {}
+        return self._get_break_preview_payload(employee)
+
     @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
-    def scan_barcode(self, token, barcode, check_in_image=None):
+    def scan_barcode(self, token, barcode, break_duration=False, check_in_image=None):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
                 notification = employee._attendance_action_change(
                     self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking),
-                    self._get_validated_check_in_image_and_type(check_in_image, company.attendance_capture_check_in),
+                    check_in_image_data=self._get_validated_check_in_image_and_type(
+                        check_in_image,
+                        company.attendance_capture_check_in,
+                    ),
+                    break_duration=self._normalize_break_duration(break_duration),
                 )
                 return self._get_attendance_action_response(employee, notification)
         return {}
 
     @http.route('/hr_attendance/manual_selection', type="jsonrpc", auth="public")
-    def manual_selection(self, token, employee_id, pin_code, latitude=False, longitude=False, check_in_image=None):
+    def manual_selection(
+        self, token, employee_id, pin_code, break_duration=False,
+        latitude=False, longitude=False, check_in_image=None,
+    ):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().browse(employee_id)
@@ -289,10 +366,42 @@ class HrAttendance(http.Controller):
                         longitude=longitude,
                         device_tracking_enabled=company.attendance_device_tracking,
                     ),
-                    self._get_validated_check_in_image_and_type(check_in_image, company.attendance_capture_check_in),
+                    check_in_image_data=self._get_validated_check_in_image_and_type(
+                        check_in_image,
+                        company.attendance_capture_check_in,
+                    ),
+                    break_duration=self._normalize_break_duration(break_duration),
                 )
                 return self._get_attendance_action_response(employee, notification)
         return {}
+
+    @http.route('/hr_attendance/update_last_break_duration', type="jsonrpc", auth="public")
+    def update_last_break_duration(
+        self, token, break_duration=False, employee_id=False, pin_code=False, barcode=False,
+    ):
+        company = self._get_company(token)
+        if not company or not company.attendance_break_management:
+            return {}
+        employee = request.env['hr.employee'].sudo()
+        if barcode:
+            employee = employee.search([
+                ('barcode', '=', barcode),
+                ('company_id', '=', company.id),
+            ], limit=1)
+        elif employee_id:
+            employee = employee.browse(employee_id)
+            if employee.company_id != company or (
+                company.attendance_kiosk_use_pin and employee.pin != pin_code
+            ):
+                employee = request.env['hr.employee'].sudo()
+        if not employee:
+            return {}
+        attendance = employee.last_attendance_id
+        if attendance and attendance.check_out:
+            attendance.write({
+                'break_duration': self._normalize_break_duration(break_duration) or 0.0,
+            })
+        return self._get_attendance_action_response(employee)
 
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
@@ -323,14 +432,20 @@ class HrAttendance(http.Controller):
         return []
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
-    def systray_attendance(self, latitude=False, longitude=False, check_in_image=None):
+    def systray_attendance(self, latitude=False, longitude=False, break_duration=False, check_in_image=None):
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
-        check_in_image_data = self._get_validated_check_in_image_and_type(check_in_image, employee.company_id.attendance_capture_check_in)
-        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
+        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(
+            geo_ip_response,
+            check_in_image_data=self._get_validated_check_in_image_and_type(
+                check_in_image,
+                employee.company_id.attendance_capture_check_in,
+            ),
+            break_duration=self._normalize_break_duration(break_duration),
+        )
         return self._get_attendance_action_response(employee, notification)
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)

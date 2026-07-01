@@ -28,6 +28,7 @@ class ResConfigSettings(models.TransientModel):
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
     attendance_capture_check_in = fields.Boolean(related="company_id.attendance_capture_check_in", readonly=False)
+    attendance_break_management = fields.Boolean(related="company_id.attendance_break_management", readonly=False)
 
     @api.model
     def get_values(self):
