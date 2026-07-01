@@ -415,7 +415,7 @@ class TestArWithholdingArRi(TestArCommon):
         self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1166.54)
         self.assertEqual(wizard.l10n_ar_net_amount, 30762.71)
 
-    def test_11_withholding_amounts_1(self):
+    def test_12_withholding_amounts_1(self):
         """Check computation of withholding tax amount."""
         self.tax_wth_test_1.write({'amount': 4.5})
         moves = self.in_invoice_wht_5('2-1')
@@ -444,3 +444,81 @@ class TestArWithholdingArRi(TestArCommon):
         wizard.currency_id = self.env['res.currency']
         self.assertEqual(wizard.amount, 188865.27)
         self.assertFalse(wizard.l10n_ar_adjustment_warning)
+
+    def test_13_withholding_amounts_2(self):
+        """Verify withholding amount precision under 'round_globally' rounding method.
+
+        With price_unit=391683 and a 4.5% withholding tax, the exact amount is
+        391683 * 0.045 = 17625.735. Under 'round_globally', this rounds to 17625.74.
+        The test ensures the rounding method is respected and the resulting
+        withholding line carries the correctly rounded amount_currency.
+        """
+        company = self.env.company
+        previous_rounding_method = company.tax_calculation_rounding_method
+        company.tax_calculation_rounding_method = 'round_globally'
+        try:
+            # Create a vendor bill with a single line subject to 21% VAT
+            in_invoice_wht = self.env["account.move"].create(
+                {
+                    "move_type": "in_invoice",
+                    "date": "2025-10-01",
+                    "invoice_date": "2025-10-01",
+                    "partner_id": self.res_partner_adhoc.id,
+                    "invoice_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_a.id,
+                                "price_unit": 391683,
+                                "tax_ids": [Command.set(self.tax_21.ids)],
+                            }
+                        )
+                    ],
+                    "l10n_latam_document_number": "2-5",
+                }
+            )
+            in_invoice_wht.action_post()
+
+            # Set withholding tax rate to 4.5% (produces a non-trivial rounding case)
+            self.tax_wth_test_1.write({"amount": 4.5})
+
+            # Register payment with the withholding applied on the untaxed base
+            wizard = (
+                self.env["account.payment.register"]
+                .with_context(active_model="account.move", active_ids=in_invoice_wht.ids)
+                .create(
+                    {
+                        "payment_date": "2025-10-01",
+                        "l10n_ar_withholding_ids": [
+                            Command.create(
+                                {
+                                    "tax_id": self.tax_wth_test_1.id,
+                                    "base_amount": in_invoice_wht.amount_untaxed,
+                                    "amount": 0,
+                                }
+                            )
+                        ],
+                    }
+                )
+            )
+            wizard.l10n_ar_withholding_ids._compute_amount()
+            action = wizard.action_create_payments()
+            payment = self.env["account.payment"].browse(action["res_id"])
+
+            self.assertEqual(payment.company_id.tax_calculation_rounding_method, 'round_globally')
+            # 391683 * 21% = 82253.43 (VAT) -> total invoice: 473936.43
+            # 391683 * 4.5% = 17625.735 -> rounded globally to 17625.74 (withholding)
+            # net payment (liquidity): 473936.43 - 17625.74 = 456310.69
+            self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+                # Liquidity line:
+                {'debit': 0.0, 'credit': 456310.69, 'currency_id': wizard.currency_id.id, 'amount_currency': -456310.69, 'reconciled': False},
+                # base line:
+                {'debit': 0.0, 'credit': 391683.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -391683.0, 'reconciled': False},
+                # withholding line:
+                {'debit': 0.0, 'credit': 17625.74, 'currency_id': wizard.currency_id.id, 'amount_currency': -17625.74, 'reconciled': False},
+                # base line:
+                {'debit': 391683.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 391683.0, 'reconciled': False},
+                # Receivable line:
+                {'debit': 473936.43, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 473936.43, 'reconciled': True},
+            ])
+        finally:
+            company.tax_calculation_rounding_method = previous_rounding_method
