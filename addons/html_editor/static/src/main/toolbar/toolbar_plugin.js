@@ -237,7 +237,7 @@ export class ToolbarPlugin extends Plugin {
                 if (ev.detail >= 2) {
                     // Delayed open, waiting for a possible triple click.
                     this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 } else {
                     // Fast open, just wait for a possible selection change due
                     // to mouseup.
@@ -270,7 +270,7 @@ export class ToolbarPlugin extends Plugin {
                 if (ev.key?.startsWith("Arrow")) {
                     this.pendingArrowKey = false;
                     this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 }
             });
             if (isMacOS()) {
@@ -278,7 +278,7 @@ export class ToolbarPlugin extends Plugin {
                     if (this.pendingArrowKey && !this.isMouseDown) {
                         this.pendingArrowKey = false;
                         this.onSelectionChangeActive = true;
-                        this.debouncedUpdateToolbar();
+                        this.triggerDebouncedUpdateToolbar();
                     }
                 });
                 this.addDomListener(this.editable, "mousedown", () => (this.isMouseDown = true));
@@ -299,6 +299,13 @@ export class ToolbarPlugin extends Plugin {
         this.updateToolbar.cancel();
         this.overlay.close();
         super.destroy();
+    }
+
+    /**
+     * Schedules a debounced toolbar update.
+     */
+    triggerDebouncedUpdateToolbar() {
+        this.debouncedUpdateToolbar();
     }
 
     /**
