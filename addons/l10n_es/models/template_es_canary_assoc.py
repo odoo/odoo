@@ -33,4 +33,17 @@ class AccountChartTemplate(models.AbstractModel):
             if 'tax_ids' in data:
                 del data['tax_ids']
 
+        # Remove the accounts from association
+        res.pop('account_assoc_4757', None)
+        res.pop('account_assoc_4707', None)
+
+        # We change the name to the accounts that we have to adapt thtm to association
+        res['account_common_canary_4707'] = {
+            'name': 'Public Treasury, debtor for collaboration in the delivery and distribution of subsidies (art.12 Subsidies Law)',
+            'name@es': 'Hacienda Pública, deudora por colaboración en la entrega y distribución de subvenciones (art.12 Ley de Subvenciones'
+            }
+        res['account_common_canary_4757'] = {
+            'name': 'Public Treasury, creditor for subsidies received as a collaborating entity (art.12 Subsidies Law)',
+            'name@es': 'Hacienda Pública, acreedora por subvenciones recibidas en concepto de entidad colaboradora (art.12 Ley de Subvenciones)'}
+
         return res
