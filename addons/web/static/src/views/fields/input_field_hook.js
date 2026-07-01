@@ -1,6 +1,7 @@
 import { onWillRender, useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -12,14 +13,15 @@ import { useBus } from "@web/core/utils/hooks";
  * @param {() => string} params.getValue a function that returns the value to write in
  *   the input, if the user isn't currently editing it
  * @param {(value: string) => any} [params.parse] a function that parses the value of the input.
- * @param {Ref<HTMLInputElement | HTMLTextAreaElement>} [params.ref] a ref containing the input/textarea
+ * @param {Ref<HTMLInputElement | HTMLTextAreaElement> | (() => HTMLInputElement | HTMLTextAreaElement | null)} [params.ref] a ref or signal containing the input/textarea
  * @param {string} [params.refName="input"] the ref name of the input/textarea
  * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
  * @param {string} [params.fieldName]
  * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
  */
 export function useInputField(params) {
-    const inputRef = params.ref || useRef(params.refName || "input");
+    const inputRefOrSignal = params.ref || useRef(params.refName || "input");
+    const getEl = () => resolveRefEl(inputRefOrSignal) ?? null;
     const component = useComponent();
     const fieldName = params.fieldName || component.props.name;
     const shouldSave = params.shouldSave ?? (() => false);
@@ -79,7 +81,7 @@ export function useInputField(params) {
 
             if (!isInvalid) {
                 if (val !== component.props.record.data[fieldName]) {
-                    lastSetValue = inputRef.el.value;
+                    lastSetValue = getEl().value;
                     pendingUpdate = true;
                     await component.props.record.update(
                         { [fieldName]: val },
@@ -88,7 +90,7 @@ export function useInputField(params) {
                     pendingUpdate = false;
                     component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
-                    inputRef.el.value = params.getValue();
+                    getEl().value = params.getValue();
                 }
             }
         }
@@ -120,7 +122,7 @@ export function useInputField(params) {
                 };
             }
         },
-        () => [inputRef.el]
+        () => [getEl()]
     );
 
     // We need to call getValue to always observe
@@ -136,15 +138,16 @@ export function useInputField(params) {
      */
     useLayoutEffect(() => {
         const value = params.getValue();
-        if (!inputRef.el) {
+        const el = getEl();
+        if (!el) {
             return;
         }
-        if (inputRef.el.value === value) {
+        if (el.value === value) {
             isDirty = false;
         }
         if (!isDirty && !component.props.record.isFieldInvalid(fieldName)) {
-            inputRef.el.value = value;
-            lastSetValue = inputRef.el.value;
+            el.value = value;
+            lastSetValue = el.value;
         }
     });
 
@@ -156,15 +159,16 @@ export function useInputField(params) {
      * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
      */
     async function commitChanges(urgent) {
-        if (!inputRef.el) {
+        const el = getEl();
+        if (!el) {
             return;
         }
 
-        isDirty = inputRef.el.value !== lastSetValue;
+        isDirty = el.value !== lastSetValue;
         if (isDirty || (urgent && pendingUpdate)) {
             let isInvalid = false;
             isDirty = false;
-            let val = inputRef.el.value;
+            let val = el.value;
             if (params.parse) {
                 try {
                     val = params.parse(val);
@@ -183,14 +187,14 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.record.data[fieldName] || false)) {
-                lastSetValue = inputRef.el.value;
+                lastSetValue = el.value;
                 await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
-                inputRef.el.value = params.getValue();
+                el.value = params.getValue();
             }
         }
     }
 
-    return inputRef;
+    return inputRefOrSignal;
 }
