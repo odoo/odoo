@@ -127,3 +127,28 @@ test("activity menu widget: close on messaging menu click", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ActivityMenu", { count: 0 });
 });
+
+test("activity menu widget: 'To Assign' button visibility and action", async () => {
+    const pyEnv = await startServer();
+    const roleId = pyEnv["res.role"].create({ name: "Test Role" });
+    pyEnv["res.users"].write([pyEnv.user.id], { role_ids: [roleId] });
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create([
+        { res_id: partnerId, res_model: "res.partner", user_id: false, role_id: roleId },
+        { res_id: partnerId, res_model: "res.partner", user_id: false, role_id: roleId },
+    ]);
+    mockService("action", {
+        doAction(action, options) {
+            expect.step("do_action");
+            expect(action).toBe("mail.mail_activity_action_to_assign");
+            expect(options.clearBreadcrumbs).toBe(true);
+        },
+    });
+
+    await start();
+    await click(".o_menu_systray i[aria-label='Activities']");
+    await contains(".o-mail-ActivityMenu");
+    await contains(".o-mail-ActivityMenu span.list-group-item", { text: "2 To Assign" });
+    await click(".o-mail-ActivityMenu span.list-group-item", { text: "2 To Assign" });
+    await expect.waitForSteps(["do_action"]);
+});
