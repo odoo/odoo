@@ -193,20 +193,19 @@
                                             <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
                                         </span>
                                     </span>
+                                    <div name="send_buttons" class="d-flex gap-2" invisible="not attendees_count">
+                                        <button name="action_open_composer" class="btn btn-sm btn-secondary" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
+                                    </div>
                                 </div>
-                                <div name="send_buttons" class="d-flex gap-2 pt-2 pb-3" invisible="not attendees_count">
-                                    <button name="action_open_composer" class="btn btn-sm btn-secondary" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
-                                </div>
-                                <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
-                                <field name="partner_ids" widget="many2manyattendee"
-                                    placeholder="Select attendees..."
-                                    options="{'no_quick_create': True}"
-                                    context="{'form_view_ref': 'base.view_partner_simple_form'}"
-                                    domain="[('type','!=','private')]"
-                                    class="oe_inline"
-                                    readonly="not user_can_edit"
-                                />
                             </div>
+                            <field name="partner_ids" widget="many2manyattendee_mail"
+                                placeholder="Add attendees..."
+                                options="{'no_quick_create': True}"
+                                context="{'form_view_ref': 'calendar.view_partner_simple_form_calendar'}"
+                                domain="[('type','!=','private')]"
+                                class="oe_inline o_placeholder_linebreak"
+                                readonly="not user_can_edit"
+                            />
                         </group>
                     </group>
                     <notebook>
@@ -356,8 +355,12 @@
                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-user" title="Participants"/>
                     <field name="partner_ids" nolabel="1" class="w-100"
-                        widget="many2many_tags"
+                        widget="many2manyattendee_mail"
                         placeholder="Participants"
+                        options="{'no_quick_create': True}"
+                        context="{'form_view_ref': 'calendar.view_partner_simple_form_calendar'}"
+                        domain="[('type','!=','private')]"
+                        readonly="not user_can_edit"
                     />
                 </div>
                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
