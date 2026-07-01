@@ -190,8 +190,10 @@ class PosConfig(models.Model):
         return res
 
     def _ensure_public_attachments(self):
-        self.self_ordering_image_background_ids.write({"public": True})
-        self.self_ordering_image_home_ids.write({"public": True})
+        attachments = self.self_ordering_image_background_ids | self.self_ordering_image_home_ids
+        attachments = attachments.filtered(lambda a: not a.public)
+        if attachments:
+            attachments.sudo().write({"public": True})
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
