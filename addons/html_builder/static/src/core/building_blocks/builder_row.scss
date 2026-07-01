@@ -1,12 +1,12 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
-    top: var(--o-hb-row-sublevel-top, 0);
+    top: calc(var(--o-hb-row-sublevel-top, 0px) - var(--o-hb-row-sublevel-offset, 0px));
     bottom: 0;
     left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
     border-width: 0 0 $o-we-border-width $o-we-border-width;
     pointer-events: none;
-    transform: translate(0, ($o-hb-row-min-height + $o-hb-row-spacing) * -0.5 + $o-we-border-width);
+    transform: translate(0, calc(var(--o-hb-row-sublevel-base-offset) + var(--o-hb-row-sublevel-offset, 0px)));
     content: "";
 }
 
@@ -32,6 +32,7 @@
     }
 
     --o-hb-btn-minHeight: #{$o-hb-row-min-height - ($o-hb-row-spacing * 0.5)};
+    --o-hb-row-sublevel-base-offset: #{($o-hb-row-min-height + $o-hb-row-spacing) * -0.5 + $o-we-border-width};
 
     min-height: $o-hb-row-min-height;
     padding-top: $o-hb-row-spacing;
@@ -56,7 +57,7 @@
         z-index: $_z-index;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-padding-left;
-        align-self: baseline;
+        align-self: center;
     }
 
     .hb-row-content {

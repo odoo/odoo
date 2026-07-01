@@ -37,6 +37,29 @@ test("show row title", async () => {
     expect(".options-container").toBeVisible();
     expect(".hb-row .text-nowrap").toHaveText("my label");
 });
+
+test("keeps row label vertically centered when controls are taller", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderRow label="'label_1'" level="1">
+                    <BuilderButton style="'height: 80px;'">Tall Button</BuilderButton>
+                </BuilderRow>`;
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeVisible();
+    const rowRect = queryOne(".hb-row[data-label='label_1']").getBoundingClientRect();
+    const labelTextRect = queryOne(
+        ".hb-row[data-label='label_1'] .hb-row-label .text-nowrap"
+    ).getBoundingClientRect();
+    const rowCenter = rowRect.top + rowRect.height * 0.5;
+    const labelTextCenter = labelTextRect.top + labelTextRect.height * 0.5;
+    expect(Math.abs(rowCenter - labelTextCenter)).toBeLessThan(2);
+});
+
 test("show row tooltip", async () => {
     addBuilderOption(
         class extends BaseOptionComponent {
@@ -117,23 +140,21 @@ test("reconnects lines across mixed levels", async () => {
     await waitFor(".options-container .hb-row-label");
 
     const labelEls = queryAll(".options-container .hb-row-label");
+    const textEls = queryAll(".options-container .hb-row-label .text-nowrap");
     const rowEls = queryAll(".options-container .hb-row");
-    const rects = [
-        { top: 0, bottom: 40 },
-        { top: 40, bottom: 80 },
-        { top: 80, bottom: 120 },
-        { top: 120, bottom: 160 },
-        { top: 160, bottom: 200 },
-        { top: 200, bottom: 240 },
-        { top: 240, bottom: 280 },
-        { top: 280, bottom: 320 },
-        { top: 320, bottom: 360 },
-        { top: 360, bottom: 400 },
-        { top: 400, bottom: 440 },
-        { top: 440, bottom: 480 },
-    ];
+    const rects = rowEls.map((_, index) => ({
+        top: index * 40,
+        bottom: (index + 1) * 40,
+        height: 40,
+    }));
     labelEls.forEach((labelEl, index) => {
         labelEl.getBoundingClientRect = () => rects[index];
+    });
+    textEls.forEach((textEl, index) => {
+        textEl.getBoundingClientRect = () => rects[index];
+    });
+    rowEls.forEach((rowEl, index) => {
+        rowEl.getBoundingClientRect = () => rects[index];
     });
     refreshSublevelLines(rowEls[10]);
     await animationFrame();
@@ -142,6 +163,47 @@ test("reconnects lines across mixed levels", async () => {
         labelEl.style.getPropertyValue("--o-hb-row-sublevel-top")
     );
     expect(offsets).toEqual(["", "", "", "-40px", "", "", "", "", "", "", "-80px", "-200px"]);
+});
+
+test("connects first sublevel line after taller previous row", async () => {
+    const optionsContainerEl = document.createElement("div");
+    optionsContainerEl.className = "options-container";
+    optionsContainerEl.innerHTML = `
+        <div class="hb-row">
+            <div class="hb-row-label"><span class="text-nowrap">Background</span></div>
+        </div>
+        <div class="hb-row hb-row-sublevel hb-row-sublevel-1">
+            <div class="hb-row-label"><span class="text-nowrap">Image</span></div>
+        </div>`;
+    document.body.append(optionsContainerEl);
+
+    const rowEls = [...optionsContainerEl.querySelectorAll(".hb-row")];
+    const labelEls = [...optionsContainerEl.querySelectorAll(".hb-row-label")];
+    const textEls = [...optionsContainerEl.querySelectorAll(".text-nowrap")];
+    const previousRowRect = { top: 0, bottom: 80, height: 80 };
+    const currentRowRect = { top: 80, bottom: 100, height: 20 };
+    const previousLabelRect = { top: 20, bottom: 60, height: 40 };
+    const currentLabelRect = { top: 80, bottom: 100, height: 20 };
+    rowEls[0].getBoundingClientRect = () => previousRowRect;
+    rowEls[1].getBoundingClientRect = () => currentRowRect;
+    labelEls[0].getBoundingClientRect = () => previousLabelRect;
+    labelEls[1].getBoundingClientRect = () => currentLabelRect;
+    textEls[1].getBoundingClientRect = () => ({ top: 84, bottom: 96, height: 12 });
+
+    refreshSublevelLines(rowEls[1]);
+
+    const getRectCenter = (rect) => rect.top + rect.height * 0.5;
+    const previousLabelCenter = getRectCenter(labelEls[0].getBoundingClientRect());
+    const currentLabelCenter = getRectCenter(labelEls[1].getBoundingClientRect());
+    const currentBaseOffset = currentLabelCenter - currentRowRect.bottom;
+    expect(labelEls[1].style.getPropertyValue("--o-hb-row-sublevel-base-offset")).toBe(
+        `${currentBaseOffset}px`
+    );
+    expect(labelEls[1].style.getPropertyValue("--o-hb-row-sublevel-top")).toBe(
+        `${previousLabelCenter - currentRowRect.top - currentBaseOffset}px`
+    );
+    expect(labelEls[1].style.getPropertyValue("--o-hb-row-sublevel-offset")).toBe("");
+    optionsContainerEl.remove();
 });
 
 /* ================= Collapse template ================= */
