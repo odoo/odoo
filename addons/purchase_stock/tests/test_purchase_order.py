@@ -628,7 +628,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
     def test_receive_negative_quantity(self):
         """
         Receive a negative quantity, the picking should be a delivery and the quantity received
-        negative. """
+        negative and no incoming empty picking should be created.
+        """
         self.product_id_2.type = 'consu'
         po_vals = {
             'partner_id': self.partner_a.id,
@@ -648,6 +649,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.picking_ids.picking_type_id.code, 'outgoing')
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
+        self.assertEqual(self.env['stock.picking'].search_count([('origin', '=', po.name), ('picking_type_id.code', '=', 'incoming')]), 0)
 
     @skip('Temporary to fast merge new valuation')
     def test_receive_qty_invoiced_but_no_posted(self):
