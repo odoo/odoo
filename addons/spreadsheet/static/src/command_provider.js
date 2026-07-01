@@ -48,11 +48,16 @@ function setupSpreadsheetCommandProvider(spreadsheetEnv) {
 
 function registerCommand(spreadsheetEnv, menu, parentName, category) {
     const result = [];
+    const isReadonly = spreadsheetEnv.model.getters.isReadonly();
     if (menu.children) {
         for (const subMenu of menu
             .children(spreadsheetEnv)
             .sort((a, b) => a.sequence - b.sequence)) {
-            if (!subMenu.isVisible(spreadsheetEnv) || !subMenu.isEnabled(spreadsheetEnv)) {
+            if (
+                !subMenu.isVisible(spreadsheetEnv) ||
+                !subMenu.isEnabled(spreadsheetEnv) ||
+                (isReadonly && !subMenu.isReadonlyAllowed)
+            ) {
                 continue;
             }
             const subMenuName = `${subMenu.name(spreadsheetEnv)}`;
