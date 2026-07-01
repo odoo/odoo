@@ -418,12 +418,16 @@ class ProjectProject(models.Model):
 
         SaleOrderLine = self.env['sale.order.line']
         sale_order_line_domain = [
-            '&',
-                ('display_type', '=', False),
-                ('order_id', 'any', ['|',
-                    ('id', 'in', self.reinvoiced_sale_order_id.ids),
-                    ('project_id', 'in', self.ids),
-                ]),
+            ('display_type', '=', False),
+            ('order_id', 'any', ['|',
+                ('id', 'in', self.reinvoiced_sale_order_id.ids),
+                ('project_id', 'in', self.ids),
+            ]),
+            '|',
+                ('project_id', 'in', self.ids),
+                '&',
+                    ('project_id', '=', False),
+                    ('analytic_distribution', 'in', self.account_id.ids),
         ]
         sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
         sale_order_line_sql = sale_order_line_query.select(
@@ -488,7 +492,11 @@ class ProjectProject(models.Model):
             ('state', '=', 'sale'),
             ('display_type', '=', False),
             '|',
-                ('project_id', 'in', [*self.ids, False]),
+            '|',
+                ('project_id', 'in', self.ids),
+                '&',
+                    ('project_id', '=', False),
+                    ('analytic_distribution', 'in', self.account_id.ids),
                 ('id', 'in', sale_items.ids),
         ]
         if additional_domain:
@@ -761,9 +769,11 @@ class ProjectProject(models.Model):
         domain = [
             ('order_id', 'in', sale_items.order_id.ids),
             '|',
-                '|',
-                    ('project_id', 'in', self.ids),
+            '|',
+                ('project_id', 'in', self.ids),
+                '&',
                     ('project_id', '=', False),
+                    ('analytic_distribution', 'in', self.account_id.ids),
                 ('id', 'in', sale_items.ids),
         ]
         revenue_items_from_sol = self._get_revenues_items_from_sol(
