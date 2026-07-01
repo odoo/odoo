@@ -1,0 +1,78 @@
+<templates>
+
+    <t t-name="discuss.RecordingDialog">
+        <Dialog size="'sm'" footer="false" title.translate="Recording">
+            <div class="o-discuss-RecordingDialog d-flex flex-column gap-1">
+                <t t-if="!this.isRecording">
+                    <h3>Record the call</h3>
+                    <p class="mb-2">
+                    Recording will capture participants' audio, video, and screen shares. The recording file will be available in the chat and call history once it is ready.
+                    </p>
+                    <div class="btn border-transparent d-flex gap-2" t-on-click="() => this.state.transcription = !this.state.transcription">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!this.store.rtc?.canRecordTranscription || !this.state.audio" t-att-checked="this.state.transcription ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">Generate transcription</span>
+                        </label>
+                    </div>
+                    <!-- TODO: use t-model instead of t-att-checked? -->
+                    <!-- should not be able to click that outer div if the checkbox is disabled, probably add state to the compoment, same for the other checkbox, TODO move handler to component js -->
+                    <div class="btn border-transparent d-flex gap-2" t-on-click="() => this.state.audio = !this.state.audio">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!this.store.rtc?.canRecordAudio || !this.state.transcription" t-att-checked="this.state.audio ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">Generate recording file</span>
+                        </label>
+                    </div>
+                    <div class="btn border-transparent d-flex gap-2 ps-4" t-on-click="() => this.state.video = !this.state.video">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!this.store.rtc?.canRecordVideo || !this.state.audio" t-att-checked="this.state.video ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">video</span>
+                        </label>
+                    </div>
+                </t>
+                <t t-else="">
+                    <h3>Recording in progress</h3>
+                    <div class="d-flex flex-column gap-2 mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-circle text-danger fa-xs" style="animation: blink 1s infinite;"/>
+                            <span t-if="this.store.rtc?.recordingState.video">Video recording</span>
+                            <span t-else="">Audio recording</span>
+                        </div>
+                    </div>
+                    <t t-if="this.canChangeTranscription">
+                        <div class="btn border-transparent d-flex gap-2" t-on-click="() => this.state.transcription = !this.state.transcription">
+                            <div class="pe-2 d-flex align-items-center">
+                                <input type="checkbox" role="switch" t-att-disabled="!this.store.rtc?.canRecordTranscription" t-att-checked="this.state.transcription ? 'checked' : ''"/>
+                            </div>
+                            <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                                <span class="text-truncate text-wrap">Generate transcription</span>
+                            </label>
+                        </div>
+                    </t>
+                </t>
+                <div class="d-flex justify-content-center gap-2 p-2">
+                    <t t-if="this.showUpdateButton">
+                        <button class="btn btn-secondary d-flex align-items-center justify-content-center gap-2" t-on-click="this.onClickUpdate" t-att-disabled="this.store.rtc?.recordingRequest">
+                            <span>Update</span>
+                            <t t-if="this.store.rtc?.recordingRequest">
+                                <i class="fa fa-fw fa-spinner fa-spin"/>
+                            </t>
+                        </button>
+                    </t>
+                    <button class="btn d-flex align-items-center justify-content-center gap-2" t-att-class="this.isRecording ? 'btn-danger' : 'btn-primary'" t-on-click="this.onClickRecording" t-att-disabled="this.store.rtc?.recordingRequest">
+                        <span><t t-if="this.isRecording">Stop recording</t><t t-else="">Start recording</t></span>
+                        <t t-if="this.store.rtc?.recordingRequest">
+                            <i class="fa fa-fw fa-spinner fa-spin"/>
+                        </t>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

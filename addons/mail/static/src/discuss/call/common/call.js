@@ -1,9 +1,11 @@
 import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { ActionList } from "@mail/core/common/action_list";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation_bar";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
+import { CallRecordingIndicator } from "@mail/discuss/call/common/call_recording_indicator";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
 import { Component, onMounted, onPatched, onWillUnmount, props, proxy, t } from "@odoo/owl";
@@ -14,6 +16,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { ACTION_TAGS } from "@mail/core/common/action";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
 
@@ -34,10 +37,12 @@ const MIN_TILED_TILE_WIDTH = 320;
 
 export class Call extends Component {
     static components = {
+        ActionList,
         BlurPerformanceWarning,
         CallActionList,
         CallPresentationBar,
         CallParticipantCard,
+        CallRecordingIndicator,
         PttAdBanner,
     };
     static template = "discuss.Call";
@@ -94,6 +99,15 @@ export class Call extends Component {
         useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
         useSubEnv({ inDiscussCallView: true });
+    }
+
+    get layoutActions() {
+        if (!this.isActiveCall) {
+            return [];
+        }
+        return this.callActions.actions.filter((action) =>
+            action.tags.includes(ACTION_TAGS.CALL_LAYOUT)
+        );
     }
 
     get isAnyonePresenting() {

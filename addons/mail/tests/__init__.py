@@ -13,6 +13,7 @@ from . import test_mail_activity
 from . import test_mail_blacklist
 from . import test_mail_canned_response
 from . import test_mail_composer
+from . import test_mail_jwt
 from . import test_mail_mail
 from . import test_mail_message
 from . import test_mail_message_translate

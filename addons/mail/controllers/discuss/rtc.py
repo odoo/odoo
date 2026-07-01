@@ -1,15 +1,40 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+import logging
 
-from werkzeug.exceptions import NotFound
+from collections import defaultdict
+from datetime import datetime
+
+from werkzeug.exceptions import NotFound, BadRequest
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import file_open
 
-from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context, get_derived_sfu_key, mail_route
+from odoo.addons.mail.tools.jwt import Algorithm, verify
+
+_logger = logging.getLogger(__name__)
+
+
+def _check_jwt(request, channel):
+    if not channel:
+        raise NotFound()
+    auth_header = request.httprequest.headers.get("Authorization")
+    if not auth_header:
+        raise NotFound()
+    try:
+        jwt = auth_header.split(" ")[1]
+    except IndexError:
+        raise NotFound()
+    if not jwt:
+        raise NotFound()
+    sfu_key = get_derived_sfu_key(request.env, channel.id)
+    try:
+        return verify(jwt, sfu_key, algorithm=Algorithm.HS256)
+    except ValueError:
+        raise NotFound()
 
 
 class RtcController(Controller):
@@ -165,3 +190,61 @@ class RtcController(Controller):
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
         )
+
+    ##########
+    # Recording / Transcription
+    ##########
+
+    def _get_recording_destination(self, call_history, start_ms, end_ms):
+        """Save the recording, to be overriden by (cloud) storage modules"""
+        pass
+
+    def _handle_audio_recording(self, call_history, start_ms, end_ms, transcribe=False):
+        """
+        TODO move to call_history model
+        Handle the audio file received from the SFU, to be overriden by the AI for transcription"""
+        file_data = request.httprequest.get_data()
+        if not file_data:
+            raise BadRequest()
+        artifact_sudo = request.env["mail.call.artifact"].sudo().create({
+            "discuss_call_history_id": call_history.id,
+            "start_ms": start_ms,
+            "end_ms": end_ms,
+        })
+        content_type = request.httprequest.content_type or "audio/ogg"
+        request.env["ir.attachment"].sudo().create({
+            "name": f"audio_{call_history.id}",
+            "type": "binary",
+            "raw": file_data,
+            "res_model": "mail.call.artifact",
+            "res_id": artifact_sudo.id,
+            "mimetype": content_type,
+        })
+        return artifact_sudo.sudo(False)
+
+    @route(
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/audio',
+        type="http",
+        auth="public",
+        methods=["POST"],
+        cors="*",
+        csrf=False,
+        max_content_length=30 * 1024 * 1024,  # 30MB decent margin, expecting 1h of 32k audio (~15MB)
+    )
+    def audio_recording(self, call_history, start_ms, end_ms, transcribe=False):
+        _check_jwt(request, call_history.channel_id)
+        if not start_ms or not end_ms:
+            raise BadRequest()
+        self._handle_audio_recording(call_history, start_ms, end_ms, transcribe)
+
+    @route(
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/routing',
+        type="http",
+        auth="public",
+        cors="*",
+    )
+    def get_routing(self, call_history, start_ms, end_ms):
+        _check_jwt(request, call_history.channel_id)
+        return request.make_json_response({
+            "destination": self._get_recording_destination(call_history, start_ms, end_ms),
+        }, status=200)
