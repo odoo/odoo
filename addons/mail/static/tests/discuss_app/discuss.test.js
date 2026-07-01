@@ -87,6 +87,9 @@ test("can change the thread name of #general", async () => {
     await assertSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-DiscussSidebarChannel:contains(special)");
     await contains("input.o-mail-Discuss-threadName:value(special)");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-Composer-input", { count: 0 });
+    await contains("input.o-mail-Discuss-threadName:disabled");
 });
 
 test("can active change thread from messaging menu", async () => {
@@ -127,6 +130,8 @@ test("can change the thread description of #general", async () => {
     triggerHotkey("Enter");
     await assertSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
     await contains("input.o-mail-Discuss-threadDescription:value(I want a burger today!)");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains("input.o-mail-Discuss-threadDescription:disabled");
 });
 
 test("Message following a notification should not be squashed", async () => {
@@ -580,7 +585,7 @@ test("sidebar: change active", async () => {
 
 test("sidebar: basic channel rendering", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
@@ -592,6 +597,8 @@ test("sidebar: basic channel rendering", async () => {
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave Channel']"
     );
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
 test("channel become active", async () => {
@@ -694,7 +701,7 @@ test("default active id on mailbox", async () => {
 
 test("basic top bar rendering", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
     await contains("button:disabled", { text: "Mark all read" });
@@ -704,7 +711,11 @@ test("basic top bar rendering", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-mail-Discuss-header button[title='Notification Settings']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains("[title='Invite People']", { count: 0 });
+    await contains("[title='Notification Settings']", { count: 0 });
 });
 
 test("rendering of inbox message", async () => {
@@ -1541,7 +1552,10 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+    await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar .fa-pencil");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-Discuss-threadAvatar");
+    await contains(".o-mail-Discuss-threadAvatar .fa-pencil", { count: 0 });
 });
 
 test("Partner IM status is displayed as thread icon in top bar of channels of type 'chat'", async () => {

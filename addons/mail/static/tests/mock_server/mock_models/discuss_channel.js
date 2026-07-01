@@ -234,6 +234,7 @@ export class DiscussChannel extends models.ServerModel {
         const [data] = this.read(
             ids,
             [
+                "active",
                 "allow_public_upload",
                 "avatarCacheKey", // mock server simplification
                 "channel_type",
@@ -1044,5 +1045,31 @@ export class DiscussChannel extends models.ServerModel {
             channel_member_ids: [Command.create({ guest_id: guestId })],
         });
         MailGuest._set_auth_cookie(guestId);
+    }
+
+    _find_channels() {
+        const { domain, ids, limit, order } = getKwArgs(
+            arguments,
+            "ids",
+            "domain",
+            "limit",
+            "order"
+        );
+        let channelDomain = domain || [];
+        if (ids) {
+            channelDomain = [["id", "in", ensureArray(ids)], ...channelDomain];
+        }
+        if (channelDomain.length === 0) {
+            return this.browse();
+        }
+        const resultIds = this.search(
+            channelDomain,
+            makeKwArgs({
+                context: { ...this.env.context, active_test: false },
+                limit,
+                order,
+            })
+        );
+        return this.browse(resultIds);
     }
 }

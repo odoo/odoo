@@ -387,6 +387,10 @@ export class Thread extends Record {
         return attachments;
     }
 
+    get isActive() {
+        return this.model !== "discuss.channel";
+    }
+
     get isUnread() {
         return this.selfMember?.message_unread_counter > 0 || this.needactionMessages.length > 0;
     }

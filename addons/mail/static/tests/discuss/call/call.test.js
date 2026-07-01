@@ -56,6 +56,12 @@ test("basic rendering", async () => {
     await click("[title='More']");
     await contains("[title='Raise Hand']");
     await contains("[title='Enter Full Screen']");
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains("[title='Start a Call']");
+    await contains("[title='Start a Video Call']");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains("[title='Start a Call']", { count: 0 });
+    await contains("[title='Start a Video Call']", { count: 0 });
 });
 
 test("keep the `more` popover active when hovering it", async () => {

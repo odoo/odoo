@@ -18,7 +18,7 @@ class BinaryController(Binary):
     )
     @add_guest_to_context
     def discuss_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         domain = [
@@ -44,7 +44,7 @@ class BinaryController(Binary):
     )
     @add_guest_to_context
     def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         domain = [
