@@ -1381,7 +1381,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultiProductOptionsTour', login="pos_user")
+        self.start_pos_tour('MultiProductOptionsTour')
+
+        self.chair_multi_line.value_ids = [Command.unlink(chair_multi_value_2.id)]
+        self.start_pos_tour('test_single_attribute_value_multi_dispaly_type_attribute_product')
 
     def test_translate_product_name(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -2551,6 +2554,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         order_payment.with_context(**payment_context).check()
         order.refund()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_backend_duplicate', login="pos_user")
+
+    def test_single_attribute_value_products(self):
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_single_attribute_value_products')
 
 
 # This class just runs the same tests as above but with mobile emulation

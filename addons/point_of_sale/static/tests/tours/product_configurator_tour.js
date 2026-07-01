@@ -101,3 +101,13 @@ registry.category("web_tour.tours").add("test_combo_variant_mix", {
             inLeftSide([...ProductScreen.orderLineHas("Test Product (Large) (Blue)", 1)]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_single_attribute_value_products", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            inLeftSide([...ProductScreen.orderLineHas("Whiteboard Pen (add 2)", 1)]),
+        ].flat(),
+});
