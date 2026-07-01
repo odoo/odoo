@@ -140,7 +140,7 @@ class HrEmployee(models.Model):
 
     job_id = fields.Many2one(tracking=True)
     # employee in company
-    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
+    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates', domain=[('active', '=', True)])
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
         'employee_id', 'category_id', groups="hr.group_hr_user",
