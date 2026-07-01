@@ -89,7 +89,6 @@ class ResPartner(models.Model):
 
         return super(ResPartner, self - l10n_ar_partners)._run_check_identification(validation=validation)
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_ar_afip_responsibility_type_id']
 

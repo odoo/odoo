@@ -224,7 +224,6 @@ class ResPartner(models.Model):
             if pan_entity:
                 self.l10n_in_pan_entity_id = pan_entity.id
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_in_gst_treatment', 'l10n_in_pan_entity_id', 'l10n_in_tan']
 

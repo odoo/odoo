@@ -135,7 +135,6 @@ class ResPartner(models.Model):
         # Using the Tax ID field also causes issue when base_vat is enabled, which block setting foreign VAT numbers.
         return self.l10n_my_edi_malaysian_tin or self.vat
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_my_identification_type', 'l10n_my_identification_number', 'l10n_my_edi_industrial_classification', 'l10n_my_edi_malaysian_tin']
 

@@ -42,7 +42,6 @@ class ResPartner(models.Model):
         l10n_sa_commercial_partners.is_company = True
         super(ResPartner, self - l10n_sa_commercial_partners)._compute_is_company()
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_sa_edi_building_number',
                                                'l10n_sa_edi_plot_identification',

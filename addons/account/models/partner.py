@@ -722,9 +722,8 @@ class ResPartner(models.Model):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
 
-    @api.model
     def _commercial_fields(self):
-        return super(ResPartner, self)._commercial_fields() + \
+        return super()._commercial_fields() + \
             ['property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'credit_limit']
 
