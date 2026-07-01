@@ -66,6 +66,40 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
+    def test_changing_delivery_method_recomputes_taxes(self):
+        country_fr = self.env.ref('base.fr')
+        self.env.company.country_id = country_fr
+        self.warehouse.partner_id.country_id = country_fr
+        tax_20 = self.env['account.tax'].create({'name': "20%", 'amount': 20})
+        fp_jp = self.env['account.fiscal.position'].create({
+            'name': "Test JP fiscal position",
+            'country_id': self.env.ref('base.jp').id,
+            'auto_apply': True,
+            'tax_ids': [Command.create({'tax_src_id': tax_20.id})],  # Removes 20% tax
+        })
+        self.env['account.fiscal.position'].create({
+            'name': "Test FR fiscal position",
+            'country_id': country_fr.id,
+            'auto_apply': True,
+        })
+        self.storable_product.write({
+            'list_price': 100,
+            'taxes_id': [Command.set(tax_20.ids)],
+        })
+        so = self._create_so(
+            partner_id=self.default_partner.id,
+            partner_shipping_id=self.default_partner.id,
+            fiscal_position_id=fp_jp.id,
+            carrier_id=self.free_delivery.id,
+            order_line=[Command.create({
+                'product_id': self.storable_product.id,
+                'product_uom_qty': 1,
+            })],
+        )
+        so._set_delivery_method(self.in_store_dm)
+        so._set_pickup_location(json.dumps({'id': self.warehouse.id}))
+        self.assertEqual(so.amount_tax, 20)
+
     def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
         self.warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse_2
