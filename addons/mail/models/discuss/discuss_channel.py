@@ -1674,6 +1674,33 @@ class DiscussChannel(models.Model):
         )
         return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
 
+    def _get_last_needaction_messages(self):
+        """Return the last needaction message for each of the given channels."""
+        messages = self.env["mail.message"]
+        if not self.ids:
+            return messages
+        domain = (
+            Domain("model", "=", self._name)
+            & Domain("needaction", "=", True)
+            & Domain.custom(
+                to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
+            )
+        )
+        messages_query = messages._search(domain, order="id desc", limit=1)
+        sql = SQL(
+            """
+                   SELECT last_needaction_message_id
+                     FROM discuss_channel
+        LEFT JOIN LATERAL %s AS t(last_needaction_message_id) ON TRUE
+                    WHERE discuss_channel.id IN %s
+                 GROUP BY discuss_channel.id, t.last_needaction_message_id
+                 ORDER BY discuss_channel.id
+            """,
+            messages_query.subselect(),
+            tuple(self.ids),
+        )
+        return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
+
     def _clean_empty_message(self, message):
         super()._clean_empty_message(message)
         message.parent_id = False
@@ -1746,3 +1773,43 @@ class DiscussChannel(models.Model):
         else:
             msg = _("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)
+
+    @api.model
+    def web_read_group(
+        self,
+        domain,
+        groupby,
+        aggregates=(),
+        limit=None,
+        offset=0,
+        order=None,
+        *,
+        auto_unfold=False,
+        opening_info=None,
+        unfold_read_specification=None,
+        unfold_read_default_limit=80,
+        groupby_read_specification=None,
+    ):
+        if opening_info is None and groupby and groupby[0] == "discuss_category_id":
+            # Open the "None" group initially, most of the channels aren't link to any category.
+            opening_info = [
+                {
+                    "value": False,
+                    "folded": False,
+                    "offset": 0,
+                    "limit": unfold_read_default_limit,
+                },
+            ]
+        return super().web_read_group(
+            domain,
+            groupby,
+            aggregates,
+            limit,
+            offset,
+            order,
+            auto_unfold=auto_unfold,
+            opening_info=opening_info,
+            unfold_read_specification=unfold_read_specification,
+            unfold_read_default_limit=unfold_read_default_limit,
+            groupby_read_specification=groupby_read_specification,
+        )

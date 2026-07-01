@@ -17,6 +17,7 @@ export const mailCorePublicWebService = {
                 channel.notifyMessageToUser(message);
             }
         );
+        services["mail.store"].messagingMenu.initializeCountersFetcher.fetch();
     },
 };
 

@@ -8,6 +8,7 @@
             <field name="name">Public Community</field>
             <field name="description">A space for engaging discussions among employees, partners, and the public.</field>
             <field name="group_public_id" eval="False"/>
+            <field name="discuss_category_id" ref="mail.discuss_category_community"/>
         </record>
         <record model="mail.message" id="mail.channel_public_community_message_0_demo">
             <field name="model">discuss.channel</field>

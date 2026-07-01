@@ -4,7 +4,6 @@ import {
     generateEmojisOnHtml,
     prettifyMessageText,
 } from "@mail/utils/common/format";
-import { compareDatetime } from "@mail/utils/common/misc";
 
 import { proxy } from "@odoo/owl";
 
@@ -38,9 +37,6 @@ export class Store extends BaseStore {
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
-    bookmarkBox = fields.One("mail.thread");
-    history = fields.One("mail.thread");
-    inbox = fields.One("mail.thread");
     isReadyPromise = new Promise((resolve) => (this._resolveIsReady = resolve));
     self_guest = fields.One("mail.guest");
     self_user = fields.One("res.users");
@@ -132,15 +128,6 @@ export class Store extends BaseStore {
             "o-simulateDarkTheme": simulateDarkTheme,
         });
     }
-
-    standaloneInboxMessages = fields.Many("mail.message", {
-        compute() {
-            const messages = (this.store.inbox?.messages ?? []).filter((m) => !m.thread);
-            return messages.sort(
-                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
-            );
-        },
-    });
 
     /**
      * @param {Object} params post message data
@@ -254,7 +241,8 @@ export class Store extends BaseStore {
      * calling the function again.
      *
      * @param {string} name
-     * @param {*} params Parameters to pass to the `fetchStoreData` method.
+     * @param {*} params Parameters to pass to the `fetchStoreData` method or a function
+     * that evaluates to those parameters.
      * @returns {{
      *      fetch: () => ReturnType<Store["fetchStoreData"]>,
      *      status: "not_fetched"|"fetching"|"fetched"
@@ -270,7 +258,7 @@ export class Store extends BaseStore {
                 }
                 r.status = "fetching";
                 promWithResolvers = Promise.withResolvers();
-                this.fetchStoreData(name, params).then(
+                this.fetchStoreData(name, typeof params === "function" ? params() : params).then(
                     (result) => {
                         r.status = "fetched";
                         promWithResolvers.resolve(result);
@@ -709,7 +697,7 @@ export class Store extends BaseStore {
                     before,
                 },
             },
-            { readonly: thread.model === "mail.box", requestData: true }
+            { requestData: true }
         );
         return {
             count,

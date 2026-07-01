@@ -1,6 +1,6 @@
 import { createPublicEmployee } from "@hr/../tests/hr_test_helpers";
 
-import { click, start } from "@mail/../tests/mail_test_helpers";
+import { click, openMessagingMenu, start } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { defineHrGamificationModels } from "@hr_gamification/../tests/hr_gamification_test_helpers";
 import { makeMockServer, mockService, serverState } from "@web/../tests/web_test_helpers";
@@ -34,6 +34,7 @@ test("badge notification opens employee form", async () => {
         notification_status: "sent",
         notification_type: "inbox",
     });
+    env["res.users"].write(serverState.userId, { notification_type: "inbox" });
     mockService("action", {
         doAction(action) {
             expect.step("do_action");
@@ -45,7 +46,7 @@ test("badge notification opens employee form", async () => {
     });
 
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("notification");
     await click(".o-mail-NotificationItem:has(:text(You: You've received a badge!");
     await expect.waitForSteps(["do_action"]);
 });

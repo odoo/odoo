@@ -3,11 +3,23 @@ import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_ac
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussClientAction.prototype, {
-    async restoreDiscussThread() {
-        await this.store.channels.fetch();
-        return super.restoreDiscussThread(...arguments);
-    },
     parseActiveId(rawActiveId) {
+        if (typeof rawActiveId === "string") {
+            const [model, id] = rawActiveId.split("_");
+            if (model === "discuss.tab") {
+                return ["discuss.tab", id];
+            }
+            if (model === "mail.box") {
+                // Legacy mailbox links (old emails, shared URLs): map to the tabs that
+                // replaced the mailboxes. "starred" became "bookmark", "history" and
+                // "inbox" became "notification".
+                return [
+                    "discuss.tab",
+                    { starred: "bookmark", history: "notification", inbox: "notification" }[id] ??
+                        id,
+                ];
+            }
+        }
         if (typeof rawActiveId === "number") {
             return ["discuss.channel", rawActiveId];
         }

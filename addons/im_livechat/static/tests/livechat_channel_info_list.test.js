@@ -129,11 +129,8 @@ test("shows live chat status in discuss sidebar", async () => {
     await contains(".o-livechat-ChannelInfoList button.active:text('In progress')");
     await click(".o-livechat-ChannelInfoList button", { text: "Looking for help" });
     await contains(".o-livechat-ChannelInfoList button.active", { text: "Looking for help" });
-    await contains(".o-mail-DiscussSidebar-item span[title='Looking for help']");
-    // live chat status icon also in messaging menu item
-    await click(".o_menu_systray i[aria-label='Messages']");
     await contains(
-        ".o-mail-MessagingMenu .o-mail-NotificationItem:contains('Visitor #20') [title='Looking for help']"
+        ".o-mail-MessagingMenuItem:has(:text('Visitor #20')) [title='Looking for help']"
     );
 });
 
@@ -278,17 +275,17 @@ test("info panel toggle state persists across chats", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:text('Visitor 1')");
+    await openDiscuss("tab:livechat");
+    await click(".o-mail-NotificationItem:has(:text('Visitor 1'))");
     await contains(".o-livechat-ChannelInfoList");
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
-    await click(".o-mail-DiscussSidebarChannel:text('Visitor 2')");
+    await click(".o-mail-NotificationItem:has(:text('Visitor 2'))");
     await contains(".o-mail-DiscussContent-threadName[title='Visitor 2']");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList");
-    await click(".o-mail-DiscussSidebarChannel:text('Visitor 1')");
+    await click(".o-mail-NotificationItem:has(:text('Visitor 1'))");
     await contains(".o-mail-DiscussContent-threadName[title='Visitor 1']");
     await contains(".o-livechat-ChannelInfoList");
 });
@@ -313,29 +310,33 @@ test("auto-open of livechat info & members panels should combine", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await openDiscuss("tab:channel");
+    await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-discuss-ChannelMemberList");
-    await click(".o-mail-DiscussSidebarChannel:text('Visitor')");
+    await click(".o-mail-MessagingMenu-tab[data-id='livechat']");
+    await click(".o-mail-NotificationItem:has(:text('Visitor'))");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
     await contains(".o-livechat-ChannelInfoList");
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
-    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-discuss-ChannelMemberList");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
     await click("button[name='member-list']");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
-    await click(".o-mail-DiscussSidebarChannel:text('Visitor')");
+    await click(".o-mail-MessagingMenu-tab[data-id='livechat']");
+    await click(".o-mail-NotificationItem:has(:text('Visitor'))");
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
     await click("button[name='member-list']");
     await contains(".o-discuss-ChannelMemberList");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
-    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-discuss-ChannelMemberList");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
 });

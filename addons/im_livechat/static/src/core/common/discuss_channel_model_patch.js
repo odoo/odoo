@@ -38,31 +38,8 @@ const discussChannelPatch = {
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
         this.livechat_lang_id = fields.One("res.lang");
         this.livechat_looking_for_help_since_dt = fields.Datetime();
-        this.storeAsPinnedLivechats = fields.One("Store", {
-            compute() {
-                if (this.channel_type === "livechat" && this.self_member_id?.is_pinned) {
-                    return this.store;
-                }
-            },
-        });
         /** @type {"in_progress"|"need_help"|undefined} */
-        this.livechat_status = fields.Attr(undefined, {
-            onUpdate() {
-                if (this.livechat_status === "need_help") {
-                    this.wasLookingForHelp = true;
-                    this.unpinOnThreadSwitch = false;
-                    return;
-                }
-                if (this.wasLookingForHelp) {
-                    this.wasLookingForHelp = false;
-                    // Still the active thread; keep it pinned after leaving "need help" status.
-                    // The agent may interact with the thread, keeping it pinned, or it will be
-                    // unpinned on the next thread switch to avoid bloating the sidebar.
-                    this.unpinOnThreadSwitch = this.eq(this.store.discuss?.thread?.channel);
-                }
-            },
-        });
-        this.unpinOnThreadSwitch = false;
+        this.livechat_status;
         this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("res.partner");
         this.livechat_note = fields.Html();
@@ -103,7 +80,11 @@ const discussChannelPatch = {
     /** @override */
     _computeCanHide() {
         if (this.channel_type === "livechat") {
-            return this.isLocallyPinned && !this.self_member_id;
+            return (
+                this.isLocallyPinned &&
+                !this.self_member_id &&
+                !this.livechat_status !== "need_help"
+            );
         }
         return super._computeCanHide(...arguments);
     },

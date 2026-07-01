@@ -138,13 +138,16 @@ export class DiscussChannelMember extends models.ServerModel {
         }
     }
 
-    _compute_message_unread_counter([memberId]) {
-        const [member] = this.browse(memberId);
-        return this.env["mail.message"].search_count([
-            ["res_id", "=", member.channel_id],
-            ["model", "=", "discuss.channel"],
-            ["id", ">=", member.new_message_separator],
-        ]);
+    _compute_message_unread_counter() {
+        for (const member of this) {
+            this.write([member.id], {
+                message_unread_counter: this.env["mail.message"].search_count([
+                    ["res_id", "=", member.channel_id],
+                    ["model", "=", "discuss.channel"],
+                    ["id", ">=", member.new_message_separator],
+                ]),
+            });
+        }
     }
 
     _store_avatar_card_fields(res) {
@@ -221,7 +224,8 @@ export class DiscussChannelMember extends models.ServerModel {
             )
         );
         if (fields.includes("message_unread_counter")) {
-            res.attr("message_unread_counter", (m) => this._compute_message_unread_counter([m.id]));
+            this._compute_message_unread_counter();
+            res.attr("message_unread_counter", (m) => m.message_unread_counter);
             res.attr("message_unread_counter_bus_id", this.env["bus.bus"].lastBusNotificationId);
         }
         if (fields.includes("channel")) {
@@ -264,7 +268,7 @@ export class DiscussChannelMember extends models.ServerModel {
         for (const member of members) {
             if (member && member.is_pinned !== pinned) {
                 DiscussChannelMember.write([member.id], {
-                    unpin_dt: pinned ? false : serializeDateTime(today()),
+                    unpin_dt: pinned ? false : serializeDateTime(DateTime.now()),
                 });
             }
             const [partner] = ResPartner.read(this.env.user.partner_id);
@@ -337,12 +341,8 @@ export class DiscussChannelMember extends models.ServerModel {
         if (!member) {
             return;
         }
-        DiscussChannelMember.write([member.id], {
-            seen_message_id: message_id,
-            message_unread_counter: DiscussChannelMember._compute_message_unread_counter([
-                member.id,
-            ]),
-        });
+        DiscussChannelMember.write([member.id], { seen_message_id: message_id });
+        this._compute_message_unread_counter();
         if (notify) {
             const [channel] = this.search_read([["id", "in", ids]]);
             const [partner, guest] = ResPartner._get_current_persona();
@@ -380,8 +380,7 @@ export class DiscussChannelMember extends models.ServerModel {
         this.env["discuss.channel.member"].write([member.id], {
             new_message_separator: message_id,
         });
-        const message_unread_counter = this._compute_message_unread_counter([member.id]);
-        this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
+        this._compute_message_unread_counter();
     }
 
     set_custom_notifications(ids, custom_notifications) {

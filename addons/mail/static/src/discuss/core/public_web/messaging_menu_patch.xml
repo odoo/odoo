@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
+    <xpath expr="//MessagingMenuItem[@t-foreach='this.messages()']" position="after">
+        <MessagingMenuItem
+            t-foreach="this.channels()" t-as="channel" t-key="channel.localId"
+            channel="channel"
+            activeTab="this.state().activeTab"
+            onClick="() => this.onClickChannel(channel)"
+        />
+    </xpath>
+</t>
+</templates>

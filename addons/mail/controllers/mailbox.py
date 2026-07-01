@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Command, Domain
+from odoo.fields import Command
 from odoo.http import request
 
 from odoo.addons.mail.controllers.webclient import WebclientController
@@ -26,7 +26,6 @@ class MailboxController(WebclientController):
         bus_store = Store(bus_channel=request.env.user)
         for cur_store in [store, bus_store]:
             cur_store.add(messages, ["is_bookmarked"])
-            cur_store.add_global_values(request.env.user._store_bookmark_box_global_fields)
 
     @store_handler("add_bookmark", readonly=False)
     def store_add_bookmark(self, store: Store, message_id):
@@ -44,28 +43,3 @@ class MailboxController(WebclientController):
         )
         messages_su.bookmarked_partner_ids = [Command.unlink(request.env.user.partner_id.id)]
         self._send_bookmark_update(store, messages_su)
-
-    @store_handler("/mail/inbox/messages")
-    def store_mailbox_messages(self, store: Store, fetch_params=None):
-        request.update_context(add_inbox_fields=True)
-        self._resolve_messages(
-            store,
-            domain=Domain("needaction", "=", True),
-            fetch_params=fetch_params,
-        )
-
-    @store_handler("/mail/history/messages")
-    def store_history_messages(self, store: Store, fetch_params=None):
-        self._resolve_messages(
-            store,
-            domain=Domain("needaction", "=", False),
-            fetch_params=fetch_params,
-        )
-
-    @store_handler("/mail/bookmark/messages")
-    def store_bookmark_messages(self, store: Store, fetch_params=None):
-        self._resolve_messages(
-            store,
-            domain=Domain("bookmarked_partner_ids", "in", [request.env.user.partner_id.id]),
-            fetch_params=fetch_params,
-        )

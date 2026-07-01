@@ -91,6 +91,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         "init_messaging",
         "failures", // called because mail/core/web is loaded in test bundle
         "systray_get_activities", // called because mail/core/web is loaded in test bundle
+        "/mail/messaging_menu/initialize_counters", // called because mail/core/public_web is loaded in test bundle
         ["init_livechat", livechatChannelId],
     ]);
     await click(".o-livechat-LivechatButton");

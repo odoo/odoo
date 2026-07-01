@@ -1,22 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import HttpCase, tagged
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
 @tagged("discuss_action")
 class TestDiscussAction(HttpCase, MailCommon):
     def test_go_back_to_thread_from_breadcrumbs(self):
-        admin_partner = self.env.ref("base.user_admin").partner_id
-        self.env["mail.message"].create({
-            "body": "bookmarked message",
-            "bookmarked_partner_ids": [(4, admin_partner.id)],
-            "model": "res.partner",
-            "res_id": admin_partner.id,
-        })
+        bob_user = mail_new_test_user(self.env, "bob_user")
+        channel_a = self.env["discuss.channel"].with_user(bob_user).create({"name": "Channel A"})
+        self.env["discuss.channel"].with_user(bob_user).create({"name": "Channel B"})
         self.start_tour(
-            "/odoo/discuss?active_id=mail.box_inbox",
+            f"/odoo/discuss?active_id=discuss.channel_{channel_a.id}",
             "discuss_go_back_to_thread_from_breadcrumbs.js",
-            login="admin",
+            login="bob_user",
         )
 
     def test_join_call_with_client_action(self):

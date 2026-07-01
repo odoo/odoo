@@ -2,6 +2,7 @@
 
 from . import channel
 from . import gif
+from . import messaging_menu
 from . import public_page
 from . import rtc
 from . import search

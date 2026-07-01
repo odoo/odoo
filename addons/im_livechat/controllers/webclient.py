@@ -22,15 +22,6 @@ class WebClient(WebclientController):
     def store_im_livechat_channel(self, store: Store):
         store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
 
-    @store_handler("/im_livechat/looking_for_help")
-    def store_im_livechat_looking_for_help(self, store: Store):
-        chats_looking_for_help = request.env["discuss.channel"].search(
-            [("livechat_status", "=", "need_help")],
-            order="livechat_looking_for_help_since_dt ASC, id ASC",
-            limit=100,
-        )
-        request.update_context(channels=request.env.context["channels"] | chats_looking_for_help)
-
     @store_handler("/im_livechat/session/data")
     def store_im_livechat_session_data(self, store: Store, channel_id):
         if not channel_id:

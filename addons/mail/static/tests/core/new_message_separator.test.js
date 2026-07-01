@@ -7,6 +7,7 @@ import {
     listenStoreFetch,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     setupChatHub,
     start,
     startServer,
@@ -123,15 +124,17 @@ test("new message separator is shown after first mark as read, on receiving new 
 
 test("keep new message separator until user goes back to the thread", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: serverState.partnerId }),
-        ],
-    });
+    const [channelId] = pyEnv["discuss.channel"].create([
+        {
+            name: "test",
+            channel_member_ids: [
+                Command.create({ partner_id: partnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
+            ],
+        },
+        { name: "Other" },
+    ]);
     const messageIds = pyEnv["mail.message"].create([
         {
             author_id: partnerId,
@@ -165,9 +168,9 @@ test("keep new message separator until user goes back to the thread", async () =
         "mail.record/insert",
         (n) => n["discuss.channel.member"][0].new_message_separator,
     ]);
-    await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
-    await contains(".o-mail-DiscussContent-threadName", { value: "History" });
-    await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
+    await click(".o-mail-NotificationItem:has(:text('Other'))");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Other" });
+    await click(".o-mail-NotificationItem:has(:text('test'))");
     await contains(".o-mail-DiscussContent-threadName", { value: "test" });
     await contains(".o-mail-Message:has(:text('Message body 2'))");
     await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
@@ -237,7 +240,7 @@ test("keep new message separator when switching between chat window and discuss 
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem-name:text('General')");
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
@@ -342,48 +345,6 @@ test("show new message separator when message is received while chat window is c
     await contains(".o-mail-ChatBubble-counter:text('1')");
     await click(".o-mail-ChatBubble");
     await contains(".o-mail-Thread-newMessage:contains('New')");
-});
-
-test("only show new message separator in its thread", async () => {
-    // when a message acts as the reference for displaying new message separator,
-    // this should applies only when vieweing the message in its thread.
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const messageIds = pyEnv["mail.message"].create([
-        {
-            author_id: demoPartnerId,
-            body: "Hello",
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-        {
-            author_id: demoPartnerId,
-            body: "@Mitchell Admin",
-            attachment_ids: [],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-            needaction: true,
-        },
-    ]);
-    // simulate that there is at least one read message in the channel
-    const [memberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageIds[0] + 1 });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))");
-    await click(".o-mail-DiscussSidebar-item:text('Inbox')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await contains(".o-mail-Message:has(:text('@Mitchell Admin'))");
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))", {
-        count: 0,
-    });
 });
 
 test("new member's separator should be at the bottom of existing messages after being invited", async () => {

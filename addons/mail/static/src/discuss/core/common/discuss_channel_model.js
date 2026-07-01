@@ -782,6 +782,7 @@ export class DiscussChannel extends Record {
             this.store.env.services.notification.add(_t("The conversation was deleted."));
             return;
         }
+        this.isLocallyPinned = false;
         if (!notify) {
             return;
         }

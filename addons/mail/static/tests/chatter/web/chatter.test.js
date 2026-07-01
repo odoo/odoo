@@ -10,6 +10,7 @@ import {
     listenStoreFetch,
     onRpcBefore,
     openFormView,
+    openMessagingMenu,
     patchUiSize,
     scroll,
     start,
@@ -46,7 +47,12 @@ test("simple chatter on a record", async () => {
     });
     listenStoreFetch(undefined, { logParams: ["mail.thread", "/mail/thread/messages"] });
     await start();
-    await waitStoreFetch(["init_messaging", "failures", "systray_get_activities"]);
+    await waitStoreFetch([
+        "init_messaging",
+        "failures",
+        "systray_get_activities",
+        "/mail/messaging_menu/initialize_counters",
+    ]);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
@@ -780,6 +786,7 @@ test("Update primary email in recipient without saving", async () => {
 
 test("can mark message as unread from chatter", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -801,8 +808,9 @@ test("can mark message as unread from chatter", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o_notification:text(Marked as unread)");
-    await click(".o-mail-MessagingMenu-counter:text(1)");
-    await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");
+    await contains(".o-mail-MessagingMenuDropdown-counter:text(1)");
+    await openMessagingMenu("notification");
+    await contains(".o-mail-NotificationItem-text:has(:text(John Doe: lorem ipsum))");
 });
 
 test("Can only mention internal users in Log note", async () => {

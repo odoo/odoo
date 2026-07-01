@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenuEmptyChannel">
+    <MessagingMenuEmpty t-props="this.props">
+        <div class="o-mail-MessagingMenuEmptyChannel-popularChannels d-flex flex-column gap-1 w-100 mt-1" t-foreach="this.store.most_popular_channels" t-as="channel" t-key="channel.id">
+            <div class="d-flex px-2 py-1 gap-2 align-items-start">
+                <div class="o-mail-avatarContainer">
+                    <img class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Channel image" t-att-src="channel.avatarUrl"/>
+                </div>
+                <div class="d-flex flex-column align-items-start flex-grow-1 text-start overflow-hidden">
+                    <span class="fw-semibold text-truncate w-100"><t t-out="channel.displayName"/></span>
+                    <span class="text-muted smaller"><t t-out="channel.member_count"/> followers</span>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm flex-shrink-0" t-on-click="() => this.onClickFollow(channel)">Follow</button>
+            </div>
+        </div>
+    </MessagingMenuEmpty>
+</t>
+
+</templates>

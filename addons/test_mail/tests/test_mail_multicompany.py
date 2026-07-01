@@ -342,7 +342,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
             partner_ids=[self.partner_employee_c2.id, customer_c3.id],
         )
         self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
-        messages = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
+        messages = self.make_jsonrpc_request("/mail/store", {"fetch_params": [["/mail/messaging_menu/mail.message/load_more", {"domain": [["needaction", "=", True]], "limit": 20}]]})
         self.assertEqual(len(messages["mail.message"]), 1)
 
     def test_redirect_to_records(self):

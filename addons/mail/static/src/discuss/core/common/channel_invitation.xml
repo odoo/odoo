@@ -60,7 +60,7 @@
                             </t>
                         </div>
                     </div>
-                    <button t-if="this.props.channel and (this.selectedPartners.length > 0 or this.state.selectedEmails.length > 0)" class="btn btn-primary w-100 my-2" t-att-title="this.invitationButtonText" t-on-click="this.onClickInvite">
+                    <button t-if="this.selectedPartners.length > 0 or this.state.selectedEmails.length > 0" class="btn btn-primary w-100 my-2" t-att-title="this.invitationButtonText" t-on-click="this.onClickInvite">
                         <t t-out="this.invitationButtonText"/>
                     </button>
                 </t>

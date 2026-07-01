@@ -3,32 +3,39 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_category_tour", {
     steps: () => [
         {
-            // Two live chats are looking for help, they are both in the "Looking for help" category.
-            trigger:
-                ".o-mail-DiscussSidebarCategory-livechatNeedHelp + .o-mail-DiscussSidebarCategory-channels .o-mail-DiscussSidebarChannel-container:contains(Visitor Accounting) + .o-mail-DiscussSidebarChannel-container:contains(Visitor Sales)",
+            trigger: ".o-mail-MessagingMenu-tab:has(:text('Live Chats'))",
+            run: "click",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Sales) .o-mail-favorite",
-        },
-        {
-            trigger:
-                ".o-mail-DiscussSidebarChannel:contains(Visitor Accounting):contains(Invoice SO0042 not received)",
+            trigger: "button:text('Help Needed')",
+            run: "click",
         },
         {
             trigger:
-                ".o-mail-DiscussSidebarChannel:contains(Visitor Sales):contains(Delivery delayed for PO0099)",
+                ".o-mail-MessagingMenuItem:has(:text('Visitor Sales')) ~ .o-mail-MessagingMenuItem:has(:text('Visitor Accounting'))",
+        },
+        {
+            trigger: ".o-mail-MessagingMenuItem:has(:text('Visitor Sales')) .o-mail-favorite",
         },
         {
             trigger:
-                ".o-mail-DiscussSidebarChannel:contains(Accounting):not(:has(.o-mail-favorite))",
-        },
-        {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Accounting)",
-            run: "hover && click [title='Chat Actions']",
+                ".o-mail-MessagingMenuItem:has(:text('Visitor Accounting')):has(:text('Invoice SO0042 not received'))",
         },
         {
             trigger:
-                ".o-mail-DiscussSidebar:has(.o-mail-DiscussSidebarChannel:contains(Accounting))",
+                ".o-mail-MessagingMenuItem:has(:text('Visitor Sales')):has(:text('Delivery delayed for PO0099'))",
+        },
+        {
+            trigger:
+                ".o-mail-MessagingMenuItem:has(:text('Visitor Accounting')):not(:has(.o-mail-favorite))",
+        },
+        {
+            trigger: ".o-mail-MessagingMenuItem:has(:text('Visitor Accounting'))",
+            run: "hover && click .o-mail-MessagingMenuItem:has(:text('Visitor Accounting')) [title='Chat Actions']",
+        },
+        {
+            trigger:
+                ".o-mail-DiscussApp-sidebar:has(.o-mail-MessagingMenuItem:has(:text('Visitor Accounting')))",
         },
         {
             trigger: "button[name='livechat-status']",
@@ -40,7 +47,7 @@ registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_ca
         },
         {
             trigger:
-                ".o-mail-DiscussSidebar:not(:has(.o-mail-DiscussSidebarChannel:contains(Accounting)))",
+                ".o-mail-DiscussApp-sidebar:not(:has(.o-mail-MessagingMenuItem:has(:text('Visitor Accounting'))))",
         },
     ],
 });

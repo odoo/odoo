@@ -7,6 +7,7 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     start,
     startServer,
     triggerHotkey,
@@ -142,7 +143,7 @@ test("Show self-avatar in composer of Discuss App", async () => {
     // but not in chat window
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Chatter");
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Composer");
     await contains(".o-mail-ChatWindow .o-mail-Composer-avatar", { count: 0 });

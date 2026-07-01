@@ -221,6 +221,10 @@ export class ChannelMember extends Record {
         return this.channel_id?.self_member_id?.channel_role;
     }
 
+    get isSelf() {
+        return Boolean(this.guest_id?.eq(this.store.self) || this.partner_id?.eq(this.store.self));
+    }
+
     /** @param {string} role */
     setChannelRole(role) {
         if (!this.store.self_user?.is_admin && (this.channelAsSelf || role === "owner")) {

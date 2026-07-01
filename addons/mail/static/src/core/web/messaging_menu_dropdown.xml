@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenuDropdown">
+    <t t-if="this.env.inDiscussApp" t-call="mail.MessagingMenuDropdown.content"/>
+    <Dropdown t-if="!this.env.inDiscussApp" state="this.dropdown" position="'bottom-end'" menuClass="this.discussSystray.menuClass" bottomSheet="false">
+        <button t-att-class="this.discussSystray.class">
+            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages"/>
+            <span t-if="this.store.messagingMenu.globalCounter" class="o-mail-MessagingMenuDropdown-counter badge rounded-pill"><t t-out="this.store.messagingMenu.globalCounter"/></span>
+        </button>
+        <t t-set-slot="content">
+            <t t-call="mail.MessagingMenuDropdown.content"/>
+        </t>
+    </Dropdown>
+</t>
+
+<t t-name="mail.MessagingMenuDropdown.content">
+    <div t-att-class="`${this.discussSystray.contentClass} o-mail-MessagingMenuDropdown`">
+        <t name="before-content"/>
+        <MessagingMenu close="() => this.dropdown.close()" state="this.store.messagingMenuSystrayState"/>
+    </div>
+</t>
+
+</templates>

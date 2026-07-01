@@ -614,7 +614,7 @@ export class Composer extends Component {
                 ) {
                     const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
-                        messageToEdit.enterEditMode(this.props.composer.thread);
+                        messageToEdit.enterEditMode();
                     }
                 }
                 break;
@@ -790,10 +790,6 @@ export class Composer extends Component {
         browser.localStorage.removeItem(this.props.composer.localId);
     }
 
-    notifySendFromMailbox() {
-        this.store.notifySendFromMailbox(this.thread.displayName);
-    }
-
     isEventTrusted(ev) {
         // Allow patching during tests
         return ev.isTrusted;
@@ -917,9 +913,6 @@ export class Composer extends Component {
             post();
         } else {
             message = await post();
-        }
-        if (this.props.composer.thread.model === "mail.box") {
-            this.notifySendFromMailbox();
         }
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedResponses();

@@ -13,6 +13,7 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     patchUiSize,
     SIZES,
     start,
@@ -249,14 +250,14 @@ test("Editing message keeps the mentioned roles", async () => {
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "admin" });
     await press("Enter");
-    await contains(".o-discuss-mention", { text: "@admin" });
+    await contains(".o-mail-Message .o-discuss-mention", { text: "@admin" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "@admin edit", { replace: true });
     await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-content", { text: "@admin edit (edited)" });
-    await contains(".o-discuss-mention", { text: "@admin" });
+    await contains(".o-mail-Message .o-discuss-mention", { text: "@admin" });
 });
 
 async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
@@ -317,51 +318,6 @@ test("Can edit message comment in chatter", async () => {
 
 test("Can edit message comment in chatter (MacOS)", async () => {
     await canEditMessageCommentInChatter({ isMacOS: true });
-});
-
-test("Reply to inbox message with full composer shows a notification", async () => {
-    const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "Hello World!",
-        message_type: "comment",
-        model: "res.partner",
-        res_id: serverState.partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        is_read: true,
-        res_partner_id: serverState.partnerId,
-    });
-    mockService("action", {
-        doAction(action) {
-            if (action.res_model === "mail.compose.message") {
-                action.context.default_res_ids = JSON.stringify(action.context.default_res_ids);
-            }
-            return super.doAction(...arguments);
-        },
-    });
-    mockService("notification", {
-        add() {
-            expect.step("notification");
-            return super.add(...arguments);
-        },
-    });
-    await start();
-    await openDiscuss("mail.box_history");
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
-    await click(".o-mail-Composer button[title='More Actions']");
-    await click(".dropdown-item:contains('Open Full Composer')");
-    await click(".modal button:contains('Discard')"); // test no notification from discard (see waitForSteps)
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
-    await click(".o-mail-Composer button[title='More Actions']");
-    await click(".dropdown-item:contains('Open Full Composer')");
-    await contains(".o_notification", { count: 0 }); // none from 'Discard'
-    await click(".modal button:contains('Send')");
-    await contains(`.o_notification:has(:text('Message posted on "Mitchell Admin"'))`); // one from 'Send'
-    await expect.waitForSteps(["notification"]); // only notif from 'Send', not 'Discard'
 });
 
 test("Basic list of edit message actions in chatter", async () => {
@@ -1202,7 +1158,7 @@ test("open author avatar card", async () => {
     });
     await start();
     await openDiscuss(channelId_1);
-    await contains(".o-mail-DiscussSidebarChannel.o-active:text('General')");
+    await contains(".o-mail-NotificationItem.o-active:has(:text('General'))");
     await contains(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
     await click(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
     await contains(".o_avatar_card");
@@ -1262,6 +1218,7 @@ test("remove message from bookmarks", async () => {
 
 test("can bookmark a persistent message without thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const messageId = pyEnv["mail.message"].create({
         body: "Test",
         message_type: "user_notification",
@@ -1274,11 +1231,11 @@ test("can bookmark a persistent message without thread", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message:not([data-bookmarked]):has(:text('Test'))");
-    await click(".o-mail-Message:has(:text('Test')) [title='Expand']");
+    await openDiscuss("tab:notification");
+    await click(".o-mail-MessagingMenuItem:has(:text('You: Test')) [title='Message Actions']");
     await click(".o-dropdown-item:text('Bookmark')");
-    await contains(".o-mail-Message[data-bookmarked]:has(:text('Test'))");
+    await click(".o-mail-MessagingMenu-tab:has(:text('Bookmarks'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('You: Test'))");
 });
 
 test("Name of message author is only displayed in chat window for partners others than the current user", async () => {
@@ -1299,7 +1256,7 @@ test("Name of message author is only displayed in chat window for partners other
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message-author:text('Not the current user')");
 });
@@ -1322,7 +1279,7 @@ test("Name of message author is not displayed in chat window for channel of type
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message-author", { count: 0 });
 });
@@ -2067,48 +2024,6 @@ test("message with body 'test' should not be considered empty", async () => {
     await contains(".o-mail-Message");
 });
 
-test("Can reply to chatter messages from history", async () => {
-    const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "Hello World!",
-        message_type: "comment",
-        model: "res.partner",
-        res_id: serverState.partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        is_read: true,
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss("mail.box_history");
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
-    await click(".o-mail-Composer button[title='More Actions']");
-    await contains(".dropdown-item:contains('Open Full Composer')");
-});
-
-test("Can't reply to user notifications", async () => {
-    // User notifications are specific to a user
-    const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "Dear Mitchell Admin, you have received a new rank",
-        message_type: "user_notification",
-        model: "res.partner",
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        is_read: true,
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss("mail.box_history");
-    await contains(".o-mail-Message-actions");
-    await contains(".o-mail-Message-actions [title='Reply']", { count: 0 });
-});
-
 test("Mark as unread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -2132,7 +2047,7 @@ test("Mark as unread", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage");
-    await contains(".o-mail-DiscussSidebarChannel .badge:text('1')");
+    await contains(".o-mail-MessagingMenuItem .o-discuss-badge:text('1')");
 });
 
 test("Avatar of unknown author for email message", async () => {
@@ -2546,9 +2461,10 @@ test("Clicking message link does not open a new tab", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName[title='Channel']");
     await insertText(".o-mail-Composer-input", `${url(`/mail/message/${messageId}`)}`);
     await press("Enter");
-    await click(".o_message_redirect");
+    await click(".o-mail-Message .o_message_redirect");
     await contains(".o-mail-DiscussContent-threadName[title='Other Channel']");
     await contains(".o-mail-Message:has(:text('Message on other channel'))");
 });
@@ -2576,45 +2492,6 @@ test("should delete link preview along with message", async () => {
     await click(".o-dropdown-item:contains('Delete')");
     await click(".modal button:text('Delete')");
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
-});
-
-test("Prevent adding reactions on messages without a mail thread", async () => {
-    const pyEnv = await startServer();
-    const fakeId = pyEnv["res.fake"].create({ name: "Fake" });
-    const messageIds = pyEnv["mail.message"].create([
-        {
-            body: "Hello",
-            message_type: "user_notification",
-            model: "res.partner",
-            res_id: serverState.partnerId,
-        },
-        {
-            body: "Hello",
-            message_type: "user_notification",
-            model: "res.fake",
-            res_id: fakeId,
-        },
-    ]);
-    pyEnv["mail.notification"].create([
-        {
-            mail_message_id: messageIds[0],
-            notification_type: "inbox",
-            is_read: true,
-            res_partner_id: serverState.partnerId,
-        },
-        {
-            mail_message_id: messageIds[1],
-            notification_type: "inbox",
-            is_read: true,
-            res_partner_id: serverState.partnerId,
-        },
-    ]);
-    await start();
-    await openDiscuss("mail.box_history");
-    await contains(".o-mail-Message", { count: 2 });
-    await contains("[title='Add a Reaction']");
-    await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
-    await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
 });
 
 test("context menu should not open on right-click when editing a message", async () => {

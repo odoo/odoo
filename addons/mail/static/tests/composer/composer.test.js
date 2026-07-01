@@ -357,8 +357,8 @@ test("Selection is kept when changing channel and going back to original channel
     const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(0, textarea.value.length);
     await animationFrame(); // synced with model selection
-    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)");
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)");
+    await click(":nth-child(2 of .o-mail-MessagingMenuItem) .o-mail-NotificationItem");
+    await click(":nth-child(1 of .o-mail-MessagingMenuItem) .o-mail-NotificationItem");
     expect(textarea.selectionStart).toBe(0);
     expect(textarea.selectionEnd).toBe(textarea.value.length);
 });
@@ -486,7 +486,6 @@ test("Show send button in mobile", async () => {
     pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     await start();
     await openDiscuss();
-    await contains("button.active:text('Notifications')");
     await click("button:text('Channels')");
     await click(".o-mail-NotificationItem-name:text('minecraft-wii-u')");
     await contains(".o-mail-Composer button[title='Send']");
@@ -502,10 +501,10 @@ test("composer textarea content is retained when changing channel then going bac
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "According to all known laws of aviation,");
-    await click("span:text('epic-shrek-lovers')");
+    await click(".o-mail-NotificationItem:has(:text('epic-shrek-lovers'))");
     await contains("textarea.o-mail-Composer-input[placeholder='Message #epic-shrek-lovers…']");
     await contains(".o-mail-Composer-input", { value: "" });
-    await click("span:text('minigolf-galaxy-iv')");
+    await click(".o-mail-NotificationItem:has(:text('minigolf-galaxy-iv'))");
     await contains("textarea.o-mail-Composer-input[placeholder='Message #minigolf-galaxy-iv…']", {
         value: "According to all known laws of aviation,",
     });
@@ -650,15 +649,15 @@ test("leave command on channel", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel.o-active:text('general')");
+    await contains(".o-mail-NotificationItem.o-active:has(:text('general'))");
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await click("button:text(Leave Conversation)");
-    await contains(".o-mail-DiscussSidebarChannel:text('general')", { count: 0 });
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-NotificationItem:has(:text('general'))", { count: 0 });
+    await contains(".o-mail-DiscussContent:text('No conversation selected.')");
 });
 
 test("Can handle leave notification from unknown member", async () => {
@@ -693,14 +692,14 @@ test("leave command on chat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel.o-active:text('Chuck Norris')");
+    await contains(".o-mail-NotificationItem.o-active:has(:text('Chuck Norris'))");
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel:text('Chuck Norris')", { count: 0 });
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-NotificationItem:has(:text('Chuck Norris'))", { count: 0 });
+    await contains(".o-mail-DiscussContent:text('No conversation selected.')");
 });
 
 test("Can post suggestions", async () => {
@@ -893,33 +892,6 @@ test("composer: add an attachment", async () => {
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer .o_input_file", [text]);
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
-    await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
-    await contains(
-        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
-    );
-});
-
-test("composer: add an attachment in reply to message in history", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-        is_read: true,
-    });
-    await start();
-    await openDiscuss("mail.box_history");
-    await click("[title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
@@ -1500,16 +1472,18 @@ test("can quickly add emoji with ':' keyword", async () => {
 
 test("composer reply-to message is restored on thread change", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "channel",
-        name: "General",
-    });
+    const [channelId] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "channel",
+            name: "General",
+        },
+        { channel_type: "channel", name: "Other" },
+    ]);
     pyEnv["mail.message"].create({
         author_id: serverState.partnerId,
         body: "Test",
@@ -1524,9 +1498,9 @@ test("composer reply-to message is restored on thread change", async () => {
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:contains('Replying to')");
     await insertText(".o-mail-Composer-input", "Hello World!");
-    await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
+    await click(".o-mail-NotificationItem:has(:text('Other'))");
     await contains(".o-mail-Message", { count: 0 });
-    await click(".o-mail-DiscussSidebar-item:contains('General')");
+    await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-mail-Message");
     await contains(".o-mail-Composer:contains('Replying to')");
     const store = getService("mail.store");
@@ -1544,9 +1518,9 @@ test("composer reply-to message is restored on thread change", async () => {
         await getIndexedDB("composer", store["discuss.channel"].get(channelId).composer.localId)
     ).toBe(undefined);
     // check IndexedDB empty, change thread to force save in local storage if needed (debounced otherwise)
-    await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
+    await click(".o-mail-NotificationItem:has(:text('Other'))");
     await contains(".o-mail-Message", { count: 0 });
-    await click(".o-mail-DiscussSidebar-item:contains('General')");
+    await click(".o-mail-NotificationItem:has(:text('General'))");
     expect(
         await getIndexedDB("composer", store["discuss.channel"].get(channelId).composer.localId)
     ).toBe(undefined);

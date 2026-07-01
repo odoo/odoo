@@ -1,9 +1,10 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
-import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
+
 import { MessageInReply } from "@mail/core/common/message_in_reply";
 import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
@@ -13,14 +14,10 @@ import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { renderToElement } from "@web/core/utils/render";
-import { nbsp } from "@web/core/utils/strings";
 
 import { Component, computed, props, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -28,7 +25,8 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
-import { getOrigin, url } from "@web/core/utils/urls";
+import { nbsp } from "@web/core/utils/strings";
+import { getOrigin } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
@@ -41,6 +39,9 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
+import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { renderToElement } from "@web/core/utils/render";
 
 export class Message extends Component {
     // This is the darken version of #71639e
@@ -49,7 +50,6 @@ export class Message extends Component {
     static SHADOW_LINK_HOVER_COLOR = "#564b79";
     static components = {
         ActionList,
-        ActionSwiper,
         AttachmentList,
         Composer,
         Dropdown,
@@ -299,21 +299,6 @@ export class Message extends Component {
         };
     }
 
-    get authorAvatarUrl() {
-        if (
-            this.message.message_type &&
-            this.message.message_type.includes("email") &&
-            !this.message.author_id &&
-            !this.message.author_guest_id
-        ) {
-            return url("/mail/static/src/img/email_icon.png");
-        }
-        if (this.message.author) {
-            return this.message.author.avatarUrl;
-        }
-        return this.store.DEFAULT_AVATAR;
-    }
-
     get expandText() {
         return _t("Expand");
     }
@@ -379,36 +364,6 @@ export class Message extends Component {
 
     get isMobileOS() {
         return isMobileOS();
-    }
-
-    get isPersistentMessageFromAnotherThread() {
-        return (
-            !this.message.is_transient &&
-            !this.message.isPending &&
-            this.message.thread &&
-            this.message.thread.notEq(this.props.thread)
-        );
-    }
-
-    get onRightSwipe() {
-        if (this.props.thread?.eq(this.store.inbox)) {
-            return {
-                action: () => this.message.setDone(),
-                bgColor: "bg-success",
-                icon: "fa-check-circle",
-            };
-        }
-        if (
-            this.props.thread?.eq(this.store.history) &&
-            this.message.canMarkAsUnread(this.props.thread)
-        ) {
-            return {
-                action: () => this.message.markAsUnread(this.props.thread),
-                bgColor: "bg-secondary",
-                icon: "fa-eye-slash",
-            };
-        }
-        return undefined;
     }
 
     get translatedFromText() {
@@ -578,7 +533,7 @@ export class Message extends Component {
     }
 
     exitEditMode() {
-        this.message.exitEditMode(this.props.thread);
+        this.message.exitEditMode();
     }
 
     onClickNotification(ev) {

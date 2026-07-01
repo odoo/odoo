@@ -9,7 +9,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, setInputFiles, test } from "@odoo/hoot";
-import { press, rightClick } from "@odoo/hoot-dom";
+import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { getService, mockService, serverState } from "@web/../tests/web_test_helpers";
@@ -48,7 +48,7 @@ test("Thread rename", async () => {
     });
     triggerHotkey("Enter");
     await contains(`${env2.selector} .o-mail-DiscussContent-threadName[title='Sales']`);
-    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel:text('Sales')`);
+    await contains(`${env2.selector} .o-mail-NotificationItem:has(:text('Sales'))`);
 });
 
 test.tags("focus required");
@@ -96,12 +96,12 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
         },
     });
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-MessagingMenuItem");
     getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
         channel_id: channelId,
         user_ids: [serverState.userId],
     });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
     await expect.waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
 });
 
@@ -179,17 +179,16 @@ test("Message (hard) delete notification", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await openDiscuss("tab:notification");
+    await click(".o-mail-MessagingMenuItem [title='Message Actions']");
     await click(".o-dropdown-item:contains('Bookmark')");
-    await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
+    await contains("button:has(:text('Notifications'))", { contains: [".badge:text('1')"] });
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
-    await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Notifications'))", { contains: [".badge", { count: 0 }] });
     await contains("button:has(:text('Bookmarks'))", { count: 0 });
 });

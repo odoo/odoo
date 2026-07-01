@@ -23,13 +23,16 @@ defineMailModels();
 
 test("open channel in discuss from push notification", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [generalId, salesId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales" },
+    ]);
     await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await openDiscuss(salesId);
+    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
     navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
-            data: { action: "OPEN_CHANNEL", data: { id: channelId } },
+            data: { action: "OPEN_CHANNEL", data: { id: generalId } },
         })
     );
     await contains(".o-mail-DiscussContent-threadName[title='General']");

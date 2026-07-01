@@ -14,32 +14,21 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussSearch-inputContainer",
+            trigger: ".o-mail-MessagingMenu-tab:has(:text('Channels'))",
             content: markup(
                 _t(
-                    "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
+                    "<p>Channels make it easy to organize information across different topics and groups.</p>"
                 )
             ),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
-            trigger: ".o_command_palette_search input",
-            content: markup(_t("<p>Create a channel here.</p>")),
+            trigger:
+                ".o-mail-Discuss:has(.o-mail-MessagingMenu-tab:has(:text('Channels')).active) .o-mail-NotificationItem:eq(0)",
+            content: markup(_t("<p>Click a channel to open the discussion.</p>")),
             tooltipPosition: "bottom",
-            run: `edit SomeChannel_${new Date().getTime()}`,
-        },
-        {
-            trigger: ".o-mail-DiscussCommand-createChannel",
-            content: markup(_t("<p>Create a public or private channel.</p>")),
             run: "click",
-            tooltipPosition: "right",
-        },
-        {
-            trigger: ".o-mail-CreateChannelDialog .btn-primary",
-            content: markup(_t("<p>Create a public or private channel.</p>")),
-            run: "click",
-            tooltipPosition: "bottom",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -74,7 +63,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: "button[data-mailbox-id='bookmark']",
+            trigger: ".o-mail-MessagingMenu-tab:has(:text('Bookmarks))",
             content: _t(
                 "Once a message has been bookmarked, you can come back and review it at any time here."
             ),

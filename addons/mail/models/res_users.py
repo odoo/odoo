@@ -471,23 +471,6 @@ class ResUsers(models.Model):
     def _store_manual_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
 
-    def _store_bookmark_box_global_fields(self, res: Store.FieldList, bus_last_id=None):
-        """ Update the bookmark box info in the given store."""
-        self.ensure_one()
-        # sudo: bus.bus: reading non-sensitive last id
-        bus_last_id = bus_last_id or self.env["bus.bus"].sudo()._bus_last_id()
-        res.attr(
-            "bookmarkBox",
-            {
-                "counter": self.env["mail.message"].search_count(
-                    [("bookmarked_partner_ids", "in", self.partner_id.ids)],
-                ),
-                "counter_bus_id": bus_last_id,
-                "id": "bookmark",
-                "model": "mail.box",
-            },
-        )
-
     def _store_user_fields(self, res: Store.FieldList):
         res.one("partner_id", "_store_partner_fields")
 

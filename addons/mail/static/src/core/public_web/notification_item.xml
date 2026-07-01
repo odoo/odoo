@@ -3,24 +3,15 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="this.props.onSwipeLeft ? this.props.onSwipeLeft : undefined" onRightSwipe="this.props.onSwipeRight ? this.props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="this.onClick" t-custom-ref="root" t-att-class="{
-            'o-important': this.props.important,
-            'o-interest': this.props.muted === 0,
-            'border-secondary': this.props.muted === 1,
-            'opacity-50 border-secondary': this.props.muted === 2,
-            'px-3 py-2 gap-1 o-small': this.ui.isSmall,
-            'border-top-0': this.props.first,
-            'o-px-2_5 o-py-1_5 gap-2': !this.ui.isSmall,
-            'o-active': this.props.isActive,
-        }">
-            <div class="o-mail-NotificationItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="this.onClick" t-custom-ref="root" t-att-class="this.attClass">
+            <div class="o-mail-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
                 <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 52 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
                 <t t-if="this.props.slots and this.props.slots.icon" t-call-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': this.ui.isSmall, 'o_line_clamp': this.props.nameMaxLine !== undefined }" t-att-style="this.props.nameMaxLine !== undefined ? '--lines-clamp: ' + this.props.nameMaxLine + ';' : ''">
+                    <span class="o-mail-NotificationItem-name align-items-baseline o-fw-600 text-truncate d-flex" t-att-class="{ 'fs-5': this.ui.isSmall, 'o_line_clamp': this.props.nameMaxLine !== undefined }" t-att-style="this.props.nameMaxLine !== undefined ? '--lines-clamp: ' + this.props.nameMaxLine + ';' : ''">
                         <t t-call-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
@@ -31,20 +22,20 @@
                         <t t-call-slot="sideContent"/>
                     </t>
                 </div>
+                <div class="d-flex flex-column align-items-start"><t t-call-slot="name-after"/></div>
                 <div class="d-flex o-mail-NotificationItem-line">
-                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted, 'o_line_clamp': this.props.textMaxLine !== undefined }" t-att-style="this.props.textMaxLine !== undefined ? '--lines-clamp: ' + this.props.textMaxLine + ';' : ''">
-                        <t t-call-slot="body-icon"/>
-                        <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
-                        <t t-if="this.props.slots?.body" name="notificationBody" t-call-slot="body"/>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted, 'o_line_clamp': this.props.textMaxLine !== undefined }" t-att-style="this.props.textMaxLine !== undefined ? '--lines-clamp: ' + this.props.textMaxLine + ';' : ''">
+                            <t t-call-slot="body-icon"/>
+                            <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
+                            <t name="notificationBody" t-call-slot="body"/>
+                        </div>
+                        <t t-call-slot="footer"/>
                     </div>
-                    <div class="flex-grow-1"/>
-                    <div class="d-flex align-items-start position-relative">
-                        <span class="position-absolute" t-if="this.props.hasMarkAsReadButton">
-                            <span t-if="this.rootHover.isHover" class="bg-view" t-att-class="{ 'ms-1': !this.props.muted }">
-                                <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-custom-ref="markAsRead"><i class="fa fa-check text-success"/></span>
-                            </span>
-                        </span>
-                        <span t-if="!this.props.muted or this.props.counter > 0" class="o-mail-NotificationItem-badge o-discuss-badge d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm" t-att-class="{
+                    <div class="d-flex align-items-center justify-content-center position-relative o-mail-NotificationItem-counterArea align-self-stretch ms-1 flex-shrink-0">
+                        <t t-call-slot="counterSideContent"/>
+                        <span t-if="this.props.hasMarkAsReadButton" t-custom-ref="markAsRead" class="o-mail-NotificationItem-markAsRead btn btn-light rounded-circle d-flex h-100 w-100 align-items-center justify-content-center position-absolute inset-0 border z-1" t-att-class="{'d-none': !this.rootHover.isHover}" title="Mark As Read"><i class="fa fa-check text-success"/></span>
+                        <span t-if="this.props.counter > 0 or (this.props.counter === 0 and !this.props.muted and !this.props.important)" class="o-mail-NotificationItem-badge o-discuss-badge d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm" t-att-class="{
                             'o-important': this.props.important,
                             'o-empty me-1': this.props.counter === 0,
                         }">

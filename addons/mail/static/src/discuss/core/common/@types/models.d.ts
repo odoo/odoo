@@ -31,7 +31,7 @@ declare module "models" {
         "discuss.channel": StaticMailRecord<DiscussChannel, typeof DiscussChannelClass>;
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;
         favoriteChannels: DiscussChannel[];
-        fetchChannel: (channelId: number) => Promise<void>;
+        fetchChannel: (channelId: number, param0: { with_last_message: boolean }) => Promise<void>;
         fetchChannelPromiseByChannelId: Map<number, Promise<DiscussChannel|void>>;
         getRecentChatPartnerIds: () => number[];
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;

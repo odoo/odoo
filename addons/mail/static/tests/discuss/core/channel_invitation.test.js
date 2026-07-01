@@ -147,7 +147,7 @@ test("should be able to create a new group chat from an existing chat", async ()
     await click("button[title='Create Group Chat']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
-        ".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin, TestPartner, and TestPartner2')"
+        ".o-mail-NotificationItem:has(:text('Mitchell Admin, TestPartner, and TestPartner2'))"
     );
 });
 
@@ -166,9 +166,11 @@ test("unnamed group chat should display correct name just after being invited", 
         },
     ]);
     await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jane and Mitchell Admin')", {
+    await openDiscuss("tab:channel");
+    await contains(".o-mail-NotificationItem:has(:text('General'))");
+    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats')).active");
+    await contains(".o-mail-NotificationItem:has(:text('Jane and Mitchell Admin'))", {
         count: 0,
     });
     const currentUserId = serverState.userId;
@@ -178,7 +180,7 @@ test("unnamed group chat should display correct name just after being invited", 
             user_ids: [currentUserId],
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jane and Mitchell Admin')");
+    await contains(".o-mail-NotificationItem:has(:text('Jane and Mitchell Admin'))");
 });
 
 test("invite user to self chat opens DM chat with user", async () => {
@@ -219,15 +221,15 @@ test("invite user to self chat opens DM chat with user", async () => {
     ]);
     await start();
     await openDiscuss(selfChatId);
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')"); // self-chat
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('TestPartner and Mitchell Admin')");
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('TestGuest and Mitchell Admin')");
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('TestPartner')");
+    await contains(".o-mail-NotificationItem:has(:text('Mitchell Admin'))"); // self-chat
+    await contains(".o-mail-NotificationItem:has(:text('TestPartner and Mitchell Admin'))");
+    await contains(".o-mail-NotificationItem:has(:text('TestGuest and Mitchell Admin'))");
+    await contains(".o-mail-NotificationItem:has(:text('TestPartner'))");
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
     await click("button:contains('Go to Conversation'):enabled");
-    await contains(".o-mail-DiscussSidebarChannel.o-active:text('TestPartner')");
+    await contains(".o-mail-NotificationItem.o-active:has(:text('TestPartner'))");
 });
 
 test("Invite sidebar action has the correct title for group chats", async () => {

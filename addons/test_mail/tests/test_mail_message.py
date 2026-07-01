@@ -113,14 +113,14 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
         p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
         p2_notifications.is_read = False
         self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
-        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": [["/mail/messaging_menu/mail.message/load_more", {"domain": [["needaction", "=", True]], "limit": 20}]]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),
             "Currently reading message on missing record, crash avoided",
         )
         p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
-        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/history/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": [["/mail/messaging_menu/mail.message/load_more", {"domain": [["needaction", "=", False]], "limit": 20}]]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),

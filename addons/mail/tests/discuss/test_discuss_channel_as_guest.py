@@ -48,7 +48,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _open_channel_page_as_user(self, login):
         user = self.env["res.users"].search([("login", "=", login)])
         url = (
-            f"/discuss/channel/{self.channel.id}"
+            f"/discuss/channel/{self.channel.id}?debug=tests"
             if user._is_internal()
             else self.channel.invitation_url
         )

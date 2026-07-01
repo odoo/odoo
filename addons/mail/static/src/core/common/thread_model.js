@@ -231,7 +231,7 @@ export class Thread extends Record {
     suggestedRecipients = fields.Attr([]);
     /** @type {Boolean|undefined} */
     showSubjectInSmallComposer;
-    /** 
+    /**
      * similar to suggested recipients, except for the subject and optional per model.
     @type {String|undefined} */
     suggestedSubject;
@@ -427,7 +427,7 @@ export class Thread extends Record {
      */
     async fetchMessages({ fetchParams = {}, routeParams = {} } = {}) {
         this.status = "loading";
-        if (!["mail.box", "discuss.channel"].includes(this.model) && !this.id) {
+        if (this.model !== "discuss.channel" && !this.id) {
             this.isLoaded = true;
             return [];
         }
@@ -472,7 +472,7 @@ export class Thread extends Record {
                     before,
                 },
             },
-            { readonly: this.model === "mail.box", requestData: true }
+            { readonly: false, requestData: true }
         );
     }
 
@@ -545,10 +545,7 @@ export class Thread extends Record {
      * @param {MessageRouteParams} [options.routeParams]
      */
     async fetchNewMessages({ routeParams = {} } = {}) {
-        if (
-            this.status === "loading" ||
-            (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
-        ) {
+        if (this.status === "loading" || (this.isLoaded && this.model === "discuss.channel")) {
             return;
         }
         const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
@@ -597,9 +594,6 @@ export class Thread extends Record {
         if (this.channel) {
             return { channel_id: this.id };
         }
-        if (this.model === "mail.box") {
-            return {};
-        }
         return {
             thread_id: this.id,
             thread_model: this.model,
@@ -610,15 +604,6 @@ export class Thread extends Record {
     getFetchRoute() {
         if (this.channel) {
             return "/discuss/channel/messages";
-        }
-        if (this.model === "mail.box" && this.id === "inbox") {
-            return `/mail/inbox/messages`;
-        }
-        if (this.model === "mail.box" && this.id === "bookmark") {
-            return `/mail/bookmark/messages`;
-        }
-        if (this.model === "mail.box" && this.id === "history") {
-            return `/mail/history/messages`;
         }
         return this.fetchRouteChatter;
     }

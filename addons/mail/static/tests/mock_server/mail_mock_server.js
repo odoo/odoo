@@ -575,6 +575,7 @@ export async function mail_message_post(request) {
         "attachment_ids",
         "body",
         "message_type",
+        "needaction",
         "partner_ids",
         "subtype_xmlid",
     ];
@@ -820,7 +821,7 @@ async function search(request) {
     /** @type {import("mock_models").DiscussChannelMember} */
     const DiscussChannelMember = this.env["discuss.channel.member"];
     const base_domain = [
-        ["name", "ilike", term],
+        ...(!term ? [] : [["name", "ilike", term]]),
         ["channel_type", "!=", "chat"],
     ];
     const currentPartnerId = this.env.user?.partner_id;
@@ -932,6 +933,73 @@ function _resolve_messages(store, fetch_params, { extraKwargs = {}, filter = () 
     });
     return res.messages;
 }
+
+/**
+ * Resolve `self_member_id.<field>` conditions in a channel domain by querying
+ * DiscussChannelMember directly, since the mock server doesn't support relational field
+ * traversal in domains.
+ */
+function _resolve_self_member_domain(domain) {
+    /** @type {import("mock_models").DiscussChannelMember} */
+    const DiscussChannelMember = this.env["discuss.channel.member"];
+    return domain.map((condition) => {
+        if (Array.isArray(condition) && condition[0] === "is_member") {
+            const memberChannelIds = DiscussChannelMember._filter([["is_self", "=", true]]).map(
+                (m) => m.channel_id
+            );
+            return ["id", condition[2] ? "in" : "not in", memberChannelIds];
+        }
+        if (Array.isArray(condition) && condition[0].startsWith("self_member_id.")) {
+            const memberField = condition[0].slice("self_member_id.".length);
+            const matchingChannelIds = DiscussChannelMember._filter([
+                ["is_self", "=", true],
+                [memberField, condition[1], condition[2]],
+            ]).map((m) => m.channel_id);
+            return ["id", "in", matchingChannelIds];
+        }
+        return condition;
+    });
+}
+
+function _with_last_message(store, channelIds) {
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
+    /** @type {import("mock_models").MailNotification} */
+    const MailNotification = this.env["mail.notification"];
+    const partnerId = this.env.user?.partner_id;
+    const lastMessageIds = channelIds
+        .map(
+            (channelId) =>
+                MailMessage._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", channelId],
+                ]).sort((a, b) => b.id - a.id)[0]
+        )
+        .filter(Boolean)
+        .map((message) => message.id);
+    const messageIdsToLoad = new Set(lastMessageIds);
+    if (partnerId) {
+        const inboxNotificationMessageIds = new Set(
+            MailNotification._filter([
+                ["notification_type", "=", "inbox"],
+                ["res_partner_id", "=", partnerId],
+            ]).map((n) => n.mail_message_id)
+        );
+        for (const channelId of channelIds) {
+            const lastNeedactionMessage = MailMessage._filter([
+                ["model", "=", "discuss.channel"],
+                ["res_id", "=", channelId],
+            ])
+                .filter((m) => inboxNotificationMessageIds.has(m.id))
+                .sort((a, b) => b.id - a.id)[0];
+            if (lastNeedactionMessage) {
+                messageIdsToLoad.add(lastNeedactionMessage.id);
+            }
+        }
+    }
+    store.add(MailMessage.browse([...messageIdsToLoad]), "_store_message_fields");
+}
+
 function _process_request_for_all(store, name, params, context = {}) {
     function add_has_hidden_channels_to_store() {
         store.add_global_values({
@@ -960,9 +1028,6 @@ function _process_request_for_all(store, name, params, context = {}) {
     /** @type {import("mock_models").ResUsers} */
     const ResUsers = this.env["res.users"];
     if (name === "init_messaging") {
-        if (!MailGuest._get_guest_from_context() || !ResUsers._is_public(this.env.uid)) {
-            ResUsers._init_messaging([this.env.uid], store, context);
-        }
         const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
         const members = DiscussChannelMember._filter([
             guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id],
@@ -973,6 +1038,17 @@ function _process_request_for_all(store, name, params, context = {}) {
             DiscussChannel.browse(DiscussChannel.search(channelsDomain)),
             "_store_channel_fields"
         );
+        if (!ResUsers._is_public(this.env.uid)) {
+            const odoobotChatMembers = DiscussChannelMember._filter([
+                ["partner_id", "=", serverState.odoobotId],
+            ]);
+            const odoobotChatIds = DiscussChannel.search([
+                ["channel_type", "=", "chat"],
+                ["id", "in", odoobotChatMembers.map((m) => m.channel_id)],
+                ["channel_member_ids", "any", [["partner_id", "=", this.env.user.partner_id]]],
+            ]);
+            store.add(DiscussChannel.browse(odoobotChatIds), "_store_channel_fields");
+        }
     }
     if (name === "failures" && this.env.user?.partner_id) {
         const [partner] = ResPartner.browse(this.env.user.partner_id);
@@ -1049,21 +1125,7 @@ function _process_request_for_all(store, name, params, context = {}) {
         const channels = DiscussChannel.search([["id", "=", ids]]);
         store.add(DiscussChannel.browse(channels), "_store_channel_fields");
         if (with_last_message) {
-            store.add(
-                MailMessage.browse(
-                    channels
-                        .map(
-                            (channelId) =>
-                                MailMessage._filter([
-                                    ["model", "=", "discuss.channel"],
-                                    ["res_id", "=", channelId],
-                                ]).sort((a, b) => b.id - a.id)[0]
-                        )
-                        .filter(Boolean)
-                        .map((message) => message.id)
-                ),
-                "_store_message_fields"
-            );
+            _with_last_message.call(this, store, ids);
         }
     }
     if (name === "res.partner") {
@@ -1107,12 +1169,9 @@ function _process_request_for_all(store, name, params, context = {}) {
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         const channel = this.env["discuss.channel"].browse(params.channel_id);
-        const messages = _resolve_messages.call(this, store, {
-            ...params.fetch_params,
-            domain: [],
-            thread: channel,
-        });
-        MailMessage.set_message_done(messages.map((message) => message.id));
+        const fetch_params = { ...params.fetch_params, domain: [], thread: channel };
+        MailMessage.set_message_done(MailMessage._message_fetch(makeKwArgs(fetch_params)));
+        _resolve_messages.call(this, store, fetch_params);
     }
     if (name === "/discuss/channel/add_members") {
         DiscussChannel._add_members(
@@ -1168,6 +1227,90 @@ function _process_request_for_all(store, name, params, context = {}) {
             res.one("channel", "_store_channel_fields", { value: channelId })
         );
     }
+    if (name === "/mail/messaging_menu/mail.message/load_more") {
+        const { domain, limit, search_term } = params;
+        const messages = _resolve_messages.call(
+            this,
+            store,
+            {
+                domain,
+                limit,
+                search_term: search_term || undefined,
+            },
+            { extraKwargs: { inbox_fields: true } }
+        );
+        store.resolve_data_request({ is_fully_loaded: messages.length < limit });
+    }
+    if (name === "/mail/messaging_menu/discuss.channel/load_more") {
+        const { domain, limit, search_term, priority_domain } = params;
+        const channelDomain = [...domain];
+        if (search_term) {
+            channelDomain.push(["name", "ilike", search_term]);
+        }
+        const resolvedDomain = _resolve_self_member_domain.call(this, channelDomain);
+        const selfFavoriteChannelIds = DiscussChannelMember._filter([
+            ["is_favorite", "=", true],
+        ]).map((m) => m.channel_id);
+        // Favorites first, plus any tab-specific priority (e.g. the operator's own livechats).
+        const priorityDomain = [
+            "|",
+            ["id", "in", selfFavoriteChannelIds],
+            ...(priority_domain
+                ? _resolve_self_member_domain.call(this, priority_domain)
+                : [["id", "=", false]]),
+        ];
+        const favoriteIds = DiscussChannel.search(
+            [...resolvedDomain, ...priorityDomain],
+            makeKwArgs({
+                limit,
+                order: "last_interest_dt DESC, id DESC",
+            })
+        );
+        const channelIds = [...favoriteIds];
+        const remaining = limit - channelIds.length;
+        if (remaining > 0) {
+            const otherIds = DiscussChannel.search(
+                [...resolvedDomain, ["id", "not in", channelIds]],
+                makeKwArgs({
+                    limit: remaining,
+                    order: "last_interest_dt DESC, id DESC",
+                })
+            );
+            channelIds.push(...otherIds);
+        }
+        const channels = DiscussChannel.browse(channelIds);
+        store.add(channels, "_store_channel_fields");
+        store.add(
+            DiscussChannelMember.browse(
+                DiscussChannelMember.search([
+                    ["channel_id", "in", channelIds],
+                    ["is_self", "=", true],
+                ])
+            ),
+            ["is_favorite"]
+        );
+        _with_last_message.call(this, store, channelIds);
+        store.resolve_data_request({ is_fully_loaded: channelIds.length < limit });
+    }
+    if (name === "/mail/messaging_menu/get_most_popular_channels") {
+        const countByChannelId = {};
+        for (const member of DiscussChannelMember) {
+            const [channel] = DiscussChannel.browse(member.channel_id);
+            if (channel && channel.channel_type === "channel") {
+                countByChannelId[member.channel_id] =
+                    (countByChannelId[member.channel_id] || 0) + 1;
+            }
+        }
+        const topChannelIds = Object.entries(countByChannelId)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 3)
+            .map(([channelId]) => Number(channelId));
+        store.add_global_values((res) =>
+            res.many("most_popular_channels", "_store_channel_fields", {
+                value: DiscussChannel.browse(topChannelIds),
+            })
+        );
+    }
 }
 
 function _process_request_for_logged_in_user(store, name, params) {
@@ -1201,60 +1344,73 @@ function _process_request_for_logged_in_user(store, name, params) {
         for (const cur_store of [store, bus_store]) {
             for (const message_id of bookmark_message_ids) {
                 cur_store.add(MailMessage.browse(message_id), "_store_message_fields");
-                const bus_last_id = BusBus.lastBusNotificationId;
-                cur_store.add_global_values({
-                    bookmarkBox: {
-                        counter: MailMessage._filter([
-                            ["bookmarked_partner_ids", "in", [this.env.user.partner_id]],
-                        ]).length,
-                        counter_bus_id: bus_last_id,
-                        id: "bookmark",
-                        model: "mail.box",
-                    },
-                });
             }
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "mail.record/insert", bus_store.as_dict());
     }
-    if (name === "/mail/inbox/messages") {
-        _resolve_messages.call(
-            this,
-            store,
-            {
-                ...params.fetch_params,
-                domain: [["needaction", "=", true]],
-            },
-            { extraKwargs: { inbox_fields: true } }
-        );
-    }
-    if (name === "/mail/history/messages") {
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
-        _resolve_messages.call(
-            this,
-            store,
-            {
-                ...params.fetch_params,
-                domain: [["needaction", "=", false]],
-            },
-            {
-                filter(message) {
-                    const notifs = MailNotification.search_read([
-                        ["mail_message_id", "=", message.id],
-                        ["is_read", "=", true],
+    if (name === "/mail/messaging_menu/initialize_counters") {
+        const { domain_by_tab_id_by_record_type = {} } = params;
+        const channel_domain_by_tab_id = domain_by_tab_id_by_record_type["discuss.channel"] ?? {};
+        const message_domain_by_tab_id = domain_by_tab_id_by_record_type["mail.message"] ?? {};
+        let allUnreadChannelIds = [];
+        if (Object.keys(channel_domain_by_tab_id).length) {
+            /** @type {import("mock_models").DiscussChannel} */
+            const DiscussChannel = this.env["discuss.channel"];
+            /** @type {import("mock_models").DiscussChannelMember} */
+            const DiscussChannelMember = this.env["discuss.channel.member"];
+            /** @type {import("mock_models").MailMessage} */
+            const MailMessage = this.env["mail.message"];
+            /** @type {import("mock_models").MailNotification} */
+            const MailNotification = this.env["mail.notification"];
+            DiscussChannelMember._compute_message_unread_counter();
+            const allMembers = DiscussChannelMember._filter([
+                ["is_self", "=", true],
+                ["is_pinned", "=", true],
+                ["mute_until_dt", "=", false],
+            ]).filter((m) => {
+                const [channel] = DiscussChannel.browse(m.channel_id);
+                return channel && channel.active !== false;
+            });
+            const membersWithUnread = allMembers.filter((m) => {
+                if (m.message_unread_counter) {
+                    return true;
+                }
+                const channelMessageIds = MailMessage._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", m.channel_id],
+                ]).map((msg) => msg.id);
+                return (
+                    MailNotification._filter([
                         ["res_partner_id", "=", this.env.user.partner_id],
-                    ]);
-                    return notifs.length > 0;
-                },
+                        ["is_read", "=", false],
+                        ["mail_message_id", "in", channelMessageIds],
+                    ]).length > 0
+                );
+            });
+            allUnreadChannelIds = membersWithUnread.map((m) => m.channel_id);
+            for (const [tabId, domain] of Object.entries(channel_domain_by_tab_id)) {
+                const tabUnreadChannelIds = DiscussChannel.search([
+                    ["id", "in", allUnreadChannelIds],
+                    ..._resolve_self_member_domain.call(this, domain),
+                ]);
+                store._add_model_values("MessagingMenuTab", {
+                    id: tabId,
+                    init_counter_ids: tabUnreadChannelIds,
+                });
             }
-        );
-    }
-    if (name === "/mail/bookmark/messages") {
-        _resolve_messages.call(this, store, {
-            ...params.fetch_params,
-            domain: [["bookmarked_partner_ids", "in", [this.env.user.partner_id]]],
-        });
+        }
+        if (Object.keys(message_domain_by_tab_id).length) {
+            /** @type {import("mock_models").MailMessage} */
+            const MailMessage = this.env["mail.message"];
+            for (const [tabId, domain] of Object.entries(message_domain_by_tab_id)) {
+                const messageIds = MailMessage._filter(domain).map((m) => m.id);
+                store._add_model_values("MessagingMenuTab", {
+                    id: tabId,
+                    init_counter_ids: messageIds,
+                });
+            }
+        }
     }
     if (name === "/mail/thread/messages") {
         const thread = this.env[params.thread_model].browse(params.thread_id);

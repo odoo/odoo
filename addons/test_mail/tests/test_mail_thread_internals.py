@@ -1342,6 +1342,7 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
                 message_type="comment",
                 partner_ids=[self.user_employee.partner_id.id],
             )
+            # TODO TSM
         self.start_tour("/odoo", "access_inbox_records_tour", login=self.user_employee.login)
 
 

@@ -6,7 +6,7 @@
                 <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': this.ui.isSmall}">
                     <Call hasOverlay="false" isPip="this.props.isPip"/>
                 </div>
-                <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0 rounded-2" t-att-class="{ 'w-100': this.ui.isSmall }">
+                <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-DiscussApp-sidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0 rounded-2" t-att-class="{ 'w-100': this.ui.isSmall }">
                     <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                 </div>
                 <MeetingReadyBanner t-if="!this.rtc.isPipMode"/>

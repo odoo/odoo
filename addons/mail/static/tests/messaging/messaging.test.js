@@ -99,7 +99,10 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
     await openDiscuss();
     await contains(".o-mail-Discuss[data-active]");
     // simulate receiving new message (chat, inside discuss app)
-    await contains(".o-mail-DiscussSidebar-item:contains('Dumbledore') .badge", { count: 0 });
+    await contains(
+        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge",
+        { count: 0 }
+    );
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Tricky", message_type: "comment" },
@@ -108,7 +111,9 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
         })
     );
     await expect.waitForSteps(["discuss.channel/new_message"]);
-    await click(".o-mail-DiscussSidebar-item:contains('Dumbledore'):has(.badge:contains(1))");
+    await click(
+        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge:text(1)"
+    );
     await contains(".o-mail-Message:contains('Tricky')");
     // check no new chat window/bubble while in discuss app
     await openFormView("res.partner", partnerId);

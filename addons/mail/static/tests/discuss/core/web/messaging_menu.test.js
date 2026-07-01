@@ -5,6 +5,7 @@ import {
     defineMailModels,
     insertText,
     openDiscuss,
+    openMessagingMenu,
     patchUiSize,
     start,
     startServer,
@@ -32,57 +33,11 @@ test("can make DM chat in mobile", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await contains("button.active:text('Notifications')");
-    await click("button:text('Chats')");
-    await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 2 });
-    await insertText(
-        ".o_command_palette_search input[placeholder='Search conversations']",
-        "Gandalf"
-    );
-    await contains(".o_command_name", { count: 2 });
-    await click(".o_command_name:text('Gandalf')");
+    await click("button:text('Chat')");
+    await click(".modal-title:text('New Chat')");
+    await click(".o-discuss-ChannelInvitation-selectable:text('Gandalf')");
+    await click("button:text('Create Chat'):enabled");
     await contains(".o-mail-ChatWindow:text('Gandalf')");
-});
-
-test("can search channel in mobile", async () => {
-    patchUiSize({ size: SIZES.SM });
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "Gryffindors" });
-    await start();
-    await openDiscuss();
-    await contains("button.active:text('Notifications')");
-    await click("button:text('Channels')");
-    await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 2 });
-    await insertText(
-        ".o_command_palette_search input[placeholder='Search conversations']",
-        "Gryff"
-    );
-    await contains(".o_command_name", { count: 2 });
-    await click(".o_command_name:text('Gryffindors')");
-    await contains(".o-mail-ChatWindow div[title='Gryffindors']");
-});
-
-test("can make new channel in mobile", async () => {
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await openDiscuss();
-    await contains("button.active:text('Notifications')");
-    await click("button:text('Channels')");
-    await click(".o-mail-DiscussSearch-inputContainer");
-    await insertText(".o_command_palette input", "slytherins");
-    await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
-    await click("button:text(Create Channel)");
-    await contains(".o-mail-ChatWindow:text('slytherins')");
-});
-
-test("new message opens the @ command palette", async () => {
-    await start();
-    await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button:text('New Message')");
-    await contains(".o_command_palette_search .o_namespace:text('@')");
-    await contains(".o_command_palette input[placeholder='Search conversations']");
 });
 
 test("channel preview show deleted messages", async () => {
@@ -106,7 +61,6 @@ test("channel preview show deleted messages", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message:has(:text('before last'))");
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text:text('Demo: This message has been removed')");
 });
 
@@ -236,8 +190,12 @@ test("counter is taking into account non-fetched channels", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
+    // Ensure compute unread counter is done before starting the test. Otherwise, the
+    // field might be sent as part of the `_sync_field_names` flow, thus inserting the
+    // channel into the store.
+    pyEnv["discuss.channel.member"]._compute_message_unread_counter();
     await start();
-    await contains(".o-mail-MessagingMenu-counter:text('1')");
+    await contains(".o-mail-MessagingMenuDropdown-counter:text('1')");
     expect(
         Boolean(
             getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
@@ -257,16 +215,27 @@ test("counter is updated on receiving message on non-fetched channels", async ()
             Command.create({ partner_id: partnerId }),
         ],
     });
-    pyEnv["mail.message"].create({
+    const newestMessageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "first message",
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
     });
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
+    });
+    // Ensure compute unread counter is done before starting the test. Otherwise, the
+    // field might be sent as part of the `_sync_field_names` flow, thus inserting the
+    // channel into the store.
+    pyEnv["discuss.channel.member"]._compute_message_unread_counter();
     await start();
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
+    await contains(".o-mail-MessagingMenuDropdown-counter", { count: 0 });
     expect(
         Boolean(
             getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
@@ -279,7 +248,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenu-counter:text('1')");
+    await contains(".o-mail-MessagingMenuDropdown-counter:text('1')");
 });
 
 test("can use notification item swipe actions", async () => {
@@ -303,8 +272,6 @@ test("can use notification item swipe actions", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.active:text('Notifications')");
-    await click(".o-mail-MessagingMenu-tab:has(:text('Chats'))");
     await contains(".o-mail-NotificationItem .o-mail-NotificationItem-badge:contains(1)");
     await swipeRight(".o_actionswiper"); // marks as read
     await contains(".o-mail-NotificationItem-badge", { count: 0 });
@@ -337,7 +304,7 @@ test("counter does not double count channel needaction messages", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels
+    await openMessagingMenu("channel"); // fetch channels
     await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
-    await contains(".o-mail-MessagingMenu-counter:text('1')");
+    await contains(".o-mail-MessagingMenuDropdown-counter:text('1')");
 });

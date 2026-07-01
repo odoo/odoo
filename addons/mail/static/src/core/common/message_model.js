@@ -119,20 +119,8 @@ export class Message extends Record {
     get isNote() {
         return this.store.mt_note?.eq(this.subtype_id);
     }
-    /** @type {boolean} */
-    is_bookmarked = fields.Attr(undefined, {
-        onUpdate() {
-            const bookmarkBox = this.store.bookmarkBox;
-            if (this.is_bookmarked === undefined || !bookmarkBox) {
-                return;
-            }
-            if (this.is_bookmarked) {
-                bookmarkBox.messages.add(this);
-            } else {
-                bookmarkBox.messages.delete(this);
-            }
-        },
-    });
+    /** @type {?boolean} */
+    is_bookmarked;
     /** @type {boolean} */
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
@@ -216,6 +204,8 @@ export class Message extends Record {
     write_date = fields.Datetime();
     /** @type {undefined|Boolean} */
     needaction;
+    /** @type {undefined|Boolean} */
+    needaction_done;
     showTranslation = false;
     ended_poll_ids = fields.Many("mail.poll", { inverse: "end_message_id" });
     started_poll_ids = fields.Many("mail.poll", { inverse: "start_message_id" });
@@ -583,8 +573,7 @@ export class Message extends Record {
         }
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    canAddReaction(thread) {
+    get canAddReaction() {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
@@ -594,29 +583,41 @@ export class Message extends Record {
         );
     }
 
-    /** @param {import("models").Thread} thread  */
-    canMarkAsUnread(thread) {
+    get canMarkAsUnread() {
         return (
             !this.isEmpty &&
             !this.needaction &&
-            thread?.model !== "discuss.channel" &&
+            this.thread?.model !== "discuss.channel" &&
             this.self_notification?.notification_type === "inbox"
         );
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    canReplyTo(thread) {
+    get canReplyTo() {
         return (
-            ["discuss.channel", "mail.box"].includes(thread?.model) &&
+            this.thread?.model === "discuss.channel" &&
             !this.isEmpty &&
             this.message_type !== "user_notification" &&
-            !thread.channel?.composerHidden
+            !this.thread.channel?.composerHidden
         );
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    canUnfollow(thread) {
-        return Boolean(this.thread?.selfFollower && thread?.model === "mail.box");
+    get canUnfollow() {
+        return Boolean(this.thread?.selfFollower);
+    }
+
+    get authorAvatarUrl() {
+        if (
+            this.message_type &&
+            this.message_type.includes("email") &&
+            !this.author_id &&
+            !this.author_guest_id
+        ) {
+            return url("/mail/static/src/img/email_icon.png");
+        }
+        if (this.author) {
+            return this.author.avatarUrl;
+        }
+        return this.store.DEFAULT_AVATAR;
     }
 
     async copyLink() {
@@ -681,16 +682,15 @@ export class Message extends Record {
         return data;
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
-    enterEditMode(thread) {
+    enterEditMode() {
         const validRoles = Array.from(
             createDocumentFragmentFromContent(this.body).querySelectorAll(
                 ".o-discuss-mention[data-oe-model='res.role']"
             )
         ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
-        if (thread?.messageInEdition) {
-            thread.messageInEdition.composer = undefined;
+        if (this.thread?.messageInEdition) {
+            this.thread.messageInEdition.composer = undefined;
         }
         this.composer = {
             composerHtml: prepareBodyForEditing(this.body),
@@ -704,11 +704,10 @@ export class Message extends Record {
         };
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is being viewed when stopping edition */
-    exitEditMode(thread) {
+    exitEditMode() {
         const threadAsInEdition = this.threadAsInEdition;
         this.composer = undefined;
-        if (threadAsInEdition && threadAsInEdition.eq(thread)) {
+        if (threadAsInEdition) {
             threadAsInEdition.composer.autofocus++;
         }
     }
@@ -748,14 +747,11 @@ export class Message extends Record {
         );
     }
 
-    /** @param {import("models").Thread} thread  */
-    async markAsUnread(thread) {
+    async markAsUnread({ inChatter = false } = {}) {
         await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
             [this.id],
         ]);
-        if (!thread?.eq(this.store.history)) {
-            this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
-        }
+        this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
     }
 
     async onClickToggleTranslation() {
@@ -828,27 +824,28 @@ export class Message extends Record {
         await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
-    async removeBookmark(thread) {
+    async removeBookmark({ notify = false } = {}) {
         await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
-        this.closeNotificationFn?.();
-        if (thread?.eq(this.store.bookmarkBox)) {
-            this.closeNotificationFn = this.store.env.services.notification.add(
-                _t("Bookmark removed"),
-                {
-                    type: "success",
-                    buttons: [
-                        {
-                            name: "Undo",
-                            icon: "fa-undo",
-                            onClick: async () => {
-                                await this.addBookmark();
-                                this.closeNotificationFn();
-                            },
-                        },
-                    ],
-                }
-            );
+        if (!notify) {
+            return;
         }
+        this.closeNotificationFn?.();
+        this.closeNotificationFn = this.store.env.services.notification.add(
+            _t("Bookmark removed"),
+            {
+                type: "success",
+                buttons: [
+                    {
+                        name: "Undo",
+                        icon: "fa-undo",
+                        onClick: async () => {
+                            await this.addBookmark();
+                            this.closeNotificationFn();
+                        },
+                    },
+                ],
+            }
+        );
     }
 
     async unfollow() {

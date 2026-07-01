@@ -1,4 +1,4 @@
-import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { contains, openMessagingMenu, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
 import { defineTestMailFullModels } from "@test_mail_full/../tests/test_mail_full_test_helpers";
 import { serverState } from "@web/../tests/web_test_helpers";
@@ -23,7 +23,7 @@ test("rating value displayed on the preview", async () => {
         rating_text: "top",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("channel");
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
     await contains(".o-rating-preview-image[alt='top']");
     await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
@@ -31,6 +31,7 @@ test("rating value displayed on the preview", async () => {
 
 test("rating value displayed on the needaction preview", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({});
     const ratingId = pyEnv["mail.test.rating"].create({ name: "Test rating" });
     const messageId = pyEnv["mail.message"].create({
@@ -54,7 +55,7 @@ test("rating value displayed on the needaction preview", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu("notification");
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
     await contains(".o-rating-preview-image[alt='top']");
     await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
