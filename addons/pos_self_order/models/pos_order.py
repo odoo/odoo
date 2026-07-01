@@ -79,7 +79,9 @@ class PosOrder(models.Model):
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         email_values = {'email_to': email}
-        if self.state == 'paid' and ticket_image:
+        if self.state == 'paid':
+            ticket_image = self.order_receipt_generate_image()
+            basic_image = self.order_receipt_generate_image(True)
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
         mail_template.send_mail(self.id, force_send=True, email_values=email_values)
 
