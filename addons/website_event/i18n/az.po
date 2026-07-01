@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-01-13 13:09+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -109,7 +109,7 @@ msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr ""
 
@@ -131,7 +131,7 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
 msgstr ""
 
@@ -244,20 +244,19 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid ""
+"<span class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold "
+"Out\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_badge
 msgid ""
 "<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-msgid ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
-"class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold "
-"Out\n"
-"                                    </span>"
 msgstr ""
 
 #. module: website_event
@@ -513,7 +512,7 @@ msgid "Can Publish"
 msgstr "Dərc Oluna Bilər"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Cancelled"
 msgstr "Ləğv olundu"
 
@@ -521,6 +520,18 @@ msgstr "Ləğv olundu"
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
 msgid "Card design"
+msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+msgid "Click on the <b>Content</b> category."
+msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+msgid "Click on the <b>Image - Text</b> building block."
 msgstr ""
 
 #. module: website_event
@@ -728,7 +739,7 @@ msgid "Event Info"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
 
@@ -909,7 +920,7 @@ msgid "Footer Visible"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
 
@@ -1418,17 +1429,17 @@ msgid "Registrations"
 msgstr "Qeydiyyatlar"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations Closed"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not open"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not yet open"
 msgstr ""
 
@@ -1511,7 +1522,7 @@ msgid "Scheduled Events"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Scheduled for"
 msgstr ""
 
@@ -1607,8 +1618,8 @@ msgid "Social Media"
 msgstr "Sosial Media"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sold Out"
 msgstr "Satışı Tamamlanıb"

@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-05-07 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,8 +23,40 @@ msgid "%(name)s (Estimated Cost: %(cost)s)"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
+msgid "'Shipping-Document-%s' % object.name"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_labels
+msgid "'Shipping-Label-%s' % object.name"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
 msgid "(computed:"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "1. Download and print the Return label and place it in your package."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "2. Download and print the Shipping label and place it on your package."
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "<i class=\"fa pe-1 fa-arrow-right\"/>Configure Carrier Labels"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "<i class=\"fa pe-1 fa-arrow-right\"/>Configure Export Documents"
 msgstr ""
 
 #. module: stock_delivery
@@ -102,6 +135,30 @@ msgid "Applicable on Delivery Methods"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
+msgid "Auto Print Carrier Labels"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_export_documents
+msgid "Auto Print Export Documents"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
+msgid ""
+"Automatically print the carrier labels of the picking when they are created."
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_export_documents
+msgid ""
+"Automatically print the export documents of the picking when they are "
+"created. Availability of export documents depends on the carrier and the "
+"destination."
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr ""
@@ -109,8 +166,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 
 #. module: stock_delivery
@@ -128,6 +184,11 @@ msgid "Carrier Code"
 msgstr ""
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "Carrier Labels"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
 msgstr ""
@@ -135,6 +196,20 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/ir_actions_report.py:0
+msgid "Configure a printer to print this report: '%s'"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/ir_actions_report.py:0
+msgid ""
+"Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS "
+"printer to print %s from the chatter."
 msgstr ""
 
 #. module: stock_delivery
@@ -183,6 +258,8 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
@@ -192,6 +269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
@@ -203,10 +281,18 @@ msgid "Display tracking links"
 msgstr ""
 
 #. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
+msgid "Download Shipping Label"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 
 #. module: stock_delivery
@@ -222,9 +308,18 @@ msgid "Exception:"
 msgstr ""
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "Export Documents"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "Export documents"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
-#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "HS Code"
 msgstr ""
@@ -232,6 +327,8 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
@@ -241,6 +338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
@@ -264,6 +362,11 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.manage_printers_action
+msgid "Manage Printers"
 msgstr ""
 
 #. module: stock_delivery
@@ -300,13 +403,17 @@ msgid "Package too heavy!"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_picking_type
+msgid "Picking Type"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
 msgstr ""
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
 msgstr ""
@@ -319,6 +426,11 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: stock_delivery
@@ -337,6 +449,21 @@ msgid "Real cost"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.cached_printers_section
+msgid "Reporting"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.cached_printers_action
+msgid "Reset Linked Printers"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
 msgstr ""
@@ -351,8 +478,10 @@ msgstr ""
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 
 #. module: stock_delivery
@@ -379,8 +508,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 
 #. module: stock_delivery
@@ -389,8 +518,28 @@ msgid "Shipping Cost"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.actions.report,name:stock_delivery.action_report_shipping_docs
+msgid "Shipping Documents"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.actions.act_window,name:stock_delivery.open_export_docs_report
+msgid "Shipping Documents Report"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Shipping Information"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.actions.report,name:stock_delivery.action_report_shipping_labels
+msgid "Shipping Labels"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.actions.act_window,name:stock_delivery.open_shipping_labels_report
+msgid "Shipping Labels Report"
 msgstr ""
 
 #. module: stock_delivery
@@ -482,6 +631,14 @@ msgid "There is no matching delivery rule."
 msgstr ""
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/ir_actions_report.py:0
+msgid ""
+"This action is meant to print %s attachments from the chatter: none was "
+"found."
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr ""
@@ -557,8 +714,8 @@ msgstr ""
 #: code:addons/stock_delivery/models/stock_move.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 
 #. module: stock_delivery
@@ -609,4 +766,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FS"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "and"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid ""
+"are uploaded to the chatter when the picking is validated. If you want to\n"
+"                    print them automatically on validation, you need to "
+"configure a printer on the\n"
+"                    report form.<br/>"
 msgstr ""
