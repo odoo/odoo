@@ -14,6 +14,5 @@ export class DocLoadingIndicator extends Component {
     props = props({
         isLoaded: t.boolean(),
         class: t.string().optional(""),
-        slots: t.any(),
     });
 }

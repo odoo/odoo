@@ -17,7 +17,6 @@ export class FileUploader extends Component {
         inputName: t.string().optional(),
         fileUploadClass: t.string().optional(),
         acceptedFileExtensions: t.string().optional(),
-        slots: t.object().optional(),
         showUploadingText: t.boolean().optional(true),
         // See https://www.iana.org/assignments/media-types/media-t.xhtml
         allowedMIMETypes: t.string().optional(),

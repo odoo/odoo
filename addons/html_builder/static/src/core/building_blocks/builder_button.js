@@ -49,8 +49,6 @@ const builderButtonProps = {
     classActive: t.string().optional(),
     style: t.string().optional(),
     type: t.string().optional(),
-
-    slots: t.object().optional(),
 };
 
 export class BuilderButtonInternal extends Component {
@@ -112,7 +110,6 @@ export class BuilderButton extends BuilderSelectableWrapperComponent {
     props = props({
         ltrRtlMapping: t.string().optional(),
         isLabelLinkedToContent: t.boolean().optional(),
-        slots: t.object().optional(),
         ...builderButtonProps,
     });
 

@@ -10,7 +10,6 @@ export class Orderline extends Component {
     props = props({
         line: t.object(),
         class: t.object().optional(),
-        slots: t.object().optional(),
         showImage: t.boolean().optional(false),
         showTaxGroupLabels: t.boolean().optional(false),
         showTaxGroup: t.boolean().optional(false),

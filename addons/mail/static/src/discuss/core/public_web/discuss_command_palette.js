@@ -81,7 +81,6 @@ export class DiscussCommand extends Component {
                 ])
                 .optional(),
             searchValue: t.string(),
-            slots: t.object().optional(),
         });
     }
 

@@ -27,7 +27,6 @@ export class BottomSheet extends Component {
 
         // Technical props
         ref: t.function().optional(),
-        slots: t.object().optional(),
     });
 
     setup() {

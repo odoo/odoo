@@ -4,7 +4,6 @@ const { DateTime } = luxon;
 export class CardLayout extends Component {
     static template = "hr_attendance.CardLayout";
     props = props({
-        slots: t.object(),
         fromTrialMode: t.boolean().optional(),
         companyImageUrl: t.string(),
         kioskReturn: t.function(),

@@ -14,7 +14,6 @@ export class ProductCard extends Component {
         onClick: t.function().optional(() => () => {}),
         showWarning: t.boolean().optional(false),
         productCartQty: t.or([t.number(), t.literal(undefined)]).optional(),
-        slots: t.object().optional(),
         isComboPopup: t.boolean().optional(false),
     });
 

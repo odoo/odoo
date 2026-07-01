@@ -29,7 +29,6 @@ export class TreeEditor extends Component {
         getOperatorEditorInfo: t.function(),
         getDefaultOperator: t.function(),
         readonly: t.boolean().optional(false),
-        slots: t.object().optional(),
         isDebugMode: t.boolean().optional(),
         defaultConnector: t.selection(["&", "|"]).optional("&"),
         isSubTree: t.boolean().optional(false),

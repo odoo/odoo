@@ -13,7 +13,6 @@ export const dropdownItemProps = {
     onSelected: t.function().optional(),
     closingMode: t.selection(Object.values(ClosingMode)).optional(ClosingMode.AllParents),
     attrs: t.object().optional({}),
-    slots: t.object().optional(),
 };
 
 export class DropdownItem extends Component {

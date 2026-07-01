@@ -17,7 +17,6 @@ export const cogMenuProps = {
             print: t.array().optional(),
         })
         .optional({}),
-    slots: t.object().optional(),
 };
 
 /**

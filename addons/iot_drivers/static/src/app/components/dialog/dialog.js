@@ -4,7 +4,6 @@ const { Component, xml, useListener, signal, props, types: t } = owl;
 
 export class Dialog extends Component {
     props = props({
-        slots: t.object(),
         name: t.string(),
         help: t.string().optional(),
         btnName: t.string().optional(),

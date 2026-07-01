@@ -18,7 +18,6 @@ export class ActionPanel extends Component {
             initialWidth: t.number().optional(),
             minWidth: t.number().optional(),
             resizable: t.boolean().optional(true),
-            slots: t.object().optional(),
             title: t.string().optional(),
         });
         this.store = useService("mail.store");
