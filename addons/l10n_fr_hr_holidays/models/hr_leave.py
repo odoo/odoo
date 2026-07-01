@@ -145,7 +145,7 @@ class HrLeave(models.Model):
                     # Extend the end date to next working day
                     date_start = leave.date_from
                     date_end = leave.date_to
-                    while not leave.resource_calendar_id._works_on_date(date_start):
+                    while leave.resource_calendar_id and not leave.resource_calendar_id._works_on_date(date_start):
                         date_start += relativedelta(days=1)
                     extended_date_end = date_end
                     while not company_cal._works_on_date(extended_date_end + relativedelta(days=1)):
