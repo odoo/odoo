@@ -425,3 +425,21 @@ test("tooltip from and to child element", async () => {
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(0);
 });
+
+test.tags("mobile");
+test("tooltip from the title attribute", async () => {
+    class MyComponent extends Component {
+        static props = ["*"];
+        static template = xml`
+        <div title="Coucou">
+            Toto
+        </div>`;
+    }
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    await pointerDown("div[title]");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("Coucou");
+});
