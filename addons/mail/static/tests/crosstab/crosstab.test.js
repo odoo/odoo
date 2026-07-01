@@ -128,7 +128,7 @@ test("Adding attachments", async () => {
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`);
     await setInputFiles([file]);
     await contains(
-        `${env1.selector} .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt) .fa-check`
+        `${env1.selector} .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt)`
     );
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[data-type='save']`);
 

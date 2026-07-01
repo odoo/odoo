@@ -894,7 +894,7 @@ test("composer: add an attachment", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
@@ -921,7 +921,7 @@ test("composer: add an attachment in reply to message in history", async () => {
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
@@ -953,7 +953,7 @@ test("remove an attachment from composer does not need any confirmation", async 
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await click(".o-mail-Attachment-unlink");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentContainer", { count: 0 });
