@@ -46,10 +46,10 @@ export class MoveNodePlugin extends Plugin {
 
         this.elementHookMap = new Map();
 
-        this.addDomListener(this.editable, "mousemove", this.onMousemove, true);
+        this.addDomListener(this.editable, "mousemove", this.onMousemove, true, true);
         this.addDomListener(this.editable, "touchmove", this.onMousemove, true);
         this.addDomListener(this.document, "keydown", this.onDocumentKeydown, true);
-        this.addDomListener(this.document, "mousemove", this.onDocumentMousemove, true);
+        this.addDomListener(this.document, "mousemove", this.onDocumentMousemove, true, true);
         this.addDomListener(this.document, "touchmove", this.onDocumentMousemove, true);
 
         // This container help to add zone into which the mouse can activate the move widget.
