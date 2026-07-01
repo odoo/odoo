@@ -143,10 +143,8 @@ test("preventRoundingErrorsCombo", async () => {
     );
     order.setOrderPrices();
     expect(order.amount_total).toBe(57.5);
-    expect(order.lines[1].qty).toBe(2);
-    expect(order.lines[1].price_unit).toBe(16.67);
-    expect(order.lines[2].qty).toBe(1);
-    expect(Math.round(order.lines[2].price_unit * 100) / 100).toBe(16.66);
+    expect(order.lines[1].qty).toBe(3);
+    expect(order.lines[1].price_unit).toBe(16.666666666666668);
 
     // 2 different products
     await store.addLineToOrder(
@@ -166,10 +164,8 @@ test("preventRoundingErrorsCombo", async () => {
     expect(order2.amount_total).toBe(57.5);
     expect(order2.lines[1].price_unit).toBe(16.67);
     expect(order2.lines[1].qty).toBe(1);
-    expect(order2.lines[2].price_unit).toBe(16.67);
-    expect(order2.lines[2].qty).toBe(1);
-    expect(Math.round(order2.lines[3].price_unit * 100) / 100).toBe(16.66);
-    expect(order2.lines[3].qty).toBe(1);
+    expect(order2.lines[2].price_unit).toBe(16.665);
+    expect(order2.lines[2].qty).toBe(2);
 
     // 3 of the same product and 3 of the same extra items
     await store.addLineToOrder(
@@ -185,12 +181,8 @@ test("preventRoundingErrorsCombo", async () => {
     );
     order3.setOrderPrices();
     expect(order3.amount_total).toBe(92);
-    expect(order3.lines[1].qty).toBe(2);
-    expect(order3.lines[1].price_unit).toBe(16.67);
-    expect(Math.round(order3.lines[2].price_unit * 100) / 100).toBe(16.66);
-    expect(order3.lines[2].qty).toBe(1);
-    expect(order3.lines[3].qty).toBe(3);
-    expect(order3.lines[3].price_unit).toBe(10);
+    expect(order3.lines[1].qty).toBe(6);
+    expect(order3.lines[1].price_unit).toBe(13.333333333333334);
 });
 
 test("customer requirements", async () => {
@@ -400,8 +392,11 @@ test("priceDoesntChangeWhenChangingPreset", async () => {
         {
             product_tmpl_id: template,
             payload: [
-                [{ combo_item_id: comboProduct1, qty: 2 }],
-                [{ combo_item_id: comboProduct2, qty: 2 }],
+                [
+                    { combo_item_id: comboProduct1, qty: 2 },
+                    { combo_item_id: comboProduct2, qty: 1 },
+                ],
+                [{ combo_item_id: comboProduct2, qty: 1 }],
             ],
             qty: 1,
         },
@@ -494,8 +489,14 @@ test("priceDoesntChangeWhenChangingPresetMultipleQuantity", async () => {
     };
 
     await recomputeComboData(
-        [[{ combo_item_id: comboProduct1, qty: 2 }], [{ combo_item_id: comboProduct2, qty: 2 }]],
-        23750
+        [
+            [
+                { combo_item_id: comboProduct1, qty: 2 },
+                { combo_item_id: comboProduct2, qty: 1 },
+            ],
+            [{ combo_item_id: comboProduct2, qty: 1 }],
+        ],
+        21250
     );
     await recomputeComboData([[{ combo_item_id: comboProduct1, qty: 2 }]], 18750);
     await recomputeComboData(

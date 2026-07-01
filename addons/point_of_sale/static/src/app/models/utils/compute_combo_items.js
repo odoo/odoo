@@ -110,5 +110,30 @@ export const computeComboItems = (
             (mapSequence[a.combo_item_id.id] ?? Infinity) -
             (mapSequence[b.combo_item_id.id] ?? Infinity)
     );
-    return comboItems;
+
+    // Merge identical combo items
+    const mergedComboItems = [];
+    for (const item of comboItems) {
+        const existingItem = mergedComboItems.find((mergedItem) => {
+            const getAttrIds = (item) =>
+                item.attribute_value_ids
+                    .map((a) => a.id)
+                    .sort()
+                    .join(",");
+            return (
+                mergedItem.combo_item_id.id === item.combo_item_id.id &&
+                getAttrIds(item) === getAttrIds(mergedItem)
+            );
+        });
+        if (existingItem) {
+            existingItem.qty += item.qty;
+            existingItem.total_price += item.price_unit * item.qty;
+        } else {
+            mergedComboItems.push({ ...item, total_price: item.price_unit * item.qty });
+        }
+    }
+    mergedComboItems.forEach((item) => {
+        item.price_unit = item.total_price / item.qty;
+    });
+    return mergedComboItems;
 };

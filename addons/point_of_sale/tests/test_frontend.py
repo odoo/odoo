@@ -3899,6 +3899,39 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('test_combo_price_unchanged_with_lot_tracked_product', login="pos_admin")
 
+    def test_combo_product_merged(self):
+        """ Test the max free quantity of a product combo."""
+        combo_item_product = self.env["product.product"].create(
+        {
+            "name": "Combo Product",
+            "is_storable": True,
+            "available_in_pos": True,
+            "list_price": 25,
+        }
+    )
+        combo = self.env['product.combo'].create({
+            'name': 'Single Product Combo',
+            'qty_free': 3,
+            'qty_max': 6,
+            'combo_item_ids': [
+                Command.create({
+                    'product_id': combo_item_product.id,
+                    'extra_price': 0,
+                }),
+            ],
+        })
+        self.env['product.product'].create({
+            'name': 'Single Product Combo Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_product_merged')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
