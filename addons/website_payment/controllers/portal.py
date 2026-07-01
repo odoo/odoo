@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug
+
 from odoo import http, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -27,6 +29,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs['currency_id'] = self._cast_as_int(kwargs.get('currency_id')) or request.env.company.currency_id.id
         kwargs['amount'] = self._cast_as_float(kwargs.get('amount')) or 25.0
         kwargs['donation_options'] = kwargs.get('donation_options', json_safe.dumps(dict(customAmount="freeAmount")))
+
+        if request.httprequest.method == 'POST':
+            kwargs['donation_descriptions'] = request.httprequest.form.getlist('donation_descriptions')
+            return request.redirect('/donation/pay?' + werkzeug.urls.url_encode(kwargs), code=303)
 
         if request.env.user._is_public():
             kwargs['partner_id'] = request.env.user.partner_id.id
@@ -110,7 +116,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 }
 
             countries = request.env['res.country'].sudo().search([])
-            descriptions = request.httprequest.form.getlist('donation_descriptions')
+            descriptions = request.httprequest.values.getlist('donation_descriptions')
 
             donation_options = json_safe.loads(donation_options) if donation_options else {}
             donation_amounts = json_safe.loads(donation_options.get('donationAmounts', '[]'))
