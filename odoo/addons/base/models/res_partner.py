@@ -242,7 +242,7 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, inverse='_inverse_vat', help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(string='Tax ID', index=True, inverse='_inverse_vat', help="You can use '/' to indicate that the customer has no Tax ID.")
     additional_identifiers = fields.Json(string="Additional Identifiers", copy=False)
     available_additional_identifiers_metadata = fields.Json(compute='_compute_available_additional_identifiers_metadata')
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
