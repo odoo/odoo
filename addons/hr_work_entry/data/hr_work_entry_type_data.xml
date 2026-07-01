@@ -527,6 +527,23 @@
         <field name="is_extra_hours" eval="True"/>
     </record>
 
+    <record id="l10n_be_work_entry_type_extra_hours_free" model="hr.work.entry.type">
+        <field name="name">Extra Hours (Free of tax)</field>
+        <field name="code">EHNOTAX</field>
+        <field name="display_code">EHE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="color">6</field>
+        <field name="amount_rate">1.5</field>
+        <field name="is_extra_hours" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_extra_hours_immo" model="hr.work.entry.type">
+        <field name="name">Extra Hours (Immo)</field>
+        <field name="code">EHIMMO</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="color">6</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
