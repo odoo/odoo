@@ -37,11 +37,14 @@ export class MailComposerAttachmentSelector extends Component {
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
         const isThreadComposer = this.props.record.context.is_thread_composer;
-        const attachment = await this.attachmentUploadService.upload(
-            thread,
-            isThreadComposer ? thread.composer : undefined,
-            file,
-        );
+        let composer = isThreadComposer ? thread.composer : undefined;
+        // Use an isolated composer object instead of thread.composer to
+        // avoid pushing into the main thread's composer.attachments list,
+        // which is observed by the chatter.
+        if (this.props.record.resModel === "mail.scheduled.message") {
+            composer = { attachments: [] };
+        }
+        const attachment = await this.attachmentUploadService.upload(thread, composer, file);
         if (attachment) {
             await this.operations.saveRecord([attachment.id]);
         }
