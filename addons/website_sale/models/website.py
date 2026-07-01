@@ -12,7 +12,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import BinaryBytes, file_open
+from odoo.tools import SQL, BinaryBytes, file_open, split_every
 
 from odoo.addons.website_sale import const
 
@@ -90,12 +90,10 @@ class Website(models.Model):
     )
     contact_us_link_url = fields.Char(string="Link URL", translate=True, default="/contactus")
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
-    send_abandoned_cart_email = fields.Boolean(
-        string="Send email to customers who abandoned their cart."
-    )
-    send_abandoned_cart_email_activation_time = fields.Datetime(
+    send_abandoned_cart_followup = fields.Boolean(string="Send Follow-up")
+    send_abandoned_cart_followup_activation_time = fields.Datetime(
         string="Time when the 'Send abandoned cart email' feature was activated.",
-        compute="_compute_send_abandoned_cart_email_activation_time",
+        compute="_compute_send_abandoned_cart_followup_activation_time",
         store=True,
     )
     send_order_rating_emails = fields.Boolean(string="Request ratings", default=False)
@@ -307,11 +305,11 @@ class Website(models.Model):
         msg = "website.currency_id is not searchable"
         raise ValueError(msg)  # depends on request
 
-    @api.depends("send_abandoned_cart_email")
-    def _compute_send_abandoned_cart_email_activation_time(self):
+    @api.depends("send_abandoned_cart_followup")
+    def _compute_send_abandoned_cart_followup_activation_time(self):
         for website in self:
-            if website.send_abandoned_cart_email:
-                website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
+            if website.send_abandoned_cart_followup:
+                website.send_abandoned_cart_followup_activation_time = fields.Datetime.now()
 
     @api.depends("company_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
@@ -934,33 +932,44 @@ class Website(models.Model):
 
     @api.model
     def _send_abandoned_cart_email(self):
-        for website in self.search([]):
-            if not website.send_abandoned_cart_email:
-                continue
-            all_abandoned_carts = self.env["sale.order"].search([
-                ("is_abandoned_cart", "=", True),
-                ("cart_recovery_email_sent", "=", False),
-                ("website_id", "=", website.id),
-                ("date_order", ">=", website.send_abandoned_cart_email_activation_time),
-            ])
-            if not all_abandoned_carts:
-                continue
+        website_domain = Domain([
+            ("send_abandoned_cart_followup", "=", True),
+            ("cart_recovery_mail_template_id", "!=", False),
+        ])
 
-            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
-            # Mark abandoned carts that failed the filter as sent to avoid rechecking them more than
-            # once.
-            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
-            for sale_order in abandoned_carts:
-                template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to,email_to were emptied or default recipients
-                # is false
-                email_vals = (
-                    {}
-                    if template.email_to or template.partner_to or template.use_default_to
-                    else {"email_to": sale_order.partner_id.email_formatted}
+        all_abandoned_carts = self.env["sale.order"].search(
+            Domain([
+                ("is_abandoned_cart", "=", True),
+                ("website_id", "in", website_domain),
+                ("cart_recovery_email_sent", "=", False),
+            ])
+            & Domain.custom(
+                to_sql=lambda table: SQL(
+                    "%s >= %s",
+                    table.date_order,
+                    table._join("website_id").send_abandoned_cart_followup_activation_time,
                 )
-                template.send_mail(sale_order.id, email_values=email_vals)
-                sale_order.cart_recovery_email_sent = True
+            )
+        )
+        if not all_abandoned_carts:
+            return
+
+        self.env["ir.cron"]._commit_progress(remaining=len(all_abandoned_carts))
+
+        # `_filter_can_send_abandoned_cart_mail` has to be called by `website_id`
+        for cart_group in all_abandoned_carts.grouped("website_id").values():
+            for carts_batch in split_every(10, cart_group.ids, self.env["sale.order"].browse):
+                abandoned_carts = carts_batch._filter_can_send_abandoned_cart_followup()
+                abandoned_carts.filtered(
+                    lambda cart: (
+                        not cart.cart_recovery_email_sent
+                        and cart.website_id.cart_recovery_mail_template_id
+                    )
+                )._cart_recovery_email_send()
+                # Mark abandoned carts that failed the filter as sent to avoid rechecking them more
+                # than once.
+                (carts_batch - abandoned_carts).write({"cart_recovery_email_sent": True})
+                self.env["ir.cron"]._commit_progress(len(carts_batch))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1159,8 +1168,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]

@@ -839,12 +839,17 @@ class SaleOrder(models.Model):
         Similar method to action_recovery_email_send, made to be called in automation rules.
         Contrary to the former, it will use the website-specific template for each order."""
         sent_orders = self.env["sale.order"]
-        for order in self:
-            template = order._get_cart_recovery_template()
+        for template, orders in (
+            self
+            .filtered("partner_id.email")
+            .grouped(lambda order: order._get_cart_recovery_template())
+            .items()
+        ):
             if template:
-                order._portal_ensure_token()
-                template.send_mail(order.id)
-                sent_orders |= order
+                for order in orders:
+                    order._portal_ensure_token()
+                template.send_mail_batch(orders.ids)
+                sent_orders += orders
         sent_orders.write({"cart_recovery_email_sent": True})
 
     def _message_mail_after_hook(self, mails):
@@ -888,7 +893,7 @@ class SaleOrder(models.Model):
             line._is_reorder_allowed() for line in self.order_line if line.product_id
         )
 
-    def _filter_can_send_abandoned_cart_mail(self):
+    def _filter_can_send_abandoned_cart_followup(self):
         self.website_id.ensure_one()
         abandoned_datetime = datetime.utcnow() - relativedelta(
             hours=self.website_id.cart_abandoned_delay
@@ -930,8 +935,7 @@ class SaleOrder(models.Model):
 
         return self.filtered(
             lambda abandoned_sale_order: (
-                abandoned_sale_order.partner_id.email
-                and not any(
+                not any(
                     transaction.sudo().state == "error"
                     for transaction in abandoned_sale_order.transaction_ids
                 )
@@ -943,6 +947,9 @@ class SaleOrder(models.Model):
                 and abandoned_sale_order._all_product_available()
             )
         )
+
+    def _filter_can_send_abandoned_cart_email(self):
+        return self.filtered("partner_id.email")._filter_can_send_abandoned_cart_followup()
 
     def _has_deliverable_products(self):
         """Return whether the order has lines with products that should be delivered.

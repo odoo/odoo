@@ -201,8 +201,8 @@
         </field>
     </record>
 
-    <record id="view_sales_order_filter_ecommerce_abondand" model="ir.ui.view">
-        <field name="name">sale.order.ecommerce.abandonned.view</field>
+    <record id="view_sales_order_filter_ecommerce_abandoned" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.abandoned.view</field>
         <field name="model">sale.order</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
@@ -210,8 +210,8 @@
                 <field name="name"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
                 <separator/>
-                <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
-                <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+                <filter string="Follow-up to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
+                <filter string="Follow-up Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
                 <group>
                     <filter string="Order Date" name="order_date" context="{'group_by':'date_order'}"/>
                 </group>
@@ -248,7 +248,7 @@
         <field name="domain">[('is_abandoned_cart', '=', True)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abandoned"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No abandoned carts found

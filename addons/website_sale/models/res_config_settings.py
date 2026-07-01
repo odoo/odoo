@@ -33,8 +33,8 @@ class ResConfigSettings(models.TransientModel):
         related="website_id.cart_recovery_mail_template_id", readonly=False
     )
     cart_abandoned_delay = fields.Float(related="website_id.cart_abandoned_delay", readonly=False)
-    send_abandoned_cart_email = fields.Boolean(
-        string="Abandoned Email", related="website_id.send_abandoned_cart_email", readonly=False
+    send_abandoned_cart_followup = fields.Boolean(
+        related="website_id.send_abandoned_cart_followup", readonly=False
     )
     salesperson_id = fields.Many2one(related="website_id.salesperson_id", readonly=False)
     salesteam_id = fields.Many2one(related="website_id.salesteam_id", readonly=False)
@@ -129,19 +129,6 @@ class ResConfigSettings(models.TransientModel):
             suggested_products_cron_sudo.active = False
 
     # === ACTION METHODS === #
-
-    @api.readonly
-    def action_open_abandoned_cart_mail_template(self):
-        return {
-            "name": self.env._("Customize Email Templates"),
-            "type": "ir.actions.act_window",
-            "res_model": "mail.template",
-            "view_id": False,
-            "view_mode": "form",
-            "res_id": self.env["ir.model.data"]._xmlid_to_res_id(
-                "website_sale.mail_template_sale_cart_recovery"
-            ),
-        }
 
     @api.readonly
     def action_open_sale_mail_templates(self):
