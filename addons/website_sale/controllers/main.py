@@ -1912,7 +1912,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             raise NotFound
 
-        product = self.env["product.template"].browse(product_id)
+        model = options.get("model", "product.template")
+
+        product = self.env[model].browse(product_id)
         if "sequence" in options:
             sequence = options["sequence"]
             if sequence == "top":
@@ -1923,8 +1925,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 product.set_sequence_up()
             elif sequence == "down":
                 product.set_sequence_down()
-        if {"x", "y"} <= set(options):
+        if {"x", "y"} <= options.keys():
             product.write({"website_size_x": options["x"], "website_size_y": options["y"]})
+        if {"tag_field", "tag_ids"} <= options.keys():
+            product.write({options["tag_field"]: options["tag_ids"] or False})
 
     @route(["/shop/config/attribute"], type="jsonrpc", auth="user")
     def change_attribute_config(self, attribute_id, **options):
@@ -1998,6 +2002,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
         if modified_options:
             category.write(modified_options)
+
+    @route(["/shop/config/tag"], type="jsonrpc", auth="user")
+    def _change_tag_config(self, tag_id, **options):
+        tag = self.env["product.tag"].browse(int(tag_id))
+        if not tag.exists():
+            raise NotFound
+        if "color" in options:
+            tag.color = options["color"]
+        if "image" in options:
+            image_data = self.env["ir.attachment"].browse(options["image"]).raw
+            tag.image = image_data
 
     def order_lines_2_google_api(self, order_lines):
         """Transform a list of order lines into a dict for google analytics."""

@@ -169,6 +169,7 @@
                                     <field
                                         name="product_tag_ids"
                                         widget="many2many_tags"
+                                        options="{'on_tag_click': 'open_form'}"
                                         context="{'product_template_id': id}"
                                     />
                                     <field name="company_id"
@@ -382,7 +383,11 @@
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
                 <field name="product_tag_ids" position="replace">
-                    <field name="all_product_tag_ids" string="Tags"/>
+                    <field
+                        name="all_product_tag_ids"
+                        string="Tags"
+                        options="{'on_tag_click': 'open_form'}"
+                    />
                 </field>
                 <field name="name" position="replace">
                     <field name="name" string="Product" filter_domain="['|', '|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('display_name', '=', self)]"/>
@@ -596,6 +601,7 @@
                     <field
                         name="additional_product_tag_ids"
                         widget="many2many_tags"
+                        options="{'on_tag_click': 'open_form'}"
                         invisible="product_variant_count == 1"
                     />
                 </field>
@@ -684,9 +690,9 @@
                                 </div>
                                 <div name="on_hand_qty_kanban" t-if="record.is_storable.raw_value" class="d-flex gap-1 align-items-baseline">
                                     <strong>
-                                        <field name="qty_available" digits="[16, 0]"/> 
+                                        <field name="qty_available" digits="[16, 0]"/>
                                     </strong>
-                                    <field name="uom_id" groups="uom.group_uom"/> 
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <span class="text-muted">On Hand</span>
                                 </div>
                                 <field name="product_template_variant_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
