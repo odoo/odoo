@@ -253,6 +253,14 @@ export class SearchArchParser {
                 this.optionsParams = { customOptions: [] };
                 visitChildren();
                 preSearchItem.optionsParams = this.optionsParams;
+                const defaultGeneratorIds = this.optionsParams.customOptions.flatMap((option) => {
+                    const name = option.id.replace("custom_", "");
+                    return name in this.searchDefaults ? [option.id] : [];
+                });
+                if (defaultGeneratorIds.length) {
+                    preSearchItem.isDefault = true;
+                    preSearchItem.defaultGeneratorIds = defaultGeneratorIds;
+                }
                 this.optionsParams = null;
             }
 
