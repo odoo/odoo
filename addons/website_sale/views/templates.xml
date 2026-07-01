@@ -2043,7 +2043,7 @@
                                             </select>
                                         </div>
                                         <div class="w-100"/>
-                                        <t t-if="mode == ('new', 'billing') and not only_services">
+                                        <t t-if="mode == ('new', 'billing') and not only_services" groups="account.group_delivery_invoice_address">
                                             <div class="col-lg-12">
                                                 <div class="form-check form-switch mt-2 mb-3">
                                                     <label>
@@ -2066,6 +2066,9 @@
                                         </t>
                                         <t t-else="">
                                             <input type="hidden" name="use_same" t-att-value="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id"/>
+                                        </t>
+                                        <t t-if="not env.user.has_group('account.group_delivery_invoice_address')">
+                                            <input type="hidden" name="use_same" t-att-value="True"/>
                                         </t>
                                     </div>
 
@@ -2117,7 +2120,7 @@
                 <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
                 <t t-set="order_address" t-value="order.with_context(show_address=True)"/>
                 <div>
-                    <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
+                    <b>Billing<t t-if="same_shipping and not only_services" groups="account.group_delivery_invoice_address"> &amp; Shipping</t>: </b>
                     <span
                         t-esc="', '.join(order_address.partner_invoice_id.display_name.split('\n')[1:])"
                         class="address-inline lh-sm o_address_font_sm"/>
