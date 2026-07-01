@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.2a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-08 07:16+0000\n"
+"PO-Revision-Date: 2026-05-23 13:35+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_mollie/zh_Hans/>\n"
@@ -34,7 +34,7 @@ msgstr "发起付款失败：%s"
 #. odoo-javascript
 #: code:addons/pos_mollie/static/src/payment_mollie.js:0
 msgid "Failed to initiate refund: %s"
-msgstr ""
+msgstr "退款发起失败：%s"
 
 #. module: pos_mollie
 #: model:ir.model.fields,field_description:pos_mollie.field_pos_payment_method__id
@@ -44,7 +44,7 @@ msgstr "ID"
 #. module: pos_mollie
 #: model_terms:ir.ui.view,arch_db:pos_mollie.pos_payment_method_view_form_inherit_pos_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: pos_mollie
 #. odoo-javascript
@@ -55,12 +55,12 @@ msgstr "Mollie 错误"
 #. module: pos_mollie
 #: model:ir.model.fields,field_description:pos_mollie.field_pos_payment_method__mollie_payment_provider_id
 msgid "Mollie Payment Provider"
-msgstr ""
+msgstr "Mollie 付款服务商"
 
 #. module: pos_mollie
 #: model:ir.model.fields,field_description:pos_mollie.field_pos_payment_method__mollie_terminal_id
 msgid "Mollie Terminal ID"
-msgstr ""
+msgstr "Mollie 终端 ID"
 
 #. module: pos_mollie
 #. odoo-python
@@ -68,18 +68,18 @@ msgstr ""
 msgid ""
 "Please set the API key on the Mollie payment provider before making a "
 "payment."
-msgstr ""
+msgstr "请在进行支付前，先在 Mollie 支付服务商处设置 API 密钥。"
 
 #. module: pos_mollie
 #: model:ir.model,name:pos_mollie.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "POS 销售点付款方式"
 
 #. module: pos_mollie
 #. odoo-javascript
 #: code:addons/pos_mollie/static/src/payment_mollie.js:0
 msgid "The payment failed for an unknown reason."
-msgstr ""
+msgstr "付款失败，原因未明。"
 
 #. module: pos_mollie
 #. odoo-javascript
@@ -91,4 +91,4 @@ msgstr "付款已超时。"
 #. odoo-javascript
 #: code:addons/pos_mollie/static/src/payment_mollie.js:0
 msgid "You can only refund an order that was paid for with Mollie."
-msgstr ""
+msgstr "仅限通过 Mollie 支付的订单，才可申请退款。"

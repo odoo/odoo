@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-07 11:40+0000\n"
+"PO-Revision-Date: 2026-06-20 14:03+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/mrp/de/"
 ">\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -294,6 +294,7 @@ msgstr "<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Frist\"/>"
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o me-1 my-auto\" title=\"geplantes Startdatum\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
@@ -307,7 +308,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-hourglass-half me-1\" title=\"Restzeit\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
@@ -585,7 +586,7 @@ msgstr "<span>ARBEITSAUFTRÄGE</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>Tage</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1811,6 +1812,8 @@ msgstr "Bestätigt"
 msgid ""
 "Conflict: this work order overlaps with another one on the same work center"
 msgstr ""
+"Konflikt: Dieser Arbeitsauftrag überschneidet sich mit einem anderen am "
+"selben Arbeitsplatz"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4513,7 +4516,7 @@ msgstr "Planen"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
 msgid "Plan MO"
-msgstr ""
+msgstr "Fertigungsauftrag planen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -4560,6 +4563,7 @@ msgstr "Planungsprobleme"
 #: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
 msgid "Planning issue: this work order is scheduled before a dependency"
 msgstr ""
+"Planungsproblem: Dieser Arbeitsauftrag ist vor einer Abhängigkeit eingeplant"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
@@ -4741,7 +4745,7 @@ msgstr "Produziert"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Produced Quantity"
-msgstr ""
+msgstr "Produzierte Menge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
@@ -5234,7 +5238,7 @@ msgstr "Verbleibende Tage"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Remaining Time"
-msgstr ""
+msgstr "Verbleibende Zeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
@@ -5713,7 +5717,7 @@ msgstr "Startdatum"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Start date"
-msgstr ""
+msgstr "Startdatum"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -6449,7 +6453,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_production_kanban/mrp_production_kanban_header.js:0
 msgid "Total Remaining Time"
-msgstr ""
+msgstr "Verbleibende Gesamtzeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count

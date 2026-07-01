@@ -7,14 +7,15 @@
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-01-16 05:48+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-s19-1/sale/"
+"PO-Revision-Date: 2026-06-13 12:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "bs/>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +23,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
+#, fuzzy
 msgid ""
 "\n"
 "            If your customer runs on Odoo 18 or higher, customer data and "
@@ -37,11 +39,19 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            Ako vaš kupac koristi Odoo 18 ili noviji, podaci o kupcu i "
+"stavke prodajnih narudžbi\n"
+"            bit će automatski kreirani. Bilo koji drugi PDF koji sadrži "
+"priloženu\n"
+"            UBL-RequestForQuotation fajl također će funkcionirati.\n"
+"        "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
+#, fuzzy
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# prodajnih naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -50,8 +60,9 @@ msgstr "# Linija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
+#, fuzzy
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# prodajnih naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
@@ -61,14 +72,16 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, fuzzy
 msgid "%s has been created"
-msgstr ""
+msgstr "%s je kreiran"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -82,24 +95,31 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
+#, fuzzy
 msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+", 100% je besplatno! Uštedjet ćete vrijeme izradom prekrasnih ponuda i "
+"praćenjem prodaje."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>Pošalji ponudu</b> sebi i provjeri što će kupac dobiti."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -701,8 +721,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Kontaktirajte nas za novu ponudu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -711,51 +732,63 @@ msgstr "<i class=\"fa fa-comment\"/> Utisak"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizirano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Plaćeno"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Vraćeno"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Isteklo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Čeka na plaćanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Ponude\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Otkazano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Zaključano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>Pogledaj detalje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -764,39 +797,50 @@ msgstr "<i class=\"fa fa-times\"/> Odbi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Vaš kontakt</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Vaša prednost</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Prodajni nalog #</span>\n"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"This "
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"Ovaj "
+"proizvod je arhiviran\" invisible=\"state not in ['draft', 'sent'] or not "
+"is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
+#, fuzzy
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ Mjes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Prodano</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -809,82 +853,101 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr ""
+msgstr "<span id=\"o_sale_portal_use_amount_total\">Plaćanjem,</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>1.00 Units</span>"
-msgstr ""
+msgstr "<span>1.00 Jedinica</span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
+#, fuzzy
 msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your "
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>Čestitamo</b>, vaša prva ponuda je poslana!<br>Provjerite svoj e-"
+"mail kako biste potvrdili ponudu.\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Iznos</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Pop.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
+#, fuzzy
 msgid "<span>Sales visibility</span>"
-msgstr ""
+msgstr "<span>Vidljivost prodaje</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Porezi</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "<span>Warning: This quote contains archived product(s)</span>"
-msgstr ""
+msgstr "<span>Upozorenje: Ova ponuda sadrži arhivirane proizvod(e)</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Upozorenje: ova narudžba bi mogla biti duplikat od</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Adresa isporuke</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Kontakt</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>Datum isporuke</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Istek</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -893,75 +956,96 @@ msgstr "<strong>Zabilješka fiskalne pozicije:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Inkoterm</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Potpis</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Hvala!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Ova ponuda je istekla!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Ova ponuda je otkazana.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Vaša referenca</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
+#, fuzzy
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Potvrđeni prodajni nalog zahtijeva datum potvrde."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Kombinirana stavka stavke prodajnog naloga mora biti među dostupnim "
+"kombiniranim stavkama povezanog stavke."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Proizvod stavke prodajnog naloga mora odgovarati proizvodu njegove "
+"kombinirane stavke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "A section title"
-msgstr ""
+msgstr "Naslov sekcije"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
+#, fuzzy
 msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"Standardni račun izdaje se sa svim narudžbama spremnim za fakturiranje, u "
+"skladu s njihovom politikom fakturiranja (na temelju naručene ili isporučene "
+"količine)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Uskladištivi proizvod je proizvod kojem se prati stanje u skladištu."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -970,18 +1054,21 @@ msgstr "Upozorenje se može postaviti na proizvod ili kupca (Prodaja)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Prihvati &amp; Plati"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Prihvati &amp; Potpiši"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
+#, fuzzy
 msgid "Access warning"
-msgstr ""
+msgstr "Upozorenje pristupa"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -999,8 +1086,9 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry_sale_order_line
+#, fuzzy
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Unos obračunatih prihoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1015,19 +1103,22 @@ msgstr "Aktivnosti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Aktivnosti od"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Oznaka izuzetka aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_plans_ids
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planovi aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1036,8 +1127,9 @@ msgstr "Status aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
+#, fuzzy
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -1047,16 +1139,22 @@ msgstr "Tipovi aktivnosti"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
+#, fuzzy
 msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
 "up\", ...)"
 msgstr ""
+"Planovi aktivnosti koriste se za dodjeljivanje popisa aktivnosti u samo "
+"nekoliko klikova\n"
+"               npr. \"Raspored dostave\", \"Praćenje plaćanja "
+"narudžbe\", ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "Activity type"
-msgstr ""
+msgstr "Tip aktivnosti"
 
 #. module: sale
 #. odoo-javascript
@@ -1082,30 +1180,35 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#, fuzzy
 msgid "Add one"
-msgstr ""
+msgstr "Dodaj jedan"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
+#, fuzzy
 msgid "Add optional products"
-msgstr ""
+msgstr "Dodajte opcionalne proizvode"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Dodajte nekoliko varijanti za narudžbu iz tablice"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Add to order"
-msgstr ""
+msgstr "Dodaj narudžbi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
+#, fuzzy
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Dodaj/Ukloni Pratitelje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__allow_invoice_overages
@@ -1114,8 +1217,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Dozvoljene JM"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1129,6 +1233,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
+#, fuzzy
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
 "Leave it empty if you don't want to share this document with sales "
@@ -1143,63 +1248,86 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation and "
 "sale order between the header pages and the quote table. "
 msgstr ""
+"Omogućuje vam dijeljenje dokumenta s vašim kupcima unutar prodaje.\n"
+"Ostavite prazno ako ne želite dijeliti ovaj dokument s prodajnim kupcem.\n"
+"Na ponudu: dokument će biti poslan kupcima i bit će im dostupan u bilo kojem "
+"trenutku.\n"
+"npr. ova opcija može biti korisna za dijeljenje fajl s opisom proizvoda.\n"
+"Na potvrdi narudžbe: dokument će biti poslan kupcima i bit će im dostupan.\n"
+"npr. ova opcija može biti korisna za dijeljenje korisničkog priručnika ili "
+"digitalnog sadržaja kupljenog u e-trgovini.\n"
+"Unutar ponude: Dokument će biti uključen u PDF ponude i narudžbenice između "
+"zaglavlja stranica i tablice ponude. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
+#, fuzzy
 msgid "Already Paid"
-msgstr ""
+msgstr "Već plaćeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
+#, fuzzy
 msgid "Already invoiced"
-msgstr ""
+msgstr "Već fakturisano"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
+#, fuzzy
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon sinhronizacija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Amount paid:"
-msgstr ""
+msgstr "Plaćeni iznos:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "Amount:"
-msgstr ""
+msgstr "Iznos:"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
+"Narudžba se odnosi na dodatnu prodaju kada su isporučene količine veće od "
+"početno naručenih\n"
+" količina, a politika fakturiranja temelji se na naručenim količinama."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitički konto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
+#, fuzzy
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analitička raspodjela"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
+#, fuzzy
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analitika iz rashoda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1208,13 +1336,15 @@ msgstr "Analitička stavka"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
+#, fuzzy
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Primjenjivost analitičkog plana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
+#, fuzzy
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Preciznost analitike"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1223,34 +1353,46 @@ msgstr "Retci analitike"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
+#, fuzzy
 msgid "Apply"
-msgstr ""
+msgstr "Primjeni"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Primijenite ručne popuste stavke prodajnog naloga ili prikažite popuste "
+"izračunate iz cjenika (opcija za aktiviranje u konfiguraciji cjenika)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Jeste li sigurni da želite otkazati odabranu stavku?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Jeste li sigurni da želite poništiti autoriziranu transakciju? Ova radnja ne "
+"može se poništiti."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Na primjer, ako prodajete unaprijed plaćene sate usluga, Odoo vam "
+"preporučuje \n"
+"da prodate dodatne sate kada se potroše svi naručeni sati."
 
 #. module: sale
 #. odoo-python
@@ -1278,8 +1420,9 @@ msgstr "Broj zakački"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
+#, fuzzy
 msgid "Attribute Values"
-msgstr ""
+msgstr "Vrijednost atributa"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
@@ -1289,8 +1432,9 @@ msgstr "Atributi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
+#, fuzzy
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Autorizirane transakcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_automatic_invoice
@@ -1301,40 +1445,47 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Availability"
-msgstr ""
+msgstr "Raspoloživost"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Available"
-msgstr ""
+msgstr "Raspoloživo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Average"
-msgstr ""
+msgstr "Prosjek"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Burger sa slaninom"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
+#, fuzzy
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Na osnovu ID-a kupca"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
+#, fuzzy
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Na osnovu reference dokumenta"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
+#, fuzzy
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "Pobijedite konkurenciju zapanjujućim ponudama!"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__delivery_status
@@ -1347,53 +1498,67 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
+#, fuzzy
 msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
+"Povećajte prodaju online plaćanjima ili potpisima, dodatnim ponudama i "
+"izvrsnim portalom za korisnike."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift "
 "Card, Loyalty. Specific conditions can be set (products, customers, minimum "
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Povećajte prodaju s više vrsta programa: kuponi, promocije, poklon kartice, "
+"programi vjernosti. Mogu se postaviti specifični uvjeti (proizvodi, kupci, "
+"minimalni iznos kupnje, period). Nagrade mogu biti popusti (% ili iznos) ili "
+"besplatni proizvodi."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Build your first quotation right here!"
-msgstr ""
+msgstr "Kreirajte svoju prvu ponudu upravo ovdje!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "Uplatom <u>pologa</u> od"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "By paying,"
-msgstr ""
+msgstr "Plaćanjem,"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
+#, fuzzy
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "Potpisivanjem potvrđujete prihvaćanje u ime"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,field_description:sale.field_account_move__campaign_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__campaign_id
+#, fuzzy
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
+#, fuzzy
 msgid "Can Edit Product"
-msgstr ""
+msgstr "Može uređivati proizvod"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
@@ -1409,13 +1574,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
+#, fuzzy
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Otkaži više ponuda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Otkaži ponude"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1439,6 +1606,7 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Cannot create an invoice. No items are available to invoice.\n"
 "\n"
@@ -1453,6 +1621,18 @@ msgid ""
 "   • For services (and other products), change the 'Invoicing Policy' to "
 "'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Nije moguće izraditi račun. Nema dostupnih stavki za fakturiranje.\n"
+"\n"
+"Da biste riješili ovaj problem, provjerite sljedeće:\n"
+"• Jesu li proizvodi isporučeni prije nego što pokušate fakturirati ih.\n"
+"• Pravila fakturiranja proizvoda su ispravno konfigurirana.\n"
+"\n"
+"Ako želite fakturirati na temelju naručenih količina:\n"
+"• Za potrošne ili skladišne proizvode otvorite proizvod, idite na karticu "
+"'Opće informacije' i promijenite 'Pravila fakturiranja' iz 'Isporučene "
+"količine' u 'Naručene količine'.\n"
+"• Za usluge (i ostale proizvode) promijenite 'Pravila fakturiranja' u "
+"'Unaprijed plaćena/fiksna cijena'.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1461,50 +1641,62 @@ msgstr "Uhvati transakciju"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Catalog"
-msgstr ""
+msgstr "Katalog"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "Kategorije"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
+#, fuzzy
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Zaštita poda ispod stolice"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Changing the company of an existing quotation might need some manual "
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Promjena kompanije u postojećoj ponudi može zahtijevati neke ručne "
+"prilagodbe u detaljima stavkaa. Možda biste trebali razmisliti o ažuriranju "
+"cijena."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
+"Kliknite ovdje da biste dodali neke proizvode ili usluge u svoju ponudu."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
+#, fuzzy
 msgid "Click to configure"
-msgstr ""
+msgstr "Kliknite za konfiguraciju"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Kliknite da biste definirali cilj fakturisanja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1525,34 +1717,40 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
+#, fuzzy
 msgid "Collapse Composition"
-msgstr ""
+msgstr "Sažmi sastav"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_prices
+#, fuzzy
 msgid "Collapse Prices"
-msgstr ""
+msgstr "Sažmi cijene"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
+#, fuzzy
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombinirani izbori"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
+#, fuzzy
 msgid "Combo Item"
-msgstr ""
+msgstr "Kombinovana stavka"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Combo Product"
-msgstr ""
+msgstr "Kombinovani proizvod"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
+#, fuzzy
 msgid "Commissions"
-msgstr ""
+msgstr "Provizije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1573,13 +1771,15 @@ msgstr "Kompanija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
+#, fuzzy
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Izgled dokumenata kompanije"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -1588,26 +1788,32 @@ msgstr "Konfiguracija"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguriši"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Konfigurirajte načine isporuke"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Konfigurirajte načine dostave ili surađujte s pružateljima usluga dostave "
+"koristeći postojeće integracije."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
+#, fuzzy
 msgid "Configure your product"
-msgstr ""
+msgstr "Konfigurirajte svoj proizvod"
 
 #. module: sale
 #. odoo-javascript
@@ -1628,8 +1834,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
+#, fuzzy
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Poruka potvrde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1643,23 +1850,27 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Connect with your software!"
-msgstr ""
+msgstr "Povežite se sa svojim softverom!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Connect your software"
-msgstr ""
+msgstr "Povežite svoj softver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connectors"
-msgstr ""
+msgstr "Konektori"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
+#, fuzzy
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Konsolidovana naplata"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_currency_id
@@ -1673,34 +1884,40 @@ msgstr "Kontakt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Copy"
-msgstr ""
+msgstr "Kopiraj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
+#, fuzzy
 msgid "Country code"
-msgstr ""
+msgstr "Šifra države"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
+#, fuzzy
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kuponi i Vjernost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Create Date"
-msgstr ""
+msgstr "Kreiraj datum"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "Create Draft"
-msgstr ""
+msgstr "Kreiraj nacrt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Create Invoice"
-msgstr ""
+msgstr "Kreriaj Fakturu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -1709,18 +1926,21 @@ msgstr "Napravi fakture"
 
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Kreirajte klijenta"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
+#, fuzzy
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Kreiraj plan aktivnosti prodajnog naloga"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
+#, fuzzy
 msgid "Create a customer invoice"
-msgstr ""
+msgstr "Kreiraj izlaznu fakturu"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1732,32 +1952,40 @@ msgstr "Kreirajte novi proizvod"
 #: model_terms:ir.actions.act_window,help:sale.action_orders
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#, fuzzy
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Kreirajte novu ponudu, prvi korak nove prodaje!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#, fuzzy
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Kreiraj fakturu(e)"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
+#, fuzzy
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
+"Kreirajte račune, registirajte plaćanja i pratite rasprave sa svjim kupcima."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
+#, fuzzy
 msgid "Create on Order"
-msgstr ""
+msgstr "Kreiraj na osnovu narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
+#, fuzzy
 msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"Izradite jednu fakturu za sve narudžbe koje se odnose na istog kupca, istu "
+"adresu za fakturiranje i istu adresu za dostavu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1784,10 +2012,13 @@ msgstr "Datum kreiranja"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__date_order
+#, fuzzy
 msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Datum izrade nacrta/poslanih naloga,\n"
+"datum potvrde potvrđenih narudžbi."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1807,8 +2038,9 @@ msgstr "Kursna lista"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
+#, fuzzy
 msgid "Custom Values"
-msgstr ""
+msgstr "Prilagođene vrijednosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1822,19 +2054,22 @@ msgstr "Kupac"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Customer Country"
-msgstr ""
+msgstr "Država kupca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
+#, fuzzy
 msgid "Customer Entity"
-msgstr ""
+msgstr "Entitet kupca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Customer Industry"
-msgstr ""
+msgstr "Industrija kupca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__order_id
@@ -1844,8 +2079,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
+#, fuzzy
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL portala za kupce"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1854,8 +2090,9 @@ msgstr "Referenca kupca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
+#, fuzzy
 msgid "Customer State"
-msgstr ""
+msgstr "Savezna država kupca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_tag_ids
@@ -1865,8 +2102,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
+#, fuzzy
 msgid "Customer ZIP"
-msgstr ""
+msgstr "Poštanski broj kupca"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1890,53 +2128,66 @@ msgstr "Datum:"
 #: model:ir.model.fields,help:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,help:sale.field_res_config_settings__quotation_validity_days
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Dani između ponude i isteka. 0 dana znači da je automatski istek onemogućen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
+#, fuzzy
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Odbij avanse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
+#, fuzzy
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Zadano važenje ponude"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_price_include
+#, fuzzy
 msgid "Default Sales Price Include"
-msgstr ""
+msgstr "Zadana prodajna cijena uključuje"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__company_price_include
 #: model:ir.model.fields,help:sale.field_sale_order_line__company_price_include
+#, fuzzy
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
+"Zadana vrijednost ovisno o tome uključuje li prodajna cijena korištena za "
+"proizvod i fakture ove kompanije poreze."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Zadano period tijekom kojeg je ponuda važeća i kupac je još uvijek može "
+"prihvatiti. Zadano period može se promijeniti po narudžbi ili predlošku."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
+#, fuzzy
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Zadani proizvod za popuste"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Delete"
-msgstr ""
+msgstr "Obriši"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_deliver_sold_quantity
@@ -1946,14 +2197,16 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Delivered"
-msgstr ""
+msgstr "Dostavljeno"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Isporučena količina: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1972,23 +2225,27 @@ msgstr "Adresa dostave"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__scheduled_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Delivery Date"
-msgstr ""
+msgstr "Datum dostave"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Delivery Date:"
-msgstr ""
+msgstr "Datum isporuke:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
+#, fuzzy
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Načini isporuke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
+#, fuzzy
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Količina isporuke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
@@ -2003,20 +2260,28 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
+#, fuzzy
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Datum isporuke koji možete obećati kupcu, računajući se od minimalnog "
+"vremena isporuke linija za narudžbu u slučaju proizvoda usluge. U slučaju "
+"dostave, uzeće se u obzir politika otpreme narudžbe kako bi se koristilo "
+"minimalno ili maksimalno vrijeme isporuke linija narudžbe."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
+#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Vrijeme isporuke, u danima. To je broj dana, obećanih kupcu, između potvrde "
+"prodajnog naloga i dostave."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2034,16 +2299,18 @@ msgstr "Opis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Disc.%"
-msgstr ""
+msgstr "Pop.%"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Odbaci"
 
 #. module: sale
 #. odoo-python
@@ -2051,25 +2318,29 @@ msgstr ""
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discount"
-msgstr ""
+msgstr "Popust"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
+#, fuzzy
 msgid "Discount %"
-msgstr ""
+msgstr "Popust %"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "Popust %(percent)s%%"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Popust %(percent)s%%- Na proizvode sa sljedećim porezima %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2078,50 +2349,59 @@ msgstr "Popust (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
+#, fuzzy
 msgid "Discount Amount"
-msgstr ""
+msgstr "Iznos popusta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
+#, fuzzy
 msgid "Discount Product"
-msgstr ""
+msgstr "Proizvod popusta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
+#, fuzzy
 msgid "Discount Type"
-msgstr ""
+msgstr "Vrsta popusta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
+#, fuzzy
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Čarobnjak popusta"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
+#, fuzzy
 msgid "Discount on lines"
-msgstr ""
+msgstr "Popust na stavkama"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Popust - Na proizvode sa sljedećim porezima %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discount:"
-msgstr ""
+msgstr "Popust:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Discounts"
-msgstr ""
+msgstr "Popusti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
+#, fuzzy
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Prikaži upozorenje nacrta fakture"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
@@ -2168,13 +2448,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
+#, fuzzy
 msgid "Display Type"
-msgstr ""
+msgstr "Display Type"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+#, fuzzy
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Analitički konto distribucije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__document_tax_mode
@@ -2184,13 +2466,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
+#, fuzzy
 msgid "Domain"
-msgstr ""
+msgstr "Domen"
 
 #. module: sale
 #. odoo-python
@@ -2203,37 +2487,43 @@ msgstr "Predujam"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Avans (otkazan)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "Polog (ref: %(reference)s na %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
+#, fuzzy
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Iznos avansa (fiksni)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Polog: %(date)s (Nacrt)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Down Payments"
-msgstr ""
+msgstr "Avansi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Down payment"
-msgstr ""
+msgstr "Avans"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -2247,8 +2537,9 @@ msgstr "Predujam (procenat)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
+#, fuzzy
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Polog <br/>"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
@@ -2258,8 +2549,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, fuzzy
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Avansna faktura"
 
 #. module: sale
 #. odoo-python
@@ -2269,10 +2561,13 @@ msgstr "Predujam za %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
+#, fuzzy
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Polog se vrši prilikom izrade računa iz prodajnog naloga. Ne kopiraju se "
+"prilikom kopiranja prodajnog naloga."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2282,48 +2577,58 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
+#, fuzzy
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Konto avansa"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Fakture u pripremi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"Povucite i ispustite PDF fajl zahtjeva za ponudu na svoj popis ponuda u Odoo-"
+"u. Uživajte u automatizaciji!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Duplicirani dokumenti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
+#, fuzzy
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Duplicirana narudžba"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_mixin.js:0
+#, fuzzy
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Uredi konfiguraciju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
+#, fuzzy
 msgid "Email Template"
-msgstr ""
+msgstr "Predložak email-a"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
+#, fuzzy
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "E-pošta poslana kupcu nakon što račun bude dostupan."
 
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
@@ -2333,8 +2638,9 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
+#, fuzzy
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Unesite prilagođenu vrijednost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2353,23 +2659,27 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
+#, fuzzy
 msgid "Expiration"
-msgstr ""
+msgstr "Istječe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Datum isteka:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "Istekao"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
+#, fuzzy
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "Dodatni porezni podaci"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__extra_total_fields
@@ -2378,19 +2688,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
+#, fuzzy
 msgid "Extra Values"
-msgstr ""
+msgstr "Dodatne vrijednosti"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Extra line with %s"
-msgstr ""
+msgstr "Dodatni stavka s %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "Finansijski konto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2399,21 +2712,26 @@ msgstr "Fiskalna pozicija"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Fiskalne pozicije se koriste za prilagođavanje poreza i računa za određene "
+"kupce ili prodajne naloge/fakture. Zadana vrijednost dolazi od kupca."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
+#, fuzzy
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Fiksni iznos"
 
 #. module: sale
 #: model:portal.entry,description:sale.portal_your_orders
+#, fuzzy
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Pratite, pregledajte ili platite svoje narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2427,8 +2745,9 @@ msgstr "Pratioci (Partneri)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+#, fuzzy
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2439,27 +2758,35 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
+#, fuzzy
 msgid "Forbidden values on non-accountable sale order line"
 msgstr ""
+"Zabranjene vrijednosti na stavci prodajnog naloga koja nije računovodstvena"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Predviđena zaliha"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
+#, fuzzy
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Iz ovog izvještaja imate pregled iznosa izdanih računa vašem kupcu. Alat "
+"pretrage može se također koristiti za personalizaciju vaših ispisa računa i "
+"priagođavanje analize vašim potrebama."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
+#, fuzzy
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Puni iznos <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
@@ -2482,52 +2809,63 @@ msgstr "Buduće aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_gelato
+#, fuzzy
 msgid "Gelato"
-msgstr ""
+msgstr "Sladoled"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
+#, fuzzy
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generiši link za plaćanje prodaje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "Automatski generirajte račun kada je mrežno plaćanje potvrđeno"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Generated Orders"
-msgstr ""
+msgstr "Generirane narudžbe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Primajte upozorenja u narudžbama za proizvode ili kupce"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
+#, fuzzy
 msgid "Global Discount"
-msgstr ""
+msgstr "Globalni popust"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Samo naprijed i pošaljite ponudu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
+#, fuzzy
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Roba su opipljivi materijali i roba koju pružate.\n"
+"Usluga je nematerijalni proizvod koji pružate."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Odobri popuste na stavkama prodajnog naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2536,28 +2874,33 @@ msgstr "Bruto težina"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
+#, fuzzy
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Ima aktivni cjenik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
+#, fuzzy
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Ima arhivirane proizvode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
+#, fuzzy
 msgid "Has Authorized Transactions"
-msgstr ""
+msgstr "Ima autorizirane transakcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
+#, fuzzy
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Ima potvrđenu narudžbu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
+#, fuzzy
 msgid "Has Message"
-msgstr ""
+msgstr "Ima poruku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_overages
@@ -2566,18 +2909,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
+#, fuzzy
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Je li promijenjen cjenik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
+#, fuzzy
 msgid "Has down payments"
-msgstr ""
+msgstr "Ima avans"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
+#, fuzzy
 msgid "Hidden"
-msgstr ""
+msgstr "Skriveno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
@@ -2612,13 +2958,15 @@ msgstr "ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_icon
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "Znak"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
+#, fuzzy
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz aktivnosti izuzetka."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -2628,8 +2976,9 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
+#, fuzzy
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__invoicing_closed
@@ -2638,50 +2987,62 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
+#, fuzzy
 msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Ako je postavljeno, prodajna narudžba će fakturirati u ovom dnevniku; inače "
+"se koristi prodajni dnevnik s najnižom sekvencom."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Ako je prodaja zaključena, više se ne može mijenjati. Međutim, još uvijek "
+"možete izdati račun ili isporučiti robu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
+#, fuzzy
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "Ako promijenite cjenik, to će utjecati samo na novo dodane stavke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Immediate"
-msgstr ""
+msgstr "Odmah"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Uvezi Amazon narudžbe i sinhroniziraj isporuke"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "Uvezi Shopee narudžbe i sinhroniziraj isporuke"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Predložak za uvoz proizvoda"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
+#, fuzzy
 msgid "Import a request for quotation from a customer"
-msgstr ""
+msgstr "Uvezi zahtjev za ponudu od kupca"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2692,28 +3053,32 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
+#, fuzzy
 msgid "In the Order"
-msgstr ""
+msgstr "U narudžbi"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Included"
-msgstr ""
+msgstr "Uključeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
+#, fuzzy
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
+#, fuzzy
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Incoterm lokacija"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2724,41 +3089,50 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
+#, fuzzy
 msgid "Internal warning for the partner or the products as set by the user."
 msgstr ""
+"Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,help:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,help:sale.field_sale_order__incoterm
+#, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Internacionalni komercijalni uslovi su niz predefiniranih komercijalnih "
+"uslova koji se koriste za inostrane transakcije."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Nevažeći iznos popusta"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Invalid order."
-msgstr ""
+msgstr "Neispravna narudžba."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Invalid signature data."
-msgstr ""
+msgstr "Nevažeći podaci potpisa."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: sale
 #. odoo-python
@@ -2773,8 +3147,9 @@ msgstr "Adresa fakture (kupca)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
+#, fuzzy
 msgid "Invoice Count"
-msgstr ""
+msgstr "Broj računa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2789,13 +3164,15 @@ msgstr ""
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
+#, fuzzy
 msgid "Invoice Paid"
-msgstr ""
+msgstr "Plaćena faktura"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
+#, fuzzy
 msgid "Invoice Posted"
-msgstr ""
+msgstr "Faktura proknjižena"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -2812,8 +3189,9 @@ msgstr "Status fakture"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
+msgstr "Račun nakon isporuke, na temelju isporučenih količina, a ne naručenih."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
@@ -2823,16 +3201,21 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Fakturirajte naručene količine čim se ova usluga proda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
+#, fuzzy
 msgid ""
 "Invoice revenue for the current month. This is the amount the sales channel "
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Prihod od fakture za trenutni mjesec. Ovo je iznos koji je prodajni kanal "
+"fakturirao ovog mjeseca. Koristi se za izračunavanje omjera progresije "
+"trenutnog i ciljanog prihoda pomoću kanban prikaza."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
@@ -2842,8 +3225,9 @@ msgstr "Fakturisano"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_invoiced
+#, fuzzy
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Fakturirani iznos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -2852,14 +3236,16 @@ msgstr "Fakturisana količina"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
+#, fuzzy
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "Fakturirana količina (proknjižena)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "Zaračunata količina: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2893,8 +3279,9 @@ msgstr "Fakturisanje"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Adresa za fakturiranje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2907,14 +3294,16 @@ msgstr "Pravilo fakturisanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
+#, fuzzy
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Cilj fakturisanja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Adresa za fakturiranje i dostavu"
 
 #. module: sale
 #. odoo-python
@@ -2930,13 +3319,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
+#, fuzzy
 msgid "Is Downpayment"
-msgstr ""
+msgstr "Je avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
+#, fuzzy
 msgid "Is Expired"
-msgstr ""
+msgstr "Isteklo je"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2945,8 +3336,9 @@ msgstr "Je pratilac"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
+#, fuzzy
 msgid "Is Product Archived"
-msgstr ""
+msgstr "Je proizvod arhiviran"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__mandatory_product
@@ -2955,36 +3347,45 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
+#, fuzzy
 msgid "Is a down payment"
-msgstr ""
+msgstr "Je avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
+#, fuzzy
 msgid "Is expense"
-msgstr ""
+msgstr "Je li trošak"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_configurable_product
+#, fuzzy
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Da li se proizvod može konfigurirati?"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
+#, fuzzy
 msgid "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Istina je ako stavka prodajnog naloga dolazi iz računa ili računa dobavljača"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Issued Date"
-msgstr ""
+msgstr "Datum izdavanja"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Zabranjeno je mijenjati sljedeća polja zaključanim redoslijedom:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
@@ -2993,18 +3394,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "Dnevnički zapis"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Stavka dnevnika"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Last Invoices"
-msgstr ""
+msgstr "Posljednje fakture"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3031,34 +3435,40 @@ msgstr "Aktivnosti u kašnjenju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
+#, fuzzy
 msgid "Lead Time"
-msgstr ""
+msgstr "Vrijeme vođenja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "Omogućite kupcima da se prijave i vide svoje dokumente"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "Kreirajmo prekrasnu ponudu u nekoliko klikova."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
+#, fuzzy
 msgid "Linked Order Line"
-msgstr ""
+msgstr "Povezana stavka narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
+#, fuzzy
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "Povezane stavke narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
+#, fuzzy
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Virtualno povezano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3068,8 +3478,9 @@ msgstr "Zaključaj"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
+#, fuzzy
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Zaključajte potvrđene prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
@@ -3078,25 +3489,33 @@ msgstr "Zaključano"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
+#, fuzzy
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Zaključane narudžbe se ne mogu mijenjati."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Učinite svoju ponudu privlačnom dodavanjem zaglavlja, opisa proizvoda i "
+"podnožja."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Upravljajte promocijama, kuponima, karticama vjernosti, poklon karticama i e-"
+"novčanikom"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Upravljajte ciljevima prodaje i timova te provizijama"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_order_mandatory_product
@@ -3110,8 +3529,9 @@ msgstr "Ručno"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
+#, fuzzy
 msgid "Manual Payment"
-msgstr ""
+msgstr "Ručno plaćanje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoicing_closed
@@ -3126,6 +3546,7 @@ msgstr "Ručno postavi količine na narudžbu"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
+#, fuzzy
 msgid ""
 "Manually set quantities on order: Invoice based on the manually entered "
 "quantity, without creating an analytic account.\n"
@@ -3134,6 +3555,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"Ručno postavljanje količina po narudžbi: Račun na temelju ručno unesene "
+"količine, bez stvaranja analitičkog konta.\n"
+"Vremenski listovi po ugovoru: Račun na temelju praćenih sati na "
+"odgovarajućem vremenskom listu.\n"
+"Stvorite zadatak i pratite radno vrijeme: Stvorite zadatak na provjeri "
+"važenjei prodajnog naloga i pratite radno vrijeme."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -3147,8 +3574,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_marketplaces
@@ -3160,13 +3588,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_account_move__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
+#, fuzzy
 msgid "Medium"
-msgstr ""
+msgstr "Medijum"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
+#, fuzzy
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -3181,45 +3611,53 @@ msgstr "Poruke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
+#, fuzzy
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metoda ažuriranja isporučene količine"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
+#, fuzzy
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Nedostaju obavezna polja na odgovarajućim stavkama prodajnog naloga."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Move Down"
-msgstr ""
+msgstr "Pomakni prema dolje"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#, fuzzy
 msgid "Move Up"
-msgstr ""
+msgstr "Pomakni prema gore"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "My"
-msgstr ""
+msgstr "Moj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
+#, fuzzy
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Rok za moju aktivnost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3228,8 +3666,9 @@ msgstr "Moje narudžbe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "My Quotations"
-msgstr ""
+msgstr "Moje ponude"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -3249,8 +3688,9 @@ msgstr "Novi predračun"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+#, fuzzy
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Događaj sljedećeg kalendara aktivnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -3275,28 +3715,33 @@ msgstr "Ne"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Nije dostavljen prilog"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Nema dodatnih zahtjeva za ovo plaćanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Nakon potvrde više se narudžbe ne mogu uređivati"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Nisu pronađene narudžbe za fakturisanje"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
+#, fuzzy
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nisu pronađene narudžbe za nadogradnju."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3310,8 +3755,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Not using Odoo?"
-msgstr ""
+msgstr "Ne koristite Odoo?"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -3329,8 +3775,9 @@ msgstr "Nema ništa za fakturisanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Number"
-msgstr ""
+msgstr "Broj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction_counter
@@ -3346,49 +3793,58 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
+#, fuzzy
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju radnju"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
+#, fuzzy
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
+#, fuzzy
 msgid "Office chairs can harm your floor: protect it"
-msgstr ""
+msgstr "Kancelarijske stolice mogu oštetiti vaš pod: zaštitite ga"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "Uključeno"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
+#, fuzzy
 msgid "On All Order Lines"
-msgstr ""
+msgstr "Na svim stavkama narudžbe"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
+#, fuzzy
 msgid "On confirmed order"
-msgstr ""
+msgstr "Na potvrđenoj narudžbi"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__quotation
+#, fuzzy
 msgid "On quote"
-msgstr ""
+msgstr "Na ponudi"
 
 #. module: sale
 #. odoo-python
@@ -3403,17 +3859,23 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#, fuzzy
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Nakon što kupac potvrdi ponudu, ona postaje prodajni nalog.<br> Moći ćete "
+"stvoriti račun i prikupiti uplatu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
+#, fuzzy
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Jednom kada se polog potvrdi, postaje prodajni nalog.<br> Moći ćete stvoriti "
+"račun i prikupiti uplatu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3424,55 +3886,68 @@ msgstr "Online plaćanje"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#, fuzzy
 msgid "Online Signature"
-msgstr ""
+msgstr "Online potpis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
+#, fuzzy
 msgid "Online payment"
-msgstr ""
+msgstr "Online plaćanje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
+#, fuzzy
 msgid "Online signature"
-msgstr ""
+msgstr "Online potpis"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
+#, fuzzy
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Uzimaju se u obzir samo potvrđeni avansi."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "Samo nacrti naloga mogu biti direktno označeni kao poslani."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
+#, fuzzy
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Dopuštena je samo jedna prilagođena vrijednost po vrijednosti atributa po "
+"stavci prodajnog naloga."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Option for: %s"
-msgstr ""
+msgstr "Opcija za: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
+#, fuzzy
 msgid "Optional Products"
-msgstr ""
+msgstr "Opcionalni proizvodi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale.field_product_template__optional_product_ids
+#, fuzzy
 msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Dodatni proizvodi predlažu se kad god kupac klikne na *Dodaj u košaricu* "
+"(strategija unakrsne prodaje, npr. za računala: jamstvo, softver itd.)."
 
 #. module: sale
 #. odoo-python
@@ -3490,8 +3965,9 @@ msgstr "Narudžba #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
+#, fuzzy
 msgid "Order Count"
-msgstr ""
+msgstr "Broj narudžbi"
 
 #. module: sale
 #. odoo-python
@@ -3509,18 +3985,21 @@ msgstr "Datum narudžbe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Order Date:"
-msgstr ""
+msgstr "Datum narudžbe:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Datum naloga: Posljednjih 365 dana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
+#, fuzzy
 msgid "Order Invoice Status"
-msgstr ""
+msgstr "Status fakture narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__line_name
@@ -3548,22 +4027,27 @@ msgstr "Status narudžbe"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Narudžbu potpisao %s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Naručena količina: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
+#, fuzzy
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Naručena količina: Obračunaj količine naručene od kupca.\n"
+"Isporučena količina: Obračunaj količine isporučene kupcu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3592,19 +4076,22 @@ msgstr "Narudžbe za naknadno fakturisanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Other Info"
-msgstr ""
+msgstr "Ostale informacije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "Izrada PDF ponuda"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3614,13 +4101,15 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.js:0
+#, fuzzy
 msgid "Packaging"
-msgstr ""
+msgstr "Pakovanje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#, fuzzy
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Stavka nadređene sekcije"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
@@ -3629,13 +4118,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
+#, fuzzy
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Upozorenje o kreditnom rejtingu partnera"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3644,23 +4135,27 @@ msgstr "Plati Sad"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "Pay Order"
-msgstr ""
+msgstr "Naplati naručeno"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
+#, fuzzy
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "Plati preko drugog provajdera plaćanja"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
+#, fuzzy
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Payment"
-msgstr ""
+msgstr "Plaćanje"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -3675,13 +4170,15 @@ msgstr "Metoda plaćanja"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
+#, fuzzy
 msgid "Payment Provider"
-msgstr ""
+msgstr "Pružatelj usluge naplate"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
+#, fuzzy
 msgid "Payment Ref."
-msgstr ""
+msgstr "Referenca plaćanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3695,13 +4192,15 @@ msgstr "Transakcija plaćanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
+#, fuzzy
 msgid "Payment Transactions Amount"
-msgstr ""
+msgstr "Iznos transakcija plaćanja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Payment terms"
-msgstr ""
+msgstr "Uvjeti plaćanja"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
@@ -3711,42 +4210,49 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
+#, fuzzy
 msgid "Pending Email Template"
-msgstr ""
+msgstr "Predložak emaila na čekanju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
+#, fuzzy
 msgid "Percentage"
-msgstr ""
+msgstr "Procenat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "Naručite putem Gelato usluge ispisa na zahtjev"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
+#, fuzzy
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL za pristup portalu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
+#, fuzzy
 msgid "Prepayment Amount"
-msgstr ""
+msgstr "Iznos avansa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#, fuzzy
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Postotak avansa"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Postotak avansa mora biti važeći postotak."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3775,8 +4281,9 @@ msgstr "Umanjena cijena bez PDV-a"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
+#, fuzzy
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Sniženje cijene s PDV-om"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3786,13 +4293,15 @@ msgstr "Cijenovnik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
+#, fuzzy
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Stavka cjenika"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist_item
+#, fuzzy
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Pravilo cjenika"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3837,18 +4346,21 @@ msgstr "Proizvod"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
+#, fuzzy
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Prilagođena vrijednost atributa proizvoda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Product Catalog"
-msgstr ""
+msgstr "Katalog proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
+#, fuzzy
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Proizvod kataloga je u prodajnom nalogu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
@@ -3859,16 +4371,18 @@ msgstr "Kategorija proizvoda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
+#, fuzzy
 msgid "Product Document"
-msgstr ""
+msgstr "Dokument proizvoda"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/product/product.xml:0
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
+#, fuzzy
 msgid "Product Image"
-msgstr ""
+msgstr "Slika proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
@@ -3877,13 +4391,15 @@ msgstr "Predlog proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
+#, fuzzy
 msgid "Product Type"
-msgstr ""
+msgstr "Tip proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
+#, fuzzy
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "JM proizvoda samo za čitanje"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3896,14 +4412,16 @@ msgstr "Varijante proizvoda"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "Cijene proizvoda su preračunate prema cjeniku %s."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "Cijene proizvoda su ponovo izračunate."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3920,8 +4438,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Promocije, vjernost i poklon kartice"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3945,8 +4464,9 @@ msgstr "Fakturisana kol."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
+#, fuzzy
 msgid "Qty Ordered"
-msgstr ""
+msgstr "Kol. naručeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_overage
@@ -3955,8 +4475,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
+#, fuzzy
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Kol. za isporuku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -3981,13 +4502,15 @@ msgstr "Količina"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
+#, fuzzy
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Količina za fakturisanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Quantity:"
-msgstr ""
+msgstr "Količina:"
 
 #. module: sale
 #. odoo-python
@@ -4006,20 +4529,23 @@ msgstr "Predračun #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Ponuda / Nalog"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
+#, fuzzy
 msgid "Quotation Count"
-msgstr ""
+msgstr "Broj ponuda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Quotation Date"
-msgstr ""
+msgstr "Datum ponude"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
@@ -4030,14 +4556,16 @@ msgstr "Predračun poslan"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/res_config_settings.py:0
+#, fuzzy
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
+msgstr "Valjanost ponude je obavezna i mora biti veća ili jednaka 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
+#, fuzzy
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Ponuda pregledana"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -4054,8 +4582,9 @@ msgstr "Predračun poslan"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Ponuda je pregledao kupac %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -4074,8 +4603,9 @@ msgstr "Predračuni"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Ponude i narudžbe"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -4089,8 +4619,9 @@ msgstr "Predračuni i Prodaja"
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_quotations_to_review
+#, fuzzy
 msgid "Quotations to review"
-msgstr ""
+msgstr "Ponude za pregled"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_rate
@@ -4099,68 +4630,81 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
+#, fuzzy
 msgid "Ratings"
-msgstr ""
+msgstr "Ocjene"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__reinvoice_policy
+#, fuzzy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Troškovi ponovnog fakturisanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_reinvoice_policy
+#, fuzzy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Politika ponovnog fakturisanja vidljiva"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Read the documentation"
-msgstr ""
+msgstr "Pročitajte dokumentaciju"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
+#, fuzzy
 msgid "Recommend when 'Adding to Cart' or quotation"
-msgstr ""
+msgstr "Preporuči prilikom 'Dodavanja u korpu' ili ponude"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Preračunaj sve cijene na osnovu ovog cjenika"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "Referenca"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
+#, fuzzy
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Referenca dokumenta koji je generirao ovaj zahtjev za prodajnu narudžbu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
+#, fuzzy
 msgid "Regular invoice"
-msgstr ""
+msgstr "Obična faktura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Odbij ovu ponudu"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "Ukloni"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#, fuzzy
 msgid "Remove one"
-msgstr ""
+msgstr "Ukloni jedan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4169,8 +4713,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
+#, fuzzy
 msgid "Report Action"
-msgstr ""
+msgstr "Akcija izvještaja"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4179,33 +4724,42 @@ msgstr "Izvještavanje"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
+#, fuzzy
 msgid "Request a online payment from the customer to confirm the order."
-msgstr ""
+msgstr "Zatražite online plaćanje od kupca kako biste potvrdili narudžbu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
+#, fuzzy
 msgid "Request a online signature from the customer to confirm the order."
-msgstr ""
+msgstr "Zatražite online potpis od kupca kako biste potvrdili narudžbu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Zatražite plaćanje za potvrdu narudžbi, u cijelosti (100%) ili djelomično. "
+"Zadana vrijednost može se promijeniti po narudžbi ili predlošku."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Zatražite od kupaca da potpišu ponude kako bi potvrdili narudžbe. Zadana "
+"vrijednost može se promijeniti po narudžbi ili predlošku."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Traženi datum je prerano."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -4214,19 +4768,23 @@ msgstr "Odgovorni korisnik"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
+#, fuzzy
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"Ciljani prihod za tekući mjesec (neoporezovani ukupni iznos plaćenih računa)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+#, fuzzy
 msgid "Revenues"
-msgstr ""
+msgstr "Prihodi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
+#, fuzzy
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Prihodi generisani iz kampanje"
 
 #. module: sale
 #: model:portal.entry,description:sale.portal_quotations_to_review
@@ -4235,35 +4793,41 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
+#, fuzzy
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Sale"
-msgstr ""
+msgstr "Prodaja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on_sale
+#, fuzzy
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Prodaja: Vidljivo na"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Sale Information"
-msgstr ""
+msgstr "Informacije o prodaji"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+#, fuzzy
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "Poruka upozorenja stavke prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4278,52 +4842,61 @@ msgstr "Prodajni nalog"
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
+#, fuzzy
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Broj prodajnih naloga"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
+#, fuzzy
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Planovi prodajnog naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
+#, fuzzy
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Upozorenja prodajnog naloga"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_partner.py:0
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Sale Orders"
-msgstr ""
+msgstr "Prodajni nalozi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
+#, fuzzy
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Broj prodajnih naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
+#, fuzzy
 msgid "Sale Warning"
-msgstr ""
+msgstr "Upozorenje prodaje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Upozorenja prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
+#, fuzzy
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Odabran način plaćanja za onboarding prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
+#, fuzzy
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Prodajni nalozi za otkazivanje"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
@@ -4356,28 +4929,33 @@ msgstr "Analiza prodaje"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
+#, fuzzy
 msgid "Sales Analysis By Customers"
-msgstr ""
+msgstr "Analiza prodaje po kupcima"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
+#, fuzzy
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Analiza prodaje po proizvodima"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
+#, fuzzy
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Analiza prodaje po prodavačima"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
+#, fuzzy
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Izvještaj analize prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_product_matrix
+#, fuzzy
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Unos prodajne mreže"
 
 #. module: sale
 #. odoo-python
@@ -4403,8 +4981,9 @@ msgstr "Prodajna narudžba potvrđena"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
+#, fuzzy
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Stavka prodajnog naloga"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4416,8 +4995,9 @@ msgstr "Stavka prodajne narudžbe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
+#, fuzzy
 msgid "Sales Order Line Warning"
-msgstr ""
+msgstr "Upozorenje stavke prodajnog naloga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
@@ -4440,8 +5020,9 @@ msgstr "Stavke prodajne narudžbe vezane za moju prodajnu narudžbu"
 #. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
+#, fuzzy
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Prodajni nalog(zi)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4483,21 +5064,27 @@ msgstr "Prodajni timovi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+#, fuzzy
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Stavka prodajnog naloga kojoj će se dodati utrošeno vrijeme kako bi se "
+"fakturirala vašem kupcu. Uklonite stavku prodajnog naloga za unos vremenskog "
+"lista kako bi bila nenaplativa."
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
+#, fuzzy
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Prodaja: Potvrda narudžbe"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Prodaja: Plaćanje izvršeno"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
@@ -4506,13 +5093,15 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
+#, fuzzy
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Prodaja: Pošalji ponudu"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_pending_emails_cron_ir_actions_server
+#, fuzzy
 msgid "Sales: Send pending emails"
-msgstr ""
+msgstr "Prodaja: Pošalji emailove na čekanju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4526,8 +5115,9 @@ msgstr "Prodavač(ica)"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
+#, fuzzy
 msgid "Salespersons"
-msgstr ""
+msgstr "Prodavači"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4538,8 +5128,9 @@ msgstr "Pretraži prodajne narudžbe"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Search a customer name, or create one on the fly."
-msgstr ""
+msgstr "Pretražite ime kupca ili ga kreirajte u hodu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
@@ -4548,14 +5139,16 @@ msgstr "Odjel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Naziv sekcije (npr. Proizvodi, Usluge)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Section Summary"
-msgstr ""
+msgstr "Sažetak sekcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4565,30 +5158,36 @@ msgstr "Sigurnosni token"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Odaberite proizvod ili kreirajte novi u hodu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
+#, fuzzy
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Odabrane kombinirane stavke"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Prodajte i kupujte proizvode u različitim mjernim jedinicama ili pakiranjima"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Prodajte varijante artikla koristeći atribute (veličina, boja itd.)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Send"
-msgstr ""
+msgstr "Pošalji"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4597,20 +5196,25 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
+#, fuzzy
 msgid "Send an email"
-msgstr ""
+msgstr "Pošalji e-mail"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
+#, fuzzy
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Šalje se kupcima pri potvrdi narudžbe"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
 msgstr ""
+"Šalje se kupcima kada je uplata primljena, ali ne potvrđuje odmah njihovu "
+"narudžbu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4625,8 +5229,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Services"
-msgstr ""
+msgstr "Usluge"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
@@ -4642,8 +5247,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "Postavite više cijena po artiklu, automatizirane popuste itd."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4669,13 +5275,15 @@ msgstr "Prevoznik"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Shipping Address"
-msgstr ""
+msgstr "Adresa isporuke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
+#, fuzzy
 msgid "Shopee Sync"
-msgstr ""
+msgstr "Shopee sinkronizacija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_ship_button
@@ -4684,13 +5292,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Prikaži sve zapise čiji je datum sljedeće aktivnosti prošao"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Show margins on orders"
-msgstr ""
+msgstr "Prikaži marže na narudžbama"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4699,13 +5309,15 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Potpiši i plati"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
+#, fuzzy
 msgid "Sign online"
-msgstr ""
+msgstr "Potpišite online"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -4715,31 +5327,36 @@ msgstr "Potpis"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "Signature is missing."
-msgstr ""
+msgstr "Nedostaje potpis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
+#, fuzzy
 msgid "Signed By"
-msgstr ""
+msgstr "Potpisao"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
+#, fuzzy
 msgid "Signed On"
-msgstr ""
+msgstr "Potpisano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "So, are you sure you want to cancel these"
-msgstr ""
+msgstr "Dakle, jeste li sigurni da želite otkazati ovo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
 msgid "Sold"
-msgstr ""
+msgstr "Prodano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -4751,16 +5368,20 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Odabrane su neke potvrđene narudžbe. Njihovi povezani dokumenti mogu biti \n"
+"pogođeni otkazivanjem."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "Neke narudžbe nisu u stanju koje zahtijeva potvrdu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4769,8 +5390,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__source_id
 #: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
+#, fuzzy
 msgid "Source"
-msgstr ""
+msgstr "Izvor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
@@ -4779,13 +5401,15 @@ msgstr "Izvorni dokument"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
+#, fuzzy
 msgid "Specific Email"
-msgstr ""
+msgstr "Specifičan email"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Start on Odoo"
-msgstr ""
+msgstr "Započni s Odoo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
@@ -4801,34 +5425,45 @@ msgstr "Status"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_state
+#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
+#, fuzzy
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
+"Stripe Connect nije dostupan u vašoj zemlji, molimo koristite drugog "
+"pružatelja usluga plaćanja."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#, fuzzy
 msgid "Subsection"
-msgstr ""
+msgstr "Podsekcija"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Subsection Name"
-msgstr ""
+msgstr "Naziv podsekcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -4837,84 +5472,101 @@ msgstr "Podukupno"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Sum of Quantity"
-msgstr ""
+msgstr "Zbroj količine"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Sum of Total"
-msgstr ""
+msgstr "Zbroj ukupnog"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#, fuzzy
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Zbroj ukupnog bez poreza"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_paid
+#, fuzzy
 msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
+"Zbroj transakcija izvršenih putem online obrasca za plaćanje koje su u "
+"statusu 'završeno' ili 'odobreno' i povezane su s ovom narudžbom."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
+#, fuzzy
 msgid "System Parameter"
-msgstr ""
+msgstr "Sistemski parametar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
+#, fuzzy
 msgid "Tags"
-msgstr ""
+msgstr "Oznake"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Tax 15%"
-msgstr ""
+msgstr "Porez 15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
+#, fuzzy
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Metada zaokruživanje izračunavanja poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_country_id
+#, fuzzy
 msgid "Tax Country"
-msgstr ""
+msgstr "Država poreza"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__document_tax_mode__tax_excluded
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Tax Excl."
-msgstr ""
+msgstr "Bez poreza"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "Tax ID"
-msgstr ""
+msgstr "Porez"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__document_tax_mode__tax_included
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Tax Incl."
-msgstr ""
+msgstr "S porezom"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Tax Total"
-msgstr ""
+msgstr "Ukupno poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
+#, fuzzy
 msgid "Tax Totals"
-msgstr ""
+msgstr "Ukupni porezi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
+#, fuzzy
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Metoda zaokruživanja poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4925,22 +5577,29 @@ msgstr "Porezi"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/crm_team.py:0
+#, fuzzy
 msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"Tim %(team_name)s ima %(sale_order_count)s aktivnih prodajnih naloga. "
+"Razmislite o njihovom otkazivanju ili arhiviranju tima."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
+#, fuzzy
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Tehnička jedinica cijene"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Recite nam zašto ste odbili ponudu, to će nam pomoći da poboljšamo naše "
+"usluge."
 
 #. module: sale
 #. odoo-python
@@ -4950,14 +5609,16 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
+#, fuzzy
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Format Uvjeta i odredbi"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Uvjeti i odredbe: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4971,82 +5632,106 @@ msgstr "Pravila i Uslovi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Uvjeti i odredbe..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__country_code
+#, fuzzy
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO oznaka države u dva slova.\n"
+"Možete koristiti za brzo pretraživanje."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
+#, fuzzy
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
+"Prodajni nalog %(order)s za ponovo fakturiranje je otkazan. Ne možete "
+"registrirati trošak na otkazanom prodajnom nalogu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
+#, fuzzy
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Prodajni nalog %(order)s koji treba ponovo fakturirati trenutno je "
+"zaključan. Ne možete registrirati trošak na zaključanom prodajnom nalogu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
+#, fuzzy
 msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Prodajni nalog %(order)s koji se ponovo fakturira mora se potvrditi prije "
+"evidentiranja troškova."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Token pristupa nije ispravan."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The amount is lower than the prepayment amount."
-msgstr ""
+msgstr "Iznos je niži od iznosa avansa."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The amount must be greater than the prepayment amount."
-msgstr ""
+msgstr "Iznos mora biti veći od iznosa avansa."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Kompanija je obavezna, molimo odaberite jednu prije nego što napravite bilo "
+"kakve druge promjene u narudžbi prodaje."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Datum isporuke je ranije od očekivanog datuma. Možda nećete moći ispoštovati "
+"datum isporuke."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
+#, fuzzy
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Fiksni iznos za fakturisanje unaprijed."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid ""
 "The following products cannot be restricted to the company %(company)s "
 "because they have already been used in quotations or sales orders in another "
@@ -5055,6 +5740,11 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
+"Sljedeći proizvodi ne mogu biti ograničeni na kompaniju %(company)s jer su "
+"već korišteni u ponudama ili prodajnim narudžbama u drugoj kompaniji:\n"
+"%(used_products)s\n"
+"Možete arhivirati ove proizvode i ponovo ih stvoriti s ograničenjem Vaše "
+"kompanije ili ih ostaviti kao dijeljeni proizvod."
 
 #. module: sale
 #. odoo-python
@@ -5067,6 +5757,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
 #: model:ir.model.fields,help:sale.field_res_config_settings__sale_automatic_invoice
+#, fuzzy
 msgid ""
 "The invoice is generated automatically and available in the customer portal "
 "when the transaction is confirmed by the payment provider.\n"
@@ -5075,64 +5766,85 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
+"Faktura se generira automatski i dostupna je na korisničkom portalu kada "
+"transakciju potvrdi pružatelj plaćanja.\n"
+"Faktura je označena kao plaćena, a plaćanje se registrira u dnevniku "
+"plaćanja definiranom u konfiguraciji pružatelja plaćanja.\n"
+"Ovaj način rada preporučuje se ako konačni račun izdajete prilikom narudžbe, "
+"a ne nakon isporuke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
 msgstr ""
+"Marža se izračunava kao zbroj prodajnih cijena proizvoda umanjen za trošak "
+"naveden u njihovom detaljnom obrascu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Nova faktura će odbiti nacrte faktura povezane s ovom prodajnim nalogom."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Broj odabranih kombiniranih stavki mora odgovarati broju dostupnih "
+"kombiniranih izbora."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "Narudžba nije u stanju koje zahtijeva plaćanje kupca."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
+#, fuzzy
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Narudžba nije u stanju koje zahtijeva potpis kupca."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Naručena količina je ažurirana."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
+#, fuzzy
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Komunikacija plaćanja ovog prodajnog naloga."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Plaćanje također treba biti preneseno s ljubavlju"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
+#, fuzzy
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Postotak iznosa za fakturisanje unaprijed."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#, fuzzy
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "Postotak iznosa koji je potrebno platiti za potvrdu ponuda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -5144,14 +5856,16 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Proizvod (%(product)s) ima nekompatibilne vrijednosti: %(value_list)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Prodajni nalog je istekao."
 
 #. module: sale
 #. odoo-python
@@ -5161,84 +5875,108 @@ msgstr "Iznos predujma mora biti pozitivan."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#, fuzzy
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "Trenutno nema ponuda za vaš račun."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Trenutno nema prodajnih naloga za vaš račun."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "There are existing"
-msgstr ""
+msgstr "Postoje"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
+#, fuzzy
 msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"Čini se da za ovu kompaniju još nije konfiguriran nijedan proizvod s "
+"popustom. Možete koristiti popust po retku ili zamoliti administratora da "
+"vam prvi put odobri popust."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__downpayment_account_id
+#, fuzzy
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Ovaj konto će se koristiti za avansne fakture."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Ova zadana vrijednost postavlja se pri stvaranju svakog novog artikla. "
+"Moguće ju je izmijeniti u formi za detalje artikla."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
 #: model:ir.model.fields,help:sale.field_sale_order__campaign_id
+#, fuzzy
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts, "
 "e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Ovo je naziv koji vam pomaže pratiti vaše različite kampanje, npr. "
+"Jesenski_pogon, Božićni_posebni"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
+#, fuzzy
 msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Ovo je datum isporuke koji je obećan kupcu. Ako je postavljeno, nalog za "
+"isporuku bit će zakazan na temelju ovog datuma, a ne vremena isporuke "
+"proizvoda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
+#, fuzzy
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "Ovo je način isporuke, na pr. Razglednica, e-pošta ili natpisni oglas"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
 #: model:ir.model.fields,help:sale.field_account_move__source_id
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
+#, fuzzy
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Ovo je izvor poveznice, npr. Tražilica, druga domena ili naziv popisa e-"
+"adresa"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "This option or combination of options is not available"
-msgstr ""
+msgstr "Ova opcija ili kombinacija opcija nije dostupna"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Ova uplata će potvrditi ponudu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5261,6 +5999,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
+#, fuzzy
 msgid ""
 "This report performs analysis on your quotations. Analysis check your sales "
 "revenues and sort it by different group criteria (salesman, partner, "
@@ -5268,9 +6007,15 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Ovaj izvještaj radi analizu vaših ponuda. Analiza provjerava dohotke od "
+"prodaje i sortira ih prema različitim kriterijima grupiranja (prodavač, "
+"partner, proizvod, itd.) Koristite ovaj izvještaj za izvođenje analize na "
+"prodajama koje još nisu obračunate. Ako želite analizirati prihod, trebali "
+"bi koristiti Izvještaj analize računa u računovodstvenoj aplikaciji."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
+#, fuzzy
 msgid ""
 "This report performs analysis on your sales orders. Analysis check your "
 "sales revenues and sort it by different group criteria (salesman, partner, "
@@ -5278,12 +6023,21 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Ovaj izvještaj radi analizu vaših prodajnih naloga. Analiza provjerava "
+"dohotke od prodaje i sortira ih prema različitim kriterijima grupiranja "
+"(prodavač, partner, proizvod, itd.) Koristite ovaj izvještaj za izvođenje "
+"analize na prodajama koje još nisu obračunate. Ako želite analizirati "
+"prihod, trebali bi koristiti Izvještaj analize računa u računovodstvenoj "
+"aplikaciji."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
+"Ovim će se ažurirati jedinična cijena svih proizvoda na temelju novog "
+"cjenika."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -5299,21 +6053,27 @@ msgstr "Za fakturisati"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#, fuzzy
 msgid "To Upsell"
-msgstr ""
+msgstr "Za dodatnu prodaju"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "To send invitations in B2B mode, open a contact or select several ones in "
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Za slanje pozivnica u B2B načinu rada, otvorite kontakt ili odaberite "
+"nekoliko njih u prikazu popisa i kliknite na opciju 'Upravljanje pristupom "
+"portalu' u padajućem meniu *Akcija*."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Danas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5338,13 +6098,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
+#, fuzzy
 msgid "Total Tax"
-msgstr ""
+msgstr "Ukupni porez"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Ukupno bez poreza"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5355,13 +6117,15 @@ msgstr "Ukupan uračunati porez"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
+#, fuzzy
 msgid "Total: %s"
-msgstr ""
+msgstr "Ukupno: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "Track Inventory"
-msgstr ""
+msgstr "Prati skladište"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5371,8 +6135,9 @@ msgstr "Usluga praćenja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Tracking"
-msgstr ""
+msgstr "Praćenje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_count
@@ -5386,33 +6151,39 @@ msgstr "Transakcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Prevedeni naziv proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
+#, fuzzy
 msgid "Type Name"
-msgstr ""
+msgstr "Naziv tipa"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
+#, fuzzy
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Upišite da pronađete kupca..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Upišite da pronađete proizvod..."
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
+#, fuzzy
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM kampanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move__utm_reference
@@ -5424,14 +6195,16 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
+#, fuzzy
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "Nefakturirani saldo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#, fuzzy
 msgid "Unit"
-msgstr ""
+msgstr "Jedinica"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5443,14 +6216,16 @@ msgstr "Jedinična cijena"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Unit Price:"
-msgstr ""
+msgstr "Jedinična cijena:"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.uom_uom_menu_list
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Jedinice i pakiranja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5469,19 +6244,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
+#, fuzzy
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Fakturirani iznos bez poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
+#, fuzzy
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Iznos bez poreza za fakturisanje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
+#, fuzzy
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Fakturirani iznos bez poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -5490,20 +6268,23 @@ msgstr "Ukupno neoporezovano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Update Prices"
-msgstr ""
+msgstr "Ažuriraj cijene"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
+#, fuzzy
 msgid "Upload Request For Quotation"
-msgstr ""
+msgstr "Učitaj zahtjev za ponudu"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Dodatna prodaja %(order)s za kupca %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5520,10 +6301,13 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
 msgstr ""
+"Upotrijebite gornji REST URL za dobivanje strukturiranih podataka "
+"narudžbenice u UBL formatu."
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
@@ -5532,8 +6316,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
+#, fuzzy
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Koriste ga prodavači kada šalju ponude ili proforme potencijalnim kupcima"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5542,59 +6328,72 @@ msgstr "Važi do"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
+#, fuzzy
 msgid "Validate Order"
-msgstr ""
+msgstr "Validiraj narudžbu"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__reinvoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__reinvoice_policy
+#, fuzzy
 msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Potvrđeni troškovi, računi dobavljača ili komisioniranje zaliha (postavljeno "
+"za praćenje troškova) mogu se fakturirati kupcu po trošku ili prodajnoj "
+"cijeni."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
+#, fuzzy
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
-msgstr ""
+msgstr "Valjanost narudžbe, nakon toga nećete moći potpisati i platiti ponudu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Ovdje postavljene vrijednosti su specifične za kompaniju."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Unos u tabelu varijanti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "View Alternatives"
-msgstr ""
+msgstr "Pogledaj alternative"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "Prikaži detalje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "View Other Providers"
-msgstr ""
+msgstr "Pogledaj ostale providere"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "View Quotation"
-msgstr ""
+msgstr "Pogledaj ponudu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
+#, fuzzy
 msgid "Virtual"
-msgstr ""
+msgstr "Virtualno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
@@ -5603,8 +6402,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Void Transaction"
-msgstr ""
+msgstr "Poništi transakciju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -5613,8 +6413,9 @@ msgstr "Volumen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Want to import this document in Odoo?"
-msgstr ""
+msgstr "Želite li uvesti ovaj dokument u Odoo?"
 
 #. module: sale
 #. odoo-python
@@ -5627,18 +6428,21 @@ msgstr "Upozorenje"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Upozorenje o promjeni kompanije vaše ponude"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+#, fuzzy
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "Upozorenje na prodajnim nalozima"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#, fuzzy
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "Upozorenje na prodajnim nalozima i fakturama"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5648,54 +6452,71 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Ne možete izbrisati poslanu ponudu ili potvrđen prodajni nalog. Prvo ga "
+"morate otkazati."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Možete odabrati sve narudžbe i fakturirati ih skupno,<br>\n"
+"ili provjeriti svaku narudžbu i fakturirati ih jednu po jednu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
+#, fuzzy
 msgid ""
 "You can set here the communication type that will appear on sales orders.The "
 "communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Ovdje možete postaviti vrstu komunikacije koja će se pojaviti na prodajnim "
+"nalozima. Komunikacija će se dati kupcu kada odabere način plaćanja."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "Ne možete otkazati zaključanu narudžbu. Prvo je otključajte."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "Ne možete promijeniti cjenik potvrđene narudžbe!"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
+#, fuzzy
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Nije moguće mijenjanje tipa proizvoda jer je već korišten na prodajnim "
+"nalozima."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Ne možete promijeniti vrstu stavke prodajnog naloga. Umjesto toga, trebali "
+"biste izbrisati trenutnu stavku i stvoriti novu stavku odgovarajućeg tipa."
 
 #. module: sale
 #. odoo-python
@@ -5706,8 +6527,9 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
+#, fuzzy
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "Ne možete mijenjati proizvod ove stavke narudžbe."
 
 #. module: sale
 #. odoo-python
@@ -5717,64 +6539,81 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, fuzzy
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Ne možete postaviti negativni broj za zadanu važenje ponude. Ostavite prazno "
+"(ili 0) da biste onemogućili automatski istek ponude."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "You don't use a good CRM software?"
-msgstr ""
+msgstr "Ne koristite dobar CRM softver?"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
+#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Morate definirati proizvod za sve što prodajete ili kupujete,\n"
+" da li se radi o proizvodu koji se može skladištiti, potrošnom materijalu "
+"ili usluzi."
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#, fuzzy
 msgid "Your Orders"
-msgstr ""
+msgstr "Vaše narudžbe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Your Reference:"
-msgstr ""
+msgstr "Vaša referenca:"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Vaš pretraživač ne podržava iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your feedback..."
-msgstr ""
+msgstr "Vaše povratne informacije..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Vaša narudžba je potvrđena."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Vaša narudžba je potpisana, ali je još treba platiti da biste je potvrdili."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Vaša narudžba je potpisana."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Vaša narudžba nije u stanju u kojem bi mogla biti odbijena."
 
 #. module: sale
 #. odoo-python
@@ -5789,13 +6628,15 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "add the price of your product."
-msgstr ""
+msgstr "dodajte cijenu svog proizvoda."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#, fuzzy
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "automatsko fakturisanje: pošalji pripremljenu fakturu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5811,80 +6652,98 @@ msgstr "Dani"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#, fuzzy
 msgid "e.g. This customer has reported recurring issues with previous orders."
 msgstr ""
+"npr. Ovaj je kupac prijavio ponavljajuće probleme s prethodnim narudžbama."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+#, fuzzy
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "npr. Ovaj proizvod je neispravan."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
+#, fuzzy
 msgid "for the"
-msgstr ""
+msgstr "za"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid "for this Sale Order."
-msgstr ""
+msgstr "za ovaj prodajni nalog."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
+#, fuzzy
 msgid "items?"
-msgstr ""
+msgstr "stavke?"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#, fuzzy
 msgid "let's continue"
-msgstr ""
+msgstr "nastavimo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
+#, fuzzy
 msgid "quote."
-msgstr ""
+msgstr "ponuda."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid "sale order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "to create quotes automatically."
-msgstr ""
+msgstr "za automatsko kreiranje ponuda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#, fuzzy
 msgid "to learn all the ways to connect your software with"
-msgstr ""
+msgstr "za učenje svih načina povezivanja vašeg softvera s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "units"
-msgstr ""
+msgstr "jedinice"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "with"
-msgstr ""
+msgstr "s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
+#, fuzzy
 msgid "you confirm acceptance on behalf of"
-msgstr ""
+msgstr "potvrđujete prihvatanje u ime"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
+#, fuzzy
 msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

@@ -6,7 +6,7 @@
 # Martin Trigaux, 2022
 # Andy Yiu, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -16,16 +16,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-04-04 12:43+0000\n"
+"PO-Revision-Date: 2026-05-30 12:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "delivery/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: delivery
 #: model:ir.actions.report,print_report_name:delivery.action_report_delivery_note
@@ -192,11 +192,13 @@ msgid ""
 "customers on the Sales Order and sales confirmation email. E.g. instructions "
 "for customers to follow."
 msgstr ""
+"販売オーダと販売確認メールで顧客に伝えたい配送方法の説明。例：顧客に対する手"
+"順の説明。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "出荷オーダを確定する際のアクション"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -240,7 +242,7 @@ msgstr "金額"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency."
-msgstr ""
+msgstr "配達無料、会社負担の速達の適用を受けるためのオーダ金額。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -260,7 +262,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
-msgstr "利用可能状況"
+msgstr "利用可能条件"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -315,12 +317,12 @@ msgstr "条件"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "構成設定"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "方法を設定"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
@@ -629,7 +631,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "配送プロバイダーを探す"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -692,6 +694,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping."
 msgstr ""
+"オーダの合計金額(送料を除く)がこの金額以上の場合、顧客は送料無料の特典を受け"
+"ることができます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -1061,12 +1065,12 @@ msgstr "通常配送"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "ステータス"
+msgstr "都道府県・州"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
 msgid "Supports Cash On Delivery"
-msgstr ""
+msgstr "代金引換に対応"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1261,6 +1265,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"すでに請求書発行済のオーダの配送費用を更新することはできません！\n"
+"\n"
+"次の配送明細（プロダクト、請求数量、価格）はすでに処理されています：\n"
+"\n"
+"%s"
 
 #. module: delivery
 #. odoo-python

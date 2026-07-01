@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-04-30 07:33+0000\n"
+"PO-Revision-Date: 2026-06-20 14:06+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/account_peppol/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -37,7 +37,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (Falta %(eas)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,6 +69,8 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s documento(s) de Peppol procesado(s), %(deleted)s documento(s) "
+"eliminado(s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -324,7 +326,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "Ya existe una conexión con %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -668,7 +670,7 @@ msgstr "Métodos de envío Peppol disponibles"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "Ayuda base para UBL"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_response
@@ -699,7 +701,7 @@ msgstr "Puede enviar, pero necesita registro para poder recibir"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -795,7 +797,7 @@ msgstr "Crear un cliente"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send and receive e-invoices for free."
-msgstr ""
+msgstr "Crea, envía y recibe facturas electrónicas gratis."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__create_uid
@@ -888,19 +890,19 @@ msgstr "Mostrar Usar selección de la conexión principal"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "¿Quieres continuar?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Documento cancelado con éxito"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Documento restablecido a borrador con éxito"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -910,6 +912,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"No puedes eliminar los documentos enviados o recibidos a través de Peppol.\n"
+"\n"
+"¿Prefieres cancelar este documento?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -919,6 +924,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"No puedes eliminar los documentos enviados o recibidos a través de Peppol.\n"
+"\n"
+"¿Prefieres restablecer este documento a borrador?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -956,7 +964,7 @@ msgstr "Usuario EDI"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "El usuario EDI debe ser de uno de los siguientes tipos: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1074,6 +1082,8 @@ msgstr "Diario contable de entrada"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"La factura %s supera el límite de tamaño de 64 MB para su envío a través de "
+"Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1189,7 +1199,7 @@ msgstr "No se encontraron puntos de conexión válidos para el participante AS4.
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "No, consérvalo"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
@@ -1248,7 +1258,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "Odoo te mantiene al día con la nueva normativa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1342,13 +1352,13 @@ msgstr "Correo de contacto de Peppol"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "No puedes eliminar los documentos de Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Documentos de Peppol: No es posible eliminar la factura"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1398,7 +1408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol: Se envió"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
@@ -1478,6 +1488,8 @@ msgstr "Usar empresa matriz de Peppol"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"Peppol te permite automatizar por completo el envío y la recepción de "
+"facturas electrónicas."
 
 #. module: account_peppol
 #. odoo-python
@@ -1518,6 +1530,8 @@ msgstr "Factura recibida por Peppol"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol es el estándar seguro utilizado para facturas electrónicas en la UE y "
+"en todo el mundo."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -1737,7 +1751,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Restablecer a borrador"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
@@ -2096,6 +2110,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Los siguientes %s documentos de Peppol se restablecerán a borrador:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2105,6 +2122,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Los siguientes %s documentos de Peppol en borrador se cancelarán:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2163,7 +2183,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "Los %s documentos restantes serán eliminados."
 
 #. module: account_peppol
 #. odoo-python
@@ -2409,13 +2429,13 @@ msgstr "¿Por qué debería usarlo?"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Sí, cancélalo"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Sí, continúa"
 
 #. module: account_peppol
 #. odoo-python

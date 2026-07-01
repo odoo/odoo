@@ -16,9 +16,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"PO-Revision-Date: 2026-05-23 12:03+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "payment/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -147,12 +147,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>Es sind keine Zahlungsmethode verfügbar</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
-msgstr ""
+msgstr "<strong>Es sind keine Zahlungsanbieter konfiguriert</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -211,7 +211,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -417,6 +417,10 @@ msgid ""
 "you want to charge your customers cards only when you are sure you can ship "
 "the goods to them."
 msgstr ""
+"Erfassen Sie den Betrag von Odoo, wenn die Lieferung abgeschlossen ist.\n"
+"Verwenden Sie diese Funktion, wenn Sie die Karten Ihrer Kunden nur dann "
+"belasten möchten,\n"
+"wenn Sie sicher sind, dass Sie die Lieferung durchführen können."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -489,13 +493,13 @@ msgstr "Bestätigt"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Contact"
-msgstr "Kontakt"
+msgstr "Kontaktieren Sie"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -524,7 +528,7 @@ msgstr "Land"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Create"
-msgstr ""
+msgstr "Erstellen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -646,7 +650,7 @@ msgstr "Entwurf"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -706,7 +710,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Zahlungsanbieter finden"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -2078,6 +2082,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"Diese Aktion archiviert auch %s-Token, die bei diesem Anbieter registriert "
+"sind."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2087,6 +2093,11 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"Dies steuert, ob Kunden ihre Zahlungsmethoden als Zahlungstoken speichern "
+"können.\n"
+"Ein Zahlungstoken ist ein anonymer Link zu den in der Datenbank des "
+"Anbieters gespeicherten Zahlungsinformationen,\n"
+"sodass der Kunde sie bei seinem nächsten Einkauf wieder verwenden kann."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2544,7 +2555,7 @@ msgstr "Anbieter"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "den Website-Administrator."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning

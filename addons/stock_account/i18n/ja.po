@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-04 13:46+0000\n"
+"PO-Revision-Date: 2026-05-23 12:02+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_account/ja/>\n"
@@ -67,6 +67,8 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"プロダクト「%s 」にはロット評価が有効になっているため、ロット番号またはシリア"
+"ル番号が必要です。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -149,7 +151,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
 msgid "All Warehouses"
-msgstr ""
+msgstr "すべての倉庫"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -170,7 +172,7 @@ msgstr "分析プラン"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "時点:"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -184,7 +186,7 @@ msgstr "期末処理時には、当該期間の在庫変動を特定の勘定科
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "以下の日付："
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -471,7 +473,7 @@ msgstr "永続在庫評価(大陸式)の場合のみ"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entry"
-msgstr ""
+msgstr "仕訳生成"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -715,7 +717,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
@@ -1112,7 +1114,7 @@ msgstr "評価額の説明"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "手持在庫額:"
 
 #. module: stock_account
 #. odoo-python
@@ -1199,6 +1201,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"以下のプロダクトにはロット番号/シリアル番号のない在庫があるため、ロット評価を"
+"有効にすることはできません:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python

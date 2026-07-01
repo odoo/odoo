@@ -8,23 +8,23 @@
 # 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2025-12-20 09:36+0000\n"
+"PO-Revision-Date: 2026-06-10 06:18+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-19/product_expiry/zh_Hans/>\n"
+"projects/odoo-s19-3/product_expiry/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product_expiry
 #. odoo-python
@@ -133,7 +133,7 @@ msgstr "在此日期前"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Best before"
-msgstr ""
+msgstr "最佳使用期限"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
@@ -261,13 +261,13 @@ msgstr "过期批次"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Expired Lots"
-msgstr ""
+msgstr "已过期批次"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "Expired Stock"
-msgstr ""
+msgstr "过期库存"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
@@ -382,6 +382,8 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
+"指商品在到期日之前多少天应从库存中移除，并不再将它们计入“在库新鲜库存”。此天"
+"数会根据批次/序号进行计算。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -504,6 +506,8 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore. This date will be used in FEFO removal strategy."
 msgstr ""
+"此序号之商品应从库存中移除、并且不再计入“新鲜在库库存”的日期。 FEFO 出库策略"
+"将会使用此日期。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -585,6 +589,9 @@ msgid ""
 "expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"您即将交付的产品%(product_name)s,%(lot_name)s 已过期，或至少应从库存中移"
+"除。\n"
+"您确认要继续吗？"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry

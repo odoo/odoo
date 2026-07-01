@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:22+0000\n"
+"PO-Revision-Date: 2026-06-12 16:59+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-3/"
 "auth_signup/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -38,6 +38,11 @@ msgid ""
 "        You may change your password by following this link which will "
 "remain valid during"
 msgstr ""
+",<br/><br/>\n"
+"                                Pro účet spojený s touto e-mailovou adresou "
+"bylo požádáno o resetování hesla.\n"
+"                                Heslo můžete změnit kliknutím na tento "
+"odkaz, který zůstane platný po dobu"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -68,6 +73,31 @@ msgid ""
 "                        </t>\n"
 "                    </t>"
 msgstr ""
+"<t>\n"
+"                        Dobrý den <t t-out=\"object.name or ''\">Marc Demo</"
+"t>,<br/><br/>\n"
+"                        Váš účet byl úspěšně vytvořen!<br/>\n"
+"                        Vaše přihlašovací údaje to <strong><t t-"
+"out=\"object.email or ''\">mark.brown23@example.com</t></strong><br/> \n"
+"                        Pro přístup k vašemu účtu můžete použít následující "
+"odkaz:\n"
+"                       <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?"
+"auth_login={{object.email}}\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\"> \n"
+"                                Přejít na Můj účet\n"
+"                           </a>\n"
+"                        </div> \n"
+"                        Děkujeme,<br/>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                           <br/>\n"
+"                            <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                       </t>\n"
+"                    </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -157,6 +187,41 @@ msgid ""
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Dobrý den <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"<t t-out=\"object.create_uid.name or ''\">OdooBot</t> z <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t> vás zve k připojení na "
+"Odoo.\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"        Přijmout pozvánku\n"
+"   </a>\n"
+"</div> \n"
+"<b> Tento odkaz zůstane platný po dobu <t t-"
+"out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
+"or 144)//24\"/> dnů </b> <br/>\n"
+"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
+"Vaše doména Odoo je: <b><a t-att-href=\"website_url\" t-out=\"website_url or "
+"''\">http://yourcompany.odoo.com</a></b><br/> \n"
+"Váš přihlašovací e-mail je: <b><a t-attf-href=\"/web/login?"
+"login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
+"''\">mark.brown23@example.com</a></b><br/><br/> \n"
+"Ještě jste o Odoo neslyšeli? Je to komplexní podnikový software, který si "
+"oblíbilo více než 12 milionů uživatelů. Výrazně zlepší vaše pracovní "
+"prostředí a zvýší vaši produktivitu.\n"
+"<br/><br/>\n"
+"Podívejte se na <a href=\"https://www.odoo.com/page/tour?"
+"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo prohlídku</"
+"a> a objevte tento nástroj.\n"
+"<br/><br/>\n"
+"Užijte si Odoo!<br/>\n"
+"--<br/> <t t-out=\"object.company_id.name or ''\"> Tým YourCompany</"
+"t>           </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -177,18 +242,33 @@ msgid ""
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Dobrý den <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
+"Do své databáze jste přidali následující uživatele, kteří se však dosud "
+"nezaregistrovali:\n"
+"<ul>\n"
+"    <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"       <li t-out=\"invited_user or ''\"> demo@example.com</li>\n"
+"    </t>\n"
+"</ul>\n"
+"Kontaktujte je, aby mohli přistupovat k vaší databázi a začít s vámi "
+"spolupracovat.\n"
+"<br/><br/>\n"
+"Přejeme vám hezký den!<br/>\n"
+"--<br/>Tým <t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>           </t>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A reset password link was sent by email"
-msgstr ""
+msgstr "Odkaz pro resetování hesla byl zaslán e-mailem"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A signup link was sent by email"
-msgstr ""
+msgstr "Odkaz pro registraci byl zaslán e-mailem"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -210,7 +290,7 @@ msgstr "Zpět k přihlášení"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr "Nelze odeslat e-mail: uživatel %s nemá žádnou e-mailovou adresu."
+msgstr "Není možné odeslat e-mail: uživatel %s nemá žádnou e-mailovou adresu."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -230,7 +310,7 @@ msgstr "Potvrzení hesla"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
-msgstr "Potvrzený"
+msgstr "Potvrzeno"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -241,7 +321,7 @@ msgstr "Kontakt"
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.xml:0
 msgid "Copy Reset Password Link"
-msgstr ""
+msgstr "Kopírovat odkaz pro resetování hesla"
 
 #. module: auth_signup
 #. odoo-python
@@ -278,7 +358,7 @@ msgstr "Zákaznický účet"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr "Vážený"
+msgstr "Vážený/á"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -291,7 +371,7 @@ msgstr "Výchozí přístupová práva"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
 msgid "Display Name"
-msgstr "Zobrazovací název"
+msgstr "Zobrazovaný název"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -334,6 +414,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "        Thanks,"
 msgstr ""
+"Pokud to neočekáváte, můžete tento e-mail bez obav ignorovat.<br/><br/>\n"
+"        Děkujeme,"
 
 #. module: auth_signup
 #. odoo-python
@@ -350,7 +432,7 @@ msgstr "Neplatný registrační token"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Invited"
-msgstr ""
+msgstr "Pozváno"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -366,7 +448,7 @@ msgstr "Nechte své zákazníky přihlásit se kvuli zobrazení svých dokument�
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.js:0
 msgid "Link copied to clipboard!"
-msgstr ""
+msgstr "Odkaz zkopírován do schránky!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -405,7 +487,7 @@ msgstr "Na pozvání"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Only administrators can generate reset password link."
-msgstr ""
+msgstr "Odkaz pro resetování hesla mohou generovat pouze administrátoři."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -427,7 +509,7 @@ msgstr "Heslo obnoveno"
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Password reset instructions sent to your email address."
-msgstr ""
+msgstr "Pokyny k resetování hesla byly zaslány na vaši e-mailovou adresu."
 
 #. module: auth_signup
 #. odoo-python
@@ -456,7 +538,7 @@ msgstr "Resetovat heslo"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset"
-msgstr ""
+msgstr "Odeslat odkaz na resetování hesla"
 
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
@@ -479,7 +561,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.portal_set_password_email
 msgid "Sent to new portal user after you invited them"
-msgstr ""
+msgstr "Odesláno novému uživateli portálu poté, co jste ho pozvali"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
@@ -499,7 +581,7 @@ msgstr "Nastavení: Nové registrace na portálu"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
 msgid "Settings: New Portal User Invite"
-msgstr ""
+msgstr "Nastavení: Pozvánka pro nového uživatele portálu"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -609,7 +691,7 @@ msgstr "Uživatelé: upozorňují na neregistrované uživatele"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "Vítejte v Odoo"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -626,25 +708,25 @@ msgstr "U archivovaného uživatele nelze tuto akci provést."
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "You cannot perform this action on your own user."
-msgstr ""
+msgstr "Tuto akci nelze provést u vlastního uživatele."
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "Váš účet"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.portal_set_password_email
 msgid "Your account at {{ object.company_id.name }}"
-msgstr ""
+msgstr "Váš účet na {{ object.company_id.name }}"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Your password has been reset successfully."
-msgstr ""
+msgstr "Vaše heslo bylo úspěšně resetováno."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -654,7 +736,7 @@ msgstr "hodiny:<br/>"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "name@example.com"
-msgstr ""
+msgstr "jmeno@přiklad.com"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email

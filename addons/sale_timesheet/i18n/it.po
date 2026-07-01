@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-04-11 14:32+0000\n"
+"PO-Revision-Date: 2026-06-20 13:35+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_timesheet/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -217,6 +217,8 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">I fogli ore senza una voce dell'ordine di vendita "
+"vengono segnalati come </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
@@ -302,6 +304,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"In base alla configurazione del prodotto, la quantità consegnata può essere "
+"calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica dalle spese: quantità calcolata come somma delle spese "
+"confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui "
+"lavori collegati alla riga\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1447,7 +1457,7 @@ msgstr "Fogli ore"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Fogli ore (prezzo fisso)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
@@ -1600,7 +1610,7 @@ msgstr "Permesso di lavoro valido per il Belgio"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_vendor_bill
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Fatture fornitore"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
