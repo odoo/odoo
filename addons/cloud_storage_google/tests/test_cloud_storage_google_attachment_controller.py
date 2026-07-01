@@ -4,6 +4,7 @@ import re
 import odoo
 from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.cloud_storage.tests.tools import filter_by_expected
 from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import TestCloudStorageGoogleCommon
 from odoo.addons.mail.tests.common import MailCommon
 
@@ -38,45 +39,44 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     res.content.decode("utf-8"),
                 )
             )
-            content["data"]["store_data"].pop("__store_version__")
-            self.assertEqual(
-                content,
-                {
-                    "data": {
-                        "attachment_id": attachment.id,
-                        "store_data": {
-                            "ir.attachment": self._filter_attachments_fields(
-                                {
-                                    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-                                    "create_date": odoo.fields.Datetime.to_string(
-                                        attachment.create_date
-                                    ),
-                                    "file_size": 0,
-                                    "has_thumbnail": False,
-                                    "id": attachment.id,
-                                    "mimetype": "text/x-python",
-                                    "name": "__init__.py",
-                                    "ownership_token": attachment._get_ownership_token(),
-                                    "raw_access_token": attachment._get_raw_access_token(),
-                                    "res_name": False,
-                                    "res_model": attachment.res_model,
-                                    "thread": False,
-                                    "thumbnail_access_token": attachment._get_thumbnail_token(),
-                                    "type": "cloud_storage",
-                                    "url": "[url]",
-                                    "voice_ids": [],
-                                    "access_token": False,
-                                    "description": False,
-                                    "image_src": False,
-                                    "image_height": 0,
-                                    "image_width": 0,
-                                    "original_id": False,
-                                    "public": False,
-                                    "res_id": 0,
-                                }
-                            ),
-                        },
+            content_expected = {
+                "data": {
+                    "attachment_id": attachment.id,
+                    "store_data": {
+                        "ir.attachment": self._filter_attachments_fields(
+                            {
+                                "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                                "create_date": odoo.fields.Datetime.to_string(
+                                    attachment.create_date
+                                ),
+                                "file_size": 0,
+                                "has_thumbnail": False,
+                                "id": attachment.id,
+                                "mimetype": "text/x-python",
+                                "name": "__init__.py",
+                                "ownership_token": attachment._get_ownership_token(),
+                                "raw_access_token": attachment._get_raw_access_token(),
+                                "res_name": False,
+                                "res_model": attachment.res_model,
+                                "thread": False,
+                                "thumbnail_access_token": attachment._get_thumbnail_token(),
+                                "type": "cloud_storage",
+                                "url": "[url]",
+                                "voice_ids": [],
+                                "access_token": False,
+                                "description": False,
+                                "image_src": False,
+                                "image_height": 0,
+                                "image_width": 0,
+                                "original_id": False,
+                                "public": False,
+                                "res_id": 0,
+                            }
+                        ),
                     },
-                    "upload_info": {"method": "PUT", "response_status": 200, "url": "[url]"},
                 },
-            )
+                "upload_info": {"method": "PUT", "response_status": 200, "url": "[url]"},
+            }
+            # Depending on installed modules, additional fields may be present,
+            # so we filter to validate only the expected subset.
+            self.assertEqual(filter_by_expected(content, content_expected), content_expected)

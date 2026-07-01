@@ -3686,7 +3686,7 @@ class BaseModel(metaclass=MetaModel):
         if ir_model_data_unlink:
             ir_model_data_unlink.unlink()
         if ir_attachment_unlink:
-            ir_attachment_unlink.unlink()
+            ir_attachment_unlink._remove()
         if cache_name := self._clear_cache_name:
             self.env.transaction.invalidate_ormcache(cache_name)
 
