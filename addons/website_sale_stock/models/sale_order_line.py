@@ -16,10 +16,6 @@ class SaleOrderLine(models.Model):
             self.shop_warning = warning
         return warning
 
-    def _get_max_line_qty(self):
-        max_quantity = self._get_max_available_qty()
-        return self.product_uom_qty + max_quantity if (max_quantity is not None) else None
-
     def _get_max_available_qty(self):
         """ The max quantity of a combo product is the max quantity of its selected combo item with
         the lowest max quantity. If none of the combo items has a max quantity, then the combo
@@ -34,7 +30,8 @@ class SaleOrderLine(models.Model):
         max_quantities = [
             free_qty - cart_qty for cart_qty, free_qty in cart_and_free_quantities
         ]
-        return min(max_quantities, default=None)
+        all_quantities = max_quantities + [super()._get_max_available_qty()]
+        return min((q for q in all_quantities if q is not None), default=None)
 
     def _check_availability(self):
         self.ensure_one()
