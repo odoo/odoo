@@ -61,8 +61,8 @@
     </xpath>
 </template>
 
-<template id="countries_setting" inherit_id="website_crm_partner_assign.index_content" name="Countries">
-    <xpath expr="//div[@id='top_section_button_middle_pos']" position="after">
+<template id="countries_setting" inherit_id="website_partnership.index" name="Countries" priority="20">
+    <section id="page_top_section" position="inside">
         <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
                 <t t-foreach="countries" t-as="country">
@@ -79,7 +79,7 @@
                 </t>
             </div>
         </div>
-    </xpath>
+    </section>
 </template>
 
 <template id="categories_setting" inherit_id="website_partnership.categories_setting">
@@ -140,46 +140,38 @@
     </xpath>
 </template>
 
-<template id="ref_country" inherit_id="website_partnership.search_setting" name="World Map">
-    <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
-        <t t-if="google_maps_api_key">
-            <!-- modal for large map -->
-            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                    </header>
-                    <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_crm_partner_assign.partners&amp;current_grade=#{ current_grade and current_grade.id }&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
-                    style="height:485px;"/>
-                </div>
-              </div>
+<template id="ref_country" inherit_id="website_partnership.index" name="World Map" active="False" priority="40">
+    <section id="page_top_section" position="inside">
+        <!-- modal for large map -->
+        <div role="dialog" class="modal fade partner_map_modal">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h4 class="modal-title">World Map</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                </header>
+                <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_crm_partner_assign.partners&amp;current_grade=#{ current_grade and current_grade.id }&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
+                style="height:485px;"/>
             </div>
-            <!-- modal end -->
-            <div class="btn-group ms-2">
-                <button class="btn btn-light border-primary active">
-                    <i class="fa fa-th-large"/>
-                </button>
-                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
-                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
-                </button>
             </div>
-        </t>
-    </xpath>
+        </div>
+        <!-- modal end -->
+        <div class="btn-group ms-2">
+            <button class="btn btn-light border-primary active">
+                <i class="fa fa-th-large"/>
+            </button>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
+                <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+            </button>
+        </div>
+    </section>
 </template>
 
-<template id="partner" inherit_id="website_partnership.partner_page">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
+<template id="partner" inherit_id="website_partner.partner_page">
+    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
         <t t-set="right_column">
             <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
         </t>
-    </xpath>
-</template>
-
-<template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="attributes">
-        <attribute name="contact_details">True</attribute>
     </xpath>
 </template>
 
