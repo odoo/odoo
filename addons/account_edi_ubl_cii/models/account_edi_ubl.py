@@ -3266,6 +3266,7 @@ class AccountEdiUBL(models.AbstractModel):
         return [
             AccountTax._import_retrieve_tax_from_invoice_predictive,
             AccountTax._import_retrieve_tax_from_price_include_exclude,
+            AccountTax._import_retrieve_tax_from_fixed_allowance_charge,
         ]
 
     def _import_ubl_invoice_retrieve_taxes(self, collected_values):
