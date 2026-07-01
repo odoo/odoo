@@ -441,9 +441,9 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self._is_in():
+        if self.is_in if self.state == 'done' else self._is_in():
             return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if self._is_out():
+        if self.is_out if self.state == 'done' else self._is_out():
             return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         if self.is_dropship:
             if lot:
