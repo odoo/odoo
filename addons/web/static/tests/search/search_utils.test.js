@@ -17,10 +17,6 @@ const dateSearchItem = {
     fieldType: "date",
     optionsParams: {
         customOptions: [],
-        endMonth: 0,
-        endYear: 0,
-        startMonth: -2,
-        startYear: -2,
     },
     type: "dateFilter",
 };

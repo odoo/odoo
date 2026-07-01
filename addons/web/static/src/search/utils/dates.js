@@ -47,6 +47,13 @@ export const QUARTER_OPTIONS = {
 
 export const DEFAULT_INTERVAL = "month";
 
+// Relative offsets (in months/years from the reference moment) defining the
+// range of month and year period options generated for a date filter.
+const START_MONTH = -2;
+const END_MONTH = 0;
+const START_YEAR = -2;
+const END_YEAR = 0;
+
 /**
  * Time interval options that users can select in the views.
  */
@@ -200,9 +207,9 @@ export function getOptionsWithDescriptions(OPTIONS) {
  */
 export function getPeriodOptions(referenceMoment, optionsParams) {
     return [
-        ...getMonthPeriodOptions(referenceMoment, optionsParams),
-        ...getQuarterPeriodOptions(optionsParams),
-        ...getYearPeriodOptions(referenceMoment, optionsParams),
+        ...getMonthPeriodOptions(referenceMoment),
+        ...getQuarterPeriodOptions(),
+        ...getYearPeriodOptions(referenceMoment),
         ...getCustomPeriodOptions(optionsParams),
     ];
 }
@@ -216,18 +223,14 @@ export function toGeneratorId(unit, offset) {
     return `${unit}${sep}${val}`;
 }
 
-function getMonthPeriodOptions(referenceMoment, optionsParams) {
-    const { startYear, endYear, startMonth, endMonth } = optionsParams;
-    return range(startMonth, endMonth + 1)
+function getMonthPeriodOptions(referenceMoment) {
+    return range(START_MONTH, END_MONTH + 1)
         .map((months) => {
-            const date = referenceMoment.plus({
-                months,
-                years: clamp(0, startYear, endYear),
-            });
+            const date = referenceMoment.plus({ months });
             const yearOffset = date.year - referenceMoment.year;
             return {
                 id: toGeneratorId("month", months),
-                defaultYearId: toGeneratorId("year", clamp(yearOffset, startYear, endYear)),
+                defaultYearId: toGeneratorId("year", clamp(yearOffset, START_YEAR, END_YEAR)),
                 description: date.toFormat("MMMM"),
                 granularity: "month",
                 groupNumber: 1,
@@ -237,18 +240,16 @@ function getMonthPeriodOptions(referenceMoment, optionsParams) {
         .reverse();
 }
 
-function getQuarterPeriodOptions(optionsParams) {
-    const { startYear, endYear } = optionsParams;
-    const defaultYearId = toGeneratorId("year", clamp(0, startYear, endYear));
+function getQuarterPeriodOptions() {
+    const defaultYearId = toGeneratorId("year", 0);
     return Object.values(QUARTER_OPTIONS).map((quarter) => ({
         ...quarter,
         defaultYearId,
     }));
 }
 
-function getYearPeriodOptions(referenceMoment, optionsParams) {
-    const { startYear, endYear } = optionsParams;
-    return range(startYear, endYear + 1)
+function getYearPeriodOptions(referenceMoment) {
+    return range(START_YEAR, END_YEAR + 1)
         .map((years) => {
             const date = referenceMoment.plus({ years });
             return {
