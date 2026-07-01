@@ -351,6 +351,9 @@
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
                         <group name="col_left" class="m-0">
+                            <!-- When calling .sudo(), context keys starting with default_ get cleaned -->
+                            <!-- so we use leave_date_from in addition to default_date_from -->
+                            <!-- default_date_from and default_date_to are still kept because they are used in different parts of the code -->
                             <field name="holiday_status_id" force_save="1"
                                 domain="[
                                     '|',
@@ -363,7 +366,7 @@
                                                     ('virtual_remaining_leaves', '&gt;', 0),
                                                     ('allows_negative', '=', False),
                                 ]"
-                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
