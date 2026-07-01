@@ -3,15 +3,7 @@
 }
 
 .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
-
-    @include media-breakpoint-down(xl) {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
-
-    @include media-breakpoint-down(sm) {
-        grid-template-columns: repeat(auto-fill, 1fr);
-    }
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 
 .button-no-demo {
@@ -25,4 +17,8 @@
 .internal-note-container .o_tag {
     border-radius: 3px !important;
     --background-color: #{$o-gray-200};
+}
+
+.product-name.no-image {
+    justify-content: safe center;
 }
