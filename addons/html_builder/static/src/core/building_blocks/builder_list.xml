@@ -56,6 +56,9 @@
                     </table>
                 </div>
             </t>
+            <t t-elif="this.props.emptyListMessage">
+                <input class="o-hb-input-base text-center" type="text" data-id="0" disabled="" t-att-value="this.props.emptyListMessage"/>
+            </t>
             <div t-if="isMany2X" class="o-hb-select-wrapper">
                 <t t-set="excludedRecords" t-value="this.getExcludedRecords()"></t>
                 <div class="mt-1 ms-auto">
@@ -65,14 +68,18 @@
                                 choices="excludedRecords.map((record) => ({ value: record, label: record.display_name  }))"
                                 onSelect="(record) => this.addItem(record)"
                                 class="'o-hb-selectMany2X-wrapper min-w-0'"
-                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown' + (this.props.fullWidthDropdown ? ' o-hb-full-width-dropdown' : '' )"
                                 togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
                                 disabled="!excludedRecords.length"
+                                alternativeChoiceItemTemplate="this.props.alternativeChoiceItemTemplate"
                             >
                                 <t t-out="this.props.addItemTitle"/>
                             </SelectMenu>
                         </div>
-                        <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the list with all records and sort it alphabetically" t-on-click="this.updateRecords"/>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-clone" title="Add all available records to the list and sort it alphabetically" t-on-click="this.updateRecords"/>
+                        <t t-if="this.props.refreshRecordsAction">
+                            <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the listed records with the latest data" t-on-click="this.refreshRecords"/>
+                        </t>
                         <button type="button" class="btn btn-lg btn-secondary fa fa-gear" title="Open the record list manager" t-on-click="this.openRecordsDialog"/>
                     </div>
                 </div>

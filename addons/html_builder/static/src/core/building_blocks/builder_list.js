@@ -89,6 +89,10 @@ export class BuilderList extends Component {
         limit: t.number().optional(50),
         disableLastCheckedCheckbox: t.boolean().optional(false),
         withScrollbar: t.boolean().optional(true),
+        fullWidthDropdown: t.boolean().optional(false),
+        alternativeChoiceItemTemplate: t.string().optional(),
+        emptyListMessage: t.string().optional(),
+        refreshRecordsAction: t.string().optional(),
     });
 
     setup() {
@@ -213,15 +217,28 @@ export class BuilderList extends Component {
     }
 
     updateRecords() {
+        // Prepares a map of listed records by their ID
         const selectedRecordsMap = new Map(
             this.getIncludedRecords()
                 .filter((r) => r.id)
                 .map((r) => [r.id, r])
         );
+        // Fills `newRecords` with `allRecords` alphabetically sorted. If a
+        // record with the same ID already exists in `selectedRecordsMap`, use
+        // the outdated version recorded in the map disregarding the information
+        // coming from `allRecords`.
         const newRecords = this.allRecords
             .map((record) => selectedRecordsMap.get(record.id) || record)
             .sort((a, b) => localeCompare(a.display_name, b.display_name));
         this.commit(newRecords);
+    }
+
+    refreshRecords() {
+        if (this.props.refreshRecordsAction) {
+            this.env.editor.shared.builderActions.applyAction(this.props.refreshRecordsAction, {
+                editingElement: this.env.getEditingElement(),
+            });
+        }
     }
 
     removeAllItems() {

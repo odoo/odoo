@@ -5,8 +5,8 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { useDebounced } from '@web/core/utils/timing';
-import { LocationList } from '@website_sale_stock/js/location_selector/location_list/location_list';
-import { MapContainer } from '@website_sale_stock/js/location_selector/map_container/map_container';
+import { LocationList } from '@website/components/location_selector/location_list/location_list';
+import { MapContainer } from '@website/components/location_selector/map_container/map_container';
 
 export const locationSelectorDialogProps = {
     isFrontend: t.boolean().optional(),
@@ -16,6 +16,14 @@ export const locationSelectorDialogProps = {
     selectedLocationId: t.string().optional(false),
     save: t.function(),
     close: t.function(), // This is the close from the env of the Dialog Component
+
+    // The following props are never set from `website_sale_stock`. They
+    // always keep their default values and are required to adapt the
+    // `LocationSelector` (`website`) to `website_sale_stock` module.
+    showDetailsTooltip: t.boolean().optional(false),
+    showDetailsTextArea: t.boolean().optional(true),
+    showSearchbar: t.boolean().optional(true),
+    showSidebar: t.boolean().optional(true),
 };
 
 export class LocationSelectorDialog extends Component {
@@ -36,7 +44,7 @@ export class LocationSelectorDialog extends Component {
 
         this.getLocationUrl = '/website_sale_stock/get_pickup_locations';
 
-        this.debouncedOnResize = useDebounced(this.updateSize, 300);
+        this.debouncedOnResize = useDebounced(() => this.updateSize(), 300);
         this.debouncedSearchButton = useDebounced(() => {
             this.state.locations = [];
             this._loadLocations();
@@ -51,12 +59,12 @@ export class LocationSelectorDialog extends Component {
         // Fetch new locations when the zip code is updated.
         useLayoutEffect(
             () => {
-                this._loadLocations()
+                this._loadLocations();
                 return () => {
                     this.state.locations = []
                 };
             },
-            () => [this.state.zipCode]
+            () => [this.state.zipCode],
         );
     }
 

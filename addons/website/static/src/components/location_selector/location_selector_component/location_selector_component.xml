@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.locationSelector.component">
+        <!-- Mobile view -->
+        <t t-if="this.state.isSmall">
+            <!-- Search bar -->
+            <t t-if="this.props.showSearchbar and this.props.showSidebar"
+                t-call="website.locationSelector.searchbar" />
+
+            <!-- "List view / Map view" navigation -->
+            <div class="nav nav-tabs" t-if="this.props.showSidebar">
+                <button
+                    class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
+                    t-att-class="{'border-bottom active': this.state.viewMode === 'list'}"
+                    t-on-click="() => this.state.viewMode = 'list'"
+                >
+                    List view
+                </button>
+                <button
+                    class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
+                    t-att-class="{'border-bottom border-primary fw-bold active': this.state.viewMode === 'map'}"
+                    t-on-click="() => this.state.viewMode = 'map'"
+                >
+                    Map view
+                </button>
+            </div>
+
+            <!-- Component -->
+            <div class="flex-grow-1 overflow-x-auto">
+                <t
+                    t-if="this.locations.length"
+                    t-component="this.mobileComponent"
+                    locations="this.locations"
+                    selectedLocationId="this.state.selectedLocationId.toString()"
+                    setSelectedLocation.bind="this.setSelectedLocation"
+                    showDetailsTextArea="this.props.showDetailsTextArea"
+                    showDetailsTooltip="this.props.showDetailsTooltip"
+                    showEmail="this.props.showEmail"
+                    showImage="this.props.showImage"
+                    showIndexes="false"
+                    showPhone="this.props.showPhone"
+                    showPinIndicator="false"
+                    showWebsite="this.props.showWebsite"
+                />
+            </div>
+        </t>
+        <!-- Desktop view -->
+        <t t-else="">
+            <div class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden"
+            t-att-class="{'flex-row-reverse': this.props.sidebarLocation == 'right'}">
+
+            <!-- List view -->
+            <section
+                t-if="this.props.showSidebar"
+                id="location_selector_list_view"
+                class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
+            >
+
+                <!-- Search bar -->
+                <t t-if="this.props.showSearchbar" t-call="website.locationSelector.searchbar">
+                    <t t-set="wrapClass" t-value="'d-flex'" />
+                </t>
+
+                <!-- List group -->
+                <LocationList
+                    t-if="this.locations.length"
+                    hideOffscreenLocations="this.props.hideOffscreenLocations"
+                    locations="this.locations"
+                    selectedLocationId="this.state.selectedLocationId.toString()"
+                    setSelectedLocation.bind="this.setSelectedLocation"
+                    showIndexes="false"
+                    showPinIndicator="false"
+                    visibleLocations="this.state.visibleLocations"
+                />
+            </section>
+
+            <!-- Map view -->
+            <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
+                <MapContainer
+                    locations="this.locations"
+                    mapZoom="this.props.mapZoom"
+                    pressControlToZoom="true"
+                    selectedLocationId="this.state.selectedLocationId.toString()"
+                    setSelectedLocation.bind="this.setSelectedLocation"
+                    setVisibleLocations="(l) => this.setVisibleLocations?.(l)"
+                    showDetailsTextArea="this.props.showDetailsTextArea"
+                    showDetailsTooltip="this.props.showDetailsTooltip"
+                    showEmail="this.props.showEmail"
+                    showImage="this.props.showImage"
+                    showIndexes="false"
+                    showLocationNameOnMarkerHover="true"
+                    showPhone="this.props.showPhone"
+                    showWebsite="this.props.showWebsite"
+                    containerEl="this.props.containerEl"
+                />
+            </section>
+        </div>
+        </t>
+    </t>
+
+    <t t-name="website.locationSelector.searchbar">
+        <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+            <input
+                id="o_location_selector_search"
+                class="search-query form-control oe_search_box border-0 text-bg-light"
+                t-custom-model.lazy="this.state.zipCode"
+                t-att-placeholder="this.props.mapSearchbarPlaceholder"
+            />
+            <button
+                aria-label="Search"
+                class="btn btn-light"
+                title="Search"
+                t-on-click="this.debouncedSearchButton"
+            >
+                <i class="oi oi-search" />
+            </button>
+        </div>
+    </t>
+
+    <t t-name="website.locationSelector.listIsEmpty">
+        <div class="container mt-3">
+            <div role="dialog" class="alert alert-info mx-auto text-center">
+                <span>No store locations have been added yet.</span>
+                <br />
+                <span>Add at least one location using the "Store Locations" selector in this block's
+                    options to display the map.</span>
+            </div>
+        </div>
+    </t>
+</templates>

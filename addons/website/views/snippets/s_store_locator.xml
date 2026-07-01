@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="s_store_locator" name="Store Locator">
+    <section class="s_store_locator"
+        data-map-zoom="12"
+        data-map-searchbar="true"
+        data-map-sidebar="true"
+        data-map-sidebar-location="left"
+        data-map-details="area"
+        locations_data=""
+        data-locations-list="[{
+            &quot;id&quot;:9,
+            &quot;city&quot;:&quot;Pleasant Hill&quot;,
+            &quot;name&quot;:&quot;Acme Corporation&quot;,
+            &quot;contact_address_inline&quot;:&quot;77 Santa Barbara Rd, Pleasant Hill CA 94523, United States&quot;,
+            &quot;country_id&quot;:[233,&quot;United States&quot;],
+            &quot;display_name&quot;:&quot;Acme Corporation&quot;,
+            &quot;email&quot;:&quot;acme_corp@yourcompany.example.com&quot;,
+            &quot;image_256&quot;:false,
+            &quot;partner_latitude&quot;:37.9354579,
+            &quot;partner_longitude&quot;:-122.0703083,
+            &quot;phone&quot;:&quot;(603)-996-3829&quot;,
+            &quot;street&quot;:&quot;77 Santa Barbara Rd&quot;,
+            &quot;zip&quot;:&quot;94523&quot;,
+            &quot;website&quot;:&quot;http://www.acme-example-company.com&quot;
+        },
+        {
+            &quot;id&quot;:15,
+            &quot;city&quot;:&quot;Fremont&quot;,
+            &quot;name&quot;:&quot;Azure Interior&quot;,
+            &quot;contact_address_inline&quot;:&quot;4557 De Silva St, Fremont CA 94538, United States&quot;,
+            &quot;country_id&quot;:[233,&quot;United States&quot;],
+            &quot;display_name&quot;:&quot;Azure Interior&quot;,
+            &quot;email&quot;:&quot;azure.Interior24@example.com&quot;,
+            &quot;image_256&quot;:false,
+            &quot;partner_latitude&quot;:37.5304271,
+            &quot;partner_longitude&quot;:-121.9746713,
+            &quot;phone&quot;:&quot;(870)-931-0505&quot;,
+            &quot;street&quot;:&quot;4557 De Silva St&quot;,
+            &quot;zip&quot;:&quot;94538&quot;,
+            &quot;website&quot;:&quot;http://www.azure-interior.com&quot;
+        }]">
+        <div class="border-0 container-fluid overflow-hidden o_store_locator_component o_not_editable"/>
+    </section>
+</template>
+
+<record id="website.s_store_locator_000_scss" model="ir.asset">
+    <field name="name">Store locator 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_store_locator/000.scss</field>
+</record>
+
+</odoo>

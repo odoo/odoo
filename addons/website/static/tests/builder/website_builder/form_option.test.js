@@ -1007,7 +1007,7 @@ describe("Many2one Field", () => {
     });
 
     test("Update button", async () => {
-        await contains(".we-bg-options-container .fa-refresh").click();
+        await contains(".we-bg-options-container .fa-clone").click();
         expect(addRecordButtonSelector).toHaveProperty("disabled", true, {
             message: "Add button should be disabled when all records are included",
         });
