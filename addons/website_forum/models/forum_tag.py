@@ -25,6 +25,7 @@ class ForumTag(models.Model):
         'unique (name, forum_id)',
         'Tag name already exists!',
     )
+    _forum_id_posts_count_idx = models.Index('(forum_id, posts_count desc)')
 
     follower_ids = fields.Many2many(
         'res.partner',

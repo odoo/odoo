@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_forum.benchmark_forum_large" model="populate.blueprint">
+        <field name="name">Benchmark: large forum (one forum, many posts)</field>
+
+        <field name="definition_xml" type="xml">
+            <model name="forum.forum" count="1" id="forums" scale="False">
+                <field name="name" generator="fake.sentence" nb_words="3"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="forum.tag" count="800" id="tags">
+                <field name="v_name" virtual="True" generator="fake.word"/>
+                <field name="v_rng_digits" virtual="True" generator="scalar.integer" start="10" end="9999"/>
+                <field name="name" eval="f'{v_name} {v_rng_digits}'" unique="True"/>
+                <field name="forum_id" ref="forums"/>
+            </model>
+
+            <model name="res.users" count="500" id="portal_users" context="{'tracking_disable': True, 'install_mode': True}">
+                <field name="name" generator="fake.name"/>
+                <field name="login" unique="True"/>
+                <field name="group_ids" eval="[Command.set([env.ref('base.group_portal').id])]"/>
+            </model>
+
+
+            <model name="forum.post" count="25000" id="posts" parallel="False">
+                <field name="name" generator="fake.sentence"/>
+                <field name="forum_id" ref="forums"/>
+                <field name="content" generator="fake.paragraph" nb_sentences="5"/>
+                <field name="create_uid" ref="portal_users"/>
+                <field name="tag_ids" ref="tags" count="5" std="3"/>
+            </model>
+
+        </field>
+    </record>
+
+    <record id="website_forum.benchmark_forum_small" model="populate.blueprint">
+        <field name="name">Benchmark: small forums (many forums, few posts)</field>
+
+        <field name="definition_xml" type="xml">
+            <model name="forum.forum" count="4" id="forums">
+                <field name="name" generator="fake.sentence" nb_words="3"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="forum.tag" count="80" id="tags" scale="False">
+                <field name="v_name" virtual="True" generator="fake.word"/>
+                <field name="v_rng_digits" virtual="True" generator="scalar.integer" start="10" end="999"/>
+                <field name="name" eval="f'{v_name}{v_rng_digits}'" unique="True"/>
+                <field name="forum_id" ref="forums"/>
+            </model>
+
+            <model name="res.users" count="350" id="portal_users" context="{'tracking_disable': True, 'install_mode': True}">
+                <field name="name" generator="fake.name"/>
+                <field name="login" unique="True"/>
+                <field name="group_ids" eval="[Command.set([env.ref('base.group_portal').id])]"/>
+            </model>
+
+            <model name="forum.post" count="600" id="posts" parallel="False">
+                <field name="name" generator="fake.sentence"/>
+                <field name="forum_id" ref="forums"/>
+                <field name="content" generator="fake.paragraph" nb_sentences="5"/>
+                <field name="create_uid" ref="portal_users"/>
+                <field name="tag_ids" ref="tags" count="5" std="3"/>
+            </model>
+
+        </field>
+    </record>
+
+</odoo>

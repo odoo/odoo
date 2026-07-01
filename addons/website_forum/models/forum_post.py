@@ -1012,26 +1012,35 @@ class ForumPost(models.Model):
 
         if not self.tag_ids:
             return self.env['forum.post']
-
-        self.env.cr.execute(SQL("""
-            SELECT forum_post.id,
-              -- Jaccard similarity
-                   (COUNT(DISTINCT intersection_tag_rel.forum_tag_id))::DECIMAL
-                   / COUNT(DISTINCT union_tag_rel.forum_tag_id)::DECIMAL AS similarity
-              FROM forum_post
-              -- common tags (intersection)
-              JOIN forum_tag_rel AS intersection_tag_rel
-                ON intersection_tag_rel.forum_post_id = forum_post.id
-               AND intersection_tag_rel.forum_tag_id = ANY(%(tag_ids)s)
-              -- union tags
-        RIGHT JOIN forum_tag_rel AS union_tag_rel
-                ON union_tag_rel.forum_post_id = forum_post.id
-                OR union_tag_rel.forum_post_id = %(current_post_id)s
-             WHERE id != %(current_post_id)s
-          GROUP BY forum_post.id
-          ORDER BY similarity DESC,
-                   forum_post.last_activity_date DESC
-             LIMIT %(limit)s
+        # Jaccard Similarity
+        # Formula: J(A,B) = |A ∩ B| / |A ∪ B|
+        #                 = |A ∩ B| / (|A| + |B| - |A ∩ B|)
+        #  A = set of tags of the current post
+        #  B = set of tags of the candidate post
+        # |S| = size of the set S
+        self.env.cr.execute(SQL(
+            """
+            WITH candidates AS (
+                -- intersection: posts that share at least one tag with the current post
+                SELECT forum_post_id, COUNT(forum_tag_id) AS intersection_count
+                  FROM forum_tag_rel
+                 WHERE forum_tag_id = ANY(%(tag_ids)s)
+                   AND forum_post_id != %(current_post_id)s
+              GROUP BY forum_post_id
+            )
+            SELECT p.id,
+                (c.intersection_count::DECIMAL /
+                (
+                    -- union: |A| + |B| - |A ∩ B|
+                    cardinality(%(tag_ids)s) +                                      -- |A|
+                    (SELECT COUNT(*) FROM forum_tag_rel WHERE forum_post_id = p.id) -- |B|
+                    - c.intersection_count                                          -- |A ∩ B|
+                )::DECIMAL) AS similarity
+            FROM candidates c
+            JOIN forum_post p
+              ON p.id = c.forum_post_id
+        ORDER BY similarity DESC, p.last_activity_date DESC
+           LIMIT %(limit)s;
         """, current_post_id=self.id, tag_ids=self.tag_ids.ids, limit=limit))
 
         result = self.env.cr.dictfetchall()
