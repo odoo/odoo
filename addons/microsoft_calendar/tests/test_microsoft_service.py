@@ -484,17 +484,37 @@ class TestMicrosoftService(TransactionCase):
         IrParameter.set_param("microsoft_account.token_endpoint", custom_token_endpoint)
         self.env.user._refresh_microsoft_calendar_token()
 
-        kwargs = {
-            "params": {
-                "refresh_token": False,
+        def make_token_call(url, refresh_token):
+            return call(url, params={
+                "refresh_token": refresh_token,
                 "client_id": "dummy_client_id",
                 "client_secret": "dummy_client_secret",
                 "grant_type": "refresh_token",
-            },
-            "headers": {"content-type": "application/x-www-form-urlencoded"},
-            "method": "POST",
-            "preuri": "",
-        }
-        first_call = call(DEFAULT_MICROSOFT_TOKEN_ENDPOINT, **kwargs)
-        second_call = call(custom_token_endpoint, **kwargs)
-        mock_do_request.assert_has_calls([first_call, second_call])
+            }, headers={"content-type": "application/x-www-form-urlencoded"}, method="POST", preuri="")
+
+        mock_do_request.assert_has_calls([
+            make_token_call(DEFAULT_MICROSOFT_TOKEN_ENDPOINT, False),
+            make_token_call(custom_token_endpoint, "dummy_refresh_token"),
+        ])
+
+    @patch.object(MicrosoftService, "_do_request")
+    def test_refresh_microsoft_calendar_token_persists_new_refresh_token(self, mock_do_request):
+        """
+        Microsoft issues a new refresh token on every token refresh (rolling 90-day window).
+        Failing to persist it causes forced re-authentication after 90 days.
+        """
+        mock_do_request.return_value = self._do_request_result({
+            "access_token": "new_access_token",
+            "token_type": "Bearer",
+            "expires_in": 3599,
+            "refresh_token": "new_refresh_token",
+        })
+        IrParameter = self.env["ir.config_parameter"].sudo()
+        IrParameter.set_param("microsoft_calendar_client_id", "dummy_client_id")
+        IrParameter.set_param("microsoft_calendar_client_secret", "dummy_client_secret")
+        self.env.user.sudo().microsoft_calendar_rtoken = "old_refresh_token"
+
+        self.env.user._refresh_microsoft_calendar_token()
+
+        self.assertEqual(self.env.user.sudo().microsoft_calendar_rtoken, "new_refresh_token")
+        self.assertEqual(self.env.user.sudo().microsoft_calendar_token, "new_access_token")
