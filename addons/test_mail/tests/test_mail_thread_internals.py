@@ -594,14 +594,16 @@ class TestAPI(ThreadRecipients):
     def test_message_get_suggested_recipients(self):
         """ Test default creation values returned for suggested recipient. """
         ticket = self.ticket_record.with_user(self.env.user)
+        # assign to another user so the responsible can be proposed as suggested recipient
+        ticket.user_id = self.user_employee_2
         ticket.message_unsubscribe(ticket.user_id.partner_id.ids)
         suggestions = ticket._message_get_suggested_recipients(no_create=True)
         self.assertEqual(len(suggestions), 2)
         for suggestion, expected in zip(suggestions, [{
             'create_values': {},
-            'email': self.user_employee.email_normalized,
-            'name': self.user_employee.name,
-            'partner_id': self.partner_employee.id,
+            'email': self.user_employee_2.email_normalized,
+            'name': self.user_employee_2.name,
+            'partner_id': self.partner_employee_2.id,
             'recipient_type': 'to',
         }, {
             'create_values': {
@@ -614,6 +616,22 @@ class TestAPI(ThreadRecipients):
             'recipient_type': 'to',
         }], strict=True):
             self.assertDictEqual(suggestion, expected)
+
+        # assigned should not be added if current user
+        ticket.user_id = self.env.user
+        ticket.message_unsubscribe(ticket.user_id.partner_id.ids)
+        suggestions = ticket._message_get_suggested_recipients(no_create=True)
+        self.assertEqual(len(suggestions), 1)
+        self.assertDictEqual(suggestions[0], {
+            'create_values': {
+                'company_id': self.env.user.company_id.id,
+                'phone': '+32455998877',
+            },
+            'email': 'paulette@test.example.com',
+            'name': 'Paulette Vachette',
+            'partner_id': False,
+            'recipient_type': 'to',
+        })
 
         # existing partner not linked -> should propose it
         ticket_partner_email = self.env['mail.test.ticket.mc'].create({
