@@ -726,7 +726,7 @@ test("sidebar: basic channel rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-actions.d-none");
     await click("[title='Channel Actions']");
-    await contains(".o-dropdown-item:contains('Leave Channel')");
+    await contains(".o-dropdown-item:contains('Leave Conversation')");
 });
 
 test("channel become active", async () => {
@@ -2359,9 +2359,9 @@ test("sidebar: cannot leave channel with group_ids", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel:text(General) .oi-ellipsis-h");
     await waitFor(".dropdown-item:text(Notification Settings)"); // check anything else in the dropdown
-    await waitForNone(".dropdown-item:text(Leave Channel)");
+    await waitForNone(".dropdown-item:text(Leave Conversation)");
     await click(".o-mail-DiscussSidebarChannel:text(Special) .oi-ellipsis-h");
-    await waitFor(".dropdown-item:text(Leave Channel)");
+    await waitFor(".dropdown-item:text(Leave Conversation)");
 });
 
 test("restore thread scroll position", async () => {

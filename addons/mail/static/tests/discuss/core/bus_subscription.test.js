@@ -105,6 +105,6 @@ test("bus subscription is refreshed when channel is left", async () => {
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Leave Conversation')");
     await expect.waitForSteps(["subscribe"]);
 });

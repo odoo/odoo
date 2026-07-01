@@ -538,7 +538,7 @@ test("sidebar: leave non-livechat channel removes it from sidebar", async () => 
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await click(".o-mail-DiscussSidebarChannel:text('General') .oi-ellipsis-h");
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Leave Conversation')");
     await contains(
         ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?')"
     );
