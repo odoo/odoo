@@ -35,7 +35,7 @@ export class ActivityCell extends Component {
             resModel: t.string(),
             summaries: t.array(),
             userAssignedIds: t.array(t.number()),
-            roleAssignedIds: t.array(t.number()).optional(),
+            roleToAssignIds: t.array(t.number()).optional(),
         });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
     }

@@ -479,8 +479,6 @@ class ResUsers(models.Model):
     def _get_activities_to_assign_count(self):
         """Activities targeting one of the current user's roles (including archived), not yet assigned to anyone."""
         role_ids = self.env.user.with_context(active_test=False).role_ids.ids
-        if not role_ids:
-            return 0
         return self.env['mail.activity'].search_count([
             ('user_id', '=', False),
             ('role_id', 'in', role_ids),

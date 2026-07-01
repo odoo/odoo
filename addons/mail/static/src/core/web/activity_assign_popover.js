@@ -56,8 +56,7 @@ export class ActivityAssignPopover extends Component {
         if (this.disableAssignButton()) {
             return;
         }
-        const { res_id, res_model } = this.activity();
-        const thread = this.store["mail.thread"].insert({ model: res_model, id: res_id });
+        const thread = this.activity().thread;
         this.disableAssignButton.set(true);
         try {
             await this.orm.write("mail.activity", [this.activity().id], {
