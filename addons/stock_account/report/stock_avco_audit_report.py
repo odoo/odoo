@@ -65,7 +65,7 @@ WHERE
     sm.state = 'done'
     AND (sm.is_in = TRUE OR sm.is_out = TRUE)
     -- Ignore moves for standard cost method. Only display the list of cost updates
-    AND COALESCE(pc.property_cost_method ->> sm.company_id::text, cost_method_default.json_value) IN ('fifo', 'average')
+    AND COALESCE(pc.property_cost_method ->> sm.company_id::text, cost_method_default.json_value::jsonb #>> '{}') IN ('fifo', 'average')
 UNION ALL
 SELECT
     -pv.id,
