@@ -10,6 +10,7 @@ import {
     nextLeaf,
     previousLeaf,
     isTableCell,
+    getTableColgroup,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -243,9 +244,9 @@ export class TablePlugin extends Plugin {
         this.onMousemove = this.onMousemove.bind(this);
     }
 
-    processTableResizeTargets(item, neighbor, position) {
+    processTableResizeTargets(item, neighbor, position, defaultMinSize) {
         if (!isTableCell(item)) {
-            return [item, neighbor];
+            return [item, neighbor, defaultMinSize, defaultMinSize];
         }
         const table = closestElement(item, "table");
         const tableGrid = this.buildTableGrid(table);
@@ -254,7 +255,7 @@ export class TablePlugin extends Plugin {
         const columnIndex =
             position === "middle" ? row.findLastIndex((c) => c === item) : row.indexOf(item);
         const adjacentColumnIndex = row.indexOf(neighbor);
-        let colgroup = table.querySelector("colgroup");
+        let colgroup = getTableColgroup(table);
         if (!colgroup) {
             colgroup = this.document.createElement("colgroup");
             for (const cell of tableGrid[0]) {
@@ -265,7 +266,37 @@ export class TablePlugin extends Plugin {
             table.insertBefore(colgroup, table.firstChild);
         }
         const columns = colgroup.children;
-        return [columns[columnIndex], columns[adjacentColumnIndex]];
+        const getNestedTableMinSize = (colIndex) => {
+            const visited = new Set();
+            return tableGrid.reduce((minSize, row) => {
+                const cell = row[colIndex];
+                if (!cell || visited.has(cell) || cell.colSpan > 1) {
+                    return minSize;
+                }
+                visited.add(cell);
+                const cellStyle = getComputedStyle(cell);
+                for (const nestedTable of cell.querySelectorAll(":scope > table")) {
+                    if (!nestedTable.style.width) {
+                        continue;
+                    }
+                    const nestedTableStyle = getComputedStyle(nestedTable);
+                    const width =
+                        nestedTable.getBoundingClientRect().width +
+                        parseFloat(cellStyle.paddingLeft) +
+                        parseFloat(cellStyle.paddingRight) +
+                        parseFloat(nestedTableStyle.marginLeft) +
+                        parseFloat(nestedTableStyle.marginRight);
+                    minSize = Math.max(minSize, width);
+                }
+                return minSize;
+            }, defaultMinSize);
+        };
+        return [
+            columns[columnIndex],
+            columns[adjacentColumnIndex],
+            getNestedTableMinSize(columnIndex),
+            adjacentColumnIndex >= 0 ? getNestedTableMinSize(adjacentColumnIndex) : defaultMinSize,
+        ];
     }
 
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
@@ -484,7 +515,7 @@ export class TablePlugin extends Plugin {
 
             // Temporarily set widths so proportions are respected.
             let totalWidth = 0;
-            const colgroup = table.querySelector("colgroup");
+            const colgroup = getTableColgroup(table);
             if (tableWidth && colgroup) {
                 for (const col of colgroup.children) {
                     const width = parseFloat(col.style.width);
@@ -638,7 +669,7 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         const tableGrid = this.buildTableGrid(table);
         const rowIndex = getRowIndex(cell);
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
@@ -744,7 +775,7 @@ export class TablePlugin extends Plugin {
                 index += moveStep;
             }
         });
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (colgroup) {
             const cols = colgroup.children;
             insertBefore
@@ -824,7 +855,7 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableElement} table
      */
     normalizeColumnWidth(table) {
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (colgroup) {
             const columns = Array.from(colgroup.children);
             const tableWidth = parseFloat(table.style.width);
@@ -852,7 +883,7 @@ export class TablePlugin extends Plugin {
      */
     resetColumnWidth(cell) {
         const table = closestElement(cell, "table");
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (!colgroup) {
             return;
         }
@@ -920,6 +951,30 @@ export class TablePlugin extends Plugin {
                 adjColWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
             }px`;
         });
+
+        // Reset nested tables in all cells of affected columns so they
+        // naturally adapt to the new outer column widths instead of
+        // overflowing their parent cell.
+        const affectedCols = [...targetCols, ...colsToAdjust];
+        const affectedColIndices = affectedCols.map((col) => colElements.indexOf(col));
+        const visited = new Set();
+        for (const rowGrid of tableGrid) {
+            for (const colIndex of affectedColIndices) {
+                const cell = rowGrid[colIndex];
+                // Skip if cell is null or already visited due to rowspan/colspan.
+                if (!cell || visited.has(cell)) {
+                    continue;
+                }
+                visited.add(cell);
+                const nestedTables = cell.querySelectorAll("table");
+                for (const nestedTable of nestedTables) {
+                    if (nestedTable.style.width) {
+                        this.resetTableSize(nestedTable);
+                    }
+                }
+            }
+        }
+
         this.normalizeColumnWidth(table);
     }
 
@@ -973,7 +1028,7 @@ export class TablePlugin extends Plugin {
         table.querySelectorAll("tr").forEach((row) => {
             row.style.height = "";
         });
-        table.querySelector("colgroup")?.remove();
+        getTableColgroup(table)?.remove();
     }
     /**
      * @param {HTMLTableCellElement} cell
