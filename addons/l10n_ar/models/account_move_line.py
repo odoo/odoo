@@ -10,6 +10,12 @@ class AccountMoveLine(models.Model):
         invoice = self.move_id
         include_vat = invoice._l10n_ar_include_vat()
 
+        if self.display_type in ('line_section', 'line_subsection'):
+            data = self._get_child_lines()[0]
+            return {
+                'section_price': data['price_total'] if include_vat else data['price_subtotal'],
+            }
+
         AccountTax = self.env['account.tax']
         base_line = invoice._prepare_product_base_line_for_taxes_computation(self)
         if include_vat:
