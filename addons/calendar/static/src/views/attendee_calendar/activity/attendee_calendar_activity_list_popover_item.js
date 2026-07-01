@@ -23,7 +23,6 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
             onRemoveActivityItem: types.function([types.number()]),
             onViewMeeting: types.function([types.instanceOf(this.store["calendar.event"].Class)]),
         });
-        this.action = useService("action");
         this.orm = useService("orm");
         const today = DateTime.now().startOf("day");
         this.targetDays = {
@@ -43,6 +42,10 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
     }
 
     get hasCancelButton() {
+        return false;
+    }
+
+    get hasMailButton() {
         return false;
     }
 
