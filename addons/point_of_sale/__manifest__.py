@@ -17,7 +17,6 @@
         'data/ir_config_parameter_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
-        'wizard/pos_close_session_wizard.xml',
         'wizard/pos_daily_sales_reports.xml',
         'wizard/pos_confirmation_wizard.xml',
         'wizard/pos_make_invoice.xml',
@@ -197,7 +196,7 @@
             'web/static/fonts/fonts.scss',
             "web/static/src/scss/ui.scss",
 
-            ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
+            ('remove', 'web/static/src/core/errors/error_handlers.js'),  # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),
             'web/static/src/core/currency.js',
             # barcode scanner

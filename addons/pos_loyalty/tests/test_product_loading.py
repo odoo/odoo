@@ -69,6 +69,7 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         company_b = company_b_data['company']
         payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash',
+            'type': 'cash',
             'receivable_account_id': company_b_data['default_account_receivable'].id,
             'journal_id': company_b_data['default_journal_cash'].id,
             'company_id': company_b.id,
@@ -77,7 +78,6 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
             'name': 'new pos',
             'company_id': company_b.id,
             'journal_id': company_b_data['default_journal_sale'].id,
-            'invoice_journal_id': company_b_data['default_journal_sale'].id,
             'payment_method_ids': [Command.set([payment_method.id])],
         })
         pos_config.open_ui()

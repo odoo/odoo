@@ -46,7 +46,7 @@ class PosOrder(models.Model):
         to_invoice = order.get('to_invoice')
 
         for refunded_order in refunded_orders:
-            submitted = ((refunded_order.is_invoiced and refunded_order.account_move.l10n_my_edi_state in ["in_progress", "valid", "rejected"])
+            submitted = ((refunded_order.is_singly_invoiced and refunded_order.account_move.l10n_my_edi_state in ["in_progress", "valid", "rejected"])
                          or (refunded_order._get_active_consolidated_invoice() and refunded_order._get_active_consolidated_invoice().myinvois_state in ["in_progress", "valid", "rejected"]))
 
             if submitted and not to_invoice:

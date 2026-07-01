@@ -8,7 +8,7 @@
             <attribute name="t-if">pos_order.company_id.country_code != 'AR'</attribute>
         </xpath>
         <xpath expr="//div[@id='get_my_invoice']/.." position="after">
-            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'AR' and not pos_order.is_invoiced">Invoice not available. You can contact us for more info</h4>
+            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'AR' and not pos_order.is_singly_invoiced">Invoice not available. You can contact us for more info</h4>
         </xpath>
 
         <!-- If the user is NOT log in we should hide the partner form, this one lost functionality because the get my invoice button is not shown and then the partner info is never save. In they want they can sign up and fill data from there -->

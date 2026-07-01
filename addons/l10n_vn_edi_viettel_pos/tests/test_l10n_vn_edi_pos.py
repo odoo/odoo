@@ -79,9 +79,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
     def test_invoice_send_and_print(self):
         """ Test the invoice creation, sending and printing from a POS order."""
         order = self._create_simple_order()
-        move_vals = order._prepare_invoice_vals()
-        invoice = order._create_invoice(move_vals)
-        invoice.action_post()
+        invoice = order._generate_pos_order_invoice()
 
         self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'ready_to_send')
         self._send_invoice(invoice)
@@ -102,15 +100,11 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
     def test_invoice_refund(self):
         """ Test the refund flow of PoS order"""
         order = self._create_simple_order()
-        move_vals = order._prepare_invoice_vals()
-        invoice = order._create_invoice(move_vals)
-        invoice.action_post()
+        invoice = order._generate_pos_order_invoice()
         self._send_invoice(invoice)
 
         refund_order = order._refund()
-        refund_move_vals = refund_order._prepare_invoice_vals()
-        refund_invoice = refund_order._create_invoice(refund_move_vals)
-        refund_invoice.action_post()
+        refund_invoice = refund_order._generate_pos_order_invoice()
 
         self.assertEqual(refund_invoice.l10n_vn_edi_invoice_state, 'ready_to_send')
         self._send_invoice(refund_invoice)
@@ -130,8 +124,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
     def test_fetch_invoice_files(self):
         """Test that l10n_vn_edi_fetch_invoice_files fetches and stores XML and PDF files on a sent POS invoice."""
         order = self._create_simple_order()
-        invoice = order._create_invoice(order._prepare_invoice_vals())
-        invoice.action_post()
+        invoice = order._generate_pos_order_invoice()
         self._send_invoice(invoice)
 
         self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
@@ -166,8 +159,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
     def test_fetch_invoice_files_not_sent_raises(self):
         """Test that calling l10n_vn_edi_fetch_invoice_files on a non-sent invoice raises a UserError."""
         order = self._create_simple_order()
-        invoice = order._create_invoice(order._prepare_invoice_vals())
-        invoice.action_post()
+        invoice = order._generate_pos_order_invoice()
 
         self.assertNotEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
         with self.assertRaises(UserError):

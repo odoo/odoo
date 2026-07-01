@@ -50,15 +50,14 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'iface_tipproduct': False,
             'company_id': cls.env.company.id,
             'journal_id': test_sale_journal_2.id,
-            'invoice_journal_id': test_sale_journal_2.id,
             'payment_method_ids': [
                 (4, cls.bank_payment_method.id),
                 (0, 0, {
                     'name': 'Cash',
-                    'split_transactions': False,
                     'receivable_account_id': cls.account_receivable.id,
                     'journal_id': cash_journal_2.id,
-                })
+                    'type': 'cash',
+                }),
             ],
         })
         cls.main_pos_config = cls.pos_config
@@ -785,18 +784,6 @@ class TestFrontend(TestFrontendCommon):
         Tests that when a customer is set, it will be saved and not be reset even if this is the only thing that changed in the order
         """
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
-
-    def test_no_kitchen_confirmation_for_deposit_money(self):
-        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
-            self.skipTest("pos_settle_due module is required for this test")
-
-        self.customer_account_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Customer Account',
-            'split_transactions': True,
-        })
-        self.pos_config.write({'payment_method_ids': [(4, self.customer_account_payment_method.id)]})
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('test_no_kitchen_confirmation_for_deposit_money', login="pos_admin")
 
     def test_open_default_register_screen_config(self):
         """

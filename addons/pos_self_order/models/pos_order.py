@@ -107,7 +107,7 @@ class PosOrder(models.Model):
     def _load_pos_self_data_fields(self, config):
         return ['id', 'uuid', 'name', 'display_name', 'access_token', 'date_order', 'amount_total', 'amount_paid', 'amount_return', 'user_id', 'amount_tax', 'lines', 'pricelist_id', 'company_id', 'country_code', 'sequence_number', 'session_id',
                 'config_id', 'currency_id', 'currency_rate', 'is_refund', 'has_refundable_lines', 'state', 'account_move', 'preset_id', 'floating_order_name', 'general_customer_note', 'internal_note', 'nb_print', 'pos_reference', 'fiscal_position_id', 'payment_ids', 'to_invoice',
-                'preset_time', 'is_invoiced', 'is_tipped', 'tip_amount', 'ticket_code', 'tracking_number', 'email', 'mobile', 'table_id', 'course_ids',
+                'preset_time', 'is_singly_invoiced', 'is_globally_invoiced', 'is_tipped', 'tip_amount', 'ticket_code', 'tracking_number', 'email', 'mobile', 'table_id', 'course_ids',
                 'table_stand_number', 'self_ordering_table_id', 'create_date', 'write_date', 'source', 'partner_id', 'customer_count']
 
     @api.model
@@ -280,7 +280,7 @@ class PosOrder(models.Model):
         self._compute_service_fee_price()
 
         order_lines = self.lines
-        base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+        base_lines = order_lines._prepare_base_lines_for_taxes_computation()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, company)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, company)
         tax_totals = self.env['account.tax']._get_tax_totals_summary(

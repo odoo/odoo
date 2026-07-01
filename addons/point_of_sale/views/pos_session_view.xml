@@ -7,7 +7,7 @@
             <form string="Point of Sale Session" create="0" edit="0">
                 <header>
                     <widget name="pos_open_ui_button" action="open_frontend_cb" invisible="rescue or state not in ['opening_control', 'opened']"/>
-                    <button id="validate_closing_control" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
+                    <button id="validate_closing_control" name="close_session_from_ui" type="object" string="Close Session &amp; Post Entries"
                             invisible="(state != 'closing_control' and not rescue or state == 'closed' and rescue) and state != 'closing_control'"
                     class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
@@ -30,41 +30,34 @@
                             <field name="total_payments_amount" widget="statinfo" string="Payments"/>
                         </button>
                         <button
-                            name="show_journal_items"
+                            name="show_linked_account_move"
                             type="object"
                             class="oe_stat_button"
                             icon="fa-bars"
+                            invisible="account_move_count == 0"
                             groups="account.group_account_readonly"
                             >
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Journal Items</span>
-                            </div>
-                        </button>
-                        <button
-                            name="show_cash_register"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-bars"
-                            invisible="not cash_control"
-                            groups="account.group_account_readonly">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Cash Register</span>
-                            </div>
+                            <field name="account_move_count" widget="statinfo" string="Invoices"/>
                         </button>
                     </div>
                     <h1 class="oe_title">
                         <field name="name" invisible="name == '/'" class="oe_inline"/>
                     </h1>
                     <group>
-                        <field name="cash_control" invisible="1" />
                         <field name="user_id" readonly="state != 'opening_control'"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="config_id" readonly="1"/>
-                        <field name="move_id" readonly="1" groups="account.group_account_readonly" />
-                        <field name="start_at" invisible="state == 'opening_control'"/>
-                        <field name="stop_at" invisible="state != 'closed'"/>
-                        <field name="cash_register_balance_start"/>
-                        <field name="cash_register_balance_end_real" invisible="state != 'closed'"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="cash_control" invisible="1" />
+                            <field name="start_at" invisible="state == 'opening_control'"/>
+                            <field name="stop_at" invisible="state != 'closed'"/>
+                        </group>
+                        <group>
+                            <field name="opening_balance" widget="monetary" readonly="1" />
+                            <field name="closing_balance" widget="monetary" readonly="1" />
+                            <field name="sales_move_id" readonly="1" groups="base.group_no_one" />
+                            <field name="refunds_move_id" readonly="1" groups="base.group_no_one" />
+                        </group>
                     </group>
                 </sheet>
                 <chatter/>
@@ -82,9 +75,6 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
                 <field name="start_at" />
                 <field name="stop_at" />
-                <field name="cash_register_balance_start"/>
-                <field name="cash_register_balance_end_real"/>
-                <field name="cash_register_balance_end"/>
                 <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
             </list>
         </field>

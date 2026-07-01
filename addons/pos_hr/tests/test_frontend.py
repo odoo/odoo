@@ -200,19 +200,20 @@ class TestUi(TestPosHrHttpCommon):
                 Command.create({
                     'product_id': self.product_a.id,
                     'qty': 1,
-                    'price_subtotal': 100.0,
-                    'price_subtotal_incl': 100.0,
+                    'price_unit': 1000.0,
+                    'price_subtotal': 1000.0,
+                    'price_subtotal_incl': 1000.0,
                 }),
             ],
             'amount_tax': 0.0,
-            'amount_total': 100.0,
+            'amount_total': 1000.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
         })
 
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': 100,
+            'amount': 1000,
             'payment_method_id': self.bank_payment_method.id
         })
         order_payment.with_context(**payment_context).check()

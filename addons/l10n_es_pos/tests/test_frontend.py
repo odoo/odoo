@@ -22,7 +22,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_spanish_pos(self):
         split_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
-            'split_transactions': True,
+            'type': 'pay_later',
         })
         self.main_pos_config.payment_method_ids = [(4, split_payment_method.id)]
 
@@ -33,7 +33,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'code': 'SIMP',
         })
         def get_number_of_regular_invoices():
-            return self.env['account.move'].search_count([('journal_id', '=', self.main_pos_config.invoice_journal_id.id), ('l10n_es_is_simplified', '=', False), ('pos_order_ids', '!=', False)])
+            return self.env['account.move'].search_count([('journal_id', '=', self.main_pos_config.journal_id.id), ('l10n_es_is_simplified', '=', False), ('pos_order_ids', '!=', False)])
         initial_number_of_regular_invoices = get_number_of_regular_invoices()
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = simp
         # this `limit` value is linked to the `SIMPLIFIED_INVOICE_LIMIT` const in the tour
@@ -52,7 +52,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # create customer account payment method
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
-            'split_transactions': True,
+            'type': 'pay_later',
         })
         # add customer account payment method to pos config
         self.main_pos_config.write({
@@ -91,7 +91,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         order_payment.with_context(**payment_context).check()
 
         self.assertEqual(self.partner_test_1.total_due, 10)
-        current_session.action_pos_session_closing_control()
+        current_session.close_session_from_ui()
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'l10n_es_pos_settle_account_due', login="accountman")
@@ -120,11 +120,11 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'price_unit': 100,
                 'qty': 1.0,
                 'tax_ids': self.product_a.taxes_id,
-                'price_subtotal': 85,
-                'price_subtotal_incl': 100,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 115,
                 'discount': 0,
             })],
-            'amount_total': 100,
+            'amount_total': 115,
             'amount_tax': 15,
             'amount_paid': 0,
             'amount_return': 0,
@@ -133,7 +133,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
         self.pos_make_payment_0 = self.env['pos.make.payment'].with_context(context_make_payment).create({
-            'amount': 100.0,
+            'amount': 115.0,
             'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
         })
         context_payment = {'active_id': self.pos_order_pos0.id}

@@ -38,6 +38,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
 
         # Payment Methods
         cls.payment_method_display = cls.env["pos.payment.method"].create({
+            'type': 'bank',
             "name": "Bancontact - Display",
             "payment_method_type": "external_qr",
             "payment_provider": "bancontact_pay",
@@ -49,6 +50,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
             "bancontact_test_mode": True,
         })
         cls.payment_method_display_2 = cls.env["pos.payment.method"].create({
+            'type': 'bank',
             "name": "Bancontact - Display2",
             "payment_method_type": "external_qr",
             "payment_provider": "bancontact_pay",
@@ -64,6 +66,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
             "payment_method_type": "external_qr",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "sticker",
+            "type": "bank",
             "company_id": cls.company.id,
             "journal_id": cls.bancontact_journal.id,
             "bancontact_api_key": "sticker_api_key",
@@ -75,6 +78,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
             "payment_method_type": "external_qr",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "sticker",
+            "type": "bank",
             "company_id": cls.company.id,
             "journal_id": cls.bancontact_journal.id,
             "bancontact_api_key": "sticker_api_key",
@@ -84,7 +88,6 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
 
         # Pos Config
         cls.main_pos_config.journal_id.currency_id = cls.eur_currency
-        cls.main_pos_config.invoice_journal_id.currency_id = cls.eur_currency
         cls.main_pos_config.use_pricelist = False
         cls.main_pos_config.payment_method_ids = [
             Command.clear(),

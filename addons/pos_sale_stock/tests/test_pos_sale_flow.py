@@ -633,7 +633,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         sale_order.action_confirm()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_2', login="accountman")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_3', login="accountman")
-        self.main_pos_config.current_session_id.action_pos_session_close()
+        self.main_pos_config.current_session_id.close_session_from_ui()
         picking = sale_order.pos_order_line_ids.order_id.picking_ids
         self.assertEqual(picking.move_ids.quantity, 6)
         self.assertEqual(len(picking.move_ids.move_line_ids), 3)
@@ -761,14 +761,15 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         pos_order_record = self.env['pos.order'].browse(pos_order_id)
 
         pos_order_refund = {
-           'amount_paid': -self.product_a.lst_price * 3,
+           'amount_paid': self.product_a.lst_price * 3,
            'amount_return': 0,
            'amount_tax': 0,
-           'amount_total': -self.product_a.lst_price * 3,
+           'amount_total': self.product_a.lst_price * 3,
            'company_id': self.env.company.id,
            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
            'fiscal_position_id': False,
            'to_invoice': True,
+           'is_refund': True,
            'partner_id': self.partner_a.id,
            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
@@ -777,8 +778,8 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
               'pack_lot_ids': [],
               'price_unit': self.product_a.lst_price,
               'product_id': self.product_a.id,
-              'price_subtotal': -self.product_a.lst_price * 3,
-              'price_subtotal_incl': -self.product_a.lst_price * 3,
+              'price_subtotal': self.product_a.lst_price * 3,
+              'price_subtotal_incl': self.product_a.lst_price * 3,
               'refund_orderline_ids': [],
               'refunded_orderline_id': pos_order_record.lines[0].id,
               'qty': -3,

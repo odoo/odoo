@@ -36,7 +36,7 @@ class TestPoSSaleStockReport(TestPoSSaleReport, TestPosStockCommon, TestPosStock
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
         self.env['pos.order'].sync_from_ui(orders)
 
-        session.action_pos_session_closing_control()
+        session.close_session_from_ui()
 
         reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id', limit=2)
         self.assertEqual(reports[0].warehouse_id.id, self.config.picking_type_id.warehouse_id.id)
@@ -59,7 +59,7 @@ class TestPoSSaleStockReport(TestPoSSaleReport, TestPosStockCommon, TestPosStock
         order = self.env['pos.order'].sync_from_ui(orders)
         order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
 
-        session.action_pos_session_closing_control()
+        session.close_session_from_ui()
 
         report = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id')
 

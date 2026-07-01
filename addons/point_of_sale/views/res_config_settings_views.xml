@@ -112,7 +112,7 @@
                                     <div class="content-group mt16" invisible="not pos_use_fast_payment">
                                         <label for="pos_fast_payment_method_ids" class="fw-bold me-2"/>
                                         <field name="pos_fast_payment_method_ids" widget="many2many_tags" string="Payment Methods"
-                                            options="{'no_create': True}" required="pos_use_fast_payment" domain="[('id', 'in', pos_payment_method_ids), ('payment_provider', '=', False), ('split_transactions', '=', False)]"/>
+                                            options="{'no_create': True}" required="pos_use_fast_payment" domain="[('id', 'in', pos_payment_method_ids), ('payment_provider', '=', False), ('type', '!=', 'pay_later')]"/>
                                     </div>
                                 </setting>
                                 <setting id="set_maximum_difference" help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
@@ -247,13 +247,12 @@
                                         <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
                                     </div>
                                 </setting>
-                                <setting groups="account.group_account_readonly">
-                                    <label string="Default POS Receivable Account" for="account_default_pos_receivable_account_id"/>
-                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
-                                    <div class="text-muted">
-                                        Intermediary account used for unidentified customers.
+                                <setting groups="base.group_no_one">
+                                    <label string="Default PoS Partner for closing" for="pos_default_partner_id" />
+                                    <div class="text-muted mb-1">
+                                        The partner account will be used to generate out receipts.
                                     </div>
-                                    <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('account_type', '=', 'asset_receivable')]"/>
+                                    <field name="pos_default_partner_id" create="0" />
                                 </setting>
                                 <setting id="order_edit_tracking" help="Store edited orders in the backend">
                                     <field name="pos_order_edit_tracking"/>
@@ -279,12 +278,6 @@
                                         <div class="row" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                             <label string="Orders" for="pos_journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="pos_journal_id" domain="[('company_id', '=', company_id), ('type', 'in', ('general', 'sale'))]" context="{'default_company_id': company_id, 'default_type': 'general'}" required="pos_company_has_template"/>
-                                        </div>
-                                        <div class="row">
-                                            <label string="Invoices" for="pos_invoice_journal_id" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_invoice_journal_id"
-                                                domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
-                                                context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
                                         </div>
                                     </div>
                                 </setting>

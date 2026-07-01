@@ -671,7 +671,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour('PosSettleAndInvoiceOrder2')
 
-        final_invoice_downpayment_line = sale_order.pos_order_line_ids[-1].order_id.account_move.invoice_line_ids.filtered(lambda r: r.quantity < 0)
+        final_invoice_downpayment_line = sale_order.pos_order_line_ids[-1].order_id.account_move.invoice_line_ids
 
         self.assertEqual(
             final_invoice_downpayment_line._get_downpayment_lines(),

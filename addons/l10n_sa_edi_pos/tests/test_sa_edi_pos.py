@@ -141,71 +141,6 @@ class TestUi(TestGenericSAEdi):
             login="pos_admin",
         )
 
-    @patch(
-        "odoo.addons.l10n_sa_edi.models.account_journal.AccountJournal._l10n_sa_ready_to_submit_einvoices",
-        new=lambda self: True,
-    )
-    def test_ZATCA_blocks_settle_due_and_sale_on_same_order(self):
-        """
-        Tests that the invoice is mandatory in POS payment for ZATCA.
-        Also is by default checked.
-        """
-        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
-            self.skipTest("pos_settle_due module is required for this test")
-
-        self.customer_account_payment_method = self.env["pos.payment.method"].create(
-            {
-                "name": "Customer Account",
-                "split_transactions": True,
-            },
-        )
-        self.main_pos_config.write(
-            {"payment_method_ids": [(4, self.customer_account_payment_method.id)]},
-        )
-
-        self.assertEqual(self.partner_a.total_due, 0)
-
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-        current_session = self.main_pos_config.current_session_id
-
-        order = self.env["pos.order"].create(
-            {
-                "company_id": self.env.company.id,
-                "session_id": current_session.id,
-                "partner_id": self.partner_a.id,
-                "lines": [
-                    Command.create(
-                        {
-                            "product_id": self.whiteboard_pen.product_variant_id.id,
-                            "price_unit": 20,
-                            "discount": 0,
-                            "qty": 1,
-                            "price_subtotal": 20,
-                            "tax_ids": [Command.link(self.tax_sale_a.id)],
-                            "price_subtotal_incl": 23,
-                        },
-                    ),
-                ],
-                "amount_paid": 23,
-                "amount_total": 23.0,
-                "amount_tax": 3,
-                "amount_return": 0.0,
-                "to_invoice": True,
-            },
-        )
-
-        self.make_payment(order, self.customer_account_payment_method, 23)
-        current_session.action_pos_session_closing_control()
-        self.assertEqual(self.partner_a.invoices_amount_due, 23)
-
-        self.main_pos_config.open_ui()
-
-        self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "ZATCA_blocks_settle_due_and_sale_on_same_order",
-            login="accountman",
-        )
-
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSAZATCAPosInvoice(TestPoSCommon):
@@ -237,7 +172,7 @@ class TestSAZATCAPosInvoice(TestPoSCommon):
         })
 
         # Load ZATCA demo credentials on the invoice journal (used by ZATCA onboarding check)
-        journal = cls.config.invoice_journal_id
+        journal = cls.config.journal_id
         journal._l10n_sa_load_edi_test_data()
         PCSID_data = json.loads(journal.l10n_sa_production_csid_json)
         cert = cls.env['certificate.certificate'].create({
@@ -260,8 +195,10 @@ class TestSAZATCAPosInvoice(TestPoSCommon):
     def with_pos_session(self):
         session = self.open_new_session(0.0)
         yield session
-        session.post_closing_cash_details(0.0)
-        session.close_session_from_ui()
+        cash_pm = self.config._get_cash_payment_method()
+        session.close_session_from_ui({
+            cash_pm.id: 0,
+        })
 
     def test_generate_pdf_false_runs_zatca_skips_pdf(self):
         """

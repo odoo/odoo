@@ -61,7 +61,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         }
         self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=get_invoice_data)
         self.assertEqual(self.env['res.partner'].sudo().search_count([('name', '=', 'AAA Partner')]), 1)
-        self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
+        self.assertTrue(self.pos_order.is_singly_invoiced, "The pos order should have an invoice")
         self.assertTrue(len(self.pos_order.pos_reference) >= 12, "The pos reference should not be less than 12 characters")
 
     def test_qr_code_receipt_user_connected(self):
@@ -107,7 +107,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.current_session_id.close_session_from_ui()
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', timeout=30000)
-        self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
+        self.assertTrue(self.pos_order.is_singly_invoiced, "The pos order should have an invoice")
         self.assertTrue("my/invoices" in res.url)
 
     def test_qr_code_receipt_user_not_connected(self):
@@ -150,6 +150,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.main_pos_config.current_session_id.close_session_from_ui()
         self.start_tour('/pos/ticket', 'invoicePoSOrderWithSelfInvocing', login=None)
         self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
+        self.assertNotEqual(self.pos_order.account_move, self.pos_order.session_id.move_ids)
 
     def test_qr_code_receipt_user_updated(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""

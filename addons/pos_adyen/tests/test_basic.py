@@ -17,6 +17,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
             "payment_method_ids": [
                 Command.create({
                     "name": "Adyen",
+                    'type': 'bank',
                     "adyen_api_key": "my_adyen_api_key",
                     "adyen_terminal_identifier": "my_adyen_terminal",
                     "adyen_test_mode": False,

@@ -10,8 +10,8 @@ patch(PosStore.prototype, {
         const opts = this.getValidationOrderOptions({ order });
         if (
             !order.isSynced &&
-            (opts.fastPaymentMethod?.is_online_payment ||
-                order.payment_ids.find((p) => p.payment_method_id.is_online_payment))
+            (opts.fastPaymentMethod?.type === "online" ||
+                order.payment_ids.find((p) => p.payment_method_id.type === "online"))
         ) {
             order.date_order = serializeDateTime(luxon.DateTime.now());
             this.addPendingOrder([order.id]);

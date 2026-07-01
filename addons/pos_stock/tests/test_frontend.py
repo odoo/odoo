@@ -66,9 +66,8 @@ class TestUi(TestPosStockHttpCommon):
         # create bank payment method
         bank_pm = self.env['pos.payment.method'].create({
             'name': 'Bank',
+            'type': 'bank',
             'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
-            'is_cash_count': False,
-            'split_transactions': False,
             'company_id': self.env.company.id,
         })
         self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)], 'ship_later': True})
@@ -213,7 +212,7 @@ class TestUi(TestPosStockHttpCommon):
         self.main_pos_config.current_session_id.order_ids.filtered(
             lambda o: o.state != 'paid').state = 'cancel'
 
-        self.main_pos_config.current_session_id.action_pos_session_closing_control()
+        self.main_pos_config.current_session_id.close_session_from_ui()
         self.assertEqual(
             two_last_orders[0].picking_ids.move_line_ids.owner_id.id,
             two_last_orders[1].picking_ids.move_line_ids.owner_id.id,

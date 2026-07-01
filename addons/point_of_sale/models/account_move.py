@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import fields, models, api, _
+from odoo import _, api, fields, models
 
 
 class AccountMove(models.Model):
@@ -14,8 +12,23 @@ class AccountMove(models.Model):
     reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
         index='btree_not_null',
         help="The pos order that was reverted after closing the session to create an invoice for it.")
-    pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
+    pos_session_ids = fields.One2many("pos.session", compute="_compute_pos_sessions", search="_search_pos_sessions", string="POS Sessions")
+    pos_session_from_sales_ids = fields.One2many("pos.session", "sales_move_id", "POS Sessions from Sales")
+    pos_session_from_refunds_ids = fields.One2many("pos.session", "refunds_move_id", "POS Sessions from Refunds")
     pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')
+
+    @api.depends('pos_session_from_sales_ids', 'pos_session_from_refunds_ids')
+    def _compute_pos_sessions(self):
+        for move in self:
+            move.pos_session_ids = move.pos_session_from_sales_ids | move.pos_session_from_refunds_ids
+
+    def _search_pos_sessions(self, operator, value):
+        sessions = self.env['pos.session'].sudo().search([('id', operator, value)])
+        return [
+            '|',
+            ('pos_session_from_sales_ids', 'in', sessions.ids),
+            ('pos_session_from_refunds_ids', 'in', sessions.ids),
+        ]
 
     @api.depends('pos_order_ids')
     def _compute_origin_pos_count(self):
@@ -28,8 +41,6 @@ class AccountMove(models.Model):
         # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
         # (But there may still be old closing moves that used caba entries from previous versions.)
         for move in self:
-            if move.always_tax_exigible or move.tax_cash_basis_created_move_ids:
-                continue
             if move.pos_session_ids:
                 move.always_tax_exigible = True
 
@@ -81,7 +92,7 @@ class AccountMove(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         result = super()._load_pos_data_fields(config)
-        return result or ['id', 'name']
+        return result or ['id', 'name', 'amount_residual', 'move_type']
 
     @api.model
     def _load_pos_data_domain(self, data, config):

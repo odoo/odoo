@@ -8,7 +8,7 @@
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            invisible="state not in ['paid', 'done'] or account_move"/>
+                            invisible="state not in ['paid', 'done'] or is_singly_invoiced"/>
                     <button name="action_pos_order_receipt" string="Download Receipt" type="object" invisible="state not in ['paid', 'done']"/>
                     <button name="refund" string="Return Products" type="object"
                         invisible="state == 'draft' or not has_refundable_lines"/>
@@ -23,8 +23,13 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
-                        invisible="not account_move">
-                    </button>
+                        invisible="not is_singly_invoiced"/>
+                    <button name="action_view_invoice"
+                        string="Global Invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        invisible="not is_globally_invoiced"/>
                     <button name="action_view_refund_orders"
                         type="object"
                         class="oe_stat_button"
@@ -48,11 +53,11 @@
                 <group>
                     <group name="order_customer_details">
                         <field name="date_order"/>
-                        <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="account_move"/>
+                        <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="is_singly_invoiced"/>
                         <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                     </group>
                     <group name="order_operational_details">
-                        <field string="Served by" name="user_id" readonly="account_move or state == 'done'" widget="many2one_avatar_user"/>
+                        <field string="Served by" name="user_id" readonly="is_singly_invoiced or state == 'done'" widget="many2one_avatar_user"/>
                         <field name="session_id"  readonly="state != 'draft'"/>
                         <field name="order_edit_tracking" invisible="1"/>
                         <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
@@ -166,13 +171,7 @@
                         </group>
                     </page>
                     <page name="extra" string="Extra Info">
-                        <group >
-                            <group
-                                string="Accounting"
-                                groups="account.group_account_manager"
-                                invisible="not session_move_id or account_move">
-                                <field name="session_move_id" readonly="1" />
-                            </group>
+                        <group>
                             <group string="Other Information" name="other_information">
                                 <field name="pos_reference"/>
                                 <field name="tracking_number"/>

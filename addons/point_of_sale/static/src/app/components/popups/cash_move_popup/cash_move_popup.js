@@ -62,13 +62,12 @@ export class CashMovePopup extends Component {
 
         const type = this.state.type;
         const translatedType = _t(type);
-        const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
 
         await this.pos.data.call(
             "pos.session",
             "try_cash_in_out",
-            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId, extras),
+            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId),
             {},
             true
         );
@@ -109,8 +108,8 @@ export class CashMovePopup extends Component {
             ? this.env.utils.formatCurrency(parseFloat(value))
             : "";
     }
-    _prepareTryCashInOutPayload(type, amount, reason, partnerId, extras) {
-        return [[this.pos.session.id], type, amount, reason, partnerId, extras];
+    _prepareTryCashInOutPayload(type, amount, reason, partnerId) {
+        return [[this.pos.session.id], type, amount, reason, partnerId];
     }
     isValidCashMove() {
         return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";

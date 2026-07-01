@@ -167,6 +167,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
 
         self.bank_payment_method = self.env['pos.payment.method'].create({
             'name': 'Bank',
+            'type': 'bank',
             'journal_id': self.bank_journal.id,
         })
 

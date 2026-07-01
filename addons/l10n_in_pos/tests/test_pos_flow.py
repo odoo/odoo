@@ -50,21 +50,21 @@ class TestPosFlow(TestInPosBase):
         # with self.with_pos_session() as session2:
         pos_order_going_to_invoice.partner_id = self.partner_a
         pos_order_going_to_invoice.action_pos_order_invoice()
-        # session2.action_pos_session_closing_control()
 
         # Confirm that reversal move(s) are now set
         reversal_moves = self.env['account.move'].search([('reversed_pos_order_id', '=', pos_order_going_to_invoice.id)])
         self.assertEqual(pos_order_going_to_invoice.reversed_move_ids, reversal_moves,
                         "Reversal move should be set for the order invoiced after the session is closed.")
         self.assertInvoiceValues(reversal_moves, [
+            {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 0.0, 'credit': 630.0},
+            {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 630.0, 'credit': 0.0},
             {'product_id': self.product_a.id, 'l10n_in_hsn_code': '1111', 'product_uom_id': self.product_a.uom_id.id, 'debit': 200.0, 'credit': 0.0},
             {'product_id': self.product_b.id, 'l10n_in_hsn_code': '2222', 'product_uom_id': self.product_b.uom_id.id, 'debit': 400.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 15.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 15.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 0.0, 'credit': 630.0},
-
         ], {
             'amount_untaxed': 0.0,
             'amount_tax': 0.0,
-            'amount_total': 630.0,
+            'amount_total': 1260.0,
         })

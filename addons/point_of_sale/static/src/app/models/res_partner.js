@@ -10,6 +10,14 @@ export class ResPartner extends Base {
         this._searchString = null;
     }
 
+    get company() {
+        return this.config.company_id;
+    }
+
+    get config() {
+        return this.models["pos.config"].getFirst();
+    }
+
     get searchString() {
         if (this._searchString) {
             return this._searchString;

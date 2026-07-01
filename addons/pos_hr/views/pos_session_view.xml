@@ -5,7 +5,7 @@
         <field name="model">pos.session</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='config_id']" position="after">
+            <xpath expr="//field[@name='stop_at']" position="after">
                 <field name="logged_employee_ids" string="Employees" widget="many2many_tags"/>
             </xpath>
         </field>

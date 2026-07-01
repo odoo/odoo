@@ -17,8 +17,8 @@ class TestPOSGstrSection(TestInPosBase):
                 ],
                 'payments': [(self.bank_pm1, 630.0)],
             })
-            session.action_pos_session_closing_control()
-            pos_entry_lines = session.move_id.line_ids
+            session.close_session_from_ui()
+            pos_entry_lines = session.move_ids.line_ids
             for line in pos_entry_lines.filtered(lambda l: l.display_type in ('product, tax')):
                 self.assertEqual(line.l10n_in_gstr_section, 'sale_b2cs')
 
@@ -31,7 +31,7 @@ class TestPOSGstrSection(TestInPosBase):
                 'payments': [(self.bank_pm1, 900.0)],
                 'customer': self.partner_a,
             })
-            session.action_pos_session_closing_control()
-            pos_entry_lines = session.move_id.line_ids
+            session.close_session_from_ui()
+            pos_entry_lines = session.move_ids.line_ids
             for line in pos_entry_lines.filtered(lambda l: l.display_type in ('product, tax')):
                 self.assertEqual(line.l10n_in_gstr_section, 'sale_nil_rated')

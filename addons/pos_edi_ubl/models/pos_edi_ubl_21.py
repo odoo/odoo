@@ -49,7 +49,7 @@ class PosEdiXmlUBL21(models.AbstractModel):
             'document_type': 'invoice' if pos_order.amount_total >= 0 else 'credit_note',
 
             'company': pos_order.company_id,
-            'journal': pos_order.config_id.invoice_journal_id,
+            'journal': pos_order.config_id.journal_id,
             'name': pos_order.name,
 
             'supplier': supplier,
@@ -65,7 +65,7 @@ class PosEdiXmlUBL21(models.AbstractModel):
     def _add_pos_order_base_lines_vals(self, vals):
         pos_order = vals['pos_order']
 
-        base_lines = pos_order._prepare_tax_base_line_values()
+        base_lines = pos_order.lines._prepare_base_lines_for_taxes_computation()
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, pos_order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, pos_order.company_id)

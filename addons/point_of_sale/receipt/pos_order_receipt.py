@@ -90,7 +90,7 @@ class PosOrderReceipt(models.AbstractModel):
         }
 
     def _order_receipt_generate_taxe_data(self):
-        sign = -1 if self.is_refund else 1
+        sign = -1 if self.is_refund_or_negative() else 1
         tax_totals = self._get_order_tax_totals()  # Use account helpers to compute tax totals
         discount_amount = sum(line._get_discount_amount() for line in self.lines.filtered(lambda line: line.discount > 0))
         rounding = tax_totals.get('cash_rounding_base_amount_currency', 0)

@@ -340,7 +340,9 @@ export class PosData {
                 for (const model of this.opts.cleanupModels) {
                     const local = localData[model] || [];
                     if (local.length > 0) {
-                        local_records_to_filter[model] = local.map((r) => r.id);
+                        local_records_to_filter[model] = local
+                            .map((r) => r.id)
+                            .filter((id) => typeof id === "number");
                     }
                 }
 
