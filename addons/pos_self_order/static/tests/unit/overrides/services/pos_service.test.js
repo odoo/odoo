@@ -41,4 +41,31 @@ describe("pos_store.js", () => {
         expect(store.getActiveOrdersOnTable(table)).toHaveLength(0);
         expect(store.getTableOrders(table)).toHaveLength(0);
     });
+
+    test("setOrder initializes lastPrints for mobile self-order", async () => {
+        const store = await setupPoSEnvForSelfOrder();
+        const order = await getFilledOrder(store, {
+            source: "mobile",
+            online_payment_method_id: false,
+            last_order_preparation_change: { lines: {} },
+        });
+
+        order.uiState = { lastPrints: [] };
+        store.setOrder(order);
+
+        expect(order.uiState.lastPrints).toHaveLength(1);
+    });
+
+    test("setOrder does not initialize lastPrints for normal POS order", async () => {
+        const store = await setupPoSEnvForSelfOrder();
+        const order = await getFilledOrder(store, {
+            source: "pos", // Not kiosk/mobile
+            last_order_preparation_change: { lines: {} },
+        });
+
+        order.uiState = { lastPrints: [] };
+        store.setOrder(order);
+
+        expect(order.uiState.lastPrints).toHaveLength(0);
+    });
 });
