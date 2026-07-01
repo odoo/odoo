@@ -36,3 +36,8 @@ class SaleOrder(models.Model):
     def _compute_expense_count(self):
         for sale_order in self:
             sale_order.expense_count = len(sale_order.order_line.expense_ids)
+
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        invoices = super()._create_invoices(grouped=grouped, final=final, date=date)
+        invoices._copy_reinvoiced_expense_receipts()
+        return invoices
