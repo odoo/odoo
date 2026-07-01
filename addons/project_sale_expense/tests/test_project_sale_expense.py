@@ -8,6 +8,30 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
+    def test_company_paid_expense_from_project_no_phantom_revenue(self):
+        """ The liquidity line of a company-paid expense created from a project must not get
+            the project analytic distribution, else it shows as a positive 'Other Revenues'.
+        """
+        project = self.env['project.project'].sudo().create({
+            'name': 'Project',
+            'account_id': self.analytic_account_1.id,
+        })
+        expense = self.env['hr.expense'].with_context(project_id=project.id).create({
+            'name': 'Company paid expense',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 321.0,
+            'payment_mode': 'company_account',
+        })
+        expense.action_submit()
+        expense.action_approve()
+        expense.action_post()
+
+        self.assertEqual(
+            expense.account_move_id.line_ids.analytic_line_ids.mapped('billable_type'),
+            ['12_other_costs']
+        )
+
     def test_analytic_account_expense_policy(self):
         product_form = Form(self.product_a.product_tmpl_id)
         product_form.can_be_expensed = True
