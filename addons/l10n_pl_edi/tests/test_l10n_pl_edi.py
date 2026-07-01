@@ -827,13 +827,11 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 'name': '[FURN_0006] Podstawka pod monitor',
                 'price_unit': 3.19,
                 'price_total': 3.92,
-                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_23').ids,
             },
             {
                 'name': '[ZERO] Transport',
                 'price_unit': 0.0,
                 'price_total': 0.0,
-                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_zw').ids,
             },
         ])
 
@@ -1002,3 +1000,23 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(capt.call_count, 3)
         new_bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-NEW-BILL-001')])
         self.assertTrue(new_bill)
+
+    def test_ksef_bill_import_dynamic_taxes_and_fiscal_position(self):
+        """ Test that importing a KSeF bill maps taxes dynamically using amounts and fiscal positions. """
+
+        path = 'l10n_pl_edi/tests/import_xmls/fa3_standard_bill.xml'
+        with tools.file_open(path, mode='rb') as file:
+            xml_content = file.read()
+
+        parsed_vals = self.env['account.move'].with_company(self.company).l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
+        bill = self.env['account.move'].with_company(self.company).create(parsed_vals)
+
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'price_unit': 3.19},
+            {'price_unit': 5.00},
+            {'price_unit': 5.00},
+        ])
+        self.assertEqual(
+            bill.invoice_line_ids.mapped('tax_ids.amount'),
+            [23.0, 0.0, 5.0],
+        )

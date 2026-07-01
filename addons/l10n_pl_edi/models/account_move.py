@@ -492,18 +492,16 @@ class AccountMove(models.Model):
     @api.model
     def l10n_pl_edi_get_ksef_bill_vals_from_xml(self, xml_content):
 
-        p12_to_tax_xml_id_map = {
-            "23": "vz_kraj_23",
-            "8": "vz_kraj_8",
-            "5": "vz_kraj_5",
-            "0 KR": "vz_kraj_0",
-            "zw": "vz_kraj_zw",
-            "oo": "vz_stal",
-            "0 WDT": "vz_unia",
-            "np II": "vz_nabu",
-            "0 EX": "vz_imp_tow",
-            "np I": "vz_impu",
-        }
+        def get_tax_amount_from_p12(tax_name):
+            """ Derive the tax rate (as a percentage) from the KSeF P_12 code,
+                without relying on a specific tax record existing in the database.
+            """
+            if tax_name in ("0 KR", "0 WDT", "0 EX", "zw", "oo", "np I", "np II"):
+                return 0.0
+            try:
+                return float(tax_name)
+            except ValueError:
+                return None
 
         def parse_fa3_bill_xml(xml_content):
             root = etree.fromstring(xml_content)
@@ -533,13 +531,10 @@ class AccountMove(models.Model):
                 if P_9A := get_value(line_node, '{*}P_9A'):
                     price_unit = float(P_9A)
                 elif P_9B := get_value(line_node, '{*}P_9B'):
-                    if xml_id := p12_to_tax_xml_id_map.get(tax_name):
-                        if tax := self.env['account.chart.template'].ref(xml_id, raise_if_not_found=False):
-                            price_unit = float(P_9B) * (1 - tax.amount / (100 + tax.amount))
-                        else:
-                            raise UserError(self.env._("Purchase tax corresponding to '%s' required for the KSeF import was not found in the system.", tax_name))
-                    else:
-                        raise UserError(self.env._("Tax corresponding to '%s' required to derive the net unit price from gross price during KSeF import was not found in the mapping.", tax_name))
+                    tax_amount = get_tax_amount_from_p12(tax_name)
+                    if tax_amount is None:
+                        raise UserError(self.env._("Tax corresponding to '%s' required to derive the net unit price from gross price during KSeF import could not be interpreted.", tax_name))
+                    price_unit = float(P_9B) * (1 - tax_amount / (100 + tax_amount))
                 else:
                     price_unit = 0.0
 
@@ -589,7 +584,15 @@ class AccountMove(models.Model):
                     },
                 )
 
-            currency = self.env['res.currency'].with_context(active_test=False).search([('name', '=', data['currency_code'])], limit=1)
+            currency = self.env['res.currency'].with_context(active_test=False).search(
+                [('name', '=', data['currency_code'])], limit=1,
+            )
+            if not currency:
+                raise UserError(self.env._("Currency '%s' from the KSeF bill was not found.", data['currency_code']))
+            if not currency.active:
+                currency.sudo().active = True
+
+            fiscal_position = self.env['account.fiscal.position']._get_fiscal_position(partner)
 
             move_vals = {
                 'move_type': 'in_invoice',
@@ -602,11 +605,31 @@ class AccountMove(models.Model):
             }
 
             for line in data['lines']:
-
                 tax_ids = []
-                if xml_id := p12_to_tax_xml_id_map.get(line['tax_name']):
-                    if tax := self.env['account.chart.template'].ref(xml_id, raise_if_not_found=False):
-                        tax_ids.append(Command.set(tax.ids))
+                tax_name = line['tax_name']
+                tax_amount = get_tax_amount_from_p12(tax_name)
+
+                if tax_amount is not None:
+                    domain = [
+                        ('type_tax_use', '=', 'purchase'),
+                        ('amount_type', '=', 'percent'),
+                        ('price_include', '=', False),
+                        ('amount', '=', tax_amount),
+                        *self.env['account.tax']._check_company_domain(self.env.company)
+                    ]
+
+                    matching_taxes = self.env['account.tax'].search(domain, order='sequence')
+
+                    mapped_tax = None
+                    if matching_taxes:
+                        if fiscal_position:
+                            mapped_taxes = fiscal_position.map_tax(matching_taxes)
+                            mapped_tax = mapped_taxes[0] if mapped_taxes else matching_taxes[0]
+                        else:
+                            mapped_tax = matching_taxes[0]
+
+                    if mapped_tax:
+                        tax_ids.append(Command.set(mapped_tax.ids))
                     else:
                         raise UserError(self.env._("Purchase tax corresponding to '%s' required for the KSeF import was not found in the system.", line['tax_name']))
 
@@ -755,3 +778,22 @@ class AccountMove(models.Model):
                         'res_id': bill.id,
                         'res_model': bill._name,
                     })
+
+    def _decode_fa3_ksef(self, invoice, file_data, new):
+        xml_content = file_data.get('content')
+        move_vals = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
+
+        if move_vals:
+            invoice.write(move_vals)
+            return True
+
+        return False
+
+    def _get_edi_decoder(self, file_data, new=False):
+        if file_data.get('type') == 'xml' and file_data.get('xml_tree') is not None:
+            tree = file_data['xml_tree']
+            kod_node = tree.find('.//{*}KodFormularza')
+            if kod_node is not None and kod_node.get('kodSystemowy') == 'FA (3)':
+                return self._decode_fa3_ksef
+
+        return super()._get_edi_decoder(file_data, new=new)
