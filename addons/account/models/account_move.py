@@ -5802,15 +5802,21 @@ class AccountMove(models.Model):
 
     def _can_be_unlinked(self):
         self.ensure_one()
+        tax_date = self.company_id._get_user_lock_date('tax_lock_date')
         lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
         posted_caba_entry = self.state == 'posted' and (self.tax_cash_basis_rec_id or self.tax_cash_basis_origin_move_id)
         posted_exchange_diff_entry = self.state == 'posted' and self.exchange_diff_partial_ids
-        return not self.inalterable_hash and self.date > lock_date and not posted_caba_entry and not posted_exchange_diff_entry
+        return (
+            not self.inalterable_hash
+            and self.date > lock_date
+            and not (posted_caba_entry and self.date < tax_date)
+            and not posted_exchange_diff_entry
+        )
 
     def _is_protected_by_audit_trail(self):
         return any(move.posted_before and move.company_id.restrictive_audit_trail for move in self)
 
-    def _unlink_or_reverse(self):
+    def _unlink_or_reverse(self, default_values_list=None):
         if not self:
             return
         to_unlink = self.env['account.move']
@@ -5826,7 +5832,7 @@ class AccountMove(models.Model):
         to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
         to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
-        return to_reverse._reverse_moves(cancel=True)
+        return to_reverse._reverse_moves(default_values_list=default_values_list, cancel=True)
 
     def _get_lines_with_wrong_partner(self):
         self.ensure_one()
@@ -6654,13 +6660,6 @@ class AccountMove(models.Model):
         for move in self:
             if move.id in exchange_move_ids:
                 raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
-            if move.tax_cash_basis_rec_id or move.tax_cash_basis_origin_move_id:
-                # If the reconciliation was undone, move.tax_cash_basis_rec_id will be empty;
-                # but we still don't want to allow setting the caba entry to draft
-                # (it'll have been reversed automatically, so no manual intervention is required),
-                # so we also check tax_cash_basis_origin_move_id, which stays unchanged
-                # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
-                raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
             if move.inalterable_hash:
                 raise UserError(_('You cannot reset to draft a locked journal entry.'))
 

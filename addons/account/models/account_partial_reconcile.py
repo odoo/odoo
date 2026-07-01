@@ -123,22 +123,19 @@ class AccountPartialReconcile(models.Model):
         # if the move is draft and can be removed, there is no need to update the matching number
         all_reconciled = self.debit_move_id + self.credit_move_id
 
+        # Reverse or unlink CABA/exchange move entries.
+        if moves_to_reverse:
+            default_values_list = [{
+                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
+                'ref': move.env._('Reversal of: %s', move.name),
+            } for move in moves_to_reverse]
+            moves_to_reverse._unlink_or_reverse(default_values_list=default_values_list)
+
         # Unlink partials before doing anything else to avoid 'Record has already been deleted' due to the recursion.
         res = super().unlink()
 
         # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
         full_to_unlink.unlink()
-
-        # Reverse or unlink CABA/exchange move entries.
-        if moves_to_reverse:
-            not_draft_moves = moves_to_reverse.filtered(lambda m: m.state != 'draft')
-            draft_moves = moves_to_reverse - not_draft_moves
-            default_values_list = [{
-                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
-                'ref': move.env._('Reversal of: %s', move.name),
-            } for move in not_draft_moves]
-            not_draft_moves._reverse_moves(default_values_list, cancel=True)
-            draft_moves.unlink()
 
         all_reconciled = all_reconciled.exists()
         self._update_matching_number(all_reconciled)
