@@ -73,39 +73,48 @@
                 <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
                     <t name="address_not_same_as_shipping">
                         <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                        <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
-                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                        </div>
-                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
-                        <div t-if="partner_ice">
-                            ICE: <span t-out="partner_ice"/>
+                        <div id="partner_vat_address_not_same_as_shipping">
+                            <t t-set="tax_ident" t-value="o.partner_id._get_preferred_tax_identifier_vals() if o.partner_id else False"/>
+                            <t t-set="legal_ident" t-value="o.partner_id._get_preferred_legal_entity_identifier_vals() if o.partner_id else False"/>
+                            <t t-if="tax_ident" id="partner_tax_identifiers_block">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="" t-out="tax_ident.get('category') or 'Tax ID'"/>: <span t-out="tax_ident.get('value')"/>
+                            </t>
+                            <t t-elif="legal_ident" id="partner_legal_identifiers_block">
+                                <t t-out="legal_ident.get('label') or legal_ident.get('key')" id="inv_legal_id_label"/>: <span t-out="legal_ident.get('value')"/>
+                            </t>
                         </div>
                     </t>
                 </t>
                 <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
                     <t name="address_same_as_shipping">
                         <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                        <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
-                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                        </div>
-                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
-                        <div t-if="partner_ice">
-                            ICE: <span t-out="partner_ice"/>
+                        <div id="partner_vat_address_same_as_shipping">
+                            <t t-set="tax_ident" t-value="o.partner_id._get_preferred_tax_identifier_vals() if o.partner_id else False"/>
+                            <t t-set="legal_ident" t-value="o.partner_id._get_preferred_legal_entity_identifier_vals() if o.partner_id else False"/>
+                            <t t-if="tax_ident" id="partner_tax_identifiers_block">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="" t-out="tax_ident.get('category') or 'Tax ID'"/>: <span t-out="tax_ident.get('value')"/>
+                            </t>
+                            <t t-elif="legal_ident" id="partner_legal_identifiers_block">
+                                <t t-out="legal_ident.get('label') or legal_ident.get('key')" id="inv_legal_id_label"/>: <span t-out="legal_ident.get('value')"/>
+                            </t>
                         </div>
                     </t>
                 </t>
                 <t t-else="">
                     <t name="no_shipping">
                         <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                        <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
-                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                        </div>
-                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
-                        <div t-if="partner_ice">
-                            ICE: <span t-out="partner_ice"/>
+                        <div id="partner_vat_no_shipping">
+                            <t t-set="tax_ident" t-value="o.partner_id._get_preferred_tax_identifier_vals() if o.partner_id else False"/>
+                            <t t-set="legal_ident" t-value="o.partner_id._get_preferred_legal_entity_identifier_vals() if o.partner_id else False"/>
+                            <t t-if="tax_ident" id="partner_tax_identifiers_block">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="" t-out="tax_ident.get('category') or 'Tax ID'"/>: <span t-out="tax_ident.get('value')"/>
+                            </t>
+                            <t t-elif="legal_ident" id="partner_legal_identifiers_block">
+                                <t t-out="legal_ident.get('label') or legal_ident.get('key')" id="inv_legal_id_label"/>: <span t-out="legal_ident.get('value')"/>
+                            </t>
                         </div>
                     </t>
                 </t>
