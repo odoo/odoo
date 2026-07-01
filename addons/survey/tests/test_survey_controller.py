@@ -129,3 +129,16 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
         session_manage_url = f'/survey/session/manage/{survey.access_token}'
         response = self.url_open(session_manage_url)
         self.assertEqual(response.status_code, 200, "Should be able to open live session manage page")
+
+    def test_answer_token_skips_partner_check(self):
+        """A logged-in user whose partner differs from `answer.partner_id` should
+        be able to open the survey when the URL contains an `answer_token` (the
+        token is itself proof of authorization)."""
+        answer = self.survey._create_answer(partner=self.customer)
+        url = f'/survey/start/{self.survey.access_token}?answer_token={answer.access_token}'
+
+        self.authenticate(self.user_emp.login, 'user_emp')
+        self.assertNotEqual(self.user_emp.partner_id, self.customer)
+
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
