@@ -36,7 +36,12 @@ class ResCompany(models.Model):
     attendance_validation = fields.Selection([
         ('no_validation', 'Worked days are automatically approved'),
         ('manual_validation', 'Worked days require manual approval'),
+        ('tolerance_validation', 'Worked days require approval if outside tolerance'),
     ], string="Attendance Validation", default='no_validation')
+    attendance_validation_tolerance = fields.Float(
+        string="Validation Tolerance (Hours)",
+        default=0.0,
+    )
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Work Entry Type",

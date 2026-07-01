@@ -19,6 +19,7 @@ class ResConfigSettings(models.TransientModel):
     auto_check_out_specific_time = fields.Float(related="company_id.auto_check_out_specific_time", readonly=False)
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_validation = fields.Selection(related="company_id.attendance_validation", readonly=False)
+    attendance_validation_tolerance = fields.Float(related="company_id.attendance_validation_tolerance", readonly=False)
     attendance_work_entry_type_id = fields.Many2one(
         related='company_id.attendance_work_entry_type_id',
         readonly=False,

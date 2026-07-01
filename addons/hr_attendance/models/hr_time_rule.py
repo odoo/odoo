@@ -12,7 +12,7 @@ class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
     condition_work_entry_type_ids = fields.Many2many(
-        default=lambda self: self.env.ref('hr_work_entry.attendance_work_entry_type', raise_if_not_found=False),
+        default=lambda self: self.env.company.attendance_work_entry_type_id
     )
 
     def _get_applicable_employees(self, employees):

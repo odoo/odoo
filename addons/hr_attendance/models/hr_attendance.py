@@ -302,6 +302,8 @@ class HrAttendance(models.Model):
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         result = super().write(vals)
+        if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
+            self._update_tolerance_state()
         if not self.env.context.get('skip_time_rules') and any(
             f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'state')
         ):
@@ -832,20 +834,39 @@ class HrAttendance(models.Model):
             ('check_out', '!=', False),
         ])
 
+    def _update_tolerance_state(self):
+        to_validate = self.browse()
+        candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id and not a.source_attendance_id)
+        for att in candidates:
+            company = att.employee_id.company_id or self.env.company
+            if company.attendance_validation != 'tolerance_validation':
+                continue
+            tz = ZoneInfo(att.employee_id._get_tz())
+            day = att.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            expected = sum_intervals(att.employee_id._get_expected_attendances(
+                datetime.combine(day, time.min, tz),
+                datetime.combine(day, time.max, tz),
+            ))
+            worked = (att.check_out - att.check_in).total_seconds() / 3600
+            if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
+                to_validate |= att
+        if to_validate:
+            to_validate.with_context(skip_time_rules=True, tracking_disable=True).write({'state': 'validated'})
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if 'state' not in vals:
                 if vals.get('time_rule_id') or vals.get('source_attendance_id'):
-                    # system-generated records (outputs and remainders) always auto-validate
+                    # system-generated outputs always auto-validate
                     vals['state'] = 'validated'
                 else:
                     company = self.env.company
                     if vals.get('employee_id'):
-                        employee = self.env['hr.employee'].browse(vals['employee_id'])
-                        company = employee.company_id or company
-                    vals['state'] = 'draft' if company.attendance_validation == 'manual_validation' else 'validated'
+                        company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
+                    vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
         res = super().create(vals_list)
+        res._update_tolerance_state()
         if not self.env.context.get('skip_time_rules'):
             res._trigger_time_rules()
         return res
