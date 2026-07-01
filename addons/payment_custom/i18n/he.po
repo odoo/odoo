@@ -1,33 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_transfer
+# * payment_transfer
 #
 # Translators:
 # Martin Trigaux, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2026-06-13 13:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-3/"
+"payment_custom/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#, fuzzy
 msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
 "small>"
 msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">סרוק עם אפליקצית הבנק שלך</"
+"small>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
@@ -48,13 +53,15 @@ msgstr "חשבונות בנק"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+#, fuzzy
 msgid "Code"
-msgstr ""
+msgstr "קוד"
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+#, fuzzy
 msgid "Custom"
-msgstr ""
+msgstr "מותאם"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
@@ -65,18 +72,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_custom.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "שם לתצוגה"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+#, fuzzy
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "לאפשר קוד QR"
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+#, fuzzy
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "לאפשר שימוש בקוד QR בתשלום בהעברה בנקאית."
 
 #. module: payment_custom
 #. odoo-python
@@ -88,13 +98,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_custom.field_payment_method__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#, fuzzy
 msgid "OR"
-msgstr ""
+msgstr "או"
 
 #. module: payment_custom
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
@@ -114,8 +126,9 @@ msgstr ""
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
+#, fuzzy
 msgid "Payment Provider"
-msgstr ""
+msgstr "ספק תשלום"
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_transaction
@@ -125,8 +138,9 @@ msgstr "עסקת תשלום"
 #. module: payment_custom
 #. odoo-python
 #: code:addons/payment_custom/models/payment_provider.py:0
+#, fuzzy
 msgid "Please use the following transfer details"
-msgstr ""
+msgstr "אנא השתמש בפרטי ההעברה הבאים"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
@@ -141,11 +155,13 @@ msgstr ""
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "הקוד הטכני של ספק התשלומים הזה."
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
 #: model:payment.method,name:payment_custom.payment_method_wire_transfer
+#, fuzzy
 msgid "Wire Transfer"
-msgstr ""
+msgstr "העברה בנקאית"

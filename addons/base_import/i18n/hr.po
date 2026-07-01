@@ -10,15 +10,15 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
 # Martin Trigaux, 2022
 # Bole <bole@dajmi5.com>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:33+0000\n"
-"PO-Revision-Date: 2025-11-12 13:02+0000\n"
+"PO-Revision-Date: 2026-06-12 02:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-3/"
 "base_import/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -71,18 +71,24 @@ msgstr "Dodatna polja"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
 "limit exceeded or memory limits exceeded). Please retry in case the issue is "
 "transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Došlo je do nepoznatog problema tijekom uvoza (moguće izgubljena veza, "
+"premašeno ograničenje podataka ili premašene memorijske granice). Pokušajte "
+"ponovno u slučaju privremenog problema. Ako se problem i dalje pojavljuje, "
+"pokušajte podijeliti datoteku umjesto uvoza odjednom."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, fuzzy
 msgid "Attachments"
-msgstr ""
+msgstr "Privitci"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -102,8 +108,9 @@ msgstr "Osnovno mapiranje za uvoz"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "Batch"
-msgstr ""
+msgstr "Količina"
 
 #. module: base_import
 #. odoo-javascript
@@ -160,9 +167,12 @@ msgstr "Zarez"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
+"Nije moguće dohvatiti URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -191,8 +201,9 @@ msgstr "ID baze podataka"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Date Format"
-msgstr ""
+msgstr "Oblik datuma"
 
 #. module: base_import
 #. odoo-javascript
@@ -243,8 +254,9 @@ msgstr "Naziv"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, fuzzy
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentacija"
 
 #. module: base_import
 #. odoo-javascript
@@ -262,8 +274,9 @@ msgstr "Preuzimanje"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Encoding"
-msgstr ""
+msgstr "Kodna stranica:"
 
 #. module: base_import
 #. odoo-python
@@ -280,18 +293,23 @@ msgstr "Greška u retku %(row)s: \"%(error)s\""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
-msgstr ""
+msgstr "Pogreška pri uvozu zapisa: razdjelnik teksta mora biti jedan znak."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
 "title row has %(title_row_entries)d entries while the first row has %"
 "(first_row_entries)d. You may need to change the separator character."
 msgstr ""
+"Pogreška pri uvozu zapisa: svi redovi moraju biti iste veličine, ali red "
+"naslova ima %(title_row_entries)d unosa, dok prvi red ima %"
+"(first_row_entries)d. Možda trebate promijeniti znak razdjelnika."
 
 #. module: base_import
 #. odoo-javascript
@@ -351,14 +369,16 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Dovršavam trenutnu skupinu prije prekida..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, fuzzy
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "Za CSV datoteke možda trebate odabrati ispravan razdjelnik."
 
 #. module: base_import
 #. odoo-javascript
@@ -412,19 +432,27 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, fuzzy
 msgid ""
 "If the file contains\n"
 "                    the column names, Odoo can try auto-detecting the\n"
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Ako datoteka sadrži\n"
+"                    nazive stupaca, Odoo može pokušati automatski otkriti\n"
+"                    polje koje odgovara stupcu. To čini uvoz\n"
+"                    jednostavnijim, posebno kada datoteka ima mnogo stupaca."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Veličina slike je prevelika, uvezene slike moraju biti manje od 42 milijuna "
+"piksela"
 
 #. module: base_import
 #. odoo-javascript
@@ -449,14 +477,16 @@ msgstr "Datoteka za uvoz ne sadrži podatke ili je oštećena"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, fuzzy
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Predpregled uvoza nije uspio zbog:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
+#, fuzzy
 msgid "Imported records"
-msgstr ""
+msgstr "Uvezeni zapisi"
 
 #. module: base_import
 #. odoo-javascript
@@ -467,16 +497,21 @@ msgstr "Uvozim"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Neispravan format ćelije u redu %(row)s, stupcu %(col)s: %(cell_value)s, s "
+"formatom: %(cell_format)s, jer (%(format_type)s) formati nisu podržani."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Neispravna vrijednost ćelije u redu %(row)s, stupcu %(col)s: %(cell_value)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -528,8 +563,9 @@ msgstr "Model"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Pojavilo se više grešaka"
 
 #. module: base_import
 #. odoo-javascript
@@ -552,14 +588,16 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+#, fuzzy
 msgid "No file selected"
-msgstr ""
+msgstr "Nije odabrana datoteka"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Nije pronađen odgovarajući zapis za"
 
 #. module: base_import
 #. odoo-javascript
@@ -570,8 +608,9 @@ msgstr "Polje"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: base_import
 #. odoo-javascript
@@ -582,8 +621,9 @@ msgstr "Molimo učitajte jednu datoteku"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
+#, fuzzy
 msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
-msgstr ""
+msgstr "Učitajte Excel (.xls ili .xlsx) ili .csv datoteku za uvoz."
 
 #. module: base_import
 #. odoo-javascript
@@ -647,8 +687,9 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "See possible values"
-msgstr ""
+msgstr "Vidi moguće vrijednosti"
 
 #. module: base_import
 #. odoo-javascript
@@ -665,8 +706,9 @@ msgstr "Točka-zarez"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Separator"
-msgstr ""
+msgstr "Separator"
 
 #. module: base_import
 #. odoo-javascript
@@ -749,36 +791,45 @@ msgstr "Testiranje"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was automatically detected."
 msgstr ""
+"Došlo je do problema pri dekodiranju datoteke koristeći kodiranje \"%s\".\n"
+"Ovo kodiranje automatski je otkriveno."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was manually selected."
 msgstr ""
+"Došlo je do problema pri dekodiranju datoteke koristeći kodiranje \"%s\".\n"
+"Ovo kodiranje je ručno odabrano."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Ovaj stupac bit će spojen u polje"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Thousands Separator"
-msgstr ""
+msgstr "Separator tisućica"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Za uvoz više vrijednosti razdvojite ih zarezom."
 
 #. module: base_import
 #. odoo-javascript
@@ -820,8 +871,9 @@ msgstr "Bez naslova"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, fuzzy
 msgid "Upload"
-msgstr ""
+msgstr "Učitaj"
 
 #. module: base_import
 #. odoo-javascript
@@ -834,27 +886,37 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
 "system. You can use a custom format in addition to the suggestions provided. "
 "Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Koristite HH za sate u 24-satnom sustavu, koristite II u kombinaciji s 'p' "
+"za 12-satni sustav. Možete koristiti prilagođeni format uz navedene "
+"prijedloge. Ostavite prazno kako bi Odoo pogodio format (preporučeno)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid ""
 "Use YYYY to represent the year, MM for the month and DD for the day. Include "
 "separators such as a dot, forward slash or dash. You can use a custom format "
 "in addition to the suggestions provided. Leave empty to let Odoo guess the "
 "format (recommended)"
 msgstr ""
+"Koristite YYYY za predstavljanje godine, MM za mjesec i DD za dan. Uključite "
+"razdjelnike kao što su točka, kosa crta ili crtica. Možete koristiti "
+"prilagođeni format uz navedene prijedloge. Ostavite prazno kako bi Odoo "
+"pogodio format (preporučeno)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, fuzzy
 msgid "Use first row as header"
-msgstr ""
+msgstr "Koristi prvi red kao zaglavlje"
 
 #. module: base_import
 #. odoo-javascript
@@ -872,22 +934,27 @@ msgstr "Korisnik"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+#, fuzzy
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Kada vrijednost ne može biti usklađena:"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid ""
 "You can not import file via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Ne možete uvesti datoteku putem URL-a, provjerite s administratorom ili "
+"podrškom razlog."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "You can test or reload your file before resuming the import."
-msgstr ""
+msgstr "Možete testirati ili ponovno učitati datoteku prije nastavka uvoza."
 
 #. module: base_import
 #. odoo-python
@@ -898,20 +965,23 @@ msgstr "Definirajte barem jedno polje za uvoz"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "at multiple rows"
-msgstr ""
+msgstr "u više redaka"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "at row"
-msgstr ""
+msgstr "u retku"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "in field"
-msgstr ""
+msgstr "u polju"
 
 #. module: base_import
 #. odoo-javascript
@@ -922,8 +992,9 @@ msgstr "minuta"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "više"
 
 #. module: base_import
 #. odoo-javascript
@@ -934,8 +1005,9 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "out of"
-msgstr ""
+msgstr "od"
 
 #. module: base_import
 #. odoo-javascript
@@ -947,5 +1019,6 @@ msgstr "sekundi"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, fuzzy
 msgid "unknown error code %s"
-msgstr ""
+msgstr "nepoznat kod pogreške %s"

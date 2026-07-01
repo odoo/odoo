@@ -42,16 +42,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-14 13:45+0000\n"
+"PO-Revision-Date: 2026-06-20 13:57+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/"
 "project/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -893,9 +893,10 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
-"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain "
-"muutamalla napsautuksella\n"
-"                    (esim. \"Seurantaraportti\", \"Pystytystapaaminen\", ...)"
+"Toimintasuunnitelmien avulla voi määrittää luettelon toimenpiteistä vain "
+"muutamalla klikkauksella\n"
+"                    (esim. \"Edistymisraportti\", "
+"\"Pystytystapaaminen\", ...)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1501,6 +1502,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Kerää palautetta asiakkailtasi lähettämällä heille arviointipyyntö tehtävän "
+"siirtyessä tiettyyn vaiheeseen. Määritä arviointia varten sähköpostipohja, "
+"jonka voit lisätä tähän vaiheeseen.\n"
+"Arviointi vaiheeseen siirtyessä: sähköposti lähetetään automaattisesti, kun "
+"tehtävä saavuttaa kyseisen vaiheen.\n"
+"Säännöllinen arviointi: sähköposti lähetetään automaattisesti säännöllisin "
+"väliajoin niin kauan, kun tehtävä pysyy kyseisessä vaiheessa."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -3878,6 +3886,31 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Projektien ja tehtävien näkyvyys:\n"
+"- Kutsutut sisäiset käyttäjät: Pääsevät käsiksi vain niihin projekteihin tai "
+"tehtäviin, joita he seuraavat. Tehtävänannon saaneet käyttäjät saavat pääsyn "
+"automaattisesti.\n"
+"- Kutsutut sisäiset ja portaalikäyttäjät: Sama kuin yllä, laajennettuna "
+"portaalikäyttäjiin.\n"
+"- Kaikki sisäiset käyttäjät: Täysi pääsy projektiin ja kaikkiin sen "
+"tehtäviin.\n"
+"- Kaikki sisäiset ja kutsutut portaalikäyttäjät: Sisäiset käyttäjät saavat "
+"täyden pääsyn. Portaalikäyttäjät saavat pääsyn vain niihin projekteihin tai "
+"tehtäviin, joita he seuraavat.\n"
+"\n"
+"Portaalin käyttöoikeustasot:\n"
+"- Vain luku: Portaalikäyttäjät näkevät tehtävät portaalissaan, mutta eivät "
+"voi muokata niitä.\n"
+"- Muokkaus (rajoitettu): Portaalin käyttäjät pääsevät kanban-/"
+"luettelonäkymiin ja voivat muokata rajoitettuja kenttiä seuratuissa "
+"tehtävissä.\n"
+"- Muokkaus: Sama kuin edellä, pääsy kaikkiin tehtäviin.\n"
+"\n"
+"Muut säännöt:\n"
+"- Sisäiset käyttäjät voivat avata tehtävän suorasta linkistä, vaikka heillä "
+"ei olisi pääsyä projektiin.\n"
+"- Projektin ylläpitäjillä on pääsy yksityisiin projekteihin, vaikka he eivät "
+"olisi seuraajia.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4492,7 +4525,7 @@ msgstr "Lähetä Kutsu"
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
@@ -4612,7 +4645,7 @@ msgstr ""
 #. module: project
 #: model:project.tags,name:project.project_tags_12
 msgid "Social"
-msgstr "Some"
+msgstr "Sosiaalinen"
 
 #. module: project
 #. odoo-javascript
@@ -5749,6 +5782,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Käytä näitä avansanoja otsikossa määrittääksesi uusia tehtäviä:\n"
+"\n"
+"                     30h Varaa 30 tuntia tehtävään\n"
+"                     #tunnisteet Aseta tunnisteita tehtävälle\n"
+"                     @käytttäjä Määritä tehtävä käyttäjälle\n"
+"                     ! Aseta tehtävälle keskisuuri prioriteetti\n"
+"                     !! Aseta tehtävälle korkea prioriteetti\n"
+"                     !!! Aseta tehtävä kiireelliseksi\n"
+"\n"
+"                    Varmista, että käytät oikeaa muotoa ja järjestystä, "
+"esim. Paranna ruudun konfiguraatiota 5h #ominaisuus #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5781,7 +5825,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr "Avaa tehtävä"
+msgstr "Katso tehtävä"
 
 #. module: project
 #. odoo-javascript
@@ -5789,7 +5833,7 @@ msgstr "Avaa tehtävä"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr "Näytä tehtävät"
+msgstr "Katso tehtävät"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
