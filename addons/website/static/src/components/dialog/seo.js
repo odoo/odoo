@@ -26,6 +26,7 @@ export const seoContext = proxy({
     seoName: "",
     metaImage: "",
     defaultTitle: "",
+    translationRecords: [],
     updatedAlts: [],
     brokenLinks: [],
 });
@@ -758,7 +759,9 @@ export class SeoChecks extends Component {
         CheckBox,
         BrokenLink,
     };
-    static props = {};
+    static props = {
+        isDefaultLang: Boolean,
+    };
 
     async setup() {
         this.website = useService("website");
@@ -776,20 +779,31 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            const { altAttributes, translationRecords = [] } = await this.getAltAttributes();
+            this.state.altAttributes = altAttributes;
+            this.seoContext.translationRecords = translationRecords;
             this.seoContext.updatedAlts = [];
         });
         onMounted(() => {
-            this.getBrokenLinks();
+            if (this.props.isDefaultLang) {
+                this.getBrokenLinks();
+            }
         });
     }
 
     imgUpdated(img) {
+        img.alt = (img.alt || "").trim();
         img.updated = true;
         this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
+        return this.props.isDefaultLang
+            ? this.getDefaultLangAltAttributes()
+            : this.getTranslatedAltAttributes();
+    }
+
+    async getDefaultLangAltAttributes() {
         const uniqueRecords = new Set();
 
         // Select all relevant <img> elements in the editable page.
@@ -824,7 +838,64 @@ export class SeoChecks extends Component {
 
         const results = await rpc("/website/get_alt_images", { models });
 
-        return JSON.parse(results);
+        return { altAttributes: JSON.parse(results) };
+    }
+
+    async getTranslatedAltAttributes() {
+        // Re-render the current page with the `edit_translations` markers so
+        // every translatable <img> alt carries a `<span data-oe-...>` wrapper
+        // exposing its owning record/field and the source-term hash.
+        const url = new URL(this.website.pageDocument.location.href);
+        url.searchParams.set("edit_translations", "1");
+        const response = await fetch(url);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+
+        const altAttributes = [];
+        const seenIds = new Set();
+        const imgEls = doc.querySelectorAll(
+            '#wrapwrap img[alt*="data-oe-translation-source-sha="]'
+        );
+        for (const imgEl of imgEls) {
+            if (imgEl.closest(".o_not_editable") && !imgEl.classList.contains("o_editable_media")) {
+                continue;
+            }
+            const markerEl = new DOMParser()
+                .parseFromString(imgEl.getAttribute("alt"), "text/html")
+                .querySelector("[data-oe-translation-source-sha]");
+            if (!markerEl) {
+                continue;
+            }
+            const { oeModel, oeId, oeField, oeTranslationSourceSha } = markerEl.dataset;
+            const id = `${oeModel}-${oeId}-${oeField}-${oeTranslationSourceSha}`;
+            if (seenIds.has(id)) {
+                continue;
+            }
+            seenIds.add(id);
+            altAttributes.push({
+                src: imgEl.getAttribute("src"),
+                alt: (markerEl.textContent || "").trim(),
+                decorative: false,
+                updated: false,
+                res_model: oeModel,
+                res_id: parseInt(oeId),
+                field: oeField,
+                source_sha: oeTranslationSourceSha,
+                id,
+            });
+        }
+
+        const recordKeys = new Set();
+        const translationRecords = [];
+        for (const { res_model, res_id, field } of altAttributes) {
+            const key = `${res_model}||${res_id}||${field}`;
+            if (!recordKeys.has(key)) {
+                recordKeys.add(key);
+                translationRecords.push({ model: res_model, id: res_id, field });
+            }
+        }
+
+        return { altAttributes, translationRecords };
     }
 
     async getBrokenLinks() {
@@ -1132,7 +1203,45 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
-        if (seoContext.updatedAlts?.length) {
+        if (!this.isDefaultLang) {
+            const translationsByRecord = new Map();
+            const getFieldName = (field) => (field === "arch" ? "arch_db" : field);
+
+            const addTranslationRecord = (model, id, field) => {
+                const fieldName = getFieldName(field);
+                const recordKey = `${model}||${id}||${fieldName}`;
+                if (translationsByRecord.has(recordKey)) {
+                    return translationsByRecord.get(recordKey);
+                }
+                translationsByRecord.set(recordKey, {
+                    model,
+                    id,
+                    fieldName,
+                    translations: {},
+                });
+                return translationsByRecord.get(recordKey);
+            };
+
+            for (const record of seoContext.translationRecords) {
+                addTranslationRecord(record.model, record.id, record.field);
+            }
+            for (const img of seoContext.updatedAlts || []) {
+                const record = addTranslationRecord(img.res_model, img.res_id, img.field);
+                record.translations[img.source_sha] = (img.alt || "").trim();
+            }
+            for (const record of translationsByRecord.values()) {
+                rpcCalls.push(
+                    rpc("/website/field/translation/update", {
+                        model: record.model,
+                        record_id: [record.id],
+                        field_name: record.fieldName,
+                        translations: {
+                            [currentLang]: record.translations,
+                        },
+                    })
+                );
+            }
+        } else if (seoContext.updatedAlts?.length) {
             rpcCalls.push(
                 rpc("/website/update_alt_images", {
                     imgs: seoContext.updatedAlts,

@@ -1380,25 +1380,26 @@ class Website(Home):
         result = []
         for model in models:
             record = request.env[model['model']].browse(model['id'])
-            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
-            tree = html.fromstring(str(record[model['field']]))
+            field_name = 'arch_db' if model['field'] == 'arch' else model['field']
+            tree = html.fromstring(str(record[field_name]))
             # Only process static img elements (with src) - skip dynamic
             # template images (t-att*)
             for index, el in enumerate(tree.xpath('//img[@src]')):
                 role = el.get('role')
                 decorative = role == "presentation"
                 alt = el.get('alt')
-                if not decorative or alt is None:
-                    result.append({
-                        "src": el.get("src"),
-                        "alt": alt or "",
-                        "decorative": False,
-                        "updated": False,
-                        "res_model": model['model'],
-                        "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
-                        "field": model.get('field'),
-                    })
+                if decorative and alt is not None:
+                    continue
+                result.append({
+                    "src": el.get("src"),
+                    "alt": (alt or "").strip(),
+                    "decorative": False,
+                    "updated": False,
+                    "res_model": model['model'],
+                    "res_id": model['id'],
+                    "id": f"{model['model']}-{model['id']}-{index}",
+                    "field": field_name,
+                })
         return json.dumps(result)
 
     @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
@@ -1419,7 +1420,7 @@ class Website(Home):
                         element.set('alt', '')
                         element.set('role', 'presentation')
                     else:
-                        element.set('alt', markup_escape(img['alt']))
+                        element.set('alt', markup_escape((img.get('alt') or '').strip()))
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
