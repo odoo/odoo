@@ -1,0 +1,155 @@
+<rsm:CrossIndustryInvoice  xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+
+  <rsm:ExchangedDocumentContext>
+    <ram:GuidelineSpecifiedDocumentContextParameter>
+      <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ram:ID>
+    </ram:GuidelineSpecifiedDocumentContextParameter>
+  </rsm:ExchangedDocumentContext>
+
+  <rsm:ExchangedDocument>
+    <ram:ID>___ignore___</ram:ID>
+    <ram:TypeCode>___ignore___</ram:TypeCode>
+    <ram:IssueDateTime>
+      <udt:DateTimeString format="102">___ignore___</udt:DateTimeString>
+    </ram:IssueDateTime>
+  </rsm:ExchangedDocument>
+
+  <rsm:SupplyChainTradeTransaction>
+    <ram:IncludedSupplyChainTradeLineItem>
+      <ram:AssociatedDocumentLineDocument>
+        <ram:LineID>___ignore___</ram:LineID>
+      </ram:AssociatedDocumentLineDocument>
+      <ram:SpecifiedTradeProduct>
+        <ram:Name>___ignore___</ram:Name>
+      </ram:SpecifiedTradeProduct>
+      <ram:SpecifiedLineTradeAgreement>
+        <ram:GrossPriceProductTradePrice>
+            <ram:ChargeAmount>___ignore___</ram:ChargeAmount>
+        </ram:GrossPriceProductTradePrice>
+        <ram:NetPriceProductTradePrice>
+          <ram:ChargeAmount>___ignore___</ram:ChargeAmount>
+        </ram:NetPriceProductTradePrice>
+      </ram:SpecifiedLineTradeAgreement>
+      <ram:SpecifiedLineTradeDelivery>
+        <ram:BilledQuantity unitCode="DZN">___ignore___</ram:BilledQuantity>
+      </ram:SpecifiedLineTradeDelivery>
+      <ram:SpecifiedLineTradeSettlement>
+        <ram:ApplicableTradeTax>
+          <ram:TypeCode>___ignore___</ram:TypeCode>
+          <ram:CategoryCode>___ignore___</ram:CategoryCode>
+          <ram:RateApplicablePercent>___ignore___</ram:RateApplicablePercent>
+        </ram:ApplicableTradeTax>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+          <ram:LineTotalAmount>___ignore___</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+
+    <ram:ApplicableHeaderTradeAgreement>
+      <ram:SellerTradeParty>
+        <ram:Name>company_1_data</ram:Name>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>company_1_data</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33 499 65 43 21</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+            <ram:EmailURIUniversalCommunication>
+                <ram:URIID>mycompany@company.com</ram:URIID>
+            </ram:EmailURIUniversalCommunication>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>35400</ram:PostcodeCode>
+            <ram:LineOne>Rue Grand Port 1</ram:LineOne>
+            <ram:CityName>Saint-Malo</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:URIUniversalCommunication>
+            <ram:URIID>___ignore___</ram:URIID>
+        </ram:URIUniversalCommunication>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR23334175221</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:SellerTradeParty>
+      <ram:BuyerTradeParty>
+        <ram:Name>partner_fr</ram:Name>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>partner_fr</ram:PersonName>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>75000</ram:PostcodeCode>
+            <ram:LineOne>Rue Jean Jaurès, 42</ram:LineOne>
+            <ram:CityName>Paris</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:URIUniversalCommunication>
+            <ram:URIID>___ignore___</ram:URIID>
+        </ram:URIUniversalCommunication>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR05677404089</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:BuyerTradeParty>
+      <ram:BuyerOrderReferencedDocument>
+        <ram:IssuerAssignedID>___ignore___</ram:IssuerAssignedID>
+      </ram:BuyerOrderReferencedDocument>
+    </ram:ApplicableHeaderTradeAgreement>
+      <ram:ApplicableHeaderTradeDelivery>
+        <ram:ShipToTradeParty>
+          <ram:Name>FR Partner Delivery</ram:Name>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>FR Partner Delivery</ram:PersonName>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>75000</ram:PostcodeCode>
+            <ram:LineOne>Rue Napoléon, 55</ram:LineOne>
+            <ram:CityName>Paris</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        </ram:ShipToTradeParty>
+          <ram:ActualDeliverySupplyChainEvent>
+            <ram:OccurrenceDateTime>
+              <udt:DateTimeString format="102">20260210</udt:DateTimeString>
+            </ram:OccurrenceDateTime>
+          </ram:ActualDeliverySupplyChainEvent>
+      </ram:ApplicableHeaderTradeDelivery>
+
+    <ram:ApplicableHeaderTradeSettlement>
+      <ram:PaymentReference>___ignore___</ram:PaymentReference>
+      <ram:InvoiceCurrencyCode>___ignore___</ram:InvoiceCurrencyCode>
+      <ram:SpecifiedTradeSettlementPaymentMeans>
+          <ram:TypeCode>___ignore___</ram:TypeCode>
+          <ram:PayeePartyCreditorFinancialAccount>
+              <ram:ProprietaryID>___ignore___</ram:ProprietaryID>
+          </ram:PayeePartyCreditorFinancialAccount>
+      </ram:SpecifiedTradeSettlementPaymentMeans>
+      <ram:ApplicableTradeTax>
+        <ram:CalculatedAmount>___ignore___</ram:CalculatedAmount>
+        <ram:TypeCode>___ignore___</ram:TypeCode>
+        <ram:BasisAmount>___ignore___</ram:BasisAmount>
+        <ram:CategoryCode>___ignore___</ram:CategoryCode>
+        <ram:DueDateTypeCode>___ignore___</ram:DueDateTypeCode>
+        <ram:RateApplicablePercent>___ignore___</ram:RateApplicablePercent>
+      </ram:ApplicableTradeTax>
+        <ram:BillingSpecifiedPeriod>
+            <ram:StartDateTime>
+                <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+            </ram:StartDateTime>
+            <ram:EndDateTime>
+                <udt:DateTimeString format="102">20260131</udt:DateTimeString>
+            </ram:EndDateTime>
+        </ram:BillingSpecifiedPeriod>
+        <ram:SpecifiedTradePaymentTerms>
+            <ram:DueDateDateTime>
+                <udt:DateTimeString format="102">20260131</udt:DateTimeString>
+            </ram:DueDateDateTime>
+        </ram:SpecifiedTradePaymentTerms>
+      <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+        <ram:LineTotalAmount>___ignore___</ram:LineTotalAmount>
+        <ram:TaxBasisTotalAmount>___ignore___</ram:TaxBasisTotalAmount>
+        <ram:TaxTotalAmount currencyID="EUR">___ignore___</ram:TaxTotalAmount>
+        <ram:GrandTotalAmount>___ignore___</ram:GrandTotalAmount>
+        <ram:TotalPrepaidAmount>___ignore___</ram:TotalPrepaidAmount>
+        <ram:DuePayableAmount>___ignore___</ram:DuePayableAmount>
+      </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+    </ram:ApplicableHeaderTradeSettlement>
+  </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>

@@ -1,0 +1,38 @@
+<rsm:CrossIndustryInvoice  xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+
+  <rsm:SupplyChainTradeTransaction>
+    <ram:IncludedSupplyChainTradeLineItem>
+    <ram:SpecifiedLineTradeAgreement>
+        <ram:NetPriceProductTradePrice>
+            <ram:ChargeAmount>200.00</ram:ChargeAmount>
+        </ram:NetPriceProductTradePrice>
+        <ram:GrossPriceProductTradePrice>
+            <ram:ChargeAmount>250.00</ram:ChargeAmount>
+            <ram:AppliedTradeAllowanceCharge>
+                <ram:ChargeIndicator>
+                    <udt:Indicator>false</udt:Indicator>
+                </ram:ChargeIndicator>
+                <ram:ActualAmount>50.00</ram:ActualAmount>
+            </ram:AppliedTradeAllowanceCharge>
+        </ram:GrossPriceProductTradePrice>
+      </ram:SpecifiedLineTradeAgreement>
+      <ram:SpecifiedLineTradeSettlement>
+         <ram:SpecifiedTradeAllowanceCharge>
+            <ram:ChargeIndicator>
+                <udt:Indicator>true</udt:Indicator>
+            </ram:ChargeIndicator>
+            <ram:ActualAmount>50.00</ram:ActualAmount>
+        </ram:SpecifiedTradeAllowanceCharge>
+         <ram:SpecifiedTradeAllowanceCharge>
+            <ram:ChargeIndicator>
+                <udt:Indicator>false</udt:Indicator>
+            </ram:ChargeIndicator>
+            <ram:ActualAmount>100.00</ram:ActualAmount>
+        </ram:SpecifiedTradeAllowanceCharge>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+            <ram:LineTotalAmount>950.00</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+  </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>

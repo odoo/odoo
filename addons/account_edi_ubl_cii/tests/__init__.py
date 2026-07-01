@@ -2,6 +2,15 @@ from . import test_autopost_bills
 from . import test_partner_peppol_fields
 from . import test_ubl_cii
 from . import test_download_docs
+from . import test_cii_export_facturx_fr
+from . import test_cii_facturx_fr_decode_invoice_line
+from . import test_cii_import_facturx_fr
+from . import test_cii_import_facturx_fr_cash_rounding
+from . import test_cii_import_facturx_fr_group_lines_by_tax
+from . import test_cii_import_facturx_fr_retrieve_account
+from . import test_cii_import_facturx_fr_retrieve_partner
+from . import test_cii_import_facturx_fr_retrieve_product
+from . import test_cii_import_facturx_fr_retrieve_tax
 from . import test_ubl_export_bis3_be
 from . import test_ubl_export_bis3_debit_note
 from . import test_ubl_export_bis3_invoice_be_down_payment
