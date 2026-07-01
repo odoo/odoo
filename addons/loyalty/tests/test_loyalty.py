@@ -338,3 +338,23 @@ class TestLoyalty(TransactionCase):
         # attempt to unarchive both programs together
         with self.assertRaises(ValidationError):
             (program1 + program2).action_unarchive()
+
+    def test_discount_description_translation(self):
+        """A discount product's name field should automatically update for all languages for which changes
+        are made on the reward's description"""
+        self.env['res.lang']._activate_lang('fr_FR')
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'reward_ids': [(0, 0, {})],
+        })
+        reward = self.env['loyalty.reward'].with_context(lang='en_US').create({
+            'program_id': program.id,
+            'reward_type': 'discount',
+            'description': 'My Discount'
+        })
+        product = reward.discount_line_product_id
+        translations = {'en_US': 'Test Discount EN', 'fr_FR': 'Test Discount FR'}
+        reward.update_field_translations('description', translations)
+        product.invalidate_recordset(['name'])
+        self.assertEqual(product.with_context(lang='en_US').name, 'Test Discount EN')
+        self.assertEqual(product.with_context(lang='fr_FR').name, 'Test Discount FR')
