@@ -2,6 +2,7 @@
 
 import "@website/snippets/s_website_form/000";  // force deps
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { session } from "@web/session";
 
@@ -9,14 +10,21 @@ export const turnStile = {
     addTurnstile: function (action) {
         if (!this.isEditable) {
             const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
+
+            // each turnstile widget has unique callback closures so they can act on their own container
+            const id = uniqueId("turnstile_");
+            const successCbName = `turnstileSuccess_${id}`;
+            const expiredCbName = `turnstileExpired_${id}`;
+            const becomeVisibleCbName = `turnstileBecomeVisible_${id}`;
+
             const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
                 action: action,
                 appearance: mode,
                 additionalClasses: "float-end",
-                beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+                beforeInteractiveGlobalCallback: becomeVisibleCbName,
                 errorGlobalCallback: "throwTurnstileErrorCode",
-                executeGlobalCallback: "turnstileSuccess",
-                expiredCallback: "turnstileExpired",
+                executeGlobalCallback: successCbName,
+                expiredCallback: expiredCbName,
                 sitekey: session.turnstile_site_key,
                 style: "display: none;",
             });
@@ -37,15 +45,13 @@ export const turnStile = {
                 button.classList.toggle("disabled", show);
                 spinner.classList.toggle("d-none", !show);
             };
-            // `this` is bound to the turnstile widget calling the callback
-            globalThis.turnstileSuccess = function () {
-                toggleSpinner(this.wrapper.parentElement, false);
+            globalThis[successCbName] = function () {
+                toggleSpinner(turnstileContainer, false);
             };
-            globalThis.turnstileExpired = function () {
-                toggleSpinner(this.wrapper.parentElement, true);
+            globalThis[expiredCbName] = function () {
+                toggleSpinner(turnstileContainer, true);
             };
-            globalThis.turnstileBecomeVisible = function () {
-                const turnstileContainer = this.wrapper.parentElement;
+            globalThis[becomeVisibleCbName] = function () {
                 turnstileContainer.style.display = "";
             };
 
