@@ -40,6 +40,16 @@ export class MailCoreCommon {
         this.busService.subscribe("mail.record/insert", (payload) => {
             this.store.insert(payload);
         });
+        this.store.ensureInitialized();
+        this.env.bus.addEventListener(
+            "discuss.channel/new_message",
+            ({ detail: { channel, message, silent } }) => {
+                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
+                    return;
+                }
+                channel.notifyMessageToUser(message);
+            }
+        );
     }
 }
 

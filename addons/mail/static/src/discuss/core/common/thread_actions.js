@@ -182,7 +182,12 @@ registerThreadAction("invite-people", {
         !owner.env.pipWindow &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !(owner.isDiscussContent && channel?.hasMemberList),
-    icon: "oi oi-fw oi-user-plus",
+    icon: ({ renderingContext }) => {
+        if (!renderingContext?.props.dropdown) {
+            return "oi oi-fw oi-user-plus";
+        }
+        return undefined;
+    },
     name: _t("Invite People"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),

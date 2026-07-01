@@ -73,9 +73,12 @@ class TestTranslationController(HttpCaseWithUserDemo):
         if f"/v2/?key={self.api_key}" in url:
             return {"translations": [{"translatedText": SAMPLE[data.get("target")]}]}
 
-    def _mock_translation_request(self, data):
+    def _mock_translation_request(self, data, user=None):
         with patch.object(requests, "post", self._patched_post):
-            return self.make_jsonrpc_request("/mail/message/translate", data)
+            user = user or self.env.user
+            return self.make_jsonrpc_request(
+                "/mail/message/translate", data, cookies={"frontend_lang": user.lang}
+            )
 
     def test_update_message(self):
         self.authenticate("admin", "admin")
@@ -98,11 +101,16 @@ class TestTranslationController(HttpCaseWithUserDemo):
         self.assertFalse(self.env["mail.message.translation"].search_count([]))
 
     def test_translation_multi_users(self):
-        new_test_user(self.env, "user_test_fr", groups="base.group_user", lang="fr_FR")
-        new_test_user(self.env, "user_test_en", groups="base.group_user", lang="en_US")
-        for login, target_lang in [("user_test_fr", "fr"), ("user_test_en", "en"), ("admin", "fr")]:
+        user_fr = new_test_user(self.env, "user_test_fr", groups="base.group_user", lang="fr_FR")
+        user_en = new_test_user(self.env, "user_test_en", groups="base.group_user", lang="en_US")
+        user_admin = self.env.ref("base.user_admin")
+        for login, target_lang, user in [
+            ("user_test_fr", "fr", user_fr),
+            ("user_test_en", "en", user_en),
+            ("admin", "fr", user_admin),
+        ]:
             self.authenticate(login, login)
-            result = self._mock_translation_request({"message_id": self.message.id})
+            result = self._mock_translation_request({"message_id": self.message.id}, user=user)
             self.assertFalse(result.get("error"))
             self.assertEqual(result["body"], SAMPLE[target_lang])
             self.assertEqual(result["lang_name"], SAMPLE["lang"][target_lang])
@@ -121,9 +129,9 @@ class TestTranslationController(HttpCaseWithUserDemo):
 
     def test_html_sanitization(self):
         self.env["res.lang"]._activate_lang("nl_NL")
-        new_test_user(self.env, "user_test_nl", groups="base.group_user", lang="nl_NL")
+        user_nl = new_test_user(self.env, "user_test_nl", groups="base.group_user", lang="nl_NL")
         self.authenticate("user_test_nl", "user_test_nl")
-        result = self._mock_translation_request({"message_id": self.message.id})
+        result = self._mock_translation_request({"message_id": self.message.id}, user=user_nl)
         self.assertFalse(result.get("error"))
         self.assertHTMLEqual(result["body"], "<p>Bij slecht weer, goed gezicht.</p>")
         translation = self.env["mail.message.translation"].search([])
@@ -141,5 +149,7 @@ class TestTranslationController(HttpCaseWithUserDemo):
     def test_unknown_language(self):
         self.authenticate("admin", "admin")
         with patch.dict(SAMPLE, {"src": "unknown_by_babel_but_known_by_google_api"}):
-            result = self._mock_translation_request({"message_id": self.message.id})
+            result = self._mock_translation_request(
+                {"message_id": self.message.id}, user=self.env.ref("base.user_admin")
+            )
         self.assertEqual(result["body"], "<p>Au mauvais temps, bonne tête.</p>")

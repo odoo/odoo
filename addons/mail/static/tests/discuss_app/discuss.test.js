@@ -1329,10 +1329,11 @@ test("auto-focus composer on opening thread", async () => {
 test("no out-of-focus notification on receiving self messages in chat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    mockService("title", {
-        setCounters(counters) {
-            if (counters.discuss) {
-                expect.step("set_counters:discuss");
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                expect.step(`set_counters:discuss:${match[1]}`);
             }
         },
     });
@@ -1367,10 +1368,11 @@ test("out-of-focus notif on needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("title", {
-        setCounters(counters) {
-            if (counters.discuss) {
-                expect.step(`set_counters:discuss:${counters.discuss}`);
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                expect.step(`set_counters:discuss:${match[1]}`);
             }
         },
     });
@@ -1407,10 +1409,11 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    mockService("title", {
-        setCounters(counters) {
-            if (counters.discuss) {
-                expect.step(`set_counters:discuss:${counters.discuss}`);
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                expect.step(`set_counters:discuss:${match[1]}`);
             }
         },
     });
@@ -1445,10 +1448,11 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("title", {
-        setCounters(counters) {
-            if (counters.discuss) {
-                expect.step("set_counters:discuss");
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                expect.step(`set_counters:discuss:${match[1]}`);
             }
         },
     });
@@ -1492,21 +1496,22 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             ],
         },
     ]);
-    mockService("title", {
-        setCounters(counters) {
-            if (!counters.discuss) {
-                return;
-            }
-            stepCount++;
-            expect.step("set_counters:discuss");
-            if (stepCount === 1) {
-                expect(counters.discuss).toBe(1);
-            }
-            if (stepCount === 2) {
-                expect(counters.discuss).toBe(2);
-            }
-            if (stepCount === 3) {
-                expect(counters.discuss).toBe(3);
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                stepCount++;
+                const count = parseInt(match[1]);
+                expect.step(`set_counters:discuss`);
+                if (stepCount === 1) {
+                    expect(count).toBe(1);
+                }
+                if (stepCount === 2) {
+                    expect(count).toBe(2);
+                }
+                if (stepCount === 3) {
+                    expect(count).toBe(3);
+                }
             }
         },
     });

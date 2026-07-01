@@ -128,5 +128,8 @@ export class UseThreadActions extends UseActions {
  * @returns {UseThreadActions_Def}
  */
 export function useThreadActions({ thread, rootRef } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
+    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, {
+        rootRef,
+        thread,
+    });
 }

@@ -219,6 +219,8 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = fields.Many("mail.message");
+    /** @type {boolean|undefined} */
+    autoTranslateEnabled = fields.Attr(undefined, { localStorage: true });
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" or "Cc" fields of the Chatter. */
     additionalRecipients = fields.Attr([]);
@@ -231,7 +233,7 @@ export class Thread extends Record {
     suggestedRecipients = fields.Attr([]);
     /** @type {Boolean|undefined} */
     showSubjectInSmallComposer;
-    /** 
+    /**
      * similar to suggested recipients, except for the subject and optional per model.
     @type {String|undefined} */
     suggestedSubject;
@@ -855,6 +857,10 @@ export class Thread extends Record {
 
     get shouldMarkAsReadOnFocus() {
         return this.scrollTop === "bottom" && !this.scrollUnread && !this.channel?.markedAsUnread;
+    }
+
+    get shouldTranslateNewMessages() {
+        return this.autoTranslateEnabled;
     }
 
     /**

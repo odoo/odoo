@@ -94,6 +94,9 @@ export class DiscussCoreCommon {
                 ) {
                     channel.self_member_id.message_unread_counter++;
                 }
+                if (channel.shouldTranslateNewMessages) {
+                    message.toggleTranslation();
+                }
             }
         }
         if (

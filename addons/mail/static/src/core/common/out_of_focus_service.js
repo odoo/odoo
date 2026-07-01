@@ -27,9 +27,14 @@ export class OutOfFocusService {
         /** @type {import("models").Store} */
         this.store = services["mail.store"];
         this.closeFuncs = [];
+        this.contributingMessageLocalIds = new Set();
+        env.bus.addEventListener("window_focus", () => this.onWindowFocus());
     }
-
     async notify(message, thread) {
+        if (this.contributingMessageLocalIds.has(message.localId)) {
+            return;
+        }
+        this.contributingMessageLocalIds.add(message.localId);
         const modelsHandleByPush = ["mail.thread", "discuss.channel"];
         if (
             modelsHandleByPush.includes(message.thread?.model) &&
@@ -163,6 +168,12 @@ export class OutOfFocusService {
 
     get canSendNativeNotification() {
         return Boolean(window.Notification && window.Notification.permission === "granted");
+    }
+    clearUnreadMessage() {
+        this.contributingMessageLocalIds.clear();
+    }
+    onWindowFocus() {
+        this.clearUnreadMessage();
     }
 }
 

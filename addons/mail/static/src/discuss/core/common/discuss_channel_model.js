@@ -711,6 +711,18 @@ export class DiscussChannel extends Record {
         await rpc("/discuss/channel/update_avatar", { channel_id: this.id, data });
     }
 
+    /** @param {import("models").Message} message */
+    shouldNotifyMessageToUser(message) {
+        return false;
+    }
+
+    /** @param {import("models").Message} message */
+    async notifyMessageToUser(message) {
+        if (this.shouldNotifyMessageToUser(message)) {
+            this.store.env.services["mail.out_of_focus"].notify(message, this.thread);
+        }
+    }
+
     onPinStateUpdated() {}
 
     /** @param {import("models").Message} message */

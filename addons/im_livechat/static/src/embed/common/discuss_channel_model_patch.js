@@ -99,5 +99,8 @@ const discussChannelPatch = {
             (this.channel?.chatbot?.completed && !this.channel.livechat_agent_history_ids.length)
         );
     },
+    shouldNotifyMessageToUser() {
+        return this.channel_type === "livechat" || super.shouldNotifyMessageToUser(...arguments);
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

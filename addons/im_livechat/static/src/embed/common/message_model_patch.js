@@ -15,5 +15,11 @@ const messagePatch = {
         }
         return this.notificationType === "channel-left";
     },
+    afterToggleTranslation() {
+        if (this.thread.channel?.channel_type === "livechat") {
+            return;
+        }
+        return super.afterToggleTranslation(...arguments);
+    },
 };
 patch(Message.prototype, messagePatch);
