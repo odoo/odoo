@@ -100,6 +100,7 @@ class TestMailTools(MailCommon):
         # formatted email
         encapsulated_test_email = f'"Robert Astaire" <{self._test_email}>'
         (follower_partner + test_partner).sudo().write({'email': encapsulated_test_email})
+        other_test_partner = follower_partner.copy({'name': 'Other Test Partner'})
         sources = [
             (self._test_email, True),  # normalized
             (self._test_email, False),  # normalized
@@ -107,11 +108,13 @@ class TestMailTools(MailCommon):
             (encapsulated_test_email, False),  # encapsulated, same
             (f'"AnotherName" <{self._test_email}', True),  # same normalized, other name
             (f'"AnotherName" <{self._test_email}', False),  # same normalized, other name
+            (f'"{other_test_partner.name}" <{self._test_email}>', True),  # same normalized, existing name
+            (f'"{other_test_partner.name}" <{self._test_email}>', False),  # same normalized, existing name
         ]
         expected = [follower_partner, test_partner,
                     follower_partner, test_partner,
                     follower_partner, test_partner,
-                    follower_partner, test_partner]
+                    follower_partner, other_test_partner]
         for (source, follower_check), expected in zip(sources, expected):
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
