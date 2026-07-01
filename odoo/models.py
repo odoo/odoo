@@ -6989,12 +6989,13 @@ class BaseModel(metaclass=MetaModel):
             for dep in self.pool.get_dependent_fields(field.base_field)
         )
 
-    def _apply_onchange_methods(self, field_name, result):
-        """ Apply onchange method(s) for field ``field_name`` on ``self``. Value
-            assignments are applied on ``self``, while warning messages are put
-            in dictionary ``result``.
+    def _apply_onchange_methods(self, field_name, result, excluded_methods=()):
+        """ Apply onchange method(s) (not in ``excluded_methods``) for field ``field_name`` on ``self``.
+            Value assignments are applied on ``self``, while warning messages are put in dictionary ``result``.
         """
         for method in self._onchange_methods.get(field_name, ()):
+            if method in excluded_methods:
+                continue
             res = method(self)
             if not res:
                 continue
