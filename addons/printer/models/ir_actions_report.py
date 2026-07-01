@@ -130,7 +130,7 @@ class IrActionsReport(models.Model):
             "context": {
                 "report_id": self.id,
                 # make printer info available to wizard without doing another RPC call
-                "printer_ids": self.printer_ids.read(["id", "ip_address", "type"]),
+                "printer_ids": self.printer_ids.read(["id", "ip_address", "type", "name"]),
                 "available_printer_ids": self.printer_ids.ids,
             },
         }
