@@ -252,6 +252,8 @@ export async function loadImageInfo(el, attachmentSrc = "") {
         newDataset.originalId = original.id;
         newDataset.originalSrc = original.image_src;
         newDataset.mimetypeBeforeConversion = original.mimetype;
+    } else if (/^\/web\/image\/[\w.]+\/\d+\/[\w-]+(\/|\?|$)/.test(src)) {
+        newDataset.originalSrc = src;
     }
     return newDataset;
 }
