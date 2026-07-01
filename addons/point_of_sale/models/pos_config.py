@@ -867,6 +867,22 @@ class PosConfig(models.Model):
         ]
         return self.env["ir.qweb"]._get_asset_links("point_of_sale.assets_prod", debug=debug) + url_to_cache
 
+    def action_open_ui(self):
+        self.ensure_one()
+        if self.company_id.root_id._existing_accounting() or self.env["pos.session"].search_count([('company_id', '=', self.company_id.id)], limit=1) > 0:
+            return self.open_ui()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("How do you want to display prices?"),
+            "res_model": "pos.price.inclusion.wizard",
+            "views": [(self.env.ref("point_of_sale.view_pos_price_inclusion_wizard_form").id, "form")],
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_config_id": self.id,
+            },
+        }
+
     def _check_before_creating_new_session(self):
         self._check_company_has_template()
         self._check_pricelists()
