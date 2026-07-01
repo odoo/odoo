@@ -912,7 +912,6 @@ class TestRepair(common.TransactionCase):
         """
         Test that the search_date_category field search functionality works correctly.
         """
-        self.env['repair.order'].search([]).unlink()
         repair_order = self.env['repair.order'].create({
             'partner_id': self.res_partner_1.id,
             'schedule_date': fields.Datetime.now(),
@@ -920,7 +919,7 @@ class TestRepair(common.TransactionCase):
         })
         repair_order.action_validate()
         repairs = self.env['repair.order'].search([('search_date_category', 'in', ['yesterday', 'today'])])
-        self.assertEqual(len(repairs), 1)
+        self.assertIn(repair_order, repairs)
 
     def test_sale_order_line_discount_on_repair_order(self):
         """
