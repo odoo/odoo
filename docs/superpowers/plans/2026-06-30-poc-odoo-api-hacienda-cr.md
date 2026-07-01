@@ -225,7 +225,8 @@ class TestCrlibreClient(TransactionCase):
         return resp
 
     def test_get_clave_returns_clave_and_consecutivo(self):
-        payload = {'clave': '5' * 50, 'consecutivo': '0' * 20, 'length': 50}
+        # La API envuelve los datos en {"status":"ok","resp":{...}}
+        payload = {'status': 'ok', 'resp': {'clave': '5' * 50, 'consecutivo': '0' * 20, 'length': 50}}
         with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
                    return_value=self._mock_response(payload)) as m:
             result = self.client.get_clave({'tipoDocumento': 'FE'})
@@ -236,7 +237,8 @@ class TestCrlibreClient(TransactionCase):
     def test_gen_xml_fe_decodes_base64(self):
         import base64
         xml = '<FacturaElectronica>ok</FacturaElectronica>'
-        payload = {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}
+        payload = {'status': 'ok',
+                   'resp': {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}}
         with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
                    return_value=self._mock_response(payload)):
             result = self.client.gen_xml_fe({'clave': '5' * 50})
@@ -302,19 +304,22 @@ class CrlibreFeClient(models.AbstractModel):
             data = resp.json()
         except ValueError:
             raise CrlibreApiError("La API devolvió una respuesta no-JSON.")
-        return data
+        # La API envuelve todo en {"status": "...", "resp": <datos>} (ver Task 1 / api-samples.md)
+        if not isinstance(data, dict) or data.get('status') != 'ok':
+            raise CrlibreApiError("La API respondió estado no-ok: %s" % data)
+        return data.get('resp')
 
     def get_clave(self, params):
-        data = self._call('clave', 'clave', params)
-        if not isinstance(data, dict) or not data.get('clave'):
-            raise CrlibreApiError("Respuesta inesperada de 'clave': %s" % data)
-        return {'clave': data['clave'], 'consecutivo': data.get('consecutivo', '')}
+        resp = self._call('clave', 'clave', params)
+        if not isinstance(resp, dict) or not resp.get('clave'):
+            raise CrlibreApiError("Respuesta inesperada de 'clave': %s" % resp)
+        return {'clave': resp['clave'], 'consecutivo': resp.get('consecutivo', '')}
 
     def gen_xml_fe(self, params):
-        data = self._call('genXML', 'gen_xml_fe', params)
-        if not isinstance(data, dict) or not data.get('xml'):
-            raise CrlibreApiError("Respuesta inesperada de 'gen_xml_fe': %s" % data)
-        return base64.b64decode(data['xml']).decode('utf-8')
+        resp = self._call('genXML', 'gen_xml_fe', params)
+        if not isinstance(resp, dict) or not resp.get('xml'):
+            raise CrlibreApiError("Respuesta inesperada de 'gen_xml_fe': %s" % resp)
+        return base64.b64decode(resp['xml']).decode('utf-8')
 ```
 
 - [ ] **Step 4: Correr el test y verificar que pasa**
