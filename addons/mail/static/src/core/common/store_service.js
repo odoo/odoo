@@ -232,8 +232,7 @@ export class Store extends BaseStore {
                 // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
                 // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
                 const isInbox =
-                    this.store.self.main_user_id?.notification_type === "inbox" &&
-                    model !== "discuss.channel";
+                    this.self_user?.notification_type === "inbox" && model !== "discuss.channel";
                 if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
