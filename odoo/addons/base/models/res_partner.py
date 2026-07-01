@@ -234,7 +234,7 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(string='Tax ID', index=True, help="You can use '/' to indicate that the customer has no Tax ID.")
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
