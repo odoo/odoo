@@ -811,9 +811,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         # If a leave changes state from validated or if the dates of a validated leave change
         # unlink the corresponding resource calendar leave
+
         date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to'}
         validated_leaves = self.filtered(lambda l: l.state == 'validate')
-        if validated_leaves and (('state' in values and values['state'] != 'validate') or date_fields.intersection(values)):
+        dates_changed = bool(date_fields.intersection(values))
+        state_unvalidated = 'state' in values and values['state'] != 'validate'
+        if validated_leaves and (state_unvalidated or dates_changed):
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
@@ -830,7 +833,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
+
         result = super().write(values)
+
+        if validated_leaves and dates_changed and not state_unvalidated:
+            validated_leaves._create_resource_leave()
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self._check_validity()
@@ -898,18 +905,19 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         self.ensure_one()
         return {
             'name': _("%s: Time Off", self.employee_id.name),
-            'date_from': self.date_from,
-            'holiday_id': self.id,
-            'date_to': self.date_to,
             'resource_id': self.employee_id.resource_id.id,
-            'calendar_id': self.resource_calendar_id.id,
             'time_type': self.holiday_status_id.time_type,
+            'calendar_id': self.resource_calendar_id.id,
+            'holiday_id': self.id,
+            'date_from': self.date_from,
+            'date_to': self.date_to,
         }
 
     def _create_resource_leave(self):
         """ This method will create entry in resource calendar time off object at the time of holidays validated
         :returns: created `resource.calendar.leaves`
         """
+        self.env['resource.calendar.leaves'].sudo().search([('holiday_id', 'in', self.ids)]).unlink()
         vals_list = [leave._prepare_resource_leave_vals() for leave in self]
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
