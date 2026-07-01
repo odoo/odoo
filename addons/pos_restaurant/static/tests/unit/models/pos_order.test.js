@@ -61,6 +61,23 @@ describe("pos.order restaurant patches", () => {
         expect(name).toBe("T 1 & 2");
     });
 
+    test("preparationName", async () => {
+        const store = await setupPosEnv();
+
+        const order = store.addNewOrder();
+        expect(order.isDirectSale).toBe(true);
+        expect(order.preparationName).toBe(order.floatingOrderName);
+
+        order.tracking_number = undefined;
+        expect(order.floatingOrderName).toBe("");
+        expect(order.preparationName).toBe(order.pos_reference);
+
+        const table = store.models["restaurant.table"].get(2);
+        const tableOrder = store.addNewOrder({ table_id: table });
+        expect(tableOrder.isDirectSale).toBe(false);
+        expect(tableOrder.preparationName).toBe(tableOrder.getName());
+    });
+
     test("ensureCourseSelection and getSelectedCourse", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
