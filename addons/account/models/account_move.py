@@ -349,7 +349,7 @@ class AccountMove(models.Model):
         string='Audit Trail Messages',
     )
     no_followup = fields.Boolean(
-        string="No Follow-Up",
+        string="No Reminder",
         compute='_compute_no_followup',
         inverse='_inverse_no_followup',
         readonly=False,

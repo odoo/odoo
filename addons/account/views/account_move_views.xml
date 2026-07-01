@@ -350,11 +350,11 @@
                     <filter string="To Review" name="to_check" domain="[('move_id.review_state', 'in', ('todo', 'anomaly'))]"/>
                     <separator/>
                     <filter string="Unreconciled"
-                            domain="[('balance', '!=', 0), ('account_id.reconcile', '=', True), '|', ('matching_number', '=', False), ('matching_number', '=like', 'P%')]"
+                            domain="[('balance', '!=', 0), ('account_id.reconcile', '=', True), '|', ('matching_number', '=', False), ('matching_number', '=like', 'P%'), ('open_on', '=', 'today')]"
                             name="reconcilable_account"
                             help="Journal items where the account allows reconciliation no matter the residual amount"
                     />
-                    <filter string="With residual" domain="[('residual_at_date', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="With residual" domain="[('residual_at_date', '!=', 0), ('account_id.reconcile', '=', True), ('open_on', '=', 'today')]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
@@ -373,10 +373,8 @@
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
-                    <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
-                    <filter string="Open On" name="open_on_date" invisible="1"/>
                     <separator/>
                     <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group>
