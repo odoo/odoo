@@ -1384,6 +1384,14 @@ class AccountMove(models.Model):
     def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, l10n_it_exempt_reason=None):
         """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
             and matches the percentage found in the XML for the company. """
+        # Most invoices reuse the same VAT rate on many lines, so without a cache
+        # we'd run the exact same search over and over. _l10n_it_edi_import_line
+        # puts a dict on the context for the invoice being imported; we just
+        # read from it here.
+        tax_cache = self.env.context.get('l10n_it_edi_tax_cache')
+        cache_key = (company.id, percentage, str(extra_domain), l10n_it_exempt_reason) if tax_cache is not None else None
+        if tax_cache is not None and cache_key in tax_cache:
+            return tax_cache[cache_key]
 
         domain = [
             *self.env['account.tax']._check_company_domain(company),
@@ -1405,15 +1413,24 @@ class AccountMove(models.Model):
             taxes = self.env['account.tax'].search(domain, order="amount desc").filtered(
                 lambda tax: any(rep_line.factor_percent < 0 for rep_line in tax.invoice_repartition_line_ids))
 
-        return taxes[0] if taxes else taxes
+        taxes = taxes[0] if taxes else taxes
+        if tax_cache is not None:
+            tax_cache[cache_key] = taxes
+        return taxes
 
     def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree, incoming=True):
         """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
             :return: extra_info, messages_to_log
         """
+        # See _l10n_it_edi_search_tax_for_import: one cache per invoice, shared
+        # by every tax lookup we do while importing it.
+        l10n_it_edi_tax_cache = {}
+        self = self.with_context(l10n_it_edi_tax_cache=l10n_it_edi_tax_cache)
         extra_info = {
             'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type),
             'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
+            # _l10n_it_edi_import_line picks this back up for every line.
+            'l10n_it_edi_tax_cache': l10n_it_edi_tax_cache,
         }
         message_to_log = []
         type_tax_use_domain = extra_info['type_tax_use_domain']
@@ -1756,10 +1773,12 @@ class AccountMove(models.Model):
 
             # Invoice lines ---------------------------------------
             tag_name = './/DettaglioLinee' if not extra_info['simplified'] else './/DatiBeniServizi'
-            for element in tree.xpath(tag_name):
-                move_line = self.invoice_line_ids.create({
-                    'move_id': self.id,
-                    'tax_ids': [fields.Command.clear()]})
+            elements = tree.xpath(tag_name)
+            move_lines = self.invoice_line_ids.create([
+                {'move_id': self.id, 'tax_ids': [fields.Command.clear()]}
+                for element in elements
+            ])
+            for element, move_line in zip(elements, move_lines):
                 if move_line:
                     message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
 
@@ -1811,6 +1830,8 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_import_line(self, element, move_line, extra_info=None):
         extra_info = extra_info or {}
+        if (tax_cache := extra_info.get('l10n_it_edi_tax_cache')) is not None:
+            self = self.with_context(l10n_it_edi_tax_cache=tax_cache)
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
