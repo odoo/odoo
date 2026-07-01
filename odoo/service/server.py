@@ -175,6 +175,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         # The ODOO_MAX_HTTP_THREADS environment variable allows to limit the amount of concurrent
         # socket connections accepted by a threaded server, implicitly limiting the amount of
         # concurrent threads running for http requests handling.
+        self.running_state = 'running'
         self.max_http_threads = os.environ.get("ODOO_MAX_HTTP_THREADS")
         if self.max_http_threads:
             try:
@@ -220,7 +221,9 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         t.daemon = self.daemon_threads
         t.type = 'http'
         t.start_time = time.time()
+        self.running_state = 'blocked'
         t.start()
+        self.running_state = 'running'
 
     # TODO: Remove this method as soon as either of the revision
     # - python/cpython@8b1f52b5a93403acd7d112cd1c1bc716b31a418a for Python 3.6,
@@ -423,6 +426,13 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt()
 
     def process_limit(self):
+        # Clean-up threads that are no longer alive
+        # e.g. threads that exceeded their real time,
+        # but which finished before the server could restart.
+        for thread in list(self.limits_reached_threads):
+            if not thread.is_alive() and thread not in threading.enumerate():
+                self.limits_reached_threads.remove(thread)
+
         memory = memory_info(psutil.Process(os.getpid()))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
             _logger.warning('Server memory limit (%s) reached.', memory)
@@ -439,17 +449,16 @@ class ThreadedServer(CommonServer):
                     if (getattr(thread, 'type', None) == 'cron' and
                             config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
                         thread_limit_time_real = config['limit_time_real_cron']
+                    if thread_execution_time > 5 and not thread.is_alive():
+                        _logger.warning(
+                            'Thread %s is in limbo (%ds).',
+                            thread, thread_execution_time)
+                        self.limits_reached_threads.add(thread)
                     if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
                         _logger.warning(
                             'Thread %s virtual real time limit (%d/%ds) reached.',
                             thread, thread_execution_time, thread_limit_time_real)
                         self.limits_reached_threads.add(thread)
-        # Clean-up threads that are no longer alive
-        # e.g. threads that exceeded their real time,
-        # but which finished before the server could restart.
-        for thread in list(self.limits_reached_threads):
-            if not thread.is_alive():
-                self.limits_reached_threads.remove(thread)
         if self.limits_reached_threads:
             self.limit_reached_time = self.limit_reached_time or time.time()
         else:
@@ -564,7 +573,7 @@ class ThreadedServer(CommonServer):
 
         stop_time = time.time()
 
-        if self.httpd:
+        if self.httpd and self.httpd.running_state == 'running':
             self.httpd.shutdown()
 
         super().stop()
