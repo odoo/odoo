@@ -19,6 +19,9 @@
 - Cada línea de `detalles` DEBE incluir: `codigoCABYS`, `subTotal`, `impuestoAsumidoEmisorFabrica`, `impuestoNeto` (la API los valida y responde error si faltan).
 - `license` del addon: `LGPL-3`.
 - Comandos Odoo se ejecutan dentro del contenedor con `docker exec erp-odoo-1 ...`.
+- **Comando de test (verificado en Task 3):** el servidor ya ocupa 8069, y Git Bash mangla el tag `/modulo`. Usar:
+  `MSYS_NO_PATHCONV=1 docker exec erp-odoo-1 odoo -d odoo --db_host=db --db_user=odoo --db_password=odoo --http-port=8099 --gevent-port=8101 -u l10n_cr_fe_crlibre --test-enable --test-tags /l10n_cr_fe_crlibre --stop-after-init`
+  Resultado esperado en el log: `0 failed, 0 error(s) of N tests`.
 
 ---
 
