@@ -840,8 +840,6 @@ export class ApplyConfiguratorScreen extends Component {
             industry_name: this.state.selectedIndustry.label.toLowerCase(),
             selected_palette: selectedPalette,
             theme_name: themeName,
-            website_purpose:
-                this.state.selectedPositioning || this.state.formerSelectedPositioning || "general",
             website_type: WEBSITE_TYPES[this.state.selectedType].name,
             logo_attachment_id: this.state.logoAttachmentId,
         };

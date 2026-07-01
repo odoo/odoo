@@ -23,7 +23,7 @@ function runConfiguratorFlow(industrySearchText) {
         },
         {
             content: "Choose from the positioning list",
-            trigger: "button.o_change_website_purpose",
+            trigger: "button.o_change_website_positioning",
             run: "click",
         },
         // Palette screen

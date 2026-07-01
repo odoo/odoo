@@ -94,6 +94,8 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.co.zw', 'google.cat',
 ])
 
+CTA_PRIORITY_DEFAULT = 10
+
 
 class Website(models.CachedModel):
     _name = 'website'
@@ -527,8 +529,44 @@ class Website(models.CachedModel):
         # For text content generation
         return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, **kwargs)
 
-    def get_cta_data(self, website_purpose, website_type):
-        return {'cta_btn_text': False, 'cta_btn_href': '/contactus', 'shop_btn_href': '#'}
+    def get_cta_data(self, website_type):
+        """Resolve CTA button data using a priority-based approach.
+
+        Each installed module contributes CTA candidates via
+        `get_cta_candidates()`. The candidate with the highest priority wins.
+
+        :param str website_type: Type of the website
+        :return: CTA configuration dictionary
+        :rtype: dict
+        """
+        candidates = self.get_cta_candidates(website_type)
+        cta = dict(max(candidates, key=lambda c: c[0])[1])
+        cta['shop_btn_href'] = '#'
+        return cta
+
+    def get_cta_candidates(self, website_type):
+        """Return CTA candidates.
+
+        Each candidate is a tuple containing a priority and a dictionary
+        of CTA values.
+
+        Priority guidelines:
+        - 0-20: default fallback
+        - 40-60: contextual CTA (depends on website_type, e.g. blog, event)
+        - 70-90: global CTA (applies regardless of context, e.g. shop)
+        - 100+: override (tests or custom modules)
+
+        :param str website_type: Type of the website (e.g. blog, event)
+        :return: List of (priority, values) tuples
+        :rtype: list[tuple[int, dict]]
+        """
+        return [(
+            CTA_PRIORITY_DEFAULT,
+            {
+                'cta_btn_text': False,
+                'cta_btn_href': '/contactus',
+            },
+        )]
 
     def _get_snippet_defaults(self, snippet):
         """Retrieve the default configuration for a given dynamic snippet."""
@@ -881,8 +919,17 @@ class Website(models.CachedModel):
                 )
 
         # Update CTA
-        cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
+        cta_data = website.get_cta_data(kwargs.get('website_type'))
         if cta_data['cta_btn_text']:
+            if cta_data['cta_btn_href'] != '/contactus':
+                self.env['website.menu'].create({
+                    'name': self.env._("Contact us"),
+                    'url': '/contactus',
+                    'page_id': self.env.ref('website.contactus_page').id,
+                    'parent_id': website.menu_id.id,
+                    'website_id': website.id,
+                    'sequence': 60,
+                })
             xpath_view = 'website.snippets'
             parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
             self.env['ir.ui.view'].create({
