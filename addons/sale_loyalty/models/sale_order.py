@@ -460,10 +460,8 @@ class SaleOrder(models.Model):
                         discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
-        discountable = 0
         discountable_per_tax = defaultdict(int)
         for line in lines_to_discount:
-            discountable += remaining_amount_per_line[line]
             line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
             # line_discountable is the same as in a 'order' discount
             #  but first multiplied by a factor for the taxes to apply
@@ -471,6 +469,12 @@ class SaleOrder(models.Model):
             taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
             discountable_per_tax[taxes] += line_discountable *\
                 (remaining_amount_per_line[line] / line.price_total)
+        discountable = 0
+        if self.tax_calculation_rounding_method == 'round_globally':
+            for tax, amount in discountable_per_tax.items():
+                discountable += tax.compute_all(amount)['total_included']
+        else:
+            discountable = sum(remaining_amount_per_line[line] for line in lines_to_discount)
         return discountable, discountable_per_tax
 
     def _get_reward_values_discount(self, reward, coupon, **kwargs):
