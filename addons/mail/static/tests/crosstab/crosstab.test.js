@@ -65,9 +65,7 @@ test("Thread description update", async () => {
     await insertText(
         `${env1.selector} .o-mail-DiscussContent-threadDescription`,
         "The very best channel",
-        {
-            replace: true,
-        }
+        { replace: true }
     );
     triggerHotkey("Enter");
     await contains(
