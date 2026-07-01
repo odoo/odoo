@@ -5,6 +5,11 @@ const { pivotNormalizationValueRegistry } = registries;
 const { toString, toNumber } = helpers;
 
 /**
+ * List of model for which the id is a string and not a number.
+ */
+const STRING_IDS = ["account.root"];
+
+/**
  * Add pivot normalizaton functions to support odoo specific fields
  * in spreadsheet
  */
@@ -15,6 +20,11 @@ pivotNormalizationValueRegistry
     .add("selection", (value) => toString(value))
     .add("many2one_reference", (value) => toNumber(value, DEFAULT_LOCALE))
     .add("monetary", (value) => toNumber(value, DEFAULT_LOCALE))
-    .add("many2one", (value) => toNumber(value, DEFAULT_LOCALE))
+    .add("many2one", (value, dimension) => {
+        if (STRING_IDS.includes(dimension.relation)) {
+            return toString(value);
+        }
+        return toNumber(value, DEFAULT_LOCALE);
+    })
     .add("many2many", (value) => toNumber(value, DEFAULT_LOCALE))
     .add("float", (value) => toNumber(value, DEFAULT_LOCALE));
