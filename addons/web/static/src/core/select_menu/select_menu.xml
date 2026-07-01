@@ -31,7 +31,7 @@
             <Dropdown
                 menuClass="this.menuClass"
                 menuRef="this.menuRef"
-                position="'bottom-fit'"
+                position="this.props.position"
                 beforeOpen.bind="this.onBeforeOpen"
                 focusToggleOnClosed="!this.isBottomSheet"
                 onStateChanged.bind="this.onStateChanged"
@@ -76,7 +76,7 @@
                     </div>
                     <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-custom-ref="choicesRef">
                         <t t-if="this.state.choices.length === 0">
-                            <p class="text-muted fst-italic mx-4 my-1">No results</p>
+                            <p class="py-2 text-center text-muted fst-italic">No results</p>
                         </t>
                         <t t-foreach="this.state.displayedOptions" t-as="choice" t-key="choice_index">
                             <t t-call="{{ this.constructor.choiceItemTemplate }}"

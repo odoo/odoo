@@ -18,6 +18,8 @@
     }
 
     .o_select_menu_toggler {
+        padding-right: .75rem;
+
         &, &.btn-light.bg-light {
             --border-color: #{$o-we-bg-light};
             --btn-padding-x: #{map-get($spacers , 2)};
@@ -78,7 +80,24 @@
 }
 
 .o-hb-selectMany2X-dropdown {
+   // Besides the horizontal padding ($o-hb-row-padding-left + map-get($spacers, 2)),
+   // we also need to reduce the width by an extra “Spacer 2” to compensate for the
+   // editor’s scrollbar.
+    width: o-to-rem($o-we-sidebar-width) - (2 * map-get($spacers, 2)) - o-to-rem($o-hb-row-padding-left);
+    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+
+    &.o_filtering {
+        --o-hb-select-color: #{rgba($o-we-fg-lighter, .5)};
+    }
+
+    .o_filtered_text {
+        background: rgba($o-we-color-accent, .25);
+        color: lighten($o-we-color-accent, 25%);
+    }
+
     .o_select_menu_searchbox {
+        --o-hb-select-color: #{$o-we-fg-lighter};
+
         background-color: $o-we-sidebar-content-field-input-bg;
 
         &:hover, &:focus-within {
@@ -97,9 +116,19 @@
         }
     }
 
+    .o_select_menu-choices > * {
+        &:first-child, &:last-child {
+            margin: 0;
+        }
+    }
+
     .o_select_menu_item {
         --dropdown-item-padding-y: 6px;
 
         line-height: 1.7;
+    }
+
+    .dropdown-item.o_we_m2o_search_more {
+        color: $o-we-fg-lighter;
     }
 }

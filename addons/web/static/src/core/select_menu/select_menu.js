@@ -61,6 +61,7 @@ export const selectMenuProps = {
     class: t.string().optional(""),
     menuClass: t.string().optional(""),
     togglerClass: t.string().optional(""),
+    position: t.string().optional("bottom-fit"),
     required: t.boolean().optional(false),
     searchable: t.boolean().optional(true),
     autoSort: t.boolean().optional(true),
@@ -399,6 +400,7 @@ export class SelectMenu extends Component {
         const _choices = [];
         const _sections = new Set();
         groupsList.sort((a, b) => localeCompare(a.section, b.section, { emptyLast: false }));
+        this.menuRef.el?.classList.toggle('o_filtering', Boolean(this.state.searchValue));
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];
@@ -443,7 +445,7 @@ export class SelectMenu extends Component {
                         ? highlightText(
                               searchString,
                               odoomark(choice.label),
-                              "text-primary fw-bold"
+                              "o_filtered_text fw-bold"
                           )
                         : choice.value,
                     value: choice.value,

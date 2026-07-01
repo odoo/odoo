@@ -61,10 +61,13 @@
         }
 
         &:before {
-            @include o-position-absolute($top: 50%);
+            @include o-position-absolute($top: 50%, $left: map-get($spacers, 2));
             transform: translateY(-50%);
-            content: "\f002";
-            font-family: 'FontAwesome';
+            height: $o-we-font-size;
+            content: "\e808";
+            font-family: 'odoo_ui_icons';
+            line-height: 1;
+            opacity: .75;
         }
     }
 
