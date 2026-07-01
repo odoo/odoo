@@ -64,8 +64,8 @@
                 <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
             </t>
             <t t-set="o" t-value="o.with_context(lang=lang)" />
-            <t t-set="information_block" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
-                <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+            <t t-set="information_block" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address">
+                <div name="shipping_address_block">
                     <strong class="d-block mt-3">Shipping Address</strong>
                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                 </div>
