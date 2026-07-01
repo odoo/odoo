@@ -313,7 +313,6 @@ export class FormFieldOption extends BaseOptionComponent {
     computeFieldTypeItems(fieldOptionData) {
         const customFieldItems = this.customFieldsData.map((field) => ({
             label: field.name,
-            value: field.value,
             id: field.id,
             props: {
                 action: "customField",
@@ -326,7 +325,6 @@ export class FormFieldOption extends BaseOptionComponent {
         }));
         const existingFieldItems = fieldOptionData.availableFields.map((field) => ({
             label: field.string,
-            value: field.name,
             props: {
                 action: "existingField",
                 actionValue: field.name,

@@ -4,8 +4,8 @@
 <t t-name="html_builder.BuilderSearchSelect">
     <BuilderComponent>
         <SelectMenu
-            choices="this.props.choices"
-            groups="this.props.groups"
+            choices="this.choices"
+            groups="this.groups"
             onSelect.bind="this.select"
             menuRef="this.menuRef"
             onClosed.bind="this.onClosed"

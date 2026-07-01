@@ -104,7 +104,6 @@ export function useClickableSelectItem(item) {
     }
 
     async function callApply(applySpecs, isPreviewing) {
-        await clean(applySpecs, isPreviewing);
         const cleanOrApplyProms = [];
         const isAlreadyApplied = isApplied();
         for (const applySpec of applySpecs) {
@@ -141,6 +140,16 @@ export function useClickableSelectItem(item) {
     return {
         clean,
         isApplied,
+        priority:
+            getAllActions()
+                .map(
+                    (action) =>
+                        getAction(action.actionId).getPriority?.({
+                            params: action.actionParam,
+                            value: action.actionValue,
+                        }) || 0
+                )
+                .find(Boolean) || 0,
         operation,
     };
 }
@@ -175,7 +184,7 @@ export class BuilderSearchSelect extends Component {
         choices: t
             .array(
                 t.object({
-                    value: t.any(),
+                    value: t.any().optional(),
                     label: t.string(),
                 })
             )
@@ -186,7 +195,7 @@ export class BuilderSearchSelect extends Component {
                     label: t.string().optional(),
                     choices: t.array(
                         t.object({
-                            value: t.any(),
+                            value: t.any().optional(),
                             label: t.string(),
                         })
                     ),
@@ -201,6 +210,12 @@ export class BuilderSearchSelect extends Component {
     setup() {
         useBuilderComponent();
         const { getAllActions } = getAllActionsAndOperations(this);
+        this.index = 0;
+        this.choices = this.setChoicesDefaultValues(this.props.choices);
+        this.groups = this.props.groups.map((group) => ({
+            ...group,
+            choices: this.setChoicesDefaultValues(group.choices),
+        }));
 
         this.menuRef = useChildRef();
         this.getAction = this.env.editor.shared.builderActions.getAction;
@@ -215,9 +230,9 @@ export class BuilderSearchSelect extends Component {
         // decouple these hooks from the current component context and have
         // them accept an options object instead.
         this.selectedChoices = [
-            ...this.props.choices,
-            ...this.props.groups.flatMap((g) => g.choices || []),
-        ].map((choice) => {
+            ...this.choices,
+            ...this.groups.flatMap((g) => g.choices || []),
+        ].map((choice, index) => {
             // Action props set on the select are applied to all items
             // and override any corresponding action props defined on
             // the items themselves.
@@ -239,31 +254,41 @@ export class BuilderSearchSelect extends Component {
             return this.getAction(actionId).getValue({ editingElement: el, params: actionParam });
         };
         this.currentlySelected = getAllActions().length
-            ? getValue(this.env.getEditingElements())
-            : this.selectedChoices.find((choice) => choice.isApplied())?.value;
+            ? getValue(this.env.getEditingElement())
+            : this.selectedChoices
+                  .filter((choice) => choice.isApplied())
+                  .sort((a, b) => b.priority - a.priority)[0]?.value;
 
         // Handle dependencies for select items.
         [...this.selectedChoices]
             .filter((opt) => opt.id)
             .map((opt) => {
                 useDependencyDefinition(opt.id, {
-                    isActive: () => opt.value === this.domState.selected,
+                    isActive: () => opt.value === this.currentlySelected,
                 });
             });
 
         this.domState = useDomState((el) => ({ selected: this.currentlySelected }));
         onWillDestroy(() => this.removeListeners?.());
     }
+    setChoicesDefaultValues(choices) {
+        return choices.map((choice) => ({
+            ...choice,
+            value: choice.value || `${this.index++}`,
+        }));
+    }
     getSelection(value) {
         return this.selectedChoices.find((choice) => choice.value === value);
     }
     select(newSelected) {
+        this.getSelection(this.currentlySelected)?.clean();
         this.currentlySelected = newSelected;
         this.getSelection(newSelected).operation.commit();
     }
     preview(newSelected) {
         if (this.previewing !== newSelected) {
             this.previewing = newSelected;
+            this.getSelection(this.currentlySelected)?.clean();
             this.getSelection(newSelected).operation.preview();
         }
     }
