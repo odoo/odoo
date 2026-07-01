@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-04 13:44+0000\n"
+"PO-Revision-Date: 2026-06-10 06:18+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/website/zh_Hans/>\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -255,7 +255,7 @@ msgstr "%(error)s（网站：%(website_id)s）"
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "%(url)s not found"
-msgstr ""
+msgstr "找不到 %(url)s"
 
 #. module: website
 #. odoo-python
@@ -826,11 +826,13 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"o_translate_inline btn btn-primary\">Get in touch</a>"
 msgstr ""
+"<a href=\"#\" class=\"o_translate_inline btn btn-primary\">联系我们</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
 msgid "<a href=\"#\" class=\"o_translate_inline text-reset\">Shop all →</a>"
 msgstr ""
+"<a href=\"#\" class=\"o_translate_inline text-reset\">浏览全部商品 →</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_ecomm_categories_showcase
@@ -1193,6 +1195,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> What's "
 "new ?"
 msgstr ""
+"<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> 最新资讯"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -1421,6 +1424,10 @@ msgid ""
 "                            high standards of durability and performance.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"text-muted\" style=\"text-align: center;\">\n"
+"                            每款产品均经过严格测试，以满足<br/"
+">                            对耐用性和性能的高标准要求。\n"
+"                       </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_attributes_vertical
@@ -3953,7 +3960,7 @@ msgstr ""
 msgid ""
 "Are you sure you want to discard all your changes? Once you do, they're gone "
 "for good."
-msgstr ""
+msgstr "您确定要丢弃所有更改吗？一旦确认，这些更改将永久丢失。"
 
 #. module: website
 #. odoo-javascript
@@ -10615,19 +10622,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Invalid: field is not greater than or equal to %s."
-msgstr ""
+msgstr "无效：字段值未大于或等于%s 。"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Invalid: field is not less than %s."
-msgstr ""
+msgstr "无效：字段值不小于%s 。"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Invalid: field is not less than or equal to %s."
-msgstr ""
+msgstr "无效：字段值不小于或等于%s 。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_grid
@@ -10644,7 +10651,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Inverted colors"
-msgstr ""
+msgstr "颜色反转"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -15162,7 +15169,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
-msgstr "恢复以前的版本（软重置）。"
+msgstr "恢复以前的版本（前次版本）。"
 
 #. module: website
 #. odoo-javascript
@@ -20050,7 +20057,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "What type of website?"
-msgstr ""
+msgstr "网站类型？"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_wavy_grid
@@ -20176,12 +20183,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Write custom error message"
-msgstr ""
+msgstr "编写自定义错误信息"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Write down your message"
-msgstr ""
+msgstr "请输入您的消息"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -20230,7 +20237,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 msgid "Write your text"
-msgstr ""
+msgstr "撰写文本"
 
 #. module: website
 #. odoo-javascript
@@ -20247,14 +20254,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_age_verification_popup
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #. module: website
 #. odoo-javascript
@@ -20482,14 +20489,14 @@ msgstr "您的嵌入代码片段没有任何要显示的内容。单击编辑来
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/instagram_option.xml:0
 msgid "Your Instagram account"
-msgstr ""
+msgstr "您的 Instagram 账号"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/instagram_option.xml:0
 msgid ""
 "Your Instagram page must be public to be integrated into an Odoo website."
-msgstr ""
+msgstr "您的 Instagram 页面必须是公共的，才能整合到 ERP 网站中。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_soft
@@ -20534,7 +20541,7 @@ msgstr "您的网址"
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Your changes might be lost"
-msgstr ""
+msgstr "您的更改可能会丢失"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -20559,7 +20566,7 @@ msgstr "您的旅程从这里开始"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Your message has been sent. <br/>We will get back to you shortly."
-msgstr ""
+msgstr "您的消息已发送。<br/>我们将尽快回复您。"
 
 #. module: website
 #. odoo-javascript
@@ -20599,7 +20606,7 @@ msgstr ""
 msgid ""
 "Your upload is too large for the server to accept. Please choose smaller "
 "files."
-msgstr ""
+msgstr "您的上传文件过大，服务器无法接受。请选择较小的文件。"
 
 #. module: website
 #. odoo-javascript

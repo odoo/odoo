@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-07 10:00+0000\n"
+"PO-Revision-Date: 2026-06-20 14:08+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale/id/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -65,7 +65,7 @@ msgstr "# dari Sale Order"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
 msgid "% Delivered"
-msgstr ""
+msgstr "% Dikirim"
 
 #. module: sale
 #. odoo-python
@@ -886,6 +886,9 @@ msgid ""
 "                                Outgoing\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                Keluar\n"
+"                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -905,7 +908,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>1.00 Units</span>"
-msgstr ""
+msgstr "<span>1,00 Unit</span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -959,7 +962,7 @@ msgstr "<strong class=\"d-block mt-3\">Alamat Pengiriman</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Kontak</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -974,12 +977,12 @@ msgstr "<strong>Kadaluwarsa</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Keterangan Fiscal Position:</strong>"
+msgstr "<strong>Keterangan Posisi Fiskal:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1086,6 +1089,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Menurut konfigurasi produk, kuantitas yang dikirim dapat secara otomatis "
+"dihitung dengan mekanisme:\n"
+"  - Manual: kuantitas ditetapkan secara manual pada baris\n"
+"  - Analytic From expenses: kuantitas adalah jumlah kuantitas dari "
+"pengeluaran yang diposting\n"
+"  - Timesheet: kuantitas adalah jumlah jam yang dicatat pada tugas yang "
+"terkait dengan baris ini\n"
+"  - Pergerakan Stok: kuantitas datang dari picking yang dikonfirmasi\n"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1195,7 +1206,7 @@ msgstr "Tambahkan beberapa varian untuk pesanan dari grid"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "Tambahkan ke pesanan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1215,7 +1226,7 @@ msgstr "Satuan Ukuran yang Diizinkan"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro Forma Invoice to your customers"
-msgstr ""
+msgstr "Memungkinkan pengiriman Faktur Pro Forma ke pelanggan Anda"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -1299,7 +1310,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "Akun Analitik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1379,11 +1390,14 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.\n"
 "If you want to change it, please archive the product and create a new one."
 msgstr ""
+"Karena satuan ukuran lainnya (contoh: %(problem_uom)s) alih-alih %(uom)s "
+"telah digunakan untuk produk ini, satuan ukuran baru tidak dapat digunakan.\n"
+"Bila Anda ingin mengubahnya, silakan arsip produk dan buat produk baru."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
 msgid "At Sales price"
-msgstr ""
+msgstr "Pada harga penjualan"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
@@ -1533,7 +1547,7 @@ msgstr "Batal"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Cancel Order"
-msgstr ""
+msgstr "Batalkan Pesanan"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1557,6 +1571,8 @@ msgid ""
 "Cancelling this order will set its status to 'Cancelled' and will update "
 "related documents and processes. Are you sure?"
 msgstr ""
+"Membatalkan pesanan ini akan menetapkan statusnya menjadi 'Dibatalkan' dan "
+"akan mengupdate dokumen dan proses terkait. Apakah Anda yakin?"
 
 #. module: sale
 #. odoo-python
@@ -1613,7 +1629,7 @@ msgstr "Kategori"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1650,12 +1666,12 @@ msgstr "Klik untuk mengonfigurasi"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Klik untuk mendefinisikan target faktur"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
-msgstr ""
+msgstr "Akun yang paling sering digunakan Klien"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1693,7 +1709,7 @@ msgstr "Item Combo"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Combo Product"
-msgstr ""
+msgstr "Produk Kombo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1740,7 +1756,7 @@ msgstr "Konfigurasi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Konfigurasi Metode Pengiriman"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1748,6 +1764,8 @@ msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Konfigurasi metode pengiriman atau bekerja dengan provider pengiriman "
+"menggunakan integrasi yang tersedia."
 
 #. module: sale
 #. odoo-javascript
@@ -1765,7 +1783,7 @@ msgstr "Konfirmasi"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Konfirmasi Pesanan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1780,12 +1798,12 @@ msgstr "Pesan Konfirmasi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connect"
-msgstr ""
+msgstr "Hubungkan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Hubungkan Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1992,7 +2010,7 @@ msgstr "Industri Pelanggan"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__order_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Customer Order"
-msgstr ""
+msgstr "Pesanan Pelanggan"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -2099,7 +2117,7 @@ msgstr "Hapus"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_deliver_sold_quantity
 msgid "Deliver"
-msgstr ""
+msgstr "Kirim"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
@@ -2136,7 +2154,7 @@ msgstr "Tanggal Pengiriman"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Delivery Date:"
-msgstr ""
+msgstr "Tanggal Pengiriman:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2157,7 +2175,7 @@ msgstr "Status Pengiriman"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
 msgid "Delivery Time"
-msgstr ""
+msgstr "Waktu Pengiriman"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2180,6 +2198,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Lead time pengiriman, dalam hitungan hari. Ini adalah jumlah hari, "
+"dijanjikan ke pelanggan, di antara konfirmasi sales order dan pengiriman."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2322,7 +2342,7 @@ msgstr "Nama Tampilan"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display Product Images"
-msgstr ""
+msgstr "Tampilkan Gambar Produk"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
@@ -2416,7 +2436,7 @@ msgstr "Down payment <br/>"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
 msgid "Down payment Account Active"
-msgstr ""
+msgstr "Akun Uang Muka Aktif"
 
 #. module: sale
 #. odoo-python
@@ -2495,7 +2515,7 @@ msgstr "Email dikirim ke pelanggan setelah faktur tersedia."
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
 msgid "Enable Services and Materials in Sales"
-msgstr ""
+msgstr "Aktifkan Layanan dan Material di Sales"
 
 #. module: sale
 #. odoo-javascript
@@ -2506,7 +2526,7 @@ msgstr "Masukkan value yang dikustomisasi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Excl. Tax)"
-msgstr ""
+msgstr "Blm Pajak)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2516,7 +2536,7 @@ msgstr "Tanggal Perkiraan"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expenses, Services & Materials"
-msgstr ""
+msgstr "Pengeluaran, Layanan & Material"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2531,7 +2551,7 @@ msgstr "Tanggal Kadaluwarsa:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Expired"
-msgstr ""
+msgstr "Kedaluwarsa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
@@ -2557,12 +2577,12 @@ msgstr "Baris ekstra dengan %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Financial Account"
-msgstr ""
+msgstr "Akun Finansial"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Fiscal Position"
+msgstr "Posisi Fiskal"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2571,6 +2591,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Posisi fiskal digunakan untuk mengadaptasi pajak dan akun untuk pelanggan-"
+"pelanggan atau sales order/faktur tertentu. Nilai default posisi fiskal "
+"berasal dari pelanggan."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2603,6 +2626,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
 msgstr ""
+"Untuk formula atau harga tetap, harga asli tidak ditunjukkan di\n"
+"                            sales order."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -2868,6 +2893,8 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                            discount column."
 msgstr ""
+"Di baris sales order, harga asli adalah harga satuan dan diskon ada di\n"
+"                            kolom diskon."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2878,7 +2905,7 @@ msgstr "Di dalam Order"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Included"
-msgstr ""
+msgstr "Termasuk"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -2897,7 +2924,7 @@ msgstr "Lokasi Incoterm"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
@@ -2940,7 +2967,7 @@ msgstr "Data tanda tangan tidak valid."
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Invoice"
-msgstr ""
+msgstr "Faktur"
 
 #. module: sale
 #. odoo-python
@@ -3002,7 +3029,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
 msgid "Invoice created from related SO line"
-msgstr ""
+msgstr "Faktur dibuat dari baris SO terkait"
 
 #. module: sale
 #. odoo-python
@@ -3407,7 +3434,7 @@ msgstr "Pindahkan ke Atas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "My"
-msgstr ""
+msgstr "Saya"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3499,7 +3526,7 @@ msgstr "Tidak ada order untuk upsell yang ditemukan."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "No, go back"
-msgstr ""
+msgstr "Tidak, kembali"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
@@ -3540,7 +3567,7 @@ msgstr "Jumlah Action"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "Jumlah hari antara konfirmasi order dan pengiriman produk"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3565,13 +3592,13 @@ msgstr "Odoo"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it"
-msgstr ""
+msgstr "Kursi kantor dapat merusak lantai: lindungi lantai Anda"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "On"
-msgstr ""
+msgstr "Pada"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3839,7 +3866,7 @@ msgstr "Terkirim Sebagian"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3970,12 +3997,12 @@ msgstr "Pratinjau"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__previously_bought_by_customer
 msgid "Previously Bought By Customer"
-msgstr ""
+msgstr "Pernah Dibeli oleh Pelanggan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "Previously bought"
-msgstr ""
+msgstr "Pernah dibeli"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
@@ -4022,12 +4049,12 @@ msgstr "Faktur Pro Forma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro Forma Invoice #"
-msgstr ""
+msgstr "# Faktur Pro Forma"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro Forma Invoices"
-msgstr ""
+msgstr "Faktur Proforma"
 
 #. module: sale
 #. odoo-javascript
@@ -4216,7 +4243,7 @@ msgstr "Penawaran #"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Penawaran / Order"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4343,7 +4370,7 @@ msgstr "Hitung ulang semua harga berdasarkan daftar harga ini"
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reference"
-msgstr ""
+msgstr "Referensi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4364,7 +4391,7 @@ msgstr "Tolak Quotation Ini"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "Hapus"
 
 #. module: sale
 #. odoo-javascript
@@ -4375,7 +4402,7 @@ msgstr "Hapus satu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reopen Invoicing"
-msgstr ""
+msgstr "Buka Ulang Faktur"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
@@ -4448,7 +4475,7 @@ msgstr "Pendatpatan yang didapatkan dari kampanye"
 #. module: sale
 #: model:portal.entry,description:sale.portal_quotations_to_review
 msgid "Review your quotations"
-msgstr ""
+msgstr "Tinjau penawaran Anda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4551,7 +4578,7 @@ msgstr "Sale order untuk dibatalkan"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales"
-msgstr "Penjualan"
+msgstr "Sales"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -4722,7 +4749,7 @@ msgstr "Sales: Pembayaran Terkonfirmasi"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Pro Forma"
-msgstr ""
+msgstr "Sales: Kirim Pro Forma"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4775,7 +4802,7 @@ msgstr "Nama Bagian (contoh Produk, Layanan)"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Section Summary"
-msgstr ""
+msgstr "Ringkasan Bagian"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4815,7 +4842,7 @@ msgstr "Kirim"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO FORMA Invoice"
-msgstr ""
+msgstr "Kirim Faktur PRO FORMA"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
@@ -4845,24 +4872,24 @@ msgstr "Urutan"
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__service_line_count
 #: model:ir.model.fields,field_description:sale.field_account_move__service_line_count
 msgid "Service Line Count"
-msgstr ""
+msgstr "Jumlah Baris Layanan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Services"
-msgstr ""
+msgstr "Layanan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
 #: model:ir.ui.menu,name:sale.menu_service_material
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Services & Material"
-msgstr ""
+msgstr "Layanan & Material"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
 msgid "Services & Materials"
-msgstr ""
+msgstr "Layanan & Material"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4920,7 +4947,7 @@ msgstr "Tampilkan margin pada order penjualan"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show product images on your PDF and online quotes."
-msgstr ""
+msgstr "Menunjukkan gambar produk di PDF dan surat penawaran online Anda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4973,6 +5000,8 @@ msgid ""
 "Sold in the last 365 days. Outgoing represents confirmed sales orders not "
 "delivered, or partially delivered"
 msgstr ""
+"Dijual dalam 365 hari terakhir. Keluar mewakili sales order yang "
+"dikonfirmasi tetapi tidak dikirim, atau hanya dikirim sebagian"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5062,7 +5091,7 @@ msgstr "Subseksi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Nama Subbagian"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -5186,7 +5215,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Template for Quotations"
-msgstr ""
+msgstr "Template Penawaran"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -5320,6 +5349,8 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Sales order berikut %(invalid_orders)s tidak dapat dikirim. Semua pengiriman "
+"dibatalkan."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
@@ -5410,6 +5441,8 @@ msgid ""
 "The percentage of the amount that must be paid by the customer to confirm "
 "the order."
 msgstr ""
+"Persentase jumlah yang harus dibayar oleh pelanggan untuk mengonfirmasi "
+"order."
 
 #. module: sale
 #. odoo-python
@@ -5613,7 +5646,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Today"
-msgstr ""
+msgstr "Hari ini"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5719,7 +5752,7 @@ msgstr "Kampanye UTM"
 #: model:ir.model.fields,field_description:sale.field_sale_order__utm_reference
 #: model:ir.model.fields,field_description:sale.field_sale_report__utm_reference
 msgid "UTM Reference"
-msgstr ""
+msgstr "Referensi UTM"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
@@ -5765,7 +5798,7 @@ msgstr "Jumlah Sebelum Pajak"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_delivered_amount
 msgid "Untaxed Amount Delivered"
-msgstr ""
+msgstr "Jumlah yang Dikirim Sebelum Pajak"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
@@ -5817,6 +5850,8 @@ msgstr "Peluang Penjualan Upsell"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
+"Gunakan layanan dan material dengan harga tetap dan berbasis biaya untuk "
+"faktur ulang"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5830,7 +5865,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send pro forma to prospects"
-msgstr ""
+msgstr "Digunakan oleh salesperson saat mengirim pro forma ke prospek"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5872,7 +5907,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Value yang ditetapkan di sini spesifik ke perusahaan."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5892,7 +5927,7 @@ msgstr "Lihat Detail"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "View Other Providers"
-msgstr ""
+msgstr "Lihat Penyedia Lain"
 
 #. module: sale
 #. odoo-python
@@ -5952,7 +5987,7 @@ msgstr "Peringatan di Sales Order dan Faktur"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Yes, cancel order"
-msgstr ""
+msgstr "Ya, batalkan pesanan"
 
 #. module: sale
 #. odoo-python
@@ -6022,7 +6057,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/account_analytic_line.py:0
 msgid "You cannot modify already invoiced services."
-msgstr ""
+msgstr "Anda tidak dapat mengubah layanan yang sudah difakturkan."
 
 #. module: sale
 #. odoo-python
@@ -6034,7 +6069,7 @@ msgstr "Anda tidak dapat memodifikasi produk baris pesanan ini."
 #. odoo-python
 #: code:addons/sale/models/account_analytic_line.py:0
 msgid "You cannot remove already invoiced services."
-msgstr ""
+msgstr "Anda tidak dapat menghapus layanan yang sudah difakturkan."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -6074,7 +6109,7 @@ msgstr "Referensi Anda:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Browser Anda tidak mendukung iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6112,6 +6147,10 @@ msgid ""
 "Please change the company of your quotation or remove the products from "
 "other companies(%(bad_products)s)."
 msgstr ""
+"Surat penawaran Anda berisi produk dari perusahaan %(product_company)s "
+"sedangkan surat penawaran Anda berasal dari perusahaan %(quote_company)s. \n"
+"Mohon ganti perusahaan pada surat penawaran Anda atau hapus produk dari "
+"perusahaan lain (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
@@ -6231,6 +6270,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
 "Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
+"Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

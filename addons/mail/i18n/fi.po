@@ -45,7 +45,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-06 09:39+0000\n"
+"PO-Revision-Date: 2026-06-20 13:20+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/mail/"
 "fi/>\n"
@@ -54,7 +54,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -1445,7 +1445,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr "Toiminta-aikataulun suunnittelun ohjattu toiminto"
+msgstr "Ohjattu toimenpideaikataulun suunnittelutoiminto"
 
 #. module: mail
 #. odoo-javascript
@@ -7670,7 +7670,7 @@ msgstr "Kirjaa sisäinen huomautus…"
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Log note"
-msgstr "Kirjaa muistiinpano"
+msgstr "Muistiinpano"
 
 #. module: mail
 #. odoo-javascript
@@ -8290,7 +8290,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_id
 msgid "Message-Id"
-msgstr "Viestin ID"
+msgstr "Viestin tunnus"
 
 #. module: mail
 #. odoo-javascript
@@ -11800,7 +11800,7 @@ msgstr "Lähetä postituksia tai ilmoituksia suoraan"
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/core/web/avatar_card/avatar_card.xml:0
 msgid "Send message"
-msgstr "Lähetä viesti"
+msgstr "Viestin lähetys"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11855,7 +11855,7 @@ msgstr "Lähetetty"
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__sequence
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -13592,7 +13592,7 @@ msgstr "Käännös epäonnistui"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 msgid "Trigger"
-msgstr "Liipaisin"
+msgstr "Laukaisin"
 
 #. module: mail
 #. odoo-javascript
@@ -13685,17 +13685,19 @@ msgid ""
 "actions\n"
 msgstr ""
 "Palvelintoiminnon tyyppi. Saatavilla seuraavat arvot:\n"
-"- 'Päivitä tietue': päivitä tietueen arvot\n"
+"- 'Päivitä kirjaus': päivittää kirjauksen arvot\n"
 "- 'Luo toimenpide': luo toimenpiteen (Viestintä)\n"
-"- 'Lähetä sähköposti': lähetä viesti, huomautus tai sähköposti (Viestintä)\n"
-"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin "
-"(Tekstiviesti)- 'Lisää/Poista seuraajia': lisää tai poista tietueen "
-"seuraajia (Viestintä)\n"
-"- 'Luo tietue': luo uusi tietue uusilla arvoilla\n"
-"- 'Suorita koodi': Python-koodin pätkä, joka suoritetaan\n"
-"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, "
-"joka tunnetaan myös nimellä Webhook\n"
-"- 'Monitoiminnot': Määritä toiminto, joka käynnistää useita muita "
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin "
+"(Viestintä)\n"
+"- 'Lähetä tekstiviesti': lähettää tekstiviestejä, kirjaa ne asiakirjoihin "
+"(Tekstiviesti)\n"
+"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia "
+"(Viestintä)\n"
+"- 'Luo kirjaus': luo uuden kirjauksen uusilla arvoilla\n"
+"- 'Suorita koodi': pätkä Python-koodia, joka suoritetaan\n"
+"- 'Lähetä Webhook-ilmoitus': lähettää JULKAISU-pyynnön ulkoiseen "
+"järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Useita toimintoja': määrittää toiminnon, joka laukaisee useita muita "
 "palvelintoimintoja\n"
 
 #. module: mail

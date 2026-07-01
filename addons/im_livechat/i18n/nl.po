@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:39+0000\n"
-"PO-Revision-Date: 2026-05-08 09:06+0000\n"
+"PO-Revision-Date: 2026-06-06 13:04+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "im_livechat/nl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_rating_constraint
@@ -35,6 +35,11 @@ msgid ""
 "        or empty and can only be set on live chat channels.\n"
 "        "
 msgstr ""
+"\n"
+"        De beoordeling van de Live Chat moet 1 (Ontevreden), 3 (Neutraal), 5 "
+"(Tevreden)\n"
+"        of leeg zijn en kan alleen worden ingesteld op Live Chat-kanalen.\n"
+"        "
 
 #. module: im_livechat
 #. odoo-python
@@ -99,7 +104,7 @@ msgstr "%(minutes)s m"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s heeft een beoordeling achtergelaten:"
 
 #. module: im_livechat
 #. odoo-python
@@ -164,12 +169,12 @@ msgstr "< 1 m"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-sign-in o-me-1_5\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-in o-me-1_5\" role=\"img\"/>Deelnemen"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-sign-out o-me-1_5\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-out o-me-1_5\" role=\"img\"/>Verlaten"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -177,6 +182,8 @@ msgid ""
 "<i class=\"fa fa-smile-o text-success\" role=\"img\" aria-label=\"Happy "
 "face\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o text-success\" role=\"img\" aria-label=\"Blij "
+"gezicht\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -333,7 +340,7 @@ msgstr "Verbonden agents"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "Prestaties van agents"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -528,6 +535,8 @@ msgid ""
 "Chat with your website visitors in real time by creating a\n"
 "                channel for each website where you want live chat enabled."
 msgstr ""
+"Chat realtime met je websitebezoekers door een kanaal aan te maken voor elke "
+"website waar je live chat wilt inschakelen."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -634,7 +643,7 @@ msgstr "Sluiten"
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
-msgstr ""
+msgstr "Gesprek sluiten"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
@@ -648,6 +657,8 @@ msgid ""
 "Closing this will end the live chat with %(channel_name)s. Are you sure you "
 "want to proceed?"
 msgstr ""
+"Als je dit sluit, wordt de live chat met %(channel_name)s beëindigd. Weet je "
+"zeker dat je door wilt gaan?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__color
@@ -923,7 +934,7 @@ msgstr "Chatkanaal"
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_utm_mixin__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1465,7 +1476,7 @@ msgstr "Talen"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Languages you can speak for live chat conversations."
-msgstr ""
+msgstr "Talen die je spreekt voor live chat-gesprekken."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1728,7 +1739,7 @@ msgstr "Geschiedenis Livechat deelnemers"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_rating
 msgid "Livechat Rating Text"
-msgstr ""
+msgstr "Livechat-beoordelingstekst"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
@@ -1894,6 +1905,8 @@ msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
 msgstr ""
+"Nickname die wordt gebruikt in live chat-gesprekken om je echte naam te "
+"verbergen voor bezoekers."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
@@ -1914,7 +1927,7 @@ msgstr "Geen beschikbare werknemer, probeer het later opnieuw."
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "No chatbots found. Let's create one!"
-msgstr ""
+msgstr "Geen chatbots gevonden. Laten we er een maken!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1941,7 +1954,7 @@ msgstr "Geen geschiedenis gevonden"
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "No live chat channel found. Let's create one!"
-msgstr ""
+msgstr "Er is geen Live Chat-kanaal gevonden. Laten we er een aanmaken!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2000,11 +2013,13 @@ msgid ""
 "Number of conversations and percentage of positive ratings in the last 30 "
 "days"
 msgstr ""
+"Aantal gesprekken en percentage positieve beoordelingen in de afgelopen 30 "
+"dagen"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversations in the past 30 days"
-msgstr ""
+msgstr "Aantal gesprekken in de afgelopen 30 dagen"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -2035,7 +2050,7 @@ msgstr "Lopend"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ongoing Conversations"
-msgstr ""
+msgstr "Lopende gesprekken"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2057,7 +2072,7 @@ msgstr "Alleen livechat-operatoren mogen lid worden van livechatkanalen"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Only customers can rate a live chat conversation."
-msgstr ""
+msgstr "Alleen klanten kunnen een Live Chat-gesprek beoordelen."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
@@ -2116,7 +2131,7 @@ msgstr "Partner"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Percentage of positive ratings in the last 30 days"
-msgstr ""
+msgstr "Percentage positieve beoordelingen in de afgelopen 30 dagen"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -2300,7 +2315,7 @@ msgstr "Script (extern)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external_text
 msgid "Script (external) Text"
-msgstr ""
+msgstr "Script (extern) Tekst"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -2424,7 +2439,7 @@ msgstr "Sessies"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Sessions Analysis"
-msgstr ""
+msgstr "Sessieanalyse"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
@@ -2439,6 +2454,11 @@ msgid ""
 "and generate leads or\n"
 "                support tickets automatically."
 msgstr ""
+"Stel een bot in met een gedefinieerd script om te chatten met de bezoekers "
+"van je website.\n"
+"                Beoordeel en stuur gesprekken door naar je Live Chat-"
+"medewerkers, en genereer automatisch leads of\n"
+"                supporttickets."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
@@ -2820,7 +2840,7 @@ msgstr "Kanaal bekijken"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
 msgid "View Chat"
-msgstr ""
+msgstr "Chat bekijken"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2832,7 +2852,7 @@ msgstr "Contact bekijken"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.js:0
 msgid "View or join live chat channels"
-msgstr ""
+msgstr "Bekijk of neem deel aan Live Chat-kanalen"
 
 #. module: im_livechat
 #. odoo-python
@@ -3090,4 +3110,4 @@ msgstr "websocket berichtverwerking"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
-msgstr ""
+msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"

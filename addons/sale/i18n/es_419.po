@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-09 01:13+0000\n"
+"PO-Revision-Date: 2026-06-20 13:46+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/sale/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -645,10 +645,10 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
 "+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
 "('draft', 'sent')\">\n"
-"                Confirmaremos su orden una vez que el pago esté confirmado.\n"
+"                Confirmaremos tu orden una vez que el pago esté confirmado.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Una vez que se confirme, faltarán\n"
+"                Una vez confirmado, faltarán\n"
 "                <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total - object.amount_paid - "
 "transaction_sudo.amount, object.currency_id) or ''\">$10.00</span>\n"
@@ -659,7 +659,7 @@ msgstr ""
 "            ha sido confirmado.\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
-"                <br/>faltan \n"
+"                <br/>Faltan \n"
 "                <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total - object.amount_paid, "
 "object.currency_id) or ''\">$10.00</span>\n"
@@ -669,7 +669,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Agradecemos su confianza.\n"
 "        <br/>\n"
-"        No dude en contactarnos si tiene alguna pregunta.\n"
+"        No dudes en contactarnos si tienes alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
 "out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
@@ -1204,7 +1204,7 @@ msgstr "Agregar varias variantes a una orden desde una tabla"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "Agregar a la orden"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1666,7 +1666,7 @@ msgstr "Haz clic para configurar"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Haz clic para definir un objetivo de facturación"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -2439,7 +2439,7 @@ msgstr "Anticipo <br/>"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
 msgid "Down payment Account Active"
-msgstr ""
+msgstr "Cuenta de anticipo activa"
 
 #. module: sale
 #. odoo-python
@@ -2519,7 +2519,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
 msgid "Enable Services and Materials in Sales"
-msgstr ""
+msgstr "Activa servicios y materiales en Ventas"
 
 #. module: sale
 #. odoo-javascript
@@ -2530,7 +2530,7 @@ msgstr "Escriba un valor personalizado"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Excl. Tax)"
-msgstr ""
+msgstr "excl. impuestos)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2595,6 +2595,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Las posiciones fiscales se utilizan para adaptar impuestos y cuentas para "
+"determinados clientes u ordenes de venta/facturas. El valor predeterminado "
+"viene del cliente."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2908,7 +2911,7 @@ msgstr "En la orden"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Included"
-msgstr ""
+msgstr "Incluido"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3606,7 +3609,7 @@ msgstr "Las sillas de oficina pueden dañar tu piso: protégelo"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "On"
-msgstr ""
+msgstr "El"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -4402,7 +4405,7 @@ msgstr "Rechazar esta cotización"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #. module: sale
 #. odoo-javascript
@@ -4750,7 +4753,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr "Ventas: confirmación de orden"
+msgstr "Ventas: Confirmación de la orden"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
@@ -5862,6 +5865,8 @@ msgstr "Oportunidad de venta adicional"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
+"Usa servicios y materiales de precio fijo y basados en el costo para la "
+"refacturación"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6118,7 +6123,7 @@ msgstr "Su referencia:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Su navegador no es compatible con iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6156,6 +6161,10 @@ msgid ""
 "Please change the company of your quotation or remove the products from "
 "other companies(%(bad_products)s)."
 msgstr ""
+"Su cotización incluye productos de la empresa%(product_company)s pero la "
+"cotización pertenece a la empresa %(quote_company)s. \n"
+"Cambie la empresa de su cotización o elimine los productos que pertenecen a "
+"otras empresas (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript

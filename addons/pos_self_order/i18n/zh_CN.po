@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-05 08:30+0000\n"
+"PO-Revision-Date: 2026-06-06 15:38+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_self_order/zh_Hans/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -160,6 +160,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                   <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> 您好<t t-"
+"out=\"client_name\">客户名称</t>,</t>\n"
+"                        <t t-else=\"\">您好，</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> 您的订单<t t-out=\"object.tracking_number\">...</"
+"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <br/> \n"
+"                   <div> 准备就绪。</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> 随信附上您的收据</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> 商店名称</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -178,7 +206,7 @@ msgstr "生效"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -189,13 +217,13 @@ msgstr "添加语言"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add Media"
-msgstr ""
+msgstr "添加媒体"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add an order note"
-msgstr ""
+msgstr "添加订单备注"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -220,7 +248,7 @@ msgstr "下午"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -238,7 +266,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Are you sure you want to cancel this order?"
-msgstr ""
+msgstr "确实要注销此订单吗？"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -593,7 +621,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Do not refresh the page."
-msgstr ""
+msgstr "请勿刷新页面。"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -604,7 +632,7 @@ msgstr "下载二维码"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "在这里下载您的收据"
 
 #. module: pos_self_order
 #. odoo-python
@@ -726,7 +754,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Full Day"
-msgstr ""
+msgstr "全天"
 
 #. module: pos_self_order
 #. odoo-python
@@ -894,7 +922,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "网络连接似乎已中断。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -955,7 +983,7 @@ msgstr "正在加载... 稍安勿躁"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_longitude
 msgid "Longitude"
-msgstr ""
+msgstr "经度"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1254,27 +1282,28 @@ msgstr "POS配置"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
+#, fuzzy
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "POS 销售订单明细"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "POS 销售订单收据生成器"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "POS 销售点付款方式"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_product_template_snooze
 msgid "Point of Sale Product Snooze"
-msgstr ""
+msgstr "POS 产品暂缓"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -1305,7 +1334,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
-msgstr ""
+msgstr "由 Google 提供技术支持"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -2016,7 +2045,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__delivery_distance_unit__mi
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #. module: pos_self_order
 #. odoo-javascript

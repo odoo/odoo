@@ -16,16 +16,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"PO-Revision-Date: 2026-06-10 06:18+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/hr_holidays/zh_Hans/>\n"
+"projects/odoo-s19-3/hr_holidays/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -109,7 +109,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -340,6 +340,22 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    亲爱的 <b><t t-out=\"object.env.context.get('manager')\"/"
+"></b>，\n"
+"                    <br/><br/>\n"
+"                    <p>我特此申请休假。如您能尽快批准，我将不胜感激！</p>\n"
+"                    <ul>\n"
+"                        <li>休假类型：<t t-"
+"out=\"object.work_entry_type_id.name\"/></li>\n"
+"                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
+"out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
+"li>\n"
+"                        <li t-if=\"object.name\">原因：<t t-"
+"out=\"object.name\"/></li>\n"
+"                    </ul>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -612,6 +628,8 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(work_entry_type_name)s can only be taken by days."
 msgstr ""
+"根据你的排班计划，本周期内应出勤%(days)s天；但本次%(work_entry_type_name)s类"
+"型休假按整日核算，实际将抵扣%(nb_days)s天工作日。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -728,7 +746,7 @@ msgstr "活动异常标示"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_plans_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "活动计划"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_state
@@ -780,7 +798,7 @@ msgstr "添加原因..."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Add some description for the leave"
-msgstr ""
+msgstr "为休假添加一些说明"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -797,7 +815,7 @@ msgstr "之后"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "After a year, unused accrued time will be :"
-msgstr ""
+msgstr "一年后，未使用的累计时间将："
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
@@ -860,7 +878,7 @@ msgstr "分配 （天/小时）"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Allocated:"
-msgstr ""
+msgstr "已分配"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__duration
@@ -1192,7 +1210,7 @@ msgstr "复工日%(date)s"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Back to Approval"
-msgstr ""
+msgstr "返回审批"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1344,6 +1362,11 @@ msgid ""
 "\n"
 "This error has been triggered by:\n"
 msgstr ""
+"修改该员工的合同将改变其在已请假期间的工作安排。更改此工作安排会相应调整这些"
+"休假的时长，导致员工不再拥有相应的休假配额。请在修改合同前核对这些休假和/或配"
+"额。\n"
+"\n"
+"此错误由以下原因触发：\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3855,7 +3878,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "They should be lost (reset)."
-msgstr ""
+msgstr "应将其清除（重置）。"
 
 #. module: hr_holidays
 #. odoo-python
