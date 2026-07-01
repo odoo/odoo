@@ -3,6 +3,9 @@ import random
 from datetime import datetime
 
 from odoo import fields, models
+from odoo.exceptions import UserError
+
+from .crlibre_client import CrlibreApiError
 
 
 class AccountMove(models.Model):
@@ -92,4 +95,48 @@ class AccountMove(models.Model):
             'total_ventas_neta': base,
             'total_comprobante': total,
             'detalles': json.dumps(detalles),
+        }
+
+    def action_l10n_cr_fe_generate(self):
+        self.ensure_one()
+        if self.move_type != 'out_invoice':
+            raise UserError("Solo aplica a facturas de cliente.")
+        if not self.partner_id:
+            raise UserError("La factura no tiene cliente (receptor).")
+        client = self.env['l10n_cr.fe.client']
+        try:
+            clave_params = self._l10n_cr_fe_build_clave_params()
+            clave_res = client.get_clave(clave_params)
+            detalles = self._l10n_cr_fe_build_detalles()
+            genxml_params = self._l10n_cr_fe_build_genxml_params(
+                clave_res['clave'], clave_res['consecutivo'], detalles)
+            xml = client.gen_xml_fe(genxml_params)
+        except CrlibreApiError as exc:
+            # No se lanza excepción para no romper la transacción (ver spec §5):
+            # se persiste el estado de error, se informa en el chatter y se
+            # devuelve una notificación no bloqueante al usuario.
+            self.l10n_cr_fe_state = 'error'
+            self.message_post(body="Error al generar el comprobante FE: %s" % exc)
+            return self._l10n_cr_fe_notify(
+                "Error al generar el comprobante", str(exc), 'danger')
+        self.write({
+            'l10n_cr_fe_clave': clave_res['clave'],
+            'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
+            'l10n_cr_fe_xml': xml,
+            'l10n_cr_fe_state': 'generated',
+        })
+        self.message_post(body="Comprobante FE generado (PoC). Clave: %s" % clave_res['clave'])
+        return self._l10n_cr_fe_notify(
+            "Comprobante generado", "Clave: %s" % clave_res['clave'], 'success')
+
+    def _l10n_cr_fe_notify(self, title, message, notif_type):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': title,
+                'message': message,
+                'type': notif_type,  # 'success' | 'warning' | 'danger'
+                'sticky': False,
+            },
         }
