@@ -1226,11 +1226,15 @@ class SaleOrderLine(models.Model):
             price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
 
-    @api.depends('price_unit', 'discount', 'qty_invoiced_at_date', 'qty_delivered_at_date')
+    @api.depends('price_unit', 'discount', 'qty_invoiced_at_date', 'qty_delivered_at_date', 'product_uom_qty')
     @api.depends_context('accrual_entry_date')
     def _compute_amount_to_invoice_at_date(self):
         for line in self:
-            line.amount_to_invoice_at_date = (line.qty_delivered_at_date - line.qty_invoiced_at_date) * line._get_gross_price_unit()
+            if line.product_id.type == 'service' and line.product_id.invoice_policy == 'order':
+                qty_ref = line.product_uom_qty
+            else:
+                qty_ref = line.qty_delivered_at_date
+            line.amount_to_invoice_at_date = (qty_ref - line.qty_invoiced_at_date) * line._get_gross_price_unit()
 
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
