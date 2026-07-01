@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-05-08 09:02+0000\n"
+"PO-Revision-Date: 2026-05-16 14:36+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_expense/de/>\n"
@@ -1342,7 +1342,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "No (Direct Expense)"
-msgstr ""
+msgstr "Nein (direkte Ausgabe)"
 
 #. module: hr_expense
 #. odoo-python
@@ -1360,6 +1360,7 @@ msgstr "Noch keine Daten vorhanden!"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
 msgstr ""
+"Es wurden keine Spesenprodukte gefunden. Lassen Sie uns eines erstellen!"
 
 #. module: hr_expense
 #. odoo-python
@@ -1372,7 +1373,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
 msgid "None (company)"
-msgstr ""
+msgstr "Keins (Unternehmen)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1589,13 +1590,13 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Post"
-msgstr ""
+msgstr "Buchen"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Post Entries"
-msgstr ""
+msgstr "Posten buchen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
@@ -1666,12 +1667,12 @@ msgstr "Produktvarianten"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product:"
-msgstr ""
+msgstr "Produkt:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "Produkt: nicht gefunden"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1759,12 +1760,12 @@ msgstr "In Gehaltsabrechnung erstatten"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Reimbursement"
-msgstr ""
+msgstr "Erstattung"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
-msgstr ""
+msgstr "Zugehörig"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
@@ -1828,18 +1829,18 @@ msgstr ""
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Scan"
-msgstr ""
+msgstr "Scannen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Select Bill..."
-msgstr ""
+msgstr "Rechnung auswählen …"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select a product to proceed."
-msgstr ""
+msgstr "Wählen Sie ein Produkt aus, um fortzufahren."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1867,6 +1868,12 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"Senden Sie eine E-Mail an diesen E-Mail-Alias mit dem Beleg im Anhang, um "
+"mit einem Klick eine Ausgabe zu erstellen. Wenn das erste Wort des E-Mail-"
+"Betreffs die interne Referenz des Produkts oder den Produktnamen enthält, "
+"wird das entsprechende Produkt automatisch zugewiesen. Geben Sie den "
+"Ausgabenbetrag in den E-Mail-Betreff ein, um ihn auch für die Ausgabe "
+"festzulegen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -2081,6 +2088,8 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"Das erste Wort des E-Mail-Betreffs entsprach keinem Produktcode. Sie müssen "
+"das Produkt manuell in der Spesenabrechnung festlegen."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2089,6 +2098,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Die folgenden genehmigten Spesen haben ähnliche Mitarbeiter, Beträge und "
+"Produkte wie einige Spesen in dieser Abrechnung. Bitte stellen Sie sicher, "
+"dass diese Abrechnung keine Duplikate enthält."
 
 #. module: hr_expense
 #. odoo-python
@@ -2146,6 +2158,9 @@ msgid ""
 "There are draft expenses linked to this product. Updating the product cost "
 "will change expense amounts. Make sure it is what you want to do."
 msgstr ""
+"Mit diesem Produkt sind vorläufige Ausgaben verknüpft. Eine Aktualisierung "
+"der Produktkosten führt zu einer Änderung der Ausgabenbeträge. Vergewissern "
+"Sie sich, dass dies Ihren Absichten entspricht."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2221,7 +2236,7 @@ msgstr "Gesamter Nettobetrag in Währung"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total With Conversion"
-msgstr ""
+msgstr "Gesamt mit Umrechnung"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2342,6 +2357,11 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"Wenn die Kosten eines Spesenprodukts ungleich 0 sind, kann der Benutzer, der "
+"dieses Produkt verwendet, den Betrag der Spesen nicht ändern, sondern nur "
+"die Menge. Verwenden Sie Kosten ungleich 0 für Spesenprodukte, die vom "
+"Unternehmen zu festen Kosten finanziert werden, wie z. B. "
+"Kilometerpauschalen, Tagegelder, Unterkunft oder Verpflegung."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2357,7 +2377,7 @@ msgstr "Assistent"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Yes (Match to Bill)"
-msgstr ""
+msgstr "Ja (mit Rechnung abgleichen)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register

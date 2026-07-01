@@ -37,16 +37,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-03-19 16:20+0000\n"
+"PO-Revision-Date: 2026-06-20 14:12+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/crm/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/crm/"
 "fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -366,6 +366,29 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"Hei <t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme "
+"Corporation</t>,<br/><br/>\n"
+"Tervetuloa <t t-out=\"object.company_id.name or ''\">Yritykseeni (Helsinki)</"
+"t>.\n"
+"Mukava tavata! Nyt kun olet mukana, tulet tutustumaan kaikkeen mahtavaan <t "
+"t-out=\"object.company_id.name or ''\">Yritykseni (Helsinki)</t> tarjoamaan. "
+"Minun nimeni on <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja "
+"autan sinua saamaan kaiken irti Odoosta. Voisimmeko sopia nopean demon?<br/"
+">\n"
+"Ethän epäröi ottaa yhteyttä koska tahansa!<br/><br/>\n"
+"Parhain terveisin,<br/>\n"
+"<t t-if=\"object.user_id\">\n"
+"    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"    <br/>Sähköposti: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@esimerkki.fi</t>\n"
+"    <br/>Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    <t t-out=\"object.company_id.name or ''\">Yritykseni (Helsinki)</t>\n"
+"</t>\n"
+"        </t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -1567,7 +1590,7 @@ msgstr "Kenttä"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__name
 msgid "Field Label"
-msgstr "Kentän otsikko"
+msgstr "Kentän nimi"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized
@@ -3333,7 +3356,7 @@ msgstr "Toistuvat suunnitelmat"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Recurring Revenue"
-msgstr "Toistuva tulo"
+msgstr "Toistuva liikevaihto"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
@@ -3549,7 +3572,7 @@ msgstr "Lähetä sähköposti"
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__sequence
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action

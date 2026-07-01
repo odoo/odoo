@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-08 04:45+0000\n"
+"PO-Revision-Date: 2026-05-30 12:32+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_dpopay/zh_Hans/>\n"
@@ -24,12 +24,12 @@ msgstr ""
 msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
-msgstr ""
+msgstr "用于接口请求身份认证的持有者令牌，过期后可自动刷新。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
 msgid "Card"
-msgstr ""
+msgstr "卡"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
@@ -50,12 +50,12 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Customer's phone number used to complete the Mobile Money payment."
-msgstr ""
+msgstr "用于完成移动支付的客户电话号码。"
 
 #. module: pos_dpopay
 #: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO 支付"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
@@ -65,34 +65,34 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
 msgid "DPO Pay Client ID"
-msgstr ""
+msgstr "DPO Pay 客户 ID"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
 msgid "DPO Pay Client Secret"
-msgstr ""
+msgstr "DPO Pay 客户端密钥"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "DPO Pay Merchant ID"
-msgstr ""
+msgstr "DPO 支付商户 ID"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
 msgid "DPO Pay Terminal ID"
-msgstr ""
+msgstr "DPO 支付终端 ID"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "DPO Pay terminal is currently offline."
-msgstr ""
+msgstr "DPO Pay 终端目前处于离线状态。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -103,7 +103,7 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
 msgid "Dpopay Bearer Token"
-msgstr ""
+msgstr "Dpopay 持有人令牌"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
@@ -123,7 +123,7 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
-msgstr ""
+msgstr "输入 DPO Pay 分配的商户 ID（例如：123456789012）。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
@@ -131,6 +131,7 @@ msgid ""
 "Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
 "XXXXXXXX)."
 msgstr ""
+"输入你的 DPO Pay POS 收银终端唯一终端编号（TID）（格式示例：XXXXXXXX）。"
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -194,15 +195,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Payment is unsuccessful."
-msgstr ""
+msgstr "付款未成功。"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Please ensure the device is online and confirm that the Merchant ID (MID) "
 "and Terminal ID (TID) are correct. %s"
-msgstr ""
+msgstr "请确保设备已联网，并确认商户 ID (MID) 和终端 ID (TID) 是否正确。%s"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
@@ -212,12 +214,12 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "POS 销售点付款方式"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
 msgid "RRN"
-msgstr ""
+msgstr "RRN"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref

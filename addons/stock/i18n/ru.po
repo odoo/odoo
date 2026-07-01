@@ -5,15 +5,15 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-01-13 16:09+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/stock/"
+"PO-Revision-Date: 2026-06-13 13:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/stock/"
 "ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -96,12 +96,18 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "\n"
 "The quantity done for the product %(product)s doesn't respect the rounding "
 "precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Выполненное количество для товара %(product)s не соответствует точности "
+"округления, установленной в системе.\n"
+"Пожалуйста, измените выполненное количество или настройки точности "
+"округления."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -377,6 +383,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
+#, fuzzy
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
@@ -384,6 +391,13 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Новое: перемещение запасов создано, но не подтверждено.\n"
+"* Ожидание другого перемещения: перед этим перемещением должно быть "
+"выполнено связанное перемещение запасов.\n"
+"* Ожидание: перемещение запасов подтверждено, но товар не может быть "
+"зарезервирован.\n"
+"* Доступно: товар перемещения запасов зарезервирован.\n"
+"* Выполнено: товар перемещен, и перемещение подтверждено."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -663,8 +677,9 @@ msgstr "<span class=\"o_stat_text\">Номера лотов/серий</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Партии/серийные номера</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -717,8 +732,9 @@ msgstr "<span class=\"o_stat_text\">Маршруты</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Обрезки</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -816,8 +832,9 @@ msgstr "<strong>Контакт</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Клиент</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1074,8 +1091,9 @@ msgstr "Оформление задачи-исключения"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Планы активностей"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1234,8 +1252,9 @@ msgstr "После"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_3
+#, fuzzy
 msgid "After next month last year"
-msgstr ""
+msgstr "После следующего месяца прошлого года"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1297,10 +1316,13 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Разрешить производство под заказ (MTO) или автоматизировать создание заказов "
+"на закупку при продаже товара и получать прямые ссылки между документами."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1337,8 +1359,9 @@ msgstr "Разрешенный маршрут"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Допустимая ед. изм."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1384,8 +1407,9 @@ msgstr "Любая категория"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
+#, fuzzy
 msgid "Anyone"
-msgstr ""
+msgstr "Любой пользователь"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1475,11 +1499,16 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Так как для этого товара уже использовались другие единицы измерения "
+"(например: %(problem_uom)s), отличные от %(uom)s, изменить их невозможно. "
+"Если вы хотите использовать новую единицу измерения, пожалуйста, архивируйте "
+"текущий товар и создайте новый."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__picking_policy__direct
@@ -1643,6 +1672,7 @@ msgstr "Доступное количество"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
+#, fuzzy
 msgid ""
 "Available quantity (computed as Quantity On Hand - reserved quantity - "
 "quantity to remove)\n"
@@ -1653,6 +1683,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Доступное количество (рассчитывается как: количество в наличии минус "
+"зарезервированное количество и количество к списанию).  \n"
+"Если выбрана одна локация, учитываются товары в ней и во всех ее дочерних "
+"локациях.\n"
+"Если выбран один склад, учитываются товары в основной локации этого склада и "
+"во всех ее дочерних локациях.\n"
+"В остальных случаях учитываются товары во всех локациях с типом «Внутренняя»."
 
 #. module: stock
 #. odoo-javascript
@@ -2115,20 +2152,32 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
 #: model:ir.model.fields,help:stock.field_res_config_settings__horizon_days
+#, fuzzy
 msgid ""
 "Configure your horizon to trigger reordering rules earlier to get\n"
 "                                a head start on replenishment and avoid "
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Настройте горизонт планирования, чтобы правила повторного заказа срабатывали "
+"заранее. Это позволит\n"
+"                                вовремя начать поставку и избежать задержек. "
+"Либо установите значение\n"
+"                                «0 дней», чтобы запускать пополнение «точно "
+"в срок» и не допускать избытка товаров на складе."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure your horizon to trigger reordering rules earlier to get a head "
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Настройте горизонт планирования, чтобы правила повторного заказа срабатывали "
+"заранее. Это позволит вовремя начать поставку и избежать задержек. Либо "
+"установите значение «0 дней», чтобы запускать пополнение «точно в срок» и не "
+"допускать избытка товаров на складе."
 
 #. module: stock
 #: model:res.company,pay_later_label:stock.res_company_1
@@ -2146,13 +2195,15 @@ msgstr "Подтвердить"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "Подтвердить заказ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "Подтверждение по электронной почте"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2204,8 +2255,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
+#, fuzzy
 msgid "Container"
-msgstr ""
+msgstr "Контейнер"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
@@ -2618,12 +2670,18 @@ msgstr "Дата, когда перемещение было обработан�
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__deadline_date
+#, fuzzy
 msgid ""
 "Date before which you should order to avoid falling below the minimum. If "
 "you have nothing to order while a deadline is found, it may be because a "
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"Дата, до которой необходимо сделать заказ, чтобы не допустить снижения "
+"запасов ниже минимального уровня. Если у вас нет заказов на дату, указанную "
+"в сроке, это может означать, что ожидается поступление товара после "
+"достижения минимального уровня запасов (возможный дефицит). Проверьте отчет "
+"о прогнозе."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -2789,6 +2847,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
+#, fuzzy
 msgid ""
 "Defines the default method used for suggesting the exact location (shelf) "
 "where to take the products from, which lot etc. for this location. This "
@@ -2805,6 +2864,23 @@ msgid ""
 "(the availability of this method depends on the \"Expiration Dates\" "
 "setting)."
 msgstr ""
+"Определяет метод по умолчанию, используемый для предложения точной локации "
+"(полки), откуда следует взять товар, какой лот и т. д. для данного "
+"местоположения. Этот метод может быть принудительно установлен на уровне "
+"категории товара; если здесь ничего не задано, используются резервные "
+"настройки родительских локаций.\n"
+"\n"
+"FIFO: товары/партии, поступившие на склад первыми, будут перемещены в первую "
+"очередь.\n"
+"LIFO: товары/партии, поступившие на склад последними, будут перемещены в "
+"первую очередь.\n"
+"Ближайшая локация: товары/партии, находящиеся ближе всего к целевой локации, "
+"будут перемещены в первую очередь.\n"
+"Наименьшее количество упаковок: товары/партии, которые были размещены в "
+"упаковках с наименьшим количеством, будут перемещены в первую очередь.\n"
+"FEFO: товары/партии с ближайшей датой истечения срока годности будут "
+"перемещены в первую очередь (доступность этого метода зависит от настройки "
+"«Сроки годности»)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2821,6 +2897,7 @@ msgstr "Задержка включения %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
+#, fuzzy
 msgid ""
 "Deleting product moves after the transfer is done?\n"
 "\n"
@@ -2830,6 +2907,13 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Удалить перемещения товаров после завершения трансфера?\n"
+"\n"
+"Это все равно что пытаться отмотать время назад и отменить все связанные "
+"операции, которые уже запустило это перемещение. Последствия для учета могут "
+"быть непредсказуемыми, поэтому лучше так не делать.\n"
+"\n"
+"Вместо удаления просто измените выполненное количество на 0."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -3148,8 +3232,9 @@ msgstr "Разница"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "Обзор"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3464,14 +3549,16 @@ msgstr "Исключения:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "Обмен"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "истекать"
 
 #. module: stock
 #. odoo-python
@@ -4853,8 +4940,9 @@ msgstr "Последние 12 месяцев"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_year
+#, fuzzy
 msgid "Last 12 months"
-msgstr ""
+msgstr "Последние 12 месяцев"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4996,8 +5084,9 @@ msgstr "Последний раз количество было обновлен
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_quarter
+#, fuzzy
 msgid "Last year quarter"
-msgstr ""
+msgstr "Квартал прошлого года"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -5203,8 +5292,9 @@ msgstr "Места хранения"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Lock"
-msgstr ""
+msgstr "Заблокировать"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -5300,8 +5390,9 @@ msgstr "Лот/серийный номер Перемещено"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Номера лотов/серий"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5626,8 +5717,9 @@ msgstr "Маршруты"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid "Multiple"
-msgstr ""
+msgstr "Кратность"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5794,8 +5886,9 @@ msgstr "На следующую дату необходимо подсчитат
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_2
+#, fuzzy
 msgid "Next month last year"
-msgstr ""
+msgstr "Следующий месяц прошлого года"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -5923,8 +6016,9 @@ msgstr "Передача не найдена. Давайте создадим е
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6061,10 +6155,14 @@ msgstr "В наличии Количество"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
+#, fuzzy
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"Количество в наличии (на складе), которое не было зарезервировано под "
+"перемещения и у которого не истек срок годности, в базовой единице измерения "
+"товара"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
@@ -6442,8 +6540,9 @@ msgstr "Тип упаковки"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
+#, fuzzy
 msgid "Pack of 6"
-msgstr ""
+msgstr "Упаковка (6 шт.)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package
@@ -6674,8 +6773,9 @@ msgstr "Ширина упаковки"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+#, fuzzy
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Единица упаковки из заказов на продажу или закупку"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6738,8 +6838,9 @@ msgstr ""
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "Оплатить сейчас"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
@@ -6812,8 +6913,9 @@ msgstr "Операции сборки"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Политика упаковки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -6861,8 +6963,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "Предшествующие операции"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6877,8 +6980,9 @@ msgstr "Предпочтительный маршрут"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Значение префикса записи для последовательности"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7263,8 +7367,9 @@ msgstr "Подтолкнуть к"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_put_in_pack
+#, fuzzy
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "Мастер упаковки"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_put_in_pack_wizard
@@ -7461,8 +7566,9 @@ msgstr "Количество в основной единице товара"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+#, fuzzy
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Количество в единице упаковки"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7712,8 +7818,9 @@ msgstr "Эталонная последовательность"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_reference
+#, fuzzy
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Ссылка между складскими документами"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
@@ -7943,8 +8050,9 @@ msgstr "Метод бронирования"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "Резерв"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8098,8 +8206,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "Отменить"
 
 #. module: stock
 #. odoo-python
@@ -8258,8 +8367,9 @@ msgstr "СТАНДАРТНЫЕ ПОЛОЖЕНИЯ И УСЛОВИЯ ПРОДАЖ
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year
+#, fuzzy
 msgid "Same month last year"
-msgstr ""
+msgstr "Тот же месяц прошлого года"
 
 #. module: stock
 #. odoo-python
@@ -8269,8 +8379,9 @@ msgstr "Демо-данные"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #. module: stock
 #. odoo-python
@@ -8372,8 +8483,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "Забраковано"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -8448,8 +8560,10 @@ msgstr "Выбор не поддерживается."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Продавайте и закупайте товары в различных единицах измерения или упаковках"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9717,6 +9831,7 @@ msgstr "Пока нет перемещений товаров"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "This adds a Replenish On Order (MTO) route to apply on products in order to "
 "generate on-demand replenishment linked to your sales orders (for example) "
@@ -9724,6 +9839,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Этот параметр добавляет маршрут «Пополнение под заказ» для товаров. Он "
+"позволяет создавать пополнение по запросу, привязанное к вашим заказам на "
+"продажу (например), как только они будут подтверждены. Заказы на закупку, "
+"производственные заказы и т. д. создаются автоматически в зависимости от "
+"установленного для товара способа пополнения (маршрут «Купить» или "
+"«Произвести»)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10422,8 +10543,9 @@ msgstr "Единицы"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Ед. изм. и упаковки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__uom_id
@@ -10439,8 +10561,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Unlock"
-msgstr ""
+msgstr "Разблокировать"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_form
@@ -10556,8 +10679,9 @@ msgstr "Подтвердить"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Подтвердите информацию по складу"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10748,8 +10872,9 @@ msgstr "Маршруты склада"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "Склад:"
 
 #. module: stock
 #. odoo-javascript
@@ -10947,8 +11072,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "Когда начать отгрузку"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11477,8 +11603,9 @@ msgstr "ближайший"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, fuzzy
 msgid "day(s)"
-msgstr ""
+msgstr "дней"
 
 #. module: stock
 #. odoo-javascript
@@ -11619,8 +11746,9 @@ msgstr "из"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "запланированный на"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11685,8 +11813,9 @@ msgstr "единицы"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation

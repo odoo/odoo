@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-04-11 14:24+0000\n"
+"PO-Revision-Date: 2026-05-23 13:43+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "payment/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: payment
 #. odoo-python
@@ -147,12 +147,13 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>Nessun metodo di pagamento disponibile</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
 msgstr ""
+"<strong>Non ci sono fornitori di servizi di pagamento configurati</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -209,7 +210,7 @@ msgstr "<strong>Attenzione</strong> Devi essere connesso per poter pagare."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "Conto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -416,6 +417,9 @@ msgid ""
 "you want to charge your customers cards only when you are sure you can ship "
 "the goods to them."
 msgstr ""
+"Cattura l'importo da Odoo, quando la consegna è completata. Usa questo se "
+"vuoi addebitare le carte dei tuoi clienti solo quando sei sicuro di poter "
+"spedire la merce a loro."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -488,7 +492,7 @@ msgstr "Confermato"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Connect"
-msgstr ""
+msgstr "Connetti"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -523,7 +527,7 @@ msgstr "Nazione"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Create"
-msgstr ""
+msgstr "Crea"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -644,7 +648,7 @@ msgstr "Bozza"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -703,7 +707,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Trova un fornitore di servizi di pagamento"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -2075,6 +2079,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"L'azione porterà all'archiviazione %s dei token che sono registrati con "
+"questo fornitore."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2084,6 +2090,10 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"Questo controlla se i clienti possono salvare i propri metodi di pagamento "
+"come token di pagamento. Un token di pagamento è un link anonimo ai dettagli "
+"del metodo di pagamento salvati nel database del fornitore, permettendo al "
+"cliente di utilizzarli di nuovo per il prossimo acquisto."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2540,7 +2550,7 @@ msgstr "fornitore"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "l'amministratore del sito web."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
