@@ -47,10 +47,6 @@ class AccountJournal(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
     _rec_names_search = ['name', 'code']
 
-    def _default_display_invoice_template_pdf_report_id(self):
-        """ Show PDF template selection if there are more than 1 template available for invoices. """
-        return len(self.available_invoice_template_pdf_report_ids) > 1
-
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')
 
@@ -191,7 +187,7 @@ class AccountJournal(models.Model):
         comodel_name='ir.actions.report',
         compute='_compute_available_invoice_template_pdf_report_ids',
     )
-    display_invoice_template_pdf_report_id = fields.Boolean(default=_default_display_invoice_template_pdf_report_id, store=False)
+    display_invoice_template_pdf_report_id = fields.Boolean(compute='_compute_display_invoice_template_pdf_report_id')
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
@@ -727,6 +723,10 @@ class AccountJournal(models.Model):
     def _compute_available_invoice_template_pdf_report_ids(self):
         for journal in self:
             journal.available_invoice_template_pdf_report_ids = self.env['account.move']._get_available_invoice_template_pdf_report_ids()
+
+    def _compute_display_invoice_template_pdf_report_id(self):
+        for journal in self:
+            journal.display_invoice_template_pdf_report_id = len(journal.available_invoice_template_pdf_report_ids) > 1
 
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
