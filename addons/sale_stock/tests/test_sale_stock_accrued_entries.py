@@ -611,3 +611,26 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': account_variation.id, 'debit': 229.41, 'credit': 0},
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 229.41},
         ])
+
+    def test_accrued_order_from_sale_order_with_draft_invoice(self):
+        self.product.invoice_policy = 'order'
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'price_unit': 140,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices()
+        sale_order.order_line.invalidate_recordset()
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+
+        wizard.create_entries()

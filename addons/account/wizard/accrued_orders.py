@@ -262,7 +262,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                                 processed_qty += inv_line.quantity
                                 if processed_qty >= abs(qty_to_invoice):
                                     break
-                            price_unit = abs(amount / processed_qty)
+                            price_unit = abs(amount / processed_qty) if processed_qty else 0
                         label = _(
                             '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
                             order=order.name,
@@ -304,7 +304,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                                 # Invoiced not delivered.
                                 invoiced_quantity = sum(posted_invoice_lines.mapped('quantity'))
                                 sum_amount = sum(expense_invoice_lines.mapped('debit'))
-                                invoiced_unit_price = sum_amount / invoiced_quantity
+                                invoiced_unit_price = sum_amount / invoiced_quantity if invoiced_quantity else 0
                                 perpetual_amount = invoiced_unit_price * qty_to_invoice
                                 perpetual_data = (invoiced_unit_price, perpetual_amount)
                                 perpetual_data_by_accounts_and_order_line[expense_account, stock_variation_account][order_line] = perpetual_data
