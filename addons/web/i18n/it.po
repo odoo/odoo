@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/web/"
@@ -523,7 +523,7 @@ msgstr "Nome obbligatorio per il filtro preferito."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "A name for your new action is required."
 msgstr "Nome richiesto per la nuova azione."
 
@@ -674,6 +674,12 @@ msgstr "Attiva la modalità sviluppatore (con asset)"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Activate the developer mode (with tests assets)"
 msgstr "Attiva la modalità sviluppatore (con asset di test)"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Active"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -896,7 +902,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "An action with the same name already exists."
 msgstr "Esiste già un'azione con lo stesso nome."
 
@@ -947,6 +953,7 @@ msgstr "Acquario"
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Archive"
@@ -967,6 +974,7 @@ msgstr "Archiviare veramente tutti i record selezionati?"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 msgid "Are you sure that you want to archive this record?"
 msgstr "Archiviare veramente questo record?"
@@ -979,7 +987,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Are you sure that you want to remove this embedded action?"
 msgstr "Rimuovere veramente l'azione incorporata?"
 
@@ -1067,6 +1075,7 @@ msgstr "Allega"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: model:ir.model,name:web.model_ir_attachment
 msgid "Attachment"
 msgstr "Allegato"
 
@@ -1406,6 +1415,12 @@ msgstr "Capricorno"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
+msgid "Card: no action for type: %(type)s"
 msgstr ""
 
 #. module: web
@@ -1752,8 +1767,6 @@ msgid "Confirm"
 msgstr "Conferma"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.check_identity
 msgid "Confirm access"
 msgstr "Conferma accesso"
@@ -1920,6 +1933,12 @@ msgstr "Limite conteggio"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "Count LoC"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Count lines of code (%s billable)"
 msgstr ""
 
@@ -2024,13 +2043,7 @@ msgstr "Campo valuta"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
-msgid "Custom"
-msgstr "Personalizzata"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom %s"
 msgstr "%s su misura"
 
@@ -2041,7 +2054,7 @@ msgstr "Colori personalizzati"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom Embedded Action"
 msgstr "Personalizza azione integrata"
 
@@ -2276,7 +2289,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/tags_list/avatar_tag.xml:0
 #: code:addons/web/static/src/core/tags_list/badge_tag.js:0
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
@@ -2306,7 +2319,7 @@ msgstr "Rimuovi campo proprietà"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Delete item"
 msgstr "Elimina voce"
 
@@ -2339,6 +2352,12 @@ msgstr "Decrescente"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Developer Tools"
 msgstr "Strumenti di sviluppo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Dial Field"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2437,6 +2456,7 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
@@ -2814,6 +2834,8 @@ msgid "Enter your email"
 msgstr "Inserisci e-mail"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Enter your password"
 msgstr "Inserisci password"
@@ -3186,6 +3208,12 @@ msgstr ""
 "separatori migliaia, arrotondamento, ecc."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Formatted Field"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
 msgstr "Frame"
@@ -3322,12 +3350,6 @@ msgid "Handle"
 msgstr "Maniglia"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Having problems ?"
-msgstr "Stai riscontrando problemi?"
-
-#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Intestazione visualizzata nella parte superiore di tutti i report."
@@ -3457,12 +3479,6 @@ msgstr "Come ottenere l'applicazione"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Hue"
-msgstr "Tonalità"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "I want to update data (import-compatible export)"
 msgstr ""
@@ -3471,6 +3487,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_attachment__id
 #: model:ir.model.fields,field_description:web.field_ir_http__id
 #: model:ir.model.fields,field_description:web.field_ir_model__id
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
@@ -4038,12 +4055,6 @@ msgstr "Esempi Kanban"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record.js:0
-msgid "Kanban: no action for type: %(type)s"
-msgstr "Kanban: nessun'azione per il tipo: %(type)s"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Label"
 msgstr "Etichetta"
@@ -4328,7 +4339,7 @@ msgstr "Azioni principali"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Make this embedded action available to other users"
 msgstr "Rendi l'azione integrata disponibile per altri utenti"
 
@@ -4583,12 +4594,6 @@ msgstr "Modalità"
 #: model:ir.model,name:web.model_ir_model
 msgid "Model"
 msgstr "Modello"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Model Record Rules"
-msgstr "Regole su record modello"
 
 #. module: web
 #. odoo-javascript
@@ -5331,12 +5336,6 @@ msgstr "Ops! Non puoi modificare %(parentFieldLabel)s \"%(parentName)s\"."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Opacity"
-msgstr "Opacità"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Open"
@@ -5929,12 +5928,6 @@ msgstr "Record"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Record Rules"
-msgstr "Regole su record"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
 msgstr "Memoria record"
@@ -6137,12 +6130,6 @@ msgstr "Richiesto:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Reset"
-msgstr "Azzera"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/offline_action_helper.xml:0
 msgid "Reset Filters"
 msgstr ""
@@ -6267,19 +6254,7 @@ msgstr "Sab"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Saturation and brightness color picker."
-msgstr "Selettore di colore per saturazione e luminosità."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.js:0
-msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-msgstr "Saturazione: %(saturationLvl)s %. Luminosità: %(brightnessLvl)s %"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
@@ -6311,7 +6286,7 @@ msgstr "Salva proprietà"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Save View"
 msgstr "Salva vista"
 
@@ -6702,7 +6677,7 @@ msgstr "Condividi la vista corrente"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 msgid "Shared"
 msgstr "Condiviso"
 
@@ -6775,12 +6750,6 @@ msgstr "Firma"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Signed in as"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
 msgstr "Data unica"
@@ -6806,12 +6775,6 @@ msgstr "Piccola"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Smileys & Emotion"
 msgstr "Faccine ed emoticon"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
-msgid "Solid"
-msgstr "Tinta unita"
 
 #. module: web
 #. odoo-javascript
@@ -7321,7 +7284,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "This embedded action is global and will be removed for everyone."
 msgstr "L'azione integrata è globale e verrà rimossa per tutti."
 
@@ -7380,6 +7343,12 @@ msgstr "Gio"
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Time"
 msgstr "Tempo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7522,6 +7491,12 @@ msgstr "Viaggio e luoghi"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Triton"
 msgstr "Tritone"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Trouble signing in?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7858,19 +7833,6 @@ msgstr "Utilizza il filtro per impostazione predefinita quando apri la vista"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid ""
-"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
-"keys to adapt the saturation. Press the Control or Command key at the same "
-"time to have finer control."
-msgstr ""
-"Utilizza i tasti freccia su e giù per regolare la luminosità. Utilizza i "
-"tasti freccia sinistra e destra per regolare la saturazione. Premi "
-"contemporaneamente il tasto Ctrl o Command per ottenere un controllo più "
-"preciso."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Use your password"
 msgstr "Usa la tua password"
@@ -7978,6 +7940,12 @@ msgstr "I valori impostati qui sono specifici per azienda."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Verify your identity"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 msgid "Video"
 msgstr "Video"
@@ -8066,7 +8034,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
-#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
@@ -15563,12 +15531,6 @@ msgstr "eroe"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "heroine"
 msgstr "eroina"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "hex"
-msgstr "esadecimale"
 
 #. module: web
 #. odoo-javascript
@@ -27429,32 +27391,3 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
-
-#~ msgid "Autosave"
-#~ msgstr "Salvataggio automatico"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr ""
-#~ "Se selezionato, il record verrà salvato immediatamente quando il campo "
-#~ "viene modificato."
-
-#~ msgid "Invalid data"
-#~ msgstr "Dati non validi"
-
-#~ msgid "No settings found"
-#~ msgstr "Nessuna impostazione trovata"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "Il grafico a torta non può gestire sia numeri positivi che negativi. "
-#~ "Prova a cambiare il dominio per visualizzare solo risultati positivi."
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "Prova a cercare un'altra parola chiave"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

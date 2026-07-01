@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -642,6 +642,11 @@ msgid "Inventory Valuation"
 msgstr "Zaxiralarni baholash"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
+msgid "Invoice Line"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 #, fuzzy
 msgid "Is Dropship"
@@ -850,8 +855,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product__property_price_difference_account_id
-#: model:ir.model.fields,field_description:stock_account.field_product_template__property_price_difference_account_id
 #, fuzzy
 msgid "Price Difference Account"
 msgstr "Narx farqi hisobi"
@@ -1037,6 +1040,7 @@ msgstr "Zaxira jurnali"
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_move_ids
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__stock_move_id
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__stock_move
 #, fuzzy
 msgid "Stock Move"
@@ -1305,8 +1309,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-#: model:ir.model.fields,help:stock_account.field_product_product__property_price_difference_account_id
-#: model:ir.model.fields,help:stock_account.field_product_template__property_price_difference_account_id
 #, fuzzy
 msgid ""
 "With perpetual valuation, this account will hold the price difference "
@@ -1365,15 +1367,3 @@ msgstr "stock_move_id"
 #, fuzzy
 msgid "units"
 msgstr "dona"
-
-#, fuzzy
-#~ msgid ""
-#~ "Value of the product (automatically computed in AVCO).\n"
-#~ "        Used to value the product when the purchase cost is not known "
-#~ "(e.g. inventory adjustment).\n"
-#~ "        Used to compute margins on sale orders."
-#~ msgstr ""
-#~ "Mahsulot qiymati (AVCO usulida avtomatik hisoblanadi).         Xarid "
-#~ "narxi noma'lum bo‘lganda mahsulotni baholash uchun ishlatiladi (masalan, "
-#~ "zaxiralarni tuzatish).         Sotuv buyurtmalari bo‘yicha foyda "
-#~ "marjalarini hisoblash uchun qo‘llaniladi."

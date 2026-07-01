@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -109,10 +109,31 @@ msgid "Currency Rate"
 msgstr "Valyuta kursi"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__default_product_id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_default_product_id
+msgid "Default Product"
+msgstr ""
+
+#. module: pos_sale
+#: model:product.template,name:pos_sale.default_sol_product_product_template
+msgid "Default Product (POS)"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Default Sale Product"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 #, fuzzy
 msgid "Delivery Quantity"
 msgstr "Yetkazib berish miqdori"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_name
+msgid "Description"
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -175,6 +196,11 @@ msgstr "Boshlang‘ich to‘lov (havola: %(order_reference)s sana: %(date)s)"
 #, fuzzy
 msgid "Due balance: %s"
 msgstr "To‘lanishi kerak bo‘lgan qoldiq: %s"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__has_default_product
+msgid "Has Default Product"
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__id
@@ -438,9 +464,20 @@ msgstr ""
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "This product will be applied on description only Sale order lines."
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 #, fuzzy
 msgid "This product will be applied when down payment is made"
 msgstr "Bu mahsulot boshlang‘ich to‘lov amalga oshirilganda qo‘llaniladi"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__default_product_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_default_product_id
+msgid "This product will be used as default product on productless SOLs."
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
@@ -449,6 +486,13 @@ msgstr "Bu mahsulot boshlang‘ich to‘lov amalga oshirilganda qo‘llaniladi"
 msgid "This product will be used as down payment on a sale order."
 msgstr ""
 "Ushbu mahsulot sotish buyurtmasida boshlang‘ich to‘lov sifatida ishlatiladi."
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order_line__has_default_product
+msgid ""
+"To check whether the product is default product from pos.config or not. In "
+"case of description only SOLs we use default product from pos.config."
+msgstr ""
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale

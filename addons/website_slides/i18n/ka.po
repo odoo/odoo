@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2016-06-27 15:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
@@ -2605,10 +2605,12 @@ msgid "Display"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__display_name
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:website_slides.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:website_slides.field_mail_message__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__display_name
@@ -3324,10 +3326,12 @@ msgid "HowTo"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__id
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__id
 #: model:ir.model.fields,field_description:website_slides.field_mail_activity__id
+#: model:ir.model.fields,field_description:website_slides.field_mail_message__id
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_slides.field_res_groups__id
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__id
@@ -4014,6 +4018,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_mail_message
+msgid "Message"
 msgstr ""
 
 #. module: website_slides
@@ -6237,22 +6251,10 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
 msgid "Website URL"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
-#: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: website_slides
@@ -6462,6 +6464,14 @@ msgstr ""
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
 "members or it is unpublished."
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
 msgstr ""
 
 #. module: website_slides

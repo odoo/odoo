@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-04-04 12:59+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/mrp/"
@@ -293,7 +293,7 @@ msgid ":  hours"
 msgstr ": timmar"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
 "<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
 msgstr ""
@@ -304,7 +304,7 @@ msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
 "<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
 "Availability\"/>"
@@ -316,14 +316,14 @@ msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
 "<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
 "Time\"/>"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
 msgstr ""
 
@@ -456,6 +456,11 @@ msgid "<span class=\"o_stat_text\">Product Moves</span>"
 msgstr "<span class=\"o_stat_text\">Produktförflyttningar</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "<span class=\"o_stat_text\">Productions</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Scraps</span>"
 msgstr "<span class=\"o_stat_text\">Kasserade</span>"
@@ -550,6 +555,11 @@ msgstr "<span>Rapportering</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
 msgstr "<span>ARBETSORDER</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span>days</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -871,11 +881,6 @@ msgid "Allocation Report Labels"
 msgstr "Etiketter för tilldelningsrapport"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "Allokeringsrapport för tillverkningsorder"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
@@ -898,6 +903,7 @@ msgstr "Tillåt att skapa nya parti-/serienummer för komponenterna"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
+#: model:ir.model.fields,field_description:mrp.field_product_uom__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr "Tillåten Uom"
 
@@ -1016,6 +1022,11 @@ msgstr "Bilagor"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_variant_attributes
 msgid "Attribute Values"
 msgstr "Attributvärden"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_confirm_production
+msgid "Auto Confirm Production"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -1226,6 +1237,7 @@ msgstr "Före"
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__bom_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Bill of Material"
 msgstr "Produktstruktur"
@@ -1497,6 +1509,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__cancel
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__cancel
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Cancelled"
 msgstr "Annullerad"
@@ -1572,19 +1585,12 @@ msgid "Check BoM Overview"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "Check availability"
-msgstr "Kontrollera tillgänglighet"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__child_ids
 msgid "Child Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/wizard/stock_label_type.py:0
 msgid "Choose Labels Layout"
 msgstr "Välj Etikett Layout"
@@ -1608,12 +1614,18 @@ msgstr "Tid för uppstädning"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Clear"
 msgstr "Rensa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Clears the selected lot/serial number"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
+msgid "Close Production"
 msgstr ""
 
 #. module: mrp
@@ -1648,11 +1660,18 @@ msgid "Company"
 msgstr "Bolag"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_open_bom_lines
+msgid "Compare BoMs"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_bom_popover.xml:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_pivot
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -1782,6 +1801,11 @@ msgid "Consumption Warning"
 msgstr "Varning för förbrukning"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__continuous
+msgid "Continuous Production"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Copy Existing Operations"
 msgstr "Kopiera befintliga operationer"
@@ -1881,8 +1905,18 @@ msgid "Count of linked backorder"
 msgstr "Antal länkade returorder"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__backorder_count
+msgid "Count of linked backorders"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__serial_numbers_count
 msgid "Count of serial numbers"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
+msgid "Create Backorder"
 msgstr ""
 
 #. module: mrp
@@ -1920,28 +1954,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
-msgid "Create backorder"
-msgstr "Skapa restorder"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
 msgstr "Skapa anpassningsbara kalkylblad för dina kvalitetskontroller"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"Skapa beroenden på operationsnivå som kommer att påverka både planering och "
-"status för arbetsorder vid bekräftelse av MO. Om denna funktion är ikryssad, "
-"och inget anges, kommer Odoo att anta att alla operationer kan startas "
-"samtidigt."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2054,8 +2069,9 @@ msgid "Custom Description"
 msgstr "Anpassad beskrivning"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
-msgid "Custom Work Order Dependencies"
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
+msgid "Custom Operation Dependencies"
 msgstr ""
 
 #. module: mrp
@@ -2258,6 +2274,7 @@ msgstr "Avbryt"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 msgid "Display"
 msgstr ""
 
@@ -2289,13 +2306,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp.field_product_uom__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__display_name
-#: model:ir.model.fields,field_description:mrp.field_report_stock_report_reception__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
@@ -2516,6 +2534,13 @@ msgstr "Förväntad %s"
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Expected Duration"
 msgstr "Förväntad varaktighet"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_pivot
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
+msgid "Final Product"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
@@ -2817,13 +2842,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
 #: model:ir.model.fields,field_description:mrp.field_product_template__id
+#: model:ir.model.fields,field_description:mrp.field_product_uom__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__id
-#: model:ir.model.fields,field_description:mrp.field_report_stock_report_reception__id
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
@@ -3272,6 +3298,11 @@ msgid "Line of issue consumption"
 msgstr "Konsumtion i samband med emission"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_product_uom
+msgid "Link between products and their UoMs"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Plats"
@@ -3337,7 +3368,8 @@ msgstr "Parti/Serie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__lot_producing_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__lot_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__lot_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_lot_producing_id
 msgid "Lot/Serial Number"
 msgstr "Parti/Serienummer"
 
@@ -3358,18 +3390,6 @@ msgid "MO Backorder"
 msgstr "MO Backorder"
 
 #. module: mrp
-#: model:mail.message.subtype,description:mrp.mrp_mo_in_cancelled
-#: model:mail.message.subtype,name:mrp.mrp_mo_in_cancelled
-msgid "MO Cancelled"
-msgstr "MO avbruten"
-
-#. module: mrp
-#: model:mail.message.subtype,description:mrp.mrp_mo_in_confirmed
-#: model:mail.message.subtype,name:mrp.mrp_mo_in_confirmed
-msgid "MO Confirmed"
-msgstr "MO Bekräftad"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
@@ -3381,12 +3401,6 @@ msgstr "MO-kostnad"
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "MO Costs"
 msgstr "MO-kostnader"
-
-#. module: mrp
-#: model:mail.message.subtype,description:mrp.mrp_mo_in_done
-#: model:mail.message.subtype,name:mrp.mrp_mo_in_done
-msgid "MO Done"
-msgstr "MO Klar"
 
 #. module: mrp
 #. odoo-python
@@ -3411,17 +3425,6 @@ msgid "MO Pending"
 msgstr "MO Avvaktande"
 
 #. module: mrp
-#: model:mail.message.subtype,name:mrp.mrp_mo_planned
-msgid "MO Planned"
-msgstr ""
-
-#. module: mrp
-#: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
-#: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
-msgid "MO Progress"
-msgstr "MO Framsteg"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
 msgid "MO Readiness"
 msgstr "MO Beredskap"
@@ -3432,10 +3435,9 @@ msgid "MO Ready"
 msgstr "MO Ready"
 
 #. module: mrp
-#: model:mail.message.subtype,description:mrp.mrp_mo_in_to_close
-#: model:mail.message.subtype,name:mrp.mrp_mo_in_to_close
-msgid "MO To Close"
-msgstr "MO för att stänga"
+#: model:mail.message.subtype,name:mrp.mt_mo_state
+msgid "MO State"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -3447,11 +3449,6 @@ msgstr ""
 #: model:ir.model,name:mrp.model_report_mrp_label_production_view_pdf
 msgid "MRP Finished Product Label Report"
 msgstr ""
-
-#. module: mrp
-#: model:ir.actions.client,name:mrp.mrp_reception_action
-msgid "MRP Reception Report"
-msgstr "MRP mottagningsrapport"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -3666,6 +3663,7 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_mark_as_done_workorders
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
 msgstr "Klarmarkera"
@@ -3850,11 +3848,6 @@ msgstr "Nästa aktivitetssammanställning"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_type_id
 msgid "Next Activity Type"
 msgstr "Nästa aktivitetstyp"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
-msgid "No Backorder"
-msgstr "Ingen restorder"
 
 #. module: mrp
 #. odoo-python
@@ -4150,17 +4143,6 @@ msgstr "Öppna"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Operation"
 msgstr "Åtgärd"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
-msgid "Operation Category"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
-msgid "Operation Dependencies"
-msgstr "Beroenden av verksamheten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
@@ -4495,6 +4477,12 @@ msgstr ""
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "Please specify the produced serial numbers."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Please unblock the work center to start the work order."
 msgstr "Vänligen avblockera arbetscentret för att starta arbetsordern."
@@ -4609,11 +4597,6 @@ msgid "Produce"
 msgstr "Producera"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Produce All"
-msgstr "Producera alla"
-
-#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
 msgid "Produce residual products"
 msgstr "Producera restprodukter"
@@ -4625,6 +4608,7 @@ msgstr "Framställning av restprodukter (A + B -> C + D)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "Produced"
 msgstr "Producerad"
@@ -4844,6 +4828,8 @@ msgid "Production started late"
 msgstr "Produktionen startade sent"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
@@ -4952,6 +4938,7 @@ msgstr "Antal färdiga"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__qty_produced
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Quantity Produced"
@@ -4982,8 +4969,17 @@ msgstr "Kvantitet att konsumera"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__quantity
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_to_produce
 msgid "Quantity To Produce"
 msgstr "Kvantitet att producera"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
+msgid ""
+"Quantity already processed in this work order. If continuous production is "
+"active on the bill of materials, recording quantities will unblock the next "
+"operation."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_capacity
@@ -5015,6 +5011,7 @@ msgstr "Råa rörelser"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__assigned
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Ready"
 msgstr "Redo"
 
@@ -5098,6 +5095,11 @@ msgid "References"
 msgstr "Referenser"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Remaining"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_relative_date_unformatted_field.js:0
 msgid "Remaining Days"
@@ -5142,6 +5144,12 @@ msgstr "Återuppfyllnad"
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Reporting"
 msgstr "Rapportering"
+
+#. module: mrp
+#: model:ir.actions.server,name:mrp.mrp_production_action_reserve
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Reserve"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -5288,6 +5296,21 @@ msgid "Select Operations to Copy"
 msgstr "Välj operationer att kopiera"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
+msgid ""
+"Select to customise operation dependencies. When checked, operations will be "
+"in parallel by default."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
+msgid ""
+"Select to enable continuous production. When checked, operations will start "
+"as soon as some quantities are ready."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__sequence
@@ -5312,11 +5335,6 @@ msgid "Serial number(s) for product %(product_name)s already produced"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
-msgid "Set Quantities & Validate"
-msgstr "Ange kvantiteter och validera"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Set Quantity"
 msgstr "Ställ in kvantitet"
@@ -5333,15 +5351,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"Ange i vilken ordning arbetsordrar ska behandlas. Aktivera funktionen under "
-"fliken Övrigt i varje BoM"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5370,11 +5379,6 @@ msgstr "Butiksgolv"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
 msgid "Show Allocation"
 msgstr "Visa tilldelning"
-
-#. module: mrp
-#: model:ir.actions.server,name:mrp.action_open_bom_lines
-msgid "Show BoM Lines"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
@@ -5418,16 +5422,6 @@ msgid "Show Lock/unlock buttons"
 msgstr "Visa knappar för låsning/upplåsning"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
-msgid "Show Produce"
-msgstr "Visa produkter"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
-msgid "Show Produce All"
-msgstr "Visa Producera Alla"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_set_bom_button
 msgid "Show Set Bom Button"
 msgstr ""
@@ -5462,6 +5456,14 @@ msgstr "Massivt trä är ett hållbart naturmaterial."
 #: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
 msgstr "Bord i massivt trä."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid ""
+"Some product have invalid variants.\n"
+"\t%(error_message)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5626,6 +5628,11 @@ msgid "Stock After Manufacturing Rule"
 msgstr "Regel för lager efter tillverkning"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_allocation_report
+msgid "Stock Allocation Report"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
 msgid "Stock Availability"
 msgstr "Tillgänglighet i lager"
@@ -5644,11 +5651,6 @@ msgstr "Lagerrörelser av producerade varor"
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
 msgid "Stock Moves"
 msgstr "Lagerflyttar"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_report_stock_report_reception
-msgid "Stock Reception Report"
-msgstr "Rapport om mottagande av aktier"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
@@ -5741,17 +5743,6 @@ msgid "Technical field for workcenter views"
 msgstr "Tekniskt fält för arbetscentervyer"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
-msgid "Technical field to check if produce all button can be shown"
-msgstr ""
-"Tekniskt fält för att kontrollera om knappen för att producera allt kan visas"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
-msgid "Technical field to check if produce button can be shown"
-msgstr "Tekniskt fält för att kontrollera om produktionsknappen kan visas"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
 msgstr "Tekniskt fält för att kontrollera när vi kan reservera kvantiteter"
@@ -5842,11 +5833,6 @@ msgid "The manufacturing order has been unplanned."
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
-msgid "The number of products already handled by this work order"
-msgstr "Antal produkter som redan hanterats av denna arbetsorder"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__operation_id
 msgid ""
 "The operation where the components are consumed, or the finished products "
@@ -5910,6 +5896,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_to_produce
+msgid "The quantity to produce in this workorder in the backorders chain."
 msgstr ""
 
 #. module: mrp
@@ -6078,6 +6069,12 @@ msgstr "Denna produktion har slagits samman i %s"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+msgid "This production order has been closed."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "This production order has been created from Replenishment Report."
 msgstr "Denna produktionsorder har skapats från Påfyllnadsrapport."
@@ -6119,11 +6116,6 @@ msgstr "Tidseffektivitet"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
 msgid "Time Logs"
 msgstr "Tidsloggar"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "Time Remaining"
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6219,7 +6211,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_finished
 msgid "To Produce"
 msgstr "Att producera"
 
@@ -6300,8 +6291,14 @@ msgstr "Total kvantitet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
 msgid "Total Quantity"
 msgstr "Totalt antal"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
+msgid "Total Remaining"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6315,9 +6312,9 @@ msgid "Total Running Orders"
 msgstr "Totalt antal löpande order"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_raw
-msgid "Total To Consume"
-msgstr "Totalt att konsumera"
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
+msgid "Total To Produce"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -6376,6 +6373,11 @@ msgid "Transfers"
 msgstr "Flyttar"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
+msgid "Type of Operation"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
@@ -6393,14 +6395,12 @@ msgstr "Kan inte delas med fler än den kvantitet som ska produceras."
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
 msgstr "Demontera"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
 msgstr "Unbuild Order"
 
@@ -6412,12 +6412,6 @@ msgid "Unbuild Orders"
 msgstr "Demontera ordrar"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid "Unbuild: %s"
-msgstr "Unbuild: %s"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
 msgstr "Ej byggda"
@@ -6426,6 +6420,13 @@ msgstr "Ej byggda"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
 msgstr "Obyggd"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_confirm_production
+msgid ""
+"Uncheck this option if you want to create a draft production order on "
+"replenishment, instead of a confirmed one."
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6511,7 +6512,6 @@ msgstr "Utan plan"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr "Avboka"
 
@@ -6519,6 +6519,11 @@ msgstr "Avboka"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
 msgstr "Uppdatering BoM"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
+msgid "Update Quantities & Validate"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -6533,16 +6538,6 @@ msgid ""
 msgstr ""
 "Använd tillverkningsorder (MO) för att bygga färdiga produkter samtidigt som "
 "du förbrukar komponenter: t.ex. 1 bord = 4 bordsben + 1 bordsskiva"
-
-#. module: mrp
-#: model:res.groups,name:mrp.group_mrp_workorder_dependencies
-msgid "Use Operation Dependencies"
-msgstr "Använda Operation Beroenden"
-
-#. module: mrp
-#: model:res.groups,name:mrp.group_mrp_reception_report
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "Använd mottagningsrapport med tillverkningsorder"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6610,15 +6605,6 @@ msgid "View Planning"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr ""
-"Visa och fördela produktionskvantiteter till kundorder eller andra "
-"tillverkningsorder"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
@@ -6667,26 +6653,6 @@ msgstr "Varningar"
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
 msgstr "Slitlager"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__website_message_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__website_message_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__website_message_ids
-msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__website_message_ids
-#: model:ir.model.fields,help:mrp.field_mrp_production__website_message_ids
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__website_message_ids
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__website_message_ids
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter__website_message_ids
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__website_message_ids
-msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
@@ -7267,11 +7233,6 @@ msgid "copy paste a list and/or use Generate"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid "days"
-msgstr "dagar"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "expected duration"
@@ -7285,6 +7246,7 @@ msgstr "från plats"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/stock_picking.py:0
 msgid "id"
 msgstr "id"
@@ -7311,6 +7273,12 @@ msgstr "tillverkningsorder"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/report/stock_allocation_report.py:0
+msgid "manufacturing orders"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "merged"
 msgstr "sammanslagen"
@@ -7331,6 +7299,11 @@ msgid "per workcenter"
 msgstr "per arbetscenter"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "product_qty"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
 msgstr "kvantiteten har uppdaterats."
@@ -7345,48 +7318,3 @@ msgstr "verklig varaktighet"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "split"
-
-#~ msgid "Final Location from procurement"
-#~ msgstr "Slutlig plats från upphandling"
-
-#~ msgid ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Upload files to your product\n"
-#~ "                    </p><p>\n"
-#~ "                        Use this feature to store any files, like "
-#~ "drawings or specifications.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Ladda upp filer till din produkt\n"
-#~ "                    </p><p>\n"
-#~ "                        Använd den här funktionen för att lagra filer, "
-#~ "t.ex. ritningar eller specifikationer.\n"
-#~ "                    </p>"
-
-#~ msgid "Attachments Count"
-#~ msgstr "Antal bilagor"
-
-#~ msgid "Files attached to the product."
-#~ msgstr "Filer som bifogas produkten."
-
-#~ msgid "Hidden"
-#~ msgstr "Dolda"
-
-#~ msgid ""
-#~ "Leave hidden if document only accessible on product form.\n"
-#~ "Select Bill of Materials to visualise this document as a product "
-#~ "attachment when this product is in a bill of material."
-#~ msgstr ""
-#~ "Lämna dold om dokumentet endast är tillgängligt på produktformuläret.\n"
-#~ "Välj Bill of Materials för att visualisera det här dokumentet som en "
-#~ "produktbilaga när produkten finns i en materialförteckning."
-
-#~ msgid "MRP : Visible at"
-#~ msgstr "MRP: Synlig vid"
-
-#~ msgid "Product Attachments"
-#~ msgstr "Produkttillbehör"
-
-#~ msgid "Product Document"
-#~ msgstr "Produktdokument"

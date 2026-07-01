@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-05-09 01:13+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -46,8 +46,8 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Real Margins"
-msgstr "Márgenes reales de %(name)s"
+msgid "%(name)s's Margins"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -248,12 +248,6 @@ msgid "Create Project"
 msgstr "Crear proyecto"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
-msgid "Create Sales Order"
-msgstr "Crear orden de venta"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
@@ -341,6 +335,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Customer"
 msgstr "Cliente"
@@ -427,7 +422,6 @@ msgid "Invoice your milestones when they are reached."
 msgstr "Facture sus objetivos cuando los alcance."
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
 msgstr "Facture su tiempo y materiales a sus clientes"
@@ -477,6 +471,13 @@ msgstr ""
 "hoja de horas correspondiente.\n"
 "Crear una tarea y hacer un seguimiento de las horas: cree una tarea en la "
 "validación de la orden de venta y haga un seguimiento de las horas laborales."
+
+#. module: sale_project
+#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
+#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
+msgid "Margins"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -656,17 +657,6 @@ msgid "Real Costs"
 msgstr "Costos reales"
 
 #. module: sale_project
-#: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
-msgid "Real Margin"
-msgstr "Margen real"
-
-#. module: sale_project
-#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
-#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
-msgid "Real Margins"
-msgstr "Márgenes reales"
-
-#. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
 msgid "Revenues"
 msgstr "Ingresos"
@@ -730,6 +720,7 @@ msgstr "Orden de venta"
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_kanban_inherit_sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
@@ -1028,21 +1019,3 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "Ingresos (tiempo y material)"
-
-#~ msgid "Timesheets (Fixed Price)"
-#~ msgstr "Registro de horas (precio fijo)"
-
-#~ msgid "Timesheets (Non-Billable)"
-#~ msgstr "Registro de horas (no facturable)"
-
-#~ msgid "Timesheets (Manual) "
-#~ msgstr "Registro de horas (manual)"
-
-#~ msgid "Timesheets (Milestones)"
-#~ msgstr "Registro de horas (objetivos)"
-
-#~ msgid "Timesheets (Time & Materials)"
-#~ msgstr "Registro de horas (tiempo y materiales)"

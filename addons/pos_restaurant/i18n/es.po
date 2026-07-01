@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-05-05 18:00+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -72,6 +72,11 @@ msgstr ""
 "200 gramos de carne de ternera irlandesa Black Angus, cebollas caramelizadas "
 "con pimentón, lechuga iceberg, cebolla roja, panceta, salsa de tomate, "
 "pepinillos y salsa BBQ"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
+msgid "<br/>Guest"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
@@ -722,7 +727,6 @@ msgstr "Verduras a la plancha"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 msgid "Guest"
 msgstr "Invitado"
 
@@ -940,11 +944,6 @@ msgstr ""
 #: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
 msgid "Old Fashioned"
 msgstr "Old Fashioned"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
-msgid "Options"
-msgstr "Opciones"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__line_ids
@@ -1322,11 +1321,6 @@ msgid "Shapes"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.pa_sides
-msgid "Sides"
-msgstr "Guarniciones"
-
-#. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Size"
@@ -1399,10 +1393,15 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
+msgid "T %s"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 msgid "Table"
 msgstr "Mesa"
@@ -1692,15 +1691,3 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr ""
-
-#~ msgid " and $1"
-#~ msgstr " y 1 dólar"
-
-#~ msgid "Message"
-#~ msgstr "Mensaje"
-
-#~ msgid "Note"
-#~ msgstr "Nota"
-
-#~ msgid "Split"
-#~ msgstr "Dividir"

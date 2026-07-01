@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-04-18 13:39+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -242,6 +242,12 @@ msgstr "Tambahkan ke keranjang"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Address"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Afternoon"
 msgstr ""
@@ -257,6 +263,12 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
 msgstr "Terjadi error"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.js:0
+msgid "Are you sure you want to cancel the cash machine payment?"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -344,6 +356,12 @@ msgstr "Batalkan pesanan"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+msgid "Cancellation in progress"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Cancelled"
 msgstr "Dibatalkan"
@@ -389,6 +407,7 @@ msgstr "Kota"
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Close"
 msgstr "Tutup"
 
@@ -425,6 +444,12 @@ msgstr "Pengaturan Konfigurasi"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.xml:0
 msgid "Confirm"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.js:0
+msgid "Confirm cancellation"
 msgstr ""
 
 #. module: pos_self_order
@@ -687,6 +712,12 @@ msgid "Enter your tracker number"
 msgstr "Masukkan nomor pelacak Anda"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Error while creating the order. Please try again."
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Evening"
@@ -855,6 +886,12 @@ msgstr "Gambar untuk ditampilkan di latar belakang"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Image to display on the self order screen"
 msgstr "Gambar untuk ditampilkan pada layar self order"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Impossible to create a new order."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1163,6 +1200,7 @@ msgstr "Asal"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Out of stock"
 msgstr "Out of stock"
 
@@ -1755,6 +1793,13 @@ msgid "The mail template with xmlid %s has been deleted."
 msgstr "Templat email dengan xmlid %s telah dihapus."
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid ""
+"The shop is currently closed but you can still place an order for later."
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "The user must be a POS user"
@@ -1769,7 +1814,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.js:0
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Today"
 msgstr "Hari Ini"
@@ -1779,12 +1823,6 @@ msgstr "Hari Ini"
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Tommorrow"
 msgstr "Besok"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.js:0
-msgid "Tomorrow"
-msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1808,12 +1846,6 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
 msgstr "URL:"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-msgid "Unavailable"
-msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript

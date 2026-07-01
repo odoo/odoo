@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-06-30 00:51+0000\n"
 "PO-Revision-Date: 2026-04-11 14:30+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -45,7 +45,7 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Real Margins"
+msgid "%(name)s's Margins"
 msgstr ""
 
 #. module: sale_project
@@ -233,12 +233,6 @@ msgid "Create Project"
 msgstr "프로젝트 생성"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
-msgid "Create Sales Order"
-msgstr "판매주문서 생성"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
@@ -318,6 +312,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Customer"
 msgstr "고객"
@@ -404,7 +399,6 @@ msgid "Invoice your milestones when they are reached."
 msgstr "마일스톤에 도달하게 되면 청구서를 발행하십시오."
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
 msgstr "시간 및 재료를 고객에게 청구하십시오"
@@ -453,6 +447,13 @@ msgstr ""
 "연락처의 작업 기록 : 청구서에 관련된 작업 기록에 추적된 시간을 반영합니다. \n"
 "작업 생성 및 시간 추적 : 판매 주문 승인에서 작업을 생성하고 작업 시간을 추적"
 "합니다."
+
+#. module: sale_project
+#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
+#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
+msgid "Margins"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -629,17 +630,6 @@ msgid "Real Costs"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
-msgid "Real Margin"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
-#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
-msgid "Real Margins"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
 msgid "Revenues"
 msgstr ""
@@ -703,6 +693,7 @@ msgstr "판매 주문"
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_kanban_inherit_sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"

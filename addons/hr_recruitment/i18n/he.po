@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2026-01-16 05:40+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -608,6 +608,11 @@ msgid "Add to Pool"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Add to this Job"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
 msgid "Add/Remove Followers"
 msgstr "הוספה/הסרה של עוקבים"
@@ -791,7 +796,6 @@ msgstr "דוא\"ל פניה"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linked_applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__applicant_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
@@ -819,6 +823,7 @@ msgid "Applied on"
 msgstr "חל על"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Apply"
 msgstr ""
@@ -883,11 +888,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-msgid "Attach a file"
-msgstr "צרף קובץ"
-
-#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_ir_attachment
 msgid "Attachment"
 msgstr "קובץ מצורף"
@@ -900,15 +900,9 @@ msgstr "כמות קבצים מצורפים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__attachment_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__attachment_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
 msgid "Attachments"
 msgstr "קבצים מצורפים"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__author_id
-msgid "Author"
-msgstr "מחבר"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
@@ -944,7 +938,6 @@ msgstr "חסום"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body_has_template_value
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "תוכן הגוף זהה לתבנית."
 
@@ -991,7 +984,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__can_edit_body
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__can_edit_body
 msgid "Can Edit Body"
 msgstr "ניתן לערוך גוף"
 
@@ -1074,7 +1066,6 @@ msgstr "תוכן"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body
 msgid "Contents"
 msgstr "תוכן"
 
@@ -1156,7 +1147,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
@@ -1173,7 +1163,6 @@ msgstr "נוצר על-ידי"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_date
@@ -1374,7 +1363,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
@@ -1453,6 +1441,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
+msgid "Duplicates the selected Talent profile(s) for the selected Job Position"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1717,7 +1710,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
@@ -1919,7 +1911,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__is_mail_template_editor
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
 msgid "Is Editor"
 msgstr "האם עורך"
 
@@ -2067,7 +2058,6 @@ msgstr "מדד משאבי אנוש ערך גיוס עמיתים חדשים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__lang
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
 msgid "Language"
 msgstr "שפה"
 
@@ -2090,7 +2080,6 @@ msgstr "עדכון השלב האחרון"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
@@ -2107,7 +2096,6 @@ msgstr "עודכן לאחרונה על-ידי"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
@@ -2181,19 +2169,9 @@ msgid "Load sample data"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-msgid "Load template"
-msgstr "טען תבנית"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "זיהוי הודעות נכנסות מבוסס על החלק המקומי בכתובת"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
-msgid "Mail Template"
-msgstr "תבנית דואר"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
@@ -2204,6 +2182,12 @@ msgstr "קובץ ראשי מצורף"
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
 msgstr "תואר שני"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "Matching Talents"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
@@ -2428,6 +2412,11 @@ msgid "No talent pools yet"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Non-Linked Talents"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
 msgid "Normal"
 msgstr "נורמלי"
@@ -2554,7 +2543,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
@@ -2871,7 +2859,6 @@ msgstr "מרחוק"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__render_model
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
 msgid "Rendering Model"
 msgstr "דגם עיבוד"
 
@@ -3049,19 +3036,12 @@ msgid "Select where the applicant comes from"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-msgid "Send"
-msgstr "שלח"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
 msgstr ""
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
+#: model:ir.actions.act_window,name:hr_recruitment.action_applicant_mass_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
 msgid "Send Email"
 msgstr "שלח דוא\"ל"
@@ -3087,11 +3067,6 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Send applications to"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_applicant_send_mail
-msgid "Send mails to applicants"
-msgstr "שלח מיילים למועמדים"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3244,7 +3219,6 @@ msgstr "סטטוס זמן"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__subject
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__subject
 msgid "Subject"
 msgstr "נושא"
 
@@ -3331,6 +3305,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 msgid "Talents"
 msgstr ""
 
@@ -3383,12 +3358,6 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
 msgstr "התאריך בו המועמד יהיה זמין להתחיל לעבוד"
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
-msgid "The following applicants are missing an email address: %s."
-msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3610,18 +3579,6 @@ msgid "Want to analyse where applications come from ?"
 msgstr "רוצה לנתח מהיכן מגיעות הבקשות?"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website Messages"
-msgstr "הודעות מאתר האינטרנט"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__website_message_ids
-msgid "Website communication history"
-msgstr "היסטורית התקשרויות מאתר האינטרנט"
-
-#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__weekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__weekly
 msgid "Week"
@@ -3653,11 +3610,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
 msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-msgid "Write your message here..."
-msgstr "כתיבת הודעה כאן..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__yearly

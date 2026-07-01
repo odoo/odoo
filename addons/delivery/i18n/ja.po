@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2026-04-04 12:43+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -26,6 +26,15 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.16.2\n"
+
+#. module: delivery
+#: model:ir.actions.report,print_report_name:delivery.action_report_delivery_note
+msgid ""
+"\n"
+"            \"Delivery Note - %s - %s\" % (object.partner_id.name or \"\", "
+"object.name)\n"
+"        "
+msgstr ""
 
 #. module: delivery
 #. odoo-python
@@ -48,6 +57,40 @@ msgstr ""
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "%s (copy)"
 msgstr "%s (コピー)"
+
+#. module: delivery
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_note
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        <t t-if=\"object.tracking_ref\">\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"                <t t-if=\"object.tracking_url\">\n"
+"                    <a t-attf-href=\"{{ object.tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <t t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/"
+">\n"
+"        Thank you,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -98,9 +141,49 @@ msgstr ""
 "                                <span class=\"o_stat_text\">環境</span>"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<span>Delivery Note</span>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Delivery Description</strong>"
 msgstr "<strong>配送説明</strong>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Delivery method</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Order</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Remaining quantities to ship:</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Shipping Date</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "<strong>Tracking Number</strong>"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -212,8 +295,15 @@ msgid "Cash on Delivery"
 msgstr "代金引換"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid "Cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__company_id
 msgid "Company"
 msgstr "会社"
 
@@ -230,6 +320,11 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Configure Methods"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
+msgid "Confirm Shipment"
 msgstr ""
 
 #. module: delivery
@@ -260,6 +355,8 @@ msgstr "顧客を作成"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
 msgid "Created by"
@@ -268,6 +365,8 @@ msgstr "作成者"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
 msgid "Created on"
@@ -287,6 +386,7 @@ msgstr "カスタムモード"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__partner_id
 msgid "Customer"
 msgstr "顧客"
 
@@ -301,6 +401,7 @@ msgid "Define a new delivery method"
 msgstr "新規配送方法の登録"
 
 #. module: delivery
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model:product.category,name:delivery.product_category_deliveries
 msgid "Deliveries"
 msgstr "デリバリー"
@@ -336,10 +437,31 @@ msgstr "配送方法選択ウィザード"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
 msgid "Delivery Methods"
 msgstr "配送方法"
+
+#. module: delivery
+#: model:ir.actions.report,name:delivery.action_report_delivery_note
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
+msgid "Delivery Note"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_note_wizard_line
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_note_list_view
+msgid "Delivery Note Line"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__note_id
+msgid "Delivery Note Reference"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_note_wizard
+msgid "Delivery Note Wizard"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -371,6 +493,11 @@ msgstr "配送郵便番号プレフィックス"
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
 msgstr "送料の再計算が必要です。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__dm_id
+msgid "Delivery method"
+msgstr ""
 
 #. module: delivery
 #. odoo-python
@@ -418,12 +545,14 @@ msgstr "表示順序を決定します"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
 #: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_method__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
-#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
@@ -541,12 +670,14 @@ msgstr "HTTPルーティング"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
 #: model:ir.model.fields,field_description:delivery.field_ir_http__id
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
+#: model:ir.model.fields,field_description:delivery.field_payment_method__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
-#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
@@ -575,6 +706,11 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr "オーダの総重量がこの量を超える場合、この方法は利用できません。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_image
+msgid "Image 128"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -615,6 +751,8 @@ msgstr "配送である"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_uid
 msgid "Last Updated by"
@@ -623,6 +761,8 @@ msgstr "最終更新者"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
 msgid "Last Updated on"
@@ -701,6 +841,16 @@ msgid "Not available for current order"
 msgstr "現在のオーダ用に利用不可"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__name
+msgid "Note Reference"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
+msgid "Operations"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
 msgid "Operator"
 msgstr "作業者"
@@ -711,14 +861,19 @@ msgid "Order"
 msgstr "オーダ"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__so_reference
+msgid "Order reference"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_payment_provider
 msgid "Payment Provider"
 msgstr "決済プロバイダー"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "支払取引"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -771,6 +926,12 @@ msgid "Pricing Rules"
 msgstr "価格設定ルール"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_id
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "Product"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_product_category
 msgid "Product Category"
 msgstr "プロダクトカテゴリ"
@@ -788,10 +949,16 @@ msgid "Provider"
 msgstr "プロバイダー"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_qty
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
 msgid "Quantity"
 msgstr "数量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__remaining_qty_to_ship
+msgid "Remaining Qty To Ship"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -810,6 +977,7 @@ msgstr "販売価格"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__so_id
 msgid "Sales Order"
 msgstr "販売オーダ"
 
@@ -817,6 +985,11 @@ msgstr "販売オーダ"
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "販売オーダ明細"
+
+#. module: delivery
+#: model:mail.template,description:delivery.mail_template_data_delivery_note
+msgid "Sent to the customers when orders are shipped."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -835,6 +1008,27 @@ msgid "Set to True if your credentials are certified for production."
 msgstr "証明書が本稼動のために認定されている場合はTrueに設定します。"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Ship"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid "Ship Order %s"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
+msgid "Shipped"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
+msgid "Shipping Date"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
 msgid "Shipping Weight"
 msgstr "荷物重量"
@@ -847,6 +1041,16 @@ msgid ""
 msgstr ""
 "運送保険は、小包の紛失、盗難、および/または輸送中の損傷を補償するサービスで"
 "す。"
+
+#. module: delivery
+#: model:mail.template,name:delivery.mail_template_data_delivery_note
+msgid "Shipping: Send by Email"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__sol_id
+msgid "Source Sale Order Line"
+msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -876,7 +1080,7 @@ msgid "The Poste"
 msgstr "郵送"
 
 #. module: delivery
-#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
 msgid "The delivery staff will collect payment upon delivery."
 msgstr "配送時に配達員が支払を集金します。"
 
@@ -958,6 +1162,21 @@ msgstr "オーダ重量合計"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
 msgstr "追跡リンク"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_ref
+msgid "Tracking Reference"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_url
+msgid "Tracking URL"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_id
+msgid "Unit"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1064,9 +1283,9 @@ msgid "Your payment has been cancelled."
 msgstr "支払がキャンセルされました。"
 
 #. module: delivery
-#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
-msgid "Your payment has been processed."
-msgstr "支払が処理されました。"
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
+msgid "Your payment has been processed but is waiting for approval."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1079,12 +1298,6 @@ msgid "Zip Prefixes"
 msgstr "郵便番号プレフィックス"
 
 #. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/payment_provider.py:0
-msgid "cash on delivery not allowed by selected delivery method"
-msgstr "選択された配送方法では代金引換はご利用いただけません"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "例. UPS Express"
@@ -1094,3 +1307,10 @@ msgstr "例. UPS Express"
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
 "つまり https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+
+#. module: delivery
+#: model:mail.template,subject:delivery.mail_template_data_delivery_note
+msgid ""
+"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
+"{{ object.so_id.name or 'n/a' }})"
+msgstr ""
