@@ -50,11 +50,11 @@ registerWebsitePreviewTour("website_sale.add_and_remove_main_product_image_no_va
         content: "Ensure the new image is really loaded in DOM before click on remove",
         trigger: `:iframe .o_product_detail_img_wrapper img:not([alt='Test Remove Image'])`,
     },
-    // Double check not placeholder image is loaded with :not(:contains(5.9 kB)
+    // Double check not placeholder image is loaded with :not(:contains(3.7 kB)
     {
         content: "Click on Remove",
         trigger:
-            ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:not(:contains(5.9 kB))) button[data-action-id='removeMedia']",
+            ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:not(:contains(3.7 kB))) button[data-action-id='removeMedia']",
         run: "click",
     },
     // If the snippet editor is not visible, the remove process is considered as finished.
