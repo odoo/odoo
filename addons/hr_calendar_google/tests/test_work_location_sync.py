@@ -4,7 +4,7 @@ from odoo.tools import frozendict
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
-from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleEvent
 from unittest.mock import patch
 
 
@@ -94,7 +94,8 @@ class TestSyncWorkLocationsGoogle(TestSyncGoogle):
             previous_work_locations_count = self.env['hr.work.location'].search_count([])
 
             self.env['calendar.event'].with_user(self.work_location_user)._sync_google2odoo(
-                GoogleEvent([office_location_values, home_location_values, custom_location_values, custom_location_same_values])
+                GoogleEvent([office_location_values, home_location_values, custom_location_values, custom_location_same_values]),
+                self.work_location_user.primary_calendar
             )
 
             current_work_locations_count = self.env['hr.work.location'].search_count([])

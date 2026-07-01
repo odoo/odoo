@@ -1,6 +1,7 @@
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { AttendeeCalendarFilterSection } from "@calendar/views/attendee_calendar/filter/attendee_calendar_filter_section";
 
 /**
  * Add the possibility to display/hide the user pending activities from the attendee calendar
@@ -9,6 +10,7 @@ import { user } from "@web/core/user";
 export class AttendeeCalendarSidePanel extends CalendarSidePanel {
     static components = {
         ...CalendarSidePanel.components,
+        AttendeeCalendarFilterSection,
     };
     static template = "calendar.AttendeeCalendarSidePanel";
 
@@ -33,5 +35,12 @@ export class AttendeeCalendarSidePanel extends CalendarSidePanel {
         this.state.activityFilterChecked = !this.state.activityFilterChecked;
         await user.setUserSettings("calendar_show_activities", this.state.activityFilterChecked);
         await this.props.model.load();
+    }
+
+    /**
+     * @override
+     */
+    get sortedFilterSections() {
+        return this.props.model.filterSections.sort((a, b) => b.fieldName.localeCompare(a.fieldName));
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarFilterSection.filter" t-inherit="web.CalendarFilterSection.filter" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_calendar_filter_item')]//label" position="after">
+            <button
+                t-att-class="'o_edit btn position-absolute top-0 py-0 p-1 bg-view text-body transition-base' + (filter.canRemove ? ' o_edit_end' : ' end-0')"
+                role="img"
+                title="Edit filter"
+                aria-label="Edit filter"
+                t-on-click="() => this.editCalendar(filter)"
+            >
+                <i class="oi oi-ellipsis-v"></i>
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarFilterSection" t-inherit="web.CalendarFilterSection" t-inherit-mode="primary">
+        <!-- Remove the checkbox to select all calendar filters -->
+        <xpath expr="//input[@name='select-all']" position="replace"/>
+        <xpath expr="//div[hasclass('o_calendar_filter_items_checkall')]" position="attributes">
+            <attribute name="class" remove="o-checkbox form-check" add="mt-2" separator=" "/>
+        </xpath>
+    </t>
+</templates>

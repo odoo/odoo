@@ -83,4 +83,11 @@ export class CalendarSidePanel extends Component {
         }
         return res;
     }
+
+    /**
+     * Can be overriden to provide custom sorting
+     */
+    get sortedFilterSections() {
+        return this.props.model.filterSections;
+    }
 }

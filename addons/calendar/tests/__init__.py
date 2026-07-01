@@ -4,7 +4,10 @@ from . import test_access_rights
 from . import test_attendees
 from . import test_calendar
 from . import test_calendar_activity
+from . import test_calendar_calendar
+from . import test_calendar_calendar_user
 from . import test_calendar_controller
+from . import test_calendar_event_calendar
 from . import test_calendar_event_time_extraction
 from . import test_calendar_recurrent_event_case2
 from . import test_calendar_tour
@@ -14,3 +17,4 @@ from . import test_mail_activity_mixin
 from . import test_res_partner
 from . import test_recurrence_rule
 from . import test_res_users
+from . import test_res_users_calendars

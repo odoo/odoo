@@ -21,6 +21,7 @@ export class CalendarFilterSection extends Component {
     static props = {
         model: Object,
         section: Object,
+        placeholder: { type: String, optional: true },
     };
 
     setup() {
@@ -36,7 +37,7 @@ export class CalendarFilterSection extends Component {
         return {
             autoSelect: true,
             resetOnSelect: true,
-            placeholder: _t("+ Add %s", this.section.label),
+            placeholder: this.props.placeholder ?? _t("+ Add %s", this.section.label),
             sources: [
                 {
                     placeholder: _t("Loading..."),

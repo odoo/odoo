@@ -36,6 +36,7 @@ const arch = /*xml*/ `
         <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
             filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
             write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"/>
+        <field name="calendar_id" write_model="calendar.calendar.user" write_field="calendar_id" filters="1" filter_field="is_filter_checked"/>
         <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
         <field name="user_id"/>
         <field name="start"/>
@@ -78,6 +79,12 @@ beforeEach(async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
+    serverData.calendarIds = pyEnv["calendar.calendar"].create([
+        { name: "Primary Calendar" },
+    ])
+    pyEnv["calendar.calendar.user"].create([
+        { calendar_id: serverData.calendarIds[0], user_id: serverState.userId, is_filter_checked: true, is_filter_active: true, is_primary: true },
+    ])
     pyEnv["calendar.filters"].create([
         { partner_id: partnerId_1, partner_checked: true, user_id: serverState.userId },
         { partner_id: partnerId_2, partner_checked: true, user_id: serverData.userId },

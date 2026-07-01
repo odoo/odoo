@@ -3,22 +3,42 @@
 import datetime
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, modules, _
-from odoo.exceptions import AccessError
+from odoo import api, Command, fields, models, modules, _
 from odoo.fields import Domain
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    calendar_default_privacy = fields.Selection(
-        [('public', 'Public by default'),
-         ('private', 'Private by default'),
-         ('confidential', 'Internal users only')],
-        compute="_compute_calendar_default_privacy",
-        inverse="_inverse_calendar_res_users_settings",
-        user_writeable=True,
-    )
+    calendar_users = fields.One2many('calendar.calendar.user', 'user_id')
+    calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_calendar_ids')
+    owned_calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_owned_calendar_ids')
+    writable_calendar_ids = fields.Many2many('calendar.calendar', compute='_compute_writeable_calendar_ids')
+    primary_calendar = fields.Many2one('calendar.calendar', compute='_compute_primary_calendar', store=True)
+
+    @api.depends('calendar_ids')
+    def _compute_primary_calendar(self):
+        for user in self:
+            user.primary_calendar = user.calendar_users.filtered(
+                lambda l: l.is_primary and l.access_role == 'owner').calendar_id
+
+    @api.depends('calendar_users')
+    def _compute_calendar_ids(self):
+        for user in self:
+            user.sudo().calendar_ids = user.calendar_users.mapped('calendar_id')
+
+    @api.depends('calendar_users')
+    def _compute_owned_calendar_ids(self):
+        for user in self:
+            user.owned_calendar_ids = user.calendar_users.filtered(lambda l: l.access_role == 'owner').mapped('calendar_id')
+
+    @api.depends('calendar_users')
+    def _compute_writeable_calendar_ids(self):
+        for user in self:
+            user.writable_calendar_ids = (user.calendar_users.filtered(lambda l: l.access_role in ('owner', 'writer')).mapped('calendar_id'))
+
+    def get_secondary_calendars(self):
+        return self.calendar_users.filtered(lambda l: not (l.is_primary and l.access_role == 'owner')).mapped('calendar_id')
 
     def get_selected_calendars_partner_ids(self, include_user=True):
         """
@@ -39,58 +59,28 @@ class ResUsers(models.Model):
             partner_ids += [self.env.user.partner_id.id]
         return partner_ids
 
-    @api.model
-    def _default_user_calendar_default_privacy(self):
-        """ Get the calendar default privacy from the Default User Template, set public as default. """
-        return self.env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public')
-
     @api.model_create_multi
     def create(self, vals_list):
-        """ Set the calendar default privacy as the same as Default User Template when defined. """
-        default_privacy = self._default_user_calendar_default_privacy()
-        # Update the dictionaries in vals_list with the calendar default privacy.
-        for vals_dict in vals_list:
-            if not vals_dict.get('calendar_default_privacy'):
-                vals_dict.update(calendar_default_privacy=default_privacy)
-
-        res = super().create(vals_list)
-        return res
-
-    def write(self, vals):
-        """ Forbid the calendar default privacy update from different users for keeping private events secured. """
-        privacy_update = 'calendar_default_privacy' in vals
-        if privacy_update and self != self.env.user:
-            raise AccessError(_("You are not allowed to change the calendar default privacy of another user due to privacy constraints."))
-        return super().write(vals)
-
-    @api.depends("res_users_settings_id.calendar_default_privacy")
-    def _compute_calendar_default_privacy(self):
-        """
-        Compute the calendar default privacy of the users, pointing to its ResUsersSettings.
-        When any user doesn't have its setting from ResUsersSettings defined, fallback to Default User Template's.
-        """
-        fallback_default_privacy = 'public'
-        # sudo: any user has access to other users calendar_default_privacy setting
-        if any(not user.sudo().res_users_settings_id.calendar_default_privacy for user in self):
-            fallback_default_privacy = self._default_user_calendar_default_privacy()
-
-        for user in self:
-            user.calendar_default_privacy = user.sudo().res_users_settings_id.calendar_default_privacy or fallback_default_privacy
-
-    def _inverse_calendar_res_users_settings(self):
-        """
-        Updates the values of the calendar fields in 'res_users_settings_ids' to have the same values as their related
-        fields in 'res.users'. If there is no 'res.users.settings' record for the user, then the record is created.
-        """
-        for user in self.filtered(lambda user: user._is_internal()):
-            settings = self.env["res.users.settings"].sudo()._find_or_create_for_user(user)
-            configuration = {field: user[field] for field in self._get_user_calendar_configuration_fields()}
-            settings.sudo().update(configuration)
-
-    @api.model
-    def _get_user_calendar_configuration_fields(self) -> list[str]:
-        """ Return the list of configurable fields for the user related to the res.users.settings table. """
-        return ['calendar_default_privacy']
+        users = super().create(vals_list)
+        default_privacy = self.env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public')
+        calendar_vals_list = [
+            {
+                'calendar_default_privacy': default_privacy,
+                'calendar_users': [
+                    Command.create({
+                        'user_id': user.id,
+                        'access_role': 'owner',
+                        'is_primary': True,
+                        'is_filter_active': True,
+                        'is_filter_checked': True,
+                        'label': 'Primary Calendar',
+                    }),
+                ],
+            }
+            for user in users
+        ]
+        self.env['calendar.calendar'].create(calendar_vals_list)
+        return users
 
     def _systray_get_calendar_event_domain(self):
         # Determine the domain for which the users should be notified. This method sends notification to

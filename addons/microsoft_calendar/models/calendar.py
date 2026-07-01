@@ -193,8 +193,11 @@ class CalendarEvent(models.Model):
         if not notify_context:
             recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
             recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
+            # TODO: allow computed calendar_id writes without forbidding recurrence updates. To be updated when the
+            # Outlook part of multicalendar synchronization is implemented.
+            calendar_update = set(values.keys()).issubset({'calendar_id', 'last_google_calendar_sync_id'}) and bool(values)
             # Check if this is an Outlook recurring event with active sync
-            if recurrence_update_attempt and 'active' not in values:
+            if recurrence_update_attempt and 'active' not in values and not calendar_update:
                 recurring_events = self.filtered('microsoft_recurrence_master_id')
                 if recurring_events and any(
                     event.with_user(organizer)._check_microsoft_sync_status()
@@ -348,12 +351,15 @@ class CalendarEvent(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
+        organizer = microsoft_event.owner_id(self.env)
+        organizer_user = self.env['res.users'].browse(organizer) if organizer else self.env.user
         values = default_values or {}
         values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.body and microsoft_event.body['content'],
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner_id(self.env),
+            'user_id': organizer,
+            'calendar_id': organizer_user.primary_calendar.id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, False),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
@@ -590,7 +596,7 @@ class CalendarEvent(models.Model):
             }
             # Set default privacy in event according to the organizer's calendar default privacy if defined.
             if self.user_id:
-                sensitivity_o2m[False] = sensitivity_o2m.get(self.user_id.calendar_default_privacy)
+                sensitivity_o2m[False] = sensitivity_o2m.get(self.calendar_id.calendar_default_privacy)
             else:
                 sensitivity_o2m[False] = 'normal'
             values['sensitivity'] = sensitivity_o2m.get(self.privacy)

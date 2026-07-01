@@ -88,11 +88,13 @@ class TestCommon(HttpCase):
             "start": self.start_date,
             "stop": self.end_date,
             "partner_ids": [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
+            "calendar_id": self.organizer_user.primary_calendar.id,
         }
         self.recurrent_event_values = {
             'name': 'recurring_event',
             'description': 'a recurring event',
             "partner_ids": [(4, self.attendee_user.partner_id.id)],
+            "calendar_id": self.organizer_user.primary_calendar.id,
             'recurrency': True,
             'follow_recurrence': True,
             'start': self.start_date.strftime("%Y-%m-%d %H:%M:%S"),

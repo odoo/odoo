@@ -2,6 +2,8 @@
 
 from . import ir_http
 from . import res_partner
+from . import calendar_calendar
+from . import calendar_calendar_user
 from . import calendar_event
 from . import calendar_alarm
 from . import calendar_alarm_manager

@@ -15,6 +15,7 @@ class CalendarEvent extends models.Model {
             id: 1,
             user_id: serverState.userId,
             partner_id: serverState.partnerId,
+            calendar_id: 1,
             name: "event 1",
             start: "2016-12-11 00:00:00",
             stop: "2016-12-11 01:00:00",
@@ -25,6 +26,7 @@ class CalendarEvent extends models.Model {
             id: 2,
             user_id: serverState.userId,
             partner_id: serverState.partnerId,
+            calendar_id: 1,
             name: "event 2",
             start: "2016-12-12 10:55:05",
             stop: "2016-12-12 14:55:05",
@@ -35,11 +37,39 @@ class CalendarEvent extends models.Model {
 
     user_id = fields.Many2one({ relation: "users" });
     partner_id = fields.Many2one({ relation: "partner" });
+    calendar_id = fields.Many2one({ relation: "calendar" });
     name = fields.Char();
     start = fields.Datetime();
     stop = fields.Datetime();
     allday = fields.Boolean();
     partner_ids = fields.One2many({ relation: "partner" });
+}
+
+class Calendar extends models.Model {
+    _records = [
+        { id: 1, name: "User 1 Calendar", user_id: serverState.userId, is_primary: true },
+        { id: 2, name: "User 2 Calendar", user_id: 2, is_primary: true },
+    ];
+
+    name = fields.Char();
+    user_id = fields.Many2one({ relation: "users" });
+    is_primary = fields.Boolean();
+}
+
+class CalendarCalendarUser extends models.Model {
+    _records = [
+        { id: 1, user_id: serverState.userId, calendar_id: 1, is_filter_checked: true, is_filter_active: true, access_role: "owner", is_primary: true },
+        { id: 2, user_id: 2, calendar_id: 2, is_filter_checked: true, is_filter_active: true, access_role: "owner", is_primary: true },
+    ];
+
+    user_id = fields.Many2one({ relation: "users" });
+    calendar_id = fields.Many2one({ relation: "calendar" });
+    access_role = fields.Selection({
+        selection: [["owner", "owner"], ["writer", "write"], ["reader", "read"], ["freeBusyReader", "freeBusyReader"], ["none", "none"]]
+    });
+    is_filter_checked = fields.Boolean();
+    is_filter_active = fields.Boolean();
+    is_primary = fields.Boolean();
 }
 
 class CalendarFilter extends models.Model {
@@ -98,6 +128,8 @@ class Users extends models.Model {
 
 defineModels([
     CalendarEvent,
+    Calendar,
+    CalendarCalendarUser,
     CalendarFilter,
     HrEmployee,
     HrWorkLocation,
@@ -180,6 +212,7 @@ function mountHomeWorkingView() {
         arch: `
             <calendar js_class="attendee_calendar" event_open_popup="1" date_start="start" date_stop="stop" all_day="allday">
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}" filters="1" write_model="calendar.filter" write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"/>
+                <field name="calendar_id" filters="1" write_model="calendar.calendar.user" write_field="calendar_id" filter_field="is_filter_checked"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
                 <field name="user_id"/>
                 <field name="start"/>

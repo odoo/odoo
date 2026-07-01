@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { CalendarFormView } from "./calendar_form_view";
-import { CalendarFormController } from "./calendar_form_controller";
+import { CalendarEventFormView } from "./calendar_event_form_view";
+import { CalendarEventFormController } from "./calendar_event_form_controller";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 export const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
@@ -39,7 +39,7 @@ function getDefaultValuesFromRecord(data) {
     return context;
 }
 
-export class CalendarQuickCreateFormController extends CalendarFormController {
+export class CalendarEventQuickCreateFormController extends CalendarEventFormController {
 
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data);
@@ -75,18 +75,18 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     }
 }
 
-registry.category("views").add("calendar_quick_create_form_view", {
-    ...CalendarFormView,
-    Controller: CalendarQuickCreateFormController,
+registry.category("views").add("calendar_event_quick_create_form_view", {
+    ...CalendarEventFormView,
+    Controller: CalendarEventQuickCreateFormController,
 });
 
-export class CalendarQuickCreate extends FormViewDialog {
+export class CalendarEventQuickCreate extends FormViewDialog {
 
     setup() {
         super.setup();
         Object.assign(this.viewProps, {
             ...this.viewProps,
-            buttonDialogTemplate: "calendar.CalendarQuickCreateButtons",
+            buttonDialogTemplate: "calendar.CalendarEventQuickCreateButtons",
         });
     }
 }

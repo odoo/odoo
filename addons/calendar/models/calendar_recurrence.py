@@ -98,6 +98,8 @@ class CalendarRecurrence(models.Model):
     base_event_id = fields.Many2one(
         'calendar.event', ondelete='set null', copy=False)  # store=False ?
     calendar_event_ids = fields.One2many('calendar.event', 'recurrence_id')
+    calendar_id = fields.Many2one('calendar.calendar', string='Calendar', index='btree',
+        default=lambda self: self.env.user.primary_calendar, ondelete='cascade')
     event_tz = fields.Selection(
         _tz_get, string='Timezone',
         default=lambda self: self.env.context.get('tz') or self.env.user.tz)

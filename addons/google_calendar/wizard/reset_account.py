@@ -15,8 +15,11 @@ class GoogleCalendarAccountReset(models.TransientModel):
     def reset_account(self):
         if self.delete_events:
             events = self.env['calendar.event'].search([
-                ('user_id', '=', self.user_id.id),
-                ('google_id', '!=', False)])
+                ('google_id', '!=', False),
+                '|',
+                    ('calendar_id', 'in', self.user_id.calendar_ids.ids),
+                    ('user_id', '=', self.user_id.id)
+                ])
             recurrences = self.env['calendar.recurrence'].search([
                 ('base_event_id', 'in', events.ids),
                 ('google_id', '!=', False)])

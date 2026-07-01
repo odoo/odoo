@@ -9,12 +9,12 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 
 
 class CalendarEvent(models.Model):
     _name = 'calendar.event'
-    _inherit = ['calendar.event', 'google.calendar.sync']
+    _inherit = ['calendar.event', 'google.event.sync']
 
     MEET_ROUTE = 'meet.google.com'
 
@@ -45,7 +45,7 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _get_google_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'allday', 'start', 'date_end', 'stop', 'calendar_id',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
     @api.model
@@ -108,7 +108,9 @@ class CalendarEvent(models.Model):
         skip_event_permission = self.env.context.get('skip_event_permission', False)
         # Edge case 3: check if event is synchronizable in order to make sure the error is worth it.
         is_synchronizable = self._check_values_to_sync(values)
-        if google_sync_restart or skip_event_permission or not is_synchronizable:
+        # Edge case 4: archiving an event should always be allowed.
+        archiving = 'active' in values and not values['active']
+        if google_sync_restart or skip_event_permission or not is_synchronizable or archiving:
             return
         if any(event.guests_readonly and self.env.user.id != event.user_id.id for event in self):
             raise ValidationError(
@@ -130,7 +132,9 @@ class CalendarEvent(models.Model):
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return Domain([
-            ('partner_ids.user_ids', 'in', self.env.user.id),
+            '|',
+                ('partner_ids.user_ids', 'in', self.env.user.id),
+                ('calendar_id', 'in', self.env.user.calendar_ids.ids),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
@@ -138,27 +142,32 @@ class CalendarEvent(models.Model):
         ])
 
     @api.model
-    def _odoo_values(self, google_event, default_reminders=()):
+    def _odoo_values(self, google_event, calendar, default_reminders=()):
         if google_event.is_cancelled():
             return {'active': False}
 
         # default_reminders is never () it is set to google's default reminder (30 min before)
         # we need to check 'useDefault' for the event to determine if we have to use google's
         # default reminder or not
-        reminder_command = google_event.reminders.get('overrides')
+        # google_event.reminders can be None in non-primary calendars such as country specific holidays
+        reminders = google_event.reminders or {}
+        reminder_command = reminders.get('overrides')
         if not reminder_command:
-            reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
+            reminder_command = reminders.get('useDefault') and default_reminders or ()
         alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
+            'calendar_id': calendar.id,
+            'last_google_calendar_sync_id': calendar.get_google_path(),
             'name': name,
             'description': google_event.description and tools.html_sanitize(google_event.description),
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or False,
             'attendee_ids': attendee_commands,
+            'partner_ids': [],
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
             'videocall_location': google_event.get_meeting_url(),
@@ -201,12 +210,6 @@ class CalendarEvent(models.Model):
         attendee_commands = []
         partner_commands = []
         google_attendees = google_event.attendees or []
-        if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
-            user = google_event.owner(self.env)
-            google_attendees += [{
-                'email': user.partner_id.email,
-                'responseStatus': 'accepted',
-            }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
@@ -258,7 +261,7 @@ class CalendarEvent(models.Model):
             if alarm:
                 commands += [(4, alarm.id)]
             else:
-                if minutes % (60*24) == 0:
+                if minutes % (60 * 24) == 0:
                     interval = 'days'
                     duration = minutes / 60 / 24
                     name = _(
@@ -291,7 +294,7 @@ class CalendarEvent(models.Model):
         google_service = GoogleCalendarService(self.env['google.service'])
         archive_future_events = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
         if recurrence_update_setting == 'all_events' or archive_future_events:
-            self.recurrence_id.with_context(is_recurrence=True)._google_delete(google_service, self.recurrence_id.google_id)
+            self.recurrence_id.with_context(is_recurrence=True)._google_delete(google_service, self.calendar_id.get_google_path(), self.recurrence_id.google_id)
             # Increase performance handling 'future_events' edge case as it was an 'all_events' update.
             if archive_future_events:
                 recurrence_update_setting = 'all_events'
@@ -394,7 +397,6 @@ class CalendarEvent(models.Model):
             return self.user_id
         return self.env.user
 
-    def _is_google_insertion_blocked(self, sender_user):
+    def _get_event_owner(self):
         self.ensure_one()
-        has_different_owner = self.user_id and self.user_id != sender_user
-        return has_different_owner
+        return self.user_id

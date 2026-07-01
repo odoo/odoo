@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.CalendarFormDialogButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_remove')]" position="replace">
+            <button t-if="this.model.root.isInEdition and this.props.removeRecord"
+                class="btn btn-danger fa fa-trash h-100 p-2 ms-auto o_form_button_remove"
+                t-on-click="this.props.removeRecord"
+                data-hotkey="x"/>
+        </xpath>
+    </t>
+</templates>

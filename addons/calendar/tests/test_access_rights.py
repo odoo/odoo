@@ -28,6 +28,7 @@ class TestAccessRights(TransactionCase):
             'start': datetime(2020, 2, 2, 8, 0),
             'stop': datetime(2020, 2, 2, 18, 0),
             'user_id': user.id,
+            'calendar_id': user.primary_calendar.id,
             'partner_ids': [(4, self.george.partner_id.id, 0)],
             **values
         })
@@ -163,7 +164,7 @@ class TestAccessRights(TransactionCase):
     def test_event_default_privacy_as_private(self):
         """ Check the privacy of events with owner's event default privacy as 'private'. """
         # Set organizer default privacy as 'private' and create event privacies default, public, private and confidential.
-        self.george.with_user(self.george).calendar_default_privacy = 'private'
+        self.george.with_user(self.george).primary_calendar.calendar_default_privacy = 'private'
         default_event = self.create_event(self.george)
         public_event = self.create_event(self.george, privacy='public')
         private_event = self.create_event(self.george, privacy='private')
@@ -198,23 +199,23 @@ class TestAccessRights(TransactionCase):
         events_partners = [self.john.partner_id.id, self.raoul.partner_id.id]
 
         # Set calendar default privacy as private and create a normal event, only attendees/organizer can edit it.
-        self.john.with_user(self.john).calendar_default_privacy = 'private'
+        self.john.with_user(self.john).primary_calendar.calendar_default_privacy = 'private'
         johns_default_privacy_event = self.create_event(self.john, name='my event with default privacy', attendee_ids=events_attendees, partner_ids=events_partners)
         ensure_user_can_update_event(self, johns_default_privacy_event, self.john)
         ensure_user_can_update_event(self, johns_default_privacy_event, self.raoul)
         with self.assertRaises(AccessError):
             self.assertEqual(len(self.john.res_users_settings_id), 1, "Res Users Settings for the user is not defined.")
-            self.assertEqual(self.john.res_users_settings_id.calendar_default_privacy, 'private', "Privacy field update was lost.")
+            self.assertEqual(self.john.primary_calendar.calendar_default_privacy, 'private', "Privacy field update was lost.")
             johns_default_privacy_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})
 
         # Set calendar default privacy as public and create a private event, only attendees/organizer can edit it.
-        self.john.with_user(self.john).calendar_default_privacy = 'public'
+        self.john.with_user(self.john).primary_calendar.calendar_default_privacy = 'public'
         johns_private_event = self.create_event(self.john, name='my private event', privacy='private', attendee_ids=events_attendees, partner_ids=events_partners)
         ensure_user_can_update_event(self, johns_private_event, self.john)
         ensure_user_can_update_event(self, johns_private_event, self.raoul)
         with self.assertRaises(AccessError):
             self.assertEqual(len(self.john.res_users_settings_id), 1, "Res Users Settings for the user is not defined.")
-            self.assertEqual(self.john.res_users_settings_id.calendar_default_privacy, 'public', "Privacy field update was lost.")
+            self.assertEqual(self.john.primary_calendar.calendar_default_privacy, 'public', "Privacy field update was lost.")
             johns_private_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})
 
     def test_admin_cant_fetch_uninvited_private_events(self):
@@ -317,27 +318,27 @@ class TestAccessRights(TransactionCase):
         """
         for privacy in ['public', 'private', 'confidential']:
             # Update normal user and administrator 'calendar_default_privacy' simulating their own update.
-            self.john.with_user(self.john).write({'calendar_default_privacy': privacy})
-            self.admin_system_user.with_user(self.admin_system_user).write({'calendar_default_privacy': privacy})
-            self.assertEqual(self.john.calendar_default_privacy, privacy, 'Normal user must be able to update its calendar default privacy.')
-            self.assertEqual(self.admin_system_user.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
+            self.john.with_user(self.john).primary_calendar.write({'calendar_default_privacy': privacy})
+            self.admin_system_user.with_user(self.admin_system_user).primary_calendar.write({'calendar_default_privacy': privacy})
+            self.assertEqual(self.john.primary_calendar.calendar_default_privacy, privacy, 'Normal user must be able to update its calendar default privacy.')
+            self.assertEqual(self.admin_system_user.primary_calendar.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
 
             # Update the Default 'calendar.default_privacy' as an administrator.
             self.env['ir.config_parameter'].sudo().set_str("calendar.default_privacy", privacy)
 
             # All calendar default privacy updates must be blocked during write.
             with self.assertRaises(AccessError):
-                self.john.with_user(self.admin_system_user).write({'calendar_default_privacy': privacy})
+                self.john.with_user(self.admin_system_user).primary_calendar.write({'calendar_default_privacy': privacy})
             with self.assertRaises(AccessError):
-                self.admin_system_user.with_user(self.john).write({'calendar_default_privacy': privacy})
+                self.admin_system_user.with_user(self.john).primary_calendar.write({'calendar_default_privacy': privacy})
 
     def test_check_private_event_conditions_by_internal_user(self):
         """ Ensure that internal user (non-admin) will see that admin's event is private. """
         # Update admin calendar_default_privacy with 'private' option. Create private event for admin.
-        self.admin_user.with_user(self.admin_user).write({'calendar_default_privacy': 'private'})
+        self.admin_user.with_user(self.admin_user).primary_calendar.write({'calendar_default_privacy': 'private'})
         admin_user_private_evt = self.create_event(self.admin_user, name='My Event', privacy=False, partner_ids=[self.admin_user.partner_id.id])
 
-        # Ensure that intrnal user will see the admin's event as private.
+        # Ensure that internal user will see the admin's event as private.
         self.assertTrue(
             admin_user_private_evt.with_user(self.raoul)._check_private_event_conditions(),
             "Privacy check must be True since the new event is private (following John's calendar default privacy)."

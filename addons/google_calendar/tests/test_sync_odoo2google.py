@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
@@ -21,6 +21,7 @@ class TestSyncOdoo2GoogleCommon(TestSyncGoogle):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.partner_id.tz = "Europe/Brussels"
+        cls.env.user.primary_calendar.google_id = "primary_calendar_id"
         cls.google_service = GoogleCalendarService(cls.env['google.service'])
         cls.partner_jean_luc = cls.env["res.partner"].create({
             "name": "Jean-Luc",
@@ -139,7 +140,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
                 'res_id': self.partner_jean_luc.id,
             })
 
-        with self.assertQueryCount(__system__=29):
+        with self.assertQueryCount(__system__=31):
             event.unlink()
 
     def test_event_without_user(self):
@@ -976,16 +977,17 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': self.organizer_user.email, 'self': True},
-            'attendees': [
-                            {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
-                            {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
-                         ],
+
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         }
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'attendees': [
+                {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+            ],
         })
 
         event2 = event.copy()
@@ -994,7 +996,8 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
-        })
+            'attendees': [],  # Attendees are added on an update, not on creation.
+        }, timeout=3)
 
     def test_event_over_send_updates(self):
         """Test that events that are over don't sent updates to attendees."""
@@ -1123,7 +1126,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'a.a@example.com', 'responseStatus': 'accepted'}, {'email': 'o.o@example.com', 'responseStatus': 'needsAction'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
-        }, timeout=3)
+        })
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')

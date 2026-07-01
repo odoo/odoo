@@ -2,7 +2,7 @@ import { FormController } from "@web/views/form/form_controller";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
 
-export class CalendarFormController extends FormController {
+export class CalendarEventFormController extends FormController {
     setup() {
         super.setup();
         this.actionService = useService("action");

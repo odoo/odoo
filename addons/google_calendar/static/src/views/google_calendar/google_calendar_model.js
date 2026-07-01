@@ -20,8 +20,10 @@ patch(AttendeeCalendarModel.prototype, {
      * @override
      */
     async updateData() {
+        const reason = this.meta.loadReason;
+        this.meta.loadReason = undefined;
         this.googleSyncTimedOut = false;
-        if (this.state.googlePendingSync) {
+        if (reason === "filters_update" || this.state.googlePendingSync) {
             return super.updateData(...arguments);
         }
         try {
