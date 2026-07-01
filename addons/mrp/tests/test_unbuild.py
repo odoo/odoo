@@ -1230,3 +1230,84 @@ class TestUnbuild(TestMrpCommon):
             {'reference': unbuild.name, 'quantity': 28, 'product_id': p1.id, 'state': 'done'},
             {'reference': unbuild.name, 'quantity': 7, 'product_id': p2.id, 'state': 'done'},
         ])
+
+    def test_unbuild_specific_serial_number_ignores_fifo(self):
+        """
+        Test that unbuilding a specific serial number from an MO ignores
+        the default FIFO behavior and correctly unbuilds the selected lot.
+        """
+        stock_location = self.stock_location
+        product_final = self.env['product.product'].create({
+            'name': 'Final Product SN',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'consu',
+            'is_storable': True,
+        })
+
+        self.env['stock.quant']._update_available_quantity(
+            component,
+            stock_location,
+            5.0,
+        )
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_final.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_qty': 1.0,
+                })
+            ],
+        })
+
+        lot_1 = self.env['stock.lot'].create({'name': 'SN1', 'product_id': product_final.id})
+        lot_2 = self.env['stock.lot'].create({'name': 'SN2', 'product_id': product_final.id})
+        lot_3 = self.env['stock.lot'].create({'name': 'SN3', 'product_id': product_final.id})
+        lot_4 = self.env['stock.lot'].create({'name': 'SN4', 'product_id': product_final.id})
+        lot_5 = self.env['stock.lot'].create({'name': 'SN5', 'product_id': product_final.id})
+
+        fifo_lot = lot_1
+        target_lot = lot_4
+        mo = self.env['mrp.production'].create({
+            'product_id': product_final.id,
+            'bom_id': bom.id,
+            'product_qty': 5.0,
+        })
+        mo.action_confirm()
+
+        mo.lot_producing_ids = lot_1 + lot_2 + lot_3 + lot_4 + lot_5
+        mo._set_qty_producing()
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(product_final, stock_location, lot_id=fifo_lot),
+            1.0,
+            "Le lot FIFO devrait être en stock après production."
+        )
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(product_final, stock_location, lot_id=target_lot),
+            1.0,
+            "Le lot cible devrait être en stock après production."
+        )
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = target_lot
+        unbuild = unbuild_form.save()
+
+        unbuild.action_unbuild()
+
+        self.assertEqual(unbuild.state, 'done', "Unbuild order should be completed.")
+        qty_target_lot = self.env['stock.quant']._get_available_quantity(product_final, stock_location, lot_id=target_lot)
+        qty_fifo_lot = self.env['stock.quant']._get_available_quantity(product_final, stock_location, lot_id=fifo_lot)
+
+        self.assertEqual(qty_target_lot, 0.0, "The selected serial number should be unbuilt.")
+        self.assertEqual(qty_fifo_lot, 1.0, "The FIFO serial number should not be unbuilt.")
