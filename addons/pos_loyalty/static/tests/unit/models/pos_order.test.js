@@ -2,7 +2,11 @@ import { test, describe, expect } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import {
+    addProductLineToOrder,
+    deactivateAllProgramsExcept,
+} from "@pos_loyalty/../tests/unit/utils";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -414,5 +418,53 @@ describe("pos.order - loyalty", () => {
         expect(order.getOrderlines().length).toBe(2);
         const rewardLine = order._get_reward_lines()[0];
         expect(rewardLine.prices.total_included).toBe(-10);
+    });
+
+    test("reward max discount quantity", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const models = store.models;
+        deactivateAllProgramsExcept(store, [1, 9]);
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
+
+        const loyalty_program = models["loyalty.program"].get(1);
+        const loyalty_reward = models["loyalty.reward"].get(4);
+        const loyalty_card = models["loyalty.card"].get(1);
+
+        const code_program = models["loyalty.program"].get(9);
+        const code_rule = models["loyalty.rule"].get(3);
+        const code_reward = models["loyalty.reward"].get(1);
+
+        loyalty_program.reward_ids = [4];
+        loyalty_reward.discount_applicability = "specific";
+        loyalty_reward.all_discount_product_ids = [8];
+        loyalty_reward.discount_max_amount = 100;
+
+        code_program.rule_ids = [3];
+        code_program.reward_ids = [1];
+        code_rule.valid_product_ids = [];
+        code_rule.reward_point_amount = 10;
+        code_rule.minimum_qty = 1;
+        code_reward.discount_applicability = "specific";
+        code_reward.all_discount_product_ids = [8];
+        code_reward.discount_line_product_id = 5;
+
+        const partner1 = models["res.partner"].get(1);
+        order.setPartner(partner1);
+        await store.orderUpdateLoyaltyPrograms();
+
+        await addProductLineToOrder(store, order, {
+            productId: 8,
+            templateId: 8,
+            price_unit: 300,
+            qty: 1,
+        });
+
+        order._applyReward(loyalty_reward, loyalty_card.id);
+        await store.activateCode("EXPIRED");
+
+        expect(order.getOrderlines().length).toBe(3);
+        expect(order.lines[1].prices.total_included).toBe(-100);
+        expect(order.lines[2].prices.total_included).toBe(-27.5);
     });
 });
