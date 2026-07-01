@@ -18,7 +18,7 @@
                     </p>
                 </div>
                 <div class="d-flex flex-column flex-grow-1 gap-2">
-                    <SubChannelPreview t-foreach="this.search.results" t-as="channel" t-key="channel.localId" channel="channel" onClick="() => this.onClickSubChannel(channel)"/>
+                    <SubChannelPreview t-foreach="this.search.results" t-as="channel" t-key="channel.localId" channel="channel" onClick="this.onClickSubChannel"/>
                     <span t-if="!this.search.searchTerm" class="pt-1" t-custom-ref="load-more"/>
                 </div>
             </div>

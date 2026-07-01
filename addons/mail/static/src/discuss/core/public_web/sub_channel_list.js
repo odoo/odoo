@@ -13,6 +13,8 @@ export class SubChannelList extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        // bound once so `onClickSubChannel` is a stable (props.static) handler
+        this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             close: types.function([types.instanceOf(MouseEvent)]).optional(),
@@ -33,10 +35,10 @@ export class SubChannelList extends Component {
     }
 
     /**
-     * @param {import("models").DiscussChannel} subChannel
+     * @type {ReturnType<typeof import("@mail/discuss/core/public_web/sub_channel_preview").subChannelPreviewOnClickType>["type"]}
      */
-    async onClickSubChannel(subChannel) {
-        subChannel.open({ focus: true });
+    async onClickSubChannel(ev, { channelAtRender }) {
+        channelAtRender.open({ focus: true });
         this.props.close?.();
     }
 

@@ -1,8 +1,8 @@
-import { Component, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, signal, t, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
-import { useHover } from "@mail/utils/common/hooks";
+import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -17,10 +17,8 @@ export class DiscussSidebarCallParticipants extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            compact: types.boolean().optional(),
-        });
+        this.channel = propSignal("channel", t.instanceOf(this.store["discuss.channel"].Class));
+        this.compactProp = propComputed("compact", t.boolean().optional());
         this.rtc = useService("discuss.rtc");
         this.hover = useHover(["root", "floating"], {
             onHover: () => (this.floating.isOpen = true),
@@ -42,14 +40,14 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get compact() {
-        if (typeof this.props.compact === "boolean") {
-            return this.props.compact;
+        if (typeof this.compactProp() === "boolean") {
+            return this.compactProp();
         }
         return this.store.discuss.isSidebarCompact;
     }
 
     get lastActiveSession() {
-        const sessions = [...this.props.channel.rtc_session_ids];
+        const sessions = [...this.channel().rtc_session_ids];
         sessions?.sort((s1, s2) => {
             if (s1.isActuallyTalking && !s2.isActuallyTalking) {
                 return -1;
@@ -75,7 +73,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get sessions() {
-        const sessions = [...this.props.channel.rtc_session_ids];
+        const sessions = [...this.channel().rtc_session_ids];
         return sessions.sort((s1, s2) => {
             const member1 = s1.channel_member_id;
             const member2 = s2.channel_member_id;

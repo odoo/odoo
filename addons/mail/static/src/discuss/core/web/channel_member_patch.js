@@ -20,16 +20,22 @@ patch(ChannelMember.prototype, {
     get attClass() {
         return { ...super.attClass, "o-active": this.isAvatarCardOpen() };
     },
-    get isClickable() {
-        return this.member.partner_id;
+    /** @param {import("models").ChannelMember} member */
+    isClickable(member) {
+        return member.partner_id;
     },
-    onClickAvatar(ev) {
-        if (!this.isClickable) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {Object} param1
+     * @param {import("models").ChannelMember} param1.memberAtRender
+     */
+    onClickAvatar(ev, { memberAtRender }) {
+        if (!this.isClickable(memberAtRender)) {
             return;
         }
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.member.partner_id.id,
+                id: memberAtRender.partner_id.id,
                 model: "res.partner",
             });
             this.isAvatarCardOpen.set(true);

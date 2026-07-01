@@ -4,7 +4,7 @@ import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
-import { MessageInReply } from "@mail/core/common/message_in_reply";
+import { MessageInReply, onParentMessageClickType } from "@mail/core/common/message_in_reply";
 import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
@@ -97,7 +97,7 @@ export class Message extends Component {
         });
         this.onParentMessageClick = props.static(
             "onParentMessageClick",
-            t.function([t.instanceOf(this.store["mail.message"].Class)]).optional()
+            onParentMessageClickType(this.store).optional()
         );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
@@ -597,6 +597,7 @@ export class Message extends Component {
         this.optionsDropdown.open();
     }
 
+    /** @type {ReturnType<typeof import("@mail/core/common/message_reaction_list").openReactionMenuType>["type"]} */
     openReactionMenu(reaction) {
         this.dialog.add(
             MessageReactionMenu,

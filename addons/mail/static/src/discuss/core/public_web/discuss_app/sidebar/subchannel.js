@@ -1,6 +1,6 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
-import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
+import { propComputed, useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -14,10 +14,8 @@ export class DiscussSidebarSubchannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            isFirst: types.boolean(),
-        });
+        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"].Class));
+        this.isFirst = propComputed("isFirst", t.boolean());
         this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
@@ -39,13 +37,13 @@ export class DiscussSidebarSubchannel extends Component {
         return _t("Thread Actions");
     }
 
-    get channel() {
-        return this.props.channel;
-    }
-
-    /** @param {MouseEvent} ev */
-    openChannel(ev, channel) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {Object} param1
+     * @param {import("models").DiscussChannel} param1.channelAtRender
+     */
+    openChannel(ev, { channelAtRender }) {
         markEventHandled(ev, "sidebar.openChannel");
-        channel.open();
+        channelAtRender.open();
     }
 }

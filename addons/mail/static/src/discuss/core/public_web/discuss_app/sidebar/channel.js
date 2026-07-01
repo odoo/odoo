@@ -2,7 +2,7 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { DiscussSidebarSubchannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/subchannel";
-import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
+import { propComputed, useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -10,7 +10,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -31,9 +31,7 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-        });
+        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"].Class));
         this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
@@ -52,7 +50,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get actionsTitle() {
-        if (this.channel.channel_type === "channel") {
+        if (this.channel().channel_type === "channel") {
             return _t("Channel Actions");
         }
         return _t("Chat Actions");
@@ -60,13 +58,13 @@ export class DiscussSidebarChannel extends Component {
 
     get attClass() {
         return {
-            "bg-inherit": !this.channel.discussAppAsThread,
-            "o-active": this.channel.discussAppAsThread,
+            "bg-inherit": !this.channel().discussAppAsThread,
+            "o-active": this.channel().discussAppAsThread,
             "o-unread":
-                this.channel.self_member_id?.message_unread_counter > 0 &&
-                !this.channel.self_member_id?.mute_until_dt,
+                this.channel().self_member_id?.message_unread_counter > 0 &&
+                !this.channel().self_member_id?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
-            "opacity-50": this.channel.self_member_id?.mute_until_dt,
+            "opacity-50": this.channel().self_member_id?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "ps-0": !this.store.discuss.isSidebarCompact,
@@ -83,7 +81,7 @@ export class DiscussSidebarChannel extends Component {
     get bordered() {
         return (
             this.store.discuss.isSidebarCompact &&
-            Boolean(this.channel.subChannelsInSidebar?.length)
+            Boolean(this.channel().subChannelsInSidebar?.length)
         );
     }
 
@@ -94,14 +92,9 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread o-fw-600":
-                this.channel.self_member_id?.message_unread_counter > 0 &&
-                !this.channel.self_member_id?.mute_until_dt,
+                this.channel().self_member_id?.message_unread_counter > 0 &&
+                !this.channel().self_member_id?.mute_until_dt,
         };
-    }
-
-    /** @returns {import("models").DiscussChannel} */
-    get channel() {
-        return this.props.channel;
     }
 
     get threadAvatarAttClass() {
@@ -109,38 +102,43 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get subChannels() {
-        return this.channel.subChannelsInSidebar;
+        return this.channel().subChannelsInSidebar;
     }
 
+    /** @param {import("models").DiscussChannel} sub */
     showChannel(sub) {
         if (sub.discussAppAsThread) {
             return true;
         }
-        if (!this.channel.discussAppCategory.is_open) {
+        if (!this.channel().discussAppCategory.is_open) {
             return false;
         }
         if (
-            !this.channel.self_member_id?.mute_until_dt ||
+            !this.channel().self_member_id?.mute_until_dt ||
             sub.self_member_id?.message_unread_counter > 0
         ) {
             return true;
         }
         return (
             this.isSelfOrThreadActive &&
-            !(this.channel.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
+            !(this.channel().self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
         );
     }
 
     get isSelfOrThreadActive() {
         return (
-            this.channel.discussAppAsThread ||
+            this.channel().discussAppAsThread ||
             this.subChannels.some((sub) => sub.discussAppAsThread)
         );
     }
 
-    /** @param {MouseEvent} ev */
-    openChannel(ev, channel) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {Object} param1
+     * @param {import("models").DiscussChannel} param1.channelAtRender
+     */
+    openChannel(ev, { channelAtRender }) {
         markEventHandled(ev, "sidebar.openChannel");
-        channel.open();
+        channelAtRender.open();
     }
 }

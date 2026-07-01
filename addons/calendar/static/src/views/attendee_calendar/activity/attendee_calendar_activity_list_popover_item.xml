@@ -51,10 +51,11 @@
             <attribute name="onClickDone">this.onClickDone</attribute>
         </xpath>
         <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-editbtn')]" position="after">
+            <t t-set="eventAtRender" t-value="this.activity().calendar_event_id"/>
             <button t-if="this.hasViewMeetingButton"
                 title="View Meeting" aria-label="View Meeting"
                 class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
-                t-on-click="() => this.calendarProps.onViewMeeting(this.activity().calendar_event_id)">
+                t-on-click="(ev) => this.calendarProps.onViewMeeting(ev, { eventAtRender })">
                 <i class="fa fa-eye"/>
             </button>
         </xpath>
