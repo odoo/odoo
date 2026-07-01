@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Create channel for the Woocommerce -->
+        <record id="channel_woocommerce" model="queue.job.channel">
+            <field name="name">WooCommerce</field>
+            <field name="parent_id" ref="queue_job.channel_root" />
+        </record>
+        <!-- Import Batch related action queue job -->
+        <record
+            id="job_function_woo_import_res_partner_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_res_partner"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Partners related action queue job -->
+        <record
+            id="job_function_woo_import_res_partner_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_res_partner"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Product Batch related action queue job -->
+        <record
+            id="job_function_woo_import_product_product_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_product"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Product Attribute Batch related action queue job -->
+        <record
+            id="job_function_woo_import_product_attribute_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_attribute"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Product Attribute Value Batch related action queue job -->
+        <record
+            id="job_function_woo_import_product_attribute_value_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_attribute_value"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Product Category Batch related action queue job -->
+        <record
+            id="job_function_woo_import_product_category_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_category"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Products related action queue job -->
+        <record
+            id="job_function_woo_import_product_product_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_product"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Product Attributes related action queue job -->
+        <record
+            id="job_function_woo_import_product_attribute_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_attribute"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Product Attribute Value terms related action queue job -->
+        <record
+            id="job_function_woo_import_product_attribute_value_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_attribute_value"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Product Categories related action queue job -->
+        <record
+            id="job_function_woo_import_product_category_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_category"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Account Tax Import Batch related action queue job  -->
+        <record id="job_function_woo_import_tax_record" model="queue.job.function">
+            <field name="model_id" ref="bad_connector_woocommerce.model_woo_tax" />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Taxes related action queue job -->
+        <record id="job_function_woo_import_tax_batch" model="queue.job.function">
+            <field name="model_id" ref="bad_connector_woocommerce.model_woo_tax" />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Sale Order Import Batch related action queue job -->
+        <record
+            id="job_function_woo_import_sale_order_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Orders related action queue job -->
+        <record
+            id="job_function_woo_import_sale_order_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Sale Order Line related action queue job -->
+        <record
+            id="job_function_woo_import_sale_order_line_import_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order_line"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Batch related action queue job -->
+        <record
+            id="job_function_woo_sale_order_line_import_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order_line"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Sale Order Status Export Batch related action queue job -->
+        <record
+            id="job_function_woo_sale_order_status_export_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order"
+            />
+            <field name="method">export_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Sale Order Status Export Record related action queue job -->
+        <record
+            id="job_function_woo_sale_order_status_export_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_sale_order"
+            />
+            <field name="method">export_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!--Product Tag Import Batch related action queue job -->
+        <record
+            id="job_function_woo_import_product_tag_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_tag"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Product Tag Import Record related action queue job -->
+        <record
+            id="job_function_woo_import_product_tag_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_tag"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!--Delivery Carrier Import Batch related action queue job -->
+        <record
+            id="job_function_woo_import_delivery_carrier_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_delivery_carrier"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Delivery Carrier Import Record related action queue job -->
+        <record
+            id="job_function_woo_import_delivery_carrier_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_delivery_carrier"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Country and State related action queue job -->
+        <record
+            id="job_function_woo_import_res_country_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_res_country"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Res Country and there States related action queue job -->
+        <record
+            id="job_function_woo_import_res_country_import_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_res_country"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Settings related action queue job -->
+        <record id="job_function_woo_import_settings_batch" model="queue.job.function">
+            <field name="model_id" ref="bad_connector_woocommerce.model_woo_settings" />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Settings related action queue job -->
+        <record
+            id="job_function_woo_import_settings_import_record"
+            model="queue.job.function"
+        >
+            <field name="model_id" ref="bad_connector_woocommerce.model_woo_settings" />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Record product.template related action queue job -->
+        <record
+            id="job_function_woo_import_product_template_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_template"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Batch product.template related action queue job -->
+        <record
+            id="job_function_woo_import_product_template_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_template"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!--Stock Update Export Batch related action queue job -->
+        <record
+            id="job_function_woo_stock_inventory_export_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_product"
+            />
+            <field name="method">export_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Stock Inventory Export Record related action queue job -->
+        <record
+            id="job_function_woo_product_product_stock_export_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_product"
+            />
+            <field name="method">export_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!--Stock Update Export Batch Template related action queue job -->
+        <record
+            id="job_function_woo_stock_inventory_template_export_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_template"
+            />
+            <field name="method">export_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Stock Inventory Export Record Template related action queue job -->
+        <record
+            id="job_function_woo_product_template_stock_export_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_product_template"
+            />
+            <field name="method">export_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+
+        <!-- Import Payment Gateways related action queue job -->
+        <record
+            id="job_function_woo_import_payment_gateway_batch"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_payment_gateway"
+            />
+            <field name="method">import_batch</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Payment Gateways related action queue job -->
+        <record
+            id="job_function_woo_import_payment_gateway_import_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_payment_gateway"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!--Stock Picking Refund Export Record related action queue job -->
+        <record
+            id="job_function_woo_stock_picking_refund_export_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_stock_picking_refund"
+            />
+            <field name="method">export_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+        <!-- Import Refund related action queue job -->
+        <record
+            id="job_function_woo_import_woo_stock_picking_refund_import_record"
+            model="queue.job.function"
+        >
+            <field
+                name="model_id"
+                ref="bad_connector_woocommerce.model_woo_stock_picking_refund"
+            />
+            <field name="method">import_record</field>
+            <field name="channel_id" ref="channel_woocommerce" />
+        </record>
+    </data>
+</odoo>

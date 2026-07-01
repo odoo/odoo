@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Template for sale order due reminder-->
+    <data noupdate="1">
+        <record id="sale_order_due_mail_template" model="mail.template">
+            <field name="name">Sale Order: Due Reminder Email</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="email_from">{{ object.company_id.partner_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="subject">Reminder for {{ object.name }} Expiration</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <h4><b>Dear <t t-out="object.partner_id.name"/>,</b></h4>
+                        <br/>
+                        Sale Order - <b><t t-out="object.name"/></b> is going to expire.
+                        The due date is on <b><t t-out="object.due_date_order"/></b>.
+                        <br/>
+                        Please take necessary actions.
+                        <br/>
+                        <br/>
+                        <b>More details of Order <t t-out="object.name"/></b> :<br/>
+                        Order Name : <t t-out="object.name"/><br/>
+                        Created Date : <t t-out="object.date_order"/><br/>
+                        Sales Person : <t t-out="object.user_id.partner_id.name"/><br/>
+                        Partner Name :  <t t-out="object.partner_id.name"/><br/>
+                        Total Order Amount : <t t-out="object.amount_total"/><br/>
+                        <br/>
+                    </p>
+                </div>
+            </field>
+        </record>
+<!--        Template for invoice due reminder-->
+         <record id="invoice_due_mail_template" model="mail.template">
+            <field name="name">Invoice: Due Reminder Email</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="email_from">{{ object.company_id.partner_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="subject">Reminder for {{ object.name }} Expiration</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <h4><b>Dear <t t-out="object.partner_id.name"/>,</b></h4>
+                        <br/>
+                        Invoice - <b><t t-out="object.name"/></b> is going to expire.
+                        The due date is on <b><t t-out="object.invoice_date_due"/></b>.
+                        <br/>
+                        Please take necessary actions.
+                        <br/>
+                        <br/>
+                        <b>More details of Invoice <t t-out="object.name"/></b> :<br/>
+                        Invoice Name : <t t-out="object.name"/><br/>
+                        Created Date : <t t-out="object.invoice_date"/><br/>
+                        Sales Person : <t t-out="object.user_id.partner_id.name"/><br/>
+                        Partner Name :  <t t-out="object.partner_id.name"/><br/>
+                        Total Order Amount : <t t-out="object.amount_total"/><br/>
+                        Amount Paid : <t t-out="object.amount_paid"/><br/>
+                        Amount Due : <t t-out="object.amount_residual"/><br/>
+                        <br/>
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

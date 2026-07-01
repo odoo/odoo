@@ -1,0 +1,36 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_product_attribute_line_tree_view">
+        <field name="name">eg.product.attribute.line.tree.view</field>
+        <field name="model">eg.product.attribute.line</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="eg_product_attribute_id"/>
+                <field name="eg_product_tmpl_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_product_attribute_line_from_view">
+        <field name="name">eg.product.attribute.line.form.view</field>
+        <field name="model">eg.product.attribute.line</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="eg_product_attribute_id"/>
+                            <field name="eg_product_tmpl_id"/>
+                        </group>
+                       <field name="eg_value_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_product_attribute_line_action">
+        <field name="name">Product Attribute Lines</field>
+        <field name="res_model">eg.product.attribute.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Product Attribute Lines" id="eg_product_attribute_line_menu" action="eg_product_attribute_line_action"
+              parent="product_mapping_id" sequence="8" groups="base.group_no_one"/>
+</odoo>

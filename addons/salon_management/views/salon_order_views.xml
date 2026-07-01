@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salon_order_view_tree" model="ir.ui.view">
+            <field name="name">salon.order.view.tree</field>
+            <field name="model">salon.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="chair_id" />
+                    <field name="start_time" />
+                    <field name="end_time" />
+                    <field name="currency_id" invisible="1" />
+                    <field name="time_taken_total" widget="float_time" />
+                    <field name="price_subtotal" widget="monetary" />
+                    <field name="stage_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="salon_order_view_kanban" model="ir.ui.view">
+            <field name="name">salon.order.view.kanban</field>
+            <field name="model">salon.order</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column" quick_create="false" on_create="quick_create">
+                    <field name="color" />
+                    <field name="stage_id" />
+                    <field name="currency_id" invisible="1" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v" />
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable">
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit...</a>
+                                        </t>
+                                        <t t-if="widget.deletable">
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                        </t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color" />
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <strong>
+                                            <field name="name" />
+                                        </strong>
+                                    </div>
+                                    <div class="text-muted">
+                                        <a>Customer :</a>
+                                        <field name="customer_name" />
+                                        <div style="float: right;">
+                                            <a>Chair :</a>
+                                            <field name="chair_id" />
+                                        </div>
+                                    </div>
+                                    <div class="text-muted">
+                                        <a>Amount :</a>
+                                        <field name="price_subtotal" widget="monetary" />
+                                    </div>
+                                    <div class="text-muted">
+                                        <a>Total time taken :</a>
+                                        <field name="time_taken_total" widget="float_time" />
+                                    </div>
+                                    <div class="text-muted">
+                                        <a>Date :</a>
+                                        <field name="date" />
+                                    </div>
+                                </div>
+                                <div class="oe_clear" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="salon_order_view_form" model="ir.ui.view">
+            <field name="name">salon.order.view.form</field>
+            <field name="model">salon.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_validate" attrs="{'invisible': ['|',('stage_id', '!=', 1), ('validation_controller', '=', True)]}" string="Validate" type="object" class="oe_highlight" />
+                        <button name="action_confirm" attrs="{'invisible': ['|',('stage_id', '!=', 1), ('validation_controller', '!=', True)]}" string="Confirm" type="object" class="oe_highlight" />
+                        <button name="action_create_invoice" attrs="{'invisible': [('stage_id', '!=', 2)]}" string="Create Invoice" type="object" class="oe_highlight" />
+                        <button name="action_cancel" string="Cancel" attrs="{'invisible': [('stage_id', 'not in', [1,2])]}" type="object" />
+                        <button name="action_close" attrs="{'invisible': [('stage_id', '!=', 3)]}" string="Close" type="object" />
+                        <field name="stage_id" widget="statusbar" domain="[('id','in',[1,2,4])]" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_invoice_salon" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('stage_id', 'not in', [3,4])]}">
+                                <field name="count" widget="statinfo" string="Invoice" />
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" domain="[('partner_salon','=',True)]" attrs="{'readonly': [('stage_id', '!=', 1)]}" />
+                                <field name="customer_name" attrs="{'readonly': [('stage_id', '!=', 1)]}" />
+                                <field name="chair_id" domain="[('active_booking_chairs','!=',True)]" attrs="{'readonly': [('stage_id', '!=', 1)]}" />
+                                <field name="currency_id" invisible="1" />
+                            </group>
+                            <group>
+                                <field name="booking_identifier" invisible="1" />
+                                <field name="date" attrs="{'readonly': [('stage_id', '!=', 1)]}" />
+                                <field name="start_time" attrs="{'readonly': [('stage_id', '!=', 1)], 'invisible': ['|',('stage_id', '!=', 1), ('booking_identifier', '!=', True)]}" />
+                                <field name="end_time" attrs="{'readonly': [('stage_id', '!=', 1)], 'invisible': ['|',('stage_id', '!=', 1), ('booking_identifier', '!=', True)]}" />
+                                <field name="inv_stage_identifier" invisible="1" />
+                                <field name="time_taken_total" invisible="1" />
+                                <field name="validation_controller" invisible="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="order_line_ids" mode="tree,kanban" attrs="{'readonly': [('stage_id', '!=', 1)]}">
+                                    <form string="Salon Order Lines">
+                                        <group>
+                                            <group>
+                                                <field name="service_id" />
+                                                <field name="time_taken" />
+                                                <field name="currency_id" invisible="1" />
+                                                <field name="price" widget="monetary" />
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <tree string="Salon Order Lines" editable="bottom">
+                                        <field name="service_id" />
+                                        <field name="time_taken" widget="float_time" />
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="price" widget="monetary" />
+                                        <field name="price_subtotal" widget="monetary" />
+                                    </tree>
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="service_id" />
+                                        <field name="time_taken" />
+                                        <field name="price_subtotal" widget="monetary" />
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <strong>
+                                                                <span>
+                                                                    <t t-esc="record.service_id.value" />
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 text-muted">
+                                                            <span class="pull-right text-right">
+                                                                <t t-esc="record.time_taken.value" />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 text-muted">
+                                                            <span class="pull-right text-right">
+                                                                <t t-esc="record.price_subtotal.value" />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="salon_total">
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="price_subtotal" />
+                                        <button name="action_update_total" string="(update)" type="object" class="oe_edit_only oe_link" />
+                                    </div>
+                                    <field name="price_subtotal" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" />
+                                </group>
+                                <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings." />
+                                <div class="oe_clear" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="salon_order_action" model="ir.actions.act_window">
+            <field name="name">Salon Orders</field>
+            <field name="res_model">salon.order</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="salon_active_orders_dashboard_action" model="ir.actions.act_window">
+            <field name="name">Salon Orders</field>
+            <field name="res_model">salon.order</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('chair_id', '=', active_id)]</field>
+        </record>
+
+    </data>
+</odoo>

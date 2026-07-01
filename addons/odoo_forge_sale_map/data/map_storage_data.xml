@@ -1,0 +1,19 @@
+<odoo>
+    <data noupdate="1">  
+        <record id="map_storage_record_1" model="map_storage">
+            <field name="name">Customer Sale Map</field>
+            <field name="map_html">Click 'Update Map' button!</field>
+        </record>
+        <record id="cron_update_map_html" model="ir.cron">
+            <field name="name">Update Map Nightly</field>
+            <field name="model_id" ref="model_map_storage"/> 
+            <field name="state">code</field>
+            <field name="code">model.cron_update_map_html()</field> 
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')"/>
+        </record>
+    </data>
+</odoo>

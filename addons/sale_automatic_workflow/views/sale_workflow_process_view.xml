@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>
+  Copyright (C) 2016 Sodexis <dev@sodexis.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="sale_workflow_process_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form.automatic.inherit</field>
+        <field name="model">sale.workflow.process</field>
+        <field name="arch" type="xml">
+            <form string="Automatic Workflow">
+                <sheet>
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" nolabel="1" />
+                        </h1>
+                    </div>
+                    <div class="container" name="sale_order_confirm">
+                        <h3>
+                            <bold>Order Configuration</bold>
+                        </h3>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label
+                                    for="picking_policy"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <span>
+                                    <field name="picking_policy" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="team_id" class="col-lg-4 o_light_label" />
+                                <span>
+                                    <field name="team_id" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="container" name="workflow_options">
+                        <h3>
+                            <bold>Workflow Options</bold>
+                        </h3>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="validate_order"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="validate_order" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="order_filter_id"
+                                    attrs="{'required':[('validate_order','=',True)], 'invisible':[('validate_order','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('validate_order','=',True)], 'invisible':[('validate_order','!=',True)]}"
+                                >
+                                    <field
+                                        name="order_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('order_filter_id', '=', False)]}"
+                                        options="{'model': 'sale.order'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="order_filter_id"
+                                            domain="[('model_id', '=', 'sale.order')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'sale.order', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="send_order_confirmation_mail"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field
+                                    name="send_order_confirmation_mail"
+                                    nolabel="1"
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="validate_picking"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="validate_picking" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="picking_filter_id"
+                                    attrs="{'required':[('validate_picking','=',True)], 'invisible':[('validate_picking','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('validate_picking','=',True)], 'invisible':[('validate_picking','!=',True)]}"
+                                >
+                                    <field
+                                        name="picking_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('picking_filter_id', '=', False)]}"
+                                        options="{'model': 'stock.picking'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="picking_filter_id"
+                                            domain="[('model_id', '=', 'stock.picking')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'stock.picking', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="create_invoice"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="create_invoice" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="create_invoice_filter_id"
+                                    attrs="{'required':[('create_invoice','=',True)], 'invisible':[('create_invoice','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('create_invoice','=',True)], 'invisible':[('create_invoice','!=',True)]}"
+                                >
+                                    <field
+                                        name="create_invoice_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('create_invoice_filter_id', '=', False)]}"
+                                        options="{'model': 'sale.order'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="create_invoice_filter_id"
+                                            domain="[('model_id', '=', 'sale.order')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'sale.order', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="validate_invoice"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="validate_invoice" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="validate_invoice_filter_id"
+                                    attrs="{'required':[('validate_invoice','=',True)], 'invisible':[('validate_invoice','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('validate_invoice','=',True)], 'invisible':[('validate_invoice','!=',True)]}"
+                                >
+                                    <field
+                                        name="validate_invoice_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('validate_invoice_filter_id', '=', False)]}"
+                                        options="{'model': 'account.move'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="validate_invoice_filter_id"
+                                            domain="[('model_id', '=', 'account.move')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'account.move', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="send_invoice"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="send_invoice" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="send_invoice_filter_id"
+                                    attrs="{'required':[('send_invoice','=',True)], 'invisible':[('send_invoice','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('send_invoice','=',True)], 'invisible':[('send_invoice','!=',True)]}"
+                                >
+                                    <field
+                                        name="send_invoice_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('send_invoice_filter_id', '=', False)]}"
+                                        options="{'model': 'account.move'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="send_invoice_filter_id"
+                                            domain="[('model_id', '=', 'account.move')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'account.move', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="register_payment"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <field name="register_payment" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="payment_filter_id"
+                                    attrs="{'required':[('register_payment','=',True)], 'invisible':[('register_payment','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('register_payment','=',True)], 'invisible':[('register_payment','!=',True)]}"
+                                >
+                                    <field
+                                        name="payment_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('payment_filter_id', '=', False)]}"
+                                        options="{'model': 'account.move'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="payment_filter_id"
+                                            domain="[('model_id', '=', 'account.move')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'account.move', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="sale_done" class="col-lg-7 o_light_label" />
+                                <field name="sale_done" nolabel="1" />
+                            </div>
+                            <div class="col-sm-8">
+                                <label
+                                    for="sale_done_filter_id"
+                                    attrs="{'required':[('sale_done','=',True)], 'invisible':[('sale_done','!=',True)]}"
+                                />
+                                <div
+                                    attrs="{'required':[('sale_done','=',True)], 'invisible':[('sale_done','!=',True)]}"
+                                >
+                                    <field
+                                        name="sale_done_filter_domain"
+                                        widget="domain"
+                                        attrs="{'invisible': [('sale_done_filter_id', '=', False)]}"
+                                        options="{'model': 'sale.order'}"
+                                    />
+                                    <div class="oe_edit_only oe_inline">
+                                        Set selection based on a search filter:
+                                        <field
+                                            name="sale_done_filter_id"
+                                            domain="[('model_id', '=', 'sale.order')]"
+                                            class="oe_inline"
+                                            context="{'default_model_id': 'sale.order', 'default_active': False, 'active_test': False}"
+                                            can_create="true"
+                                            can_write="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="container" name="invoice_options">
+                        <h3>
+                            <bold>Invoice Options</bold>
+                        </h3>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="invoice_date_is_order_date"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <span>
+                                    <field
+                                        name="invoice_date_is_order_date"
+                                        nolabel="1"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label
+                                    for="invoice_service_delivery"
+                                    class="col-lg-7 o_light_label"
+                                />
+                                <span>
+                                    <field
+                                        name="invoice_service_delivery"
+                                        nolabel="1"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <div
+                            class="row"
+                            groups="account.group_account_invoice"
+                            domain="[('type', '=', 'sale')]"
+                        >
+                            <div class="col-sm-12">
+                                <label
+                                    for="property_journal_id"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field name="property_journal_id" nolabel="1" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="warning" />
+                                <field name="warning" nolabel="1" />
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sale_workflow_process_view_tree" model="ir.ui.view">
+        <field name="name">sale_automic_workflow.sale_workflow_process.view_tree</field>
+        <field name="model">sale.workflow.process</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="picking_policy" />
+                <field name="team_id" />
+                <field name="validate_order" />
+                <field name="validate_picking" />
+                <field name="validate_invoice" />
+                <field name="register_payment" />
+                <field name="invoice_date_is_order_date" />
+            </tree>
+        </field>
+    </record>
+    <record id="act_sale_workflow_process_form" model="ir.actions.act_window">
+        <field name="name">Automatic Workflow</field>
+        <field name="res_model">sale.workflow.process</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_sale_workflow_parent"
+        parent="sale.menu_sale_config"
+        sequence="20"
+        name="Automatic Workflow"
+    />
+    <menuitem
+        action="act_sale_workflow_process_form"
+        id="menu_act_sale_workflow_process_form"
+        parent="menu_sale_workflow_parent"
+    />
+</odoo>

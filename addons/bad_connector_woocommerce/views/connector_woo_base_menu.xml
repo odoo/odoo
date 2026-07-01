@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Menu for the Woocommerce root  -->
+    <menuitem
+        id="menu_woo_root"
+        parent="connector.menu_connector_root"
+        name="WooCommerce"
+        groups="connector.group_connector_manager"
+    />
+    <!-- Menu for the Woocommerce backend -->
+    <menuitem
+        id="menu_woo_backend"
+        name="WooCommerce Backends"
+        parent="menu_woo_root"
+        action="action_woo_backend"
+    />
+    <!-- Added Menu configuration -->
+    <menuitem
+        id="menu_action_connector_configuration"
+        name="Configuration"
+        active="True"
+        parent="connector.menu_connector_root"
+        sequence="1000"
+    />
+    <!-- Added Submenu settings -->
+    <menuitem
+        id="menu_action_connector_settings"
+        action="action_connector_settings"
+        name="Settings"
+        active="True"
+        parent="menu_action_connector_configuration"
+        sequence="0"
+    />
+    <!-- Added Submenu WooCommerce Sale Status -->
+    <menuitem
+        id="menu_woo_sale_status"
+        action="action_woo_sale_status"
+        name="WooCommerce Sale Status"
+        active="True"
+        parent="menu_action_connector_configuration"
+        sequence="1"
+    />
+    <!-- Added Submenu for WooCommerce Settings -->
+    <menuitem
+        id="menu_action_woo_settings"
+        action="action_woo_settings"
+        name="WooCommerce Settings"
+        active="True"
+        parent="menu_action_connector_configuration"
+        sequence="1"
+    />
+    <!-- Define the menu item WooCommerce product category -->
+    <menuitem
+        id="menu_woo_product_category"
+        name="WooCommerce Product Categories"
+        parent="menu_woo_root"
+        action="action_woo_product_category"
+    />
+    <!-- Define the menu item WooCommerce product Image URL -->
+    <menuitem
+        id="menu_woo_product_image_url"
+        name="WooCommerce Product Image URL"
+        parent="menu_woo_root"
+        action="action_woo_product_image_url"
+    />
+    <!-- Define the menu item WooCommerce Taxes -->
+    <menuitem
+        id="menu_woo_tax"
+        name="WooCommerce Taxes"
+        parent="menu_woo_root"
+        action="action_woo_tax"
+    />
+    <!-- Define the menu item WooCommerce payment gateway -->
+    <menuitem
+        id="menu_woo_payment_gateway"
+        name="WooCommerce Payment Gateway"
+        parent="menu_woo_root"
+        action="action_woo_payment_gateway"
+    />
+    <!-- Define the menu item WooCommerce Downloadable Product -->
+    <menuitem
+        id="menu_woo_downloadable_product"
+        name="WooCommerce Downloadable Product"
+        parent="menu_woo_root"
+        action="action_woo_downloadable_product"
+    />
+</odoo>

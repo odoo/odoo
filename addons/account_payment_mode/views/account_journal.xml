@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">usability.account_journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <!-- better when related fields are readonly, otherwise the user
+                 doesn't understand that he is changing the bank_id
+                 on the underlying res.partner.bank object -->
+            <field name="bank_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--Created a module category for all in one dynamic custom fields-->
+        <record id="module_category_all_in_one_dynamic_custom_fields"
+                model="ir.module.category">
+            <field name="name">All in One Custom Dynamic Fields</field>
+            <field name="description">Helps you handle your All-in-One Custom Dynamic Fields Permissions </field>
+            <field name="sequence">5</field>
+        </record>
+        <!--Created a new group User in one dynamic custom fields-->
+        <record id="group_all_in_one_dynamic_custom_fields_user"
+                model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id"
+                   ref="all_in_one_dynamic_custom_fields.module_category_all_in_one_dynamic_custom_fields"/>
+        </record>
+        <!--Created a new group Administrator in one dynamic custom fields-->
+        <record id="group_all_in_one_dynamic_custom_fields_administrator"
+                model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id"
+                   ref="all_in_one_dynamic_custom_fields.module_category_all_in_one_dynamic_custom_fields"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('all_in_one_dynamic_custom_fields.group_all_in_one_dynamic_custom_fields_user'))]"/>
+            <field name="users"
+                   eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

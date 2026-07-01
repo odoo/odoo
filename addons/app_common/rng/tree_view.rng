@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+
+    <rng:define name="groupby">
+        <rng:element name="groupby">
+            <rng:attribute name="name"/>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:ref name="button"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="tree">
+        <rng:element name="tree">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="edit"/></rng:optional>
+            <rng:optional><rng:attribute name="multi_edit"/></rng:optional>
+            <rng:optional><rng:attribute name="multi_group_select"/></rng:optional>
+            <rng:optional><rng:attribute name="export_xlsx"/></rng:optional>
+            <rng:optional><rng:attribute name="duplicate"/></rng:optional>
+            <rng:optional><rng:attribute name="import"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional> <!-- deprecated, has no effect anymore -->
+            <rng:optional><rng:attribute name="class"/></rng:optional>
+            <!-- Allows to take a custom View widget for handling -->
+            <rng:optional><rng:attribute name="js_class"/></rng:optional>
+            <rng:optional><rng:attribute name="options"/></rng:optional>
+            <rng:optional><rng:attribute name="default_order"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-black"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-white"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-info"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-success"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-warning"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-black"/></rng:optional>
+            <rng:optional><rng:attribute name="bg-white"/></rng:optional>
+            <rng:optional><rng:attribute name="banner_route"/></rng:optional>
+            <rng:optional><rng:attribute name="sample"/></rng:optional>
+            <rng:optional><rng:attribute name="action"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="count_limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="groups_limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="editable">
+                    <rng:choice>
+                        <rng:value>top</rng:value>
+                        <rng:value>bottom</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:element name="header">
+                        <rng:zeroOrMore>
+                            <rng:ref name="button"/>
+                        </rng:zeroOrMore>
+                    </rng:element>
+                    <rng:ref name="control"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="groupby"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="tree" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

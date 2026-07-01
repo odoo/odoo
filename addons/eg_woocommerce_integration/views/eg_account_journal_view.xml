@@ -1,0 +1,24 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_account_journal_woocommerce_form_view">
+        <field name="name">eg.account.journal.woocommerce.form.view</field>
+        <field name="model">eg.account.journal</field>
+        <field name="inherit_id" ref="eg_ecommerce_base.eg_account_journal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[1]" position="after">
+                <notebook attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <page string="Other Information">
+                        <group>
+                            <group>
+                                <field name="payment_order"/>
+                                <field name="is_payment_enable"/>
+                                <field name="payment_method_title"/>
+                                <field name="payment_method_description"/>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

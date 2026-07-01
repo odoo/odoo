@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="izi_kpi_line_action">
+            <field name="name">Key Performance Indicator Details</field>
+            <field name="res_model">izi.kpi.line</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <!-- Tree view for the menuitem -->
+        <record id="izi_kpi_line_tree" model="ir.ui.view">
+            <field name="name">izi.kpi.line.tree</field>
+            <field name="model">izi.kpi.line</field>
+            <field name="arch" type="xml">
+                <tree editable='bottom'>
+                    <field name="kpi_id" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="period_id" readonly="1"/>
+                    <field name="date" readonly="1"/>
+                    <field name="interval" readonly="1"/>
+                    <field name="target"/>
+                    <field name="value" readonly="1"/>
+                    <field name="achievement" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

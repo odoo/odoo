@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Lab test line action-->
+    <record id="lab_test_line_action" model="ir.actions.act_window">
+        <field name="name">Add Lab Test</field>
+        <field name="res_model">lab.test.line</field>
+        <field name="view_mode">form</field>
+    </record>
+    <!--Lab test line form view-->
+    <record id="lab_test_line_view_form" model="ir.ui.view">
+        <field name="name">lab.test.line.view.form</field>
+        <field name="model">lab.test.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button string="Confirm" states="draft" class="oe_highlight"
+                            name="action_confirm" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name" placeholder="Test No."
+                                   required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" widget="selection"/>
+                            <field name="patient_type" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="date"/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                        <field name="test_ids">
+                            <tree>
+                                <field name="name"/>
+                                <field name="patient_lead" widget="float_time"/>
+                                <field name="price"/>
+                                <field name="test_type"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Lab test line tree view-->
+    <record id="lab_test_line_view_tree" model="ir.ui.view">
+        <field name="name">lab.test.line.view.tree</field>
+        <field name="model">lab.test.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="patient_type"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Test type menu action-->
+    <record id="lab_test_line_action" model="ir.actions.act_window">
+        <field name="name">Patient Test</field>
+        <field name="res_model">lab.test.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create patient lab test.
+            </p>
+        </field>
+    </record>
+    <!--    Test type menu-->
+    <menuitem id="lab_test_line_menu" name="Patient Test"
+              parent="hospital_menu_laboratory" sequence="1"
+              action="lab_test_line_action"/>
+</odoo>

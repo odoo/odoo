@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="qweb_pdf_export" model="ir.actions.report">
+        <field name="name">MIS report instance QWEB PDF report</field>
+        <field name="model">mis.report.instance</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">mis_builder.report_mis_report_instance</field>
+        <field name="report_type">qweb-pdf</field>
+    </record>
+    <!--
+        TODO we use divs with css table layout, but this has drawbacks:
+             (bad layout of first column, no colspan for first header row),
+             consider getting back to a plain HTML table.
+    -->
+    <template id="report_mis_report_instance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                    <t t-set="matrix" t-value="o._compute_matrix()" />
+                    <t t-set="style_obj" t-value="o.env['mis.report.style']" />
+                    <div class="page">
+                        <h3>
+                            <span t-field="o.name" />
+                            <span>-</span>
+                            <t t-foreach="o.query_company_ids" t-as="company">
+                                <span t-field="company.name" />
+                                <span t-if="company != o.query_company_ids[-1]">,</span>
+                            </t>
+                        </h3>
+                        <p>
+                            <div class="mis_report_filers">
+                                <t
+                                    t-foreach="o.get_filter_descriptions()"
+                                    t-as="filter_description"
+                                >
+                                    <div>
+                                        <span t-out="filter_description" />
+                                    </div>
+                                </t>
+                            </div>
+                        </p>
+                        <div class="mis_table">
+                            <div class="mis_thead">
+                                <div class="mis_row">
+                                    <div class="mis_cell mis_collabel" />
+                                    <t t-foreach="matrix.iter_cols()" t-as="col">
+                                        <div class="mis_cell mis_collabel">
+                                            <t t-out="col.label" />
+                                            <t t-if="col.description">
+                                                <br />
+                                                <t t-out="col.description" />
+                                            </t>
+                                        </div>
+                                        <!-- add empty cells because we have no colspan with css tables -->
+                                        <t
+                                            t-foreach="list(col.iter_subcols())[1:]"
+                                            t-as="subcol"
+                                        >
+                                            <div class="mis_cell mis_collabel" />
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="mis_row">
+                                    <div class="mis_cell mis_collabel" />
+                                    <t t-foreach="matrix.iter_subcols()" t-as="subcol">
+                                        <div class="mis_cell mis_collabel">
+                                            <t t-out="subcol.label" />
+                                            <t t-if="subcol.description">
+                                                <br />
+                                                <t t-out="subcol.description" />
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="mis_tbody">
+                                <t t-foreach="matrix.iter_rows()" t-as="row">
+                                    <div
+                                        t-if="not ((row.style_props.hide_empty and row.is_empty()) or row.style_props.hide_always)"
+                                        class="mis_row"
+                                    >
+                                        <div
+                                            t-att-style="style_obj.to_css_style(row.style_props)"
+                                            class="mis_cell mis_rowlabel"
+                                        >
+                                            <t t-out="row.label" />
+                                            <t t-if="row.description">
+                                                <br />
+                                                <t t-out="row.description" />
+                                            </t>
+                                        </div>
+                                        <t t-foreach="row.iter_cells()" t-as="cell">
+                                            <div
+                                                t-att-style="cell and style_obj.to_css_style(cell.style_props) or ''"
+                                                class="mis_cell mis_amount"
+                                            >
+                                                <t
+                                                    t-out="cell and cell.val_rendered or ''"
+                                                />
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2014 ABF OSIELL <http://osiell.com>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+ -->
+<odoo>
+    <record id="view_res_users_role_form" model="ir.ui.view">
+        <field name="name">res.users.role.form</field>
+        <field name="model">res.users.role</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button
+                            name="show_model_access_ids"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                        >
+                        <field
+                                name="model_access_count"
+                                widget="statinfo"
+                                string="Access Rights"
+                            />
+                        </button>
+                        <button
+                            name="show_rule_ids"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-server"
+                        >
+                        <field
+                                name="rules_count"
+                                widget="statinfo"
+                                string="Record Rules"
+                            />
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name" />
+                        <field name="group_id" required="0" readonly="1" />
+                    </group>
+                    <notebook>
+                        <page string="Groups">
+                            <field name="implied_ids" nolabel="1" />
+                        </page>
+                        <page string="Users">
+                            <field name="line_ids" nolabel="1">
+                                <tree
+                                    editable="bottom"
+                                    decoration-muted="not is_enabled"
+                                >
+                                    <field name="user_id" />
+                                    <field name="date_from" />
+                                    <field name="date_to" />
+                                    <field name="is_enabled" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="page_internal_notes" string="Internal Notes">
+                            <field name="comment" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_res_users_role_tree" model="ir.ui.view">
+        <field name="name">res.users.role.tree</field>
+        <field name="model">res.users.role</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="user_ids" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_res_users_role_search" model="ir.ui.view">
+        <field name="name">res.users.role.search</field>
+        <field name="model">res.users.role</field>
+        <field name="arch" type="xml">
+            <search string="Roles">
+                <field name="name" />
+                <field name="user_ids" />
+                <field name="implied_ids" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_res_users_role_tree">
+        <field name="name">Roles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.users.role</field>
+        <field name="view_id" ref="view_res_users_role_tree" />
+    </record>
+    <menuitem
+        id="menu_action_res_users_role_tree"
+        parent="base.menu_users"
+        action="action_res_users_role_tree"
+    />
+</odoo>

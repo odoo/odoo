@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_tag_tree" model="ir.ui.view">
+        <field name="name">product.tag.tree.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <tree string="WooCommerce Tags" js_class="woo_import_product_tag_woo_button">
+                <field name="name" required="1"/>
+                <field name="slug"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="woo_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_tag_form" model="ir.ui.view">
+        <field name="name">product.tag.form.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Tags">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+
+                        <group>
+                            <field name="slug"/>
+                            <field name="woo_id" readonly="1" string="WooCommerce Id"/>
+                            <field name="woo_instance_id" readonly="1"/>
+                            <field name="is_exported" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_product_tag_search" model="ir.ui.view">
+        <field name="name">view.product.tag.search.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Woo Synced Product Tags" name="woo_imported_product_tags"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_tag" model="ir.actions.act_window">
+        <field name="name">Product Tag</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.tag.woo</field>
+        <field name="view_id" ref="view_product_tag_tree"/>
+        <field name="context">{'search_default_woo_imported_product_tags': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

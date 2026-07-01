@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- View and actions for sock Location -->
+    <record id="stock_transfer_view_form" model="ir.ui.view">
+        <field name="name">stock.transfer.view.form</field>
+        <field name="model">stock.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Stock Transfer">
+                <group>
+                    <field name="product_id"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="qty_available"/>
+                    </group>
+                    <group>
+                        <field name="qty_to_move"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="location_ids" invisible="1"
+                               widget="many2many_tags"/>
+                        <field name="source_location_id"/>
+                    </group>
+                    <group>
+                        <field name="destination_location_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="create_action" string="Apply"
+                            type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_transfer" model="ir.actions.act_window">
+        <field name="name">Stock Transfer</field>
+        <field name="res_model">stock.transfer</field>
+        <field name="view_mode">form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

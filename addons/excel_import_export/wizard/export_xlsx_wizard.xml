@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2019 Ecosoft Co., Ltd.
+  License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+    <record id="export_xlsx_wizard" model="ir.ui.view">
+        <field name="name">export.xlsx.wizard</field>
+        <field name="model">export.xlsx.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Get Import Template">
+                <field invisible="1" name="state" />
+                <field name="name" invisible="1" />
+                <group states="choose">
+                    <group>
+                        <field name="template_id" widget="selection" />
+                    </group>
+                    <group>
+                        <field name="res_model" invisible="1" />
+                        <field name="res_ids" invisible="1" />
+                    </group>
+                </group>
+                <div states="get">
+                    <h2>Complete Prepare File (.xlsx)</h2>
+                    <p>Here is the exported file: <field
+                            name="data"
+                            readonly="1"
+                            filename="name"
+                        /></p>
+                </div>
+                <footer states="choose">
+                  <button
+                        name="action_export"
+                        string="Export"
+                        type="object"
+                        class="oe_highlight"
+                    /> or
+                  <button
+                        special="cancel"
+                        string="Cancel"
+                        type="object"
+                        class="oe_link"
+                    />
+              </footer>
+                <footer states="get">
+                    <button special="cancel" string="Close" type="object" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

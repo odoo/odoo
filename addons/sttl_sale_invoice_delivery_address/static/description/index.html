@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html style="box-sizing: border-box;--bs-breakpoint-xs: 0;--bs-breakpoint-sm: 576px;--bs-breakpoint-md: 768px;--bs-breakpoint-lg: 992px;--bs-breakpoint-xl: 1200px;--bs-breakpoint-xxl: 1400px;">
+<head style="box-sizing: border-box;">
+    <meta charset="utf-8" style="box-sizing: border-box;">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" style="box-sizing: border-box;">
+    <title style="box-sizing: border-box;">odoo</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" style="box-sizing: border-box;">
+</head>
+<body style="box-sizing: border-box;margin: 0;font-family: 'Poppins', sans-serif;font-size: var(--bs-body-font-size);font-weight: var(--bs-body-font-weight);line-height: var(--bs-body-line-height);color: var(--bs-body-color);text-align: var(--bs-body-text-align);background-color: var(--bs-body-bg);-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;padding: 0;">
+
+<!-- oddo bussiness start -->
+<section class="bussiness space"
+         style="box-sizing: border-box;padding: 70px 0; position: relative; padding:5px;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));align-items: center;">
+            <div class="col-md-7"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 50%; padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="bussiness_content" style="box-sizing: border-box;">
+                    <h1 style="box-sizing: border-box;margin-top: 0;margin-bottom: 10px;font-weight: bold;line-height: 64px;color: #1465b4;font-size: 54px;">
+                        Sale Delivery and Invoice Address</h1>
+                    <div class="bussiness_text" style="box-sizing: border-box;max-width: 462px;width: 100%;">
+                        <span class="s6"
+                              style="box-sizing: border-box;font-size: 24px;line-height: 35px;font-weight: 600;margin-bottom: 15px;color: #323232;display: block;">Dynamically listing invoice and delivery address!</span>
+                    </div>
+                    <div class="bussiness_award" style="box-sizing: border-box;">
+                        <ul style="box-sizing: border-box;padding-left: 2rem;margin-top: 0;margin-bottom: 1rem;list-style-type: none;margin: 0;padding: 0;padding-bottom: 10px;">
+                            <li style="box-sizing: border-box;display: inline-block;padding-right: 15px;"><img
+                                    src="image/15.png"
+                                    style="box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                            </li>
+                            <li style="box-sizing: border-box;display: inline-block;padding-right: 15px;"><img
+                                    src="image/16A.png"
+                                    style="box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bussiness_btn" style="box-sizing: border-box;margin: 15px 0;">
+                        <a class="orange_btn" href="#"
+                           style="box-sizing: border-box;text-decoration: none;color: #ffff;transition: 0.5s all ease-out;-webkit-transition: 0.5s all ease-out;-moz-transition: 0.5s all ease-out;display: inline-block;padding: 13px 17px;font-size: 22px;line-height: 27px;font-weight: 600;background-color: #ff6420;border-radius: 8px;border: 1px solid transparent;position: relative;margin-right: 10px;">Demo
+                            Available</a>
+                        <a class="trans_btn" href="#"
+                           style="box-sizing: border-box;text-decoration: none;color: #ff6420;transition: 0.5s all ease-out;-webkit-transition: 0.5s all ease-out;-moz-transition: 0.5s all ease-out;display: inline-block;padding: 13px 17px;font-size: 22px;line-height: 27px;font-weight: 600;background: transparent;border: 1px solid #ff6420;border-radius: 8px;">30
+                            Days Support</a>
+                    </div>
+                    <div class="bussiness_suggest"
+                         style="box-sizing: border-box;display: flex;align-items: center;justify-content: left;flex-wrap: wrap;">
+                        <div class="suggestion"
+                             style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                            <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                                <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                            </div>
+                            <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo Community</span>
+                        </div>
+                        <div class="suggestion"
+                             style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                            <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                                <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                            </div>
+                            <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo Enterprise</span>
+                        </div>
+                        <div class="suggestion"
+                             style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;padding: 9px 18px;border-radius: 25px;background-color: #1465b4;color: #fff;margin-right: 10px;margin-top: 25px;font-size: 16px;line-height: 22px;">
+                            <div class="sug_icon" style="box-sizing: border-box;padding-right: 6px;">
+                                <i class="fa fa-check-circle" style="box-sizing: border-box;"></i>
+                            </div>
+                            <span style="box-sizing: border-box;font-size: 16px;line-height: 25px;font-weight: 400;">Odoo.SH</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 50%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="bussiness_right" style="box-sizing: border-box;">
+                    <img src="sale_invoice_delivery.png"
+                         style="border-radius:20px; box-sizing: border-box;vertical-align: middle;max-width: 100%;height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- oddo bussiness end -->
+<!-- consultion start -->
+<section class="consultion"
+         style="box-sizing: border-box;  position: relative; margin-top: 100px; background-color: #1465b4; padding:20px;
+            border-radius: 15px;">
+    <div style="display:flex;">
+        <div class="cons_text" style="box-sizing: border-box;max-width: 750px;width: 100%;">
+            <h2 style="box-sizing: border-box;margin-top: 0;margin-bottom: 2px;font-weight: 400;line-height: 55px;color: var(--bs-heading-color);font-size: 46px;">
+                <strong style="box-sizing: border-box;font-weight: bolder;color: #ff6420;">CONSULT OUR EXPERTS</strong>
+            </h2>
+            <p style="color: white; box-sizing: border-box;margin-top: 0;margin-bottom: 1rem;font-size: 14px;line-height: 18px;font-weight: 600;max-width: 682px;width: 100%;">
+                Unlock the potential of your business with Silver Touch! Avail a complimentary 1-hour Odoo
+                consulting session and discover tailored solutions for your unique needs.</p>
+            <div class="cons_info"
+                 style="box-sizing: border-box;display: flex;align-items: center;justify-content: start;">
+                <div class="cons_btn" style="box-sizing: border-box;margin-right: 30px;">
+                    <a class="orange_btn" href="mailto:info@silvertouch.com"
+                       style="box-sizing: border-box;text-decoration: none;color: #ffff;transition: 0.5s all ease-out;-webkit-transition: 0.5s all ease-out;-moz-transition: 0.5s all ease-out;display: inline-block;background-color: #ff6420;border-radius: 8px;border: 1px solid transparent;position: relative;padding: 12px 30px;font-size: 16px;line-height: 22px;font-weight: bold;">Let's
+                        Connect</a>
+                </div>
+                <div class="cons_con_details"
+                     style="box-sizing: border-box;display: flex;align-items: center;justify-content: center;">
+                    <div style="position: relative; z-index: 2;">
+                        <img src="image/support.svg" style="max-width: 100%; height: auto;">
+                    </div>
+                    <div style="padding: 8px 12px 8px 35px; background: #276CD6; border-radius: 0 19px 19px 0; margin-left: -25px;">
+                    <span style="font-size: 14px; line-height: 18px; display: inline-block; margin-right: 10px;">
+                        <i class="fa fa-envelope" style="color:white"></i>
+                        <a href="mailto:info@silvertouch.com" style="color: #FFF; font-size: 14px; line-height: 18px;
+                         transition: 0.5s all ease-out;">info@silvertouch.com</a>
+                    </span>
+                        <span style="margin-right: 0;     font-size: 14px; line-height: 18px; display: inline-block;">
+                        <i class="fa fa-phone" style="color:white"></i>
+                        <a href="skype:+91 79-4002-2770/1/2/3/4?chat" style="color: #FFF;
+                            font-size: 14px;
+                            line-height: 18px; transition: 0.5s all ease-out;">+91 79-4002-2770/1/2/3/4</a>
+                    </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+        <!-- <div style="margin-top:px; width:108px; height:108px; padding:20px; border-radius:100px; left:45%; ">
+            <img src="assets/icons/1Hour.png"/>
+            </div>
+        </div> -->
+        <div class="one_hours"
+             style="margin: 7px 0;background-color: #ffff;width: 130px;height: 130px;border-radius: 100px;padding: 25px 0px 0px 10px;">
+            <div class="one_hrs_circle"
+                 style="display: flex;text-align: center;">
+            <span style="color: #ff6420;font-size: 18px;line-height: 22px;font-weight: bold;">
+                01
+                <br>
+                HOUR
+                <br>
+                DISCUSSION
+            </span>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- consultion end -->
+<section class="oe_container" style="margin-top: 2rem !important;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div style="width: 100%;">
+            <img src="assets/icons/footer.png" alt="Silver Touch Footer" width="100%"/>
+        </div>
+    </div>
+</section>
+<!-- features start -->
+<section class="features" style="box-sizing: border-box;  padding: 70px 0;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text " style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Features</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 mt-3" style="padding:0px; border:1px solid #7e827f; border-radius: 15px;">
+                        <div class="card-deck" style="height:100%">
+                            <div class="card-body" style="height:100%">
+                                <h5 class="card-title" style="color: #1465b4;"><i class="fa fa-arrow-right"
+                                                                                  style="margin-right: 10px;"/>Dynamic Delivery Address Selection</h5>
+                                <p class="card-text">Easily select delivery address among listed delivery addresses with our dynamic delivery address feature. This allows users to quickly choose from previously saved addresses or add new ones, ensuring a smooth and efficient order fulfillment experience.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mt-3" style="padding:0px; border:1px solid #7e827f; border-radius: 15px;">
+                        <div class="card-deck" style="height:100%">
+                            <div class="card-body" style="height:100%">
+                                <h5 class="card-title" style="color: #1465b4;"><i class="fa fa-arrow-right"
+                                                                                  style="margin-right: 10px;"/>Dynamic Invoice Address Selection</h5>
+                                <p class="card-text">Streamline the invoicing process with dynamic invoice address selection. Users can effortlessly choose or update billing addresses, ensuring accurate invoicing and reducing errors, all while maintaining a user-friendly interface.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:25px">
+            <div class="col-5"
+                 style="padding-left: 16%; padding-top:13px; padding-bottom:13px; color: #ff6420; display: inline-block; border-radius: 8px;font-size: 20px;line-height: 18px;font-weight:bold;">
+                Website : <span
+                    style="font-size:14px; padding:8px; border-radius:15px; color:white; background-color:#1465b4">www.silvertouch.com</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5" style="padding:0px 0px">
+                <div style="width:100%; padding:13px 0px; color: #ff6420; border-radius: 8px;font-size: 20px;line-height: 18px;font-weight:bold;">
+                    For any queries : <span
+                        style="font-size:14px; padding:8px; border-radius:15px; color:white; background-color:#1465b4">www.silvertouch.com/contact</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- features end -->
+
+<!-- screenshots start -->
+<section class="screenshots"
+         style="box-sizing: border-box;background-color: #e1f0ed; padding: 70px 0; border-radius:15px;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        App Preview</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                            <div class="p-md-5 p-3 position-relative">
+                                <div class="row ">
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <div class="pl-md-2 pl-0">
+                                            <h3 class="mb-3"
+                                                style="font-family:'Inter', sans-serif; font-style:normal; font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:103%; text-transform:capitalize; color:#2B5FB2">
+                                                Youtube Preview<br />
+                                                <span style="color:#333333; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h3>
+                                            <p
+                                                style="font-family:Inter; font-style:normal; font-weight:500; font-size:16px; line-height:150%; letter-spacing:0.02em; color:#535456">
+                                                Witness the power of our module through the comprehensive demonstration in the linked YouTube video.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="d-inline-block text-center p-3 shadow-sm"
+                                            style="background-color:#fff; border-radius:10px">
+                                            <!-- <video class="img-fluid" src="https://www.youtube.com/embed/tgbNymZ7vqY" controls
+                                                width="725px" /> -->
+                                                <a href="https://www.youtube.com/watch?v=Q_11THgd_2Y"><img width="725px" height="400px" src="youtube_thumbnail.png"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row ">
+                                <div class="col-md-8">
+                                    <div class="d-inline-block text-center p-3 shadow-sm"
+                                         style="background-color:#fff; border-radius:10px">
+                                        <img class="img-fluid"
+                                             src="delivery.png" width="725px" height="400px"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <div class="pl-md-2 pl-0">
+                                        <h3 class="mb-3"
+                                            style="font-family:'Inter', sans-serif; font-style:normal; font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:103%; text-transform:capitalize; color:#2B5FB2">
+                                            Dynamic Delivery Address Selection<br/>
+                                            <span style="color:#333333; font-size:calc(1.1rem + 1vw)"></span>
+                                        </h3>
+                                        <p style="font-family:Inter; font-style:normal; font-weight:500; font-size:16px; line-height:150%; letter-spacing:0.02em; color:#535456">
+                                            Here is a snapshot providing you with a comprehensive dynamic selection of partner's delivery addresses.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 position-relative" style="border-radius:10px">
+                        <div class="p-md-5 p-3 position-relative">
+                            <div class="row ">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <div class="pl-md-2 pl-0">
+                                        <h2 class="mb-3"
+                                            style="font-family:'Inter', sans-serif; font-style:normal; font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:103%; text-transform:capitalize; color:#2B5FB2">
+                                            Dynamic Invoice Address Selection
+                                            <span style="color:#333333; font-size:calc(1.1rem + 1vw)"> </span>
+                                        </h2>
+                                        <p style="font-family:Inter; font-style:normal; font-weight:500; font-size:16px; line-height:150%; letter-spacing:0.02em; color:#535456">
+                                            Here is a snapshot providing you with a comprehensive dynamic selection of partner's invoice addresses.
+
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="d-inline-block text-center p-3 shadow-sm"
+                                         style="background-color:#fff; border-radius:10px">
+                                        <img class="img-fluid"
+                                             src="invoice.png" width="725px" height="400px"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- screenshots end -->
+
+
+<!-- other apps start -->
+<section class="other_app space" style="box-sizing: border-box;padding: 35px 0;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1  var(--bs-gutter-y));margin-right: calc(-0.5  var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;margin-bottom: 15px;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Other Apps By Silver Touch</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="width:25%; padding-right:calc(var(--bs-gutter-x)  0.5); padding-left:calc(var(--bs-gutter-x)  0.5); margin-top:var(--bs-gutter-y)">
+                <div class="app_sec" style="margin:16px 0">
+                    <div class="app_img" style="border-radius:12px; min-height:170px; margin:0 10px">
+                        <a href="https://apps.odoo.com/apps/modules/16.0/sttl_email_validation">
+                            <img src="app_images/email_validation.png"
+                                 style="vertical-align:middle; height:auto; max-width:100%; width:100%"></a>
+                    </div>
+                    <div class="app_text">
+                        <span class="text"
+                              style="text-align:center; font-size:20px; line-height:30px; font-weight:600; display:block; color:black">Email Validation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="width:25%; padding-right:calc(var(--bs-gutter-x)  0.5); padding-left:calc(var(--bs-gutter-x)  0.5); margin-top:var(--bs-gutter-y)">
+                <div class="app_sec" style="margin:16px 0">
+                    <div class="app_img" style="border-radius:12px; min-height:170px; margin:0 10px">
+                        <a href="https://apps.odoo.com/apps/modules/16.0/sttl_timesheet_calendar">
+                            <img src="app_images/timesheet_calendar.png"
+                                 style="vertical-align:middle; height:auto; max-width:100%; width:100%">
+                        </a>
+                    </div>
+                    <div class="app_text">
+                        <span class="text"
+                              style="text-align:center; font-size:20px; line-height:30px; font-weight:600; display:block; color:black">Timesheet Calender</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="width:25%; padding-right:calc(var(--bs-gutter-x)  0.5); padding-left:calc(var(--bs-gutter-x)  0.5); margin-top:var(--bs-gutter-y)">
+                <div class="app_sec" style="margin:16px 0">
+                    <div class="app_img" style="border-radius:12px; min-height:170px; margin:0 10px">
+                        <a href="https://apps.odoo.com/apps/modules/16.0/sttl_timesheet_forecasting">
+                            <img src="app_images/timesheet_forecasting.png"
+                                 style="vertical-align:middle; height:auto; max-width:100%; width:100%">
+                        </a>
+                    </div>
+                    <div class="app_text">
+                        <span class="text"
+                              style="text-align:center; font-size:20px; line-height:30px; font-weight:600; display:block; color:black">Timesheet Forecasting </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="width:25%; padding-right:calc(var(--bs-gutter-x)  0.5); padding-left:calc(var(--bs-gutter-x)  0.5); margin-top:var(--bs-gutter-y)">
+                <div class="app_sec" style="margin:16px 0">
+                    <div class="app_img" style="border-radius:12px; min-height:170px; margin:0 10px">
+                        <a href="https://apps.odoo.com/apps/modules/16.0/sttl_product_description/">
+                            <img src="app_images/product_description.png"
+                                 style="vertical-align:middle; height:auto; max-width:100%; width:100%">
+                        </a>
+                    </div>
+                    <div class="app_text">
+                        <span class="text"
+                              style="text-align:center; font-size:20px; line-height:30px; font-weight:600; display:block; color:black">AI Product Description</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"/>
+            <a href="https://apps.odoo.com/apps/modules/browse?search=silver+touch" target="_blank"
+               class="col-md-3 btn btn-block mb-2 deep_hover"
+               style="color: #ffff; margin-left:28px; transition: 0.5s all ease-out;-webkit-transition: 0.5s all ease-out;-moz-transition: 0.5s all ease-out;display: inline-block;background-color: #ff6420;border-radius: 8px;border: 1px solid transparent;position: relative;padding: 12px 20px;font-size: 19px;line-height: 18px;font-weight:bold;">All
+                Silver Touch Apps</a>
+            <div class="col-md-5"/>
+        </div>
+
+
+    </div>
+</section>
+<!-- other apps end -->
+<!-- service start -->
+<section class="service" style="box-sizing: border-box;background-color: #e1f0ed;padding: 70px 0; border-radius:15px;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1 * var(--bs-gutter-y));margin-right: calc(-0.5 * var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x) * 0.5);padding-left: calc(var(--bs-gutter-x) * 0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Our Expertise</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+                <img src="assets/icons/services1.png" style="width: 99.8%;"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5"/>
+            <a href="mailto:info@silvertouch.com"
+               class="col-2 btn btn-block mb-2 deep_hover"
+               style="color: #ffff; transition: 0.5s all ease-out;-webkit-transition: 0.5s all ease-out;-moz-transition: 0.5s all ease-out;display: inline-block;background-color: #ff6420;border-radius: 8px;border: 1px solid transparent;position: relative;padding: 12px 20px;font-size: 19px;line-height: 18px;font-weight:bold;">
+                Get in Touch
+            </a>
+            <div class="col-5"/>
+        </div>
+    </div>
+
+</section>
+<!-- service end -->
+<!-- industries start -->
+<!--industries 2.0 start-->
+<section class="oe_container" style="margin-top: 6rem !important; margin-right:10px; margin-left:10px">
+    <div class="container"
+         style="--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-right: auto;margin-left: auto;max-width: 1440px;margin: 0 auto;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1  var(--bs-gutter-y));margin-right: calc(-0.5  var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Industries</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color: #f4f4f4">
+            <div class="col-5" style="background-color: #f4f4f4">
+                <div>
+                    <p style="color:rgb(30,30,30); margin-top:30px; font-size:25px; font-weight:bold; margin-left:30px">
+                        Industries we grow</p>
+                </div>
+                <div>
+                    <p style="width:75%; margin-top:10px; font-size:17px; color:#347cc9; margin-left:30px">Tech
+                        Solutions for Industries to improve the way they operate.</p>
+                </div>
+                <div>
+                    <p style="width:95%; margin-top:10px; font-size:15px; margin-left:30px">Every industry has special
+                        needs and all those special needs ask for a special solution.
+                        At Silvertouch we offer solutions that are especially built to aid special characteristics
+                        of that specific industry.</p>
+                </div>
+            </div>
+            <div class="col-7" style="background-color: #f4f4f4;">
+                <img src="assets/icons/industry.png" alt="Industries Icons" width="100%">
+            </div>
+        </div>
+    </div>
+</section>
+<!--industries 2.0 end-->
+<!-- industries end -->
+
+<!-- contact details start -->
+<section class="oe_container" id="presense" style="margin-top: 6rem !important;">
+    <div class="container"
+         style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);margin-right: auto;max-width: 1440px;">
+        <div class="row"
+             style="box-sizing: border-box;--bs-gutter-x: 1.5rem;--bs-gutter-y: 0;display: flex;flex-wrap: wrap;margin-top: calc(-1  var(--bs-gutter-y));margin-right: calc(-0.5  var(--bs-gutter-x));margin-left: calc(-0.5 * var(--bs-gutter-x));">
+            <div class="col-md-12"
+                 style="box-sizing: border-box;flex-shrink: 0;width: 100%;max-width: 100%;padding-right: calc(var(--bs-gutter-x)  0.5);padding-left: calc(var(--bs-gutter-x)  0.5);margin-top: var(--bs-gutter-y);">
+                <div class="title_text" style="box-sizing: border-box;">
+                    <h3 class="text-center"
+                        style="box-sizing: border-box;margin-top: 0;margin-bottom: 0.5rem;font-weight: 700;line-height: 60px;color: #1465b4;font-size: 40px;text-align: center;">
+                        Our Presence</h3>
+                    <center>
+                        <hr
+                                style="border: 3px solid #000133 !important; background-color: #000133 !important; width: 80px !important; margin-bottom: 2rem !important;"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/india-flag.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">India</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies Limited</p>
+                    <p style="padding-top:10px">2nd Floor, Saffron Tower, Opp. Central Mall, Panchvati Cross Road,
+                        Ahmedabad - 380006 Gujarat,
+                        India</p>
+                    <div style="padding-top:5px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+91 79-4002-2770/1/2/3/4"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +91 79-4002-2770/1/2/3/4</a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.com">info@silvertouch.com</a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a href="https://www.silvertouch.com/">https://www.silvertouch.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/united-state-flag.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">USA</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies INC</p>
+                    <p style="padding-top:16px; ">1149 Green Street, Iselin, NJ 08830, United States of America</p>
+                    <div style="padding-top:20px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+1 (201) 331-9818"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +1 (201) 331-9818
+                    </a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.com">info@silvertouch.com</a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouchinc.com/">https://www.silvertouchinc.com</a></div>
+                </div>
+            </div>
+            <div class="col-md-3"
+                 style="padding:10px; font-size: 14px; border: 1px solid #cacccc; border-width: 0 1px 0 0">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/uk-flag-img.jpg" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">UK</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies UK Limited</p>
+                    <p style="padding-top:16px; ">4th Floor, Victoria House, Victoria Road, Chelmsford, Essex,
+                        United Kingdom - CM1 1JR</p>
+                    <div><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+44 203-872-5140"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +44 203-872-5140
+                    </a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a
+                            href="mailto:info@silvertouchtech.co.uk">info@silvertouchtech.co.uk
+                    </a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouchtech.co.uk/">https://www.silvertouchtech.co.uk</a></div>
+                </div>
+            </div>
+            <div class="col-md-3" style="padding:10px; font-size: 14px;">
+                <div style="padding:10px;">
+                    <div style="display:flex;">
+                        <img src="image/canada-flag.png" style="border-radius: 15px; width:32px; height:34px;"/>
+                        <p class="mx-2">
+                        <p style="font-size: 24px; font-weight:bold;">Canada</p></p>
+                    </div>
+                    <p style="font-weight: bold;">Silver Touch Technologies CA</p>
+                    <p style="padding-top:16px; ">55 Albert Street, Suite 100,
+                        Markham, ON, L3P 2T4,
+                        Canada</p>
+                    <div style="padding-top:20px; "><i class="fa fa-phone" style="margin-right:10px;"></i><a
+                            href="tel:+1 (647) 829-2482"
+                            style="box-sizing: border-box;text-decoration: none;-webkit-transition: 0.5s all ease;-moz-transition: 0.5s all ease;transition: 0.5s all ease-out;font-size: 14px;line-height: 18px;">
+                        +1 (647) 829-2482</a></div>
+                    <div><i class="fa fa-envelope" style="margin-right:10px;"></i><a href="mailto:info@silvertouch.ca">info@silvertouch.ca
+                    </a>
+                    </div>
+                    <div><i class="fa fa-globe" style="margin-right:10px;"></i><a
+                            href="https://www.silvertouch.ca/">https://www.silvertouch.ca</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- contact details end -->
+<!-- Footer Logos Start -->
+
+
+</body>
+</html>

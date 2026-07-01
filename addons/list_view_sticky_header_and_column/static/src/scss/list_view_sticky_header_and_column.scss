@@ -1,0 +1,51 @@
+.sticky-column {
+    position: sticky !important;
+    background-color: white;
+    z-index: 2;
+}
+.o_list_view .o_list_table td.sticky-column {
+    z-index: 4;
+    background-color: white;
+}
+.o_list_view .o_list_table thead {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background-color: white;
+}
+.o_list_view .o_list_table th.sticky-column {
+    z-index: 4;
+    background-color: white;
+}
+.o_account_reports_page .table-responsive {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+.table-responsive {
+    overflow: visible;
+}
+.o_list_view .table-responsive .table thead {
+    z-index: 5;
+}
+.o_list_renderer .o_list_table thead {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+}
+th.sticky-column::before {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    background: white;
+    top: 0;
+    left: -4px;
+}
+.fa-thumb-tack {
+    display: none;
+}
+
+th:hover .fa-thumb-tack,
+th.clicked-header .fa-thumb-tack {
+    display: block;
+}

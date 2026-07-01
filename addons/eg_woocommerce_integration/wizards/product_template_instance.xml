@@ -1,0 +1,29 @@
+<odoo>
+    <record model="ir.ui.view" id="product_template_instance_wizard">
+        <field name="name">product.template.instance.wizard</field>
+        <field name="model">product.template.instance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="instance_id"  required="1" domain="[('provider', '=', 'eg_woocommerce')]"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="export_in_woo_product_template" string="Export Woocommerce" type="object"
+                            class="oe_right oe_highlight"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="launch_product_template_instance">
+        <field name="name">Export Woocommerce</field>
+        <field name="res_model">product.template.instance</field>
+        <field name="binding_model_id" ref="model_product_template"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

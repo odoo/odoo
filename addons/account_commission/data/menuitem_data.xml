@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="menu_invoicing_commission" model="ir.ui.menu">
+        <field name="name">Commissions</field>
+        <field name="sequence" eval="10" />
+        <field
+            name="parent_id"
+            search="[('child_id', 'in', ref('account.menu_finance_receivables'))]"
+        />
+    </record>
+</odoo>

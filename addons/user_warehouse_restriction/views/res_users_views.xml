@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Added fields for accessible location -->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.user.warehouse.restriction
+        </field>
+        <field name="model">res.users</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='security']" position="after">
+                <page name="stock_location" string="Restricted Location"
+                      attrs="{'invisible': [('restrict_location','=', False)]}">
+                    <group>
+                        <field name="allowed_warehouse_ids" widget="many2many_tags"/>
+                        <field name="location_ids" widget="many2many_tags"
+                               domain="[('warehouse_id', 'in', allowed_warehouse_ids)]"/>
+                        <field name="restrict_location" invisible="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Users simple form view inherited-->
+    <record id="view_users_simple_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.user.warehouse.restriction
+        </field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile']" position="after">
+                    <group>
+                        <field name="allowed_warehouse_ids" widget="many2many_tags" readonly="True"/>
+                        <field name="location_ids" widget="many2many_tags"
+                               domain="[('warehouse_id', 'in', allowed_warehouse_ids)]"/>
+                        <field name="restrict_location" invisible="1"/>
+                        <field name="check_user" invisible="1"/>
+                    </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

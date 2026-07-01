@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit product attribute view to add connector page and  Binding -->
+    <record id="product_attribute_form_view" model="ir.ui.view">
+        <field name="name">product.attribute.form</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//form/field[@name='number_related_products']"
+                position="after"
+            >
+                <header>
+                    <field name="woo_bind_ids" invisible="1" />
+                    <button
+                        name="import_product_attribute_value"
+                        title="Import/Update attribute value from Woocommerce."
+                        type="object"
+                        class="oe_highlight"
+                        string="Import Attribute Value"
+                        attrs="{'invisible': ['|',('woo_bind_ids', '=', []),('not_real','=', True)]}"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='create_variant']" position="after">
+                <field name="has_archives" />
+                <field name="not_real" invisible="1" />
+            </xpath>
+            <xpath expr="//page[@name='attribute_values']" position="after">
+                <page
+                    string="WooCommerce Connector"
+                    name="woo_connector"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="woo_bind_ids" nolabel="1" readonly="1">
+                        <tree
+                            string="WooCommerce Product Attribute"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </tree>
+                        <form
+                            string="WooCommerce Product Attribute"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <group>
+                                <group>
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                    <field name="woo_data" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

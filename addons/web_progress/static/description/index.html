@@ -1,0 +1,125 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Progress Bar | Odoo App</title>
+</head>
+<body>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+</style>
+<section>
+    <h1>Dynamic Progress Bar</h1>
+    <div>
+        <p>Progress bar for Odoo waiting screen, possibility to cancel an ongoing operation and a system tray menu for all
+            operations in progress.</p>
+    </div>
+    <img src="progress_bar_loading_cancelling.gif" width="100%" align="center"/>
+    <img src="progress_bar_loading_systray.gif" width="50%" align="right"
+         style="margin-left:20px; margin-top:20px; margin-bottom:20px;"/>
+    <p><strong>web_progress</strong> exists for Odoo 11.0, 12.0, 13.0, 14.0, 15.0, 16.0 (CE and EE).</p>
+    <p>Author: Grzegorz Marczyński</p>
+    <p>License: LGPL-3.</p>
+    <p>Copyright © 2023 Grzegorz Marczyński</p>
+    <div>
+
+        <h2>Features</h2>
+        <ul>
+            <li> progress reporting for all standard Odoo import and export operations</li>
+            <li> system tray menu that lists ongoing operations initiated by the logged user (all operations visible to
+                Administrator)
+            </li>
+            <li> support for all operations initiated through UI and executed by planned activities (cron)</li>
+            <li> generator-like method to simply add progress reporting to any iteration (support for sub-iterations)
+            </li>
+        </ul>
+        <h2>For developers</h2>
+
+        <p>Typically when your code executes any long-term operation there is a loop over a <code>collection</code> in
+            your
+            code.</p>
+
+        <p>In order to report progress of the operation, wrap the <code>collection</code>
+            with <code><b>self.web_progress_iter</b>(collection, msg="Message")</code> or,
+            if the <code>collection</code> is <code>self</code> (or other recordset),
+            use a simpler version <code>self.<b>with_progress</b>("Message")</code></p>
+
+        <p>Say, your operation's main method looks as follows:</p>
+
+        <pre>
+
+    def action_operation(self):
+        for rec in self:
+            rec.do_somethig()
+            </pre>
+        <p>then a progress-reporting-ready version would be:</p>
+        <pre>
+
+    def action_operation(self):
+        for rec in <b>self.web_progress_iter</b>(self, msg="Message"):
+            rec.do_something()
+            </pre>
+        <p>or a simpler version for recordsets:</p>
+        <pre>
+
+    def action_operation(self):
+        for rec in self.<b>with_progress</b>(msg="Message"):
+            rec.do_something()
+        </pre>
+
+        <p>Progress tracking may be added to sub-operations as well:</p>
+
+        <pre>
+
+    def action_operation(self):
+        for rec in self.<b>with_progress</b>(msg="Message"):
+            lines = rec.get_lines()
+            for line in lines.<b>with_progress</b>("Sub-operation")
+                line.do_something()
+        </pre>
+
+
+        <h2>Release Notes</h2>
+        <b>2.1</b> - 2023-01-29 - new Odoo version and fixes:
+        <ul>
+            <li> fix systray container for v15</li>
+            <li> support Odoo v16.0</li>
+        </ul>
+        <b>2.0</b> - 2023-01-03 - new functionality and fixes:
+        <ul>
+            <li> add styles (standard, simple, nyan cat)</li>
+            <li> make the progress bar appear directly when the screen becomes blocked</li>
+            <li> keep basic progress functionality even if long polling is disabled or cease to work</li>
+            <li> fix import of o2m fields for Odoo v13.0 and v14.0</li>
+            <li> support Odoo v15.0</li>
+        </ul>
+        <b>1.4</b> - 2021-03-21 - fixes:
+        <ul>
+            <li> fix deadlock on bus.bus garbage collection</li>
+            <li> fix deadlock on access to res.users</li>
+            <li> do not animate but set the progress bar going backwards</li>
+        </ul>
+        <b>1.3</b> - 2019-10-03 - ported to Odoo 13.0
+        <p></p>
+        <b>1.3</b> - 2019-07-15 - new functionality
+        <ul>
+            <li> estimated time left / total</li>
+        </ul>
+        <b>1.2</b> - 2019-06-24 - fixes:
+        <ul>
+            <li> refactor global progress data</li>
+            <li> change progress template name to avoid clash with progressbar widget</li>
+        </ul>
+        <b>1.1</b> - 2019-06-23 - fixes:
+        <ul>
+            <li> remove unecessary dependency on multiprocessing</li>
+            <li> fix memory leak in time-tracking internal data</li>
+        </ul>
+        <b>1.0</b> - 2019-06-20 - initial version
+
+
+    </div>
+</section>
+</body>
+</html>

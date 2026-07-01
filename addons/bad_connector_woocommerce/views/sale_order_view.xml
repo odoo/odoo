@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit sale order view to add connector page and  Binding -->
+    <record id="sale_order_form_view_inherit_woocommerce" model="ir.ui.view">
+        <field name="name">sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/div[hasclass('oe_button_box')]" position="inside">
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    attrs="{'invisible': [('tax_different', '=', False)]}"
+                >
+                    <div class="o_row">
+                        <div
+                            class="col-1 text-center"
+                            style="padding-left: unset;padding-right: unset;"
+                        >
+                            <span style="font-size:20px;">
+                                <i
+                                    title="Tax Different"
+                                    class="fa fa-exclamation-triangle"
+                                    style="font-size:20px;"
+                                />
+                                The WooCommerce Price Tax is different then Total Tax of
+                                Odoo.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    attrs="{'invisible': [('total_amount_different', '=', False)]}"
+                >
+                    <div class="o_row">
+                        <div
+                            class="col-1 text-center"
+                            style="padding-left: unset;padding-right: unset;"
+                        >
+                            <span style="font-size:20px;">
+                                <i
+                                    title="Tax Different"
+                                    class="fa fa-exclamation-triangle"
+                                    style="font-size:20px;"
+                                />
+                                The WooCommerce Amount Total is different then Amount
+                                Total of Odoo.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//form/header/button[@name='action_cancel']" position="after">
+                <field name="has_done_picking" invisible="1" />
+                <field name="woo_bind_ids" invisible="1" />
+                <field name="is_final_status" invisible="1" />
+                <field name="woo_order_status_code" invisible="1" />
+                <button
+                    name="export_delivery_status"
+                    type="object"
+                    class="oe_highlight"
+                    attrs="{'invisible': ['|','|','|',('is_final_status','=',True),('has_done_picking', '=', False),('woo_bind_ids','=',[]),('woo_order_status_code','=','refunded')]}"
+                    string="Export Delivery Status"
+                />
+            </xpath>
+            <xpath
+                expr="//form/sheet/group/group/field[@name='sale_order_template_id']"
+                position="after"
+            >
+                <field
+                    name="woo_order_status_id"
+                    readonly="1"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                />
+                <field
+                    name="woo_coupon"
+                    readonly="1"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                />
+                <field name="tax_different" invisible="1" />
+                <field name="total_amount_different" invisible="1" />
+                <field name="is_fully_returned" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//form/sheet/group/group/field[@name='payment_term_id']"
+                position="after"
+            >
+                <field
+                    name="woo_payment_mode_id"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                />
+                <field name="woo_bind_ids" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree" position="attributes">
+                <attribute name="editable" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form" position="inside">
+                <notebook>
+                    <page
+                        string="WooCommerce Connector"
+                        name="woo_connector"
+                        attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                        groups="connector.group_connector_manager"
+                    >
+                        <field name="woo_bind_ids" nolabel="1" readonly="1">
+                            <tree
+                                string="WooCommerce Sale Order Line"
+                                delete="false"
+                                edit="false"
+                                create="false"
+                            >
+                                <field name="backend_id" widget="selection" />
+                                <field name="external_id" />
+                            </tree>
+                            <form
+                                string="WooCommerce Sale Order Line"
+                                delete="false"
+                                edit="false"
+                                create="false"
+                            >
+                                <group>
+                                    <group>
+                                        <field name="backend_id" widget="selection" />
+                                        <field name="external_id" />
+                                        <field name="price_unit" />
+                                        <field name="product_uom_qty" />
+                                    </group>
+                                    <group>
+                                        <field name="subtotal_line" />
+                                        <field name="subtotal_tax_line" />
+                                        <field name="total_tax_line" />
+                                        <field name="price_subtotal_line" />
+                                    </group>
+                                    <group>
+                                        <field name="woo_data" />
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="WooCommerce Connector"
+                    name="woo_connector"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="woo_bind_ids" nolabel="1" readonly="1">
+                        <tree
+                            string="WooCommerce Order"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </tree>
+                        <form
+                            string="WooCommerce Order"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <group>
+                                <group>
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                    <field name="discount_total" />
+                                    <field name="woo_amount_total" />
+                                </group>
+                                <group>
+                                    <field name="discount_tax" />
+                                    <field name="shipping_total" />
+                                    <field name="shipping_tax" />
+                                    <field name="cart_tax" />
+                                    <field name="total_tax" />
+                                </group>
+                                <group>
+                                    <field name="woo_data" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

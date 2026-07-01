@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--    Added display_pricelist field in pricelist-->
+    <record id="product_pricelist_view_form" model="ir.ui.view">
+        <field name="name">
+            product.pricelist.view.form.inherit.pricelist.price.on.product
+        </field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_group_ids']"
+                   position="after">
+                <field name="display_pricelist"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

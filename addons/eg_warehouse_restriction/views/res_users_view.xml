@@ -1,0 +1,14 @@
+<odoo>
+    <record id="res_user_form_view_restricts" model="ir.ui.view">
+        <field name="name">res.Users.warehouse.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='login']" position="after">
+                <group>
+                    <field name="warehouse_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

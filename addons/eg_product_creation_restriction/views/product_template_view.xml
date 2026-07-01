@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_creation_restriction_kanban_view" model="ir.ui.view">
+        <field name="name">product.template.creation.restriction.kanban.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('eg_product_creation_restriction.product_creation_restriction'))]"/>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="create">false</attribute>
+            </kanban>
+        </field>
+    </record>
+    <record id="product_template_creation_restriction_tree_view" model="ir.ui.view">
+        <field name="name">product.template.creation.restriction.tree.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('eg_product_creation_restriction.product_creation_restriction'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_template_creation_restriction_form_view" model="ir.ui.view">
+        <field name="name">product.template.creation.restriction.form.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('eg_product_creation_restriction.product_creation_restriction'))]"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="create">false</attribute>
+            </form>
+        </field>
+    </record>
+</odoo>

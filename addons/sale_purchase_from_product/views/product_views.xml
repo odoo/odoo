@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_product_quick_create_tree_view">
+        <field name="name">product.product.quick.create.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_open_label_layout']" position="after">
+                <button string="Quick Sale Order" name="%(sale_purchase_from_product.action_sale_purchase_quick_create)d" type="action"/>
+                <button string="Quick Purchase Order" name="%(sale_purchase_from_product.action_purchase_quick_create)d" type="action"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

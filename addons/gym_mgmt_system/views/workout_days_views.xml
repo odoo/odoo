@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="workout_days_view_tree" model="ir.ui.view">
+        <field name="name">workout.days.view.tree</field>
+        <field name="model">workout.days</field>
+        <field name="arch" type="xml">
+            <tree string="Workout Days" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action for workout days-->
+    <record id="workout_days_action" model="ir.actions.act_window">
+        <field name="name">Workout Days</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">workout.days</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Workout Days!
+            </p>
+        </field>
+    </record>
+    <!--Menu and Submenu-->
+    <menuitem id="gym_workout_days_menu_action"
+              name="Workout Days"
+              parent="gym_workout_root"
+              action="workout_days_action"
+              sequence="30"/>
+</odoo>

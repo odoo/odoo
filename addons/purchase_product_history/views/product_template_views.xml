@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Inherit the view of product.template and add separate tab for purchase
+        history-->
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">
+            product.template.view.form.inherit.purchase.product.history
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Purchase History" name="po_history">
+                    <field name="po_history_line_ids">
+                        <tree editable="bottom">
+                            <field name="order_reference_id"/>
+                            <field name="description"/>
+                            <field name="price_unit"/>
+                            <field name="product_qty"/>
+                            <field name="price_subtotal"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

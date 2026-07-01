@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Purchase order line search view for disabling filter based on the state-->
+    <record id="purchase_order_line_view_search_inherit"
+            model="ir.ui.view">
+        <field name="name">purchase.order.line.view.search.inherit</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id"
+               ref="purchase.purchase_order_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='status']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='hide_cancelled']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Purchase order line tree view-->
+    <record id="purchase_order_line_tree_view" model="ir.ui.view">
+        <field name="name">purchase.order.line.tree view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="order_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="name"/>
+                <field name="date_order"/>
+                <field name="date_planned" optional="hide"/>
+                <field name="product_qty"/>
+                <field name="price_unit"/>
+                <field name="product_uom" optional="hide"/>
+                <field name="price_subtotal"/>
+                <field name="taxes_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'purchase' or state == 'done'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Purchase order line form view-->
+    <record id="purchase_order_line_form_view" model="ir.ui.view">
+        <field name="name">Purchase.order.line.form.view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="product_image" widget="image"
+                               class="oe_avatar" string=""/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="order_id" string="Order"/>
+                            <field name="product_id"/>
+                            <field name="product_uom"/>
+                            <field name="product_qty"
+                                   string="Ordered Qty"/>
+                            <field name="taxes_id"
+                                   widget="many2many_tags"/>
+                            <field name="price_subtotal"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="name"/>
+                            <field name="price_unit"/>
+                            <field name="date_planned"
+                                   string="Delivery Date"/>
+                            <field name="product_uom_category_id"
+                                   string="Category"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Purchase order line kanban view -->
+    <record id="purchase_order_line_kanban_view" model="ir.ui.view">
+        <field name="name">purchase.order.line.kanban.view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="partner_id">
+                <field name="partner_id" readonly="1"/>>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image me-1">
+                                <field name="product_image"
+                                       widget="image"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top mb-0">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            Order:
+                                            <field name="order_id"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div name="product_lst_price"
+                                     class="mt-1">
+                                    Vendor:
+                                    <field name="partner_id"/>
+                                </div>
+                                Product:
+                                <field name="product_id"/>
+                                <div>
+                                    Price
+                                    <field name="price_unit"/>
+                                </div>
+                                <div>
+                                    Quantity:
+                                    <field name="product_qty"/>
+                                </div>
+                                State:
+                                <field name="state" widget="badge"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Purchase order line pivot view -->
+    <record id="purchase_order_line_pivot_view_pivot" model="ir.ui.view">
+        <field name="name">purchase order pivot</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Pivot View" sample="1">
+                <field name="order_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="product_qty" type="measure"/>
+                <field name="price_unit" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Purchase order line graph view -->
+    <record id="purchase_order_line_graph_view" model="ir.ui.view">
+        <field name="name">purchase.order.line.graph.view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <graph string="Graph View" type="bar">
+                <field name="product_id" group="True"/>
+                <field name="price_unit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Purchase order line calendar view -->
+    <record id="bill_line_calender_view" model="ir.ui.view">
+        <field name="name">bill.line.calender</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date_order" string="Tasks">
+                <field name="order_id"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Purchase order line action  -->
+    <record id="action_purchase_order_line_view"
+            model="ir.actions.act_window">
+        <field name="name">Purchase Order line</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_mode">tree,form,kanban,pivot,graph</field>
+        <field name="domain">
+            [('state','=','purchase')]
+        </field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase_order_line_tree_view')}),
+                    (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase_order_line_kanban_view')}),
+                    (0, 0, {'view_mode': 'pivot', 'view_id': ref('purchase_order_line_pivot_view_pivot')}),
+                    (0, 0, {'view_mode': 'graph', 'view_id': ref('purchase_order_line_graph_view')}),
+                    (0, 0, {'view_mode': 'calendar', 'view_id': ref('bill_line_calender_view')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('purchase_order_line_form_view')}),]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Purchase Order Line Views
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu for the purchase order line -->
+    <menuitem id="menu_purchase_order_line_view" name="Purchase Order Line"
+              sequence="300"
+              parent="purchase.menu_procurement_management"
+              action="action_purchase_order_line_view">
+    </menuitem>
+</odoo>

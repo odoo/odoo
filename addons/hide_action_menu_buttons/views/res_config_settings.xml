@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account.check.printing</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='integration']" position="after">
+                    <h2>Hide Action Button</h2>
+                    <div class="row mt16 o_settings_container" name="integration">
+
+
+                        <div class="col-12 col-lg-6 o_setting_box" id="sync_google_calendar_setting">
+
+                            <div class="o_setting_right_pane">
+                                <label string="Models" for="model_names" />
+                                <div class="text-muted">
+                                    Add models you want to hide action button
+                                </div>
+                                <div class="content-group">
+                                    <field name="model_names"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

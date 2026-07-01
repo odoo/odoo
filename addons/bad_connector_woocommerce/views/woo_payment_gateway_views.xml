@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Woocommerce payment gateway form view-->
+    <record id="view_woo_payment_gateway_form" model="ir.ui.view">
+        <field name="name">woo.payment.gateway.form</field>
+        <field name="model">woo.payment.gateway</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Payment Gateway">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Title" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Bank Transfer" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="slug" />
+                            <field name="enable" />
+                            <field name="description" />
+                            <field name="workflow_process_id" />
+                        </group>
+                        <group>
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Define the tree view -->
+    <record id="view_woo_payment_gateway_tree" model="ir.ui.view">
+        <field name="name">woo.payment.gateway.tree</field>
+        <field name="model">woo.payment.gateway</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="enable" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Define the action for the menu item -->
+    <record id="action_woo_payment_gateway" model="ir.actions.act_window">
+        <field name="name">Woo Payment Gateway</field>
+        <field name="res_model">woo.payment.gateway</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_woo_payment_gateway_tree" />
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- inherited view of stock_return_picking wizard to add a field #T7157 -->
+    <record
+        model="ir.ui.view"
+        id="stock_return_reason_stock_return_picking_form_view_inherited"
+    >
+        <field name="name">
+            stock.return.reason.stock.return.picking.form.view.inherited
+        </field>
+        <field name="model">stock.return.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_return_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_return_moves']" position="after">
+                <!-- adding the return reason field after the o2m field #T7157-->
+                <separator string="Return Reason" />
+                <field name="return_reason" required="1" nolabel="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

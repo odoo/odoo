@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="commission_make_invoice_form" model="ir.ui.view">
+        <field name="name">Make invoices</field>
+        <field name="model">commission.make.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Make invoices">
+                <group colspan="2">
+                    <field name="journal_id" />
+                    <field name="company_id" />
+                    <field name="product_id" />
+                    <field name="date" />
+                </group>
+                <group
+                    string="Settlements"
+                    attrs="{'invisible': [('from_settlement', '=', True)]}"
+                >
+                    <p
+                        colspan="4"
+                    >(keep empty for invoicing all the pending settlements)</p>
+                    <field name="from_settlement" invisible="1" />
+                    <group>
+                        <field name="grouped" />
+                    </group>
+                    <group colspan="4">
+                        <field name="settlement_ids" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="button_create"
+                        string="Create invoices"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        special="cancel"
+                        data-hotkey="z"
+                        string="Cancel"
+                        class="oe_link"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_commission_make_invoices" model="ir.actions.act_window">
+        <field name="name">Create Commission Invoices</field>
+        <field name="res_model">commission.make.invoice</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_commission_make_invoice" />
+    </record>
+    <menuitem
+        id="menu_invoicing_settlements_make_invoice"
+        parent="menu_invoicing_commission"
+        action="action_commission_make_invoices"
+        sequence="20"
+    />
+</odoo>

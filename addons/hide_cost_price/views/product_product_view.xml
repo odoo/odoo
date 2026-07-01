@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Variant Form View -->
+    <record id="product_product_view_form" model="ir.ui.view">
+        <field name="name">
+            product.product.view.form.inherited.hide.cost.price
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='standard_price']"
+                   position="attributes">
+                <attribute name="groups">hide_cost_price.groups_view_cost_price
+                </attribute>
+            </xpath>
+            <xpath expr="//div[@name='standard_price_uom']"
+                   position="attributes">
+                <attribute name="groups">hide_cost_price.groups_view_cost_price
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- Product Variant Tree View -->
+    <record id="product_product_view_tree" model="ir.ui.view">
+        <field name="name">
+            product.product.view.tree.inherited.hide.cost.price
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='standard_price']"
+                   position="attributes">
+                <attribute name="groups">hide_cost_price.groups_view_cost_price
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">
+            product.product.view.tree.inherited.hide.cost.price
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='standard_price']"
+                   position="attributes">
+                <attribute name="groups">hide_cost_price.groups_view_cost_price
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

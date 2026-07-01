@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inherited form view of delivery carrier to include the option to add
+    products to be restricted-->
+    <record id="view_delivery_carrier_form" model="ir.ui.view">
+        <field name="name">
+            delivery.carrier.view.form.inherit.restrict.delivery.method
+        </field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='delivery_details']" position="after">
+                <group>
+                    <label for="restrict_product_ids"/>
+                    <div>
+                        <field name="restrict_product_ids"
+                               widget="many2many_tags" class="oe_inline"/>
+                        <button type="object" name="action_notification"
+                                class="o_tz_warning fa fa-exclamation-triangle position-static align-self-center m-0 ms-2 oe_inline"
+                                attrs="{'invisible': [('partner_warning', '=', False)]}"/>
+                        <field name="partner_warning" invisible="1"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

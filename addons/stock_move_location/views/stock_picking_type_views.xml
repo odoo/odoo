@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_picking_type_form">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form" />
+        <field name="arch" type="xml">
+            <field name="show_operations" position="after">
+                <field
+                    name="show_move_onhand"
+                    attrs='{"invisible": [("code", "not in", ["internal", "outgoing"])]}'
+                />
+            </field>
+        </field>
+    </record>
+    <record id="stock_picking_type_kanban" model="ir.ui.view">
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="show_move_onhand" />
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="inside">
+                <div t-if="record.show_move_onhand.raw_value">
+                    <button
+                        name="action_move_location"
+                        type="object"
+                        class="btn btn-info"
+                        style="margin-top: 5px;"
+                    >
+                        Move On Hand
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--The security for the gym_mgmt_system-->
+    <record model="ir.module.category" id="module_category_gym_operator">
+        <field name="name">Gym Management</field>
+        <field name="description">category for Gym Management</field>
+    </record>
+    <record id="group_gym_member" model="res.groups">
+        <field name="name">Member</field>
+        <field name="category_id" ref="module_category_gym_operator"/>
+    </record>
+    <record id="group_gym_trainer" model="res.groups">
+        <field name="name">Trainer</field>
+        <field name="category_id" ref="module_category_gym_operator"/>
+        <field name="implied_ids" eval="[(4, ref('group_gym_member'))]"/>
+    </record>
+    <record id="group_gym_operator" model="res.groups">
+        <field name="name">Operator</field>
+        <field name="category_id" ref="module_category_gym_operator"/>
+        <field name="implied_ids" eval="[(4, ref('group_gym_trainer'))]"/>
+    </record>
+</odoo>

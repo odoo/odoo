@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">
+        <t t-set="head_web" position="inside">
+            <script type="text/javascript">
+                odoo.web_chatter_position = "<t
+                    t-out="request.env.user.chatter_position"
+                />";
+            </script>
+        </t>
+    </template>
+</odoo>

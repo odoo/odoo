@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherited the product template form view-->
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.margin.product.sale.invoice</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='detailed_type']" position="after">
+                <field name="margin_percent_product" widget="percentage" groups="!product.group_product_variant"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

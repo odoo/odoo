@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit product view to add connector page and  Binding -->
+    <record id="product_product_form_view" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <header>
+                    <field name="woo_bind_ids" invisible="1" />
+                    <field name="stock_manage" invisible="1" />
+                    <field name="backend_stock_manage" invisible="1" />
+                    <button
+                        name="update_stock_qty"
+                        title="Update stock inventory To Woocommerce."
+                        type="object"
+                        class="oe_highlight"
+                        string="Update Stock Inventory"
+                        attrs="{'invisible': ['|','|',('woo_bind_ids', '=', []),('stock_manage','=',False),('backend_stock_manage','=',False)]}"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="WooCommerce Connector"
+                    name="woo_connector"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="woo_bind_ids" nolabel="1" readonly="1">
+                        <tree
+                            string="WooCommerce Product"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </tree>
+                        <form
+                            string="WooCommerce Product"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <group>
+                                <group>
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                    <field name="status" />
+                                    <field name="tax_status" />
+                                    <field name="woo_product_qty" />
+                                </group>
+                                <group>
+                                    <field name="woo_product_name" />
+                                    <field name="stock_status" />
+                                    <field name="price" />
+                                    <field name="regular_price" />
+                                    <field name="stock_management" />
+                                    <field name="downloadable_product" />
+                                </group>
+                                <label
+                                    for="woo_product_categ_ids"
+                                    string="WooCommerce Product Categories"
+                                />
+                                <field name="woo_product_categ_ids" />
+                                <label
+                                    for="woo_attribute_ids"
+                                    string="WooCommerce Attributes"
+                                />
+                                <field name="woo_attribute_ids">
+                                    <tree>
+                                        <field name="name" />
+                                        <field
+                                            name="value_ids"
+                                            widget="many2many_tags"
+                                        />
+                                    </tree>
+                                </field>
+                                <label
+                                    for="woo_product_attribute_value_ids"
+                                    string="WooCommerce Product Attribute Values"
+                                />
+                                <field name="woo_product_attribute_value_ids">
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="attribute_id" />
+                                    </tree>
+                                </field>
+                                <label
+                                    for="woo_product_image_url_ids"
+                                    string="WooCommerce Product Image URL"
+                                />
+                                <field name="woo_product_image_url_ids" />
+                                <label
+                                    for="woo_downloadable_product_ids"
+                                    string="WooCommerce Downloadable Product"
+                                />
+                                <field name="woo_downloadable_product_ids" />
+                                <group>
+                                    <field name="woo_data" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

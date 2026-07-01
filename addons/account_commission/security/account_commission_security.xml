@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2020-2022 Tecnativa - Pedro M. Baeza
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+     <data>
+        <record id="group_invoicing_commission" model="res.groups">
+            <field name="name">Manage invoices commissions</field>
+            <field name="category_id" ref="base.module_category_hidden" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+     </data>
+     <data noupdate="1">
+        <record id="rule_invoice_line_agent_multi_company" model="ir.rule">
+            <field name="name">Invoice commission line multi-company</field>
+            <field name="model_id" ref="model_account_invoice_line_agent" />
+            <field name="global" eval="True" />
+            <field
+                name="domain_force"
+            >['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_settlement_all" model="ir.rule">
+            <field name="name">Commission settlements - Sales invoices</field>
+            <field name="groups" eval="[(4, ref('group_invoicing_commission'))]" />
+            <field name="model_id" ref="model_commission_settlement" />
+            <field
+                name="domain_force"
+            >[('settlement_type', '=', 'sale_invoice')]</field>
+        </record>
+    </data>
+</odoo>

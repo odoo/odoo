@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+    <record id="availability_create_cron" model="ir.cron">
+        <field name="name">Task Deadline Reminder</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_deadline_reminder()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+
+</odoo>

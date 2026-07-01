@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="pip_command_form" model="ir.ui.view">
+			<field name="name">pip.commamd.form</field>
+			<field name="model">pip.command</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="pip_versions" 
+							/>					
+						</group>
+						<group>
+							<field name="library_name"/>					
+						</group>
+					</group>
+					<footer>
+						<button
+							string="Install"
+							type  ="object"
+							name  ="install_button"
+							class ="oe_highlight btn btn-success"
+						/>
+						<button string="Cancel" class="btn btn-danger" name="cancel" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>
