@@ -215,17 +215,6 @@
                     <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                 </xpath>
-                <filter name="month" position="inside">
-                    <filter name="date_this_week" string="This Week" domain="[
-                        ('date', '&gt;=', '=week_start'),
-                        ('date', '&lt;', '=week_start +1w'),
-                    ]"/>
-                    <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
-                    <filter name="date_last_week" string="Last Week" domain="[
-                        ('date', '&gt;=', '=week_start -1w'),
-                        ('date', '&lt;', '=week_start'),
-                    ]"/>
-                </filter>
                 <xpath expr="//group" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>

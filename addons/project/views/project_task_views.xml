@@ -83,14 +83,6 @@
                     <field name="activity_type_id" string="Activity type"/>
                     <filter string="Deadline" name="date_deadline" date="date_deadline">
                         <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
-                        <filter name="deadline_this_week" string="This Week" domain="[
-                            ('date_deadline', '&gt;=', '=week_start'),
-                            ('date_deadline', '&lt;', '=week_start +1w'),
-                        ]"/>
-                        <filter name="deadline_today" string="Today" domain="[
-                            ('date_deadline', '&gt;=', 'today'),
-                            ('date_deadline', '&lt;', 'today +1d'),
-                        ]"/>
                         <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
                     </filter>
                 </filter>

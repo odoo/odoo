@@ -10,17 +10,7 @@
                     <filter string="My Team" name="my_team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
                     <filter string="My Department" name="my_department" domain="[('employee_id.member_of_department', '=', True)]"/>
                     <separator/>
-                    <filter name="month" string="Date" date="date">
-                        <filter name="date_this_week" string="This Week" domain="[
-                            ('date', '&gt;=', '=week_start'),
-                            ('date', '&lt;', '=week_start +1w'),
-                        ]"/>
-                        <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
-                        <filter name="date_last_week" string="Last Week" domain="[
-                            ('date', '&gt;=', '=week_start -1w'),
-                            ('date', '&lt;', '=week_start'),
-                        ]"/>
-                    </filter>
+                    <filter name="month" string="Date" date="date"/>
                     <filter name="group_by_user" string="Employee" context="{'group_by': 'employee_id'}"/>
                     <filter name="group_by_month" string="Date" date="date" context="{'group_by': 'date'}"/>
                 </search>
