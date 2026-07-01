@@ -1025,9 +1025,9 @@ class PosConfig(models.Model):
         fee_products = self.env['pos.preset'].search([('service_fee', '=', True)]).mapped('service_fee_product_id')
         return default_tip | default_fee | fee_products
 
-    def update_customer_display(self, order, device_uuid):
+    def update_customer_display(self, order, identifier):
         self.ensure_one()
-        self._notify(f"UPDATE_CUSTOMER_DISPLAY-{device_uuid}", order)
+        self._notify(f"UPDATE_CUSTOMER_DISPLAY-{identifier}", order)
 
     def _get_customer_display_data(self):
         self.ensure_one()

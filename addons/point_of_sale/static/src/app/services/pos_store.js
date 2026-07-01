@@ -45,6 +45,7 @@ import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_scree
 import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
+import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
 
 const { DateTime } = luxon;
@@ -81,6 +82,7 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "pos_router",
         "mail.sound_effects",
+        "customer_display_service",
     ];
 
     constructor() {
@@ -106,6 +108,7 @@ export class PosStore extends WithLazyGetterTrap {
             action,
             pos_router,
             alert,
+            customer_display_service,
         }
     ) {
         this.env = env;
@@ -121,6 +124,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.router = pos_router;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
+        this.customerDisplay = customer_display_service;
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
         this.searchProductDBState = null;
@@ -160,6 +164,10 @@ export class PosStore extends WithLazyGetterTrap {
             type: "pending",
             message: _t("Checking Local Network Access permission..."),
         };
+        this.debounceUpdateCustomerDisplay = debounce(
+            () => this.customerDisplay.sendOrder(this.selectedOrder),
+            100
+        );
 
         this.syncingOrders = new Set();
         await this.initServerData();
@@ -225,6 +233,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             }
         });
+        await this.initCustomerDisplay();
     }
 
     handleQRPaymentLines() {
@@ -308,6 +317,9 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         this.router.navigate(routeName, routeParams);
+        this.customerDisplay.send({
+            displayScreenSaver: ["SaverScreen", "LoginScreen"].includes(this.router.state.current),
+        });
         return true;
     }
 
@@ -368,13 +380,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get customerDisplayUrl() {
-        if (!localStorage.getItem("device_uuid")) {
-            localStorage.setItem("device_uuid", uuidv4());
-        }
-        const deviceUuid = localStorage.getItem("device_uuid");
-        return `${this.config._base_url}/pos_customer_display/${
-            this.config.id
-        }/${deviceUuid}?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
+        return `${this.config._base_url}/pos_customer_display/${this.config.id}/${
+            this.device.identifier
+        }?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
     }
 
     async reloadData(fullReload = false) {
@@ -2951,6 +2959,28 @@ export class PosStore extends WithLazyGetterTrap {
                 cancel: () => resolve(false),
             });
         });
+    }
+
+    async initCustomerDisplay() {
+        await this.customerDisplay.initSender(
+            this.device.identifier,
+            this.models,
+            GeneratePrinterData
+        );
+        // model-event map that should trigger a customer display update.
+        const customerDisplayEventListeners = {
+            "pos.order": ["create", "update"],
+            "pos.order.line": ["update"],
+            "pos.payment": ["update"],
+        };
+        for (const [model, events] of Object.entries(customerDisplayEventListeners)) {
+            for (const eventName of events) {
+                this.models[model].addEventListener(
+                    eventName,
+                    this.debounceUpdateCustomerDisplay.bind(this)
+                );
+            }
+        }
     }
 }
 

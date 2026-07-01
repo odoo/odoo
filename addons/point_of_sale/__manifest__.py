@@ -233,6 +233,7 @@
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'google_address_autocomplete/static/src/**/*',
             'point_of_sale/static/src/backend/pos_res_partner_view/*',
+            'point_of_sale/static/src/customer_display/customer_display_service.js',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
@@ -263,6 +264,7 @@
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+            "point_of_sale/static/src/app/utils/pretty_console_log.js",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),

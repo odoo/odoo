@@ -7,6 +7,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
     steps: () =>
         [
+            CustomerDisplay.startCustomerDisplay(),
             CustomerDisplay.addProduct(CustomerDisplay.ADD_PRODUCT_SELECTED, "add product"),
             Order.hasLine({ productName: "Letter Tray", price: "2,972.75" }),
             CustomerDisplay.amountIs("Total", "2,972.75"),
@@ -26,7 +27,6 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
                 trigger: "div:contains('Welcome')",
             },
             Order.doesNotHaveLine({}),
-            CustomerDisplay.amountIs("Total", "0.00"),
 
             // Make a new order
             CustomerDisplay.postMessage(CustomerDisplay.ADD_PRODUCT_SELECTED, "add product"),

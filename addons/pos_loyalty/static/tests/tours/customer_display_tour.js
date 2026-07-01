@@ -2,8 +2,10 @@ import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as CustomerDisplay from "@point_of_sale/../tests/customer_display/customer_display_utils";
 
-const ADD_PRODUCT = JSON.stringify({
-    ...JSON.parse(CustomerDisplay.ADD_PRODUCT),
+const ADD_PRODUCT_WITH_LOYALTY = JSON.stringify({
+    ...CustomerDisplay.getOrderJsonData({
+        lines: [CustomerDisplay.getLineJsonData()],
+    }),
     loyaltyData: [
         {
             couponId: 101,
@@ -21,7 +23,8 @@ const ADD_PRODUCT = JSON.stringify({
 registry.category("web_tour.tours").add("test_customer_display_loyalty_points", {
     steps: () =>
         [
-            CustomerDisplay.addProduct(ADD_PRODUCT, "add product"),
+            CustomerDisplay.startCustomerDisplay(),
+            CustomerDisplay.addProduct(ADD_PRODUCT_WITH_LOYALTY, "add product"),
             Order.hasLine({ productName: "Letter Tray", price: "2,972.75" }),
             CustomerDisplay.amountIs("Total", "2,972.75"),
             {

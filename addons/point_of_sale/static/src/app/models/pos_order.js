@@ -4,6 +4,7 @@ import { computeComboItems } from "./utils/compute_combo_items";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 import { getStrNotes } from "./utils/order_change";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 
 const { DateTime } = luxon;
 
@@ -957,6 +958,29 @@ export class PosOrder extends PosOrderAccounting {
             removedQuantity: removedQuantity,
             noteUpdate: noteUpdate,
         };
+    }
+
+    get hasRemainingDue() {
+        const isNegative = this.totalDue < 0;
+        const remainingDue = this.remainingDue;
+
+        if ((isNegative && remainingDue > 0) || (!isNegative && remainingDue <= 0)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    get remainingDueAmount() {
+        return this.hasRemainingDue ? this.remainingDue : this.change;
+    }
+
+    get remainingDueAmountText() {
+        return formatCurrency(this.remainingDueAmount, this.currency);
+    }
+
+    get remainingDueText() {
+        return this.hasRemainingDue ? _t("Remaining") : _t("Change");
     }
 
     get serviceFeeLines() {
