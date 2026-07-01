@@ -3563,3 +3563,37 @@ class TestStockValuation(TestStockValuationCommon):
             {'account_id': self.product_standard.with_company(self.other_company).categ_id.account_stock_variation_id.id,            'debit': 0.0, 'credit': 30.0},
             {'account_id': self.product_standard.with_company(self.other_company).categ_id.property_stock_valuation_account_id.id,   'debit': 30, 'credit': 0.0}
         ])
+
+    def test_avco_report_with_global_default_cost_method(self):
+        """ Ensure that products using a global default cost method of 'average'
+        have their moves included in the stock.avco.report. """
+
+        category = self.env['product.category'].create({
+            'name': 'No Cost Method Category',
+        })
+
+        self.env['ir.default'].set(
+            'product.category',
+            'property_cost_method',
+            'average',
+            company_id=True,
+            user_id=False,
+        )
+
+        # Re-fetch category to clear cache after ir.default update
+        category.invalidate_recordset(['property_cost_method'])
+
+        product = self.env['product.product'].create({
+            'name': 'Test Default AVCO Product',
+            'categ_id': category.id,
+            'is_storable': True,
+        })
+
+        self.assertEqual(product.cost_method, 'average')
+
+        self._make_in_move(product, 10, 10)
+
+        report_records = self.env['stock.avco.report'].search([('product_id', '=', product.id)]).sorted('date, id')
+
+        # 1 move + 1 cost adjustment line
+        self.assertEqual(len(report_records), 2, "The AVCO report should include the moves when using a global default cost method.")
