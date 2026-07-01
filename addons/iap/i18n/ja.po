@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-05 19:33+0000\n"
 "PO-Revision-Date: 2026-04-30 07:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/iap/"
@@ -55,21 +55,6 @@ msgstr ""
 "い。"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr "自動補充"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
-msgid "Auto-refill Pack"
-msgstr "自動補充パック"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_threshold
-msgid "Auto-refill Threshold"
-msgstr "自動補充閾値"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 msgid "Balance"
 msgstr "残高"
@@ -83,11 +68,6 @@ msgstr "残高"
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
 msgstr "禁止済"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr "購入"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -250,11 +230,6 @@ msgid "Manage Service & Buy Credits"
 msgstr ""
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
-msgstr "自動補充の支払い方法を管理"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__name
@@ -271,16 +246,6 @@ msgstr "提供された技術設定名のサービスは存在しません"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo In-App Purchase"
 msgstr "Odoo アプリ内課金"
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_threshold
-msgid ""
-"Once you have this many credits or less, the system will automatically buy "
-"the following pack with your payment method on file. Set to 0 to disable "
-"auto-refill."
-msgstr ""
-"このクレジット数以下になると、システムは登録済みの支払い方法で自動的に次の"
-"パックを購入します。自動補充を無効にするには0に設定してください。"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
@@ -352,11 +317,6 @@ msgid "Service Packs"
 msgstr "サービスパック"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr "アラート設定と自動補充"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "状態"
@@ -382,25 +342,6 @@ msgstr ""
 #: code:addons/iap/models/iap_account.py:0
 msgid "The IAP token provided is invalid or empty."
 msgstr "提供されたIAPトークンが無効か空です。"
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_pack_id
-msgid ""
-"The In-App Purchase pack the system will automatically buy when reaching "
-"your refill threshold."
-msgstr ""
-"リフィルのしきい値に達したときに、システムが自動的に購入するアプリ内課金パッ"
-"クです。"
-
-#. module: iap
-#. odoo-python
-#: code:addons/iap/tools/iap_tools.py:0
-msgid ""
-"The request to the service timed out. Please contact the author of the app. "
-"The URL it tried to contact was %s"
-msgstr ""
-"サービスへのリクエストはタイムアウトしました。アプリの作者にお問い合わせくだ"
-"さい。連絡を施行したURL:  %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-11-11 17:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -28,6 +28,16 @@ msgid "%(payment_method)s requires both a first and last name."
 msgstr ""
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_abitab
+msgid "Abitab"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
@@ -36,9 +46,44 @@ msgid ""
 msgstr ""
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_astropay
+msgid "Astropay TEF"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_banco_guayaquil
+msgid "Banco Guayaquil"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_banco_pichincha
+msgid "Banco Pichincha"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_boleto
+msgid "Boleto"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
 msgid "Code"
 msgstr "Oznaka"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
@@ -47,14 +92,34 @@ msgid "Display Name"
 msgstr "Prikazani naziv"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_facilito
+msgid "Facilito"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_nuvei_local
+msgid "Local Payments"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_naranja
+msgid "Naranja"
 msgstr ""
 
 #. module: payment_nuvei
@@ -78,6 +143,16 @@ msgid "Nuvei Site Identifier"
 msgstr ""
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_oxxopay
+msgid "Oxxo Pay"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_pse
+msgid "PSE"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
 msgid "Payment Provider"
 msgstr "Ponudnik plačil"
@@ -86,6 +161,11 @@ msgstr "Ponudnik plačil"
 #: model:ir.model,name:payment_nuvei.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Plačilna transakcija"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_pix
+msgid "Pix"
+msgstr ""
 
 #. module: payment_nuvei
 #. odoo-python
@@ -100,6 +180,16 @@ msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr ""
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_redpagos
+msgid "Redpagos"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_spei
+msgid "SPEI"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Secret Key"
 msgstr "Skrivni ključ"
@@ -107,6 +197,11 @@ msgstr "Skrivni ključ"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_tarjeta_mercadopago
+msgid "Tarjeta MercadoPago"
 msgstr ""
 
 #. module: payment_nuvei
@@ -128,4 +223,19 @@ msgstr ""
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_webpay
+msgid "WebPay"
 msgstr ""

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2026-01-24 12:39+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -699,6 +699,8 @@ msgstr "블로그 게시물 제목"
 
 #. module: website_blog
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_blog/models/website_blog.py:0
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
@@ -1019,6 +1021,21 @@ msgid "Drag blocks here to add them on all blogs"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the \"Filter Results\" page header"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the Blog page header"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the header of the \"{{0}}\" category."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
 msgid "East Maui"
 msgstr "서 마우이"
@@ -1041,21 +1058,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Edit in backend"
 msgstr "백엔드에서 편집하기"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the 'All Blogs' page header."
-msgstr "'모든 블러그' 페이지 머릿말을 편집하기."
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the 'Filter Results' page header."
-msgstr "'필터 결과' 페이지 헤더를 편집하기."
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the '{{0}}' page header."
-msgstr "{{0}}' 페이지 헤더를 수정합니다."
 
 #. module: website_blog
 #. odoo-javascript
@@ -1968,7 +1970,7 @@ msgid "Read Now <i class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_card
 msgid "Read more <i class=\"oi oi-chevron-right ms-2\"/>"
 msgstr "더 읽기 <i class=\"oi oi-chevron-right ms-2\"/>"
 
@@ -2801,12 +2803,6 @@ msgid "Website Blogs"
 msgstr "웹사이트 블로그"
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_message_ids
-#: model:ir.model.fields,field_description:website_blog.field_blog_post__website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: website_blog
 #: model:ir.model,name:website_blog.model_website_snippet_filter
 msgid "Website Snippet Filter"
 msgstr "웹사이트 스니펫 필터"
@@ -2816,12 +2812,6 @@ msgstr "웹사이트 스니펫 필터"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
 msgid "Website URL"
 msgstr "웹 사이트 URL"
-
-#. module: website_blog
-#: model:ir.model.fields,help:website_blog.field_blog_blog__website_message_ids
-#: model:ir.model.fields,help:website_blog.field_blog_post__website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_description
