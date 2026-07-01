@@ -295,3 +295,114 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
             {'amount_currency': -17.36, 'analytic_distribution': False},
             {'amount_currency': 100.00, 'analytic_distribution': False},
         ])
+
+    def test_trust_precalculated_tax_lines_on_creation(self):
+        """
+        Test that when a move is created with explicitly provided tax lines and balances
+        (like hr.expense does), the synchronization is skipped to prevent penny drift
+        and preserve line ordering.
+        """
+        self.tax_21.analytic = False
+        self.tax_21.invoice_repartition_line_ids.use_in_tax_closing = True
+
+        move_vals = {
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': -100.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'balance': -21.01,  # Forced drifted penny
+                    'tax_repartition_line_id': self.tax_21.invoice_repartition_line_ids.filtered(
+                        lambda l: l.repartition_type == 'tax').id,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'balance': 121.01,
+                }),
+            ]
+        }
+
+        move = self.env['account.move'].create(move_vals)
+
+        tax_line = move.line_ids.filtered('tax_repartition_line_id')
+        self.assertEqual(tax_line.balance, -21.01, "The pre-calculated tax amount must be trusted on creation.")
+
+    def test_trust_injected_tax_lines(self):
+        """
+        Test that when an external engine (like Avatax) injects a tax line into an
+        existing move, Odoo hits the safety block instead of deleting and recalculating it.
+        """
+        self.tax_21.analytic = False
+        self.tax_21.invoice_repartition_line_ids.use_in_tax_closing = True
+
+        invoice = self._create_invoice_one_line(
+            price_unit=800.0,
+            tax_ids=self.env['account.tax'],  # Empty
+        )
+
+        # Simulate Avatax injecting a computed tax line
+        invoice.write({
+            'line_ids': [
+                Command.create({
+                    'display_type': 'tax',
+                    'name': 'Injected External Tax',
+                    'amount_currency': -96.0,
+                    'tax_repartition_line_id': self.tax_21.invoice_repartition_line_ids.filtered(
+                        lambda l: l.repartition_type == 'tax').id,
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                })
+            ]
+        })
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertEqual(tax_line.amount_currency, -96.0, "Injected tax lines must survive synchronization.")
+
+    def test_injection_survives_subsequent_writes(self):
+        """
+        When an external API (like Avatax) calculates taxes, it injects them directly via write().
+        Any subsequent, completely unrelated write will wake up the diffing engine. The engine will
+        see the injected tax, assume it's an unprotected error, and recalculate it (or delete it).
+        """
+        self.tax_21.analytic = False
+
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            tax_ids=self.env['account.tax'],  # Explicitly empty
+        )
+
+        tax_rep_line = self.tax_21.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax')
+
+        invoice.write({
+            'line_ids': [
+                Command.create({
+                    'display_type': 'tax',
+                    'name': 'API Injected Tax',
+                    'amount_currency': -123.45,
+                    'tax_repartition_line_id': tax_rep_line.id,
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                })
+            ]
+        })
+
+        # Confirm tax line is not recalculated
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertEqual(tax_line.amount_currency, -123.45, "Initial injection failed.")
+
+        # Do unrelated write to invoice to make sure tax is not recalculated
+        invoice.write({'payment_reference': 'API_PROCESSED_001'})
+        tax_line_after = invoice.line_ids.filtered('tax_repartition_line_id')
+
+        self.assertTrue(
+            tax_line_after,
+            "The API-injected tax was completely deleted by the diffing engine!"
+        )
+        self.assertEqual(
+            tax_line_after.amount_currency,
+            -123.45,
+            "The API-injected tax amount was overwritten by the diffing engine!"
+        )
