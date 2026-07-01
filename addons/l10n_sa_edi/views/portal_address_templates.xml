@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_state" position="after">
+            <t t-if="is_used_as_billing and res_company.account_fiscal_country_id.code == 'SA'">
+                <div id="div_l10n_sa_edi_building_number" class="col-lg-6 mb-2">
+                    <label class="col-form-label label-optional" for="o_l10n_sa_edi_building_number">Building Number</label>
+                    <input
+                        id="o_l10n_sa_edi_building_number"
+                        type="text"
+                        name="l10n_sa_edi_building_number"
+                        t-att-value="partner_sudo.l10n_sa_edi_building_number"
+                        class="form-control"
+                    />
+                </div>
+                <div id="div_l10n_sa_edi_plot_identification" class="col-lg-6 mb-2">
+                    <label class="col-form-label label-optional" for="o_l10n_sa_edi_plot_identification">Plot Identification</label>
+                    <input
+                        id="o_l10n_sa_edi_plot_identification"
+                        type="text"
+                        name="l10n_sa_edi_plot_identification"
+                        t-att-value="partner_sudo.l10n_sa_edi_plot_identification"
+                        class="form-control"
+                    />
+                </div>
+                <div id="div_l10n_sa_edi_additional_identification_scheme" class="col-lg-6 mb-2">
+                    <label class="col-form-label label-optional" for="o_l10n_sa_edi_additional_identification_scheme">
+                        Identification Scheme
+                    </label>
+                    <select
+                        id="o_l10n_sa_edi_additional_identification_scheme"
+                        name="l10n_sa_edi_additional_identification_scheme"
+                        class="form-select"
+                    >
+                        <option value="">Select Scheme...</option>
+                        <option
+                            t-foreach="identification_schemes"
+                            t-as="scheme"
+                            t-att-value="scheme[0]"
+                            t-att-selected="scheme[0] == partner_sudo.l10n_sa_edi_additional_identification_scheme"
+                            t-out="scheme[1]"
+                        />
+                    </select>
+                </div>
+                <div id="div_l10n_sa_edi_additional_identification_number" class="col-lg-6 mb-2">
+                    <label class="col-form-label label-optional" for="o_l10n_sa_edi_additional_identification_number">Identification Number</label>
+                    <input
+                        id="o_l10n_sa_edi_additional_identification_number"
+                        type="text"
+                        name="l10n_sa_edi_additional_identification_number"
+                        t-att-value="partner_sudo.l10n_sa_edi_additional_identification_number"
+                        class="form-control"
+                    />
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>
