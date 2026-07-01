@@ -105,6 +105,10 @@ export class SearchBarMenu extends Component {
         this.env.searchModel.toggleRelativeFilter(itemId, optionId);
     }
 
+    hasActiveOption(item, relativeItem) {
+        return item.isActive || (relativeItem?.options?.some((o) => o.isActive) ?? false);
+    }
+
     async onToggle({ itemId, optionsParams }) {
         if (optionsParams.toBeLoaded) {
             await this.env.searchModel.loadLazyParentFilter(itemId);

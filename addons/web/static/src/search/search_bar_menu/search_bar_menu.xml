@@ -34,6 +34,7 @@
                                     class="'text-truncate'"
                                     description="item.description"
                                     selected="item.isActive"
+                                    open="this.hasActiveOption(item, relativeItem)"
                                     onWillToggle="() => this.onToggle({ itemId: item.id, optionsParams: item.optionsParams })"
                                 >
                                     <t t-if="relativeItem" t-call="web.SearchBarMenu.RelativeFilterOptions"/>
@@ -76,7 +77,7 @@
                                 <PropertiesGroupByItem item="item" onGroup.bind="this.onGroupBySelected"/>
                             </t>
                             <t t-elif="item.options">
-                                <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
+                                <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive" open="item.isActive">
                                     <t t-set="subGroup" t-value="null"/>
                                     <t t-foreach="item.options" t-as="option" t-key="option.id">
                                         <t t-if="subGroup !== null and subGroup !== option.groupNumber">

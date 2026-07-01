@@ -6,7 +6,6 @@ import {
     mockService,
     models,
     mountView,
-    toggleMenuItem,
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
@@ -102,11 +101,6 @@ async function mountViewWithSearch(mountViewContext = null) {
     });
 }
 
-async function toggleGroupBy(fieldLabel) {
-    await toggleSearchBarMenu();
-    await toggleMenuItem(fieldLabel);
-}
-
 function checkGroupByOrder() {
     const searchFacets = queryAll(".o_facet_value");
     expect(searchFacets).toHaveCount(2);
@@ -134,7 +128,7 @@ test("burndown.chart: check that removing the group by 'Date: Month > Stage' in 
 
 test("burndown.chart: check that removing the group by 'Date' triggers a notification", async () => {
     await mountViewWithSearch();
-    await toggleGroupBy("Date");
+    await toggleSearchBarMenu();
     await toggleMenuItemOption("Date", "Month");
     // Only the notification will be triggered and the file won't be uploaded.
     expect.verifySteps(["notification"]);
@@ -142,7 +136,7 @@ test("burndown.chart: check that removing the group by 'Date' triggers a notific
 
 test("burndown.chart: check that adding a group by 'Date' actually toggles it", async () => {
     await mountViewWithSearch();
-    await toggleGroupBy("Date");
+    await toggleSearchBarMenu();
     await toggleMenuItemOption("Date", "Year");
     expect(".o_accordion_values .selected").toHaveCount(1, {
         message: "There should be only one selected item",

@@ -10,7 +10,6 @@ import {
     models,
     mountWithSearch,
     selectGroup,
-    toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
@@ -118,7 +117,6 @@ test(`add a date field in "Custom Group" activate a groupby with global default 
     expect(getFacetTexts()).toEqual(["Date: Month"]);
     expect(isItemSelected("Date")).toBe(true);
 
-    await toggleMenuItem("Date");
     expect(isOptionSelected("Date", "Month")).toBe(true);
 });
 
