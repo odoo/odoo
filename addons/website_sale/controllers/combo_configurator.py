@@ -72,7 +72,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
 
             data["extra_price"] -= data["extra_price"] * (discount_percentage / 100.0)
 
-        website = self.env["website"].get_current_website(fallback=False)
+        website = self.env.website
         if website and website.show_line_subtotals_tax_selection == "tax_included":
             item_taxes = combo_item.product_id.taxes_id._filter_taxes_by_company(self.env.company)
             taxes = request.fiscal_position.map_tax(item_taxes)

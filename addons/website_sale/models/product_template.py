@@ -1085,9 +1085,7 @@ class ProductTemplate(models.Model):
     ):
         product = product or self.env["product.product"]
         if not tax_display:
-            show_tax = (
-                website or self.env["website"].get_current_website()
-            ).show_line_subtotals_tax_selection
+            show_tax = (website or self.env.website).show_line_subtotals_tax_selection
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         if self.type == "combo" and tax_display == "total_included":
@@ -1500,7 +1498,7 @@ class ProductTemplate(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website = self.env.website or self.env["website"].browse(self.env.context.get("host_id"))
 
         if self.product_variant_count == 1:
             vals = self.product_variant_id._prepare_jsonld_vals()
