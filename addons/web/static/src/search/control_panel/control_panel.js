@@ -17,7 +17,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t, useEffect } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 const DEFAULT_DISPLAY = {
@@ -191,40 +191,36 @@ export class ControlPanel extends Component {
             );
         }
 
-        // useLayoutEffect(() => {
-        //     if (
-        //         !this.env.isSmall ||
-        //         ("adaptToScroll" in this.display && !this.display.adaptToScroll)
-        //     ) {
-        //         return;
-        //     }
-        //     const scrollingEl = this.getScrollingElement();
-        //     this.scrollingElementResizeObserver.observe(scrollingEl);
-        //     scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
-        //     this.root.el.style.top = "0px";
-        //     this.scrollingElementHeight = scrollingEl.scrollHeight;
-        //     return () => {
-        //         this.scrollingElementResizeObserver.unobserve(scrollingEl);
-        //         scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
-        //     };
-        // });
+        useEffect(() => {
+            if (
+                !this.env.isSmall ||
+                ("adaptToScroll" in this.display && !this.display.adaptToScroll)
+            ) {
+                return;
+            }
+            const scrollingEl = this.getScrollingElement();
+            this.scrollingElementResizeObserver.observe(scrollingEl);
+            scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
+            this.root.el.style.top = "0px";
+            this.scrollingElementHeight = scrollingEl.scrollHeight;
+            return () => {
+                this.scrollingElementResizeObserver.unobserve(scrollingEl);
+                scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
+            };
+        });
 
         // The goal is to automatically open the dropdown menu of embedded actions if there is only one visible embedded action
         // We use a timer to delay the display of that dropdown menu to avoid flicker issues
-        // useLayoutEffect(
-        //     (el, showEmbedded) => {
-        //         const timer = setTimeout(() => {
-        //             if (
-        //                 showEmbedded &&
-        //                 this.state.embeddedInfos.visibleEmbeddedActions.length === 1
-        //             ) {
-        //                 el.querySelector(".btn[name='openEmbeddedActions']")?.click();
-        //             }
-        //         }, 100);
-        //         return () => clearTimeout(timer);
-        //     },
-        //     () => [this.root.el, this.state.embeddedInfos.showEmbedded]
-        // );
+        useEffect(() => {
+            const el = this.root.el;
+            const showEmbedded = this.state.embeddedInfos.showEmbedded;
+            const timer = setTimeout(() => {
+                if (showEmbedded && this.state.embeddedInfos.visibleEmbeddedActions.length === 1) {
+                    el?.querySelector(".btn[name='openEmbeddedActions']")?.click();
+                }
+            }, 100);
+            return () => clearTimeout(timer);
+        });
 
         onMounted(() => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
