@@ -5,7 +5,7 @@ import binascii
 import io
 from typing import Tuple, Union
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageSequence
 # We can preload Ico too because it is considered safe
 from PIL import IcoImagePlugin
 try:
@@ -77,6 +77,7 @@ class ImageProcess:
         """
         self.source = source or False
         self.operationsCount = 0
+        self.animated_frames = []
 
         if not source or source[:1] == b'<' or (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
             # don't process empty source or SVG or WEBP
@@ -148,6 +149,7 @@ class ImageProcess:
         if output_format == 'GIF':
             opt['optimize'] = True
             opt['save_all'] = True
+            opt['append_images'] = self.animated_frames
 
         if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
             output_image = output_image.convert("RGB")
@@ -171,8 +173,9 @@ class ImageProcess:
         If `max_width` or `max_height` is falsy, it will be computed from the
         other to keep the current ratio. If both are falsy, no resize is done.
 
-        It is currently not supported for GIF because we do not handle all the
-        frames properly.
+        Upscaling (expanding) is intentionally not supported for animated GIFs 
+        as forcing color palette interpolation across sequential frames causes 
+        the resulting file size to skyrocket.
 
         :param int max_width: max width
         :param int max_height: max height
@@ -180,10 +183,16 @@ class ImageProcess:
         :return: self to allow chaining
         :rtype: ImageProcess
         """
-        if self.image and self.original_format != 'GIF' and (max_width or max_height):
+        if self.image and (max_width or max_height):
             w, h = self.image.size
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
+            if self.original_format == 'GIF' and getattr(self.image, "is_animated", False):
+                if asked_width < w or asked_height < h:
+                    self._resize_animated_gif(asked_width, asked_height)
+                    if self.image.width != w or self.image.height != h:
+                        self.operationsCount += 1
+                return self
             if expand and (asked_width > w or asked_height > h):
                 self.image = self.image.resize((asked_width, asked_height))
                 self.operationsCount += 1
@@ -283,6 +292,26 @@ class ImageProcess:
             self.image = ImageOps.expand(self.image, border=padding)
             self.operationsCount += 1
         return self
+    
+    def _resize_animated_gif(self, target_width, target_height):
+        """Helper to safely step through, resize, and store GIF frames."""
+        
+        duration = self.image.info.get('duration', 100)
+        loop = self.image.info.get('loop', 0)
+
+        resized_frames = []
+        for frame in ImageSequence.Iterator(self.image):
+            frame_copy = frame.copy()
+            frame_copy.thumbnail((target_width, target_height), Resampling.LANCZOS)
+            resized_frames.append(frame_copy)
+
+        if resized_frames:
+            # Set primary anchor to the newly shrunken first frame
+            self.image = resized_frames[0]
+            self.image.info['duration'] = duration
+            self.image.info['loop'] = loop
+            # Pack remaining frames into instance memory
+            self.animated_frames = resized_frames[1:]
 
 
 def image_process(source, size=(0, 0), verify_resolution=False, quality=0, expand=False, crop=None, colorize=False, output_format='', padding=False):
