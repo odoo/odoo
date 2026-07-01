@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -12,7 +12,11 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
+<<<<<<< HEAD
 import { Component, onMounted, useEffect, props, proxy, t } from "@odoo/owl";
+=======
+import { Component, onMounted, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
+>>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
@@ -37,6 +41,14 @@ export class CustomColorPicker extends Component {
         setOperationCallbacks: t.function().optional(),
     });
 
+    elRef = signal(null);
+    colorPickerAreaRef = signal(null);
+    colorPickerPointerRef = signal(null);
+    colorSliderRef = signal(null);
+    colorSliderPointerRef = signal(null);
+    opacitySliderRef = signal(null);
+    opacitySliderPointerRef = signal(null);
+
     setup() {
         this.pickerFlag = false;
         this.sliderFlag = false;
@@ -47,13 +59,6 @@ export class CustomColorPicker extends Component {
         this.hexDisplay = proxy({ value: "" });
         this.shouldSetSelectedColor = false;
         this.lastFocusedSliderEl = undefined;
-        this.elRef = useRef("el");
-        this.colorPickerAreaRef = useRef("colorPickerArea");
-        this.colorPickerPointerRef = useRef("colorPickerPointer");
-        this.colorSliderRef = useRef("colorSlider");
-        this.colorSliderPointerRef = useRef("colorSliderPointer");
-        this.opacitySliderRef = useRef("opacitySlider");
-        this.opacitySliderPointerRef = useRef("opacitySliderPointer");
 
         // Need to be bound on all documents to work in all possible cases (we
         // have to be able to start dragging/moving from the colorpicker to
@@ -183,7 +188,7 @@ export class CustomColorPicker extends Component {
     }
 
     get el() {
-        return this.elRef.el;
+        return this.elRef();
     }
     /**
      * @param {string} hotkey
@@ -245,12 +250,12 @@ export class CustomColorPicker extends Component {
      */
     _updateUI() {
         // Update picker area and picker pointer position
-        const colorPickerArea = this.colorPickerAreaRef.el;
+        const colorPickerArea = this.colorPickerAreaRef();
         colorPickerArea.style.backgroundColor = `hsl(${this.colorComponents.hue}, 100%, 50%)`;
         const top = ((100 - this.colorComponents.lightness) * colorPickerArea.clientHeight) / 100;
         const left = (this.colorComponents.saturation * colorPickerArea.clientWidth) / 100;
 
-        const colorpickerPointer = this.colorPickerPointerRef.el;
+        const colorpickerPointer = this.colorPickerPointerRef();
         colorpickerPointer.style.top = top - 5 + "px";
         colorpickerPointer.style.left = left - 5 + "px";
         colorpickerPointer.setAttribute(
@@ -262,22 +267,22 @@ export class CustomColorPicker extends Component {
         );
 
         // Update color slider position
-        const colorSlider = this.colorSliderRef.el;
+        const colorSlider = this.colorSliderRef();
         const height = colorSlider.clientHeight;
         const y = (this.colorComponents.hue * height) / 360;
-        this.colorSliderPointerRef.el.style.bottom = `${Math.round(y - 4)}px`;
-        this.colorSliderPointerRef.el.setAttribute(
+        this.colorSliderPointerRef().style.bottom = `${Math.round(y - 4)}px`;
+        this.colorSliderPointerRef().setAttribute(
             "aria-valuenow",
             this.colorComponents.hue.toFixed(2)
         );
 
         if (!this.props.noTransparency) {
             // Update opacity slider position
-            const opacitySlider = this.opacitySliderRef.el;
+            const opacitySlider = this.opacitySliderRef();
             const heightOpacity = opacitySlider.clientHeight;
             const z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
-            this.opacitySliderPointerRef.el.style.top = `${Math.round(z - 2)}px`;
-            this.opacitySliderPointerRef.el.setAttribute(
+            this.opacitySliderPointerRef().style.top = `${Math.round(z - 2)}px`;
+            this.opacitySliderPointerRef().setAttribute(
                 "aria-valuenow",
                 this.colorComponents.opacity.toFixed(2)
             );
@@ -476,7 +481,7 @@ export class CustomColorPicker extends Component {
         this.pickerFlag = true;
         ev.preventDefault();
         this.onPointerMovePicker(ev);
-        this.setLastFocusedSliderEl(this.colorPickerPointerRef.el);
+        this.setLastFocusedSliderEl(this.colorPickerPointerRef());
     }
     /**
      * Updates saturation and lightness values on pointer drag over picker.
@@ -489,7 +494,7 @@ export class CustomColorPicker extends Component {
             return;
         }
 
-        const colorPickerArea = this.colorPickerAreaRef.el;
+        const colorPickerArea = this.colorPickerAreaRef();
         const rect = colorPickerArea.getClientRects()[0];
         const top = ev.pageY - rect.top;
         const left = ev.pageX - rect.left;
@@ -548,7 +553,7 @@ export class CustomColorPicker extends Component {
         this.sliderFlag = true;
         ev.preventDefault();
         this.onPointerMoveSlider(ev);
-        this.setLastFocusedSliderEl(this.colorSliderPointerRef.el);
+        this.setLastFocusedSliderEl(this.colorSliderPointerRef());
     }
     /**
      * Updates hue value on pointer drag over slider.
@@ -561,7 +566,7 @@ export class CustomColorPicker extends Component {
             return;
         }
 
-        const colorSlider = this.colorSliderRef.el;
+        const colorSlider = this.colorSliderRef();
         const colorSliderRects = colorSlider.getClientRects();
         const y = colorSliderRects[0].height - (ev.pageY - colorSliderRects[0].top);
         let hue = Math.round((360 * y) / colorSlider.clientHeight);
@@ -600,7 +605,7 @@ export class CustomColorPicker extends Component {
         this.opacitySliderFlag = true;
         ev.preventDefault();
         this.onPointerMoveOpacitySlider(ev);
-        this.setLastFocusedSliderEl(this.opacitySliderPointerRef.el);
+        this.setLastFocusedSliderEl(this.opacitySliderPointerRef());
     }
     /**
      * Updates opacity value on pointer drag over opacity slider.
@@ -613,7 +618,7 @@ export class CustomColorPicker extends Component {
             return;
         }
 
-        const opacitySlider = this.opacitySliderRef.el;
+        const opacitySlider = this.opacitySliderRef();
         const y = ev.pageY - opacitySlider.getClientRects()[0].top;
         let opacity = Math.round(100 * (1 - y / opacitySlider.clientHeight));
         opacity = clamp(opacity, 0, 100);

@@ -1,5 +1,5 @@
-import { proxy } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { proxy, signal } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -11,6 +11,8 @@ import { ReadonlyEmbeddedFileComponent } from "@html_editor/others/embedded_comp
 export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
     static template = "html_editor.EmbeddedFile";
 
+    nameInput = signal(null);
+
     setup() {
         super.setup();
         // override the state by an embedded state.
@@ -19,12 +21,12 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
         this.localState = proxy({
             editFileName: false,
         });
-        this.nameInput = useRef("nameInput");
         useLayoutEffect(
             () => {
                 if (this.localState.editFileName) {
-                    this.nameInput.el.focus();
-                    this.nameInput.el.select();
+                    const nameInput = this.nameInput();
+                    nameInput?.focus();
+                    nameInput?.select();
                 }
             },
             () => [this.localState.editFileName]
@@ -53,7 +55,7 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
     }
 
     renameFile() {
-        let newName = this.nameInput.el.value;
+        let newName = this.nameInput()?.value || "";
         if (!newName.length) {
             return false;
         }

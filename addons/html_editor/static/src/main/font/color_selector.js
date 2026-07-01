@@ -1,6 +1,6 @@
-import { useChildEnv, useRef } from "@web/owl2/utils";
+import { useChildEnv } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component, props, t, useEffect, proxy } from "@odoo/owl";
+import { Component, props, t, useEffect, proxy, signal } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
@@ -33,6 +33,8 @@ export class ColorSelector extends Component {
         useDefaultThemeColors: t.boolean().optional(true),
     });
 
+    colorSelectorBtn = signal(null);
+
     setup() {
         this.state = proxy({});
         this.colorSelectorState = proxy({ isOpen: false });
@@ -55,9 +57,8 @@ export class ColorSelector extends Component {
         });
 
         const colorPickerRef = useChildRef();
-        this.colorSelectorBtn = useRef("root");
         this.colorPicker = useColorPicker(
-            "root",
+            this.colorSelectorBtn,
             {
                 state: this.state,
                 applyColor: this.props.applyColor,
@@ -68,7 +69,7 @@ export class ColorSelector extends Component {
                 enabledTabs: this.props.enabledTabs,
                 cssVarColorPrefix: this.props.cssVarColorPrefix,
                 useDefaultThemeColors: this.props.useDefaultThemeColors,
-                onEscape: () => this.colorSelectorBtn.el?.focus(),
+                onEscape: () => this.colorSelectorBtn()?.focus(),
             },
             {
                 env: useChildEnv(),

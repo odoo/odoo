@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, markup, onMounted, props, t, xml } from "@odoo/owl";
+import { Component, markup, onMounted, props, signal, t, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -52,19 +51,20 @@ export class BuilderSelectItemInternal extends Component {
     });
     static components = { BuilderComponent };
 
+    itemRef = signal(null);
+
     setup() {
         if (!this.env.selectableContext) {
             throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
         this.info = useActionInfo();
-        const item = useRef("item");
         let label = "";
         const getLabel = () => {
             // todo: it's not clear why the item.el?.innerHTML is not set at in
             // some cases. We fallback on a previously set value to circumvent
             // the problem, but it should be investigated.
-
-            label = this.props.label || (item.el ? markup(item.el.innerHTML) : "") || label || "";
+            const itemEl = this.itemRef();
+            label = this.props.label || (itemEl ? markup(itemEl.innerHTML) : "") || label || "";
             return label;
         };
 

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { props, signal, t } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -14,6 +14,8 @@ export class LocalOverlayContainer extends MainComponentsContainer {
         identifier: t.string().optional("overlay_components"),
     });
 
+    overlayRef = signal(null);
+
     setup() {
         const overlayComponents = registry.category(this.props.identifier);
         // todo: remove this somehow
@@ -26,6 +28,6 @@ export class LocalOverlayContainer extends MainComponentsContainer {
             );
         }
         this.Components = useRegistry(overlayComponents);
-        useForwardRefToParent("localOverlay");
+        useForwardRefToParent(this.overlayRef, "localOverlay");
     }
 }

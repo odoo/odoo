@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -6,15 +5,15 @@ import {
     useEmbeddedState,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, signal, xml, proxy } from "@odoo/owl";
 
 export class Counter extends Component {
     static props = ["*"];
     static template = xml`
-        <span t-custom-ref="root" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
+        <span t-ref="this.ref" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
 
     state = proxy({ value: 0 });
-    ref = useRef("root");
+    ref = signal(null);
 
     increment() {
         this.state.value++;

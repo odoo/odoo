@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, signal, t } from "@odoo/owl";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -32,16 +31,17 @@ export class BuilderSlidingPanel extends Component {
         openByDefault: t.boolean().optional(false),
     });
 
+    slidingPanelRef = signal(null);
+    openButtonRef = signal(null);
+
     setup() {
         useBuilderComponent();
-        this.slidingPanelRef = useRef("slidingPanel");
-        this.openButtonRef = useRef("openButton");
         this.state = proxy({
             optionContainerName: "",
             contentRendered: this.props.openByDefault,
         });
         onMounted(() => {
-            const slidingPanelEl = this.slidingPanelRef.el;
+            const slidingPanelEl = this.slidingPanelRef();
             const optionsContainerEl = slidingPanelEl.closest("div.options-container");
             this.state.optionContainerName = optionsContainerEl.dataset.containerTitle;
             optionsContainerEl.parentElement.append(slidingPanelEl);
@@ -51,16 +51,16 @@ export class BuilderSlidingPanel extends Component {
             }
         });
         useHotkey("escape", this.hideSlidingPanel.bind(this), {
-            isAvailable: () => !this.slidingPanelRef.el.classList.contains("d-none"),
+            isAvailable: () => !this.slidingPanelRef().classList.contains("d-none"),
         });
         onWillUnmount(() => {
             clearTimeout(this.updateDisplayTimeout);
-            this.slidingPanelRef.el.remove();
+            this.slidingPanelRef().remove();
         });
     }
 
     updateDisplay(className) {
-        const slidingPanelEl = this.slidingPanelRef.el;
+        const slidingPanelEl = this.slidingPanelRef();
         if (!slidingPanelEl) {
             return;
         }
@@ -85,7 +85,7 @@ export class BuilderSlidingPanel extends Component {
         // happen otherwise.
         this.updateDisplayTimeout = setTimeout(() => {
             this.updateDisplay("d-none");
-            this.openButtonRef.el.focus();
+            this.openButtonRef().focus();
         }, 180);
     }
 

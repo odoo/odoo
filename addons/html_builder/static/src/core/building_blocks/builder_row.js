@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
@@ -35,26 +35,27 @@ export class BuilderRow extends Component {
         disabled: t.boolean().optional(),
         fullRowToggler: t.boolean().optional(false),
     });
+    rootRef = signal(null);
     contentRef = signal(null);
+    collapseRef = signal(null);
     collapseContentRef = signal(null);
+    labelWrapperRef = signal(null);
+    labelRef = signal(null);
 
     setup() {
         useBuilderComponent();
-        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
         this.state = proxy({
             expanded: this.props.expand,
         });
 
         if (this.props.slots.collapse) {
-            useVisibilityObserver(this.collapseContentRef, useApplyVisibility("collapse"));
+            useVisibilityObserver(this.collapseContentRef, useApplyVisibility(this.collapseRef));
 
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
 
-        this.labelWrapperRef = useRef("label-wrapper");
-        this.labelRef = useRef("label");
-        this.rootRef = useRef("root");
         let isMounted = false;
 
         onMounted(() => {
@@ -108,26 +109,24 @@ export class BuilderRow extends Component {
             () => [this.transition.stage]
         );
 
-        useLayoutEffect(() => refreshSublevelLines(this.rootRef.el));
+        useLayoutEffect(() => refreshSublevelLines(this.rootRef()));
     }
 
     appendTooltip(ev) {
-        if (
-            !this.labelRef.el ||
-            !this.labelWrapperRef.el ||
-            this.labelWrapperRef.el.dataset.tooltip
-        ) {
+        const labelEl = this.labelRef();
+        const labelWrapperEl = this.labelWrapperRef();
+        if (!labelEl || !labelWrapperEl || labelWrapperEl.dataset.tooltip) {
             return;
         }
-        const isLabelTooLong = this.labelRef.el.offsetWidth < this.labelRef.el.scrollWidth;
+        const isLabelTooLong = labelEl.offsetWidth < labelEl.scrollWidth;
         if (isLabelTooLong) {
-            this.labelWrapperRef.el.dataset.tooltip = this.props.tooltip
+            labelWrapperEl.dataset.tooltip = this.props.tooltip
                 ? `${this.props.label}\u00A0: ${this.props.tooltip}`
                 : this.props.label;
         } else if (this.props.tooltip) {
-            this.labelWrapperRef.el.dataset.tooltip = this.props.tooltip;
+            labelWrapperEl.dataset.tooltip = this.props.tooltip;
         } else {
-            this.labelWrapperRef.el.dataset.tooltip = "";
+            labelWrapperEl.dataset.tooltip = "";
         }
     }
 

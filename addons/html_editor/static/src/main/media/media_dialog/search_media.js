@@ -8,9 +8,10 @@ export class SearchMedia extends Component {
     static props = ["searchPlaceholder", "search", "needle"];
 
     input = signal(this.props.needle || "");
+    autofocusRef = signal(null);
 
     setup() {
-        useAutofocus({ mobile: true });
+        useAutofocus({ ref: this.autofocusRef, mobile: true });
         this.debouncedSearch = useDebounced(this.props.search, 1000);
 
         useEffect(() => {

@@ -1,5 +1,5 @@
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 
 export class ReadonlyEmbeddedVideoComponent extends Component {
@@ -15,6 +15,8 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
         baseUrl: { type: String, optional: true }, // optional for retro compatibility reason
         params: { type: Object, optional: true },
     };
+
+    iframeRef = signal(null);
 
     getVideoDataFromSrc(src) {
         for (const platform of Object.values(PLATFORMS)) {

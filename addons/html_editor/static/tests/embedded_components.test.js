@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import {
     Counter,
     embedding,
@@ -27,6 +26,7 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
+    signal,
     xml,
     proxy,
 } from "@odoo/owl";
@@ -95,11 +95,11 @@ describe("Mount and Destroy embedded components", () => {
             setup() {
                 onMounted(() => {
                     steps.push("mounted");
-                    expect(this.ref.el.isConnected).toBe(true);
+                    expect(this.ref().isConnected).toBe(true);
                 });
                 onWillUnmount(() => {
                     steps.push("willunmount");
-                    expect(this.ref.el.isConnected).toBe(true);
+                    expect(this.ref().isConnected).toBe(true);
                 });
                 onWillDestroy(() => steps.push("willdestroy"));
             }
@@ -122,11 +122,11 @@ describe("Mount and Destroy embedded components", () => {
             setup() {
                 onMounted(() => {
                     steps.push("mounted");
-                    expect(this.ref.el.isConnected).toBe(true);
+                    expect(this.ref().isConnected).toBe(true);
                 });
                 onWillUnmount(() => {
                     steps.push("willunmount");
-                    expect(this.ref.el?.isConnected).toBe(true);
+                    expect(this.ref()?.isConnected).toBe(true);
                 });
             }
         }
@@ -152,11 +152,11 @@ describe("Mount and Destroy embedded components", () => {
             setup() {
                 onMounted(() => {
                     expect.step("mounted");
-                    expect(this.ref.el.isConnected).toBe(true);
+                    expect(this.ref().isConnected).toBe(true);
                 });
                 onWillUnmount(() => {
                     expect.step("willunmount");
-                    expect(this.ref.el?.isConnected).toBe(true);
+                    expect(this.ref()?.isConnected).toBe(true);
                 });
             }
         }
@@ -190,11 +190,11 @@ describe("Mount and Destroy embedded components", () => {
             setup() {
                 onMounted(() => {
                     expect.step("mounted");
-                    expect(this.ref.el.isConnected).toBe(true);
+                    expect(this.ref().isConnected).toBe(true);
                 });
                 onWillUnmount(() => {
                     expect.step("willunmount");
-                    expect(this.ref.el?.isConnected).toBe(true);
+                    expect(this.ref()?.isConnected).toBe(true);
                 });
             }
         }
@@ -310,22 +310,22 @@ describe("Mount and Destroy embedded components", () => {
             static template = xml`
                 <div>
                     <div t-on-click="this.increment" t-att-class="'click count-' + this.props.index">Count:<t t-out="this.state.value"/></div>
-                    <div t-custom-ref="innerEditable" t-att-class="'innerEditable-' + this.props.index"/>
+                    <div t-ref="this.innerEditableRef" t-att-class="'innerEditable-' + this.props.index"/>
                 </div>
             `;
             static props = {
                 innerValue: HTMLElement,
                 index: Number,
             };
+            innerEditableRef = signal(null);
             setup() {
-                this.innerEditableRef = useRef("innerEditable");
                 this.state = proxy({
                     value: this.props.index,
                 });
                 onMounted(() => {
                     this.props.innerValue.dataset.oeProtected = "false";
                     this.props.innerValue.setAttribute("contenteditable", "true");
-                    this.innerEditableRef.el.append(this.props.innerValue);
+                    this.innerEditableRef().append(this.props.innerValue);
                     expect.step(`mount ${this.props.index}`);
                 });
                 onWillDestroy(() => {
@@ -770,14 +770,14 @@ describe("Mount processing", () => {
         const delayedWillStart = Promise.withResolvers();
         class LabeledCounter extends Counter {
             static template = xml`
-                <span t-custom-ref="root" class="counter" t-on-click="this.increment">
-                    <span t-custom-ref="label"/>:<t t-out="this.state.value"/>
+                <span t-ref="this.ref" class="counter" t-on-click="this.increment">
+                    <span t-ref="this.labelRef"/>:<t t-out="this.state.value"/>
                 </span>
             `;
             static props = {
                 label: HTMLElement,
             };
-            labelRef = useRef("label");
+            labelRef = signal(null);
             setup() {
                 onWillStart(async () => {
                     expect.step("willstart");
@@ -786,7 +786,7 @@ describe("Mount processing", () => {
                 onMounted(() => {
                     this.props.label.dataset.oeProtected = "false";
                     this.props.label.setAttribute("contenteditable", "true");
-                    this.labelRef.el.append(this.props.label);
+                    this.labelRef().append(this.props.label);
                     expect.step("html prop insertion");
                 });
             }

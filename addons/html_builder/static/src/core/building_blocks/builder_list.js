@@ -1,9 +1,12 @@
-import { useRef } from "@web/owl2/utils";
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
+<<<<<<< HEAD
 import { Component, computed, onPatched, props, t, xml, proxy } from "@odoo/owl";
+=======
+import { Component, onWillUpdateProps, onPatched, props, signal, t, xml, proxy } from "@odoo/owl";
+>>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -14,14 +17,14 @@ import { localeCompare } from "@web/core/l10n/utils";
 /**
  * Focus the last added input item to a list container.
  *
- * @param {string} refName The list container's ref.
+ * @param {import("@odoo/owl").Signal<HTMLElement | null>} ref The list
+ *  container's ref signal.
  */
-export function useAutoFocusNewItem(refName) {
-    const ref = useRef(refName);
+export function useAutoFocusNewItem(ref) {
     let nbRow = 0;
     function autofocus() {
         const prevSize = nbRow;
-        const rowEls = ref.el?.querySelectorAll(".o_row_draggable") || [];
+        const rowEls = ref()?.querySelectorAll(".o_row_draggable") || [];
         nbRow = rowEls.length;
         if (nbRow <= prevSize) {
             return;
@@ -91,13 +94,15 @@ export class BuilderList extends Component {
         withScrollbar: t.boolean().optional(true),
     });
 
+    tableRef = signal(null);
+
     setup() {
         if (this.props.default) {
             this.validateProps();
         }
         this.dialog = useService("dialog");
         useBuilderComponent();
-        useAutoFocusNewItem("table");
+        useAutoFocusNewItem(this.tableRef);
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
             defaultValue: this.parseDisplayValue([]),
@@ -107,8 +112,12 @@ export class BuilderList extends Component {
         this.state = state;
         this.commit = commit;
         this.preview = preview;
+<<<<<<< HEAD
         this.allRecords = computed(() => this.formatRawValue(this.props.records));
         this.tableRef = useRef("table");
+=======
+        this.allRecords = this.formatRawValue(this.props.records);
+>>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
         this.visibilityState = proxy({
             limit: this.props.limit,
         });

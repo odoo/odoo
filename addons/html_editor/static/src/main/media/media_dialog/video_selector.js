@@ -140,7 +140,7 @@ export class VideoSelector extends Component {
             await this.prepareVimeoPreviews();
         });
 
-        useAutofocus();
+        useAutofocus({ ref: this.urlInputRef });
 
         // Avoid refreshing the video data after each updateOption call,
         // since multiple options can be updated at once when parsing the url, for example.

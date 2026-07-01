@@ -22,7 +22,7 @@
             t-on-pointerleave="this.onPointerLeave"
             t-on-focusin="() => this.onFocusin()"
             t-on-focusout="() => this.onFocusout()"
-            t-custom-ref="item"
+            t-ref="this.itemRef"
             role="menuitem"
             tabindex="0">
             <t t-call-slot="default" />

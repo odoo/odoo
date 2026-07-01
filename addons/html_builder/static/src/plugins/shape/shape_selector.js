@@ -1,5 +1,4 @@
-import { proxy } from "@odoo/owl";
-import { useRef } from "@web/owl2/utils";
+import { proxy, signal } from "@odoo/owl";
 import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -19,14 +18,15 @@ export class ShapeSelector extends BaseOptionComponent {
         getShapeStyle: { type: Function, optional: true },
     };
     static components = { ImgGroup };
+    rootRef = signal(null);
+    tabsRef = signal(null);
+    backButtonRef = signal(null);
 
     setup() {
         super.setup();
-        this.rootRef = useRef("root");
-        this.tabsRef = useRef("tabs");
         this.state = proxy({ activeGroup: "basic" });
         this.onScroll = useThrottleForAnimation(this._onScroll);
-        useAutofocus({ refName: "backButton" });
+        useAutofocus({ ref: this.backButtonRef });
     }
     getShapeUrl(shapePath) {
         return this.props.getShapeUrl ? this.props.getShapeUrl(shapePath) : getShapeURL(shapePath);
@@ -35,7 +35,7 @@ export class ShapeSelector extends BaseOptionComponent {
         return `o_${shapePath.replaceAll("/", "_")}`;
     }
     scrollToShapes(id) {
-        const container = this.rootRef.el;
+        const container = this.rootRef();
         const selectedElement = container?.querySelector(`[data-shape-group-id="${id}"]`);
         if (container && selectedElement) {
             container.scrollTop = selectedElement.offsetTop - container.offsetTop;
@@ -43,16 +43,16 @@ export class ShapeSelector extends BaseOptionComponent {
     }
 
     _onScroll() {
-        const pagerContainerRect = this.rootRef.el.getBoundingClientRect();
+        const pagerContainerRect = this.rootRef().getBoundingClientRect();
         // The threshold for when a menu element is defined as 'active' is half
         // of the container's height. This has a drawback as if a section
         // is too small it might never get `active` if it's the last section.
         const threshold = pagerContainerRect.height / 2;
 
-        const anchorEls = this.tabsRef.el.querySelectorAll(".o-hb-select-pager-tab");
+        const anchorEls = this.tabsRef().querySelectorAll(".o-hb-select-pager-tab");
         for (const anchorEl of anchorEls) {
             const groupId = anchorEl.dataset.groupId;
-            const sectionEl = this.rootRef.el.querySelector(`[data-shape-group-id="${groupId}"]`);
+            const sectionEl = this.rootRef().querySelector(`[data-shape-group-id="${groupId}"]`);
             const nextSectionEl = sectionEl.nextElementSibling;
 
             const sectionTop = sectionEl.getBoundingClientRect().top - pagerContainerRect.top;

@@ -1,5 +1,4 @@
-import { proxy } from "@odoo/owl";
-import { useRef } from "@web/owl2/utils";
+import { proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -10,11 +9,12 @@ import { isSrcCorsProtected } from "@html_editor/utils/image";
 
 export class AutoResizeImage extends Attachment {
     static template = "html_editor.AutoResizeImage";
+
+    image = signal(null);
+    container = signal(null);
+
     setup() {
         super.setup();
-
-        this.image = useRef("auto-resize-image");
-        this.container = useRef("auto-resize-image-container");
 
         this.state = proxy({
             loaded: false,
@@ -22,22 +22,22 @@ export class AutoResizeImage extends Attachment {
     }
 
     async onImageLoaded() {
-        if (!this.image.el) {
+        if (!this.image()) {
             // Do not fail if already removed.
             return;
         }
         if (this.props.onLoaded) {
-            await this.props.onLoaded(this.image.el);
-            if (!this.image.el) {
+            await this.props.onLoaded(this.image());
+            if (!this.image()) {
                 // If replaced by colored version, aspect ratio will be
                 // computed on it instead.
                 return;
             }
         }
-        const aspectRatio = this.image.el.offsetWidth / this.image.el.offsetHeight;
+        const aspectRatio = this.image().offsetWidth / this.image().offsetHeight;
         const width = aspectRatio * this.props.minRowHeight;
-        this.container.el.style.flexGrow = width;
-        this.container.el.style.flexBasis = `${width}px`;
+        this.container().style.flexGrow = width;
+        this.container().style.flexBasis = `${width}px`;
         this.state.loaded = true;
     }
 }

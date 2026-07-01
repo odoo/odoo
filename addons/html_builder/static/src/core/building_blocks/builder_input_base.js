@@ -1,4 +1,4 @@
-import { Component, useEffect, proxy } from "@odoo/owl";
+import { Component, useEffect, proxy, signal } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActionInfo } from "../utils";
 
@@ -34,14 +34,16 @@ export class BuilderInputBase extends Component {
         value: { type: [String, { value: null }], optional: true },
     };
 
+    inputRef = signal(null);
+
     setup() {
         this.isEditing = false;
         this.info = useActionInfo();
-        this.inputRef = useForwardRefToParent("inputRef");
+        useForwardRefToParent(this.inputRef, "inputRef");
         this.state = proxy({ value: this.props.value });
         useEffect(() => {
             const value = this.props.value;
-            this.state.value = this.isEditing ? this.inputRef.el.value : value;
+            this.state.value = this.isEditing ? this.inputRef().value : value;
         });
     }
 
@@ -62,7 +64,7 @@ export class BuilderInputBase extends Component {
 
     onFocus(ev) {
         if (this.props.selectTextOnFocus) {
-            this.inputRef.el.select();
+            this.inputRef().select();
         }
         this.props.onFocus?.(ev);
     }

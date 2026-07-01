@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
@@ -31,19 +30,20 @@ export class BlockTab extends Component {
         newInstalledModule: { type: String, optional: true },
     };
 
+    blockTabRef = signal(null);
+    groupSnippetsContainer = signal(null);
+    innerSnippetsContainer = signal(null);
+
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.popover = useService("popover");
         this.snippetModel = useSnippets(this.props.snippetsName);
-        this.blockTabRef = useRef("block-tab");
-        this.groupSnippetsContainer = useRef("group-snippets-container");
-        this.innerSnippetsContainer = useRef("inner-snippets-container");
         // Needed to avoid race condition in tours.
         this.state = proxy({ ongoingInsertion: false });
 
         this.onSnippetKeydown = useMatrixKeyNavigation(
-            () => [this.groupSnippetsContainer.el, this.innerSnippetsContainer.el],
+            () => [this.groupSnippetsContainer(), this.innerSnippetsContainer()],
             ".o_snippet",
             ".o_snippet_thumbnail_area, .o_install_btn"
         );
@@ -184,10 +184,10 @@ export class BlockTab extends Component {
         };
 
         const dragAndDropOptions = {
-            ref: { el: this.blockTabRef.el },
+            ref: { el: this.blockTabRef() },
             iframeWindow,
             cursor: "move",
-            el: this.blockTabRef.el,
+            el: this.blockTabRef(),
             elements: ".o_snippet.o_draggable",
             scrollingElement,
             handle: ".o_snippet_thumbnail:not(.o_we_ongoing_insertion .o_snippet_thumbnail)",
@@ -361,7 +361,7 @@ export class BlockTab extends Component {
                 // If the snippet was dropped outside of a dropzone, find the
                 // dropzone that is the nearest to the dropping point.
                 if (!currentDropzoneEl) {
-                    const blockTabRect = this.blockTabRef.el.getBoundingClientRect();
+                    const blockTabRect = this.blockTabRef().getBoundingClientRect();
                     const helperWidth = helper.getBoundingClientRect().width;
                     const isRTL = document.body.classList.contains("o_rtl");
                     const isOutOfBlockTab = isRTL

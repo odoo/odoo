@@ -2,7 +2,7 @@
 <t t-name="html_editor.ColorPickerSolidTab">
     <div class="d-flex flex-column align-items-center p-1"
         t-on-click="this.props.onColorClick" t-on-mouseover="this.props.onColorPointerOver"
-        t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout" t-custom-ref="solidTabRef"
+        t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout" t-ref="this.solidTabRef"
         t-on-keydown="this.props.colorPickerNavigation">
         <div class="o_colorpicker_section">
             <t t-foreach="this.props.defaultThemeColorVars" t-as="color" t-key="color">

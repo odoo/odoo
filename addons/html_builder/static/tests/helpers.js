@@ -1,4 +1,4 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
@@ -14,7 +14,7 @@ import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, xml, proxy, signal } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -101,10 +101,10 @@ export function getSnippetStructure({
 
 class BuilderContainer extends Component {
     static template = xml`
-        <div class="d-flex h-100 w-100" t-custom-ref="container">
-            <div class="o_website_preview flex-grow-1" t-custom-ref="website_preview">
+        <div class="d-flex h-100 w-100" t-ref="this.containerRef">
+            <div class="o_website_preview flex-grow-1" t-ref="this.websitePreviewRef">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-custom-ref="iframe" t-on-load="this.onLoad"/>
+                    <iframe class="h-100 w-100" t-ref="this.iframeRef" t-on-load="this.onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>
@@ -126,9 +126,12 @@ class BuilderContainer extends Component {
         builderProps: { type: Object, optional: true },
     };
 
+    containerRef = signal(null);
+    websitePreviewRef = signal(null);
+    iframeRef = signal(null);
+
     setup() {
         this.state = proxy({ isMobile: false, isEditing: false, showSidebar: true });
-        this.iframeRef = useRef("iframe");
         const originalIframeLoaded = new Promise((resolve) => {
             this._originalIframeLoadedResolve = resolve;
         });
@@ -137,12 +140,12 @@ class BuilderContainer extends Component {
                 // Fix for Firefox < 148.
                 if (
                     isBrowserFirefox() &&
-                    !(this.iframeRef.el?.contentDocument.readyState === "complete")
+                    !(this.iframeRef()?.contentDocument.readyState === "complete")
                 ) {
                     await originalIframeLoaded;
                 }
 
-                const el = this.iframeRef.el;
+                const el = this.iframeRef();
                 el.contentDocument.body.innerHTML = `<div id="wrapwrap">${this.props.headerContent}<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
                 if (this.props.iframeLangDir === "rtl") {
                     el.contentDocument.body.querySelector("#wrapwrap").classList.add("o_rtl");
@@ -151,7 +154,7 @@ class BuilderContainer extends Component {
             });
         });
         useSubEnv({
-            builderRef: useRef("container"),
+            builderRef: this.containerRef,
         });
     }
 
@@ -355,8 +358,8 @@ export async function setupHTMLBuilder(
     return {
         getEditor: () => attachedEditor,
         getEditableContent: () => editableContent,
-        contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
-        builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
+        contentEl: comp.iframeRef().contentDocument.body.firstChild.firstChild,
+        builderEl: comp.env.builderRef().querySelector(".o-website-builder_sidebar"),
         waitSidebarUpdated,
     };
 }

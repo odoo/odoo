@@ -1,4 +1,4 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Component, onMounted, props, signal, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -51,20 +51,22 @@ export class BuilderSelect extends Component {
         BuilderComponent,
         WithIgnoreItem,
     };
+    buttonRef = signal(null);
+    rootRef = signal(null);
     contentRef = signal(null);
 
     setup() {
-        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
         this.dropdown = useDropdownState();
 
-        const buttonRef = useRef("button");
         let currentLabel;
         const updateCurrentLabel = () => {
             if (!this.props.slots.fixedButton) {
                 const newHtml = currentLabel || _t("None");
-                if (buttonRef.el && buttonRef.el.innerHTML !== newHtml) {
-                    setElementContent(buttonRef.el, newHtml);
+                const buttonEl = this.buttonRef();
+                if (buttonEl && buttonEl.innerHTML !== newHtml) {
+                    setElementContent(buttonEl, newHtml);
                 }
             }
         };

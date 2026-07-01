@@ -1,5 +1,6 @@
 import { batched, proxy } from "@odoo/owl";
 import { closestScrollableY, scrollTo } from "@web/core/utils/scrolling";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 export const HEADINGS = ["H1", "H2", "H3", "H4", "H5", "H6"];
 
@@ -14,7 +15,7 @@ export class TableOfContentManager {
     }
 
     getContainerEl() {
-        return this.containerRef.el;
+        return resolveRefEl(this.containerRef);
     }
 
     /**

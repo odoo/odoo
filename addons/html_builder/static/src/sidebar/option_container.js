@@ -27,6 +27,7 @@ export class OptionsContainer extends BaseOptionComponent {
         containerTitle: t.object().optional({}),
         headerMiddleButtons: t.array().optional([]),
     });
+    rootRef = signal(null);
     contentRef = signal(null);
 
     setup() {
@@ -35,9 +36,8 @@ export class OptionsContainer extends BaseOptionComponent {
         this.containerId = uniqueId("option-container-");
         this.notification = useService("notification");
         this.getItemValue = useGetItemValue();
-        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
-        this.rootRef = useRef("root");
         this.titleRef = useRef("title");
         useListener(browser, "focusin", this.updateOverlayPreview.bind(this));
         useListener(browser, "pointermove", this.updateOverlayPreview.bind(this));
@@ -97,7 +97,7 @@ export class OptionsContainer extends BaseOptionComponent {
 
     /** @param {PointerEvent | FocusEvent} ev */
     updateOverlayPreview(ev) {
-        const shouldShow = this.rootRef.el?.contains(ev.target);
+        const shouldShow = this.rootRef()?.contains(ev.target);
         if (shouldShow === this.showingOverlayPreview) {
             return;
         }

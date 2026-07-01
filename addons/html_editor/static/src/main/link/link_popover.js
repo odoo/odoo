@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
@@ -56,6 +55,7 @@ export class LinkPopover extends Component {
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
+    editingWrapper = signal(null);
     urlRef = signal(null);
     labelRef = signal(null);
 
@@ -113,16 +113,15 @@ export class LinkPopover extends Component {
         });
 
         this.updateDocumentState();
-        this.editingWrapper = useRef("editing-wrapper");
+        // The focused input is chosen once, mirroring the original dynamic
+        // `useRef("url" | "label")`: the URL field for images or when only a
+        // label is set, otherwise the label field.
         this.inputRef =
             this.state.isImage || (this.state.label && !this.state.url)
                 ? this.urlRef
                 : this.labelRef;
         useEffect(() => {
-            const el = this.inputRef();
-            if (el) {
-                el.focus();
-            }
+            this.inputRef()?.focus();
         });
         if (!this.state.editing) {
             this.loadAsyncLinkPreview();
@@ -132,7 +131,7 @@ export class LinkPopover extends Component {
                 return;
             }
             this.state.url ||= "#";
-            if (this.editingWrapper?.el && !this.editingWrapper.el.contains(ev.target)) {
+            if (this.editingWrapper() && !this.editingWrapper().contains(ev.target)) {
                 this.onClickApply();
             }
         };
@@ -252,7 +251,7 @@ export class LinkPopover extends Component {
             this.onClickApply();
         } else if (ev.key == "Tab") {
             ev.preventDefault();
-            const focusableElements = this.editingWrapper.el.querySelectorAll(
+            const focusableElements = this.editingWrapper().querySelectorAll(
                 "input, select, button:not([disabled])"
             );
             trapFocus(focusableElements, ev.shiftKey);

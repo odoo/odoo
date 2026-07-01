@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { useRef } from "@web/owl2/utils";
 import { Component, props, proxy, t } from "@odoo/owl";
+=======
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
+>>>>>>> 5433a9d0937c ([REF] html_editor, html_builder: migrate t-ref to Owl 3 signals)
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -31,10 +36,11 @@ export class FontSizeSelector extends Component {
     });
     static components = { Dropdown, DropdownItem, IframeInput };
 
+    fontSizeSelector = signal(null);
+
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
-        this.fontSizeSelector = useRef("fontSizeSelector");
         this.dropdown = useDropdownState();
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);

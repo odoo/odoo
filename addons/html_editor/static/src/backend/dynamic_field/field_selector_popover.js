@@ -1,4 +1,4 @@
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -17,8 +17,10 @@ export class FieldSelectorPopover extends Component {
         filter: t.function().optional(),
     });
 
+    autofocusRef = signal(null);
+
     setup() {
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
         this.state = proxy({
             path: this.props.path || "",
             label: this.props.label || "",

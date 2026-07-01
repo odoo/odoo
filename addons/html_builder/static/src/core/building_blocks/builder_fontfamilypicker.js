@@ -22,11 +22,12 @@ export class BuilderFontFamilyPicker extends Component {
         BuilderSelectItem,
     };
     contentRef = signal.ref();
+    rootRef = signal(null);
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
         this.fonts = [];
         onWillStart(async () => {
             const fontsData = await this.env.editor.shared.builderFont.getFontsData();

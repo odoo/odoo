@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { Image } from "@html_builder/core/img";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
@@ -14,9 +13,10 @@ export class CustomInnerSnippet extends Component {
     };
     static components = { Image };
 
+    renameInputRef = signal(null);
+
     setup() {
-        this.renameInputRef = useRef("rename-input");
-        useAutofocus({ refName: "rename-input" });
+        useAutofocus({ ref: this.renameInputRef });
 
         this.state = proxy({ isRenaming: false });
 
@@ -37,7 +37,7 @@ export class CustomInnerSnippet extends Component {
     }
 
     onConfirmRename() {
-        this.props.snippetModel.renameCustomSnippet(this.snippet, this.renameInputRef.el.value);
+        this.props.snippetModel.renameCustomSnippet(this.snippet, this.renameInputRef().value);
         this.toggleRenamingState();
     }
 }

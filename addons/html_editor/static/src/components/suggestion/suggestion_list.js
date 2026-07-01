@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 
 export class SuggestionList extends Component {
@@ -10,10 +9,10 @@ export class SuggestionList extends Component {
     };
     static template = "html_editor.SuggestionList";
 
-    setup() {
-        this.suggestionList = useRef("suggestionList");
+    suggestionListRef = signal(null);
 
-        this.navigation = useNavigation(this.suggestionList, {
+    setup() {
+        this.navigation = useNavigation(this.suggestionListRef, {
             isNavigationAvailable: () => this.props.overlay.isOpen,
             shouldFocusFirstItem: true,
             hotkeys: {

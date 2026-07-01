@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, signal, useEffect } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { cookie } from "@web/core/browser/cookie";
 
@@ -26,11 +26,13 @@ export class IframeInput extends Component {
         onKeydown: { type: Function, optional: true },
     };
 
+    iframeRef = signal(null);
+
     setup() {
-        this.iframeRef = useForwardRefToParent("iframeRef");
+        useForwardRefToParent(this.iframeRef, "iframeRef");
 
         onMounted(() => {
-            this.iframeEl = this.iframeRef.el;
+            this.iframeEl = this.iframeRef();
 
             this.initInput = () => {
                 const iframeDoc = this.iframeEl.contentWindow.document;

@@ -1,5 +1,5 @@
-import { render, useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, props, t } from "@odoo/owl";
+import { render, useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, onWillDestroy, props, signal, t } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
@@ -40,23 +40,24 @@ export class Wysiwyg extends Component {
     static components = { Toolbar, LocalOverlayContainer };
     props = props(wysiwygProps);
 
+    contentRef = signal(null);
+
     setup() {
         this.overlayRef = useChildRef();
         useSubEnv({
             localOverlayContainerKey: uniqueId("wysiwyg"),
         });
-        const contentRef = useRef("content");
         this.editor = this.props.editor;
         const config = this.getEditorConfig();
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
         useSpellCheck({
-            refName: "content",
+            ref: this.contentRef,
         });
 
         onMounted(() => {
             /** @type { any } **/
-            const el = contentRef.el;
+            const el = this.contentRef();
 
             if (el.tagName === "IFRAME") {
                 // grab the inner body instead

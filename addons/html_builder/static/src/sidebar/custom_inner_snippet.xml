@@ -14,7 +14,7 @@
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{this.snippet.thumbnailSrc}});"/>
             <t t-if="this.state.isRenaming">
                 <div class="rename-input w-100 z-1">
-                    <input t-custom-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o-hb-input-text o-hb-input-base" t-on-pointerdown.stop=""/>
+                    <input t-ref="this.renameInputRef" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o-hb-input-text o-hb-input-base" t-on-pointerdown.stop=""/>
                     <button class="o_we_text_success fa fa-check btn btn-outline-success border-0"
                             data-tooltip="Confirm"
                             t-on-click="this.onConfirmRename"/>

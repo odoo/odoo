@@ -1,10 +1,10 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import {
     getEmbeddedProps,
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillDestroy, onWillUnmount, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, signal, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -31,6 +31,8 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         commit: { type: Function, optional: true },
         openVideoSelectorDialog: { type: Function, optional: true },
     };
+
+    iframeRef = signal(null);
 
     setup() {
         super.setup();
@@ -62,7 +64,6 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
             className: "video-overlay",
             closeOnPointerdown: false,
         });
-        this.iframeRef = useRef("iframeRef");
 
         useExternalListener(this.videoBlock, "pointerenter", () => {
             this.videoSettingsOverlay.open({
@@ -73,7 +74,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                     replaceVideo: () => {
                         this.props.openVideoSelectorDialog((media) => {
                             this.replaceVideo(media);
-                        }, this.iframeRef.el);
+                        }, this.iframeRef());
                     },
                     removeVideo: () => {
                         this.videoBlock.remove();
@@ -142,11 +143,11 @@ export class VideoSettings extends Component {
         dropdown: { type: Object },
     };
 
-    setup() {
-        this.menuRef = useRef("menuRef");
+    menuRef = signal(null);
 
+    setup() {
         onMounted(() => {
-            this.menuRef.el.addEventListener("pointerleave", () => {
+            this.menuRef()?.addEventListener("pointerleave", () => {
                 if (!this.props.dropdown.isOpen) {
                     this.props.overlay.close();
                 }

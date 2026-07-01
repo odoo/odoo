@@ -6,11 +6,11 @@
     <t t-set="disabledBlockTooltip">This block cannot be dropped anywhere on this page.</t>
     <div class="o_block_tab"
          t-att-class="{'o_we_ongoing_insertion': this.state.ongoingInsertion}"
-         t-custom-ref="block-tab"
+         t-ref="this.blockTabRef"
          role="tabpanel"
          aria-labelledby="blocks-tab">
         <div t-if="this.snippetModel.snippetGroups.length" class="o_snippets_container" id="snippet_groups">
-            <div t-custom-ref="group-snippets-container" class="o_snippets_container_body o_snippets_container_body_row_cols_2 d-grid z-0">
+            <div t-ref="this.groupSnippetsContainer" class="o_snippets_container_body o_snippets_container_body_row_cols_2 d-grid z-0">
                 <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"
@@ -38,7 +38,7 @@
         <div t-if="this.snippetModel.snippetInnerContents.length"
             class="o_snippets_container" id="snippet_content">
             <div class="o_snippets_container_header"><span>Inner Content</span></div>
-            <div t-custom-ref="inner-snippets-container" class="o_snippets_container_body d-grid z-0">
+            <div t-ref="this.innerSnippetsContainer" class="o_snippets_container_body d-grid z-0">
                 <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"

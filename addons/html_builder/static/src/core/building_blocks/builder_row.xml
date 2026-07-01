@@ -6,14 +6,14 @@
         <div
             class="hb-row d-flex position-relative pe-2"
             t-att-class="this.getLevelClass()"
-            t-custom-ref="root"
+            t-ref="this.rootRef"
             t-att-data-label="this.props.label"
             t-att-data-disabled="this.props.disabled"
             t-att-aria-disabled="this.props.disabled ? 'true' : undefined"
             >
 
             <button
-                t-custom-ref="collapse"
+                t-ref="this.collapseRef"
                 t-if="this.props.slots.collapse"
                 class="o_hb_collapse_toggler btn border-0 bg-transparent"
                 t-att-class="{ 'active fa-rotate-90': this.state.expanded }"
@@ -35,8 +35,8 @@
                     t-on-pointerover="this.appendTooltip"
                     t-on-click="this.toggleCollapseContent"
                     >
-                    <div class="d-inline-flex align-items-center mw-100" t-custom-ref="label-wrapper">
-                        <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
+                    <div class="d-inline-flex align-items-center mw-100" t-ref="this.labelWrapperRef">
+                        <span class="text-nowrap text-truncate" t-out="this.props.label" t-ref="this.labelRef"/>
                         <i
                             t-if="this.props.tooltip"
                             class="fa fa-question icon-sup"

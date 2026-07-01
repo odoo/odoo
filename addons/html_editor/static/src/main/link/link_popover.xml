@@ -8,7 +8,7 @@
 
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
-            <div t-if="this.state.editing" class="container-fluid d-flex vertical-center p-2" t-custom-ref="editing-wrapper">
+            <div t-if="this.state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="this.editingWrapper">
                 <div t-if="this.state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
                         <label for="o_linkpopover_url_img" class="o_we_input_label">

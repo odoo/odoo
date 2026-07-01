@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class EmbeddedComponentToolbar extends Component {
@@ -21,7 +21,9 @@ export class EmbeddedComponentToolbarButton extends Component {
     };
     static template = "html_editor.EmbeddedComponentToolbarButton";
 
+    buttonRef = signal(null);
+
     setup() {
-        useForwardRefToParent("buttonRef");
+        useForwardRefToParent(this.buttonRef, "buttonRef");
     }
 }

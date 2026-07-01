@@ -1,6 +1,6 @@
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.AutoResizeImage">
-    <div t-custom-ref="auto-resize-image-container"
+    <div t-ref="this.container"
          class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0"
          t-att-class="{
             o_we_attachment_optimized: this.props.isOptimized,
@@ -11,7 +11,7 @@
         <RemoveButton t-if="this.props.isRemovable" model="this.props.model" remove="() => this.remove()"/>
         <div class="o_we_media_dialog_img_wrapper" t-att-class="{ 'bg-light': this.props.unselectable }">
              <t t-set="unselectable_attachment_title">You can not use this image in a field</t>
-             <img t-custom-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-class="{ 'opacity-25': this.props.unselectable}" t-att-src="this.props.src" t-att-alt="this.props.altDescription" loading="lazy" t-att-title="this.props.unselectable ? unselectable_attachment_title : this.props.title" t-on-load="this.onImageLoaded"/>
+             <img t-ref="this.image" class="o_we_attachment_highlight img img-fluid w-100" t-att-class="{ 'opacity-25': this.props.unselectable}" t-att-src="this.props.src" t-att-alt="this.props.altDescription" loading="lazy" t-att-title="this.props.unselectable ? unselectable_attachment_title : this.props.title" t-on-load="this.onImageLoaded"/>
              <a t-if="this.props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="this.props.authorLink" target="_blank" t-out="this.props.author"/>
         </div>
         <button class="o_btn_reset o_button_area"
@@ -37,7 +37,7 @@
 </t>
 
 <t t-name="html_editor.ImagesListTemplate">
-    <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0 px-3" t-custom-ref="existing-attachments">
+    <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0 px-3" t-ref="this.existingAttachmentsRef">
         <t t-if="!this.hasContent and !this.isFetching">
             <div t-if="this.state.needle" class="o_nocontent_help">
                 <p class="o_empty_folder_image">No images found.</p>

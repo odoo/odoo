@@ -1,4 +1,5 @@
-import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
@@ -1044,18 +1045,15 @@ export function useInputBuilderComponent({
 }
 
 export function useApplyVisibility(ref) {
-    if (typeof ref === "string") {
-        const contentRef = useRef(ref);
-        ref = () => contentRef.el;
-    }
     return (hasContent) => {
-        ref()?.classList.toggle("d-none", !hasContent);
+        resolveRefEl(ref)?.classList.toggle("d-none", !hasContent);
     };
 }
 
 export function useVisibilityObserver(contentRef, callback) {
     const applyVisibility = () => {
-        const hasContent = [...contentRef().childNodes].some(
+        const contentEl = resolveRefEl(contentRef);
+        const hasContent = [...contentEl.childNodes].some(
             (el) =>
                 (isTextNode(el) && el.textContent !== "") ||
                 (isElement(el) && !el.classList.contains("d-none"))
@@ -1064,22 +1062,24 @@ export function useVisibilityObserver(contentRef, callback) {
     };
 
     const observer = new MutationObserver(applyVisibility);
-    useEffect(() => {
-        const contentEl = contentRef();
-        if (!contentEl) {
-            return;
-        }
-        applyVisibility();
-        observer.observe(contentEl, {
-            subtree: true,
-            attributes: true,
-            childList: true,
-            attributeFilter: ["class"],
-        });
-        return () => {
-            observer.disconnect();
-        };
-    });
+    useLayoutEffect(
+        (contentEl) => {
+            if (!contentEl) {
+                return;
+            }
+            applyVisibility();
+            observer.observe(contentEl, {
+                subtree: true,
+                attributes: true,
+                childList: true,
+                attributeFilter: ["class"],
+            });
+            return () => {
+                observer.disconnect();
+            };
+        },
+        () => [resolveRefEl(contentRef)]
+    );
 }
 
 export function useInputDebouncedCommit(ref) {

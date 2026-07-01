@@ -1,4 +1,4 @@
-import { onWillRender, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -8,6 +8,7 @@ import { POSITION_BUS } from "@web/core/position/position_hook";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
@@ -357,7 +358,10 @@ export class ColorPicker extends Component {
     }
 }
 
-export function useColorPicker(refName, props, options = {}) {
+/**
+ * @param {() => HTMLElement | null} ref Owl 3 signal ref to the toggler element
+ */
+export function useColorPicker(ref, props, options = {}) {
     // Callback to be overridden by child components (e.g. custom color picker).
     let onCloseCallback = () => {};
     const setOnCloseCallback = (cb) => {
@@ -374,13 +378,12 @@ export function useColorPicker(refName, props, options = {}) {
     }
 
     const colorPicker = usePopover(ColorPicker, options);
-    const root = useRef(refName);
 
     function onClick() {
         if (colorPicker.isOpen) {
             colorPicker.close();
         } else {
-            colorPicker.open(root.el, props);
+            colorPicker.open(resolveRefEl(ref), props);
             options.onOpen?.();
         }
     }
@@ -395,7 +398,7 @@ export function useColorPicker(refName, props, options = {}) {
                 el.removeEventListener("click", onClick);
             };
         },
-        () => [root.el]
+        () => [resolveRefEl(ref)]
     );
 
     return colorPicker;

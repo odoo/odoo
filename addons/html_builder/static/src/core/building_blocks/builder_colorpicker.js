@@ -1,6 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
@@ -116,9 +116,11 @@ export class ColorPickerButton extends Component {
         colorPickerConfig: { type: Object, optional: true },
     };
 
+    colorButtonRef = signal(null);
+
     setup() {
         useColorPicker(
-            "colorButton",
+            this.colorButtonRef,
             this.props.colorPickerConfig.props,
             this.props.colorPickerConfig.options
         );

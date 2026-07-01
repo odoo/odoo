@@ -1,7 +1,7 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, signal, t } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,16 +41,17 @@ export class TableMenu extends Component {
     });
     static components = { Dropdown, DropdownItem };
 
+    menuRef = signal(null);
+
     setup() {
         this.editableDocument = this.props.editable.ownerDocument;
-        this.menuRef = useRef("menuRef");
         const onPointerDown = (ev) => this.onPointerDown(ev);
         onMounted(() => {
-            this.overlayEl = this.menuRef.el;
+            this.overlayEl = this.menuRef();
             this.overlayEl.addEventListener("pointerdown", onPointerDown);
         });
         onWillUnmount(() => {
-            this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
+            this.menuRef()?.removeEventListener("pointerdown", onPointerDown);
         });
         useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
         useLayoutEffect(

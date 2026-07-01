@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import {
     Component,
@@ -7,6 +7,7 @@ import {
     onWillStart,
     onWillUnmount,
     props,
+    signal,
     t,
     useListener,
 } from "@odoo/owl";
@@ -29,12 +30,12 @@ export class ImagePositionOverlay extends Component {
         scrollToElement: t.boolean().optional(true),
     });
 
-    setup() {
-        this.overlayRef = useRef("overlay");
-        this.overlayMaskRef = useRef("overlayMask");
-        this.overlayContentRef = useRef("overlayContent");
-        this.draggerRef = useRef("dragger");
+    overlayRef = signal(null);
+    overlayMaskRef = signal(null);
+    overlayContentRef = signal(null);
+    draggerRef = signal(null);
 
+    setup() {
         this.iframeEl = this.props.editable.ownerDocument.defaultView.frameElement;
         this.builderOverlayContainerEl = document.querySelector(
             "[data-oe-local-overlay-id='builder-overlay-container']"
@@ -97,9 +98,9 @@ export class ImagePositionOverlay extends Component {
     }
 
     refreshTooltip() {
-        this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
+        this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef(), {
             trigger: "manual",
-            container: this.overlayRef.el,
+            container: this.overlayRef(),
         });
         this.tooltip.show();
     }
@@ -123,14 +124,14 @@ export class ImagePositionOverlay extends Component {
     }
 
     onDragStart() {
-        this.overlayRef.el.classList.add("o_we_grabbing");
+        this.overlayRef().classList.add("o_we_grabbing");
         const documentEl = window.document;
         const onDragMove = this.onDragMove.bind(this);
         documentEl.addEventListener("mousemove", onDragMove);
         documentEl.addEventListener(
             "mouseup",
             () => {
-                this.overlayRef.el.classList.remove("o_we_grabbing");
+                this.overlayRef().classList.remove("o_we_grabbing");
                 documentEl.removeEventListener("mousemove", onDragMove);
             },
             { once: true }
@@ -191,13 +192,13 @@ export class ImagePositionOverlay extends Component {
             ${scaledRect.left}px ${scaledRect.bottom}px,
             ${scaledRect.left}px ${scaledRect.top}px)
         `;
-        this.overlayMaskRef.el.style.clipPath = clipPath;
+        this.overlayMaskRef().style.clipPath = clipPath;
         if (this.builderOverlayContainerEl) {
             this.builderOverlayContainerEl.style.clipPath = clipPath;
         }
 
         // The overlay covers the whole iframe excluding the scrollbar.
-        Object.assign(this.overlayRef.el.style, {
+        Object.assign(this.overlayRef().style, {
             left: `${iframeRect.left}px`,
             top: `${iframeRect.top}px`,
             height: `${this.props.editable.ownerDocument.body.clientHeight * scale}px`,
@@ -205,14 +206,14 @@ export class ImagePositionOverlay extends Component {
         });
 
         // The overlay content covers the editing element.
-        Object.assign(this.overlayContentRef.el.style, {
+        Object.assign(this.overlayContentRef().style, {
             left: `${scaledRect.left}px`,
             top: `${scaledRect.top}px`,
         });
-        const overlayButtonsEl = this.overlayContentRef.el.querySelector(".o_we_overlay_buttons");
+        const overlayButtonsEl = this.overlayContentRef().querySelector(".o_we_overlay_buttons");
         overlayButtonsEl.style.top = `${Math.max(0, -scaledRect.top)}px`;
-        this.draggerRef.el.style.setProperty("width", `${scaledRect.width}px`, "important");
-        this.draggerRef.el.style.setProperty("height", `${scaledRect.height}px`, "important");
+        this.draggerRef().style.setProperty("width", `${scaledRect.width}px`, "important");
+        this.draggerRef().style.setProperty("height", `${scaledRect.height}px`, "important");
 
         // Refresh tooltip position after overlay reposition
         if (this.tooltip) {

@@ -15,7 +15,7 @@
         <span t-if="this.props.prefix" class="o-hb-input-prefix" t-out="this.props.prefix"/>
         <i t-if="this.props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix ' + this.props.prefixIcon"/> 
         <input
-            t-custom-ref="inputRef"
+            t-ref="this.inputRef"
             type="text"
             autocomplete="chrome-off"
             t-attf-class="{{ this.props.inputClasses + ( this.props.prefix ? ' o-hb-input-transparent ' : ' o-hb-input-base ' ) }}"

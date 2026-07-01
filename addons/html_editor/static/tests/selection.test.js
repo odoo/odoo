@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { isInViewPort, press, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import {
     defineModels,
     fields,
@@ -328,11 +328,13 @@ test("should focus the nearest editable ancestor when selection is inside a non-
 
 test("restore a selection when you are not in the editable shouldn't move the focus", async () => {
     class TestInput extends Component {
-        static template = xml`<input t-custom-ref="input" t-att-value="'eee'" class="test"/>`;
+        static template = xml`<input t-ref="this.inputRef" t-att-value="'eee'" class="test"/>`;
         static props = ["*"];
 
+        inputRef = signal(null);
+
         setup() {
-            useAutofocus({ refName: "input", mobile: true });
+            useAutofocus({ ref: this.inputRef, mobile: true });
         }
     }
 

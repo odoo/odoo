@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import {
     activateCropper,
     loadImage,
@@ -6,13 +6,7 @@ import {
     cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
-import {
-    Component,
-    onMounted,
-    onWillDestroy,
-    markup,
-    status,
-} from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, markup, signal, status } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 import { useActiveElement } from "@web/core/ui/ui_service";
@@ -37,18 +31,19 @@ export class ImageCrop extends Component {
         onSave: { type: Function, optional: true },
     };
 
+    elRef = signal(null);
+    imageRef = signal(null);
+    discardButtonRef = signal(null);
+    cropperWrapperRef = signal(null);
+
     setup() {
         this.aspectRatios = cropperAspectRatios;
         this.notification = useService("notification");
         this.media = this.props.media;
         this.document = this.props.document;
 
-        this.elRef = useRef("el");
-        this.cropperWrapper = useRef("cropperWrapper");
-        this.imageRef = useRef("imageRef");
-        this.discardButtonRef = useRef("discardButton");
         this.isCropperActive = false;
-        useActiveElement("cropperWrapper");
+        useActiveElement(this.cropperWrapperRef);
 
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
@@ -157,10 +152,10 @@ export class ImageCrop extends Component {
         await loadImage(this.originalSrc, this.media);
         if (status(this) !== "mounted") {
             // Abort if the component has been destroyed in the meantime
-            // since `this.imageRef.el` is `null` when it is not mounted.
+            // since `this.imageRef()` is `null` when it is not mounted.
             return;
         }
-        const cropperImage = this.imageRef.el;
+        const cropperImage = this.imageRef();
         [cropperImage.style.width, cropperImage.style.height] = [
             this.media.width + "px",
             this.media.height + "px",
@@ -190,8 +185,8 @@ export class ImageCrop extends Component {
             offset.top += frameRect.top;
         }
 
-        this.cropperWrapper.el.style.left = `${offset.left}px`;
-        this.cropperWrapper.el.style.top = `${offset.top}px`;
+        this.cropperWrapperRef().style.left = `${offset.left}px`;
+        this.cropperWrapperRef().style.top = `${offset.top}px`;
 
         await loadImage(this.originalSrc, cropperImage);
         if (status(this) !== "mounted") {
@@ -299,7 +294,7 @@ export class ImageCrop extends Component {
     onDocumentMousedown(ev) {
         if (
             this.props.document.body.contains(ev.target) &&
-            (this.elRef.el === ev.target || !this.elRef.el.contains(ev.target))
+            (this.elRef() === ev.target || !this.elRef().contains(ev.target))
         ) {
             return this.closeCropper();
         }
@@ -309,7 +304,7 @@ export class ImageCrop extends Component {
         if (!this.isCropperActive) {
             return;
         }
-        if (target === this.discardButtonRef.el) {
+        if (target === this.discardButtonRef()) {
             return this.closeCropper();
         }
         return this.save();
