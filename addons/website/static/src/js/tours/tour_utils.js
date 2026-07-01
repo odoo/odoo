@@ -810,3 +810,25 @@ export function changeImageShape(shape = "html_builder/geometric/geo_shuriken") 
         },
     ];
 }
+
+/**
+ *
+ * @param {string} trigger - selector
+ * @returns step
+ */
+export function openPowerbox(trigger) {
+    return {
+        content: "Show the powerbox",
+        trigger,
+        async run(actions) {
+            await actions.editor("/");
+            const wrapwrap = this.anchor.closest("#wrapwrap");
+            wrapwrap.dispatchEvent(
+                new InputEvent("input", {
+                    inputType: "insertText",
+                    data: "/",
+                })
+            );
+        },
+    };
+}

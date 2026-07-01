@@ -24,6 +24,10 @@ class IrQwebFieldContact(models.AbstractModel):
 class IrQwebFieldHtml(models.AbstractModel):
     _inherit = 'ir.qweb.field.html'
 
+    def _post_processing_att(self, tag, attrib):
+        self.env['ir.qweb']._copy_translate_attributes(attrib)
+        return super()._post_processing_att(tag, attrib)
+
     @api.model
     def value_to_html(self, value, options):
         res = super().value_to_html(value, options)

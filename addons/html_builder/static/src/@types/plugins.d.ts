@@ -18,6 +18,7 @@ declare module "plugins" {
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_providers, image_shape_groups_providers, on_shape_computed_handlers } from "@html_builder/plugins/image/image_shape_option_plugin";
+    import { should_optimize_image_predicates } from "@html_builder/plugins/image/image_tool_option_plugin";
     import { background_filter_target_providers, target_element_providers, on_bg_image_hidden_handlers } from "@html_builder/plugins/background_option/background_image_option_plugin";
     import { is_draggable_predicates, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
     import { lower_panel_entries, on_dom_updated_handlers, on_mobile_view_switched_handlers } from "@html_builder/builder";
@@ -116,6 +117,7 @@ declare module "plugins" {
         is_node_empty_predicates: is_node_empty_predicates;
         is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
         ignore_ctrl_a_predicates: ignore_ctrl_a_predicates;
+        should_optimize_image_predicates: should_optimize_image_predicates;
 
         // Processors
         reload_context_processors: reload_context_processors;

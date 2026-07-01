@@ -339,7 +339,12 @@ export async function setupWebsiteBuilder(
     return {
         getEditor: () => editor,
         getEditableContent: () => editableContent,
-        openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
+        openBuilderSidebar: async () => {
+            await openBuilderSidebar(editAssetsLoaded);
+            if (translateMode) {
+                iframe.contentDocument.documentElement.dataset.edit_translations = "1";
+            }
+        },
         waitSidebarUpdated,
     };
 }
@@ -510,20 +515,18 @@ export async function setupSidebarBuilderForTranslation(options) {
             this.websiteContext = this.websiteService.context;
         },
     });
-    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
-        websiteContent,
-        {
+    const { getEditor, getEditableContent, openBuilderSidebar, waitSidebarUpdated } =
+        await setupWebsiteBuilder(websiteContent, {
             openEditor: false,
             translateMode: true,
             onIframeLoaded: (iframe) => {
                 websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
             },
             loadIframeBundles,
-        }
-    );
+        });
     await getTranslatedElements();
     await openBuilderSidebar();
-    return { getEditor, getEditableContent };
+    return { getEditor, getEditableContent, waitSidebarUpdated };
 }
 
 export async function getStructureSnippet(snippetName) {

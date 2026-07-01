@@ -7,13 +7,15 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 
 /**
  * @typedef { Object } MediaWebsiteShared
+ * @property { MediaWebsitePlugin['onDblClickEditableMedia'] } onDblClickEditableMedia
+ * @property { MediaWebsitePlugin['openImageTooltip'] } openImageTooltip
  * @property { MediaWebsitePlugin['replaceMedia'] } replaceMedia
  */
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
     static dependencies = ["media", "selection", "builderOptions", "operation"];
-    static shared = ["replaceMedia"];
+    static shared = ["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -23,11 +25,11 @@ export class MediaWebsitePlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
-    setup() {
-        const basicMediaSelector = `${MEDIA_SELECTOR}, img`;
+    basicMediaSelector = `${MEDIA_SELECTOR}, img`;
 
+    setup() {
         this.addDomListener(this.editable, "dblclick", async (ev) => {
-            const targetEl = ev.target.closest(basicMediaSelector);
+            const targetEl = ev.target.closest(this.basicMediaSelector);
             if (!targetEl) {
                 return;
             }
@@ -39,7 +41,7 @@ export class MediaWebsitePlugin extends Plugin {
         this.popover = this.services.popover;
         this.removeCurrentTooltip = () => {};
         this.addDomListener(this.editable, "click", (ev) => {
-            const targetEl = ev.target.closest(basicMediaSelector);
+            const targetEl = ev.target.closest(this.basicMediaSelector);
             if (!targetEl) {
                 return;
             }
