@@ -386,3 +386,35 @@ class TestManualConsumption(TestMrpCommon):
         move = details_form.save()
         # Quantity was modified, so `manual_consumption` should be set
         self.assertTrue(move.manual_consumption)
+
+    def test_manually_created_move_line_gets_production_id_on_done(self):
+        """
+        A `stock.move.line` added manually to a component move (bypassing
+        `_action_assign`) has no `production_id` set. Marking the MO as done
+        must fill it in.
+        """
+        bom = self.bom_4
+        component = bom.bom_line_ids.product_id
+        component.is_storable = True
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1)
+
+        mo = self.env['mrp.production'].create({
+            'product_id': bom.product_id.id,
+            'product_qty': 1,
+            'bom_id': bom.id,
+        })
+
+        self.assertEqual(len(mo.move_raw_ids), 1)
+        component_line = mo.move_raw_ids
+        self.env['stock.move.line'].create({
+            'move_id': component_line.id,
+            'product_id': component_line.product_id.id,
+            'quantity': 1.0,
+        })
+        component_move_lines = mo.move_raw_ids.move_line_ids
+
+        self.assertFalse(component_move_lines.production_id)
+        mo.button_mark_done()
+        self.assertRecordValues(component_move_lines, [
+            {'production_id': mo.id, 'state': 'done'},
+        ])

@@ -1912,6 +1912,9 @@ class MrpProduction(models.Model):
         self.with_context(skip_mo_check=True).env['stock.move'].browse(moves_to_do)._action_done(cancel_backorder=cancel_backorder)
         self.with_context(skip_mo_check=True).env['stock.move'].browse(moves_to_cancel)._action_cancel()
         moves_to_do = self.move_raw_ids.filtered(lambda x: x.state == 'done') - self.env['stock.move'].browse(moves_not_to_do)
+        # Ensure manually created move lines get their production_id set
+        # by re-running _action_assign on their parent move.
+        moves_to_do.move_line_ids.filtered(lambda l: not l.production_id).move_id._action_assign()
         # Create a dict to avoid calling filtered inside for loops.
         moves_to_do_by_order = defaultdict(lambda: self.env['stock.move'], [
             (key, self.env['stock.move'].concat(*values))
