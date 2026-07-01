@@ -837,6 +837,17 @@ class HolidaysAllocation(models.Model):
                 mail_activity_automation_skip=True
             ).create(allocation_vals)
             accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            # company/department/category allocations have no employee on the parent, so its
+            # number_of_days preview is 0 and is never accrued. Restart those children from the
+            # allocation's start date so a plan that started in the past is back-filled period by
+            # period for each employee, the same way the single-employee onchange does. (employee
+            # mode keeps the value already computed on the parent.)
+            for allocation in accrual_allocations.filtered(
+                    lambda a: a.parent_id.holiday_type in ('company', 'department', 'category')):
+                allocation.lastcall = allocation.date_from
+                allocation.nextcall = False
+                allocation.already_accrued = False
+                allocation.number_of_days = 0
             for date_to, allocation in accrual_allocations.grouped('date_to').items():
                 date_to = min(date_to, date.today()) if date_to else False
                 allocation._process_accrual_plans(date_to)
