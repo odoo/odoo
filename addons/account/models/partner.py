@@ -260,7 +260,7 @@ class AccountFiscalPosition(models.Model):
             vat_exclusion = company.vat[:2] == partner.vat[:2]
 
         # If company and partner have the same vat prefix (and are both within the EU), use invoicing
-        if not delivery or (intra_eu and vat_exclusion and partner.country_id == company.country_id):
+        if not delivery and (intra_eu and vat_exclusion and partner.country_id == company.country_id):
             delivery = partner
 
         # partner manually set fiscal position always win
