@@ -22,22 +22,22 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-16 10:48+0000\n"
+"PO-Revision-Date: 2026-06-06 13:21+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid " (Refund)"
-msgstr ""
+msgstr " (การคืนเงิน)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -66,7 +66,7 @@ msgstr "% ส่วนลด"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/models/pos_order_line.py:0
 msgid "%(name)s REFUND"
-msgstr ""
+msgstr "%(name)s การคืนเงิน"
 
 #. module: point_of_sale
 #. odoo-python
@@ -317,6 +317,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                   <t t-set=\"store_name\" t-value=\"object.config_id.name\"/"
+">\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/> \n"
+"                   <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div> \n"
+"                       <t t-if=\"client_name\">สวัสดีค่ะ/ครับ<t t-"
+"out=\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ/ครับ</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> ขอบคุณที่ซื้อสินค้าจาก<t t-out=\"store_name\">ชื่อร้าน</t>!</"
+"div>\n"
+"                    <div>แนบมาด้วยคือใบเสร็จรับเงินสำหรับการซื้อ<span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">วันที่</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">เวลา</t>.</"
+"span>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div>ด้วยความเคารพ</div>\n"
+"                    <br/>\n"
+"                   <t t-out=\"store_name\">ชื่อร้าน</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -437,7 +467,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "<span name=\"ticket\">Ticket</span>"
-msgstr ""
+msgstr "<span name=\"ticket\">เลขที่อ้างอิง</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

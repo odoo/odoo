@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-08 09:07+0000\n"
+"PO-Revision-Date: 2026-06-09 07:05+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_stock/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_stock
 #. odoo-python
@@ -38,13 +38,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stock/models/stock_move.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - 从“%(uom_from)s” 到 “%(uom_to)s”"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s拣货 POS"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -55,7 +55,7 @@ msgstr ""
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
 msgid "<span>Expected delivery:</span>"
-msgstr ""
+msgstr "<span>预计交付时间：</span>"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
@@ -66,7 +66,7 @@ msgstr "允许稍后发货"
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__direct
@@ -86,22 +86,24 @@ msgid ""
 "it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
+"会话结束时：整个营业会话结束后，统一生成一张备货单。\n"
+"  实时模式：每笔订单发送至服务器时，即时单独生成各自的备货单。"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "配置设置"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #. module: pos_stock
 #. odoo-python
@@ -190,7 +192,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_pos_config__picking_policy
@@ -210,19 +212,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "Incorrect address for shipping"
-msgstr ""
+msgstr "发货地址有误"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory"
-msgstr ""
+msgstr "库存"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory Management"
-msgstr ""
+msgstr "库存管理"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move
@@ -237,12 +239,12 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新者"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新于"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -250,24 +252,24 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "Lot"
-msgstr ""
+msgstr "批次"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "批次名称"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial %s is expired"
-msgstr ""
+msgstr "批号/序列号%s 已过期"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "批次/序列号码"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -278,7 +280,7 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "批次/序列号"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -286,37 +288,37 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "Lot:"
-msgstr ""
+msgstr "批次："
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_order_line.py:0
 msgid "No PoS configuration found"
-msgstr ""
+msgstr "未找到 PoS 配置"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "No existing Lot/Serial number found..."
-msgstr ""
+msgstr "未找到现有批次/序列号..."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No existing serial/lot number"
-msgstr ""
+msgstr "无现有序列号/批号"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "On hand:"
-msgstr ""
+msgstr "在库："
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_type_id
@@ -324,34 +326,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation Type"
-msgstr ""
+msgstr "作业类型"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "操作类型显示在库存仪表板。"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "订单参考"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_ids
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_ids
 msgid "Picking"
-msgstr ""
+msgstr "拣货"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "拣货计数"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "拣货类型"
 
 #. module: pos_stock
 #. odoo-python
@@ -360,39 +362,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_session_form
 msgid "Pickings"
-msgstr ""
+msgstr "拣货"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:pos_stock.field_stock_reference__pos_order_ids
 msgid "PoS Orders"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "POS 配置"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "POS 操作类型"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "POS 销售订单明细"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "POS 销售订单收据生成器"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_session
@@ -402,12 +404,12 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr ""
+msgstr "Pos 订单"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "PoS 订单明细"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_session_id
@@ -418,7 +420,7 @@ msgstr ""
 #: model:ir.model,name:pos_stock.model_product_template
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__product_id
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__stock_reference_ids
@@ -436,7 +438,7 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "SN"
-msgstr ""
+msgstr "序列号"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -444,30 +446,30 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "SN:"
-msgstr ""
+msgstr "序列号："
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
-msgstr ""
+msgstr "选择送货日期"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Selected date cannot be in the past."
-msgstr ""
+msgstr "所选日期不能是过去的日期。"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "销售产品并稍后交付。"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Server communication problem"
-msgstr ""
+msgstr "服务器通信问题"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -486,18 +488,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_policy
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "送货策略"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "缺少某些序列号/批号"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Specific route"
-msgstr ""
+msgstr "指定路线"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__route_id
@@ -508,40 +510,40 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "在销售点订单明细中指定产品批次/序号"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "库存移动"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "库存移动"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "需在结账时更新库存"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_order.py:0
 msgid "Stock variation for %s"
-msgstr ""
+msgstr "%s 库存变动"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is already added."
-msgstr ""
+msgstr "该批次 / 序列号已存在。"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is not valid"
-msgstr ""
+msgstr "批次 / 序列号无效。"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -550,12 +552,14 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"无法读取现有批次 / 序列号。\n"
+"是否继续，不再校验批次 / 序列号有效性？"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "所选客户缺少地址信息。"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -563,55 +567,55 @@ msgstr ""
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr ""
+msgstr "所选产品无批次 / 序列号，且 POS 应用程序不支持新建批次 / 序列号。"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "调拨"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "更新库存数量"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
-msgstr ""
+msgstr "用于记录产品拣货，产品从默认源库位出库扣减。"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Validation Error"
-msgstr ""
+msgstr "校验错误"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Warehouse"
-msgstr ""
+msgstr "仓库"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr ""
+msgstr "仓库（PoS）"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "所有产品备货完成"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -621,6 +625,8 @@ msgid ""
 "are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"你正尝试销售带批次 / 序列号的商品，但部分商品未填写相关信息。\n"
+"是否仍继续操作？"
 
 #. module: pos_stock
 #. odoo-python
@@ -629,6 +635,7 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
+"无法归档 %(picking_type)s，该拣货类型已被零售前台配置 %(config)s 占用。"
 
 #. module: pos_stock
 #. odoo-javascript

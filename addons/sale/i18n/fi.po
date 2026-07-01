@@ -36,13 +36,13 @@
 # Mikko Salmela <salmemik@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-05 08:30+0000\n"
+"PO-Revision-Date: 2026-06-20 13:42+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "fi/>\n"
@@ -51,7 +51,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -951,7 +951,7 @@ msgstr "<span>Määrä</span>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr "<span>Ale%</span>"
+msgstr "<span>Ale %</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
@@ -983,8 +983,9 @@ msgstr "<strong class=\"d-block mt-3\">Toimitusosoite</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Ota yhteyttä</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1003,8 +1004,9 @@ msgstr "<strong>Verokantasäännön huomautus:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1061,7 +1063,7 @@ msgstr "Myyntitilausrivin tuotteen on vastattava sen yhdistelmäerän tuotetta."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr "Jakson otsikko"
+msgstr "Osion otsikko"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1075,8 +1077,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Varastoitava tuote on tuote, jonka varastoa hallinnoit."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1218,8 +1221,9 @@ msgstr "Lisää tilaukseen useita variantteja taulukosta"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Add to order"
-msgstr ""
+msgstr "Lisää tilaukseen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1234,7 +1238,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr "Sallitut mittayksiköt"
+msgstr "Sallittu mittayksikkö"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1322,8 +1326,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyyttinen tili"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1442,14 +1447,16 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Availability"
-msgstr ""
+msgstr "Saatavuus"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Available"
-msgstr ""
+msgstr "Saatavilla"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -1479,11 +1486,15 @@ msgstr "Päihitä kilpailijat upeilla tarjouksilla!"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__delivery_status
+#, fuzzy
 msgid ""
 "Blue: Not Delivered/Started\n"
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Sininen: Ei toimitettu/aloitettu\n"
+"            Oranssi: Osittain toimitettu\n"
+"            Vihreä: Täysin toimitettu"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1553,8 +1564,9 @@ msgstr "Peruuta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Cancel Order"
-msgstr ""
+msgstr "Peru tilaus"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1632,8 +1644,9 @@ msgstr "Kategoria(t)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "Kategoria"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1668,8 +1681,9 @@ msgstr "Klikkaa määrittääksesi"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Klikkaa määrittääksesi laskutustavoitteen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1758,15 +1772,19 @@ msgstr "Määritä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Määritä toimitustavat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Määritä toimitustavat tai työskentele toimituspalveluntarjoajien kanssa "
+"käyttäen olemassa olevia integraatioita."
 
 #. module: sale
 #. odoo-javascript
@@ -1783,8 +1801,9 @@ msgstr "Vahvista"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
+#, fuzzy
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Vahvista tilaukset"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1798,13 +1817,15 @@ msgstr "Vahvistusviesti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect"
-msgstr ""
+msgstr "Yhdistä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Yhdistä Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2031,8 +2052,9 @@ msgstr "Asiakkaan tila"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_tag_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#, fuzzy
 msgid "Customer Tags"
-msgstr ""
+msgstr "Asiakkaan tunnisteet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
@@ -2169,14 +2191,16 @@ msgstr "Toimituksen määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
+#, fuzzy
 msgid "Delivery Status"
-msgstr ""
+msgstr "Toimituksen tila"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+#, fuzzy
 msgid "Delivery Time"
-msgstr ""
+msgstr "Toimitusaika"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2194,10 +2218,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
+#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Toimitusaika päivinä. Se on asiakkaalle luvattujen päivien lukumäärä "
+"myyntitilauksen vahvistuksen ja toimituksen välillä."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2345,8 +2372,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
+#, fuzzy
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Saldonäyttö-ikkuna"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2549,8 +2577,9 @@ msgstr "Vanhentumispäivä:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "Vanhentunut"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
@@ -2575,8 +2604,9 @@ msgstr "Lisärivi, jossa %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "Rahoitustili"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2585,11 +2615,14 @@ msgstr "Verokantasääntö"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Verokantasääntöjä käytetään verojen ja tilien mukauttamiseen tietyille "
+"asiakkaille tai tilauksille/laskuille. Oletusarvo tulee asiakkaalta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2631,8 +2664,9 @@ msgstr "Kielletyt arvot ei-myymättömällä myyntitilauksen rivillä"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Ennustetut saldot"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2651,8 +2685,9 @@ msgstr "Koko summa <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
+#, fuzzy
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Täysin toimitettu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2892,27 +2927,31 @@ msgstr "Tilauksessa"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Included"
-msgstr ""
+msgstr "Sisältyy"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
+#, fuzzy
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
+#, fuzzy
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Incotermin sijainti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#, fuzzy
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
@@ -2925,10 +2964,14 @@ msgstr "Käyttäjän asttama sisäinen varoitus kumppanista tai tuotteista."
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,help:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,help:sale.field_sale_order__incoterm
+#, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"International Commercial Terms (Incoterms), eli kansainväliset kauppaehdot, "
+"ovat sarja ennalta määritettyjä kaupallisia ehtoja, joita käytetään "
+"kansainvälisessä kaupankäynnissä."
 
 #. module: sale
 #. odoo-python
@@ -2951,8 +2994,9 @@ msgstr "Puutteellinen allekirjoitus."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Lasku"
 
 #. module: sale
 #. odoo-python
@@ -3417,8 +3461,9 @@ msgstr "Siirrä ylös"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "My"
-msgstr ""
+msgstr "Omat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3509,13 +3554,15 @@ msgstr "Lisämyyntitilauksia ei löytynyt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "No, go back"
-msgstr ""
+msgstr "Ei, palaa takaisin"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
+#, fuzzy
 msgid "Not Delivered"
-msgstr ""
+msgstr "Ei toimitettu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3581,8 +3628,9 @@ msgstr "Toimistotuolit voivat vaurioittaa lattiaasi: suojaa se"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "pvm"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3842,13 +3890,15 @@ msgstr "Pääosion rivi"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
+#, fuzzy
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Osittain toimitettu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -4101,7 +4151,7 @@ msgstr "Tuotteen tyyppi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr "Tuotteen yksikkö, vain lukuoikeus"
+msgstr "Tuotteen mittayksikkö, vain luku"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -4109,7 +4159,7 @@ msgstr "Tuotteen yksikkö, vain lukuoikeus"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: sale
 #. odoo-python
@@ -4148,8 +4198,9 @@ msgstr "Määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_available_today
+#, fuzzy
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Saatavilla oleva määrä tänään"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
@@ -4224,8 +4275,9 @@ msgstr "Tarjous #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Myyntitarjous / Myyntitilaus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4350,8 +4402,9 @@ msgstr "Laske uudelleen hinnoittelu tämän hinnaston perusteella"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "Viite"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4371,8 +4424,9 @@ msgstr "Hylkää tämä tarjous"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "Poista"
 
 #. module: sale
 #. odoo-javascript
@@ -4485,8 +4539,9 @@ msgstr "Myyntitiedot"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+#, fuzzy
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "Myyntirivin varoitusviesti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4843,7 +4898,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__service_line_count
@@ -4853,8 +4908,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Services"
-msgstr ""
+msgstr "Palvelut"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
@@ -5021,8 +5077,9 @@ msgstr "Aloita Odoolla"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
+#, fuzzy
 msgid "Started"
-msgstr ""
+msgstr "Aloitettu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -5424,8 +5481,9 @@ msgstr "Tuotteella (%(product)s) on yhteensopimattomia arvoja: %(value_list)s"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Myyntitilaus on vanhentunut."
 
 #. module: sale
 #. odoo-python
@@ -5609,8 +5667,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Tänään"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5657,8 +5716,9 @@ msgstr "Loppusumma: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "Track Inventory"
-msgstr ""
+msgstr "Seuraa inventaariota"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5868,8 +5928,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Tässä määritetyt arvot ovat yrityskohtaisia."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5904,8 +5965,9 @@ msgstr "Virtuaalinen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
+#, fuzzy
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Virtuaalisaatavuus päivämäärällä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -6068,8 +6130,9 @@ msgstr "Viitteesi:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Selaimesi ei tue iframea."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_bancontact_pay
+# * pos_bancontact_pay
 #
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-04-22 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-06-11 09:46+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
+"pos_bancontact_pay/it/>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -25,62 +28,68 @@ msgid ""
 "This currency is not supported.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Il metodo di pagamento Bancontact Pay è collegato a un registro che utilizza "
+"la valuta predefinita dell'azienda.\n"
+"Questa valuta non è supportata.\n"
+"Valute supportate: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has expired."
-msgstr ""
+msgstr "Il pagamento per l'ordine %s è scaduto."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has failed."
-msgstr ""
+msgstr "Il pagamento per l'ordine %s non è andato a buon fine."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
-msgstr ""
+msgstr "Un pagamento per l'ordine %s è stato annullato."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Access denied. Please check your Bancontact permissions."
-msgstr ""
+msgstr "Accesso negato. Controlla le tue autorizzazioni Bancontact."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
 msgstr ""
+"Autenticazione con Bancontact non riuscita. Verifica la tua chiave API."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
 msgid "Bancontact API Key"
-msgstr ""
+msgstr "Chiave API Bancontact"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment__bancontact_id
 msgid "Bancontact ID"
-msgstr ""
+msgstr "ID Bancontact"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
-msgstr ""
+msgstr "PPID Bancontact"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid "Bancontact PPID must be set to generate the sticker URL."
 msgstr ""
+"Il PPID di Bancontact deve essere impostato per generare l'URL dell'adesivo."
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Bancontact Pay"
-msgstr ""
+msgstr "Bancontact Pay"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -89,17 +98,19 @@ msgid ""
 "Bancontact Pay only supports these currencies: %(currencies)s.\n"
 "The linked journal uses a different currency."
 msgstr ""
+"Bancontact Pay supporta solo queste valute: %(currencies)s.\n"
+"Il registro collegato utilizza una valuta diversa."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Bancontact Test Mode"
-msgstr ""
+msgstr "Modalità di prova Bancontact"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Bancontact is currently unavailable. Please try again later."
-msgstr ""
+msgstr "Bancontact non è attualmente disponibile. Riprova più tardi."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -108,6 +119,8 @@ msgid ""
 "Bancontact payments can only be cancelled for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"I pagamenti Bancontact possono essere annullati solo per i metodi di "
+"pagamento che utilizzano Bancontact Pay come fornitore."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -116,6 +129,8 @@ msgid ""
 "Bancontact payments can only be created for payment methods using Bancontact "
 "Pay as provider."
 msgstr ""
+"I pagamenti Bancontact possono essere creati solo per i metodi di pagamento "
+"che utilizzano Bancontact Pay come fornitore."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -124,6 +139,8 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods configured "
 "with 'Static Sticker' usage."
 msgstr ""
+"L'URL dell'adesivo Bancontact può essere generato solo per i metodi di "
+"pagamento configurati con l'utilizzo di \"Adesivo statico\"."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -132,17 +149,19 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"L'URL dell'adesivo Bancontact può essere generato solo per i metodi di "
+"pagamento che utilizzano Bancontact Pay come fornitore."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Azienda"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
@@ -153,6 +172,11 @@ msgid ""
 "- Static Sticker: A fixed QR sticker placed near the counter is used for "
 "scanning with every order."
 msgstr ""
+"Definisce come il codice QR viene presentato al cliente:\n"
+"- visualizzazione su schermo: un nuovo codice QR viene mostrato "
+"dinamicamente sullo schermo per ogni ordine.\n"
+"- adesivo statico: un adesivo QR fisso posizionato vicino al bancone viene "
+"utilizzato per la scansione ad ogni ordine."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__display_name
@@ -161,18 +185,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Download Sticker"
-msgstr ""
+msgstr "Scarica adesivo"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "Forza annullamento"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__id
@@ -181,12 +205,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Registro"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -195,17 +219,19 @@ msgid ""
 "Merchant profile not found on Bancontact. Please check your Payment Profile "
 "ID (ppid)."
 msgstr ""
+"Profilo commerciante non trovato su Bancontact. Verifica l'ID del profilo di "
+"pagamento (ppid)."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Oh, no!"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__display
 msgid "On-Screen Display"
-msgstr ""
+msgstr "Visualizzazione su schermo"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -214,6 +240,8 @@ msgid ""
 "One Bancontact Pay sticker payment method can only be linked to one POS "
 "configuration."
 msgstr ""
+"Un metodo di pagamento con adesivo Bancontact Pay può essere collegato a un "
+"solo Punto vendita."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -222,73 +250,75 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"Pagamento su %s\n"
+"Punto vendita %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment cancelled"
-msgstr ""
+msgstr "Pagamento annullato"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment expired"
-msgstr ""
+msgstr "Pagamento scaduto"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "Pagamento non riuscito"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment received"
-msgstr ""
+msgstr "Pagamento ricevuto"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Configurazione punto vendita"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Pagamento punto vendita"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodo di pagamento Punto vendita"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "Codice QR"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid "QR Usage"
-msgstr ""
+msgstr "Utilizzo del QR"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Rate limit reached with Bancontact. Please wait and try again."
-msgstr ""
+msgstr "Limite di richieste raggiunto con Bancontact. Attendi e riprova."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Esegue le transazioni nell'ambiente di prova."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
+msgstr "Adesivo statico"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -298,18 +328,23 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"Il metodo di pagamento con adesivo Bancontact \"%(method_name)s\" è già "
+"assegnato a un'altra configurazione di Punto vendita (%(config_names)s).\n"
+"Un adesivo può essere collegato a un solo Punto vendita alla volta."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "The action could not be completed. Please try again or contact support."
-msgstr ""
+msgstr "Impossibile completare l'operazione. Riprova o contatta l'assistenza."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "The amount must be positive to use this payment method."
 msgstr ""
+"L'importo deve essere positivo per poter utilizzare questo metodo di "
+"pagamento."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -318,6 +353,7 @@ msgid ""
 "The cancellation could not be completed. Do you want to force the "
 "cancellation?"
 msgstr ""
+"Non è stato possibile completare l'annullamento. Vuoi forzare l'annullamento?"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -328,6 +364,10 @@ msgid ""
 "If you need to cancel it, please ask the customer to do so on their device "
 "or force the cancellation."
 msgstr ""
+"Il cliente sta completando il pagamento, quindi non è possibile annullarlo "
+"in questo momento.\n"
+"Se è necessario annullarlo, chiedi al cliente di farlo dal proprio "
+"dispositivo o forza l'annullamento."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -337,12 +377,15 @@ msgid ""
 "This payment method does not support the journal's currency.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Il registro \"%(journal)s\" utilizza il metodo di pagamento Bancontact Pay.\n"
+"Questo metodo di pagamento non supporta la valuta del registro.\n"
+"Valute supportate: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "This sticker is already processing another payment."
-msgstr ""
+msgstr "Questo adesivo sta già elaborando un altro pagamento."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -350,6 +393,8 @@ msgstr ""
 msgid ""
 "Unable to cancel payment. The payment may not be in a cancellable state."
 msgstr ""
+"Impossibile annullare il pagamento. Il pagamento potrebbe non essere in uno "
+"stato annullabile."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -358,3 +403,5 @@ msgid ""
 "Unable to process the request. Please verify your configuration or try again "
 "later."
 msgstr ""
+"Impossibile elaborare la richiesta. Verifica la configurazione o riprova più "
+"tardi."

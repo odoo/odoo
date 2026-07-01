@@ -17,16 +17,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"PO-Revision-Date: 2026-06-10 06:18+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/product/zh_Hans/>\n"
+"projects/odoo-s19-3/product/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -122,7 +122,7 @@ msgstr "（例如：产品描述、电子书、法律声明......）。"
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: product
 #. odoo-python
@@ -474,7 +474,7 @@ msgstr "活动类型图标"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #. module: product
 #. odoo-javascript
@@ -742,7 +742,7 @@ msgstr "属性值"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attribute name (e.g. Color, Size, ... )"
-msgstr ""
+msgstr "属性名称（例如：颜色、尺寸、...）"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -769,6 +769,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"可用数量（计算方式：库存数量 - 预留数量 - 待移出数量）\n"
+"在仅有一个库存位置的场景下，此处包含存储于该位置或其任何子位置的货物。\n"
+"在仅有一个仓库的场景下，此处包含存储于该仓库的库存位置或其任何子位置的货"
+"物。\n"
+"其他情况下，此处包含存储于任何“内部”类型库存位置的货物。"
 
 #. module: product
 #. odoo-javascript
@@ -795,7 +800,7 @@ msgstr "条码"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_product_barcodelookup
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Barcode Database"
-msgstr ""
+msgstr "条形码数据库"
 
 #. module: product
 #. odoo-python
@@ -829,7 +834,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "基本单位名称"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_show_uom_price
@@ -1125,7 +1130,7 @@ msgstr "联系人"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 msgid "Copies"
-msgstr ""
+msgstr "副本"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1184,7 +1189,7 @@ msgstr "创建新产品"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_category_action_form
 msgid "Create a new product category"
-msgstr ""
+msgstr "创建一个新的产品类别"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -1295,6 +1300,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"当前产品数量。 \n"
+"对单一库存位置来说，包括了此位置或其任何子位置所存储的产品。 \n"
+"对单一库存来说，包括了此仓位置置或其任何子位置所存储的产品。  \n"
+"另外，这包括了所有'内部'类型的任何库存位置所存储的产品。"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
@@ -1307,7 +1316,7 @@ msgstr "自定义"
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "自定义计量单位"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
@@ -2818,7 +2827,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "On Hand"
-msgstr ""
+msgstr "在库"
 
 #. module: product
 #. odoo-python
@@ -2855,7 +2864,7 @@ msgstr "选项"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_oral_b
 msgid "Oral-B"
-msgstr ""
+msgstr "Oral-B"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_orange
@@ -2882,7 +2891,7 @@ msgstr "其他价格表"
 #. module: product
 #: model:product.category,name:product.product_category_outdoor_furniture
 msgid "Outdoor"
-msgstr ""
+msgstr "户外"
 
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
@@ -2898,7 +2907,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_overhead_shelves
 msgid "Overhead shelves"
-msgstr ""
+msgstr "高架储物架"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
@@ -3580,7 +3589,7 @@ msgstr "Ray-Ban"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Recursive pricelist rules detected: %s"
-msgstr ""
+msgstr "检测到递归价目表规则：%s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
@@ -3590,7 +3599,7 @@ msgstr "红色"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_reebok
 msgid "Reebok"
-msgstr ""
+msgstr "Reebok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
@@ -3602,7 +3611,7 @@ msgstr "参考号"
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_count
 msgid "Reference Unit"
-msgstr ""
+msgstr "参考单位"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3630,7 +3639,7 @@ msgstr "相关附件"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #. module: product
 #. odoo-javascript
@@ -4016,19 +4025,19 @@ msgstr "模板值"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Template for Pricelists"
-msgstr ""
+msgstr "价目表模板"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "产品模板"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 msgid "Template for Vendor Pricelists"
-msgstr ""
+msgstr "供应商价目表模版"
 
 #. module: product
 #. odoo-python
@@ -4167,6 +4176,8 @@ msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
 msgstr ""
+"销售价格可以手动设置，也可以通过产品模板计算。点击 “配置变量” 按钮，设置额外"
+"属性价格。"
 
 #. module: product
 #. odoo-python
@@ -4257,7 +4268,7 @@ msgstr "缩略图"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
 msgid "Tide"
-msgstr ""
+msgstr "汰渍"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -4269,7 +4280,7 @@ msgstr "今日活动"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
-msgstr ""
+msgstr "总预测数"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -4282,23 +4293,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total On Hand"
-msgstr ""
+msgstr "在库总数"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "追踪库存"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Two-Seat Sofa"
-msgstr ""
+msgstr "两座位沙发"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Two-Seater Sofa with Oak Wood Frame"
-msgstr ""
+msgstr "两座位橡木框架沙发"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__type
@@ -4322,7 +4333,7 @@ msgstr "单位"
 #. module: product
 #: model:res.groups,name:product.group_show_uom_price
 msgid "UOM price display"
-msgstr ""
+msgstr "价格单位显示"
 
 #. module: product
 #. odoo-python
@@ -4349,17 +4360,17 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
 msgid "Under Armour"
-msgstr ""
+msgstr "Under Armour"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_under_desk_pedestals
 msgid "Under-desk pedestals"
-msgstr ""
+msgstr "桌下抽屉柜"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_uniqlo
 msgid "Uniqlo"
-msgstr ""
+msgstr "优衣库"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
@@ -4414,12 +4425,12 @@ msgstr "计量单位及包装单位"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Update Quantities"
-msgstr ""
+msgstr "更新数量"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
 msgid "Update Variant Quantities"
-msgstr ""
+msgstr "更新变体数量"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4446,7 +4457,7 @@ msgstr "更新现有产品的额外价格"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "上传"
 
 #. module: product
 #. odoo-python
@@ -4499,7 +4510,7 @@ msgstr "用户名"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "VINT_1000"
-msgstr ""
+msgstr "VINT_1000"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -5070,27 +5081,27 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
@@ -5098,7 +5109,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
@@ -5106,6 +5117,8 @@ msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
@@ -5113,26 +5126,28 @@ msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FT35,30^A0N,15^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,15^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: product
 #. odoo-python
@@ -5143,7 +5158,7 @@ msgstr "attribute_id"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: product
 #. odoo-javascript
