@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ComboConfiguratorPopup">
-        <Dialog t-if="this.hasMultipleChoices()" title="this.title" contentClass="'combo-configurator-popup'">
-            <div t-foreach="this.props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column my-3 mb-4">
+        <Dialog t-if="this.hasMultipleChoices()" title="this.title" contentClass="'combo-configurator-popup'" bodyClass="'bg-secondary'">
+            <div t-foreach="this.props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" t-att-class="'d-flex flex-column my-3' + (combo_index > 0 ? ' mt-4' : '')">
                 <div class="d-flex align-items-center mb-3">
                     <h3 class="mb-0" t-out="combo.name"></h3>
                     <t t-if="combo.qty_free > 0">
@@ -51,7 +51,7 @@
                     <t t-if="this.ui.isSmall">
                         <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-out="this.formatTotalPrice(this.props.productTemplate)"/></div>
                     </t>
-                    <button class="confirm btn btn-primary btn-lg lh-lg w-100 w-lg-25"
+                    <button class="confirm btn btn-primary w-100 w-lg-25"
                         t-att-disabled="!this.isConfirmButtonEnabled()" t-on-click="this.confirm">
                         Add to order
                     </button>

@@ -3,7 +3,7 @@ import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
 
 Object.assign(dialogProps, {
-    backdrop: t.boolean().optional(false),
+    backdrop: t.boolean().optional(true),
     closeOnBodyButtonClick: t.boolean().optional(false),
 });
 

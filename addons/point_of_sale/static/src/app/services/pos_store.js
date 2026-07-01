@@ -2196,6 +2196,7 @@ export class PosStore extends WithLazyGetterTrap {
                           title: _t("Select preset"),
                           list: selectionList,
                           size: "md",
+                          bodyClass: "pb-4",
                       });
         }
 

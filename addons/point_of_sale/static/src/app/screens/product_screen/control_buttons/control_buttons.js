@@ -113,6 +113,8 @@ export class ControlButtons extends Component {
         const payload = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("Select the pricelist"),
             list: selectionList,
+            size: "md",
+            bodyClass: "pb-4",
         });
 
         if (payload) {

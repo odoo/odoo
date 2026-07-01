@@ -2,7 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.SelectionPopup">
-        <Dialog title="this.props.title" footer="false" size="this.props.size" contentClass="'pb-5'" bodyClass="'d-flex flex-column gap-2 border-bottom'">
+        <t t-set="bodyClass" t-value="'d-flex flex-column gap-2 pt-0 ' + (this.props.bodyClass || '')"/>
+        <Dialog title="this.props.title" footer="false" size="this.props.size" bodyClass="bodyClass">
             <button t-foreach="this.props.list" t-as="item" t-key="item.id"
                     class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start"
                     t-att-class="{ 'selected active': item.isSelected }"

@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
   <t t-name="point_of_sale.ConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="extension">
     <xpath expr="//Dialog" position="attributes">
+    <attribute name="backdrop">this.props.backdrop || false</attribute>
       <attribute name="contentClass">'o_confirmation_dialog ' + (this.props.contentClass || '')</attribute>
     </xpath>
     <xpath expr="//t[@t-set-slot='footer']" position="inside">
@@ -12,7 +13,8 @@
   </t>
   <t t-name="point_of_sale.AlertDialog" t-inherit="web.AlertDialog" t-inherit-mode="extension">
     <xpath expr="//Dialog" position="attributes">
-      <attribute name="size">'md'</attribute>
+      <attribute name="size">this.props.size || 'md'</attribute>
+      <attribute name="backdrop">this.props.backdrop || false</attribute>
       <attribute name="contentClass">'o_alert_dialog ' + (this.props.contentClass || '')</attribute>
     </xpath>
     <xpath expr="//t[@t-set-slot='footer']" position="inside">

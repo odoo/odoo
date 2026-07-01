@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OpeningControlPopup">
-        <Dialog size="'md'">
+        <Dialog size="'md'" backdrop="false">
             <t t-set-slot="header">
                 <h4 class="modal-title text-break">
                     Opening Control
@@ -40,13 +40,13 @@
                 <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-custom-model="this.state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
-                <button class="button btn btn-lg btn-primary"
+                <button class="button btn btn-primary"
                 t-if="!(this.pos.cashier._role === 'minimal')"
                     t-on-click="this.confirm"
                     t-att-disabled="!this.env.utils.isValidFloat(this.state.openingCash)">
                     Open Register
                 </button>
-                <button class="backend-button button btn btn-lg btn-secondary"
+                <button class="backend-button button btn btn-secondary"
                     t-on-click="() => this.pos.showLoginScreen()">
                     Discard
                 </button>

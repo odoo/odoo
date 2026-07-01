@@ -9,12 +9,12 @@
                 <div class="d-flex justify-content-between gap-2 w-100">
 
                     <div class="d-flex gap-2">
-                        <button class="btn btn-primary btn-lg" t-on-click="this.props.close">Continue</button>
-                        <button t-if="this.props.canRetry" class="btn btn-lg btn-secondary" t-on-click="this.onClickRetry">Retry</button>
-                        <button t-if="this.props.download" class="btn btn-lg btn-secondary" t-on-click="this.onClickDownload">Download</button>
+                        <button class="btn btn-primary" t-on-click="this.props.close">Continue</button>
+                        <button t-if="this.props.canRetry" class="btn btn-secondary" t-on-click="this.onClickRetry">Retry</button>
+                        <button t-if="this.props.download" class="btn btn-secondary" t-on-click="this.onClickDownload">Download</button>
                     </div>
                     <button t-if="this.props.tryOnOtherPrinter"
-                            class="btn btn-lg btn-secondary"
+                            class="btn btn-secondary"
                             t-on-click="this.onClickTryOnOtherPrinter">
                         Try on other printer
                     </button>

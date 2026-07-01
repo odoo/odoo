@@ -1,59 +1,91 @@
-.o_dialog .modal-content {
-    --modal-footer-border-width: 0;
-    --modal-header-border-width: 0;
+.pos {
+    .o_dialog .modal-content {
+        --modal-footer-border-width: 0;
+        --modal-header-border-width: 0;
 
-    .modal-header {
-        padding-bottom: 0;
-        &:has(.btn-close) {
-            margin-right: var(--modal-header-padding-y);
-        }
-        .btn-close {
-            position: unset !important;
-            margin: calc(-0.5 * var(--modal-header-padding-y)) calc(-0.5 * var(--modal-header-padding-x) * 2)
-                calc(-0.5 * var(--modal-header-padding-y)) auto !important;
-        }
-    }
+        .modal-header .btn-close.position-sm-absolute {
+                position: unset !important;
+                margin: calc(-0.5 * var(--modal-header-padding-y)) calc(-0.5 * var(--modal-header-padding-x) * 2)
+                    calc(-0.5 * var(--modal-header-padding-y)) auto !important;
+            }
 
-    .modal-body {
-        --modal-padding: 16px;
-
-        > p:last-child {
+        .modal-body > p:last-child {
             margin-bottom: 4px;
         }
     }
 
-    .modal-footer {
-        padding-top: 0;
-    }
-}
+    .o_dialog .modal-content.o_confirmation_dialog,
+    .o_dialog .modal-content.o_alert_dialog {
+        --modal-border-radius: 0.4rem;
 
-.o_dialog .modal-content.o_confirmation_dialog,
-.o_dialog .modal-content.o_alert_dialog {
-    --modal-border-radius: 0.4rem;
-    padding: 0 0.75rem;
-
-    .modal-header {
-        &:has(.btn-close) {
-            margin-right: 0;
+        .modal-header {
+            .modal-title {
+                font-size: 1.1rem;
+            }
         }
-        .modal-title {
+    }
+
+    .o_dialog .modal-content.o_confirmation_dialog,
+    .o_dialog .modal-content.o_alert_dialog,
+    .o_dialog .modal-content.o_error_dialog {
+        .modal-header {
+            padding-bottom: calc(var(--modal-padding) * 0.25);
+        }
+        .modal-body {
+            padding-top: calc(var(--modal-padding) * 0.25);
+        }
+    }
+    .o_dialog .modal-content.o_confirmation_dialog,
+    .o_dialog .modal-content.o_alert_dialog {
+        --modal-border-radius: 0.4rem;
+        .modal-header .modal-title {
             font-size: 1.1rem;
         }
     }
-}
 
-.o_dialog .modal-content.o_alert_dialog {
-    --heading-color: var(--danger);
-    .modal-header {
-        .modal-title {
-            font-weight: bold;
-            font-size: 1.5rem;
-            letter-spacing: 0.25px;
+    .o_dialog .modal-content.o_alert_dialog {
+        --heading-color: var(--danger);
+        .modal-header {
+            .modal-title {
+                font-weight: bold;
+                font-size: 1.5rem;
+                letter-spacing: 0.25px;
+            }
+        }
+        .modal-body {
+            p {
+                font-size: 1.05em;
+            }
         }
     }
-    .modal-body {
-        p {
-            font-size: 1.05em;
+
+    .o_modal_design_minimal {
+        @include media-breakpoint-up(sm) {
+            .modal-content .modal-header .btn-close.position-sm-absolute {
+                    margin-right: 0 !important;
+            }
         }
+    }
+
+    // We want all the buttons in POS to be large
+    .o_dialog .modal-footer .btn {
+        --btn-padding-y: #{$btn-padding-y-lg};
+        --btn-padding-x: #{$btn-padding-x-lg};
+        --btn-font-size: #{$btn-font-size-lg};
+        --btn-border-radius: #{$btn-border-radius-lg};
+
+        line-height: 2 !important;
+    }
+
+    .o_dialog .modal-content .modal-header .modal-title {
+        font-size: calc(1.25625rem + 0.075vw) !important;
+    }
+
+    .modal-dialog.modal-lg {
+        justify-content: center;
+    }
+
+    .o_modal_no_body_padding .modal-body {
+        padding: 0;
     }
 }
