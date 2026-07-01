@@ -26,7 +26,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         })
         so.action_confirm()
         so._create_analytic_account()  # normally created at so confirmation when you use the right products
-        init_price = so.amount_total
+        init_untaxed = so.amount_untaxed
 
         # create some expense and validate it (expense at cost)
         # Submit to Manager
@@ -51,11 +51,14 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # expense should now be in sales order
         self.assertIn(self.company_data['product_delivery_cost'], so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == self.company_data['product_delivery_cost'].id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (55.0, 11.3), 'Sale Expense: error when invoicing an expense at cost')
-        self.assertEqual(so.amount_total, init_price + exp.total_amount, 'Sale Expense: price of so should be updated after adding expense')
+        self.assertEqual(sol.product_uom_qty, 1.0)
+        self.assertEqual(sol.qty_delivered, 1.0)
+        self.assertEqual(sol.price_unit, exp.untaxed_amount_currency)
+        self.assertEqual(sol.price_subtotal, exp.untaxed_amount_currency)
+        self.assertEqual(so.amount_untaxed, init_untaxed + exp.untaxed_amount_currency, 'Sale Expense: price of so should be updated after adding expense')
 
         # create some expense and validate it (expense at sale price)
-        init_price = so.amount_total
+        init_untaxed = so.amount_untaxed
         prod_exp_2 = self.env['product.product'].create({
             'name': 'Car Travel',
             'expense_policy': 'sales_price',
@@ -90,13 +93,17 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # expense should now be in sales order
         self.assertIn(prod_exp_2, so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_2.id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (prod_exp_2.list_price, 100.0), 'Sale Expense: error when invoicing an expense at cost')
-        self.assertEqual(so.amount_untaxed, init_price + (prod_exp_2.list_price * 100.0), 'Sale Expense: price of so should be updated after adding expense')
-        # self.assertTrue(so.invoice_status, 'no', 'Sale Expense: expenses should not impact the invoice_status of the so')
+        expected_amount = prod_exp_2.list_price * exp.quantity
+        self.assertEqual(sol.product_uom_qty, exp.quantity)
+        self.assertEqual(sol.qty_delivered, exp.quantity)
+        self.assertEqual(sol.price_unit, prod_exp_2.list_price)
+        self.assertEqual(sol.price_subtotal, expected_amount)
+        self.assertEqual(so.amount_untaxed, init_untaxed + expected_amount, 'Sale Expense: price of so should be updated after adding expense')
 
         # both expenses should be invoiced
         inv = so._create_invoices()
-        self.assertEqual(inv.amount_untaxed, 621.5 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')
+        invoice_line = inv.invoice_line_ids.filtered(lambda line: line.product_id == prod_exp_2)
+        self.assertEqual(invoice_line.price_subtotal, expected_amount, 'Sale Expense: invoicing of expense is wrong')
 
     def test_expense_multi_id_analytic_distribution(self):
         """
