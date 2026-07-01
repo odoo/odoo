@@ -165,6 +165,8 @@ class TestReturnPicking(TestStockCommon):
         return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_picking.button_validate()
         self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)
+        self.assertEqual(return_picking.move_ids.reference, return_picking.name)
+        self.assertEqual(return_picking.move_line_ids.reference, return_picking.name)
 
     def test_stock_return_for_exchange(self):
         '''
