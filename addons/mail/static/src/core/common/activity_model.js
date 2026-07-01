@@ -66,6 +66,13 @@ export class Activity extends Record {
     /** @type {[number, string]} */
     write_uid;
 
+    get thread() {
+        return this.store["mail.thread"].insert({
+            model: this.res_model,
+            id: this.res_id,
+        });
+    }
+
     serialize() {
         return JSON.parse(JSON.stringify(this.toData(["user_id", "role_id"])));
     }

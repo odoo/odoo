@@ -789,7 +789,8 @@ class MailActivity(models.Model):
                 activities;
               * ``user_assigned_ids`` (list) -- activity responsible IDs
                 ordered by closest deadline of the related activities;
-              * ``role_assigned_ids`` (list) -- role IDs
+              * ``role_to_assign_ids`` (list) -- role IDs for activities
+                without user_id assigned to them.
                 ordered by closest deadline of the related activities;
               * ``attachments_info`` (dict) -- information about the
                 attachments, ``{'count': int, 'most_recent_id': int,
@@ -854,7 +855,7 @@ class MailActivity(models.Model):
                 res_id_to_date_done[res_id] = date_done
             # As ongoing is sorted on date_deadline, we get assignees on activity with oldest deadline first
             user_assigned_ids = ongoing.user_id.ids
-            role_assigned_ids = ongoing.role_id.ids
+            role_to_assign_ids = ongoing.filtered(lambda a: not a.user_id).role_id.ids
             attachments = [attachments_by_id[attach.id] for attach in completed.attachment_ids]
 
             grouped_activities[res_id][activity_type_id.id] = {
@@ -865,7 +866,7 @@ class MailActivity(models.Model):
                 'reporting_date': ongoing and date_deadline or date_done or None,
                 'state': self._compute_state_from_date(date_deadline, user_tz) if ongoing else 'done',
                 'user_assigned_ids': user_assigned_ids,
-                'role_assigned_ids': role_assigned_ids,
+                'role_to_assign_ids': role_to_assign_ids,
                 'summaries': [act.summary if act.summary else '' for act in activities],
             }
             if attachments:
