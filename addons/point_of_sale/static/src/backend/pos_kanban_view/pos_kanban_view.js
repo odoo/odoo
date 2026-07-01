@@ -11,7 +11,9 @@ import { _t } from "@web/core/l10n/translation";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 
 async function updatePosKanbanViewState(orm, stateObj) {
-    const result = await orm.call("pos.config", "get_pos_kanban_view_state");
+    const result = await orm
+        .cache({ type: "disk" })
+        .call("pos.config", "get_pos_kanban_view_state");
     Object.assign(stateObj, result);
 }
 
