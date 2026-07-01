@@ -1,3 +1,7 @@
+import base64
+import textwrap
+import uuid
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
@@ -190,6 +194,50 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         if test_name:
             attachment = cls._import_invoice_as_attachment(test_name)
         return journal._create_document_from_attachment(attachment.id)
+
+    @classmethod
+    def _get_raw_mail_message_str(self, attachments, email_to, message_id=None):
+        """ Mock an incoming mail message
+        :param attachments: Odoo recordset of ir.attachment.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
 
 
 class TestUblCiiBECommon(TestUblCiiCommon):
