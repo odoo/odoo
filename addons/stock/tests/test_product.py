@@ -457,3 +457,19 @@ class TestProductPostInstall(TestStockCommon):
             {'location_id': transit_location.id, 'quantity': 3.0},
             {'location_id': self.stock_location.id, 'quantity': 4.0},
         ])
+
+    def test_user_inventory_permissions_change_lot_or_serial(self):
+        """
+        Test if a user with Product/Create can change the Custom Lot/Serial
+        """
+        product = self.productA
+        product.tracking = 'lot'
+
+        user = self.user_stock_manager
+        user.group_ids += self.env.ref('product.group_product_manager')
+
+        product.with_user(user).write({
+            'serial_prefix_format': 'TCLPP'
+        })
+
+        self.assertEqual(product.serial_prefix_format, 'TCLPP')
