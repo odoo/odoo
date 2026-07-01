@@ -405,34 +405,18 @@ class SaleOrderLine(models.Model):
 
     #=== HOOKS ===#
 
-    # FIXME VFE this hook is supported on the order, not the order line
-    def _get_action_add_from_catalog_extra_context(self, order):
-        extra_context = super()._get_action_add_from_catalog_extra_context(order)
-        extra_context.update(warehouse_id=order.warehouse_id.id)
-        return extra_context
-
-    def _get_product_catalog_lines_data(self, **kwargs):
-        """ Override of `sale` to add the delivered quantity.
-
-        :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'deliveredQty': float,
-                'quantity': float,
-                'price': float,
-                'readOnly': bool,
-            }
-        """
-        res = super()._get_product_catalog_lines_data(**kwargs)
-        res['deliveredQty'] = sum(
-            self.mapped(
-                lambda line: line.product_uom_id._compute_quantity(
-                    qty=line.qty_delivered,
-                    to_unit=line.product_id.uom_id,
+    def _get_product_catalog_lines_data(self, *args, **kwargs) -> dict:
+        """Override of `sale` to add the delivered quantity."""
+        return {
+            **super()._get_product_catalog_lines_data(*args, **kwargs),
+            "deliveredQty": sum(
+                self.mapped(
+                    lambda line: line.product_uom_id._compute_quantity(
+                        qty=line.qty_delivered, to_unit=self._get_product_uom()
+                    )
                 )
-            )
-        )
-        return res
+            ),
+        }
 
     def _is_returnable(self):
         """Return whether this line contains a product eligible for return."""

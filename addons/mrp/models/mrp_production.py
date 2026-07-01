@@ -3178,53 +3178,39 @@ class MrpProduction(models.Model):
     # CATALOG
     # -------------------------------------------------------------------------
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
-        new_default_data = self.env['stock.move']._get_product_catalog_lines_data(parent_record=self)
-
-        return {**default_data, **new_default_data}
-
-    def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
-        if not child_field:
-            return {}
-        lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
-        return lines.grouped(lambda line: line.product_id)
+    def _get_product_price_type(self) -> str:
+        """Specify the price type that should be computed as product 'price' in the catalog."""
+        return 'standard_price'
 
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
-    def _update_order_line_info(self, product, quantity, uom, *, child_field=False, **kwargs):
-        if not child_field:
-            return 0
-        entity = self[child_field].filtered(lambda line: line.product_id.id == product.id)
-        if entity:
-            if quantity != 0:
-                self._update_catalog_line_quantity(entity, quantity, **kwargs)
-            else:
-                entity.unlink()
-        elif quantity > 0:
-            new_line_vals = self._get_new_catalog_line_values(product.id, quantity, uom, child_field=child_field, **kwargs)
-            command = Command.create(new_line_vals)
-            self.write({child_field: [command]})
-            new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product.id)[-1:]
-            self._update_catalog_line_quantity(new_line, quantity, **kwargs)
-
-        return product.standard_price
-
-    def _update_catalog_line_quantity(self, line, quantity, **kwargs):
-        line.product_uom_qty = quantity
-
-    def _get_new_catalog_line_values(self, product_id, quantity, uom, **kwargs):
-        child_field = kwargs.get('child_field')
+    def _get_action_add_from_catalog_extra_context(self):
         return {
-            'product_id': product_id,
-            'product_uom_qty': quantity,
-            'sequence': (self[child_field][-1:].sequence or 1) + 1,
-            'uom_id': uom.id,
+            **super()._get_action_add_from_catalog_extra_context(),
+            'display_stock': True,
+            'hide_product_type_filters': True,  # Only goods are displayed
         }
 
-    def _is_display_stock_in_catalog(self):
-        return True
+    def _catalog_create_new_line(self, child_field, product, quantity, uom, **kwargs):
+        # Trigger the necessary business flows on production updates (see `write` override above)
+        line = super()._catalog_create_new_line(child_field, product, quantity, uom, **kwargs)
+
+        if self.state != 'draft':
+            self.with_context(no_procurement=True)._autoconfirm_production()
+            if self.is_planned:
+                self._plan_workorders()
+
+        return line
+
+    def _catalog_prepare_new_line_vals(self, *args, workorder_id=None, **kwargs) -> dict:
+        vals = super()._catalog_prepare_new_line_vals(*args, workorder_id=workorder_id, **kwargs)
+
+        if workorder_id:
+            workorder = self.env['mrp.workorder'].browse(workorder_id)
+            vals.update({'workorder_id': workorder_id, 'operation_id': workorder.operation_id.id})
+
+        return vals
 
     def _post_run_manufacture(self, post_production_values):
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')

@@ -11,7 +11,11 @@ from odoo.tools import float_compare, float_is_zero, format_date, groupby
 
 class SaleOrderLine(models.Model):
     _name = "sale.order.line"
-    _inherit = ["analytic.mixin", "res.currency.rate.consolidation.mixin"]
+    _inherit = [
+        "analytic.mixin",
+        "res.currency.rate.consolidation.mixin",
+        "product.catalog.line.mixin",
+    ]
     _description = "Sales Order Line"
     _rec_names_search = ["name", "order_id.name"]
     _order = "order_id, sequence, id"
@@ -1798,12 +1802,34 @@ class SaleOrderLine(models.Model):
                 )
             )
 
-    # === ACTION METHODS ===#
+    # === CATALOG ===#
 
     @api.readonly
     def action_add_from_catalog(self):
         order = self.env["sale.order"].browse(self.env.context.get("order_id"))
         return order.with_context(child_field="order_line").action_add_from_catalog()
+
+    def _get_quantity_field(self) -> str:
+        return "product_uom_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "product_uom_id"
+
+    def _get_catalog_unit_price(self, parent_record, **kwargs):
+        if len(self) == 1:
+            return self._get_discounted_price()
+
+        return parent_record.pricelist_id._get_product_price(
+            product=self.product_id,
+            quantity=1.0,
+            uom=self._get_product_uom(),
+            currency=parent_record.currency_id,
+            date=parent_record.date_order,
+            **kwargs,
+        )
+
+    def _can_be_unlinked_from_catalog(self):
+        return super()._can_be_unlinked_from_catalog() and self.state in {"draft", "sent"}
 
     # === BUSINESS METHODS ===#
 
@@ -2001,80 +2027,6 @@ class SaleOrderLine(models.Model):
 
     def _additional_name_per_id(self):
         return {so_line.id: so_line._get_partner_display() for so_line in self}
-
-    # === HOOKS ===#
-
-    def _get_product_catalog_lines_data(self, **kwargs):
-        """Return information about sale order lines in `self`.
-
-        If `self` is empty, this method returns only the default value(s) needed for the product
-        catalog. In this case, the quantity that equals 0.
-
-        Otherwise, it returns a quantity and a price based on the product of the SOL(s) and whether
-        the product is read-only or not.
-
-        A product is considered read-only if the order is considered read-only (see
-        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records.
-
-        Note: This method cannot be called with records that have different products linked.
-
-        :raise odoo.exceptions.ValueError: ``len(self.product_id) != 1``
-        :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'quantity': float,
-                'price': float,
-                'readOnly': bool,
-                'uomDisplayName': String,
-                'uomId': int,
-                'productUomFactor': float (optional),
-                'productUomDisplayName': string (optional),
-            }
-        """
-        if len(self) == 1:
-            available_uoms = self.product_id._get_available_uoms()
-            return {
-                "quantity": self.product_uom_qty,
-                "price": self._get_discounted_price(),
-                "readOnly": (self.order_id._is_readonly() or bool(self.combo_item_id)),
-                **self.order_id._get_product_catalog_uom_data(self.product_id, self.product_uom_id),
-                "availableUoms": [
-                    {"id": uom.id, "name": uom.display_name, "factor": uom.factor}
-                    for uom in available_uoms
-                ],
-            }
-        if self:
-            self.product_id.ensure_one()
-            order_line = self[0]
-            order = order_line.order_id
-            available_uoms = self.product_id._get_available_uoms()
-            return {
-                "readOnly": True,
-                "price": order.pricelist_id._get_product_price(
-                    product=order_line.product_id,
-                    quantity=1.0,
-                    currency=order.currency_id,
-                    date=order.date_order,
-                    **kwargs,
-                ),
-                "quantity": sum(
-                    self.mapped(
-                        lambda line: line.product_uom_id._compute_quantity(
-                            qty=line.product_uom_qty, to_unit=line.product_id.uom_id
-                        )
-                    )
-                ),
-                "uomDisplayName": self.product_id.uom_id.display_name,
-                "uomId": self.product_id.uom_id.id,
-                "availableUoms": [
-                    {"id": uom.id, "name": uom.display_name, "factor": uom.factor}
-                    for uom in available_uoms
-                ],
-            }
-        return {
-            "quantity": 0
-            # price will be computed in batch with pricelist utils so not given here
-        }
 
     # === TOOLING ===#
 

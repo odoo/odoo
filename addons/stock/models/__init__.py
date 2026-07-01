@@ -21,7 +21,6 @@ from . import stock_replenish_mixin
 from . import stock_rule
 from . import stock_warehouse
 from . import product
-from . import product_catalog_mixin
 from . import stock_package_history
 from . import stock_package_type
 from . import stock_package

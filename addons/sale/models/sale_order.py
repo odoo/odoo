@@ -2,7 +2,6 @@
 # ruff: noqa: PLW0642
 
 import json
-from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
@@ -1779,23 +1778,6 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
-        new_default_data = self.env["sale.order.line"]._get_product_catalog_lines_data()
-        return {**default_data, **new_default_data}
-
-    def _get_action_add_from_catalog_extra_context(self):
-        return {
-            **super()._get_action_add_from_catalog_extra_context(),
-            "order_customer_id": self.partner_id.id,
-            "product_catalog_currency_id": self.currency_id.id,
-            "product_catalog_digits": self.order_line._fields["price_unit"].get_digits(self.env),
-            "show_sections": bool(self.id),
-        }
-
-    def _get_product_catalog_domain(self):
-        return super()._get_product_catalog_domain() & Domain("sale_ok", "=", True)
-
     @api.readonly
     def action_open_business_doc(self):
         self.ensure_one()
@@ -2153,9 +2135,7 @@ class SaleOrder(models.Model):
 
     def _discard_tracking(self):
         self.ensure_one()
-        return (
-            self.state == "draft" and request and request.env.context.get("catalog_skip_tracking")
-        )
+        return self.state == "draft" and request and request.env.context.get("catalog_update")
 
     def _track_finalize(self):
         """Override of `mail` to prevent logging changes when the SO is in a draft state."""
@@ -2656,6 +2636,25 @@ class SaleOrder(models.Model):
 
     # === CATALOG === #
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            "order_customer_id": self.partner_id.id,
+            "product_catalog_digits": self.order_line._fields["price_unit"].get_digits(self.env),
+        }
+
+    def _get_catalog_currency(self):
+        return self.currency_id or super()._get_catalog_currency()
+
+    def _get_product_catalog_domain(self):
+        return super()._get_product_catalog_domain() & Domain("sale_ok", "=", True)
+
+    def _get_product_price_type(self) -> str:
+        """Specify the price type that should be computed as product 'price' in the catalog."""
+        self.ensure_one()
+        # Disable the default price computation as the pricelist should be considered instead
+        return ""
+
     def _get_product_catalog_order_data(self, products, **kwargs):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         prices = self.pricelist_id._get_products_price(
@@ -2669,91 +2668,33 @@ class SaleOrder(models.Model):
             res[product.id]["price"] = prices.get(product.id)
         return res
 
-    def _get_product_catalog_product_data(self, product, **kwargs):  # noqa: ARG002
-        product_data = super()._get_product_catalog_product_data(product)
+    def _is_readonly(self) -> bool:
+        """Return whether the sale order is read-only or not based on the state or the lock status.
+
+        A sale order is considered read-only if its state is 'cancel' or if the sale order is
+        locked.
+        """
+        return super()._is_readonly() or self.state == "cancel" or self.locked
+
+    def _get_product_catalog_product_data(self, product, **kwargs) -> dict:
+        product_data = super()._get_product_catalog_product_data(product, **kwargs)
         has_warning_group = self.env["res.groups"]._is_feature_enabled("sale.group_warning_sale")
         if product.sale_line_warn_msg and has_warning_group:
             product_data.update(warning=product.sale_line_warn_msg)
         return product_data
 
-    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):  # noqa: ARG002
-        grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
-        if section_id is None:
-            section_id = (
-                self.order_line[:1].id
-                if self.order_line[:1].display_type == "line_section"
-                else False
-            )
-        for line in self.order_line:
-            if (
-                line.display_type
-                or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != section_id
-            ):
-                continue
-            grouped_lines[line.product_id] |= line
-        return grouped_lines
-
-    def _get_parent_field_on_child_model(self):
-        return "order_id"
-
-    def _update_order_line_info(
-        self, product, quantity, uom, *, section_id=False, child_field="order_line", **kwargs
-    ):
-        """Update sale order line information for a given product or create a
-        new one if none exists yet.
-
-        :param record product: The product, as a `product.product` record.
-        :param int quantity: The quantity selected in the catalog.
-        :param int section_id: The id of section selected in the catalog.
-        :param record uom: The UoM selected in the catalog, as a `uom.uom` record.
-        :return: The unit price of the product, based on the pricelist of the sale order and the
-                 quantity selected.
-        :rtype: float
-        """
-        request.update_context(catalog_skip_tracking=True)
-        sol = self.order_line.filtered(
-            lambda line: (
-                line.product_id.id == product.id and line.get_parent_section_line().id == section_id
-            )
+    def _get_product_catalog_default_unit_price(self, product, uom, **kwargs):
+        return self.pricelist_id._get_product_price(
+            product=product,
+            quantity=1.0,
+            currency=self.currency_id,
+            uom=uom,
+            date=self.date_order,
+            **kwargs,
         )
-        if sol:
-            if uom and sol.product_uom_id != uom:
-                sol.product_uom_id = uom.id
-            if quantity != 0:
-                sol.product_uom_qty = quantity
-            elif self.state in ["draft", "sent"]:
-                price_unit = self.pricelist_id._get_product_price(
-                    product=sol.product_id,
-                    quantity=1.0,
-                    currency=self.currency_id,
-                    uom=uom,
-                    date=self.date_order,
-                    **kwargs,
-                )
-                sol.unlink()
-                return price_unit
-            else:
-                sol.product_uom_qty = 0
-        elif quantity > 0:
-            sol = self.env["sale.order.line"].create({
-                "order_id": self.id,
-                "product_id": product.id,
-                "product_uom_qty": quantity,
-                "sequence": self._get_new_line_sequence(child_field, section_id),
-                "product_uom_id": uom.id,
-            })
-        else:  # quantity of 0, no line to update, return default pricelist price
-            return self.pricelist_id._get_product_price(
-                product=product,
-                quantity=1.0,
-                currency=self.currency_id,
-                uom=uom,
-                date=self.date_order,
-                **kwargs,
-            )
 
-        return sol._get_discounted_price()
+    def _has_sections(self) -> bool:
+        return True
 
     # === Product Documents === #
 
@@ -2775,18 +2716,6 @@ class SaleOrder(models.Model):
         )
 
     # === TOOLING ===#
-
-    def _is_readonly(self):
-        """Return Whether the sale order is read-only or not based on the state or the lock status.
-
-        A sale order is considered read-only if its state is 'cancel' or if the sale order is
-        locked.
-
-        :return: Whether the sale order is read-only or not.
-        :rtype: bool
-        """
-        self.ensure_one()
-        return self.state == "cancel" or self.locked
 
     def _is_paid(self):
         """Return whether the sale order is paid or not based on the linked transactions.

@@ -6,6 +6,7 @@ class RepairServiceLine(models.Model):
     _name = 'repair.service.line'
     _description = "Repair Service Line"
     _order = 'sequence, id'
+    _inherit = ['product.catalog.line.mixin']
 
     repair_id = fields.Many2one('repair.order', check_company=True, index='btree_not_null', copy=False, ondelete='cascade')
     product_id = fields.Many2one(
@@ -170,14 +171,8 @@ class RepairServiceLine(models.Model):
         repair_order = self.env['repair.order'].browse(self.env.context.get('order_id'))
         return repair_order.with_context(child_field='repair_service_line_ids').action_add_from_catalog()
 
-    def _get_product_catalog_lines_data(self, parent_record=False, **kwargs):
-        if not (parent_record and self):
-            return {
-                'quantity': 0,
-            }
-        self.product_id.ensure_one()
-        return {
-            'quantity': self[0].quantity,
-            'readOnly': len(self) > 1,
-            **parent_record._get_product_catalog_uom_data(self.product_id, self[0].uom_id),
-        }
+    def _get_quantity_field(self) -> str:
+        return "quantity"
+
+    def _get_product_uom_field(self) -> str:
+        return "uom_id"

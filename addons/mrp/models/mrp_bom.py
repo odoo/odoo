@@ -521,50 +521,6 @@ class MrpBom(models.Model):
             if list_of_domain_by_bom_to_unmark:
                 self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom_to_unmark)).write({'is_outdated_bom': False})
 
-    # -------------------------------------------------------------------------
-    # CATALOG
-    # -------------------------------------------------------------------------
-
-    def _get_action_add_from_catalog_extra_context(self):
-        return {
-            **super()._get_action_add_from_catalog_extra_context(),
-            'product_catalog_currency_id': self.env.company.currency_id.id,
-        }
-
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
-        new_default_data = self[child_field]._get_product_catalog_lines_data(default=True)
-
-        return {**default_data, **new_default_data}
-
-    def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
-        if not child_field:
-            return {}
-        lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
-        return lines.grouped('product_id')
-
-    def _update_order_line_info(self, product, quantity, uom, *, child_field=False, **kwargs):
-        if not child_field:
-            return 0
-        entity = self[child_field].filtered(lambda line: line.product_id.id == product.id)
-        bom_line_uom_id = entity.uom_id if entity else uom or product.uom_id
-        price_unit = product.uom_id._compute_price(product.standard_price, bom_line_uom_id)
-        if entity:
-            if quantity != 0:
-                entity.product_qty = quantity
-            else:
-                entity.unlink()
-        elif quantity > 0:
-            command = Command.create({
-                'product_qty': quantity,
-                'product_id': product.id,
-                'sequence': (self[child_field][-1:].sequence or 1) + 1,
-                'uom_id': bom_line_uom_id.id,
-            })
-            self.write({child_field: [command]})
-
-        return price_unit
-
     @api.model
     def _skip_for_no_variant(self, product, bom_attribule_values, never_attribute_values=False):
         """ Controls if a Component/Operation/Byproduct line should be skipped based on the 'no_variant' attributes
@@ -662,6 +618,7 @@ class MrpBomLine(models.Model):
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
     _check_company_auto = True
+    _inherit = ["product.catalog.line.mixin"]
 
     def _default_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
@@ -791,22 +748,11 @@ class MrpBomLine(models.Model):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
         return bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
 
-    def _get_product_catalog_lines_data(self, default=False, **kwargs):
-        if self and not default:
-            self.product_id.ensure_one()
-            price = self[0].product_id.uom_id._compute_price(self.product_id.standard_price, self[0].uom_id)
-            return {
-                'price': price,
-                'quantity': self[0].product_qty,
-                'readOnly': len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
-                'uomId': self[0].uom_id.id,
-                'productUomDisplayName': self[0].product_id.uom_id.display_name,
-                'productUomFactor': self[0].product_id.uom_id.factor / self[0].uom_id.factor,
-            }
-        return {
-            'quantity': 0,
-        }
+    def _get_quantity_field(self) -> str:
+        return "product_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "uom_id"
 
     def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
         return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': self}
@@ -820,6 +766,7 @@ class MrpBomByproduct(models.Model):
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True
+    _inherit = ["product.catalog.line.mixin"]
     _order = 'sequence, id'
 
     product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
@@ -869,19 +816,8 @@ class MrpBomByproduct(models.Model):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
         return bom.with_context(child_field='byproduct_ids').action_add_from_catalog()
 
-    def _get_product_catalog_lines_data(self, default=False, **kwargs):
-        if self and not default:
-            self.product_id.ensure_one()
-            price = self[0].product_id.uom_id._compute_price(self.product_id.standard_price, self[0].uom_id)
-            return {
-                'price': price,
-                'quantity': self[0].product_qty,
-                'readOnly': len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
-                'uomId': self[0].uom_id.id,
-                'productUomDisplayName': self[0].product_id.uom_id.display_name,
-                'productUomFactor': self[0].product_id.uom_id.factor / self[0].uom_id.factor,
-            }
-        return {
-            'quantity': 0,
-        }
+    def _get_quantity_field(self) -> str:
+        return "product_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "uom_id"

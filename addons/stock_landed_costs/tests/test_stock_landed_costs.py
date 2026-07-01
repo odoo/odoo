@@ -231,12 +231,14 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             product=self.landed_cost,
             quantity=1,
             uom=account_move.product_uom_id,
+            child_field='line_ids',
         )
         self.assertTrue(account_move.invoice_line_ids.is_landed_costs_line, "The landed cost should appear in the move line.")
         account_move._update_order_line_info(
             product=self.product,
             quantity=1,
             uom=account_move.product_uom_id,
+            child_field='line_ids',
         )
         move_line_no_landed = account_move.line_ids.filtered(lambda line: line.product_id == self.product)
         self.assertFalse(move_line_no_landed.is_landed_costs_line, "The landed cost should not be set to True.")

@@ -916,7 +916,7 @@ class TestRepair(TestRepairCommon):
 
     def test_add_product_from_catalog(self):
         """Check that only consumable products are available in the catalog."""
-        catalog_action = self.repair0.action_add_from_catalog()
+        catalog_action = self.repair0.with_context(child_field='move_ids').action_add_from_catalog()
         domain = catalog_action.get('domain')
         self.assertEqual(self.product_order_repair.type, 'service')
         self.assertEqual(self.product_product_11.type, 'consu')

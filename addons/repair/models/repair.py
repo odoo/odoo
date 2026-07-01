@@ -766,78 +766,30 @@ class RepairOrder(models.Model):
         res['search_view_id'] = [self.env.ref('repair.product_view_search_catalog').id, 'search']
         return res
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
-        new_default_data = self.env['stock.move']._get_product_catalog_lines_data(parent_record=self) if child_field == 'move_ids' \
-                           else self.env['repair.service.line']._get_product_catalog_lines_data(parent_record=self)
-
-        return {**default_data, **new_default_data}
-
     def _get_product_catalog_domain(self):
         catalog_domain = Domain('type', '=', 'consu')
         if self.env.context.get('child_field') == 'repair_service_line_ids':
             catalog_domain = Domain('type', '=', 'service')
         return super()._get_product_catalog_domain() & catalog_domain
 
-    def _get_product_catalog_product_data(self, product, **kwargs):
-        product_data = super()._get_product_catalog_product_data(product)
-        product_data['price'] = product.list_price
-        return product_data
-
-    def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
-        if not child_field:
-            return {}
-        lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
-        return lines.grouped(lambda line: line.product_id)
-
-    def _is_display_stock_in_catalog(self):
-        return True
-
-    def _update_order_line_info(self, product, quantity, uom, *, child_field=False, **kwargs):
-        if not child_field:
-            return 0
-        entity = self[child_field].filtered(lambda line: line.product_id.id == product.id)
-        if entity:
-            if quantity != 0:
-                self._update_catalog_line_quantity(entity, quantity, child_field)
-            else:
-                entity.unlink()
-        elif quantity > 0:
-            new_line_vals = self._get_new_catalog_line_values(product.id, quantity, uom, child_field=child_field, **kwargs)
-            command = Command.create(new_line_vals)
-            self.write({child_field: [command]})
-            new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product.id)[-1:]
-            self._update_catalog_line_quantity(new_line, quantity, child_field)
-
-        return product.list_price
-
-    def _update_catalog_line_quantity(self, line, quantity, child_field=False):
-        if child_field == 'move_ids':
-            line.product_uom_qty = quantity
-            return
-        line.quantity = quantity
-
-    def _get_new_catalog_line_values(self, product_id, quantity, uom, **kwargs):
-        child_field = kwargs.get('child_field')
-        vals = {
-            'repair_id': self.id,
-            'product_id': product_id,
-            'uom_id': uom.id,
-            'sequence': (self[child_field][-1:].sequence or 1) + 1,
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'display_stock': True,
+            'hide_product_type_filters': True,  # Only goods/services are displayed
         }
-        if child_field == 'move_ids':
-            move_vals = {
-                'product_uom_qty': quantity,
-                'location_id': self.location_id.id,
-                'location_dest_id': self.location_dest_id.id,
-                'repair_line_type': 'add',
 
-            }
-            vals.update(move_vals)
-        else:
-            vals['quantity'] = quantity
+    def _catalog_prepare_new_line_vals(self, child_field, *args, **kwargs) -> dict:
+        res = super()._catalog_prepare_new_line_vals(child_field, *args, **kwargs)
+        if child_field != 'move_ids':
+            return res
 
-        return vals
+        return {
+            **res,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'repair_line_type': 'add',
+        }
 
     # ------------------------------------------------------------
     # MAIL.THREAD

@@ -25,6 +25,7 @@ class AccountMoveLine(models.Model):
         "analytic.mixin",
         "mail.track.mixin",
         "res.currency.rate.consolidation.mixin",
+        "product.catalog.line.mixin",
     ]
     _description = "Journal Item"
     _explanation = "An individual line item within an account.move. Used to detail specific debits, credits, taxes, and products on invoices and journal entries."
@@ -3959,49 +3960,22 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # Catalog
     # -------------------------------------------------------------------------
-    def _get_product_catalog_lines_data(self, **kwargs):
-        """
-        Return information about account_move_line in `self`.
-        If `self` is empty, this method returns only the default value(s) needed for the product
-        catalog. In this case, the quantity that equals 0.
-        Otherwise, it returns a quantity and a price based on the product of the move line(s) and whether
-        the product is read-only or not.
-        A product is considered read-only if the order is considered read-only or if `self` contains multiple records.
-        Note: This method cannot be called with multiple records that have different products linked.
 
-        :param products: Recordset of `product.product`.
-        :param dict kwargs: additional values given for inherited models.
-        :raise odoo.exceptions.ValueError: ``len(self.product_id) != 1``
-        :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'quantity': float,
-                'price': float,
-                'readOnly': bool,
-                'min_qty': int (optional),
-                'uomDisplayName': string,
-                'uomId': int,
-                'productUomFactor': float (optional),
-                'productUomDisplayName': string (optional),
-            }
-        """
-        if self:
-            self.product_id.ensure_one()
-            return {
-                'quantity': sum(self.mapped(
-                    lambda line: line.product_uom_id._compute_quantity(
-                        qty=line.quantity, to_unit=self[0].product_uom_id,
-                    ),
-                )),
-                'readOnly': self.move_id._is_readonly() or len(self) > 1,
-                'price': self[0].price_unit,
-                **self.move_id._get_product_catalog_uom_data(
-                    self.product_id, self[0].product_uom_id
-                ),
-            }
-        return {
-            'quantity': 0,
-        }
+    def _consider_in_catalog(self, *args, **kwargs) -> bool:
+        return super()._consider_in_catalog(*args, **kwargs) and self.display_type == 'product'
+
+    def _get_quantity_field(self) -> str:
+        return "quantity"
+
+    def _get_product_uom_field(self) -> str:
+        return "product_uom_id"
+
+    def _get_catalog_unit_price(self, *args, **kwargs) -> float:
+        return self[0].price_unit
+
+    def _can_be_unlinked_from_catalog(self):
+        return super()._can_be_unlinked_from_catalog() and self.state in {'draft', 'sent'}
+
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------
