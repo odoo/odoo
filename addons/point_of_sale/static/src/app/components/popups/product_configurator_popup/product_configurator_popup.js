@@ -267,7 +267,7 @@ export class ProductConfiguratorPopup extends Component {
     }
     get priceExtra() {
         return this.selectedValues
-            .filter((value) => value.attribute_id.create_variant === "no_variant")
+            .filter((value) => !this.product || value.attribute_id.create_variant === "no_variant")
             .reduce((acc, val) => acc + val.price_extra, 0);
     }
 
