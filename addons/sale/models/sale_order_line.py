@@ -571,7 +571,7 @@ class SaleOrderLine(models.Model):
         """Hook method to be able to set/get cached taxes while computing them"""
         return tuple()
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
+    @api.depends('product_id', 'product_uom_id', 'product_uom_qty', 'order_id.currency_id', 'order_id.pricelist_id', 'order_id.date_order')
     def _compute_pricelist_item_id(self):
         for line in self:
             if not line.product_id or line.display_type or not line.order_id.pricelist_id:
@@ -583,7 +583,7 @@ class SaleOrderLine(models.Model):
                     **line._get_pricelist_kwargs(),
                 )
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
+    @api.depends('product_id', 'product_uom_id', 'product_uom_qty', 'order_id.currency_id', 'order_id.pricelist_id', 'order_id.date_order')
     def _compute_price_unit(self):
         def has_manual_price(line):
             # `line.currency_id` can be False for NewId records
