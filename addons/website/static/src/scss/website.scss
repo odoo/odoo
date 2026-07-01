@@ -2225,6 +2225,15 @@ header {
                 -webkit-mask: $navbar-light-toggler-icon-bg;
             }
         }
+
+        // When "Over the Content" uses a page-specific theme preset, apply
+        // that preset on the unscrolled header navbar. This selector is more
+        // specific than the fallback above.
+        @for $index from 1 through length($o-color-combinations) {
+            &.o_cc#{$index}:not(.o_top_menu_collapse_shown) > .navbar {
+                @include o-apply-colors($index);
+            }
+        }
     }
 }
 
