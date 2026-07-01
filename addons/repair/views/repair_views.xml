@@ -146,7 +146,7 @@
                     </group>
                 <notebook>
                     <page string="Parts" name="parts">
-                        <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
+                        <field name="move_ids" mode="list,kanban" readonly="state == 'cancel' or state == 'done'"
                         context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add', 'active_repair_id': id}">
                             <list string="Operations" editable="bottom">
                                 <control>
