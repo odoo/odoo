@@ -380,11 +380,11 @@ class TestFrenchLeaves(TransactionCase):
             'request_date_to': '2025-08-04',
         })
 
-        work_hours_data = leave_1.employee_id._list_work_time_per_day(
+        work_hours_data = self.employee.with_context(compute_leaves=False)._list_work_time_per_day(
             leave_1.date_from,
             leave_1.date_to)
 
-        self.assertEqual(work_hours_data[leave_1.employee_id.id][0][1], 7.50)
+        self.assertEqual(work_hours_data[self.employee.id][0][1], 7.50)
 
     def test_leave_full_day_different_working_hours(self):
         """Check full days leave creation for an employee with different working hours than the 2 weeks company's calendar."""

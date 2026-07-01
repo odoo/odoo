@@ -58,6 +58,11 @@
                     <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
                 </filter>
                 <separator/>
+                <filter string="Overtime Entries" name="is_time_rule_output"
+                        domain="[('is_time_rule_output', '=', True)]"/>
+                <filter string="Source Leaves" name="source_leaves"
+                        domain="[('is_time_rule_output', '=', False)]"/>
+                <separator/>
                 <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
                 <filter string="My Department" name="department"
@@ -617,7 +622,8 @@
         <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <list string="Time Off Requests" sample="1" expand="context.get('expand_leave_list', False)" duplicate="false" js_class="hr_holidays_payslip_list">
+            <list string="Time Off Requests" sample="1" expand="context.get('expand_leave_list', False)" duplicate="false" js_class="hr_holidays_payslip_list"
+                  decoration-it="is_time_rule_output">
                 <header>
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
@@ -642,13 +648,14 @@
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="work_entry_type_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                <field name="date_to" string="End Date" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="duration_display" string="Duration"/>
                 <field name="name" optional="hidden"/>
                 <field name="state" widget="badge" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="user_id" column_invisible="True"/>
                 <field name="message_needaction" column_invisible="True"/>
+                <field name="is_time_rule_output" column_invisible="1"/>
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-thumbs-up"
                     invisible="not can_approve"/>

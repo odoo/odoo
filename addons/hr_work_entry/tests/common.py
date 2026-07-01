@@ -58,5 +58,5 @@ class TestWorkEntryBase(TransactionCase):
         cls.work_entry_type_leave = cls.env['hr.work.entry.type'].create({
             'name': 'Time Off',
             'count_as': 'absence',
-            'code': 'LEAVETEST100'
+            'code': 'LEAVETEST100',
         })

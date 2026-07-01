@@ -14,9 +14,5 @@ class HrHolidaysAttendance(HrAttendance):
         if not employee:
             return response
 
-        remaining_overtime_data = employee._get_deductible_employee_overtime()
-        response['total_overtime'] = float_round(
-            remaining_overtime_data.get(employee, 0.0),
-            precision_digits=2,
-        )
+        response['total_overtime'] = float_round(employee.total_overtime, precision_digits=2)
         return response

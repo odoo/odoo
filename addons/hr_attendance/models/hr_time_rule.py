@@ -1,0 +1,123 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import UTC
+from zoneinfo import ZoneInfo
+
+from odoo import fields, models
+from odoo.addons.hr_work_entry.models.hr_time_rule import resolve_intervals_by_sequence
+from odoo.tools.intervals import Intervals
+
+
+class HrTimeRule(models.Model):
+    _inherit = 'hr.time.rule'
+
+    condition_work_entry_type_ids = fields.Many2many(
+        default=lambda self: self.env.company.attendance_work_entry_type_id
+    )
+
+    def _get_applicable_employees(self, employees):
+        result = super()._get_applicable_employees(employees)
+        if self.calendar_source == 'employee':
+            result = result.filtered('resource_calendar_id')
+        return result
+
+    def _get_remainder_attendance_vals(self, employee, source_attendance, check_in, check_out):
+        return {
+            'employee_id': employee.id,
+            'work_entry_type_id': source_attendance.work_entry_type_id.id,
+            'check_in': check_in,
+            'check_out': check_out,
+            'source_attendance_id': source_attendance.id,
+        }
+
+    def _get_output_attendance_vals(self, employee, rule, check_in, check_out, source_attendance=None, accumulated_pp=frozenset()):
+        return {
+            'employee_id': employee.id,
+            'work_entry_type_id': rule.work_entry_type_id.id,
+            'check_in': check_in,
+            'check_out': check_out,
+            'source_attendance_id': source_attendance.id if source_attendance else False,
+            'time_rule_id': rule.id,
+        }
+
+    def _resolve_output_intervals(self, intervals):
+        """For each time slice, the lowest-sequence rule with a work entry type wins."""
+        valid = [(s, e, rule) for s, e, rule in intervals if rule.work_entry_type_id]
+        return resolve_intervals_by_sequence(valid)
+
+    def _apply_attendance_output(self, excess, deficit):
+        """Create output and remainder attendance records from the computed excess/deficit."""
+        Attendance = self.env['hr.attendance'].sudo()
+        auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
+        att_create_vals = []
+        archive_source_ids = []
+        dummy = self.env['resource.calendar']
+
+        for employee, by_source in excess.items():
+            tz = ZoneInfo(employee._get_tz())
+            for source_att, intervals in by_source.items():
+                all_ivs_with_pp = list(intervals)
+                output_intervals = self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in all_ivs_with_pp])
+                if not output_intervals:
+                    continue
+                src_start = source_att.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                src_stop = source_att.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                out_union = Intervals([(s, e, dummy) for s, e, _ in output_intervals], keep_distinct=True)
+                remainder_segments = list(Intervals([(src_start, src_stop, dummy)]) - out_union)
+
+                min_out_start_utc = min(
+                    seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    for seg_s, _, _ in output_intervals
+                )
+                if min_out_start_utc <= source_att.check_in:
+                    # OT covers the very start → archive source; all remainder segments become records
+                    archive_source_ids.append(source_att.id)
+                    for s, e, _ in remainder_segments:
+                        att_create_vals.append(self._get_remainder_attendance_vals(
+                            employee, source_att,
+                            s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                            e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                        ))
+                else:
+                    # OT starts after check_in → shrink source check_out to first OT start;
+                    # source itself is the first non-OT segment, so skip remainder_segments[0]
+                    Attendance.browse([source_att.id]).with_context(**auto_ctx).write(
+                        {'check_out': min_out_start_utc}
+                    )
+                    for s, e, _ in remainder_segments[1:]:
+                        att_create_vals.append(self._get_remainder_attendance_vals(
+                            employee, source_att,
+                            s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                            e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                        ))
+
+                for seg_s, seg_e, rule in output_intervals:
+                    acc_pp = frozenset().union(*(
+                        orig_pp for orig_s, orig_e, orig_r, orig_pp in all_ivs_with_pp
+                        if orig_r == rule and orig_s <= seg_s and orig_e >= seg_e
+                    ))
+                    ci = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    co = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att, accumulated_pp=acc_pp))
+
+        for employee, by_source in deficit.items():
+            tz = ZoneInfo(employee._get_tz())
+            for source_att, intervals in by_source.items():
+                effective_rule = min(
+                    (rule for _, _, rule, _pp in intervals if rule.work_entry_type_id),
+                    key=lambda r: r.sequence,
+                    default=None,
+                )
+                if not effective_rule:
+                    continue
+                for s, e, rule, _pp in intervals:
+                    if rule != effective_rule or e <= s:
+                        continue
+                    ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
+
+        if archive_source_ids:
+            Attendance.browse(archive_source_ids).with_context(**auto_ctx).write({'active': False})
+
+        Attendance.with_context(**auto_ctx).create(att_create_vals)

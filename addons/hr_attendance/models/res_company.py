@@ -3,7 +3,6 @@
 import uuid
 
 from odoo import fields, models, api
-from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
 
 
@@ -13,11 +12,6 @@ class ResCompany(models.Model):
     def _default_company_token(self):
         return str(uuid.uuid4())
 
-    # TODO: Remove in master
-    overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
-    # TODO: Remove in master
-    overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
-    hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection([
         ('barcode', 'Barcode / RFID'),
         ('barcode_manual', 'Barcode / RFID and Manual Selection'),
@@ -33,18 +27,34 @@ class ResCompany(models.Model):
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
-    attendance_overtime_validation = fields.Selection([
-        ('no_validation', 'Automatically Approved'),
-        ('by_manager', 'Approved by Manager'),
-    ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     single_check_in = fields.Boolean(string="Single Check-In Attendance System")
     auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
+    attendance_validation = fields.Selection([
+        ('no_validation', 'Worked days are automatically approved'),
+        ('manual_validation', 'Worked days require manual approval'),
+        ('tolerance_validation', 'Worked days require approval if outside tolerance'),
+    ], string="Attendance Validation", default='no_validation')
+    attendance_validation_tolerance = fields.Float(
+        string="Validation Tolerance (Hours)",
+        default=0.0,
+    )
+    attendance_work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        string="Attendance Work Entry Type",
+        domain=[('count_as', '=', 'working_time')],
+        store=True,
+        compute='_compute_attendance_work_entry_type_id',
+        groups="hr.group_hr_user",
+        help="Work entry type assigned to attendances and read by the time rule engine.",
+    )
+
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
+    attendance_based = fields.Boolean(default=False, required=True, groups="hr.group_hr_user")
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
@@ -55,6 +65,20 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+ 
+    def _compute_attendance_work_entry_type_id(self):
+        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        country_codes = self.mapped('country_id.code')
+        country_types = self.env['hr.work.entry.type'].search([
+            ('count_as', '=', 'working_time'),
+            ('code', '=', 'WORK100'),
+            ('country_code', 'in', country_codes),
+        ])
+        type_by_country = {t.country_code: t for t in country_types}
+        for company in self:
+            if company.attendance_work_entry_type_id:
+                continue
+            company.attendance_work_entry_type_id = type_by_country.get(company.country_id.code) or fallback
 
     # ---------------------------------------------------------
     # ORM Overrides
@@ -80,22 +104,7 @@ class ResCompany(models.Model):
             self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):
-        search_domain = Domain.FALSE  # Overtime to generate
-        # Also recompute if the threshold have changed
-        if 'overtime_company_threshold' in vals or 'overtime_employee_threshold' in vals:
-            # If we modify the thresholds only
-            search_domain = Domain.OR(
-                Domain('employee_id.company_id', '=', company.id)
-                for company in self
-                if (vals.get('overtime_company_threshold') != company.overtime_company_threshold)
-                or (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold)
-            )
-
-        res = super().write(vals)
-        if not search_domain.is_false():
-            self.env['hr.attendance'].search(search_domain)._update_overtime()
-
-        return res
+        return super().write(vals)
 
     def _regenerate_attendance_kiosk_key(self):
         self.ensure_one()

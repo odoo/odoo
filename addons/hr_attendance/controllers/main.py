@@ -3,7 +3,7 @@
 import base64
 import binascii
 import re
-
+import datetime
 from requests.exceptions import RequestException
 
 import odoo.release
@@ -41,7 +41,7 @@ class HrAttendance(http.Controller):
                 'display_systray': employee.company_id.attendance_from_systray,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'capture_check_in_image': employee.company_id.attendance_capture_check_in,
-                'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                'has_attendance_check_in_ability': employee.attendance_based,
             }
         return response
 
@@ -57,10 +57,15 @@ class HrAttendance(http.Controller):
                 'kiosk_delay': employee.company_id.attendance_kiosk_delay * 1000,
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
                                'check_out': employee.last_attendance_id.check_out},
-                'overtime_today': sum(request.env['hr.attendance.overtime.line'].sudo().search([
-                    ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(request.env.user))]).mapped('duration')) or 0,
+                'overtime_today': sum(request.env['hr.attendance'].sudo().search([
+                    ('employee_id', '=', employee.id),
+                    ('is_time_rule_output', '=', True),
+                    ('source_attendance_id', '!=', False),
+                    ('check_in', '<', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.max)),
+                    ('check_out', '>', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.min)),
+                ]).mapped('worked_hours')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
-                'display_overtime': employee.company_id.hr_attendance_display_overtime,
+                'display_overtime': True,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'is_employee_single_checkin': not employee.version_id.is_flexible and employee.company_id.single_check_in,
             }

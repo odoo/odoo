@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_time_rule_view_search_inherit_hr_holidays" model="ir.ui.view">
+        <field name="name">hr.time.rule.search.inherit.hr.holidays</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='give_salary']" position="after">
+                <filter name="give_time" string="Give Time" domain="[('leave_compensation_rate', '>', 0)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_amount_rate']" position="after">
+                <filter name="group_leave_compensation_rate" string="Holiday Rate" context="{'group_by': 'leave_compensation_rate'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_time_rule_view_list_inherit_hr_holidays" model="ir.ui.view">
+        <field name="name">hr.time.rule.list.inherit.hr.holidays</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_rate']" position="after">
+                <field name="leave_compensation_rate" string="Holiday Rate (%)" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_time_rule_view_form_inherit_hr_holidays" model="ir.ui.view">
+        <field name="name">hr.time.rule.form.inherit.hr.holidays</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[contains(@style,'row-gap: 12px')]" position="inside">
+                <span class="o_form_label"
+                    invisible="threshold_operator == 'less_than'">Allocate</span>
+                <span class="o_form_label"
+                    invisible="threshold_operator != 'less_than'">Take</span>
+                <div class="d-flex gap-1 align-items-center">
+                    <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:8ch"/>
+                    <span class="text-muted" invisible="not leave_compensation_rate">to</span>
+                    <field name="allocation_type_id" nolabel="1"
+                        invisible="not leave_compensation_rate"
+                        placeholder="Choose a Time Off Type"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_hr_holidays_time_rules"
+        name="Automatic Rules"
+        parent="hr_holidays.menu_hr_holidays_configuration"
+        action="hr_work_entry.hr_time_rule_action"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="5"/>
+
+</odoo>

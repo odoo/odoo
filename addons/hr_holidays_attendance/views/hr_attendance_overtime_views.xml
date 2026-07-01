@@ -1,53 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_attendance_overtime_line_list" model="ir.ui.view">
-        <field name="name">hr.attendance</field>
+    <!-- Overtime attendance entries page on the attendance form -->
+    <record id="view_attendance_overtime_leave_form" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.leave.form</field>
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <field name="duration" position="after">
-                <field name="compensable_as_leave" optional="show"/>
-                <field name="leave_compensation_rate" optional="show"/>
-            </field>
+            <sheet position="inside">
+                <notebook invisible="not overtime_attendance_ids"
+                    groups="hr.group_hr_manager,hr_attendance.group_hr_attendance_own">
+                    <page string="Rules Outputs">
+                        <field name="overtime_attendance_ids" readonly="1">
+                            <list>
+                                <field string="Time type" name="work_entry_type_id" readonly="1"/>
+                                <field name="check_in" readonly="1"/>
+                                <field name="check_out" readonly="1"/>
+                                <field name="worked_hours" widget="float_time" readonly="1"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
         </field>
     </record>
 
-    <record id="hr_attendance_overtime_rule_view_form" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.rule.form.inherit.hr_work_entry_attendance</field>
-        <field name="model">hr.attendance.overtime.rule</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_rule_view_form"/>
-        <field name="arch" type="xml">
-            <group name="action_section" position="inside">
-                <label for="compensable_as_leave" string="Give back as time off"/>
-                <span class="d-flex gap-1" name="compensable_as_leave">
-                    <field class="w-auto" nolabel="1" name="compensable_as_leave"/>
-                    <label for="leave_compensation_rate" string="with a rate of" invisible="not compensable_as_leave"/>
-                    <field name="leave_compensation_rate" style="width:10ch" widget="percentage" invisible="not compensable_as_leave"/>
-                </span>
-            </group>
-        </field>
-    </record>
-
-    <record id="hr_attendance_overtime_analysis_list_view" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.analysis.list</field>
-        <field name="model">hr.attendance.overtime.line</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_list_view"/>
-        <field name="arch" type="xml">
-            <field name="rule_ids" position="after">
-                <field name="compensable_as_leave" string="Time Off Eligible" width="200"/>
-            </field>
-        </field>
-    </record>
-
-
-    <record id="hr_attendance_overtime_analysis_view_filter" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.analysis.view.filter</field>
-        <field name="model">hr.attendance.overtime.line</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_view_filter"/>
-        <field name="arch" type="xml">
-            <filter name="pay_rate_gt_0" position="before">
-                <filter string="Time Off Eligible" name="time_off_eligible" domain="[('compensable_as_leave', '=', True)]"/>
-            </filter>
-        </field>
-    </record>
 </odoo>

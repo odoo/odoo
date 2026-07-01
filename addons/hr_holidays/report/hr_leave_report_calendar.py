@@ -79,6 +79,7 @@ class HrLeaveReportCalendar(models.Model):
                 ON p.id = u.partner_id
         WHERE
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
+            AND hl.active IS True AND hl.time_rule_id IS NULL
         );
         """)
 
