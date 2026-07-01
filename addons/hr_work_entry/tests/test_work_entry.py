@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+from lxml import etree
 import pytz
 
+from odoo.fields import Date
 from odoo.tests.common import tagged
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
@@ -27,6 +31,25 @@ class TestWorkEntry(TestWorkEntryBase):
             'wage': 1000,
             'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
+
+    @freeze_time('2026-04-15')
+    def test_current_month_filter_tz_boundary(self):
+        """Test that the "Current Month" filter keeps the month boundaries in a
+        positive-offset timezone (Europe/Brussels, set by the base fixture),
+        instead of shifting the window one day earlier."""
+        node = etree.fromstring(self.env.ref('hr_work_entry.hr_work_entry_view_search').arch)
+        domain = ast.literal_eval(node.xpath("//filter[@name='current_month']")[0].get('domain'))
+        entries = self.env['hr.work.entry'].create([
+            {
+                'name': name,
+                'employee_id': self.richard_emp.id,
+                'version_id': self.richard_emp.version_ids[0].id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'date': Date.to_date(day),
+            }
+            for name, day in [('prev month', '2026-03-31'), ('current month', '2026-04-30')]
+        ])
+        self.assertEqual(self.env['hr.work.entry'].search(domain) & entries, entries[1])
 
     def test_no_duplicate(self):
         self.richard_emp.generate_work_entries(self.start, self.end)
