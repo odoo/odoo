@@ -570,24 +570,23 @@ class DiscussChannel(models.Model):
         res[None].attr("is_readonly", predicate=is_channel)
         res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
 
-    def _update_last_interest_dt(self, date=None):
-        """Update last_interest_dt in a way that prevents concurrency errors against parallel
-        callers of this method.
+    def _update_field_concurrency_safe(self, fname, value):
+        """Update field ``fname`` on the channel in a way that prevents concurrency
+        errors against parallel callers updating the same field.
 
         The goal is to allow several users to post messages in parallel by not holding a lock on a
         common table, including in situations where one post is particularly slow. If the channel
         row is locked through another flow, it is acceptable to have the concurrency error still
         happening, as other channel writes should be infrequent enough compared to posting messages.
 
-        In particular, if the row is locked to write another field than last_interest_dt, the error
-        must not be ignored and a retry is expected to happen to guarantee last_interest_dt does
-        get updated to a recent value, which is very important to unhide (if necessary) and to bump
-        the channel to the top of the list when new messages are posted.
-
-        On the other hand, if the row is locked specifically to write last_interest_dt, it means
-        another message is being posted and it is acceptable to not update last_interest_dt in this
-        case, as it should be updated by the concurrent flow. This explains why
-        pg_try_advisory_xact_lock is used rather than FOR UPDATE NOWAIT or ON CONFLICT DO NOTHING.
+        In particular, if the row is locked to write another field, the error must not be ignored
+        and a retry is expected to happen to guarantee the field does get updated. On the other
+        hand, if the row is locked specifically to write the same field, it means another message
+        is being posted and it is acceptable to not update the field in this case, as it should be
+        updated to an equivalent value by the concurrent flow. This explains why
+        pg_try_advisory_xact_lock is used rather than FOR UPDATE NOWAIT or ON CONFLICT DO NOTHING,
+        with one advisory lock key per field so that updates of distinct fields do not skip each
+        other.
 
         Important note: this method is meant to be called only in flows where no other writes on
         channel occur on the main transaction, as this would create a guaranteed concurrency issue.
@@ -596,40 +595,45 @@ class DiscussChannel(models.Model):
 
         Using a separate transaction allows to quickly release the lock, which reduces situations
         where an old transaction could keep the lock for a long time and prevent newer transactions
-        from updating the field to a more recent value. If this was allowed, this would create a
-        situation where the channel would not be bumped to the top of the list even though it
-        contains newer messages. The separate transaction implies last_interest_dt might be updated
-        even if the main transaction is rolled back, but this is an acceptable trade-off as it is
-        less problematic to bump the channel by mistake than not bumping it when necessary,
-        especially because if a user attempted to post a message, they are likely to try again soon
-        afterwards.
+        from updating the field. The separate transaction implies the field might be updated even
+        if the main transaction is rolled back, but this is an acceptable trade-off for the values
+        updated this way.
 
-        Finally, it is preferable to update last_interest_dt through the ORM rather than with a
-        custom query, as its change must be caught to both trigger _sync_field_names to send the newer
+        Finally, it is preferable to update the field through the ORM rather than with a custom
+        query, as its change must be caught to both trigger _sync_field_names to send the newer
         value on the bus, and as a dependency of some compute fields.
         """
-        date = date or fields.Datetime.now()
         if not self.env.context.get("mail_post_check_concurrency"):
-            # sudo: discuss.channel - can update last interest in controlled flows
-            self.sudo().last_interest_dt = date
+            self[fname] = value
             return
         for channel in self:
             with self.env.registry.cursor() as cr:
                 cr.execute(
                     SQL(
-                        "SELECT pg_try_advisory_xact_lock(hashtext('discuss_channel.last_interest_dt'), %(channel_id)s)",
+                        "SELECT pg_try_advisory_xact_lock(hashtext(%(lock_key)s), %(channel_id)s)",
+                        lock_key=f"discuss_channel.{fname}",
                         channel_id=channel.id,
                     ),
                 )
                 if not cr.fetchone()[0]:
                     continue
-                # sudo: discuss.channel - can update last interest in controlled flows
                 try:
-                    channel.with_env(self.env(cr=cr)).sudo().last_interest_dt = date
+                    channel.with_env(self.env(cr=cr))[fname] = value
                 except MissingError:
                     # when the channel is created in the outer transaction it is not yet visible
                     # by the inner transaction and there can be no concurrency issue
-                    channel.sudo().last_interest_dt = date
+                    channel[fname] = value
+
+    def _update_last_interest_dt(self, date=None):
+        """Update last_interest_dt concurrency-safely (see _update_field_concurrency_safe).
+
+        Updating it to a recent value is very important to unhide (if necessary) and to bump the
+        channel to the top of the list when new messages are posted. Skipping the update on
+        contention is acceptable because the concurrent post updates it to an equally recent value,
+        and bumping the channel by mistake is less problematic than not bumping it when necessary.
+        """
+        # sudo: discuss.channel - can update last interest in controlled flows
+        self.sudo()._update_field_concurrency_safe("last_interest_dt", date or fields.Datetime.now())
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
@@ -692,7 +696,10 @@ class DiscussChannel(models.Model):
             )
             # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
             member.channel_id.sudo().message_post(
-                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+                body=notification,
+                message_type='notification',
+                subtype_xmlid="mail.mt_comment",
+                author_id=partner.id,
             )
         member.unlink()
 

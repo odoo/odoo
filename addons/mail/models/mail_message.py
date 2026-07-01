@@ -1033,9 +1033,11 @@ class MailMessage(models.Model):
             ("message_id", "=", self.id),
             ("partner_id", "=", partner.id),
             ("guest_id", "=", guest.id),
-            ("content", "=", content),
         ]
-        reaction = self.env["mail.message.reaction"].search(domain)
+        if content:
+            domain.append(("content", "=", content))
+        reaction = self.env["mail.message.reaction"].search(domain, limit=1)
+
         # create/unlink reaction if necessary
         if action == "add" and not reaction:
             create_values = {
@@ -1046,6 +1048,7 @@ class MailMessage(models.Model):
             }
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
+            content = reaction.content
             reaction.unlink()
         if store:
             # fill the store to use for non logged in portal users in mail_message_reaction()

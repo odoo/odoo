@@ -51,9 +51,9 @@
                                         <field name="name" class="fw-bold fs-4" style="word-wrap: break-word;"/>
                                         <p class="text-muted"><field name="ongoing_session_count"/> Ongoing Conversations</p>
                                     </div>
-                                    <div class="pe-1">
-                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-secondary shadow-sm"><i class="fa fa-sign-out o-me-1_5" role="img"/>Leave</button>
-                                        <button t-else="" name="action_join" type="object" class="btn btn-primary" groups="im_livechat.im_livechat_group_user"><i class="fa fa-sign-in o-me-1_5" role="img"/>Join</button>
+                                    <div class="pe-1 d-flex flex-column">
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-secondary shadow-sm mb-2"><i class="fa fa-sign-out o-me-1_5" role="img"/>Leave</button>
+                                        <button t-else="" name="action_join" type="object" class="btn btn-primary mb-2" groups="im_livechat.im_livechat_group_user"><i class="fa fa-sign-in o-me-1_5" role="img"/>Join</button>
                                     </div>
                                 </div>
                                 <footer class="pt-0">
@@ -193,9 +193,7 @@
                                         </div>
                                         <field name="review_link" placeholder="Do not redirect visitors"/>
                                     </group>
-                                </group>
-                                <group string="Session Limits">
-                                    <group>
+                                    <group string="Session Limits">
                                         <field name="max_sessions_mode" widget="radio" options="{'horizontal': true}"/>
                                         <field name="max_sessions" invisible="max_sessions_mode != 'limited'"/>
                                         <field name="block_assignment_during_call"/>
