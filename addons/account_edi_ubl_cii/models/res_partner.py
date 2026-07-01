@@ -1,19 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api
-from odoo.exceptions import (
-    UserError,
-    ValidationError,
-)
-from odoo.tools.partner_identifiers import (
-    pick_preferred_identifier,
-    validation_error_message,
-)
+from odoo.exceptions import UserError
 
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
-    ISO_IDENTIFIERS_METADATA,
-    validate_participant_identifier,
-)
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import CORNER_CASE_IDENTIFIERS_METADATA
 
 
 class ResPartner(models.Model):
@@ -150,8 +140,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
 
-    @api.depends('commercial_partner_id', 'commercial_partner_id.vat',
-                 'commercial_partner_id.additional_identifiers', 'commercial_partner_id.country_id')
+    @api.depends('vat', 'additional_identifiers', 'country_id')
     def _compute_routing_scheme_endpoint(self):
         for partner in self:
             identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
@@ -194,6 +183,11 @@ class ResPartner(models.Model):
         self._clean_routing_endpoint(vals, partners=self)
         return super().write(vals)
 
+    def _get_all_identifiers_metadata(self):
+        # EXTENDS 'base' - add corner case metadata
+        metadata = super()._get_all_identifiers_metadata()
+        return {**metadata, **CORNER_CASE_IDENTIFIERS_METADATA}
+
     def _clean_routing_endpoint(self, vals, partners=None):
         """ Pre-create/write on a `vals` dict:
         - normalize
@@ -201,15 +195,14 @@ class ResPartner(models.Model):
         Mutates `vals` in place.
         """
         if (scheme := vals.get('routing_scheme')) and (endpoint := vals.get('routing_endpoint')):
-            result = validate_participant_identifier(scheme, endpoint)
-            if not result['valid']:
-                raise ValidationError(validation_error_message(self.env, result['key'], result['example']))
+            result = self.env['res.partner']._validate_identifier_by_scheme(scheme, endpoint, validation='error')
             vals['routing_endpoint'] = result['value']
 
     def _get_all_identifiers(self, enrich=False):
         # EXTENDS 'account'
         all_identifiers = super()._get_all_identifiers(enrich)
-        if enrich and self.routing_identifier and (metadata := ISO_IDENTIFIERS_METADATA.get(self.routing_scheme)) and metadata['key'] not in all_identifiers:
+        metadata = self.routing_identifier and self._get_all_identifiers_metadata_by_scheme().get(self.routing_scheme)
+        if enrich and metadata and metadata['key'] not in all_identifiers:
             all_identifiers[metadata['key']] = self.routing_endpoint
         return all_identifiers
 
@@ -220,12 +213,13 @@ class ResPartner(models.Model):
         - Returns empty dict when nothing routable is available.
         """
         self.ensure_one()
-        partner = self.commercial_partner_id
-        if not force_recompute and partner.routing_scheme and partner.routing_endpoint and partner.routing_scheme in ISO_IDENTIFIERS_METADATA:
+        partner = self.commercial_partner_id or self  # if it's a new record, the commercial can be empty
+        if not force_recompute and partner.routing_scheme and partner.routing_endpoint and partner.routing_scheme in self._get_all_identifiers_metadata_by_scheme():
             return {'scheme': partner.routing_scheme, 'value': partner.routing_endpoint}
-        identifier_vals = pick_preferred_identifier(
+        registrable_schemes = dict(self.env['res.partner']._fields['routing_scheme'].selection)
+        identifier_vals = self._pick_preferred_identifier(
             partner._get_all_identifiers(enrich=True),
-            filter_func=lambda k, v, m: m.get('scheme') in ISO_IDENTIFIERS_METADATA and v,
+            filter_func=lambda k, v, m: m.get('scheme') in registrable_schemes and v,
             sort_key=lambda k, v, m: (m.get('sequence', 100), k),
         )
         return identifier_vals or {}

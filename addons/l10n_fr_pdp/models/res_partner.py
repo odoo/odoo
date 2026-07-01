@@ -1,23 +1,25 @@
 import logging
-import re
 import requests
 
 from urllib import parse
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.partner_identifiers import (
+    is_identifier_void,
+    normalize_identifier,
+)
 
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
-
-siren_siret_re = re.compile(r'^(\d{9}|\d{14})$')
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     invoice_edi_format = fields.Selection(selection_add=[('ubl_21_fr', "France E-Invoicing (UBL 2.1)")])
+    l10n_fr_is_pdp = fields.Boolean(compute='_compute_l10n_fr_is_pdp')
     pdp_verification_display_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -47,6 +49,12 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('routing_scheme')
+    @api.depends_context('company')
+    def _compute_l10n_fr_is_pdp(self):
+        for partner in self:
+            partner.l10n_fr_is_pdp = self.env.company._get_peppol_proxy_type() == 'pdp' and partner.routing_scheme == '0225'
+
     @api.depends('peppol_verification_state', 'routing_scheme', 'routing_endpoint')
     @api.depends_context('company')
     def _compute_pdp_verification_display_state(self):
@@ -62,7 +70,7 @@ class ResPartner(models.Model):
         if self.filtered(
             lambda partner: (
                 partner.invoice_sending_method == "peppol"
-                and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
+                and partner.l10n_fr_is_pdp
                 and partner.invoice_edi_format != "ubl_21_fr"
             )
         ):
@@ -73,38 +81,35 @@ class ResPartner(models.Model):
     # OVERRIDE AND HELPERS
     # -------------------------------------------------------------------------
 
+    def _validate_identifier(self, key, value, validation=False):
+        # EXTENDS 'base' - bypass validation for specific **test** PDP identifiers
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        if edi_mode in ('test', 'demo') and key in ('FR_SIRET', 'FR_SIREN', 'FR_CTC'):
+            value = normalize_identifier(value)
+            return {'valid': True, 'value': value, 'key': key}
+        return super()._validate_identifier(key, value, validation)
+
+    def _get_preferred_routing_identifier_vals(self, force_recompute=False):
+        # EXTENDS 'account_edi_ubl_cii'
+        # If FR_CTC is not already there, we suggest the SIREN (even if the SIRET is filled in).
+        # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
+        self.ensure_one()
+        if (not force_recompute and self.routing_scheme and self.routing_endpoint) or self.country_code != 'FR':
+            return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+        if self.env.company._get_peppol_proxy_type() == 'pdp':
+            if ctc_value := self._get_additional_identifier('FR_CTC') or self._l10n_fr_pdp_get_siren():
+                return {'scheme': '0225', 'value': ctc_value, 'key': 'FR_CTC'}
+            return {}  # we preferer suggesting no routing identifier than anything else than 0225 if the PDP is in use.
+        return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
-        return self.vat == '/' or not self.vat
+        return is_identifier_void(self.vat)
 
     def _l10n_fr_pdp_get_siren(self):
         self.ensure_one()
-        id_type, id_value = self._l10n_fr_pdp_get_base_identifier()
-        if id_type in ('siren', 'siret'):
-            return id_value[:9]
-        return False
-
-    def _l10n_fr_pdp_get_base_identifier(self):
-        self.ensure_one()
-        candidates = [
-            self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
-            self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
-        ]
-        for identifier in candidates:
-            if not identifier:
-                continue
-            if len(identifier) == 9:
-                return 'siren', identifier
-            elif len(identifier) == 14:
-                return 'siret', identifier
-
-        return None, None
-
-    def _get_suggested_pdp_identifier(self):
-        self.ensure_one()
-        # We suggest the SIREN (even if the SIRET is filled in).
-        # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
-        return self._l10n_fr_pdp_get_siren()
+        all_identifiers = self._get_all_identifiers(enrich=True)
+        return all_identifiers.get('FR_SIREN')  # will be deduced by enrich=True if SIRET was set.
 
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
@@ -129,7 +134,7 @@ class ResPartner(models.Model):
         state = state if state is not None else self.peppol_verification_state
         if not state or state == 'not_verified':
             return state
-        elif self.env.company._get_peppol_proxy_type() == 'pdp' and self._get_pdp_receiver_identification_info()[0] == 'pdp':
+        elif self.l10n_fr_is_pdp:
             return f'pdp_{state}'
         else:
             return f'peppol_{state}'
@@ -137,7 +142,7 @@ class ResPartner(models.Model):
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
-        if self.env.company._get_peppol_proxy_type() == 'pdp' and self.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
+        if self.l10n_fr_is_pdp:
             return 'ubl_21_fr'
         return super()._get_suggested_peppol_edi_format()
 
@@ -192,15 +197,3 @@ class ResPartner(models.Model):
             return None
 
         return decoded_response.get('result')
-
-    def _get_pdp_receiver_identification_info(self):
-        eas, _sep, endpoint = (self.routing_identifier or '').partition(':')
-        return self._get_peppol_proxy_identification_info(eas, endpoint)
-
-    @api.model
-    def _get_peppol_proxy_identification_info(self, routing_scheme, routing_endpoint):
-        # Extend `account_peppol`
-        proxy_type, identifier = super()._get_peppol_proxy_identification_info(routing_scheme, routing_endpoint)
-        if routing_scheme == '0225':
-            proxy_type = 'pdp'
-        return proxy_type, identifier

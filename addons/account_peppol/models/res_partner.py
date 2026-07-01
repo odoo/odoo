@@ -7,8 +7,16 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.tools.partner_identifiers import validation_error_message
+
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
+    ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
+    ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE,
+)
 
 INVOICE_RESPONSE_CUSTOMISATION_ID = "busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:fdc:peppol.eu:poacc:trns:invoice_response:3::2.1"
 TIMEOUT = 10
@@ -84,13 +92,28 @@ class ResPartner(models.Model):
 
     def _compute_routing_scheme_endpoint(self):
         # Don't recompute on partners corresponding to registered companies
-        partners_not_to_recompute = self._get_partners_to_skip_peppol_computation()
-        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin not in partners_not_to_recompute])
+        partners_not_to_recompute = self.filtered_domain(self._domain_peppol_do_not_modify_routing_identifier())
+        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin.id not in partners_not_to_recompute.ids])
         super(ResPartner, partners_to_recompute)._compute_routing_scheme_endpoint()
 
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    def _validate_identifier_by_scheme(self, scheme, value, validation=False):
+        # EXTENDS 'base' - add basic Peppol validation for EAS schemes
+        validation_vals = super()._validate_identifier_by_scheme(scheme, value, validation=validation)
+        if validation_vals['value'] and scheme in ELECTRONIC_ADDRESS_SCHEMES_CODELIST:
+            value = ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE.sub('', validation_vals['value'])
+            validation_vals['value'] = value
+            if ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE.search(value) or not 1 <= len(value) <= 50:
+                if validation == 'error':
+                    identifier_label = self.env['res.partner']._get_identifier_label(validation_vals['key'])
+                    raise ValidationError(validation_error_message(self.env, identifier_label, validation_vals['value'], example=validation_vals['example']))
+                if validation == 'setnull':
+                    validation_vals['value'] = None
+                validation_vals['valid'] = False
+        return validation_vals
 
     @api.model
     def _get_participant_info(self, edi_identification):
@@ -285,14 +308,15 @@ class ResPartner(models.Model):
 
         return mandatory_fields
 
-    def _get_partners_to_skip_peppol_computation(self):
-        return self.env['res.company'].search([
-            ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
-        ]).mapped('partner_id')
-
     @api.model
-    def _get_peppol_proxy_identification_info(self, routing_scheme, routing_endpoint):
-        # Return tuple `(proxy_type, peppol_identifier)` where `peppol_identifier` is in form "{scheme}:{identifier}"
-        if not routing_scheme or not routing_endpoint:
-            return None, ""
-        return 'peppol', f"{routing_scheme}:{routing_endpoint}"
+    def _domain_peppol_do_not_modify_routing_identifier(self):
+        registered_company_partners = self.env['res.company'].sudo().with_context(active_test=False).search([
+            ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
+        ]).partner_id
+        return Domain([
+            ('routing_scheme', '!=', False),
+            ('routing_endpoint', '!=', False),
+            '|',
+            ('peppol_verification_state', '=', 'valid'),
+            ('id', 'in', registered_company_partners.ids),
+        ])

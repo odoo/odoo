@@ -148,7 +148,7 @@ class ResPartner(models.Model):
         # Avoid validating double prefix like BEBE0477472701
         double_prefix = prefixed_country and vat_to_return.startswith(prefixed_country + prefixed_country)
         if not self._check_vat_number(code_to_check, vat) or double_prefix:
-            partner_label = _("partner [%s]", partner_name)
+            partner_label = _("partner%s", f' [{partner_name}' if partner_name else '')
             if do_eu_check:
                 try:
                     return self._run_vat_checks(self.env['res.country'].search([('code', '=', country_code)], limit=1), vat_prefix + vat_number, partner_name, validation)

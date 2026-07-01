@@ -10,7 +10,6 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin
 
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import validate_participant_identifier
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
@@ -202,7 +201,7 @@ class PeppolRegistration(models.TransientModel):
             if all((
                 wizard.peppol_eas,
                 wizard.peppol_endpoint,
-                not validate_participant_identifier(wizard.peppol_eas, wizard.peppol_endpoint)['valid'],
+                not self.env['res.partner']._validate_identifier_by_scheme(wizard.peppol_eas, wizard.peppol_endpoint)['valid'],
             )):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'level': 'warning',
@@ -298,7 +297,7 @@ class PeppolRegistration(models.TransientModel):
             })
         return action_dict
 
-    def _action_send_notification(self, title, message):
+    def _action_send_notification(self, message):
         move_ids = self.env.context.get('active_ids')
         if move_ids and self.env.context.get('active_model') == 'account.move':
             next_action = self.env['account.move'].browse(move_ids).action_send_and_print()
@@ -310,7 +309,6 @@ class PeppolRegistration(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': title,
                 'type': 'success',
                 'message': message,
                 'next': next_action,
@@ -489,6 +487,5 @@ class PeppolRegistration(models.TransientModel):
             },
         }
         return self._action_send_notification(
-            title=None,
             message=notifications[self.company_id.account_peppol_proxy_state]['message'],
         )

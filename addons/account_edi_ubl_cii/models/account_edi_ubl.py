@@ -8,7 +8,7 @@ from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
-from odoo.tools.partner_identifiers import get_tin_metadata_of_country, validate_identifier
+from odoo.tools.partner_identifiers import get_tin_metadata_of_country
 
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
@@ -19,10 +19,7 @@ from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
     ISO_6523_ICD_CODELIST,
-    ISO_IDENTIFIERS_METADATA,
-    normalize_iso_identifier,
     normalize_vat_for_ubl,
-    validate_participant_identifier,
 )
 
 _logger = logging.getLogger(__name__)
@@ -802,8 +799,11 @@ class AccountEdiUBL(models.AbstractModel):
             tax_scheme_id = 'GST'
         else:
             tax_scheme_id = 'VAT'
-        if identifier_vals.get('scheme') in ISO_IDENTIFIERS_METADATA:
-            normalized_value = normalize_iso_identifier(identifier_vals['scheme'], identifier_vals['value'])
+        if identifier_vals.get('scheme'):
+            normalized_value = self.env['res.partner']._validate_identifier_by_scheme(
+                identifier_vals['scheme'],
+                identifier_vals['value']
+            ).get('value')
         else:
             normalized_value = normalize_vat_for_ubl(commercial_partner.country_code, identifier_vals['value'])
 
@@ -827,7 +827,7 @@ class AccountEdiUBL(models.AbstractModel):
         nodes.append({
             'cbc:RegistrationName': {'_text': commercial_partner.name},
             'cbc:CompanyID': {
-                '_text': normalize_iso_identifier(scheme, value) if scheme and value else value,
+                '_text': self.env['res.partner']._validate_identifier_by_scheme(scheme, value).get('value') if scheme and value else value,
                 'schemeID': scheme if scheme in ISO_6523_ICD_CODELIST else None,
             },
         })
@@ -2032,7 +2032,7 @@ class AccountEdiUBL(models.AbstractModel):
             scheme, value = node.attrib.get('schemeID'), node.text.strip()
             customer_values['routing_scheme'] = scheme
             customer_values['routing_endpoint'] = value
-            meta = ISO_IDENTIFIERS_METADATA.get(scheme)
+            meta = self.env['res.partner']._get_all_identifiers_metadata_by_scheme().get(scheme)
             if meta and meta['key'] in self.env['res.partner']._get_all_additional_identifiers_metadata():
                 customer_values.setdefault('additional_identifiers', {})[meta['key']] = value
 
@@ -2094,13 +2094,13 @@ class AccountEdiUBL(models.AbstractModel):
             valid_identifiers = {
                 key: value
                 for key, value in identifiers.items()
-                if validate_identifier(key, value)['valid']
+                if self.env['res.partner']._validate_identifier(key, value)['valid']
             }
             if valid_identifiers:
                 partner_create_values['additional_identifiers'] = valid_identifiers
 
         if (scheme := customer_values.get('routing_scheme')) and (endpoint := customer_values.get('routing_endpoint')):
-            result = validate_participant_identifier(scheme, endpoint)
+            result = self.env['res.partner']._validate_identifier_by_scheme(scheme, endpoint)
             if result['valid']:
                 partner_create_values['routing_scheme'] = scheme
                 partner_create_values['routing_endpoint'] = result['value']

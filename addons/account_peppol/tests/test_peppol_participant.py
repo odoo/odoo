@@ -444,3 +444,47 @@ class TestPeppolParticipant(TransactionCase):
         self.assertRecordValues(company_partner, [{
             'routing_identifier': '0088:9780471117094',
         }])
+
+    def test_do_not_recompute_routing_for_valid_peppol_partner(self):
+        """A partner whose Peppol status is 'valid' keeps its routing scheme/endpoint,
+        even when a field the routing identifier depends on changes.
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'Valid Peppol Partner',
+            'country_id': self.env.ref('base.be').id,
+            'invoice_edi_format': 'ubl_bis3',
+        })
+        partner.routing_identifier = '0208:0475646428'
+
+        with mock_lookup_success(peppol_identifier='0208:0475646428'):
+            partner.button_account_peppol_check_partner_endpoint()
+        self.assertEqual(partner.peppol_verification_state, 'valid')
+
+        # Setting a VAT would normally recompute the routing scheme/endpoint (to
+        # '0208'/'0477472701'), but the partner is a valid Peppol participant whose
+        # scheme/endpoint are already set, so its routing must be left untouched.
+        partner.vat = 'BE0477472701'
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '0208',
+            'routing_endpoint': '0475646428',
+        }])
+
+    def test_recompute_routing_for_unverified_peppol_partner(self):
+        """A partner whose Peppol status is not 'valid' still has its routing
+        scheme/endpoint recomputed when a routing dependency changes.
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'Unverified Peppol Partner',
+            'country_id': self.env.ref('base.be').id,
+            'invoice_edi_format': 'ubl_bis3',
+        })
+        partner.routing_identifier = '0208:0475646428'
+        self.assertNotEqual(partner.peppol_verification_state, 'valid')
+
+        # The partner is not a valid Peppol participant, so changing the VAT
+        # recomputes the routing scheme/endpoint from the partner's identifiers.
+        partner.vat = 'BE0477472701'
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '0208',
+            'routing_endpoint': '0477472701',
+        }])

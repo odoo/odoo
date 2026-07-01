@@ -29,7 +29,8 @@ def _post_init_pdp(env):
         view.reset_arch(mode="hard")
 
     demo_company_partner = env.ref('base.partner_demo_company_fr', raise_if_not_found=False)
-    if demo_company_partner and demo_company_partner not in demo_company_partner._get_partners_to_skip_peppol_computation():
+    demo_company_partner = demo_company_partner and demo_company_partner.filtered_domain(env['res.partner']._domain_peppol_do_not_modify_routing_identifier())
+    if demo_company_partner:
         demo_company_partner.routing_scheme = False
         demo_company_partner.routing_endpoint = False
         demo_company_partner._compute_routing_scheme_endpoint()

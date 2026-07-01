@@ -4,10 +4,8 @@ from stdnum.no import mva
 from stdnum.be import vat as be_vat
 
 from odoo import _, api, models
-from odoo.tools.partner_identifiers import validate_identifier
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import ISO_IDENTIFIERS_METADATA
 
 CHORUS_PRO_SIRET = "11000201100044"
 
@@ -410,15 +408,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
         endpoint_node = tree.find(f'.//cac:{role}Party/cac:Party/cbc:EndpointID', UBL_NAMESPACES)
         if endpoint_node is not None:
+            ResPartner = self.env['res.partner']
             scheme = endpoint_node.attrib.get('schemeID')
             value = endpoint_node.text
             if scheme and value:
-                meta = ISO_IDENTIFIERS_METADATA.get(scheme)
+                meta = ResPartner._get_all_identifiers_metadata_by_scheme().get(scheme)
                 # Skip an endpoint whose value is malformed.
-                if not meta or validate_identifier(meta['key'], value)['valid']:
+                if not meta or ResPartner._validate_identifier(meta['key'], value)['valid']:
                     partner_vals['routing_scheme'] = scheme
                     partner_vals['routing_endpoint'] = value
-                    if meta and meta['key'] in self.env['res.partner']._get_all_additional_identifiers_metadata():
+                    if meta and meta['key'] in ResPartner._get_all_additional_identifiers_metadata():
                         partner_vals.setdefault('additional_identifiers', {})[meta['key']] = value
                 elif partner_vals.get('vat') == value:
                     # VAT is malformed: clear that bogus vat
