@@ -17,7 +17,6 @@ __all__ = [
 ]
 
 _logger = logging.getLogger(__name__)
-_logger_guess_mimetype = _logger.getChild('guess_mimetype')
 _olecf_mimetypes = {'application/x-ole-storage', 'application/CDFV2'}
 MIMETYPE_HEAD_SIZE = 4096
 
