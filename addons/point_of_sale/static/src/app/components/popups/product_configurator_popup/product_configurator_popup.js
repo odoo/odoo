@@ -256,6 +256,10 @@ export class ProductConfiguratorPopup extends Component {
         }
 
         overridedValues.priceExtra = this.priceExtra;
+        // Extra price of dynamic variants not yet created
+        overridedValues.priceExtra += this.selectedValues
+            .filter((value) => !this.product && value.attribute_id.create_variant !== "no_variant")
+            .reduce((acc, val) => acc + val.price_extra, 0);
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
