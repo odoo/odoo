@@ -1,7 +1,7 @@
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
-import { props, t } from "@odoo/owl";
+import { props, t, useEffect } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
@@ -62,14 +62,12 @@ patch(LinkPopover.prototype, {
     setup() {
         super.setup();
         this.urlRef = useChildRef();
-        // useLayoutEffect(
-        //     (el) => {
-        //         if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
-        //             el.focus();
-        //         }
-        //     },
-        //     () => [this.urlRef.el]
-        // );
+        useEffect(() => {
+            const el = this.urlRef.el;
+            if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
+                el.focus();
+            }
+        });
     },
 
     get sources() {
