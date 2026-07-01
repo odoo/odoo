@@ -2,7 +2,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { immediateEffect, markup, toRaw } from "@odoo/owl";
-import { mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
@@ -47,9 +47,9 @@ afterEach(() => {
 });
 
 async function start() {
-    const env = await start2();
+    await start2();
     /** @type {Store} */
-    const store = env.services.store;
+    const store = getService("store");
     after(() => store._runDisposeFns());
     return store;
 }

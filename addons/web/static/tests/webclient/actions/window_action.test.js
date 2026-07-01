@@ -14,10 +14,10 @@ import {
     editKanbanRecordQuickCreateInput,
     editSearch,
     fields,
+    getMockEnv,
     getPagerLimit,
     getPagerValue,
     getService,
-    makeMockEnv,
     makeServerError,
     mockOffline,
     models,
@@ -2289,8 +2289,7 @@ test("Call twice clearUncommittedChanges in a row does not save twice", async ()
         writeCalls += 1;
     });
 
-    const env = await makeMockEnv();
-    await mountWithCleanup(WebClient, { env });
+    await mountWithCleanup(WebClient);
 
     // execute an action and edit existing record
     await getService("action").doAction(3);
@@ -2298,11 +2297,11 @@ test("Call twice clearUncommittedChanges in a row does not save twice", async ()
     expect(".o_form_view .o_form_editable").toHaveCount(1);
 
     await contains(".o_field_widget[name=foo] input").edit("val");
-    clearUncommittedChanges(env);
+    clearUncommittedChanges(getMockEnv());
 
     await animationFrame();
     expect(".modal").toHaveCount(0);
-    clearUncommittedChanges(env);
+    clearUncommittedChanges(getMockEnv());
 
     await animationFrame();
     expect(".modal").toHaveCount(0);

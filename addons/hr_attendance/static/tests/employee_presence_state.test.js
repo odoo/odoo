@@ -10,6 +10,8 @@ import {
     mountView,
     models,
     makeMockEnv,
+    getService,
+    getMockEnv,
 } from "@web/../tests/web_test_helpers";
 
 import { hrModels } from "@hr/../tests/hr_test_helpers";
@@ -32,10 +34,10 @@ class HrEmployee extends models.ServerModel {
 defineModels({ ...hrModels, HrEmployee });
 
 test("Check presence status state", async function () {
-    const env = await makeMockEnv();
+    await makeMockEnv();
     const channel = "hr.employee_22";
 
-    env.services.bus_service.addChannel(channel);
+    getService("bus_service").addChannel(channel);
     await waitForChannels([channel]);
 
     await mountView({
@@ -61,7 +63,7 @@ test("Check presence status state", async function () {
         employee_id: 22,
     });
 
-    await waitNotifications([env, "hr.employee/presence"]);
+    await waitNotifications([getMockEnv(), "hr.employee/presence"]);
     await runAllTimers();
 
     expect(".o_employee_availability").toHaveAttribute("title", "Present");

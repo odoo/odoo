@@ -138,7 +138,6 @@ export async function setupEditor(content, options = {}) {
             onMounted: options.onMounted,
             onWillDestroy: options.onWillDestroy,
         },
-        env: options.env,
     });
 
     // awaiting for mountWithCleanup is not enough when mounted in an iframe,

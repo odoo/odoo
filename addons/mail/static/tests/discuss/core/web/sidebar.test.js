@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -24,8 +24,8 @@ test("unknown channel can be displayed and interacted with", async () => {
         channel_type: "channel",
         name: "Not So Secret",
     });
-    const env = await start();
-    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+    await start();
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
         expect.step("discuss.channel/new_message")
     );
     await openDiscuss("mail.box_inbox");

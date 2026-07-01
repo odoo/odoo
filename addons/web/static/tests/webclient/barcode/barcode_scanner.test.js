@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame, press } from "@odoo/hoot-dom";
 import {
     contains,
-    makeMockEnv,
+    getMockEnv,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -15,8 +15,7 @@ import { WebClient } from "@web/webclient/webclient";
 /* global ZXing */
 
 test("Barcode scanner crop overlay", async () => {
-    const env = await makeMockEnv();
-    await mountWithCleanup(WebClient, { env });
+    await mountWithCleanup(WebClient);
 
     const firstBarcodeValue = "Odoo";
     const secondBarcodeValue = "OCDTEST";
@@ -72,7 +71,7 @@ test("Barcode scanner crop overlay", async () => {
         },
     });
 
-    const firstBarcodeFound = scanBarcode(env);
+    const firstBarcodeFound = scanBarcode(getMockEnv());
     await videoReady.promise;
     await animationFrame();
     await contains(".o_crop_icon").dragAndDrop(".o_crop_container", {
@@ -93,7 +92,7 @@ test("Barcode scanner crop overlay", async () => {
     barcodeToGenerate = secondBarcodeValue;
     videoReady = Promise.withResolvers();
 
-    const secondBarcodeFound = scanBarcode(env);
+    const secondBarcodeFound = scanBarcode(getMockEnv());
     await videoReady.promise;
     await animationFrame();
     const secondValueScanned = await secondBarcodeFound;
@@ -140,8 +139,7 @@ test("BarcodeVideoScanner onReady props", async () => {
 });
 
 test("Closing barcode scanner before camera loads should not throw an error", async () => {
-    const env = await makeMockEnv();
-    await mountWithCleanup(WebClient, { env });
+    await mountWithCleanup(WebClient);
     const cameraReady = Promise.withResolvers();
 
     patchWithCleanup(browser.navigator, {
@@ -154,7 +152,7 @@ test("Closing barcode scanner before camera loads should not throw an error", as
         },
     });
 
-    scanBarcode(env);
+    scanBarcode(getMockEnv());
 
     await animationFrame();
     expect(".o-barcode-modal").toHaveCount(1);
@@ -171,8 +169,7 @@ test("Closing barcode scanner before camera loads should not throw an error", as
 });
 
 test("Closing barcode scanner while video is loading should not cause errors", async () => {
-    const env = await makeMockEnv();
-    await mountWithCleanup(WebClient, { env });
+    await mountWithCleanup(WebClient);
 
     patchWithCleanup(browser.navigator, {
         mediaDevices: {
@@ -183,7 +180,7 @@ test("Closing barcode scanner while video is loading should not cause errors", a
         },
     });
 
-    scanBarcode(env);
+    scanBarcode(getMockEnv());
 
     await animationFrame();
     expect(".o-barcode-modal").toHaveCount(1);

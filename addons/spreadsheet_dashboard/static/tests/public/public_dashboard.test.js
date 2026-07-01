@@ -26,7 +26,6 @@ async function mountPublicDashboard(dataUrl) {
         props: {
             dataUrl,
         },
-        env,
     });
     await animationFrame();
     return {

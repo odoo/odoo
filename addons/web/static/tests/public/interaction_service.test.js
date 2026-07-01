@@ -3,15 +3,15 @@ import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@web/public/interaction";
 import { startInteraction } from "./helpers";
 
 describe.current.tags("interaction_dev");
 
 test("properly fallback to body when we have no match for wrapwrap", async () => {
-    const env = await makeMockEnv();
-    expect(env.services["public.interactions"].el).toBe(document.querySelector("body"));
+    await makeMockEnv();
+    expect(getService("public.interactions").el).toBe(document.querySelector("body"));
 });
 
 test("wait for translation before starting interactions", async () => {

@@ -11,6 +11,7 @@ import { tick, waitFor } from "@odoo/hoot-dom";
 import {
     Command,
     getService,
+    mockService,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -168,8 +169,8 @@ test("Show notification when joining a channel that already received help", asyn
         channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
         livechat_status: "need_help",
     });
-    const env = await start();
-    patchWithCleanup(env.services.notification, {
+    await start();
+    mockService("notification", {
         add: (message, options) => expect.step(`${options.type} - ${message}`),
     });
     await openDiscuss(channel);
@@ -199,8 +200,8 @@ test("Hide 'help already received' notification when channel is not visible", as
         channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
         livechat_status: "need_help",
     });
-    const env = await start();
-    patchWithCleanup(env.services.notification, {
+    await start();
+    mockService("notification", {
         add: (message, options) => expect.step(`${options.type} - ${message}`),
     });
     await openDiscuss(channel);

@@ -9,7 +9,6 @@ import {
     defineModels,
     fields,
     getService,
-    makeMockEnv,
     models,
     mountWithCleanup,
     mountWebClient,
@@ -19,6 +18,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
     serverState,
+    makeMockEnv,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -300,10 +300,10 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWithCleanup(WebClient, { env });
+        await mountWithCleanup(WebClient);
         expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
             message: "url did not change",
         });
@@ -322,10 +322,10 @@ describe(`new urls`, () => {
         });
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWithCleanup(WebClient, { env });
+        await mountWithCleanup(WebClient);
         user.updateContext({ an_extra_context: 22 });
         expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
             message: "url did not change",
@@ -343,10 +343,10 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWithCleanup(WebClient, { env });
+        await mountWithCleanup(WebClient);
         expect(browser.location.href).toBe("http://example.com/odoo/__test__client__action__", {
             message: "url did not change",
         });
@@ -1263,10 +1263,10 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWithCleanup(WebClient, { env });
+        await mountWithCleanup(WebClient);
         await animationFrame();
         await animationFrame();
 
@@ -2057,10 +2057,10 @@ describe(`legacy urls`, () => {
         redirect("/web#action=1001");
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWebClient({ env });
+        await mountWebClient();
         expect.verifySteps(["/web/action/load"]);
     });
 
@@ -2068,10 +2068,10 @@ describe(`legacy urls`, () => {
         redirect("/web#action=__test__client__action__");
         stepAllNetworkCalls();
 
-        const env = await makeMockEnv();
+        await makeMockEnv();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
-        await mountWebClient({ env });
+        await mountWebClient();
         expect.verifySteps([]);
     });
 

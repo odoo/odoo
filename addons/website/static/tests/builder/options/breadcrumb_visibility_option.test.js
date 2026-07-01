@@ -4,6 +4,7 @@ import { queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { Builder } from "@html_builder/builder";
+import { useService } from "@web/core/utils/hooks";
 
 defineWebsiteModels();
 
@@ -84,7 +85,7 @@ describe("save breadcrumb visibility", () => {
         patchWithCleanup(Builder.prototype, {
             setup() {
                 super.setup();
-                const metadata = this.env.services.website.currentWebsite.metadata;
+                const metadata = useService("website").currentWebsite.metadata;
                 metadata.mainObject = { model: "fake.test-model", id: 4 };
             },
         });

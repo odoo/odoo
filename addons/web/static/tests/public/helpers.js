@@ -1,5 +1,10 @@
 import { getFixture, after } from "@odoo/hoot";
-import { clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    clearRegistry,
+    getService,
+    makeMockEnv,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 
 let activeInteractions = null;
@@ -54,8 +59,8 @@ export async function startInteractions(
             }
         }
     }
-    const env = await makeMockEnv();
-    const core = env.services["public.interactions"];
+    await makeMockEnv();
+    const core = getService("public.interactions");
     if (options.waitForStart) {
         await core.isReady;
     }

@@ -3,6 +3,7 @@ import { Component, signal, xml } from "@odoo/owl";
 import {
     allowTranslations,
     clearRegistry,
+    getService,
     makeMockEnv,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -44,8 +45,8 @@ function registerService(name, dependencies, factory) {
 
 test(`can start a service`, async () => {
     registerService("test", [], () => 17);
-    const env = await makeMockEnv();
-    expect(env.services.test).toBe(17);
+    await makeMockEnv();
+    expect(getService("test")).toBe(17);
 });
 
 test(`crashing service start causes startService to crash`, async () => {

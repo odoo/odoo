@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
 
 defineMailModels();
@@ -197,10 +197,10 @@ test("list activity widget: batch selection from list", async (assert) => {
         { name: "Matilde" },
         { name: "Alexander" },
     ]);
-    const env = await start();
+    await start();
     let scheduleWizardContext = null;
     let { promise: wizardOpened, resolve: resolveWizardOpened } = Promise.withResolvers();
-    patchWithCleanup(env.services.action, {
+    mockService("action", {
         doAction(action, options) {
             if (action.res_model === "mail.activity.schedule") {
                 scheduleWizardContext = action.context;
