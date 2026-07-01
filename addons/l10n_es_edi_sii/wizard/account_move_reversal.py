@@ -11,7 +11,7 @@ class AccountMoveReversal(models.TransientModel):
         string="Invoice Refund Reason",
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-        compute="_compute_l10n_es_sii_refund_reason"
+        compute="_compute_l10n_es_sii_refund_reason", store=True, readonly=False
     )
 
     l10n_es_edi_is_required = fields.Boolean(
