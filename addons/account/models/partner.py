@@ -499,16 +499,17 @@ class ResPartner(models.Model):
         for partner in self:
             partner.available_invoice_template_pdf_report_ids = self.env['account.move']._get_available_invoice_template_pdf_report_ids()
 
+    def _compute_display_invoice_template_pdf_report_id(self):
+        """ Show PDF template selection if there are more than 1 template available for invoices. """
+        for partner in self:
+            partner.display_invoice_template_pdf_report_id = len(partner.available_invoice_template_pdf_report_ids) > 1
+
     def _get_company_currency(self):
         for partner in self:
             partner.currency_id = partner.sudo().company_id.currency_id or self.env.company.currency_id
 
     def _get_company_currency_sql(self, table):
         return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
-
-    def _default_display_invoice_template_pdf_report_id(self):
-        """ Show PDF template selection if there are more than 1 template available for invoices. """
-        return len(self.available_invoice_template_pdf_report_ids) > 1
 
     name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
@@ -610,7 +611,7 @@ class ResPartner(models.Model):
         comodel_name='ir.actions.report',
         compute="_compute_available_invoice_template_pdf_report_ids",
     )
-    display_invoice_template_pdf_report_id = fields.Boolean(default=_default_display_invoice_template_pdf_report_id, store=False)
+    display_invoice_template_pdf_report_id = fields.Boolean(compute='_compute_display_invoice_template_pdf_report_id')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0, copy=False)
