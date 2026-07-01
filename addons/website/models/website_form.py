@@ -74,7 +74,7 @@ class IrModel(models.Model):
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \
-                    fields_get[field]['type'] in ('many2one_reference', 'json'):
+                    fields_get[field]['type'] in ('many2one_reference', 'json', 'reference'):
                 del fields_get[field]
             elif fields_get[field]['type'] == 'properties':
                 property_field = fields_get[field]
