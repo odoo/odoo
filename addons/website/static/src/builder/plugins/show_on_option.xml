@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ShowOnOption">
+    <BuilderRow label.translate="Show on" t-if="this.availableShowOnScopes">
+        <BuilderSelect action="'moveBlock'">
+            <t t-foreach="this.availableShowOnScopes" t-as="scope" t-key="scope.value">
+                <BuilderSelectItem actionValue="scope.value" actionParam="scope.containerSelector" t-out="scope.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

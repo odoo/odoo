@@ -52,6 +52,24 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         )
         self.assertEqual(internship_applicant.job_id, job_intern)
 
+    def test_website_hr_recruitment_floating_snippets(self):
+        jobs = self.env['hr.job'].create([
+            {
+                'name': 'Job A',
+                'is_published': True,
+            },
+            {
+                'name': 'Job B',
+                'is_published': True,
+            },
+        ])
+        jobs[0].website_description = f'<p><a class="job_b_link" href="{jobs[1].website_url}">Job B</a></p>'
+        self.start_tour(
+            self.env['website'].get_client_action_url(jobs[0].website_url, True),
+            'website_hr_recruitment_floating_snippets',
+            login='admin',
+        )
+
     def test_jobs_listing_city_unspecified(self):
         """ Test that the jobs listing page does not crash when a job has no address. """
         an_address, no_address = self.env['res.partner'].create([

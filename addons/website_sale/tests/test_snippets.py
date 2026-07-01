@@ -80,6 +80,25 @@ class TestSnippets(HttpCase):
             "There shouldn't be any product in recently viewed after this tour",
         )
 
+    def test_website_sale_floating_snippets(self):
+        products = self.env["product.product"].create([
+            {
+                "name": "Floating Snippets Product A",
+                "website_published": True,
+                "sale_ok": True,
+            },
+            {
+                "name": "Floating Snippets Product B",
+                "website_published": True,
+                "sale_ok": True,
+            },
+        ])
+        self.start_tour(
+            self.env["website"].get_client_action_url(products[0].website_url, True),
+            "website_sale.floating_snippets",
+            login="admin",
+        )
+
     def test_website_category_url(self):
         # Create a public category with a cover image
         category = self.env["product.public.category"].create({"name": "Test Category"})

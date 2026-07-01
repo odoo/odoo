@@ -80,6 +80,25 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
+    def test_website_event_floating_snippets(self):
+        event = self.env['event.event'].create({
+            'name': 'Event A',
+            'date_begin': fields.Datetime.now() + relativedelta(days=10),
+            'date_end': fields.Datetime.now() + relativedelta(days=13),
+            'website_published': True,
+        })
+        self.env['event.event'].create({
+            'name': 'Event B',
+            'date_begin': fields.Datetime.now() + relativedelta(days=10),
+            'date_end': fields.Datetime.now() + relativedelta(days=13),
+            'website_published': True,
+        })
+        self.start_tour(
+            self.env['website'].get_client_action_url(event.website_url, True),
+            'website_event_floating_snippets',
+            login='admin',
+        )
+
     def test_website_event_questions(self):
         """ Will execute the tour that fills up two tickets with a few questions answers
         and then assert that the answers are correctly saved for each attendee. """

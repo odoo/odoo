@@ -2,6 +2,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class BlogPageOption extends BaseOptionComponent {
@@ -26,6 +28,11 @@ export class BlogPageOptionPlugin extends Plugin {
         builder_actions: {
             SetRecommendedNextPostAction,
         },
+        floating_snippet_scope_providers: withSequence(20, {
+            value: "allBlogPosts",
+            label: _t("All blog posts"),
+            containerSelector: "#oe_structure_blog_footer, #oe_structure_blog_header",
+        }),
     };
 }
 

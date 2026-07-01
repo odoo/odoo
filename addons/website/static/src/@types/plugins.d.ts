@@ -2,6 +2,7 @@ declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
     import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
     import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
+    import { floating_snippet_scope_providers } from "@website/builder/plugins/floating_snippets_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
     import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
@@ -89,6 +90,7 @@ declare module "plugins" {
         reorder_items_processors: reorder_items_processors;
 
         // Providers
+        floating_snippet_scope_providers: floating_snippet_scope_providers;
         footer_templates_providers: footer_templates_providers;
         gallery_items_providers: gallery_items_providers;
         header_templates_providers: header_templates_providers;

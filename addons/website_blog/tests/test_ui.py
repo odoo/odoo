@@ -74,6 +74,28 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             meta = self.blog_post.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
 
+    def test_website_blog_floating_snippets(self):
+        blog = self.blog_post.blog_id
+        blog_post_a = self.env['blog.post'].create({
+            'name': 'Floating Snippets Blog A',
+            'blog_id': blog.id,
+            'author_id': self.env.user.partner_id.id,
+            'is_published': True,
+        })
+        blog_post_b = self.env['blog.post'].create({
+            'name': 'Floating Snippets Blog B',
+            'blog_id': blog.id,
+            'author_id': self.env.user.partner_id.id,
+            'is_published': True,
+        })
+        blog_post_a.content = f'<p><a href="{blog_post_b.website_url}">Floating Snippets Blog B</a></p>'
+
+        self.start_tour(
+            self.env['website'].get_client_action_url(blog_post_a.website_url, True),
+            'website_blog_floating_snippets',
+            login='admin',
+        )
+
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
             'author_id': self.user_public.partner_id.id,

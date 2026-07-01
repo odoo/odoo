@@ -1,6 +1,16 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BuilderAction } from "@html_builder/core/builder_action";
+import { ShowOnOption } from "../floating_snippets_plugin";
+
+export class PopupOption extends BaseOptionComponent {
+    static id = "popup_option";
+    static template = "website.PopupOption";
+    static components = { ShowOnOption };
+}
+
+registry.category("website-options").add(PopupOption.id, PopupOption);
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
@@ -16,14 +26,11 @@ export class PopupOptionPlugin extends Plugin {
             dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
         },
         builder_actions: {
-            // Moves the snippet in #o_shared_blocks to be common to all pages
-            // or inside the first editable oe_structure in the main to be on
-            // current page only.
-            MoveBlockAction,
             SetBackdropAction,
             CopyAnchorAction,
             SetPopupDelayAction,
         },
+        floating_snippets_selectors: ".s_popup",
         is_node_empty_predicates: (el) => {
             if (!el.matches?.(".s_popup")) {
                 return;
@@ -75,26 +82,6 @@ export class PopupOptionPlugin extends Plugin {
     }
 }
 
-// Moves the snippet in #o_shared_blocks to be common to all pages
-// or inside the first editable oe_structure in the main to be on
-// current page only.
-export class MoveBlockAction extends BuilderAction {
-    static id = "moveBlock";
-    setup() {
-        this.preview = false;
-    }
-    isApplied({ editingElement, value }) {
-        return editingElement.closest("#o_shared_blocks")
-            ? value === "allPages"
-            : value === "currentPage";
-    }
-    apply({ editingElement, value, params: { mainParam: targetSelector } }) {
-        const selector = value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_savable";
-        const whereEl = this.editable.querySelector(selector);
-        const targetEl = editingElement.closest(targetSelector);
-        whereEl.insertAdjacentElement("afterbegin", targetEl);
-    }
-}
 export class SetBackdropAction extends BuilderAction {
     static id = "setBackdrop";
     isApplied({ editingElement }) {
