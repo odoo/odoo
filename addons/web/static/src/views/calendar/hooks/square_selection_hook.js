@@ -205,18 +205,7 @@ export function useSquareSelection() {
         component.props.onSquareSelection([...allSelectedCells]);
     };
 
-    // useLayoutEffect(
-    //     (el, hasMultiCreate) => {
-    //         if (!hasMultiCreate) {
-    //             return;
-    //         }
-    //         el && el.addEventListener("click", onClick);
-    //         return () => {
-    //             el && el.removeEventListener("click", onClick);
-    //         };
-    //     },
-    //     () => [ref.el, component.props.model.hasMultiCreate]
-    // );
+    useListener(() => (component.props.model.hasMultiCreate ? ref.el : null), "click", onClick);
 
     let ctrlPressed = false;
     let shiftPressed = false;
