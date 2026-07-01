@@ -313,6 +313,11 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
         }
         await super.apply(context);
         setBuilderCSSVariables(getHtmlStyle(this.document));
+        await Promise.allSettled(
+            this.getResource("on_website_color_updated_handlers").map((handler) =>
+                handler(["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"])
+            )
+        );
     }
 }
 
