@@ -134,6 +134,16 @@ class ProductTemplate(models.Model):
         copy=False,
         index=True,
     )
+
+    website_list_price = fields.Float(
+        string="Shop Price",
+        compute="_compute_website_list_price",
+        store=True,
+        index=True,
+        help="Catalog price of the variant displayed first on the shop tile "
+        "(the first variant by website sequence).",
+    )
+
     public_categ_ids = fields.Many2many(
         string="Website Product Category",
         help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit"
@@ -271,6 +281,16 @@ class ProductTemplate(models.Model):
             template.variants_default_code = RARE_DELIMITER.join(
                 template.product_variant_ids.filtered("default_code").mapped("default_code")
             )
+
+    @api.depends(
+        "list_price", "product_variant_ids.lst_price", "product_variant_ids.website_sequence"
+    )
+    def _compute_website_list_price(self):
+        for template in self:
+            variant = template.product_variant_ids.sorted(key=lambda v: (v.website_sequence, v.id))[
+                :1
+            ]
+            template.website_list_price = variant.lst_price if variant else template.list_price
 
     # === CRUD METHODS ===#
 
@@ -579,6 +599,19 @@ class ProductTemplate(models.Model):
             return keys
 
         return self._get_possible_variants().sorted(_sort_key_variant)
+
+    def _get_website_variants(self):
+        """Return a ``{template: representative variant}`` mapping (one query).
+
+        The representative variant is the first one by website sequence the variant
+        shown on the shop tile. Empty recordset if the template has no variant.
+        """
+        Product = self.env["product.product"]
+        variants = Product.search_fetch(
+            [("product_tmpl_id", "in", self.ids)], order="website_sequence asc, id asc"
+        )
+        by_tmpl = variants.grouped(lambda v: v.product_tmpl_id.id)
+        return {template: by_tmpl.get(template.id, Product)[:1] for template in self}
 
     def _get_previewed_attribute_values(self, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
@@ -1176,7 +1209,7 @@ class ProductTemplate(models.Model):
             self.set_sequence_top()
 
     def set_sequence_down(self):
-        next_prodcut_tmpl = self.search(
+        next_product_tmpl = self.search(
             [
                 ("website_sequence", ">", self.website_sequence),
                 ("website_published", "=", self.website_published),
@@ -1184,10 +1217,10 @@ class ProductTemplate(models.Model):
             order="website_sequence ASC",
             limit=1,
         )
-        if next_prodcut_tmpl:
-            next_prodcut_tmpl.website_sequence, self.website_sequence = (
+        if next_product_tmpl:
+            next_product_tmpl.website_sequence, self.website_sequence = (
                 self.website_sequence,
-                next_prodcut_tmpl.website_sequence,
+                next_product_tmpl.website_sequence,
             )
         else:
             return self.set_sequence_bottom()
@@ -1272,9 +1305,15 @@ class ProductTemplate(models.Model):
                 ])
             )
         if min_price:
-            domains.append([("list_price", ">=", min_price)])
+            if website.shop_split_variants:
+                domains.append([("product_variant_ids.lst_price", ">=", min_price)])
+            else:
+                domains.append([("website_list_price", ">=", min_price)])
         if max_price:
-            domains.append([("list_price", "<=", max_price)])
+            if website.shop_split_variants:
+                domains.append([("product_variant_ids.lst_price", "<=", max_price)])
+            else:
+                domains.append([("website_list_price", "<=", max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = [
@@ -1328,6 +1367,8 @@ class ProductTemplate(models.Model):
         }
 
     def _search_fetch(self, search_detail, search, offset, limit, order):
+        if order:
+            order = order.replace("list_price", "website_list_price")
         results, count = super()._search_fetch(search_detail, search, offset, limit, order)
         return results.with_context(search_term=search), count
 

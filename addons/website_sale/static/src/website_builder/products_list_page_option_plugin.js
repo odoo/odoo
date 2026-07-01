@@ -13,6 +13,7 @@ export class ProductsListPageOptionPlugin extends Plugin {
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
+            SetSplitVariantsAction,
         },
     };
 }
@@ -68,6 +69,20 @@ export class SetDefaultSortAction extends BuilderAction {
     }
     apply({ value }) {
         return rpc("/shop/config/website", { shop_default_sort: value });
+    }
+}
+
+export class SetSplitVariantsAction extends BuilderAction {
+    static id = "setSplitVariants";
+    setup() {
+        this.reload = {};
+    }
+    isApplied({ editingElement }) {
+        return editingElement.dataset.splitVariants === "1";
+    }
+    apply({ editingElement }) {
+        const newValue = !this.isApplied({ editingElement });
+        return rpc("/shop/config/website", { shop_split_variants: newValue });
     }
 }
 

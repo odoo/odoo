@@ -147,6 +147,11 @@ class Website(models.Model):
         inverse_name="website_id",
     )
 
+    shop_split_variants = fields.Boolean(
+        string="Split Variants",
+        help="Display each product variant as a separate card on the shop page.",
+    )
+
     product_page_container = fields.Selection(
         selection=[("unset", "Unset"), ("regular", "Regular"), ("fluid", "Full-width")],
         default="unset",

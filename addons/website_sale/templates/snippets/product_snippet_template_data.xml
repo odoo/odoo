@@ -105,6 +105,7 @@
                                             t-att-data-product-selected="product.is_product_variant"
                                             t-att-data-product-template-id="product_template.id"
                                             t-att-data-product-type="product.type"
+                                            t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                             t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                         >
                                             <!-- Avoid whitespaces undesired gaps -->

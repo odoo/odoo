@@ -1,16 +1,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import OrderedDict
 from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models
 from odoo.http import request
 
+_logger = logging.getLogger(__name__)
+
 
 class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
+
+    # === DEFAULT METHODS ===#
+
+    @api.model
+    def _default_website_sequence(self):
+        self.env.cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        max_sequence = self.env.cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
+
+    # === FIELDS ===#
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
     website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
@@ -32,6 +47,15 @@ class ProductProduct(models.Model):
         relation="stock_notification_product_partner_rel",
         string="Back in stock Notifications",
     )
+    website_sequence = fields.Integer(
+        string="Website Sequence",
+        help="Determine the display order of variants in the Website eCommerce",
+        default=_default_website_sequence,
+        copy=False,
+        index=True,
+    )
+    website_size_x = fields.Integer(string="Size X", default=1)
+    website_size_y = fields.Integer(string="Size Y", default=1)
 
     # === COMPUTE METHODS ===#
 
@@ -47,6 +71,73 @@ class ProductProduct(models.Model):
                 query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
                 url = url._replace(query=urlencode(query_params))
             product.website_url = url.geturl()
+
+    # === SEQUENCE METHODS ===#
+
+    def _init_column(self, column_name):
+        # to avoid generating a single default website_sequence when installing the module,
+        # we need to set the default row by row for this column
+        if column_name == "website_sequence":
+            _logger.debug(
+                "Table '%s': setting default value of new column %s to unique values for each row",
+                self._table,
+                column_name,
+            )
+            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            prod_ids = self.env.cr.dictfetchall()
+            max_seq = self._default_website_sequence()
+            query = f"""
+                UPDATE {self._table}
+                SET website_sequence = p.web_seq
+                FROM (VALUES %s) AS p(p_id, web_seq)
+                WHERE id = p.p_id
+            """
+            values_args = [(prod["id"], max_seq + i * 5) for i, prod in enumerate(prod_ids)]
+            self.env.cr.execute_values(query, values_args)
+        else:
+            super()._init_column(column_name)
+
+    def set_sequence_top(self):
+        min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)
+        self.website_sequence = min_sequence.website_sequence - 5
+
+    def set_sequence_bottom(self):
+        max_sequence = self.sudo().search([], order="website_sequence DESC", limit=1)
+        self.website_sequence = max_sequence.website_sequence + 5
+
+    def set_sequence_up(self):
+        previous_product = self.sudo().search(
+            [
+                ("website_sequence", "<", self.website_sequence),
+                ("website_published", "=", self.website_published),
+            ],
+            order="website_sequence DESC",
+            limit=1,
+        )
+        if previous_product:
+            previous_product.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                previous_product.website_sequence,
+            )
+        else:
+            self.set_sequence_top()
+
+    def set_sequence_down(self):
+        next_product = self.sudo().search(
+            [
+                ("website_sequence", ">", self.website_sequence),
+                ("website_published", "=", self.website_published),
+            ],
+            order="website_sequence ASC",
+            limit=1,
+        )
+        if next_product:
+            next_product.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                next_product.website_sequence,
+            )
+        else:
+            self.set_sequence_bottom()
 
     # === BUSINESS METHODS ===#
 
@@ -87,6 +178,72 @@ class ProductProduct(models.Model):
         return self.product_tmpl_id._get_combination_info(
             combination=self.product_template_attribute_value_ids, product_id=self.id, **kwargs
         )
+
+    def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
+        """Variant-level equivalent of product.template._get_sales_prices."""
+        if not self:
+            return {}
+
+        currency = website.currency_id
+        pricelist_prices = pricelist_sudo._compute_price_rule(self, 1.0)
+        comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_product_price_comparison"
+        )
+        uom_price_enabled = self.env["res.groups"]._is_feature_enabled(
+            "product.group_show_uom_price"
+        )
+
+        res = {}
+        for product in self:
+            pricelist_price, pricelist_rule_id = pricelist_prices[product.id]
+
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company()
+            taxes = fiscal_position_sudo.map_tax(product_taxes)
+
+            base_price = None
+            product_price_vals = {
+                "raw_pricelist_price": pricelist_price,
+                "pricelist_rule_id": pricelist_rule_id,
+                "price_reduce": product._apply_taxes_to_price(
+                    pricelist_price,
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
+                ),
+            }
+            pricelist_item_sudo = (
+                product.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+            )
+            if pricelist_item_sudo._show_discount_on_shop():
+                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
+                    product=product,
+                    quantity=1.0,
+                    uom=product.product_tmpl_id._get_main_uom(),
+                    currency=currency,
+                )
+                if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
+                    base_price = pricelist_base_price
+                    product_price_vals["base_price"] = product._apply_taxes_to_price(
+                        base_price,
+                        currency,
+                        product_taxes=product_taxes,
+                        taxes=taxes,
+                        website=website,
+                    )
+            if not base_price and comparison_prices_enabled and product.compare_list_price:
+                product_price_vals["base_price"] = product.currency_id._convert(
+                    product.compare_list_price, currency, self.env.company, round=False
+                )
+
+            if uom_price_enabled:
+                product_price_vals["base_unit_price"] = product._get_base_unit_price(
+                    product_price_vals["price_reduce"]
+                )
+
+            res[product.id] = product_price_vals
+
+        return res
 
     def _website_show_quick_add(self):
         self.ensure_one()
