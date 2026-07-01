@@ -2804,7 +2804,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.binary_related_no_store.content, binary_value2.content)
         self.assertEqual(record.binary_related_store.content, binary_value2.content)
 
-    def test_82_binary_bin_size(self):
+    def test_82_binary_read(self):
         binary_value = BinaryBytes(b'content')
         record = self.env['test_orm.model_binary'].create({'binary': binary_value})
 
@@ -2815,17 +2815,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for field in fields:
                 self.assertEqual(vals[field], read_value)
 
-        record = record.with_context(bin_size=True)
-        assertBinaryValue(f'{binary_value.size}.00 bytes')
+        record = record.with_context(include_binary_content=False)
+        assertBinaryValue({'filename': '', 'size': binary_value.size})
 
-        record = record.with_context(bin_size=False)
-        assertBinaryValue(base64.b64encode(binary_value.content).decode())
-
-        # updating and invalidation with bin_size has no effect
-        record = record.with_context(bin_size=True)
-        record.binary = binary_value = BinaryBytes(b'test')
-        record.env.invalidate_all()
-        assertBinaryValue(f'{binary_value.size}.00 bytes')
+        record = record.with_context(include_binary_content=True)
+        content = base64.b64encode(binary_value.content).decode()
+        assertBinaryValue({'filename': '', 'size': binary_value.size, 'content': content})
 
     def test_85_binary_guess_zip(self):
         # Regular ZIP files can be uploaded by non-admin users
@@ -3013,13 +3008,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         })
         assertResized(record, image_512=(256, 512), image=(2000, 4000), image_256=(128, 256), image_64=(32, 64))
 
-        # test bin_size
+        # test size
         record.invalidate_recordset()
-        values_bin_size = record.with_context(bin_size=True).read([])[0]
-        self.assertEqual(values_bin_size.get('image'), '31.54 Kb')
-        self.assertEqual(values_bin_size.get('image_512'), '1.02 Kb')
-        self.assertEqual(values_bin_size.get('image_256'), '424.00 bytes')
-        self.assertEqual(values_bin_size.get('image_64'), '111.00 bytes')
+        values_size = record.read([])[0]
+        self.assertEqual(values_size['image']['size'], record.image.size)
+        self.assertEqual(values_size['image_64']['size'], record.image_64.size)
 
         # ensure image_data_uri works (value must be bytes and not string)
         self.assertEqual(record.image_256.to_base64()[:8], 'iVBORw0K')

@@ -28,7 +28,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
 from odoo.modules.module import get_manifest
-from odoo.tools import BinaryBytes, file_open, lazy
+from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
 from odoo.tools.image import image_process
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
@@ -166,7 +166,7 @@ class Website(models.CachedModel):
 
     def _default_favicon(self):
         with file_open('web/static/img/favicon.ico', 'rb') as f:
-            return BinaryBytes(f.read())
+            return BinaryBytes(f.read(), filename='favicon.ico')
 
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
@@ -350,7 +350,8 @@ class Website(models.CachedModel):
     @api.model
     def _handle_favicon(self, vals):
         if icon := vals.get('favicon'):
-            vals['favicon'] = BinaryBytes(image_process(icon, size=(256, 256), crop='center', output_format='ICO'))
+            filename = icon.filename if isinstance(icon, BinaryValue) else ''
+            vals['favicon'] = BinaryBytes(image_process(icon, size=(256, 256), crop='center', output_format='ICO'), filename)
 
     @api.model
     def _handle_domain(self, vals):

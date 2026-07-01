@@ -142,14 +142,15 @@ class TestHttpWebJson_1(TestHttpBase):
     def test_webjson_form(self):
         self.authenticate_demo()
         res = self.url_open_json(f'/test_http.stargate/{self.earth.id}')
+        gizeh = {'filename': '', 'size': len(self.gizeh_data)}
         self.assertEqual(res.json(), {
             'id': self.earth.id,
             'name': self.earth.name,
             'sgc_designation': self.earth.sgc_designation,
             'galaxy_id': {'id': self.earth.galaxy_id.id,
                           'display_name': self.earth.galaxy_id.name},
-            'glyph_attach': self.gizeh_b64,
-            'glyph_inline': self.gizeh_b64,
+            'glyph_attach': gizeh,
+            'glyph_inline': gizeh,
         })
 
     def test_webjson_form_subtree(self):

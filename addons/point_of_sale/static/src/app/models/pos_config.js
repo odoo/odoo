@@ -100,7 +100,7 @@ export class PosConfig extends Base {
     }
 
     get receiptLogoUrl() {
-        return this.logo ? imageDataUri(this.logo) : false;
+        return this.logo ? imageDataUri(this.logo.content) : false;
     }
 
     get availablePricelists() {

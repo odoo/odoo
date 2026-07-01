@@ -10,9 +10,10 @@ from odoo.tools.binary import BinaryBytes
 class TestBinaryValue(TransactionCase):
     def test_binary_bytes(self):
         data = b'test'
-        val = BinaryBytes(data)
+        val = BinaryBytes(data, filename='fn')
         self.assertIsInstance(val, BinaryBytes)
         self.assertIs(val.content, data)
+        self.assertEqual(val.filename, 'fn')
 
         self.assertEqual(val.size, len(data))
         self.assertTrue(val.mimetype, "determine a mimetype")
@@ -21,6 +22,7 @@ class TestBinaryValue(TransactionCase):
         self.assertIs(bytes(val), val.content, "Content should not be copied")
 
         self.assertFalse(BinaryBytes(b''))
+        self.assertFalse(BinaryBytes(b'').filename)
 
     def test_binary_open(self):
         with self.subTest("Can open multiple times"):

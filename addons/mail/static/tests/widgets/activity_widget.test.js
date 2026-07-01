@@ -31,7 +31,6 @@ test("list activity widget with no activity", async () => {
             offset: 0,
             order: "",
             limit: 80,
-            context: { bin_size: true },
             count_limit: 10001,
             domain: [],
         });

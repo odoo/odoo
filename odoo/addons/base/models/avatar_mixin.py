@@ -66,14 +66,14 @@ class AvatarMixin(models.AbstractModel):
             f"<rect fill='{bgcolor}' height='180' width='180'/>"
             f"<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>{initial}</text>"
             "</svg>"
-        ).encode())
+        ).encode(), filename=f'avatar_{initial}.svg')
 
     def _avatar_get_placeholder_path(self):
         return "base/static/img/avatar_grey.png"
 
     def _avatar_get_placeholder(self):
         with file_open(self._avatar_get_placeholder_path(), 'rb') as f:
-            return BinaryBytes(f.read())
+            return BinaryBytes(f.read(), filename='avatar.svg')
 
     def _get_avatar_128_access_token(self):
         """Return a scoped access token for the `avatar_128` field. The token can be

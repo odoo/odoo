@@ -13,11 +13,14 @@ import {
     pagerNext,
 } from "@web/../tests/web_test_helpers";
 
-import { toBase64Length } from "@web/core/utils/binary";
 import { MAX_FILENAME_SIZE_BYTES } from "@web/views/fields/binary/binary_field";
 
-const BINARY_FILE =
+const BINARY_CONTENT =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
+const BINARY_FILE = {
+    content: BINARY_CONTENT,
+    size: 96,
+};
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -26,7 +29,7 @@ class Partner extends models.Model {
     document = fields.Binary();
     product_id = fields.Many2one({ relation: "product" });
 
-    _records = [{ foo: "coucou.txt", document: "coucou==\n" }];
+    _records = [{ foo: "coucou.txt", document: { content: "coucou==\n" } }];
 }
 
 class Product extends models.Model {
@@ -51,10 +54,6 @@ test("BinaryField is correctly rendered (readonly)", async () => {
         expect(body.get("field")).toBe("document", {
             message: "we should download the field document",
         });
-        expect(body.get("data")).toBe("coucou==\n", {
-            message: "we should download the correct data",
-        });
-
         return new Blob([body.get("data")], { type: "text/plain" });
     });
 
@@ -149,10 +148,6 @@ test("BinaryField is correctly rendered", async () => {
         expect(body.get("field")).toBe("document", {
             message: "we should download the field document",
         });
-        expect(body.get("data")).toBe("coucou==\n", {
-            message: "we should download the correct data",
-        });
-
         return new Blob([body.get("data")], { type: "text/plain" });
     });
 
@@ -259,8 +254,8 @@ test("file name field is not defined", async () => {
         arch: `<form><field name="document" filename="foo"/></form>`,
     });
     queryOne(".o_select_file_button").focus();
-    expect(`.o_field_binary`).toHaveText("", {
-        message: "there should be no text since the name field is not in the view",
+    expect(`.o_field_binary`).toHaveText("Replace current file", {
+        message: "there should be no file name since the name field is not in the view",
     });
     expect(`.o_field_binary .fa-download`).toBeVisible({
         message: "download icon should be visible",
@@ -400,11 +395,8 @@ test("new record has no download button", async () => {
 });
 
 test("filename doesn't exceed 255 bytes", async () => {
-    const LARGE_BINARY_FILE = BINARY_FILE.repeat(5);
-    expect((LARGE_BINARY_FILE.length / 4) * 3).toBeGreaterThan(MAX_FILENAME_SIZE_BYTES, {
-        message:
-            "The initial binary file should be larger than max bytes that can represent the filename",
-    });
+    const data = "A".repeat(MAX_FILENAME_SIZE_BYTES + 1);
+    const LARGE_BINARY_FILE = {filename: data, content: data, size: data.length};
 
     Partner._fields.document.default = LARGE_BINARY_FILE;
     await mountView({
@@ -413,9 +405,9 @@ test("filename doesn't exceed 255 bytes", async () => {
         arch: `<form><field name="document"/></form>`,
     });
     expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(
-        toBase64Length(MAX_FILENAME_SIZE_BYTES),
+        MAX_FILENAME_SIZE_BYTES,
         {
-            message: "The filename shouldn't exceed the maximum size in bytes in base64",
+            message: "The filename shouldn't exceed the maximum size in bytes",
         }
     );
 });

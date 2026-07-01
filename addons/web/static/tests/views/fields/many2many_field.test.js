@@ -668,7 +668,6 @@ test("add record in a many2many non editable list with context", async () => {
         expect(args.kwargs.context).toEqual({
             abc: 2,
             allowed_company_ids: [1],
-            bin_size: true,
             lang: "en",
             tz: "taht",
             uid: 7,

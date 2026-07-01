@@ -241,7 +241,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertEqual(a1.raw.content, unique_blob)
         self.assertEqual(a1.mimetype, 'image/png')
 
-    def test_15_read_binary_bin_size_is_lazy(self):
+    def test_15_read_binary_is_lazy(self):
         self.env.invalidate_all()
         IrAttachment = self.registry['ir.attachment']
         main_partner = self.env.ref('base.main_partner')
@@ -251,7 +251,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             side_effect=IrAttachment._file_read,
             autospec=True,
         ) as patch_file_read:
-            self.env['res.partner'].with_context(bin_size=True).search_read(
+            self.env['res.partner'].search_read(
                 [('id', 'in', main_partner.ids)], ['image_128']
             )
             self.assertEqual(patch_file_read.call_count, 0)

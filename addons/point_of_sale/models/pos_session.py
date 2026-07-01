@@ -152,14 +152,15 @@ class PosSession(models.Model):
 
     def load_data(self, models_to_load):
         response = {}
-        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
+        session = self.with_context(include_binary_content=True)
+        response['pos.session'] = session._load_pos_data_search_read(response, self.config_id)
 
         for model in self._load_pos_data_models(self.config_id):
             if models_to_load and model not in models_to_load:
                 continue
 
             try:
-                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
+                response[model] = session.env[model]._load_pos_data_search_read(response, self.config_id)
             except AccessError as e:
                 response[model] = []
                 _logger.info("Could not load model %s due to AccessError: %s", model, e)
