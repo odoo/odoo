@@ -96,7 +96,7 @@ class AttachmentController(ThreadController):
             [("attachment_ids", "in", attachment.ids)], limit=1)
         if message:
             thread = request.env[message.model].browse(message.res_id)
-            thread._message_update_content(message, body=message.body)  # marks the message edited
+            thread._message_update_content(message, body=message.body, strict=False)  # marks the message edited
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 

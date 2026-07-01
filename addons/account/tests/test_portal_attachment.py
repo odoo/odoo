@@ -182,6 +182,37 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertIn("o-mail-Message-edited", message.body)
         message.sudo().unlink()
 
+        # Test attachment can be removed if attached to a message of message_type != "comment"
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "an attachment",
+                "res_model": "mail.compose.message",
+                "res_id": 0,
+            }
+        )
+        attachment.flush_recordset()
+        message = self.env["mail.message"].create(
+            {
+                "attachment_ids": [(6, 0, attachment.ids)],
+                "model": "res.partner",
+                "res_id": self.partner_a.id,
+                "message_type": "notification",
+            }
+        )
+        res = self.url_open(
+            url=f"{self.invoice_base_url}/mail/attachment/delete",
+            json={
+                "params": {
+                    "attachment_id": attachment.id,
+                    "access_token": attachment._get_ownership_token(),
+                },
+            },
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(attachment.exists())
+        self.assertIn("o-mail-Message-edited", message.body)
+        message.sudo().unlink()
+
         # Test attachment can't be associated if no attachment token.
         attachment = self.env['ir.attachment'].create({
             'name': 'an attachment',
