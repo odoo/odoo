@@ -100,7 +100,7 @@ class L10n_LatamCheck(models.Model):
     @api.depends('outstanding_line_id.amount_residual')
     def _compute_issue_state(self):
         for rec in self:
-            if not rec.outstanding_line_id:
+            if rec.payment_method_code != 'own_checks':
                 rec.issue_state = False
             elif rec.amount and not rec.outstanding_line_id.amount_residual:
                 if any(
@@ -174,10 +174,6 @@ class L10n_LatamCheck(models.Model):
         self.ensure_one()
         move = self._get_reconciled_move()
         return move._get_records_action()
-
-    def action_show_journal_entry(self):
-        self.ensure_one()
-        return self.outstanding_line_id.move_id._get_records_action()
 
     def _get_reconciled_move(self):
         reconciled_line = self.outstanding_line_id.full_reconcile_id.reconciled_line_ids - self.outstanding_line_id
