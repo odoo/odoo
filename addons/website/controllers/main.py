@@ -978,6 +978,42 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
+    def word_coverage_similarity(self, search_term, target_text, multiplier=1):
+        if not search_term or not target_text:
+            return 0.0
+
+        def tokenize(text):
+            return set(re.findall(r'\w+', text.lower()))
+
+        search_tokens = tokenize(search_term)
+        target_tokens = tokenize(target_text)
+
+        if not search_tokens:
+            return 0.0
+
+        intersection = search_tokens.intersection(target_tokens)
+        coverage_score = len(intersection) / len(search_tokens)
+        perfect_match_score = (search_term in target_text.lower()) * 5.0
+        proximity_score = 0
+        if coverage_score > 0:
+            from difflib import SequenceMatcher
+            proximity_score = SequenceMatcher(None, search_term.lower(), target_text.lower()).ratio()
+
+        # We multiply coverage by 10 to ensure it always outweighs proximity
+        return multiplier * ((coverage_score * 10) + perfect_match_score + proximity_score)
+
+    def _sort_results_by_relevance(self, results_data, term):
+        for result in results_data:
+            desc_field = result.get('_mapping', {}).get('description', {}).get('name', '')
+            desc = (result.get(desc_field) or '').lower()
+            name_text = (result.get('name') or '').lower()
+            tag_names = [(tag.get('name') or '').lower() for tag in result.get('tag_ids', [])]
+            name_score = self.word_coverage_similarity(term, name_text, 3)
+            desc_score = self.word_coverage_similarity(term, desc, 1)
+            tag_score = self.word_coverage_similarity(term, ' '.join(tag_names), 2)
+            result['score'] = sum([name_score, desc_score, tag_score])
+        return sorted(results_data, key=lambda i: i['score'], reverse=True)
+
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
@@ -993,6 +1029,7 @@ class Website(Home):
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
             renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
+            sort_by_relevance: True if we want to sort results by relevance
 
         :returns: dict (or False if no result) containing
             - 'results' (dict | str):
@@ -1019,38 +1056,6 @@ class Website(Home):
                 'results_count': 0,
                 'parts': {},
             }
-
-        if options.get("proportionateAllocation") and results_count > limit:
-            """
-            Distribute a global result limit proportionally across groups
-            based on their contribution to the total results.
-
-            Example:
-                Total retrieved results across 3 models = 50
-                    - M1: 5   (10%)
-                    - M2: 10  (20%)
-                    - M3: 35  (70%)
-
-                With limit = 30:
-                    - M1 → 10% of 30 ≈ 3
-                    - M2 → 20% of 30 ≈ 6
-                    - M3 → 70% of 30 ≈ 21
-
-            Note:
-                Due to rounding and minimum allocation guarantees,
-                the total number of allocated results may slightly exceed `limit`.
-            """
-            total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
-            for model in search_results:
-                results_data = model.get("results")
-                if results_data:
-                    # Calculate proportional allocation for this group
-                    allocated_count = math.ceil(
-                        (len(results_data) / total_obtained_results) * limit
-                    )
-                    # Ensure at least 1 result per group to maintain visibility
-                    allocated_count = max(allocated_count, 1)
-                    model["results"] = results_data[:allocated_count]
 
         term = fuzzy_term or term
         search_results = self.env.website._search_render_results(search_results, limit)
@@ -1107,6 +1112,68 @@ class Website(Home):
                 'data': result_data,
                 'has_more': search_result.get('count') > offset + limit
             }
+        if options.get('sort_by_relevance'):
+            ranked_results = [
+                dict(record, model=group_key)
+                for group_key, group in result.items()
+                for record in group['data']
+            ]
+            ranked_results = self._sort_results_by_relevance(ranked_results, term)
+            if options.get('sort_by_model'):
+                grouped_result = {}
+                for record in ranked_results:
+                    group_key = record.pop('model')
+                    if group_key not in grouped_result:
+                        group = result[group_key]
+                        grouped_result[group_key] = {
+                            'groupName': group['groupName'],
+                            'searchCount': group['searchCount'],
+                            'data': [],
+                            'has_more': group['has_more'],
+                        }
+                    grouped_result[group_key]['data'].append(record)
+                result = grouped_result
+            else:
+                for record in ranked_results:
+                    record.pop('model', None)
+                result = {
+                    'all': {
+                        'groupName': _('All'),
+                        'searchCount': results_count,
+                        'data': ranked_results,
+                        'has_more': any(group['has_more'] for group in result.values()),
+                    }
+                }
+
+        if options.get("proportionateAllocation") and results_count > limit:
+            """
+            Distribute a global result limit proportionally across groups
+            based on their contribution to the total results.
+
+            Example:
+                Total retrieved results across 3 models = 50
+                    - M1: 5   (10%)
+                    - M2: 10  (20%)
+                    - M3: 35  (70%)
+
+                With limit = 30:
+                    - M1 → 10% of 30 ≈ 3
+                    - M2 → 20% of 30 ≈ 6
+                    - M3 → 70% of 30 ≈ 21
+
+            Note:
+                Due to rounding and minimum allocation guarantees,
+                the total number of allocated results may slightly exceed `limit`.
+            """
+            total_obtained_results = sum(len(group['data']) for group in result.values())
+            if total_obtained_results:
+                for group in result.values():
+                    results_data = group.get('data')
+                    if not results_data:
+                        continue
+                    allocated_count = math.ceil((len(results_data) / total_obtained_results) * limit)
+                    allocated_count = max(allocated_count, 1)
+                    group['data'] = results_data[:allocated_count]
 
         if options.get('renderTemplate'):
             values = [item for group in result.values() for item in group['data']]

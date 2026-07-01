@@ -59,6 +59,8 @@ export class SearchBar extends Interaction {
             allowFuzzy: !(dataset.noFuzzy && JSON.parse(dataset.noFuzzy)),
             proportionateAllocation: true,
             renderTemplate: true,
+            sort_by_relevance: true,
+            sort_by_model: false,
         };
         for (const fieldEl of form.querySelectorAll("input[type='hidden']")) {
             this.options[fieldEl.name] = fieldEl.value;
