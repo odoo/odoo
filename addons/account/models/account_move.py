@@ -819,6 +819,11 @@ class AccountMove(models.Model):
     _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
     _duplicate_bills_idx = models.Index("(ref) WHERE (move_type IN ('in_invoice', 'in_refund'))")
 
+    _check_document_tax_mode_set = models.Constraint(
+        "check(move_type NOT IN ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt') OR document_tax_mode IS NOT NULL)",
+        "The document tax mode must be set.",
+    )
+
     def _auto_init(self):
         super()._auto_init()
         if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
@@ -2513,7 +2518,7 @@ class AccountMove(models.Model):
                     lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
                 ).no_followup = move.no_followup
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'move_type')
     def _compute_document_tax_mode(self):
         for move in self:
             if not move.document_tax_mode:
@@ -2950,13 +2955,6 @@ class AccountMove(models.Model):
                 and move.invoice_currency_rate <= 0
             ):
                 raise ValidationError(_("The currency rate must be strictly positive."))
-
-    @api.constrains('document_tax_mode')
-    def _check_document_tax_mode(self):
-        """Ensure that when a move is a sale or purchase document the field is set."""
-        for move in self:
-            if move.is_invoice(include_receipts=True) and not move.document_tax_mode:
-                raise ValidationError(_("The document tax mode must be set."))
 
     # -------------------------------------------------------------------------
     # CATALOG

@@ -1254,7 +1254,7 @@
                                 </div>
                             </group>
                             <div>
-                                <field name="document_tax_mode" id="document_tax_mode_mobile" class="d-md-none no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" data-hotkey="shift+t"/>
+                                <field name="document_tax_mode" id="document_tax_mode_mobile" class="d-md-none" widget="badges_selection" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
                             </div>
                         </group>
                         <notebook>
@@ -1263,7 +1263,7 @@
                                   string="Invoice Lines"
                                   invisible="move_type == 'entry'">
                                 <div class="position-relative document_tax_mode">
-                                    <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab d-none d-md-block no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" data-hotkey="shift+t"/>
+                                    <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab d-none d-md-block" widget="badges_selection" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
                                 </div>
                                 <field name="invoice_line_ids"
                                        widget="product_label_section_and_note_field_o2m"

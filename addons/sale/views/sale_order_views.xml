@@ -540,13 +540,13 @@
                         <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
                    </group>
                    <div>
-                        <field name="document_tax_mode" id="document_tax_mode_mobile" class="d-md-none no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'"/>
+                        <field name="document_tax_mode" id="document_tax_mode_mobile" class="d-md-none" widget="badges_selection" nolabel="True" readonly="state != 'draft'"/>
                     </div>
                 </group>
                 <notebook>
                     <page string="Order Lines" name="order_lines">
                     <div class="position-relative document_tax_mode">
-                        <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab d-none d-md-block no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'"/>
+                        <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab d-none d-md-block" widget="badges_selection" nolabel="True" readonly="state != 'draft'"/>
                     </div>
                         <field
                             name="order_line"
