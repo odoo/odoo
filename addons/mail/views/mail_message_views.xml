@@ -36,24 +36,24 @@
                         </div>
                         <group>
                             <group>
-                                <field name="subject"/>
-                                <field name="date"/>
-                                <field name="email_from"/>
-                                <field name="author_id"/>
-                                <field name="message_type"/>
-                                <field name="subtype_id"/>
-                                <field name="is_internal"/>
+                                <field name="subject" readonly="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="email_from" readonly="1"/>
+                                <field name="author_id" readonly="1"/>
+                                <field name="message_type" readonly="1"/>
+                                <field name="subtype_id" readonly="1"/>
+                                <field name="is_internal" readonly="1"/>
                             </group>
                             <group>
-                                <field name="model"/>
-                                <field name="res_id"/>
-                                <field name="record_name"/>
-                                <field name="parent_id"/>
+                                <field name="model" readonly="1"/>
+                                <field name="res_id" readonly="1"/>
+                                <field name="record_name" readonly="1"/>
+                                <field name="parent_id" readonly="1"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Body" name="body">
-                                <field name="body" options="{'style-inline': true}"/>
+                                <field name="body" options="{'style-inline': true}" readonly="1"/>
                             </page>
                             <page string="Gateway" name="gateway">
                                 <group>
