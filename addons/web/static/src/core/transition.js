@@ -1,7 +1,5 @@
-import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
-import { browser } from "./browser/browser";
-
-import { Component, onWillUpdateProps, status, xml, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal, useScope, xml } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)
@@ -36,19 +34,18 @@ export function useTransition({
     leaveDuration = 500,
     onLeave = () => {},
 }) {
-    const component = useComponent();
-    const state = proxy({
-        shouldMount: initialVisibility,
-        stage: initialVisibility ? "enter" : "leave",
-    });
+    const scope = useScope();
+
+    const shouldMount = signal(initialVisibility);
+    const stage = signal(initialVisibility ? "enter" : "leave");
 
     if (config.disabled) {
         return {
             get shouldMount() {
-                return state.shouldMount;
+                return shouldMount();
             },
             set shouldMount(val) {
-                state.shouldMount = val;
+                shouldMount.set(val);
             },
             get className() {
                 return `${name} ${name}-enter-active`;
@@ -73,41 +70,41 @@ export function useTransition({
     let prevState, timer;
     const transition = {
         get shouldMount() {
-            return state.shouldMount;
+            return shouldMount();
         },
         set shouldMount(newState) {
             if (newState === prevState) {
                 return;
             }
-            browser.clearTimeout(timer);
+            clearTimeout(timer);
             prevState = newState;
             // when true - transition from enter to enter-active
             // when false - transition from enter-active to leave, unmount after leaveDuration
             if (newState) {
-                if (status(component) === "mounted" || immediate) {
-                    state.stage = "enter";
+                if (immediate || scope.status === 1) {
+                    stage.set("enter");
                     // force a render here so that we get a patch even if the state didn't change
-                    render(component);
+                    signal.trigger(stage);
                     onNextPatch = () => {
-                        state.stage = "enter-active";
+                        stage.set("enter-active");
                     };
                 } else {
-                    state.stage = "enter-active";
+                    stage.set("enter-active");
                 }
-                state.shouldMount = true;
+                shouldMount.set(true);
             } else {
-                state.stage = "leave";
-                timer = browser.setTimeout(() => {
-                    state.shouldMount = false;
+                stage.set("leave");
+                timer = setTimeout(() => {
+                    shouldMount.set(false);
                     onLeave();
                 }, leaveDuration);
             }
         },
         get className() {
-            return `${name} ${name}-${state.stage}`;
+            return `${name} ${name}-${stage()}`;
         },
         get stage() {
-            return state.stage;
+            return stage();
         },
     };
     transition.shouldMount = initialVisibility;

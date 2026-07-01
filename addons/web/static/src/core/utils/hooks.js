@@ -1,7 +1,17 @@
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
-import { status, onWillUnmount, t, toRaw, onMounted, onPatched, proxy } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    proxy,
+    t,
+    toRaw,
+    useEnv,
+    useScope,
+} from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 
 /**
@@ -99,7 +109,7 @@ export function useAutofocus({ refName, ref, selectAll, mobile } = {}) {
  * @param {EventListener} callback
  */
 export function useBus(bus, eventName, callback) {
-    const component = useComponent();
+    const { component } = useScope();
     useLayoutEffect(
         () => {
             const listener = callback.bind(component);
@@ -110,37 +120,35 @@ export function useBus(bus, eventName, callback) {
     );
 }
 
-// In an object so that it can be patched in tests (prevent error on blocking RPCs after tests)
-export const useServiceProtectMethodHandling = {
-    fn() {
-        return this.original();
-    },
-    mocked() {
-        // Keep them unresolved so that no crash in test due to triggered RPCs by services
-        return new Promise(() => {});
-    },
-    original() {
-        return Promise.reject(new Error("Component is destroyed"));
-    },
-};
-
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
-function _protectMethod(component, fn) {
-    return function (...args) {
-        if (status(component) === "destroyed") {
-            return useServiceProtectMethodHandling.fn();
-        }
 
-        const prom = Promise.resolve(fn.call(this, ...args));
-        const protectedProm = prom.then((result) =>
-            status(component) === "destroyed" ? new Promise(() => {}) : result
-        );
-        return Object.assign(protectedProm, {
-            abort: prom.abort,
-            cancel: prom.cancel,
-        });
+/**
+ * @param {any} reason
+ */
+function handleAbortError(reason) {
+    if (reason?.name === "AbortError") {
+        return new Promise(() => {});
+    } else {
+        throw reason;
+    }
+}
+
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {import("@odoo/owl").Scope} scope
+ * @param {T} fn
+ * @returns {T}
+ */
+function protectMethod(scope, fn) {
+    return function protectedMethod(...args) {
+        if (scope.status > 1) {
+            return useService.handleCallWhenDestroyed();
+        }
+        const promise = fn.call(this, ...args);
+        const protectedPromise = scope.until(promise).catch(handleAbortError);
+        return Object.assign(protectedPromise, promise);
     };
 }
 
@@ -154,20 +162,20 @@ export const SERVICES_METADATA = {};
  * @returns {import("services").ServiceFactories[K]}
  */
 export function useService(serviceName) {
-    const component = useComponent();
-    const { services } = component.env;
+    const { services } = useEnv();
     if (!(serviceName in services)) {
         throw new Error(`Service ${serviceName} is not available`);
     }
+    const scope = useScope();
     const service = services[serviceName];
     if (SERVICES_METADATA[serviceName]) {
-        if (service instanceof Function) {
-            return _protectMethod(component, service);
+        if (typeof service === "function") {
+            return protectMethod(scope, service);
         } else {
             const methods = SERVICES_METADATA[serviceName] ?? [];
             const result = Object.create(service);
             for (const method of methods) {
-                result[method] = _protectMethod(component, service[method]);
+                result[method] = protectMethod(scope, service[method]);
             }
             return result;
         }
@@ -177,6 +185,10 @@ export function useService(serviceName) {
     }
     return service;
 }
+
+useService.handleCallWhenDestroyed = function handleCallWhenDestroyed() {
+    return Promise.reject(new Error("Component is destroyed"));
+};
 
 // -----------------------------------------------------------------------------
 // useSpellCheck
@@ -256,10 +268,10 @@ export function useChildRef() {
  *  parent
  */
 export function useForwardRefToParent(refName) {
-    const component = useComponent();
+    const compProps = props();
     const ref = useRef(refName);
-    if (component.props[refName]) {
-        component.props[refName](ref);
+    if (compProps[refName]) {
+        compProps[refName](ref);
     }
     return ref;
 }
@@ -302,36 +314,35 @@ export function useRefListener(ref, ...listener) {
 }
 
 /**
- * Error related to the registration of a listener
- */
-class BackButtonListenerError extends Error {}
-
-/**
  * By using the back button feature the default back button behavior from the
  * app is actually overridden so it is important to keep count to restore the
  * default when no custom listener are remaining.
  */
 export class BackButtonManager {
+    _boundOnPopstate = this._onPopstate.bind(this);
+    _cleanupPending = false;
+    _listeners = new Map();
+    _trapState = {
+        trapState: true,
+        nextState: router.current,
+        skipRouteChange: true,
+    };
+
     constructor() {
-        this._listeners = new Map();
-        this._onPopstate = this._onPopstate.bind(this);
         this._performLatestBackAction = this._performLatestBackAction.bind(this);
-        this._trapState = { trapState: true, nextState: router.current, skipRouteChange: true };
-        this._cleanupPending = false;
     }
 
     /**
      * Enables the func listener, overriding default back button behavior.
      *
-     * @param {Component} listener
+     * @param {import("@odoo/owl").Scope} scope
      * @param {function} func
-     * @throws {BackButtonListenerError} if the listener has already been registered
      */
-    addListener(listener, func) {
-        if (this._listeners.has(listener)) {
-            throw new BackButtonListenerError("This listener was already registered.");
+    addListener(scope, func) {
+        if (this._listeners.has(scope)) {
+            return;
         }
-        this._listeners.set(listener, func);
+        this._listeners.set(scope, func);
         if (this._listeners.size === 1) {
             this._activate();
         }
@@ -341,14 +352,13 @@ export class BackButtonManager {
      * Disables the func listener, restoring the default back button behavior if
      * no other listeners are present.
      *
-     * @param {Component} listener
-     * @throws {BackButtonListenerError} if the listener has already been unregistered
+     * @param {import("@odoo/owl").Scope} scope
      */
-    removeListener(listener) {
-        if (!this._listeners.has(listener)) {
-            throw new BackButtonListenerError("This listener has already been unregistered.");
+    removeListener(scope) {
+        if (!this._listeners.has(scope)) {
+            return;
         }
-        this._listeners.delete(listener);
+        this._listeners.delete(scope);
         if (this._listeners.size === 0) {
             this._deactivate();
         }
@@ -356,10 +366,10 @@ export class BackButtonManager {
 
     _activate() {
         this._cleanupPending = false;
-        window.addEventListener("popstate", this._onPopstate);
-        if (!window.history.state?.trapState) {
+        window.addEventListener("popstate", this._boundOnPopstate);
+        if (!history.state?.trapState) {
             router.skipLoad = true;
-            window.history.pushState(this._trapState, "");
+            history.pushState(this._trapState, "");
         }
     }
 
@@ -369,29 +379,31 @@ export class BackButtonManager {
         // the hook, we don't destroy and recreate the trap history entry unnecessarily,
         // as this may lead to flickering and/or extra unwanted history entries.
         Promise.resolve().then(() => {
-            if (this._cleanupPending) {
-                this._cleanupPending = false;
-                window.removeEventListener("popstate", this._onPopstate);
-                if (window.history.state?.trapState) {
-                    router.skipLoad = true;
-                    window.history.back();
-                }
+            if (!this._cleanupPending) {
+                return;
+            }
+            this._cleanupPending = false;
+            window.removeEventListener("popstate", this._boundOnPopstate);
+            if (history.state?.trapState) {
+                router.skipLoad = true;
+                history.back();
             }
         });
     }
 
-    _performLatestBackAction() {
-        const [listener, func] = [...this._listeners].pop();
-        if (listener) {
-            func.apply(listener, arguments);
+    _performLatestBackAction(...args) {
+        if (!this._listeners.size) {
+            return;
         }
+        const fn = [...this._listeners.values()].at(-1);
+        fn(...args);
     }
 
     _onPopstate() {
         this._performLatestBackAction();
         if (this._listeners.size > 0) {
             router.skipLoad = true;
-            window.history.pushState(this._trapState, "");
+            history.pushState(this._trapState, "");
         }
     }
 }
@@ -407,29 +419,17 @@ export function useBackButton(handler, shouldEnable) {
     if (!isMobileOS()) {
         return;
     }
-    const component = useComponent();
-    let isRegistered = false;
 
-    const register = () => {
-        if (isRegistered) {
-            return;
-        }
-        backButtonManager.addListener(component, handler);
-        isRegistered = true;
-    };
+    const register = () => backButtonManager.addListener(scope, handler);
 
-    const unregister = () => {
-        if (!isRegistered) {
-            return;
-        }
-        backButtonManager.removeListener(component);
-        isRegistered = false;
-    };
+    const unregister = () => backButtonManager.removeListener(scope);
 
     const updateRegistration = () => {
         const isActive = shouldEnable ? shouldEnable() : true;
         isActive ? register() : unregister();
     };
+
+    const scope = useScope();
 
     onMounted(updateRegistration);
     onPatched(updateRegistration);

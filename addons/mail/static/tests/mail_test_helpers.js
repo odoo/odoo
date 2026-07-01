@@ -41,11 +41,11 @@ import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
-import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
-import { IndexedDB } from "@web/core/utils/indexed_db";
 
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import { Store as StoreService } from "@mail/core/common/store_service";
@@ -66,10 +66,10 @@ import { DiscussVoiceMetadata } from "./mock_server/mock_models/discuss_voice_me
 import { IrAttachment } from "./mock_server/mock_models/ir_attachment";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
-import { MailCallArtifact } from "./mock_server/mock_models/mail_call_artifact";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
+import { MailCallArtifact } from "./mock_server/mock_models/mail_call_artifact";
 import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
 import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
@@ -101,7 +101,12 @@ export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 mailGlobal.isInTest = true;
-useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
+patchWithCleanup(useService, {
+    handleCallWhenDestroyed() {
+        // so that RPCs after tests do not throw error
+        return new Promise(() => {});
+    },
+});
 
 addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
     const recordsByModelName = Object.entries(payload);
