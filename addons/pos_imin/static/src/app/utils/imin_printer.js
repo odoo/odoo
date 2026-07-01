@@ -94,9 +94,9 @@ export class IminPrinterAdapter extends BasePrinter {
                 return { result: false, errorCode: status.value, canRetry: true };
             }
             await this.iminPrinter.printSingleBitmap(img);
-            this.iminPrinter.printAndLineFeed();
-            this.iminPrinter.printAndLineFeed();
-            this.iminPrinter.printAndLineFeed();
+            await new Promise((resolve) => setTimeout(resolve, 200));
+            this.iminPrinter.printAndFeedPaper(100);
+            this.iminPrinter.partialCut();
             return { result: true };
         } catch (error) {
             logPosMessage(
