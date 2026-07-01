@@ -553,82 +553,77 @@ export const imageShapeDefinitions = {
                 shapes: {
                     "html_builder/devices/iphone_front_portrait": {
                         selectLabel: _t("iPhone #1"),
-                        imgSize: "0.46:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/iphone_3d_portrait_01": {
                         selectLabel: _t("iPhone #2"),
-                        imgSize: "0.46:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/iphone_3d_portrait_02": {
                         selectLabel: _t("iPhone #3"),
-                        imgSize: "0.46:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/iphone_front_landscape": {
                         selectLabel: _t("iPhone #4"),
-                        imgSize: "2.17:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/iphone_3d_landscape_01": {
                         selectLabel: _t("iPhone #5"),
-                        imgSize: "2.17:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/iphone_3d_landscape_02": {
                         selectLabel: _t("iPhone #6"),
-                        imgSize: "2.17:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_front_portrait": {
                         selectLabel: _t("Galaxy S #1"),
-                        imgSize: "0.45:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_3d_portrait_01": {
                         selectLabel: _t("Galaxy S #2"),
-                        imgSize: "0.45:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_3d_portrait_02": {
                         selectLabel: _t("Galaxy S #3"),
-                        imgSize: "0.45:1",
+                        imgSize: "6:13",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_front_landscape": {
                         selectLabel: _t("Galaxy S #4"),
-                        imgSize: "2.22:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_3d_landscape_01": {
                         selectLabel: _t("Galaxy S #5"),
-                        imgSize: "2.22:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/galaxy_3d_landscape_02": {
                         selectLabel: _t("Galaxy S #6"),
-                        imgSize: "2.22:1",
-                        transform: false,
-                    },
-                    "html_builder/devices/galaxy_front_portrait_half": {
-                        selectLabel: _t("Half Galaxy S"),
-                        imgSize: "0.45:1",
+                        imgSize: "13:6",
                         transform: false,
                     },
                     "html_builder/devices/ipad_front_portrait": {
                         selectLabel: _t("iPad #1"),
-                        imgSize: "0.75:1",
+                        imgSize: "3:4",
                         transform: false,
                     },
                     "html_builder/devices/ipad_3d_portrait_01": {
                         selectLabel: _t("iPad #2"),
-                        imgSize: "0.75:1",
+                        imgSize: "3:4",
                         transform: false,
                     },
                     "html_builder/devices/ipad_3d_portrait_02": {
                         selectLabel: _t("iPad #3"),
-                        imgSize: "0.75:1",
+                        imgSize: "3:4",
                         transform: false,
                     },
                     "html_builder/devices/ipad_front_landscape": {
@@ -663,17 +658,32 @@ export const imageShapeDefinitions = {
                     },
                     "html_builder/devices/macbook_front": {
                         selectLabel: _t("MacBook #1"),
-                        imgSize: "1.6:1",
+                        imgSize: "16:10",
                         transform: false,
                     },
                     "html_builder/devices/macbook_3d_01": {
                         selectLabel: _t("MacBook #2"),
-                        imgSize: "1.6:1",
+                        imgSize: "16:10",
                         transform: false,
                     },
                     "html_builder/devices/macbook_3d_02": {
                         selectLabel: _t("MacBook #3"),
-                        imgSize: "1.6:1",
+                        imgSize: "16:10",
+                        transform: false,
+                    },
+                    "html_builder/devices/iphone_front_portrait_half": {
+                        selectLabel: _t("Half iPhone"),
+                        imgSize: "6:13",
+                        transform: false,
+                    },
+                    "html_builder/devices/galaxy_front_portrait_half": {
+                        selectLabel: _t("Half Galaxy S"),
+                        imgSize: "6:13",
+                        transform: false,
+                    },
+                    "html_builder/devices/macbook_front_half": {
+                        selectLabel: _t("Half MacBook"),
+                        imgSize: "16:10",
                         transform: false,
                     },
                     "html_builder/devices/browser_01": {
