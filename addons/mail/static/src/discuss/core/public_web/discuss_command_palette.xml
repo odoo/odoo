@@ -25,7 +25,7 @@
     </t>
 
     <t t-name="mail.CreateChannelDialog">
-        <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
+        <Dialog closeOnClickAway="true" size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
             <div class="d-flex flex-column" t-on-keydown="this.onKeydown">
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
                 <input type="text" class="form-control" t-att-class="{ 'is-invalid': this.state.isInvalid }" placeholder="Channel name" t-model.proxy="this.state.name" tabindex="1"/>

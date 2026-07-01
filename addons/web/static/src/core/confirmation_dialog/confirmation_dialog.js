@@ -15,6 +15,7 @@ const isValidTitle = (m) =>
 
 export const confirmationDialogProps = {
     close: t.function(),
+    closeOnClickAway: t.boolean().optional(),
     title: t.customValidator(t.any(), isValidTitle).optional(_t("Confirmation")),
     size: t.string().optional("sm"),
     body: t.string().optional(),

@@ -234,6 +234,7 @@ export class ChannelMember extends Record {
                           { member_name: this.name }
                       ),
                 cancel: () => {},
+                closeOnClickAway: true,
                 confirm: () => this.setChannelRoleRpc(role),
             });
         } else {

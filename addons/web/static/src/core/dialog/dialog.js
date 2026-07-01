@@ -38,6 +38,7 @@ const useDialogDraggable = makeDraggableHook({
 });
 
 export const dialogProps = {
+    closeOnClickAway: t.boolean().optional(),
     contentClass: t.string().optional(""),
     bodyClass: t.string().optional(""),
     fullscreen: t.boolean().optional(false),
@@ -105,6 +106,18 @@ export class Dialog extends Component {
             });
             const throttledResize = throttleForAnimation(this.onResize.bind(this));
             useListener(window, "resize", throttledResize);
+        }
+        if (this.props.closeOnClickAway) {
+            useListener(window, "click", (ev) => {
+                const modalContent = this.modalRef.el?.querySelector(".modal-content");
+                if (!modalContent) {
+                    return;
+                }
+                const target = ev.composedPath()[0];
+                if (target && !modalContent.contains(target)) {
+                    this.data.close();
+                }
+            });
         }
         onWillDestroy(() => {
             if (this.env.isSmall) {

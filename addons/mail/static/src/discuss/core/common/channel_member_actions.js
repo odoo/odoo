@@ -66,6 +66,7 @@ registerChannelMemberAction("remove-member", {
         const moreInfo = _t("Don't worry, they can rejoin later or be invited back at any time.");
         store.env.services.dialog.add(ConfirmationDialog, {
             body: markup`<p>${dialogTitle}</p><span class="text-muted small">${moreInfo}</span>`,
+            closeOnClickAway: true,
             confirmLabel: isMeeting ? _t("Remove") : _t("Remove Member"),
             cancel: () => {},
             confirm: () => {

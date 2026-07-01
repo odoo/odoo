@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.ConfirmationDialog">
-    <Dialog size="this.props.size" title="this.props.title" modalRef="this.modalRef">
+    <Dialog closeOnClickAway="this.props.closeOnClickAway" size="this.props.size" title="this.props.title" modalRef="this.modalRef">
       <p t-out="this.props.body" class="text-prewrap mb-0"/>
       <t t-set-slot="footer">
         <button class="btn" t-att-class="this.props.confirmClass" t-on-click="this._confirm" t-out="this.props.confirmLabel" data-hotkey="q" data-available-offline=""/>

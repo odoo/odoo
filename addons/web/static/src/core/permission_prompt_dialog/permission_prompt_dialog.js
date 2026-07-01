@@ -9,6 +9,7 @@ export class PermissionPromptDialog extends Component {
         "title?",
         "contentClass?",
         "close?",
+        "closeOnClickAway?",
         "slots?",
         "size?",
         "illustrationPosition?",
