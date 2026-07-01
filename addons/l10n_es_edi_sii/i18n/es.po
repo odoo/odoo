@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:13+0000\n"
+"POT-Creation-Date: 2026-06-30 01:37+0000\n"
 "PO-Revision-Date: 2026-06-13 11:31+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master-l10n/"
@@ -41,6 +41,15 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__res_company__l10n_es_sii_tax_agency__aeat
 msgid "Agencia Tributaria española"
 msgstr "Agencia Tributaria española"
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_sii_refund_reason
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_move__l10n_es_sii_refund_reason
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_move_reversal__l10n_es_sii_refund_reason
+msgid ""
+"BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
+"Valor Añadido. Artículo 80. Modificación de la base imponible."
+msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_csv
@@ -133,6 +142,7 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_certificate_certificate__display_name
@@ -189,6 +199,7 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_certificate_certificate__id
@@ -213,6 +224,22 @@ msgid "Invalid invoice configuration:"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_reversal__l10n_es_sii_refund_reason
+msgid "Invoice Refund Reason"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_sii_refund_reason
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_sii_refund_reason
+msgid "Invoice Refund Reason Code (SII)"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_reversal__l10n_es_edi_is_required
+msgid "Is SII required for this reversal"
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_is_required
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_is_required
 msgid "Is the Spanish EDI needed"
@@ -228,6 +255,11 @@ msgstr "Nombre del archivo JSON"
 #: model:ir.model,name:l10n_es_edi_sii.model_account_move
 msgid "Journal Entry"
 msgstr "Asiento contable"
+
+#. module: l10n_es_edi_sii
+#: model:ir.model,name:l10n_es_edi_sii.model_account_move_reversal
+msgid "Journal Entry Reversal"
+msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_company__l10n_es_sii_certificate_ids
@@ -305,6 +337,48 @@ msgstr ""
 "oficial."
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_sii_refund_reason__r1
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move_reversal__l10n_es_sii_refund_reason__r1
+msgid "R1: Art. 80.1, 80.2, 80.6 and rights founded error"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_sii_refund_reason__r2
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move_reversal__l10n_es_sii_refund_reason__r2
+msgid "R2: Art. 80.3"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_sii_refund_reason__r3
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move_reversal__l10n_es_sii_refund_reason__r3
+msgid "R3: Art. 80.4"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_sii_refund_reason__r4
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move_reversal__l10n_es_sii_refund_reason__r4
+msgid "R4: Art. 80 - other"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_sii_refund_reason__r5
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move_reversal__l10n_es_sii_refund_reason__r5
+msgid "R5: Factura rectificativa en facturas simplificadas"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Refund reason cannot be R5 for non-simplified invoices (SII)."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Refund reason must be R5 for simplified invoices (SII)."
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_registration_date
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_registration_date
 msgid "Registration Date"
@@ -333,6 +407,12 @@ msgstr ""
 #, fuzzy
 msgid "Response"
 msgstr "Respuesta"
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/wizard/account_move_reversal.py:0
+msgid "Reversals mixing invoices with and without SII are not allowed."
+msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__certificate_certificate__scope__sii
@@ -541,6 +621,12 @@ msgstr "Utilizar el entorno de prueba para SII"
 #. odoo-python
 #: code:addons/l10n_es_edi_sii/models/account_move.py:0
 msgid "VAT number is missing on company %s."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "You must set a Refund Reason for this credit note (SII)."
 msgstr ""
 
 #. module: l10n_es_edi_sii

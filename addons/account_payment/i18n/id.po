@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2026-01-24 12:15+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -336,16 +336,6 @@ msgstr ""
 "memiliki mata uang yang sama."
 
 #. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"Pada mode testing, pembayaran palsu akan diproses melalui antarmuka "
-"pembayaran testing.\n"
-"Mode ini disarankan saat sedang set up provider."
-
-#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
 msgstr "Invoice Online Payment"
@@ -632,11 +622,6 @@ msgid "Source Payment"
 msgstr "Sumber Pembayaran"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "Status"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -771,13 +756,9 @@ msgstr "Batalkan Transaksi"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Anda tidak dapat menghapus metode pembayaran yang terkait provider dalam "
-"status enabled atau testing.\n"
-"Provider yang terhubung: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -793,12 +774,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Anda harus pertama-tama menonaktifkan penyedia pembayaran sebelum "
-"menghapusnya dari jurnal.\n"
-"Provider yang terhubung: %s"
 
 #. module: account_payment
 #. odoo-javascript

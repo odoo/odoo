@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:41+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -64,6 +64,7 @@ msgid "Custom Mode"
 msgstr "사용자 지정 모드"
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
 msgid "Display Name"
@@ -86,6 +87,7 @@ msgid "Finalize your payment"
 msgstr "결제 완료하기"
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
 msgid "ID"
@@ -100,6 +102,17 @@ msgstr "또는"
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
 msgstr "사용자 지정 공급업체만 사용자 지정 모드를 가질 수 있습니다."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__pay_on_invoice
+#: model:payment.method,name:payment_custom.payment_method_pay_on_invoice
+msgid "Pay on Invoice"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_method
+msgid "Payment Method"
+msgstr ""
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider

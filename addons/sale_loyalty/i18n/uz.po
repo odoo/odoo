@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,6 +30,18 @@ msgstr ""
 #, fuzzy
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr "- Quyidagi soliqlar qo‘llaniladigan mahsulotlar bo‘yicha: %(taxes)s"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -49,16 +61,6 @@ msgstr "<strong>Sodiqlik kartasi</strong>"
 #, fuzzy
 msgid "A better global discount is already applied."
 msgstr "Yaxshiroq umumiy chegirma allaqachon qo‘llanilgan."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-#, fuzzy
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Mukofotni olish uchun kamida %(amount)s %(currency)s miqdorida xarid qilish "
-"kerak"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -271,13 +273,6 @@ msgid "Issued"
 msgstr "Chiqarilgan"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-#, fuzzy
-msgid "Issued :"
-msgstr "Chiqarilgan sana:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
 msgid "Journal Item"
 msgstr ""
@@ -299,23 +294,10 @@ msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-#, fuzzy
-msgid "Loyalty Card :"
-msgstr "Sodiqlik kartasi:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 #, fuzzy
 msgid "Loyalty Coupon"
 msgstr "Sodiqlik kuponi"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-#, fuzzy
-msgid "Loyalty Data"
-msgstr "Sodiqlik ma'lumotlari"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -660,6 +642,14 @@ msgid "This promo code is already applied."
 msgstr "Bu promo-kod allaqachon qo‘llanilgan."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 #, fuzzy
 msgid "Update current promotional lines and select new rewards if applicable."
@@ -672,13 +662,6 @@ msgstr ""
 #, fuzzy
 msgid "Used"
 msgstr "Ishlatilgan"
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-#, fuzzy
-msgid "Used :"
-msgstr "Ishlatildi:"
 
 #. module: sale_loyalty
 #. odoo-python

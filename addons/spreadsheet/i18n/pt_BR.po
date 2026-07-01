@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-05-08 15:35+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -78,6 +78,24 @@ msgstr "% do total da linha"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "%(count)s matches in %(sheetName)s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "%(count)s matches in all sheets"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "%(count)s matches in range %(range)s of %(sheetName)s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(hour)s AM"
 msgstr "%(hour)s AM"
 
@@ -98,18 +116,6 @@ msgstr "%(hour_number)sh"
 #: code:addons/spreadsheet/static/src/list/plugins/list_ui_plugin.js:0
 msgid "%(list_name)s (List #%(list_id)s)"
 msgstr "%(list_name)s (Lista Nº%(list_id)s)"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s correspondências em %(sheetName)s"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s correspondências no intervalo %(range)s de %(sheetName)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -280,12 +286,6 @@ msgstr "%s não é uma semana válida (deve ser um número entre 0 e 53)"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "%s matches in all sheets"
-msgstr "%s correspondências em todas as planilhas"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "'${str}'"
 msgstr "'${str}'"
 
@@ -384,6 +384,24 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "1 column"
 msgstr "1 coluna"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "1 match in %(sheetName)s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "1 match in all sheets"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "1 match in range %(range)s of %(sheetName)s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -784,7 +802,7 @@ msgstr "Juros acumulados de títulos pagos no vencimento."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 msgid "Active Filters"
 msgstr "Filtros ativos"
 
@@ -945,6 +963,13 @@ msgid ""
 msgstr ""
 "Todos os intervalos em [[FUNCTION_NAME]] devem ter o mesmo número de colunas "
 "( %s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"All ranges in [[FUNCTION_NAME]] must have the same number of rows (got %s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1373,8 +1398,8 @@ msgstr "Pelo menos um delimitador deve ser fornecido."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "At least one measure and/or dimension is not correct."
-msgstr "Pelo menos uma medida e/ou dimensão não está correta."
+msgid "At least one measure/dimension and/or filter is not correct."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1399,6 +1424,12 @@ msgstr "Ajuste automático do resultado da fórmula"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Automatic"
 msgstr "Automático"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Automatic evaluation is disabled. Press F9 to recalculate."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1832,6 +1863,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Calculation"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Calendar"
 msgstr "Calendário"
 
@@ -2036,8 +2073,14 @@ msgstr "Raio central"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Change color"
-msgstr "Alterar cor"
+msgid "Change grid color"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Change tab color"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3766,6 +3809,12 @@ msgstr "Não mude para a depreciação linear"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Domain"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Don't match to end (default)"
 msgstr "Não alinhar ao final (padrão)"
@@ -3779,8 +3828,6 @@ msgstr "Rosquinha"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.js:0
-#: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Download"
 msgstr "Baixar"
 
@@ -3898,6 +3945,18 @@ msgstr "Energia"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Engineering"
 msgstr "Engenharia"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
+msgid "Enter a value"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
+msgid "Enter one or several values"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4202,12 +4261,6 @@ msgstr "Filtrar por valores"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
-msgid "Filters"
-msgstr "Filtros"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Financial"
 msgstr "Financeiro"
@@ -4239,8 +4292,8 @@ msgstr "Primeiro código de moeda."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "First day of the month preceding a date."
-msgstr "Primeiro dia do mês anterior a uma data."
+msgid "First day of the month a date falls in."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5181,6 +5234,12 @@ msgstr "Incluir células vazias (padrão)"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Include hidden results"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Incompatible units of measure ('%s' vs '%s')"
 msgstr "Unidades de medida incompatíveis ('%s' vs '%s')"
@@ -5384,6 +5443,12 @@ msgstr "Número inteiro"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Interest rate of an annuity investment."
 msgstr "Taxa de juros de um investimento em anuidade."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_spreadsheet/odoo_menu_fill.js:0
+msgid "Internal link"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5774,8 +5839,8 @@ msgstr "Último dia de um mês antes ou depois de uma data."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Last day of the month following a date."
-msgstr "Último dia do mês seguinte a uma data."
+msgid "Last day of the month a date falls in."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6022,6 +6087,18 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Manual"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Manual calculation"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "March"
 msgstr "Março"
 
@@ -6052,6 +6129,12 @@ msgid ""
 msgstr ""
 "As correspondências não podem ser substituídas, pois fazem parte de uma "
 "fórmula ou estão dentro de uma planilha bloqueada"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Matches in the following hidden sheets:"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6177,7 +6260,7 @@ msgstr "Médio"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/ir_ui_menu/index.js:0
+#: code:addons/spreadsheet/static/src/ir_ui_menu/spreadsheet_link_service.js:0
 msgid "Menu %s not found. You may not have the required access rights."
 msgstr ""
 "Menu %s não encontrado. Talvez você não tenha os direitos de acesso "
@@ -6596,6 +6679,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No legend available"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "No match found in DGET evaluation."
 msgstr ""
 
 #. module: spreadsheet
@@ -7597,6 +7686,12 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Re-enable"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Re-insert dynamic pivot"
 msgstr "Reinserir o pivô dinâmico"
@@ -8343,6 +8438,12 @@ msgstr "Selecionar todos"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
+msgid "Select one or several criteria"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Selected cells (%s)"
 msgstr ""
@@ -8464,12 +8565,6 @@ msgstr "Exibir"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
-msgid "Show Filters"
-msgstr "Mostrar filtros"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Show a warning"
 msgstr "Mostrar um aviso"
@@ -8545,6 +8640,12 @@ msgstr "Mostrar divisor"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show subtotals at the end of series"
 msgstr "Mostrar subtotais no final da série"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Show totals"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8645,6 +8746,12 @@ msgstr "Ordenar pivô"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Sort range"
 msgstr "Intervalo de ordenação"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Sorted by measure"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10569,6 +10676,12 @@ msgstr "O last_period (%s) deve ser estritamente positivo."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The length (%s) must be positive or zero."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The length of the segment to extract."
 msgstr "O comprimento do segmento a ser extraído."
 
@@ -11265,6 +11378,12 @@ msgstr "O número."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number_of_characters (%s) must be positive or null."
 msgstr "O number_of_characters (%s) deve ser positivo ou nulo."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The number_of_characters (%s) must be positive or zero."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13029,6 +13148,12 @@ msgstr "O fim de semana deve ser diferente de '1111111'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The window is too small to display multiple side panels."
 msgstr "A janela é muito pequena para exibir vários painéis laterais."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The wrap_count (%s) must be strictly positive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14851,6 +14976,24 @@ msgstr "search_mode deve ser um valor entre [-1, 1, -2, 2]."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "showing %s items"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "showing 1 item"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "showing all items"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "sort_column${"
 msgstr "sort_column${"
 
@@ -14903,12 +15046,6 @@ msgstr "hoje"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "tomorrow"
 msgstr "amanhã"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
-msgid "x"
-msgstr "x"
 
 #. module: spreadsheet
 #. odoo-javascript
