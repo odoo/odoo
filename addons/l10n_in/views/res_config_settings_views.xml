@@ -35,12 +35,16 @@
                         </setting>
                         <setting string="Registered Under GST"
                                  company_dependent="1"
-                                 help="Enable this if you have GST number except composition scheme.">
+                                 help="Enable this if you have GST number">
                             <field name="l10n_in_is_gst_registered"/>
                             <div invisible="not l10n_in_is_gst_registered">
                                 <div id="india_gst_number" class="row">
                                     <label string="GST Number" for="l10n_in_gstin" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_in_gstin" required="l10n_in_is_gst_registered"/>
+                                    <label string="Registration Type" for="l10n_in_gst_registration_type" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_in_gst_registration_type" required="l10n_in_is_gst_registered"/>
+                                    <label string="Composition Scheme Tax Rate" for="l10n_in_composition_scheme_tax_rate" class="col-lg-4 o_light_label" invisible="l10n_in_gst_registration_type != 'composition'"/>
+                                    <field name="l10n_in_composition_scheme_tax_rate" required="l10n_in_gst_registration_type == 'composition'" invisible="l10n_in_gst_registration_type != 'composition'"/>
                                 </div>
                             </div>
                         </setting>
