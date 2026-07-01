@@ -731,6 +731,7 @@ export class PosOrder extends PosOrderAccounting {
         return {
             line: line,
             data: {
+                uuid: line.uuid,
                 basic_name: line.order_id?.config_id.module_pos_restaurant
                     ? line.product_id.name
                     : line.product_id.display_name,
@@ -861,6 +862,26 @@ export class PosOrder extends PosOrderAccounting {
         return changes;
     }
 
+    getOrCreatePrepOrder(line, prepOrder) {
+        return (
+            prepOrder ||
+            this.models["pos.prep.order"].create({
+                pos_order_id: this,
+            })
+        );
+    }
+
+    getOrCreatePrepOrderLine(line, prepOrder, data, childrenByParentUuid) {
+        return this.models["pos.prep.line"].create({
+            prep_order_id: prepOrder,
+            pos_order_line_id: line,
+            product_id: line.getProduct().id,
+            quantity: data.quantity,
+            cancelled: 0,
+            attribute_value_ids: line.attribute_value_ids,
+        });
+    }
+
     /**
      * Update the prep order group according to the given order changes.
      * Used after printing the preparation ticket to update the prep lines.
@@ -874,23 +895,32 @@ export class PosOrder extends PosOrderAccounting {
             const changes = this.preparationChanges;
             const allChanges = [...changes.addedQuantity, ...changes.removedQuantity];
 
+            // Build a map of combo_parent_uuid -> [child changes] for children with positive diffs.
+            // This avoids O(n²) scanning inside getOrCreatePrepOrderLine when processing combo parents.
+            const childrenByParentUuid = new Map();
+            for (const change of allChanges) {
+                const parentUuid = change.data.combo_parent_uuid;
+                if (parentUuid) {
+                    if (!childrenByParentUuid.has(parentUuid)) {
+                        childrenByParentUuid.set(parentUuid, []);
+                    }
+                    childrenByParentUuid.get(parentUuid).push(change);
+                }
+            }
+
             let prepOrder = null;
             for (const change of allChanges) {
                 const line = change.line;
                 const data = change.data;
-
                 if (data.quantity > 0) {
-                    const order = (prepOrder ||= this.models["pos.prep.order"].create({
-                        pos_order_id: this,
-                    }));
-                    this.models["pos.prep.line"].create({
-                        prep_order_id: order,
-                        pos_order_line_id: line,
-                        product_id: line.getProduct().id,
-                        quantity: data.quantity,
-                        cancelled: 0,
-                        attribute_value_ids: line.attribute_value_ids,
-                    });
+                    prepOrder = this.getOrCreatePrepOrder(line, prepOrder);
+                    // When isSplitPerProduct is enabled, skip combo children here, they are
+                    // handled inline by their parent's getOrCreatePrepOrderLine via
+                    // childrenByParentUuid. When isSplitPerProduct is disabled, each line
+                    // (including combo children) must be processed individually.
+                    if (!this.isSplitPerProduct || !line.combo_parent_id) {
+                        this.getOrCreatePrepOrderLine(line, prepOrder, data, childrenByParentUuid);
+                    }
                 } else {
                     let toCancel = -data.quantity;
                     let prepLinesToCancel;
