@@ -1,43 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve" >
     <t t-name="pos_self_order.ComboPage">
-        <div class="o_self_combo_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
-             <t t-set="productList" t-value="this.products"/>
-
-            <!-- Header -->
-            <div class="o_self_combo_page_header text-bg-primary"  t-att-class="{'o_self_shadow_top': this.scrollShadow.top}">
-                <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
-                    <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="() => this.goBack()">
-                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
-                        <span  t-att-class="{'invisible': this.state.showStickyTitle}">Discard</span>
-                    </button>
-                    <h2 class="o_self_combo_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !this.state.showStickyTitle}"   >
-                         <t t-out="this.currentCombo.name" />
-                    </h2>
-                </div>
-            </div>
-
-            <!-- Scroll -->
-            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-custom-ref="scrollContainer">
-               <div class="flex-grow-1 pb-4">
-                <div class="py-3 text-bg-primary">
-                    <div class="container o_self_container ">
-                         <!-- Name & Image -->
-                        <div class="d-flex flex-column align-items-center">
-                            <h1 class="mt-kiosk-p-3 mb-3" t-out="this.currentCombo.name" t-ref="this.productNameRef"/>
-                            <div t-if="this.props.productTemplate.showProductImageInSelf" class="o_self_combo_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
-                                <img class="rounded-4 object-fit-scale" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+        <ProductInterface class="'o_self_combo_page'" productTemplate="this.props.productTemplate" goBack.bind="this.goBack">
+            <t t-set-slot="content">
                 <div class="container o_self_container" t-att-class="{'o_self_combo_page_body': this.props.productTemplate.showProductImageInSelf, 'confirmation_container': this.state.showResume}">
                     <!-- Stepper -->
                     <div t-if="!this.state.showResume" class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5"  id="k-combo-scroll-target" >
                         <Stepper steps="this.comboChoices" selectedStep="this.selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
                     </div>
-
                     <!-- Product selection -->
                     <div class="d-flex o_self_fade" t-if="!this.isAttributeSelection() and !this.state.showResume">
                         <div class="d-flex flex-column w-100">
@@ -46,7 +16,8 @@
                                 <h4 class="text-muted"><t t-out="this.selectedChoice.qty_free"/> included &amp; <t t-out="this.selfOrder.formatMonetary(this.selectedChoice.base_price)"/> per extra unit</h4>
                             </div>
                             <div class="o_self_combo_products row  justify-content-center" t-att-class="{ 'small-item-nb': this.comboItems.length &lt; 3}">
-                                <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': this.comboItems.length &lt; 4}" t-foreach="this.comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
+                                <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': this.comboItems.length &lt; 4}"
+                                    t-foreach="this.comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
                                     <t t-set="itemState" t-value="this.getItemState(comboItem)"/>
                                     <t t-set="extraPrice" t-value="comboItem.extra_price + (this.selectedChoice.qty_free == 0 ? this.selectedChoice.base_price : 0)"/>
                                     <ProductCard
@@ -84,7 +55,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Variant / Attribute selection -->
                     <div t-elif="!this.state.showResume" class="d-flex flex-column rounded-4 o_self_fade">
                         <t t-set="product" t-value="this.currentChoiceState.displayAttributesOfItem.product_id"/>
@@ -106,7 +76,6 @@
                         </div>
                         <t t-if="this.hasMissingAttributeValues(this.currentChoiceState.displayAttributesOfItem) and this.shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
                     </div>
-
                     <!-- Confirmation -->
                     <div t-else="" class="o_self_combo_confirmation d-flex flex-column o_self_fade" id="k-combo-scroll-target">
                         <h2 class="mb-3">Validate your selection</h2>
@@ -141,45 +110,40 @@
                                 </t>
                             </t>
                         </div>
-
                     </div>
-                   </div>
                 </div>
-
-               <div t-if="this.state.showResume and this.selfOrder.ordering" class="container o_self_container">
-                   <div class="d-flex justify-content-end mt-auto pb-3">
-                       <t t-call="pos_self_order.QuantityWidget" />
+                <div t-if="this.state.showResume and this.selfOrder.ordering" class="container o_self_container pt-4">
+                    <div class="d-flex justify-content-end mt-auto pb-3">
+                        <t t-call="pos_self_order.QuantityWidget" />
                     </div>
-               </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="o_self_footer bg-white border-top py-3" t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
-                <div class="container o_self_container ">
-                    <div t-if="this.isArchivedCombination()" class="alert alert-warning text-center mb-3">
-                            This combination does not exist.
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
-                        <button class="btn btn-lg btn-secondary" t-on-click="!this.isBackVisible() ? this.goBack : this.back">
-                            <i class="oi oi-chevron-left d-md-none" />
-                            <span class="d-none d-md-inline">Back</span>
-                        </button>
-                        <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
-                            <div class="ms-auto text-start">
-                                <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Combo</h4>
-                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-out="this.selfOrder.formatMonetary(this.getComboPrice())" />
-                            </div>
-                            <button t-if="!this.state.showResume" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="this.next" t-att-disabled="!this.isNextEnabled()">
-                                <span><t t-if="!this.selectedChoice.qty_free and !this.hasSelectedItems" >No, thanks</t><t t-else="">Next</t></span>
-                            </button>
-                            <button t-elif="this.selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="this.next" t-att-disabled="!this.isNextEnabled()">
-                                <span >Add to cart</span>
-                            </button>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <div t-if="this.isArchivedCombination()" class="alert alert-warning text-center mb-3">
+                    This combination does not exist.
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
+                    <button class="btn btn-lg btn-secondary" t-on-click="!this.isBackVisible() ? this.goBack : this.back">
+                        <i class="oi oi-chevron-left d-md-none" />
+                        <span class="d-none d-md-inline">Back</span>
+                    </button>
+                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
+                        <div class="ms-auto text-start">
+                            <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Combo</h4>
+                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-out="this.selfOrder.formatMonetary(this.getComboPrice())" />
                         </div>
+                        <button t-if="!this.state.showResume" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="this.next" t-att-disabled="!this.isNextEnabled()">
+                            <span>
+                                <t t-if="!this.selectedChoice.qty_free and !this.hasSelectedItems" >No, thanks</t>
+                                <t t-else="">Next</t>
+                            </span>
+                        </button>
+                        <button t-elif="this.selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="this.next" t-att-disabled="!this.isNextEnabled()">
+                            <span >Add to cart</span>
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
-
+            </t>
+        </ProductInterface>
     </t>
 </templates>

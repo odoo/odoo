@@ -1,20 +1,12 @@
 .o_self_combo_page {
-  --combo-image-offset: 5rem;
-
-  .o_self_combo_image {
-    margin-bottom: calc(-1.25 * var(--combo-image-offset));
-    max-width: 250px;
-  }
-
   .o_self_combo_page_body {
-    padding-top: calc(var(--combo-image-offset) + 1rem);
+    padding-top: calc(var(--product-image-offset) + 1rem);
   }
 
   .o_self_combo_products {
     --gutter-y: 0.75rem;
     --gutter-x: 0.75rem;
   }
-
 
   .o_self_variant_cover {
     width: 10%;
@@ -24,25 +16,15 @@
     width: 90%;
   }
 
-  .o_self_combo_page_header {
-    .o_self_combo_name {
-      left: 3.2rem;
-      right: 3.2rem;
-    }
-  }
-
   .o_self_combo_confirmation {
     .o_self_product_image {
       max-width: 120px !important;
+      margin-bottom: 0;
     }
   }
 
 
   @include media-breakpoint-down(sm) {
-    .o_self_combo_image {
-      max-width: 200px;
-    }
-
     .o_self_combo_confirmation, .o_self_combo_page_body {
       .o_self_product_image {
         max-width: 90px  !important;
@@ -54,12 +36,12 @@
 
   @include media-breakpoint-only(sm) {
 
-    .o_self_combo_image {
+    .o_self_product_image {
       max-width: 200px;
     }
 
     .o_self_combo_page_body {
-      .o_self_product_image {
+      .product_img {
         max-width: 100px;
       }
     }
@@ -89,11 +71,11 @@
 
 @include o-kiosk-portrait() {
   .o_self_combo_page {
-    .o_self_product_image {
+    .product_img {
       max-width: none;
     }
 
-    .o_self_combo_image {
+    .o_self_product_image {
       max-width: 380px;
     }
   }
