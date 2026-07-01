@@ -23,6 +23,7 @@
         'data/mail_templates.xml',
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
+        'data/stock_quant_data.xml',
         'data/stock_sequence_data.xml',
         'data/stock_traceability_report_data.xml',
 
