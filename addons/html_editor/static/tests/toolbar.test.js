@@ -2026,22 +2026,45 @@ describe("toolbar open and close on user interaction", () => {
         });
 
         test("toolbar should not open between double and triple click", async () => {
-            const { el } = await setupEditor("<p>test text</p>");
+            // Track toolbar updates to assert debouncing behavior.
+            patchWithCleanup(ToolbarPlugin.prototype, {
+                triggerDebouncedUpdateToolbar(...args) {
+                    expect.step("triggerDebouncedUpdateToolbar");
+                    return super.triggerDebouncedUpdateToolbar(...args);
+                },
+                _updateToolbar(...args) {
+                    expect.step("updateToolbar");
+                    return super._updateToolbar(...args);
+                },
+            });
+            const { el } = await setupEditor("<p>test text[]</p>");
             const p = el.firstElementChild;
 
-            // Double click
+            // setupEditor with a selection marker triggers an initial updateToolbar
+            // via selectionchange_handlers. Clear these setup steps before the test.
+            // Since _updateToolbar is called asynchronously by the debounce(..., 0)
+            // wrapper, wait for it to complete.
+            await tick();
+            expect.verifySteps(["updateToolbar"]);
+
+            // Double click: first click is synchronous, second schedules debounced update
             await firstClick(p);
             await secondClick(p);
             expect(getContent(el)).toBe("<p>[test] text</p>");
-            await advanceTime(100);
-            // Toolbar is not open yet, waiting for a possible third click
-            expect(".o-we-toolbar").toHaveCount(0);
+            expect.verifySteps(["updateToolbar", "triggerDebouncedUpdateToolbar"]);
 
-            // Third click
+            // Debounced update is not executed yet
+            await advanceTime(100);
+            expect.verifySteps([]);
+
+            // Third click: cancels scheduled update and schedules a new one
             await thirdClick(p);
             expect(getContent(el)).toBe("<p>[test text]</p>");
+            expect.verifySteps(["triggerDebouncedUpdateToolbar"]);
+
+            // Scheduled update is executed after the full debounce delay
             await advanceTime(DELAY_TOOLBAR_OPEN);
-            await expectElementCount(".o-we-toolbar", 1);
+            expect.verifySteps(["updateToolbar"]);
         });
 
         test("toolbar should not open after triple click while mouse is down", async () => {
