@@ -7,7 +7,7 @@ from collections.abc import Iterator
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, OrderedSet, frozendict
+from odoo.tools import OrderedSet, frozendict
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.translate import _lt
 
@@ -82,43 +82,38 @@ class IrAccess(models.Model):
 
     kind = fields.Selection(
         [('permission', 'Permission'), ('restriction', 'Restriction')],
-        compute='_compute_kind', compute_sql='_compute_sql_kind', compute_sudo=True,
+        compute='_compute_kind', compute_sudo=True,
         help="Whether this record adds (permission) or restricts (restriction) access to the given model",
     )
     is_standard = fields.Boolean(
         compute='_compute_is_standard',
-        compute_sql='_compute_sql_is_standard',
         compute_sudo=True,
         help="Whether the access is defined by a module",
     )
     for_read = fields.Boolean(
         string="Read",
-        compute=lambda self: self._compute_for('read'), depends=['operation'],
-        compute_sql=lambda self, table: self._compute_sql_for(table, 'read'),
+        compute='_compute_for_read',
         compute_sudo=False,
         inverse='_inverse_for_operations',
         help="Whether this access record applies for operation 'read'",
     )
     for_write = fields.Boolean(
         string="Update",
-        compute=lambda self: self._compute_for('write'), depends=['operation'],
-        compute_sql=lambda self, table: self._compute_sql_for(table, 'write'),
+        compute='_compute_for_write',
         compute_sudo=False,
         inverse='_inverse_for_operations',
         help="Whether this access record applies for operation 'write'",
     )
     for_create = fields.Boolean(
         string="Create",
-        compute=lambda self: self._compute_for('create'), depends=['operation'],
-        compute_sql=lambda self, table: self._compute_sql_for(table, 'create'),
+        compute='_compute_for_create',
         compute_sudo=False,
         inverse='_inverse_for_operations',
         help="Whether this access record applies for operation 'create'",
     )
     for_unlink = fields.Boolean(
         string="Delete",
-        compute=lambda self: self._compute_for('unlink'), depends=['operation'],
-        compute_sql=lambda self, table: self._compute_sql_for(table, 'unlink'),
+        compute='_compute_for_unlink',
         compute_sudo=False,
         inverse='_inverse_for_operations',
         help="Whether this access record applies for operation 'unlink'",
@@ -130,12 +125,6 @@ class IrAccess(models.Model):
         for access in self:
             access.kind = 'permission' if access.group_id else 'restriction'
 
-    def _compute_sql_kind(self, table):
-        return SQL(
-            "CASE WHEN %s IS NULL THEN %s ELSE %s END",
-            table.group_id, 'restriction', 'permission',
-        )
-
     def _compute_is_standard(self):
         xids = self._get_external_ids()
         for access in self:
@@ -144,28 +133,33 @@ class IrAccess(models.Model):
                 for xid in xids[access.id]
             )
 
-    def _compute_sql_is_standard(self, table):
-        return SQL(
-            """ EXISTS (
-                    SELECT
-                    FROM ir_model_data d
-                    WHERE d.model = %s AND d.res_id = %s AND d.module NOT IN %s
-                )
-            """,
-            table._model._name, table.id, ('__export__', '__custom__'),
-        )
-
     def _compute_for(self, operation: str):
         field_name = f'for_{operation}'
         operations = IN_SELECTION[operation]
         for access in self:
             access[field_name] = access.operation in operations
 
-    # enables searching, grouping and ordering
-    def _compute_sql_for(self, table, operation: str):
-        operations = tuple(IN_SELECTION[operation])
-        return SQL("%s IN %s", table.operation, operations)
+    @api.depends('operation')
+    def _compute_for_read(self):
+        for access in self:
+            access.for_read = access.operation in ('crud', 'cru', 'crd', 'rud', 'cr', 'ru', 'rd', 'r')
 
+    @api.depends('operation')
+    def _compute_for_write(self):
+        for access in self:
+            access.for_write = access.operation in ('crud', 'cru', 'cud', 'rud', 'cu', 'ru', 'ud', 'u')
+
+    @api.depends('operation')
+    def _compute_for_create(self):
+        for access in self:
+            access.for_create = access.operation in ('crud', 'cru', 'crd', 'cud', 'cr', 'cu', 'cd', 'c')
+
+    @api.depends('operation')
+    def _compute_for_unlink(self):
+        for access in self:
+            access.for_unlink = access.operation in ('crud', 'crd', 'cud', 'rud', 'cd', 'rd', 'ud', 'd')
+
+    # enables searching, grouping and ordering
     @api.onchange('for_create', 'for_read', 'for_write', 'for_unlink')
     def _inverse_for_operations(self):
         for access in self:

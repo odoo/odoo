@@ -66,7 +66,6 @@ class ImLivechatChannelMemberHistory(models.Model):
         string="Rating (%)",
         aggregator="avg",
         compute="_compute_rating_percentage",
-        compute_sql="_compute_sql_rating_percentage",
         compute_sudo=True,
     )
     call_history_ids = fields.Many2many("discuss.call.history")
@@ -158,12 +157,6 @@ class ImLivechatChannelMemberHistory(models.Model):
             member_history.rating_percentage = (
                 self.env["discuss.channel"]._rating_selection_to_percentage(member_history.rating)
             )
-
-    def _compute_sql_rating_percentage(self, table):
-        # This method allows to filter out non-rated sessions of the aggregation
-        return self.env["discuss.channel"]._rating_selection_to_percentage_sql(
-            SQL.identifier(table._alias, "rating")
-        )
 
     @api.depends("partner_id.avatar_128", "guest_id.avatar_128")
     def _compute_avatar_128(self):

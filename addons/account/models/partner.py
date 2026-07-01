@@ -503,9 +503,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.currency_id = partner.sudo().company_id.currency_id or self.env.company.currency_id
 
-    def _get_company_currency_sql(self, table):
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
-
     def _default_display_invoice_template_pdf_report_id(self):
         """ Show PDF template selection if there are more than 1 template available for invoices. """
         return len(self.available_invoice_template_pdf_report_ids) > 1
@@ -539,7 +536,7 @@ class ResPartner(models.Model):
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency',
-        compute='_get_company_currency', compute_sql='_get_company_currency_sql', compute_sudo=True,
+        compute='_get_company_currency', compute_sudo=True,
         readonly=True,
         string="Currency") # currency of amount currency
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,

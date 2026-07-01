@@ -98,13 +98,11 @@ class ProductTemplate(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency',
         compute='_compute_currency_id',
-        compute_sql='_compute_sql_currency_id',
         compute_sudo=True,
     )
     cost_currency_id = fields.Many2one(
         'res.currency', 'Cost Currency',
         compute='_compute_cost_currency_id',
-        compute_sql='_compute_sql_cost_currency_id',
         compute_sudo=True,
     )
 
@@ -324,19 +322,12 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
-    def _compute_sql_currency_id(self, table):
-        main_company = self.env['res.company']._get_main_company()
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, main_company.currency_id.id)
-
     @api.depends('company_id')
     @api.depends_context('company')
     def _compute_cost_currency_id(self):
         env_currency_id = self.env.company.currency_id.id
         for template in self:
             template.cost_currency_id = template.company_id.sudo().currency_id.id or env_currency_id
-
-    def _compute_sql_cost_currency_id(self, table):
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     def _compute_template_field_from_variant_field(self, fname, default=False, multi_variant=False):
         """Set the value of the given field based on the template variant values.

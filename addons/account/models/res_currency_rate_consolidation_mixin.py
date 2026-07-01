@@ -12,7 +12,6 @@ class ConsolidationRateMixin(models.AbstractModel):
     consolidation_rate = fields.Float(
         string="Rate",
         compute='_compute_consolidation_rate',
-        compute_sql='_compute_sql_consolidation_rate',
         compute_sudo=True,
         digits=0,
         aggregator=None,
@@ -20,7 +19,6 @@ class ConsolidationRateMixin(models.AbstractModel):
     consolidation_currency_id = fields.Many2one(
         comodel_name='res.currency',
         compute='_compute_consolidation_currency_id',
-        compute_sql='_compute_sql_consolidation_currency_id',
         compute_sudo=True,
     )
 
@@ -30,11 +28,12 @@ class ConsolidationRateMixin(models.AbstractModel):
             self.consolidation_rate = 1
             return
         query = self._search([('id', 'in', self.ids)])
-        line2rate = dict(self.env.execute_query(query.select(query.table.id, query.table.consolidation_rate)))
+        consolidation_rate = self._consolidation_rate_sql(query.table)
+        line2rate = dict(self.env.execute_query(query.select(query.table.id, consolidation_rate)))
         for record in self:
             record.consolidation_rate = line2rate.get(record._origin.id, 1)
 
-    def _compute_sql_consolidation_rate(self, table):
+    def _consolidation_rate_sql(self, table):
         if len(self.env.companies.currency_id) == 1:
             return SQL("1")
 
@@ -52,9 +51,6 @@ class ConsolidationRateMixin(models.AbstractModel):
         table._query.add_join(kind='JOIN', alias=raw_rates_alias, table=raw_rates_table, condition=SQL("TRUE"))
         table._query.add_join(kind='LEFT JOIN LATERAL', alias=cta_alias, table=conversion_table, condition=SQL("TRUE"))
         return SQL("COALESCE(%s, 1)", cta_alias.rate)
-
-    def _compute_sql_consolidation_currency_id(self, table):
-        return SQL("%s", self.env.company.currency_id.id)
 
     @api.depends_context('company')
     def _compute_consolidation_currency_id(self):

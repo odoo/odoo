@@ -55,7 +55,6 @@ class MailActivityMixin(models.AbstractModel):
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
-        compute_sql='_compute_sql_activity_state',
         compute_sudo=False,
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
@@ -168,41 +167,6 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'planned'
             else:
                 record.activity_state = False
-
-    def _compute_sql_activity_state(self, table):
-        # find activities
-        act_query = self.activity_ids._search(Domain('res_model', '=', self._name) & Domain('active', '=', True), bypass_access=True)
-        activity_t = act_query.table
-        res_id_sql = activity_t.res_id
-        # group them by res_id and compute the state (as int)
-        act_query.groupby = res_id_sql
-        act_sql = act_query.subselect(res_id_sql, SQL(
-            """
-            -- Global activity state
-            MIN(
-                -- Compute the state of each individual activities
-                -- -1: overdue
-                --  0: today
-                --  1: planned
-                SIGN(EXTRACT(day FROM (
-                    %s - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(%s, 'utc'))
-                )))
-            )::INT AS activity_state
-            """,
-            activity_t.date_deadline,
-            fields.Datetime.now().astimezone(UTC),
-            activity_t.user_tz,
-        ))
-
-        # join the results and translate int into the state value
-        act_alias = table._make_alias('activity_state')
-        table._query.add_join('LEFT JOIN', act_alias, act_sql, SQL("%s = %s", table.id, act_alias.res_id))
-        col = act_alias.activity_state
-        return SQL("""CASE
-            WHEN %(col)s < 0 THEN 'overdue'
-            WHEN %(col)s = 0 THEN 'today'
-            WHEN %(col)s > 0 THEN 'planned'
-            END""", col=col)
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):

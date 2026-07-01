@@ -197,7 +197,6 @@ class AccountMove(models.Model):
         ],
         string="Invoice Scenario Group",
         compute='_compute_l10n_tr_invoice_scenario_group',
-        compute_sql='_compute_sql_invoice_scenario_group',
         compute_sudo=True,
     )
 
@@ -216,24 +215,6 @@ class AccountMove(models.Model):
                 record.l10n_tr_invoice_scenario_group = 'commercial'
             else:
                 record.l10n_tr_invoice_scenario_group = False
-
-    def _compute_sql_invoice_scenario_group(self, table):
-        partner_table = table._join('partner_id')
-        return SQL(
-            """
-            CASE
-                WHEN %(export)s = TRUE               THEN 'export'
-                WHEN %(partner_status)s = 'earchive' THEN 'earchive'
-                WHEN %(scenario)s = 'TEMELFATURA'    THEN 'basic'
-                WHEN %(scenario)s = 'KAMU'           THEN 'public'
-                WHEN %(scenario)s = 'TICARIFATURA'   THEN 'commercial'
-                ELSE NULL
-            END
-            """,
-            export=table['l10n_tr_is_export_invoice'],
-            partner_status=partner_table['l10n_tr_nilvera_customer_status'],
-            scenario=table['l10n_tr_gib_invoice_scenario'],
-        )
 
     @api.depends('move_type', 'l10n_tr_gib_invoice_scenario')
     def _compute_l10n_tr_public_spending_unit_id(self):
