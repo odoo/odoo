@@ -414,7 +414,6 @@ class TestEventSale(TestEventSaleCommon):
 
         currency_USD = _prepare_currency(self, 'USD')
         currency_VEF = _prepare_currency(self, 'VEF')
-        currency_VEF.rate_ids.rate = 5.0
 
         company_test = self.env['res.company'].create({
             'name': 'TestCompany',
@@ -423,7 +422,12 @@ class TestEventSale(TestEventSaleCommon):
         })
         self.env.user.company_ids += company_test
         self.env.user.company_id = company_test
-        currency_VEF.rate_ids.company_id = company_test
+
+        currency_VEF.rate_ids = self.env['res.currency.rate'].create({
+            'company_id': company_test.id,
+            'currency_id': currency_VEF.id,
+            'rate': 5.0,
+        })
 
         pricelist_USD = self.env['product.pricelist'].create({
             'name': 'pricelist_USD',
