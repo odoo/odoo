@@ -1478,8 +1478,6 @@ test("An error is displayed if the list has invalid model", async function () {
     });
     setCellContent(model, "A1", `=ODOO.LIST.VALUE(1,1,"foo")`);
     await animationFrame();
-    // const a =  getCellValue(model, "A1")
-    // debugger
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
     const listDataSource = model.getters.getListDataSource(listId);
