@@ -482,9 +482,19 @@ class AccountEdiCommon(models.AbstractModel):
                 'res_id': invoice.id,
             })
 
+<<<<<<< 97d06d335d57b3f3c24a2ca02616d6a0df1f1bb5
         attachments = self._import_attachments(invoice, tree)
         if attachments:
             invoice.message_post(attachment_ids=attachments.ids)
+||||||| c06be48ce7277a667719fd756e0a1f63e91cda27
+        return True
+=======
+        attachments = self._import_attachments(invoice, tree)
+        if attachments:
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+
+        return True
+>>>>>>> 1d79a636208663a54835882d1a68e3fea961fcef
 
     def _import_attachments(self, invoice, tree):
         # Import the embedded documents in the xml if some are found
@@ -522,6 +532,35 @@ class AccountEdiCommon(models.AbstractModel):
                     invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
                 attachments |= attachment
 
+<<<<<<< 97d06d335d57b3f3c24a2ca02616d6a0df1f1bb5
+||||||| c06be48ce7277a667719fd756e0a1f63e91cda27
+        attachments_data = attachments._extract_additional_documents(tree)
+        attachments = self.env['ir.attachment'].create(attachments_data)
+        # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
+        # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
+        for attachment in attachments:
+            if invoice.message_main_attachment_id and \
+                    invoice.message_main_attachment_id.name.endswith('.xml') and \
+                    'pdf' not in invoice.message_main_attachment_id.mimetype and \
+                    attachment.mimetype == 'application/pdf':
+                invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
+=======
+        attachments_data = attachments._extract_additional_documents(tree)
+        for data in attachments_data:
+            data.update({
+                'res_id': invoice.id,
+                'res_model': invoice._name,
+            })
+        attachments = self.env['ir.attachment'].create(attachments_data)
+        # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
+        # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
+        for attachment in attachments:
+            if invoice.message_main_attachment_id and \
+                    invoice.message_main_attachment_id.name.endswith('.xml') and \
+                    'pdf' not in invoice.message_main_attachment_id.mimetype and \
+                    attachment.mimetype == 'application/pdf':
+                invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
+>>>>>>> 1d79a636208663a54835882d1a68e3fea961fcef
         return attachments
 
     def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, postal_address={}, **kwargs):
