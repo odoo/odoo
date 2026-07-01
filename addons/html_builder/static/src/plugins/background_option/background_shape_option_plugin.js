@@ -72,18 +72,19 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * Update the shape color (when a theme color is selected) whenever the
      * theme preset color changes.
      *
-     * @param {String} updatedColorVariable - Updated theme color variable
-     * like 'o-color-*'.
+     * @param {String[]} updatedColorVariables - Updated theme color variables.
      */
-    syncShapeColorsWithTheme(updatedColorVariable) {
-        if (!updatedColorVariable.startsWith("o-color-")) {
-            return;
+    syncShapeColorsWithTheme(updatedColorVariables) {
+        for (const colorVar of updatedColorVariables) {
+            if (!colorVar.startsWith("o-color-")) {
+                continue;
+            }
+            const selector = `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape[style*="background-image"]`;
+            this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+            this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
+                this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
+            });
         }
-        const selector = `[data-oe-shape-data*='"${updatedColorVariable}"'] .o_we_shape[style*="background-image"]`;
-        this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
-        this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
-            this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
-        });
     }
     refreshBgShapes(shapeEls) {
         for (const shapeEl of shapeEls) {
