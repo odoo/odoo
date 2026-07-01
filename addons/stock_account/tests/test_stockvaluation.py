@@ -3623,3 +3623,25 @@ class TestStockValuation(TestStockValuationCommon):
 
         # Ensure that we didn't do 109 / 9 to compute the price
         self.assertEqual(product.standard_price, 1.0)
+
+    def test_stock_report_for_products_in_transit(self):
+        """Ensure products in transit do not cause mismatches in total value
+        or quantity in current and historical stock reports."""
+        self._use_multi_warehouses()
+        self.env['stock.quant']._update_available_quantity(self.product_standard, self.stock_location, 30.0)
+        truck = self.env['stock.location'].create({
+            'name': 'Truck',
+            'usage': 'transit',
+        })
+        product = self.product_standard.with_context(stock_report=True)
+        expected_values = [
+            [{'avg_cost': 10.0, 'total_value': 200, 'qty_available': 20}],
+            [{'avg_cost': 10.0, 'total_value': 300, 'qty_available': 30}],
+        ]
+        with freeze_time('2025-08-06 10:00:00'):
+            self._make_out_move(product, 10, location_id=self.stock_location.id, location_dest_id=truck.id)
+            self.assertRecordValues(product, expected_values[0])
+        with freeze_time('2025-08-06 11:00:00'):
+            self._make_in_move(product, 10, location_id=truck.id, location_dest_id=self.other_warehouse.lot_stock_id.id)
+            self.assertRecordValues(product.with_context(to_date='2025-08-06 10:30:00'), expected_values[0])
+        self.assertRecordValues(product, expected_values[1])

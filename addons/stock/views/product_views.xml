@@ -622,7 +622,7 @@
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="product_product_stock_tree"/>
             <field name="search_view_id" ref="product_search_form_view_stock_report"/>
-            <field name="context">{'default_is_storable': True}</field>
+            <field name="context">{'default_is_storable': True, 'stock_report': True}</field>
             <field name="domain">[('is_storable', '=', True)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
