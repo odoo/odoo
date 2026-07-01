@@ -157,7 +157,8 @@ class SmsSms(models.Model):
         if not records:
             return
 
-        records._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+        for sms_api, sms in records._split_by_api():
+            sms.with_context(sms_api=sms_api)._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
     def _get_send_batch_size(self):
