@@ -1849,9 +1849,15 @@ class HrEmployee(models.Model):
             self.version_id.write(version_vals)
 
             for employee in self:
-                version_sudo = employee.version_id.sudo()
-                start = format_date_abbr(self.env, version_sudo.date_start) if version_sudo.date_start else False
-                end = format_date_abbr(self.env, version_sudo.date_end) if version_sudo.date_end else False
+                multi_update_version_ids = self.env.context.get('multi_update_version_ids')
+                if multi_update_version_ids:
+                    first_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[0]).sudo()
+                    last_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[-1]).sudo()
+                else:
+                    first_version_sudo = employee.version_id.sudo()
+                    last_version_sudo = first_version_sudo
+                start = format_date_abbr(self.env, first_version_sudo.date_start) if first_version_sudo.date_start else False
+                end = format_date_abbr(self.env, last_version_sudo.date_end) if last_version_sudo.date_end else False
                 if start and end:
                     msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
                 elif start:
@@ -2407,3 +2413,18 @@ class HrEmployee(models.Model):
                     "end": stop,
                 })
         return working_periods
+
+    def get_multi_version_changes(self, version_changes):
+        version_changes_to_display = {}
+        for field_name in version_changes:
+            new_value = version_changes[field_name]
+            field = self.env['ir.model.fields'].search([('model', '=', 'hr.version'), ('name', '=', field_name)])
+            if field['relation']:
+                new_value = self.env[field['relation']].search([('id', 'in', new_value)])
+            tracking_values = self._create_mail_tracking_values(
+                self[field_name], new_value,
+                field_name, self._track_get_fields_info([field_name])[field_name],
+            )
+            display_field_name = '(' + tracking_values['field_label'] + ')'
+            version_changes_to_display[display_field_name] = (tracking_values['old_value'], tracking_values['new_value'])
+        return version_changes_to_display

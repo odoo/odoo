@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.FormView.MultiVersionUpdateConfirmation">
+        <Dialog size="'md'" title="this.props.title">
+            <div class="overflow-visible">
+                <div class="mb-3"> You changed an old version of the employee. Do you want to apply the following changes to future versions too?</div>
+                <div class="alert alert-info">
+                    <table>
+                        <tbody>
+                            <t t-foreach="Object.keys(this.props.version_changes)" t-as="field_name" t-key="field_name">
+                                <tr>
+                                    <td class="ps-3 pe-3"><t t-out="this.props.version_changes[field_name][0]"/></td>
+                                    <td><i class="fa fa-long-arrow-right"/></td>
+                                    <td class="ps-3 pe-3"><t t-out="this.props.version_changes[field_name][1]"/></td>
+                                    <td><t t-out="field_name"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this._change_current" t-custom-ref="autofocus">
+                This version
+                </button>
+                <button class="btn btn-secondary" t-on-click="this._change_multi">
+                Change all
+                </button>
+                <button class="btn btn-secondary" t-on-click="this._cancel">
+                Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
