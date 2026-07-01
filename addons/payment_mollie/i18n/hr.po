@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2025-11-10 13:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -26,15 +26,60 @@ msgid "API Key"
 msgstr "API ključ"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_apple_pay
+msgid "Apple Pay"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_blik
+msgid "BLIK"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_bancontact
+msgid "Bancontact"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_bank_transfer
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_belfius
+msgid "Belfius"
+msgstr ""
+
+#. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "Cancelled payment with status: %s"
 msgstr ""
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_cartes_bancaires
+msgid "Cartes Bancaires"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__code
 msgid "Code"
 msgstr "Kod"
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
@@ -44,11 +89,46 @@ msgid "Display Name"
 msgstr "Naziv"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_eps
+msgid "EPS"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_google_pay
+msgid "Google Pay"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_kbc_cbc
+msgid "KBC/CBC"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_klarna
+msgid "Klarna"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_mbway
+msgid "MB WAY"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_maestro
+msgid "Maestro"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields.selection,name:payment_mollie.selection__payment_provider__code__mollie
@@ -63,6 +143,21 @@ msgstr ""
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_token__mollie_customer_id
 msgid "Mollie Customer ID"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_multibanco
+msgid "Multibanco"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_p24
+msgid "P24"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_paysafecard
+msgid "PaySafeCard"
 msgstr ""
 
 #. module: payment_mollie
@@ -81,9 +176,19 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_paypal
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s."
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_swish
+msgid "Swish"
 msgstr ""
 
 #. module: payment_mollie
@@ -95,3 +200,29 @@ msgstr ""
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Tehnički kod ovog pružatelja usluga plaćanja."
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_twint
+msgid "Twint"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_wero_brand
+msgid "Wero"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_ideal
+#: model:payment.method,name:payment_mollie.payment_method_ideal_brand
+msgid "iDEAL"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_in3
+msgid "in3"
+msgstr ""

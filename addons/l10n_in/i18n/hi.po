@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:14+0000\n"
+"POT-Creation-Date: 2026-06-30 01:38+0000\n"
 "PO-Revision-Date: 2025-11-17 03:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19-l10n/"
@@ -44,6 +44,16 @@ msgstr ""
 #: code:addons/l10n_in/models/res_partner.py:0
 msgid ""
 " Warning: You are currently in a test environment. The result is a dummy."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.actions.report,print_report_name:l10n_in.l10n_in_account_invoices_duplicate
+msgid "\"%s (2 Copies)\" % (object._get_report_base_filename())"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.actions.report,print_report_name:l10n_in.l10n_in_account_invoices_triplicate
+msgid "\"%s (3 Copies)\" % (object._get_report_base_filename())"
 msgstr ""
 
 #. module: l10n_in
@@ -534,11 +544,6 @@ msgid "Create TDS Entry"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model,website_form_label:l10n_in.model_res_partner
-msgid "Create a Customer"
-msgstr "ग्राहक बनाएं"
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__create_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_uid
@@ -609,6 +614,11 @@ msgstr "डिस्प्ले का नाम"
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_pan_warning
 #: model:ir.model.fields,field_description:l10n_in.field_res_users__display_pan_warning
 msgid "Display pan warning"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.actions.report,name:l10n_in.l10n_in_account_invoices_duplicate
+msgid "Duplicate (2 Copies)"
 msgstr ""
 
 #. module: l10n_in
@@ -2909,6 +2919,11 @@ msgid "Total withholding amount for the move"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.actions.report,name:l10n_in.l10n_in_account_invoices_triplicate
+msgid "Triplicate (3 Copies)"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__type
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__type_name
 msgid "Type"
@@ -3109,9 +3124,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.view_company_form
 msgid "update it"
 msgstr ""
-
-#~ msgid "Website Messages"
-#~ msgstr "वेबसाइट मैसेज"
-
-#~ msgid "Website communication history"
-#~ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-09-16 10:05+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
@@ -65,6 +65,7 @@ msgid "Custom Mode"
 msgstr "Vlastní režim"
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
 msgid "Display Name"
@@ -87,6 +88,7 @@ msgid "Finalize your payment"
 msgstr "Dokončete platbu"
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
 msgid "ID"
@@ -101,6 +103,17 @@ msgstr "NEBO"
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
 msgstr "Vlastní režim by měli mít pouze vlastní poskytovatele."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__pay_on_invoice
+#: model:payment.method,name:payment_custom.payment_method_pay_on_invoice
+msgid "Pay on Invoice"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_method
+msgid "Payment Method"
+msgstr ""
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
