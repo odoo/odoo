@@ -146,6 +146,7 @@ class StockMoveLine(models.Model):
         for aggregated_move_line in aggregated_move_lines:
             bom = aggregated_move_lines[aggregated_move_line]['bom']
             is_phantom = bom.type == 'phantom' if bom else False
+            aggregated_move_lines[aggregated_move_line]['is_kit_component'] = is_phantom
             if kit_name:
                 product = bom.product_id or bom.product_tmpl_id if bom else False
                 display_name = product.display_name if product else False

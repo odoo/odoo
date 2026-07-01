@@ -260,6 +260,8 @@ class TestMrpStockReports(TestReportsCommon):
             aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(kit_name=superkit.display_name)
             for line in aggregate_values.values():
                 self.assertItemsEqual([line[val] for val in ['qty_ordered', 'quantity']], expected_vals)
+                self.assertTrue(line.get('is_kit_component'),
+                            "Kit components should be marked with is_kit_component flag to prevent packaging UOM display confusion")
 
             html_report = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', picking.ids)[0]
             self.assertTrue(html_report, "report generated successfully")
