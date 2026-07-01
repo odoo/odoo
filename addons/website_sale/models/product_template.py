@@ -591,3 +591,10 @@ class ProductTemplate(models.Model):
     def _website_show_quick_add(self):
         website = self.env['website'].get_current_website()
         return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
+
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        if (not model_name or model_name == 'product.template') and operation == 'create' and not self.env.user._is_internal():
+            if not self.env['website'].is_view_active('website_sale.product_comment'):
+                return 'write'
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
