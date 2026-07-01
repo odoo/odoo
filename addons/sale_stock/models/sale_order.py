@@ -76,8 +76,11 @@ class SaleOrder(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
+        orders_without_pickings = self.env['sale.order']
         for order in self:
-            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+            if not order.picking_ids:
+                orders_without_pickings |= order
+            elif all(p.state == 'cancel' for p in order.picking_ids):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
@@ -88,6 +91,7 @@ class SaleOrder(models.Model):
                 order.delivery_status = 'started'
             else:
                 order.delivery_status = 'pending'
+        super(SaleOrder, orders_without_pickings)._compute_delivery_status()
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
