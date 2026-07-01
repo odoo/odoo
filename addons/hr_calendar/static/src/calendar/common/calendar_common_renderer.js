@@ -2,17 +2,20 @@ import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calenda
 import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/attendee_calendar_renderer";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
-import { onWillUpdateProps, onPatched } from "@odoo/owl";
+import { onPatched } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
 patch(AttendeeCalendarCommonRenderer.prototype, {
 	setup() {
 		super.setup(...arguments);
-		onWillUpdateProps(() => {
-			this.fc.api.setOption("businessHours", this.props.model.workingHours)
-		});
+        let previousBusinessHours;
 		onPatched(() => {
+            const businessHours = this.props.model.workingHours;
+            if (businessHours !== previousBusinessHours) {
+                previousBusinessHours = businessHours;
+                this.fc.api.setOption("businessHours", businessHours);
+            }
             // Force to rerender the FC.
             // As it doesn't redraw the header when the event's data changes
             this.fc.api.render();
