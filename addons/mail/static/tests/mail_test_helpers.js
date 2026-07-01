@@ -12,7 +12,7 @@ import {
     registerDebugInfo,
     test,
 } from "@odoo/hoot";
-import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
+import { advanceTime, hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
@@ -1195,4 +1195,16 @@ export async function setIndexedDB(table, key, value) {
 export async function getIndexedDB(table, key) {
     const db = new IndexedDB("mail");
     return await db.read(table, key);
+}
+
+/**
+ * Simulate self speaking for given `duration`.
+ *
+ * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} selfSession
+ * @param {Number} duration
+ */
+export async function simulateSelfSpeaking(selfSession, duration) {
+    selfSession.isTalking = true;
+    await advanceTime(duration);
+    selfSession.isTalking = false;
 }

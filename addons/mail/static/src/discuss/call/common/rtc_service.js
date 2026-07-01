@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
+import { setupCallSuggestions } from "@mail/discuss/call/common/call_suggestions";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -46,6 +47,18 @@ const getSequence = () => sequence++;
  * @property {boolean} [is_deaf]
  * @property {boolean} [raisingHand]
  * @property {boolean} [pip]
+ */
+
+/**
+ * @typedef {object} CallSuggestion
+ * @property {string} id - Unique identifier.
+ * @property {string} targetActionId - Call action ID this suggestion anchors to.
+ * @property {string} iconClass - CSS class for the suggestion icon.
+ * @property {string} headerText - Header text of the suggestion.
+ * @property {string} bodyText - Body text of the suggestion.
+ * @property {number} priority - Display priority (higher = shown first).
+ * @property {boolean} isVisible - Whether the suggestion tooltip is currently shown.
+ * @property {function(): void} onDismiss - Callback invoked when the suggestion is dismissed.
  */
 
 /**
@@ -397,7 +410,11 @@ export class Rtc extends Record {
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
         },
+        onAdd() {
+            this._callSuggestionsCleanup = setupCallSuggestions(this.store);
+        },
         onDelete() {
+            this._callSuggestionsCleanup?.();
             if (this.channel) {
                 this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
             }
@@ -454,6 +471,38 @@ export class Rtc extends Record {
     _crossTabTimeoutId;
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
+
+    /** @type {CallSuggestion[]} */
+    callSuggestions = fields.Attr([], {
+        sort(s1, s2) {
+            return s2.priority - s1.priority;
+        },
+    });
+
+    /** @type {CallSuggestion|undefined} The highest-priority visible suggestion, if any. */
+    get visibleCallSuggestion() {
+        return this.callSuggestions.find((s) => s.isVisible);
+    }
+
+    /**
+     * Adds a call suggestion, or returns the existing one if already registered.
+     *
+     * @param {string} targetActionId - Call action ID this suggestion anchors to.
+     * @param {Partial<CallSuggestion>} config - Suggestion data.
+     * @returns {CallSuggestion} The newly created or existing suggestion.
+     */
+    addCallSuggestion(targetActionId, config = {}) {
+        const existing = this.callSuggestions.find(
+            (s) => s.id === config.id && s.targetActionId === targetActionId
+        );
+        if (existing) {
+            return existing;
+        }
+        this.callSuggestions.push({ targetActionId, ...config, isVisible: false });
+        return this.callSuggestions.find(
+            (s) => s.id === config.id && s.targetActionId === targetActionId
+        );
+    }
 
     /**
      * Whether this tab serves as a remote for a call hosted on another tab.
