@@ -61,7 +61,15 @@
                                 <img t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name" class="object-fit-contain position-absolute top-0 start-0 w-100 h-100"/>
                                 <i t-if="attachment.isVideo" class="fa fa-2x fa-play-circle"/>
                             </t>
-                            <div t-else="" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                            <div
+                                t-else=""
+                                t-att-class="attachment.voice ? 'fa fa-microphone fa-2x text-primary' : 'o_image'"
+                                role="menuitem"
+                                aria-label="Preview"
+                                t-att-tabindex="-1"
+                                t-att-aria-disabled="false"
+                                t-att-data-mimetype="attachment.mimetype"
+                            />
                         </div>
                          <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
                             <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
@@ -98,7 +106,10 @@
                         <i class="fa fa-circle-o-notch fa-spin"/>
                     </div>
                     <!-- uploaded info -->
-                    <div t-if="this.showUploaded(attachment)" class="o-Attachment-uploaded position-absolute top-0 d-flex" t-att-class="!this.isMobileOS ? 'end-0' : 'start-0'" title="Uploaded">
+                    <div t-if="this.showUploaded(attachment)"
+                        class="o-Attachment-uploaded position-absolute d-flex"
+                        t-att-class="attachment.voice ? 'bottom-0 end-0' : (!this.isMobileOS ? 'top-0 end-0' : 'top-0 start-0')"
+                        title="Uploaded">
                         <i class="fa fa-check"/>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ export class VoiceMetadata extends Record {
     static _name = "discuss.voice.metadata";
 
     attachment_id = fields.One("ir.attachment", { inverse: "voice_ids" });
+    playbackRate = fields.Attr(1);
 }
 
 VoiceMetadata.register();

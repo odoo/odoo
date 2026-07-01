@@ -1,8 +1,18 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
+import { useOnChange } from "@mail/utils/common/hooks";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    props,
+    proxy,
+    signal,
+    status,
+    types,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+import { useRef } from "@web/owl2/utils";
 
 const WAVE_COLOR = "#7775";
 
@@ -10,24 +20,19 @@ export class VoicePlayer extends Component {
     static template = "mail.VoicePlayer";
 
     /** @type {number} */
-    lastPlaytime = 0;
+    playRequestId = 0;
     /** @type {number} */
     lastPos = 0;
-    /** @type {number} */
-    startPosition = 0;
     /** @type {string} */
     progressColor;
-    /** @type {GainNode} */
-    gainNode;
-    /** @type {AudioContext} */
-    audioCtx;
-    scheduledPause;
-    /** @type {AudioBuffer} */
-    buffer;
-    /** @type {AnalyserNode} */
-    analyser;
-    /** @type {AudioBufferSourceNode} */
-    source;
+    /** @type {number} */
+    duration = 0;
+    /** @type {boolean} */
+    isAudioLoading = false;
+    /** @type {string} */
+    audioUrl;
+    /** @type {number[]} */
+    peaks;
     /** @type {number} */
     width;
     /** @type {number} */
@@ -36,6 +41,8 @@ export class VoicePlayer extends Component {
     wrapper;
     /** @type {HTMLElement} */
     progressWave;
+    /** @type {HTMLAudioElement} */
+    audioEl;
     /** @type {CanvasRenderingContext2D} */
     waveCtx;
     /** @type {CanvasRenderingContext2D} */
@@ -51,38 +58,30 @@ export class VoicePlayer extends Component {
         this.drawerRef = useRef("drawer");
         this.waveRef = useRef("wave");
         this.progressRef = useRef("progress");
+        this.audioRef = signal(null);
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");
+        this.notification = useService("notification");
         this.state = proxy({
             paused: true,
             playing: false,
             repeat: false,
             visualTime: "-- : --",
         });
-        useLayoutEffect(
-            (playing) => {
-                if (playing) {
-                    this.addOnAudioProcess();
+        useOnChange(
+            () => [this.props.attachment.uploading],
+            () => {
+                if (!this.props.attachment.uploading) {
+                    this.loadAudio();
                 }
             },
-            () => [this.state.playing]
-        );
-        useLayoutEffect(
-            (uploading) => {
-                if (uploading) {
-                    return;
-                }
-                if (this.wasUploading && !uploading) {
-                    this.makeAudio();
-                }
-                this.wasUploading = uploading;
-            },
-            () => [this.props.attachment.uploading]
+            { initialRun: false }
         );
         onMounted(() => {
             this.initElements();
+            this.audioEl = this.audioRef();
             this.wrapper.addEventListener("click", (e) => {
-                if (this.props.attachment.uploading) {
+                if (this.props.attachment.uploading || this.isAudioLoading) {
                     return;
                 }
                 const clientX = (e.targetTouches ? e.targetTouches[0] : e).clientX;
@@ -95,98 +94,123 @@ export class VoicePlayer extends Component {
                 this.seekTo(progress);
             });
             if (!this.props.attachment.uploading) {
-                this.makeAudio();
+                this.loadAudio();
             }
-            this.wasUploading = this.props.attachment.uploading;
         });
         onWillUnmount(() => {
             if (this.state.playing) {
                 this.pause();
             }
-            this.destroyWebAudio();
+            this.destroyAudio();
         });
     }
 
-    makeAudio() {
-        this.audioCtx = new browser.AudioContext();
-        this.gainNode = this.audioCtx.createGain();
-        this.gainNode.connect(this.audioCtx.destination);
-        this.analyser = this.audioCtx.createAnalyser();
-        this.analyser.connect(this.gainNode);
-        this.fetchFile(
-            url(this.props.attachment.urlRoute, {
-                ...this.props.attachment.urlQueryParams,
+    loadAudio() {
+        if (this.isAudioLoading) {
+            return;
+        }
+        this.isAudioLoading = true;
+        return this._loadAudio()
+            .catch((err) => {
+                this.notification.add(err?.message, { type: "warning" });
             })
-        ).then((arrayBuffer) => this.drawBuffer(arrayBuffer));
+            .finally(() => {
+                this.isAudioLoading = false;
+            });
     }
 
-    _fetch(...args) {
-        return fetch(...args);
+    async _loadAudio() {
+        this.destroyAudio();
+        const blob = await this.fetchFile();
+        const audioUrl = URL.createObjectURL(blob);
+        this.audioUrl = audioUrl;
+        if (this.audioEl) {
+            this.audioEl.src = audioUrl;
+        }
+        const audioCtx = new browser.AudioContext();
+        try {
+            const arrayBuffer = await blob.arrayBuffer();
+            const buffer = await audioCtx.decodeAudioData(arrayBuffer);
+            this.duration = buffer.duration;
+            this.state.visualTime = this.generateTime(Math.floor(buffer.duration));
+            this.peaks = this.getPeaks(buffer);
+            this.onProgress(0);
+            this.drawWave(this.peaks);
+            this.applyPlaybackRate();
+        } finally {
+            try {
+                await audioCtx.close();
+            } catch (err) {
+                if (err.name !== "InvalidStateError") {
+                    this.notification.add(err?.message, { type: "warning" });
+                }
+            }
+        }
     }
 
-    async fetchFile(url) {
-        const response = await this._fetch(url);
+    async fetchFile() {
+        const audioUrl = url(this.props.attachment.urlRoute, {
+            ...this.props.attachment.urlQueryParams,
+        });
+        const response = await fetch(audioUrl);
         if (!response.ok) {
             throw new Error("HTTP error status: " + response.status);
         }
-        const arrayBuffer = await response.arrayBuffer();
-        return arrayBuffer;
+        return response.blob();
     }
 
-    getPlayedTime() {
-        return this.audioCtx.currentTime - this.lastPlaytime;
-    }
-
-    getCurrentTime() {
-        if (this.state.paused) {
-            return this.startPosition;
-        } else {
-            return this.startPosition + this.getPlayedTime();
+    applyPlaybackRate() {
+        if (this.audioEl) {
+            this.audioEl.playbackRate = this.props.attachment.voice_ids?.[0]?.playbackRate ?? 1;
         }
     }
 
     play() {
-        if (this.voiceMessageService.activePlayer) {
-            this.voiceMessageService.activePlayer.pause();
-        }
+        this.voiceMessageService.activePlayer?.pause();
         this.voiceMessageService.activePlayer = this;
         this.state.repeat = false;
-        this.createSource();
-        const { start, end } = this.seekToElapsed();
-        this.scheduledPause = end;
-        this.source.start(0, start);
-        this.state.playing = true;
-        this.state.paused = false;
+        this.applyPlaybackRate();
+        const requestId = ++this.playRequestId;
+        this.audioEl
+            .play()
+            .then(() => {
+                if (this.playRequestId !== requestId) {
+                    return;
+                }
+                this.state.playing = true;
+                this.state.paused = false;
+                this.trackPlaybackProgress();
+            })
+            .catch(() => {
+                if (this.playRequestId !== requestId) {
+                    return;
+                }
+                this.voiceMessageService.activePlayer = null;
+                this.state.paused = true;
+                this.state.playing = false;
+            });
     }
 
     pause(options) {
+        this.playRequestId += 1;
         this.voiceMessageService.activePlayer = null;
         if (options?.end) {
             this.state.repeat = true;
+            this.state.visualTime = this.generateTime(Math.floor(this.duration));
+            this.onProgress(1);
         }
-        this.scheduledPause = null;
-        this.startPosition += this.getPlayedTime();
-        if (this.source) {
-            try {
-                this.source.stop();
-            } catch (e) {
-                if (e.name === "InvalidStateError") {
-                    return;
-                }
-                throw e;
-            }
-        }
+        this.audioEl?.pause();
         if (!options?.continue) {
             this.state.paused = true;
             this.state.playing = false;
         }
     }
 
-    getPeaks() {
+    getPeaks(buffer) {
         const peaks = [];
-        const sampleSize = this.buffer.length / this.width;
+        const sampleSize = buffer.length / this.width;
         const sampleStep = Math.floor(sampleSize / 10);
-        const chan = this.buffer.getChannelData(0);
+        const chan = buffer.getChannelData(0);
         let i;
         for (i = 0; i < this.width; i++) {
             const start = Math.floor(i * sampleSize);
@@ -208,36 +232,6 @@ export class VoicePlayer extends Component {
         return peaks;
     }
 
-    createSource() {
-        this.source?.disconnect();
-        this.source = this.audioCtx.createBufferSource();
-        this.source.buffer = this.buffer;
-        this.source.connect(this.analyser);
-    }
-
-    /**
-     * @param {number} [start] float representing start time
-     * @param {number} [end] float representing end time
-     * @returns {Object} res
-     * @returns {number} res.start
-     * @returns {number} res.end
-     */
-    seekToElapsed(start, end) {
-        this.scheduledPause = null;
-        if (start === undefined) {
-            start = this.getCurrentTime();
-            if (start >= this.buffer.duration) {
-                start = 0;
-            }
-        }
-        if (end === undefined) {
-            end = this.buffer.duration;
-        }
-        this.startPosition = start;
-        this.lastPlaytime = this.audioCtx.currentTime;
-        return { start, end };
-    }
-
     onProgress(progress) {
         const position = Math.round(progress * this.width);
         if (position < this.lastPos || position - this.lastPos >= 1) {
@@ -247,55 +241,50 @@ export class VoicePlayer extends Component {
     }
 
     seekTo(progress) {
-        if (this.state.playing) {
-            this.pause({ continue: true });
-        }
         this.state.repeat = false;
-        const elapsedTime = progress * this.buffer.duration;
+        const elapsedTime = progress * this.duration;
+        this.audioEl.currentTime = elapsedTime;
         this.state.visualTime = this.generateTime(Math.floor(elapsedTime));
-        this.seekToElapsed(elapsedTime);
         this.onProgress(progress);
-        if (this.state.playing) {
-            this.play();
+    }
+
+    destroyAudio() {
+        this.playRequestId += 1;
+        this.audioEl?.pause();
+        if (this.audioEl) {
+            this.audioEl.removeAttribute("src");
+            this.audioEl.load();
+        }
+        this.state.paused = true;
+        this.state.playing = false;
+        if (this.audioUrl) {
+            URL.revokeObjectURL(this.audioUrl);
+            this.audioUrl = "";
+        }
+        this.duration = 0;
+        this.peaks = null;
+        this.lastPos = 0;
+        if (this.progressWave) {
+            this.progressWave.style.width = "0px";
+        }
+        if (this.waveCtx && this.progressCtx && this.width && this.height) {
+            this.waveCtx.clearRect(0, 0, this.width, this.height);
+            this.progressCtx.clearRect(0, 0, this.width, this.height);
         }
     }
 
-    async drawBuffer(arrayBuffer) {
-        const buffer = await this.audioCtx.decodeAudioData(arrayBuffer);
-        this.state.visualTime = this.generateTime(Math.floor(buffer.duration));
-        this.startPosition = 0;
-        this.lastPlaytime = this.audioCtx.currentTime;
-        this.buffer = buffer;
-        this.createSource();
-        this.drawWave(this.getPeaks());
-    }
-
-    async destroyWebAudio() {
-        this.source?.disconnect();
-        this.gainNode?.disconnect();
-        this.analyser?.disconnect();
-        try {
-            await this.audioCtx?.close();
-        } catch (e) {
-            if (e.name === "InvalidStateError") {
-                return;
-            }
-            throw e;
-        }
-    }
-
-    addOnAudioProcess() {
+    trackPlaybackProgress() {
         if (status(this) === "destroyed") {
             return;
         }
-        const time = this.getCurrentTime();
-        if (time >= this.scheduledPause && this.state.playing) {
+        const time = this.audioEl?.currentTime ?? 0;
+        if (time >= this.duration && this.state.playing) {
             this.pause({ end: true });
         } else if (this.state.playing) {
             this.state.visualTime = this.generateTime(Math.floor(time));
-            const playedPercents = this.getCurrentTime() / this.buffer.duration;
+            const playedPercents = time / this.duration;
             this.onProgress(playedPercents);
-            requestAnimationFrame(() => this.addOnAudioProcess());
+            requestAnimationFrame(() => this.trackPlaybackProgress());
         }
     }
 
@@ -372,7 +361,7 @@ export class VoicePlayer extends Component {
     }
 
     onClickPlayPause() {
-        if (this.props.attachment.uploading) {
+        if (this.props.attachment.uploading || this.isAudioLoading) {
             return;
         }
         if (this.state.paused) {

@@ -1059,6 +1059,7 @@ export function patchVoiceMessageAudio() {
         AudioBufferSourceNode: class {
             buffer;
             constructor() {}
+            playbackRate = { value: 1 };
             connect() {}
             disconnect() {}
             start() {}

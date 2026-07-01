@@ -8,7 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, globals, test } from "@odoo/hoot";
+import { advanceTime, describe, globals, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -37,14 +37,8 @@ test("make voice message in chat", async () => {
             return res;
         },
         async fetchFile() {
-            return super.fetchFile("/mail/static/src/audio/call-invitation.mp3");
-        },
-        _fetch(url) {
-            if (url.includes("call-invitation.mp3")) {
-                const realFetch = globals.fetch;
-                return realFetch(...arguments);
-            }
-            return super._fetch(...arguments);
+            const response = await globals.fetch("/mail/static/src/audio/call-invitation.mp3");
+            return response.blob();
         },
     });
     mockGetMedia();
@@ -91,6 +85,12 @@ test("make voice message in chat", async () => {
     await contains(".o-mail-VoicePlayer button[title='Play']");
     await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
     await contains(".o-mail-VoicePlayer:text('00 : 03')"); // duration of call-invitation_.mp3
+    await click("button[aria-label='Playback speed']");
+    await click(".dropdown-item:contains('2x')");
+    await contains("button[aria-label='Playback speed']:text('2x')");
+    await click(".o-mail-VoicePlayer button[title='Play']");
+    await advanceTime(1500);
+    await contains(".o-mail-VoicePlayer:text('00 : 03')");
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".dropdown-item:contains('Attach Files')"); // check menu loaded
     await contains(".dropdown-item:contains('Voice Message')", { count: 0 }); // only 1 voice message at a time
