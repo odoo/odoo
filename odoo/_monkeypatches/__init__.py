@@ -29,6 +29,8 @@ def patch_all():
     patch_lxml()
     from .num2words import patch_num2words
     patch_num2words()
+    from .reportlab import patch_reportlab
+    patch_reportlab()
     from .stdnum import patch_stdnum
     patch_stdnum()
     from .urllib3 import patch_urllib3
