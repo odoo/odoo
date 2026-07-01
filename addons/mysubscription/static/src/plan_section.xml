@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.PlanSection" owl="1">
+        <h1 class="text-primary mb-3 o_mysub_title">Current Plan</h1>
+        <div class="row gx-5 mb-3">
+            <div class="col-lg-3">
+                <h3 class="text-primary mb-1 fw-bold">Switch Plan</h3>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>Flexible; change at any time.</div>
+                </div>
+
+                <h3 class="text-primary mb-1 fw-bold">Need Help?</h3>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>Contact your dedicated account manager or the <a href="https://www.odoo.com/help" target="_blank">support</a>.</div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row g-4">
+                    <PlanBox t-props="this.communityPlanProps"/>
+                    <PlanBox t-props="this.enterprisePlanProps"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

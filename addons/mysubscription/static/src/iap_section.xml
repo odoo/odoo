@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.IapSection" owl="1">
+        <h1 class="text-primary mb-3 o_mysub_title">Services</h1>
+        <div class="row gx-5 mb-3">
+            <div class="col-lg-3">
+                <h3 class="text-primary mb-1 fw-bold">In-App Purchases</h3>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>Provide Services to Odoo Users directly from their database through In-App Purchases.</div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <t t-foreach="this.iapAccounts" t-as="account" t-key="account.name">
+                    <IapContainer account="account"/>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mysubscription.IapContainer">
+        <div
+            t-attf-class="card mb-3 p-3 rounded-3 o_mysub_shadow_card"
+            t-on-click="() => this.openTopUp()"
+        >
+            <div class="d-flex align-items-sm-center flex-column flex-sm-row">
+                <div class="flex-shrink-0 me-sm-4 mb-3 mb-sm-0 text-center">
+                    <img t-att-src="this.imageUrl" width="64" height="64" alt="IAP Icon" class="rounded"/>
+                </div>
+                <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h3 class="text-primary mb-1 fw-bold cursor-pointer custom-hover-link"
+                            t-on-click.stop="() => this.openSettings()"
+                            t-out="this.name"
+                        />
+                        <div class="fw-bold fs-5 text-dark" t-out="this.balance"/>
+                        <div class="text-muted" t-out="this.description"/>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <a
+                            t-att-href="this.creditUrl"
+                            class="btn btn-primary px-4 py-2 text-nowrap"
+                            target="_blank"
+                            t-on-click.stop=""
+                        >
+                            Top Up
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

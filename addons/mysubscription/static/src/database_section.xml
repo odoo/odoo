@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.DatabaseSection" owl="1">
+        <h1 class="text-primary mb-3 o_mysub_title">Database</h1>
+        <div class="row gx-5 mb-3">
+
+            <DashboardBlock subtitle.translate="Selection" t-if="this.showDatabaseSelector">
+                <div>Select the database you want to act on</div>
+                <t t-set-slot="content">
+                    <select class="form-select w-50" t-model="this.currentDbName">
+                        <option
+                            t-foreach="this.databases"
+                            t-as="db"
+                            t-key="db"
+                            t-att-value="db"
+                            t-out="db"
+                        />
+                    </select>
+                </t>
+            </DashboardBlock>
+
+            <DashboardBlock subtitle.translate="Version">
+                <div>Your version: <strong><t t-out="this.serverVersion"/></strong></div>
+                <t t-set-slot="content">
+                    <a
+                        t-att-href="this.upgradeHref"
+                        class="btn btn-primary px-4 py-2"
+                        target="_blank"
+                    >
+                        Upgrade
+                    </a>
+                </t>
+            </DashboardBlock>
+
+            <DashboardBlock subtitle.translate="Rename" t-if="this.isSystem">
+                <div>Your database runs on <a href="#" t-out="this.databaseUrl"/>.</div>
+                <t t-set-slot="content">
+                    <button class="btn btn-secondary px-4 py-2" t-on-click="this.renameDatabase">
+                        Rename
+                    </button>
+                </t>
+            </DashboardBlock>
+
+            <DashboardBlock subtitle.translate="Duplicate" t-if="this.isSystem">
+                <div>Duplicate for testing or production purpose.</div>
+                <t t-set-slot="content">
+                    <button class="btn btn-secondary px-4 py-2" t-on-click="this.duplicateDatabase">
+                        Duplicate
+                    </button>
+                </t>
+            </DashboardBlock>
+
+            <DashboardBlock subtitle.translate="Backups" t-if="this.isSystem">
+                <div>Your data is safe, check our <a href="https://www.odoo.com/cloud-sla" target="_blank">SLA policy.</a></div>
+                <t t-set-slot="content">
+                    <button class="btn btn-secondary px-4 py-2" t-on-click="this.downloadBackup">
+                        Download Backup
+                    </button>
+                </t>
+            </DashboardBlock>
+        </div>
+
+        <hr class="my-4 text-muted opacity-25"/>
+
+        <h1 class="text-primary mb-3 o_mysub_title">Cancel Subscription</h1>
+        <div class="row gx-5 mb-3">
+            <div class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="text-danger">Danger Zone</h5>
+                    <span class="text-dark">Proceed with caution as these actions will affect your access to this database.</span>
+                </div>
+            </div>
+
+            <DashboardBlock subtitle.translate="Transfer Ownership">
+                <div>Open a transfer request ticket and provide relevant documentation.</div>
+                <t t-set-slot="content">
+                    <a
+                        href="https://www.odoo.com/help-form#stage=administration"
+                        class="btn btn-secondary px-4 py-2"
+                        target="_blank"
+                    >
+                        Transfer Ownership
+                    </a>
+                </t>
+            </DashboardBlock>
+
+            <DashboardBlock subtitle.translate="Delete Database">
+                <div>This action will delete the database and close the subscription.</div>
+                <t t-set-slot="content">
+                    <button class="btn btn-danger px-4 py-2" t-on-click="this.dropDatabase">
+                        Delete
+                    </button>
+                </t>
+            </DashboardBlock>
+        </div>
+    </t>
+
+</templates>

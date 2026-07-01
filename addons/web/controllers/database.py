@@ -214,6 +214,26 @@ class Database(Controller):
             e.error_response = _render_exception(e)
             raise
 
+    @route('/web/database/rename', type='http', auth="none", methods=['POST'], csrf=False)
+    def rename(self, master_pwd, name, new_name):
+        if not odoo.modules.db.DB_NAME_RE.fullmatch(name):
+            e = _("Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden.")
+            res = Response(_render_template(error=e), UnprocessableEntity.code)
+            raise UnprocessableEntity(response=res)
+        try:
+            verify_access(master_pwd)
+            odoo.modules.db.rename(
+                name,
+                new_name,
+            )
+            if request.db == name:
+                # TODO: Check this
+                request.env.cr.close()  # Renaming a database leads to an unusable cursor
+            return request.redirect('/web/database/manager')
+        except Exception as e:
+            e.error_response = _render_exception(e)
+            raise
+
     @route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format='zip', filestore=True):
         dump_file = None

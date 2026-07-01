@@ -1,0 +1,33 @@
+.o_mysubscription {
+    font-size: 16px;
+    --title-color-blue2: #1BB6F9;
+    --title-color-blue: #007e83;
+    --subtitle-font-size: 24px;
+
+    .o_mysub_title {
+        color: var(--title-color-blue) !important;
+    }
+
+    .o_mysub_plan_title {
+        color: var(--title-color-blue) !important;
+    }
+
+    h2, h3 {
+        font-size: var(--subtitle-font-size) !important;
+    }
+
+    .o_mysub_plan_grid {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 0rem 1rem;
+    }
+
+    .o_mysub_shadow_card {
+        cursor: pointer;
+
+        &:hover {
+  		border: 1px solid $o-brand-odoo;
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+        }
+    }
+}

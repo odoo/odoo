@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.Dashboard" owl="1">
+        <div class="o_mysubscription o_action_manager w-100 bg-view position-relative h-100 overflow-auto">
+            <div class="container py-4 px-5">
+
+                <PlanSection hasSubscription="this.dashboardState.hasSubscription"/>
+                <hr class="my-4 text-muted opacity-25"/>
+
+                <IapSection/>
+                <hr class="my-4 text-muted opacity-25"/>
+
+                <DatabaseSection baseUrl="this.dashboardState.baseUrl"/>
+                <hr class="my-2 text-info"/>
+
+                <!-- TODO: remove this when im done -->
+                <span class="text-info">
+                    This section is for testing purposes.
+                </span>
+                <hr class="my-2 text-info"/>
+                <button
+                    class="btn btn-info px-4 py-2"
+                    t-on-click="() => this.switchHasSubscription()"
+                >
+                    with/without subscription
+                </button>
+
+            </div>
+        </div>
+    </t>
+
+</templates>

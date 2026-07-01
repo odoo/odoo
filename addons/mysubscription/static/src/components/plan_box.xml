@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.PlanBox">
+        <div class="col-md-6">
+
+            <div t-attf-class="card {{this.isCurrentPlan ? 'border-primary' : ''}} mb-3 p-3 rounded-5 h-100 cursor-pointer"
+                t-on-click="this.props.onClickPlan"
+            >
+                <div class="d-flex justify-content-between mb-3">
+                    <h2 t-attf-class="mb-0 {{this.props.id === 'community' ? 'o_mysub_plan_title' : 'text-primary'}}" t-out="this.props.title"/>
+                </div>
+
+                <t t-set="content" t-value="this.props.content"/>
+                <div class="mb-2" t-out="content.subtitle"/>
+
+                <div class="mb-2 flex-grow-1 o_mysub_plan_grid">
+                    <t t-foreach="content.addons" t-as="addon" t-key="addon.category">
+                        <div t-out="addon.category" class="text-nowrap fw-bold"/>
+                        <div t-out="addon.apps" class="text-muted"/>
+                    </t>
+                </div>
+
+                <hr class="my-2"/>
+
+                <div class="mt-auto d-flex flex-column flex-sm-row align-items-center">
+                    <div class="d-flex flex-column align-items-start">
+                        <div class="fw-bold fs-4">
+                            <h2 class="p-0 m-0 fw-bold o_mysub_plan_title" t-out="this.price"/>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 mt-sm-0 ms-sm-auto w-100 w-sm-auto d-flex justify-content-between justify-content-sm-end gap-2">
+                        <t t-foreach="this.props.buttons" t-as="btn" t-key="btn.text">
+                            <t t-if="btn.onClick">
+                                <button
+                                    t-attf-class="btn {{btn.class}} px-4 py-2 w-100 {{this.showPlanButton ? '' : 'invisible'}}"
+                                    t-on-click.stop="btn.onClick"
+                                    t-out="btn.text"
+                                />
+                            </t>
+                            <t t-else="">
+                                <a
+                                    t-att-href="btn.href"
+                                    t-attf-class="btn {{btn.class}} px-4 py-2 w-100 {{this.showPlanButton ? '' : 'invisible'}}"
+                                    target="_blank"
+                                    t-out="btn.text"
+                                />
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

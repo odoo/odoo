@@ -1,0 +1,70 @@
+<templates>
+    <t t-name="mysubscription.DatabaseDialog" >
+        <Dialog title="this.title" size="'md'">
+
+            <t t-if="this.props.action === 'drop'">
+                <h3>You are going to definitively delete <span t-out="this.props.dbName" class="text-danger"/>.</h3>
+                <div class="mb-3">All the data for this database will be deleted for all the users and cannot be restored.</div>
+                <div>We advise you to <a t-on-click="this.onBackupBeforeDrop" href="#">backup your database</a> before deleting it.</div>
+                <hr/>
+            </t>
+
+            <t t-if="this.props.action === 'backup'">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Filename</label>
+                    <input type="text" class="form-control" t-model="this.backupFilename" autocomplete="off"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Backup Format</label>
+                    <select class="form-select" t-model="this.backupFormat">
+                        <option value="zip">Zip (includes filestore)</option>
+                        <option value="dump">pg_dump (custom format without filestore)</option>
+                    </select>
+                </div>
+            </t>
+
+            <t t-if="this.props.action === 'duplicate'">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Duplicate Name</label>
+                    <input type="text" class="form-control" t-model="this.duplicateName" autocomplete="off"/>
+                </div>
+                <div class="form-check mb-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="neutralizeCheckbox"
+                        t-model="this.duplicateNeutralize"
+                    />
+                    <label class="form-check-label fw-semibold" for="neutralizeCheckbox">
+                        Testing purposes: <span class="fw-normal">disable external integrations, outgoing emails and scheduled actions.</span>
+                    </label>
+                </div>
+            </t>
+
+            <t t-if="this.props.action === 'rename'">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Duplicate Name</label>
+                    <input type="text" class="form-control" t-model="this.duplicateName" autocomplete="off"/>
+                </div>
+            </t>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Master Password</label>
+                <input type="password" class="form-control" t-model="this.masterPwd"/>
+            </div>
+
+            <t t-set-slot="footer">
+                <button t-att-class="(this.props.action === 'drop') ? 'btn btn-danger' : 'btn btn-primary'" t-att-disabled="this.isProcessing()" t-on-click="this.onSubmit">
+                    <i class="fa fa-circle-o-notch fa-spin me-1" t-if="this.isProcessing()"/>
+                    <t t-out="this.confirmButtonText"/>
+                </button>
+
+                <button class="btn btn-secondary" t-att-disabled="this.isProcessing()" t-on-click="this.props.close">
+                    Cancel
+                </button>
+            </t>
+
+        </Dialog>
+    </t>
+
+</templates>

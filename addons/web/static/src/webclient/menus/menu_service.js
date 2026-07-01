@@ -48,6 +48,7 @@ export const menuService = {
             return menusData[menuId];
         }
         function setCurrentMenu(menu) {
+            // debugger;
             menu = typeof menu === "number" ? _getMenu(menu) : menu;
             if (menu && menu.appID !== currentAppId) {
                 currentAppId = menu.appID;
