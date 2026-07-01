@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useSubEnv } from "@web/owl2/utils";
 import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -23,12 +24,15 @@ export class MoOverview extends Component {
     setup() {
         this.actionService = useService("action");
         this.ormService = useService("orm");
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
         this.context = {};
 
         this.state = proxy({
             data: {},
             showOptions: this.getDefaultConfig(),
+            allFolded: true,
+            foldable: true,
         });
 
         useSubEnv({ overviewBus: new EventBus() });
@@ -63,12 +67,29 @@ export class MoOverview extends Component {
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
         // Main MO's operations & byproducts are always unfolded by default.
-        if (reportValues.data?.operations?.summary?.index) {
+        if (
+            reportValues.data?.operations?.details?.length &&
+            reportValues.data.operations.summary?.index
+        ) {
             this.unfoldedIds.add(reportValues.data.operations.summary.index);
+            this.foldableIds.add(reportValues.data.operations.summary.index);
         }
-        if (reportValues.data?.byproducts?.summary?.index) {
+        if (
+            reportValues.data?.byproducts?.details?.length &&
+            reportValues.data.byproducts.summary?.index
+        ) {
             this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
+            this.foldableIds.add(reportValues.data.byproducts.summary.index);
         }
+        for (const component of reportValues.data?.components) {
+            if (component.replenishments?.length && component.summary?.index) {
+                this.foldableIds.add(component.summary.index);
+            }
+        }
+        if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
+        this.state.foldable = this.foldableIds.size > 0;
     }
 
     //---- Handlers ----
@@ -80,7 +101,16 @@ export class MoOverview extends Component {
     onChangeFolded(foldInfo) {
         const { indexes, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        indexes.forEach(index => this.unfoldedIds[operation](index));
+        indexes.forEach((index) => {
+            if (this.foldableIds.has(index)) {
+                this.unfoldedIds[operation](index);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     async onPrint() {
@@ -92,8 +122,8 @@ export class MoOverview extends Component {
         });
     }
 
-    onUnfold() {
-        this.env.overviewBus.trigger("unfold-all")
+    clickToggleFold() {
+        this.env.overviewBus.trigger("toggle-fold-all-mo", { foldAll: !this.state.allFolded });
     }
 
     //---- Helpers ----
@@ -171,6 +201,10 @@ export class MoOverview extends Component {
 
     get isProductionDone() {
         return this.state.data?.summary?.state === "done";
+    }
+
+    get foldButtonText() {
+        return this.state.allFolded ? _t("Unfold") : _t("Fold");
     }
 
     get hasOperations() {
