@@ -59,7 +59,7 @@ import { Test } from "./test";
  *
  * @typedef {string | ((pass: boolean) => string)} AssertionMessage
  *
- * @typedef {string | string[] | ((pass: boolean, raw: typeof String["raw"]) => string | string[])} AssertionReportMessage
+ * @typedef {string | string[] | ((pass: boolean) => string | string[])} AssertionReportMessage
  *
  * @typedef {VerifierOptions & {
  *  timeout?: number;
@@ -1645,7 +1645,7 @@ export class Matcher {
             predicate: (checked) => !!checked,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] ${prop}`],
-            onFail: () => [r`expected`, this._received, r`[! not] to be ${prop}`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to be ${prop}`],
             getFailedDetails: (checked) => detailsFromEntries([["Checked:", checked]]),
         }));
     }
@@ -1671,7 +1671,7 @@ export class Matcher {
             predicate: (displayed) => !!displayed,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] displayed`],
-            onFail: () => [r`expected`, this._received, r`[! not] to be displayed`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to be displayed`],
             getFailedDetails: (displayed) => detailsFromEntries([["Displayed:", displayed]]),
         }));
     }
@@ -2052,7 +2052,7 @@ export class Matcher {
             predicate: (elText) => (expectsText ? valueMatches(elText, text) : elText.length > 0),
             message: options?.message,
             onPass: () => [this._received, r`[[has%have]![does%do] not have] text`, text],
-            onFail: () => [r`expected`, this._received, r`[! not] to have the given text`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to have the given text`],
             getFailedDetails: (elText) => detailsFromValuesWithDiff(text, elText),
         }));
     }
@@ -2109,7 +2109,7 @@ export class Matcher {
             },
             message: options?.message,
             onPass: () => [this._received, r`[[has%have]![does%do] not have] value`, value],
-            onFail: () => [r`expected`, this._received, r`[! not] to have the given value`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to have the given value`],
             getFailedDetails: (elValue) => detailsFromValuesWithDiff(value, elValue),
         }));
     }
@@ -2373,14 +2373,14 @@ export class Assertion extends CaseEvent {
 
         // Message
         if (typeof message === "function") {
-            this.additionalMessage = message();
+            this.additionalMessage = message(this.pass);
         } else {
             this.additionalMessage = message;
         }
 
         // Reporting message
         if (typeof reportMessage === "function") {
-            reportMessage = reportMessage(this.pass, r);
+            reportMessage = reportMessage(this.pass);
         }
         const parts =
             $isArray(reportMessage) && !isLabel(reportMessage)

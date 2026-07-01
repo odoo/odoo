@@ -14,10 +14,10 @@ import {
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => serverState.partnerId });
+    author_id = fields.Many2one({ default: () => serverState.partnerId });
     is_discussion = fields.Boolean({ string: "Discussion" });
     is_note = fields.Boolean({ string: "Note" });
-    pinned_at = fields.Generic({ default: false });
+    pinned_at = fields.Datetime({ default: false });
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -188,11 +188,11 @@ export class MailMessage extends models.ServerModel {
             if (for_current_user) {
                 data["needaction"] = Boolean(
                     this.env.user &&
-                        MailNotification.search([
-                            ["mail_message_id", "=", message.id],
-                            ["is_read", "=", false],
-                            ["res_partner_id", "=", this.env.user.partner_id],
-                        ]).length
+                    MailNotification.search([
+                        ["mail_message_id", "=", message.id],
+                        ["is_read", "=", false],
+                        ["res_partner_id", "=", this.env.user.partner_id],
+                    ]).length
                 );
                 data["starred"] = message.starred_partner_ids?.includes(this.env.user?.partner_id);
                 const trackingValues = MailTrackingValue.browse(message.tracking_value_ids);

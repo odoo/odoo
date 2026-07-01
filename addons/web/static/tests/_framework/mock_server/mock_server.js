@@ -14,7 +14,11 @@ import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";
-import { DEFAULT_FIELD_PROPERTIES, getFieldDisplayName, S_SERVER_FIELD } from "./mock_fields";
+import {
+    DEFAULT_FIELD_PROPERTIES,
+    getFieldDisplayName,
+    validateAndCleanupField,
+} from "./mock_fields";
 import {
     getRecordQualifier,
     makeKwArgs,
@@ -772,6 +776,39 @@ export class MockServer {
     }
 
     /**
+     * @param {Model} model
+     * @param {FieldDefinition} field
+     */
+    _getRelatedFieldChain(model, field) {
+        /** @type {FieldDefinition[]} */
+        const fieldChain = [field];
+        const fieldNames = safeSplit(field.related, ".");
+        const lastFieldName = fieldNames.pop();
+        let currentModel = model;
+        let currentField = field;
+        for (const fieldName of fieldNames) {
+            currentField = currentModel._fields[fieldName];
+            if (!currentField) {
+                break;
+            }
+            fieldChain.push(currentField);
+            const modelName = currentField.relation;
+            currentModel = this._models[modelName];
+            if (!currentModel) {
+                break;
+            }
+        }
+        if (currentModel) {
+            const lastField = currentModel._fields[lastFieldName];
+            if (lastField) {
+                fieldChain.push(lastField);
+                return fieldChain;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @private
      * @param {string | URL} input
      * @param {RequestInit} init
@@ -863,8 +900,10 @@ export class MockServer {
      */
     async _loadModels() {
         const models = this._modelSpecs;
-        const serverModelInheritances = new Set();
         this._modelSpecs = [];
+
+        const allServerFields = new Set();
+        const serverModelInheritances = new Set();
 
         let serverModels = {};
         if (this._modelNamesToFetch.size) {
@@ -911,16 +950,21 @@ export class MockServer {
                 }
 
                 // Fields (lowest priority): server fields definitions
-                for (const [fieldName, serverField] of Object.entries(fields)) {
-                    model._fields[fieldName] = {
-                        ...DEFAULT_FIELD_PROPERTIES,
-                        ...serverField,
-                        ...model._fields[fieldName],
-                        [S_SERVER_FIELD]: true,
-                    };
+                for (const [fieldName, serverFieldDefinition] of Object.entries(fields)) {
+                    const serverField = validateAndCleanupField({
+                        ...DEFAULT_FIELD_PROPERTIES, // 1. common default field properties
+                        ...serverFieldDefinition, // 2. server field properties
+                        ...model._fields[fieldName], // 3. custom properties on local model
+                    });
+                    allServerFields.add(serverField);
+                    model._fields[fieldName] = serverField;
                 }
 
                 Object.assign(model, otherProperties);
+            } else {
+                for (const field of Object.values(model._fields)) {
+                    validateAndCleanupField(field);
+                }
             }
 
             // Validate _rec_name
@@ -981,7 +1025,8 @@ export class MockServer {
             for (const [fieldName, field] of Object.entries(model._fields)) {
                 // Check missing models
                 if (field.relation && !this._models[field.relation]) {
-                    if (field[S_SERVER_FIELD]) {
+                    if (allServerFields.has(field)) {
+                        // Delete server fields that are not loaded
                         delete model._fields[fieldName];
                         continue;
                     } else {
@@ -1016,7 +1061,13 @@ export class MockServer {
                     model._computes[fieldName] = computeFn;
                 } else if (field.related) {
                     // Related field
-                    model._related.add(fieldName);
+                    const relatedFields = this._getRelatedFieldChain(model, field);
+                    if (relatedFields) {
+                        model._related.set(fieldName, relatedFields);
+                    } else {
+                        // Incomplete field chain: remove 'related' attribute
+                        delete field.related;
+                    }
                 }
             }
 
@@ -1046,6 +1097,7 @@ export class MockServer {
                 }
                 model.push(record);
             }
+            model._lastRecId = Math.max(model._lastRecId, ...seenIds, 0);
             model._records = [];
 
             // Records without ID are assigned later to avoid collisions
@@ -1062,7 +1114,7 @@ export class MockServer {
             for (const record of model) {
                 model._applyDefaults(record);
             }
-            model._applyComputesAndValidate();
+            model._applyComputesAndValidate({ force: true });
         }
 
         // creation of the ir.model.fields records, required for tracked fields
