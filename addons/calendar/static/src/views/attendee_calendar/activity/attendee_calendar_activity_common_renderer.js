@@ -92,12 +92,24 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 onActivityChanged: () => {
                     this.props.model.load();
                 },
+<<<<<<< d163ee58b32c6c3f6a4b54ab5f5090b0829412f9
                 /** @type {ReturnType<typeof import("./attendee_calendar_activity_list_popover_item").onViewMeetingType>["type"]} */
                 onViewMeeting: (ev, { eventAtRender }) => {
                     const el = document.querySelector(
                         `.fc-event[data-event-id="${eventAtRender.id}"]`
                     );
                     const record = this.props.model.records[eventAtRender.id];
+||||||| 45818c8ead21af0f819efe71bb79a90a611a40de
+                onViewMeeting: (eventId) => {
+                    const el = document.querySelector(`.fc-event[data-event-id="${eventId}"]`);
+                    const record = this.props.model.records[eventId];
+=======
+                onViewMeeting: (calendarEvent) => {
+                    const el = document.querySelector(
+                        `.fc-event[data-event-id="${calendarEvent.id}"]`
+                    );
+                    const record = this.props.model.records[calendarEvent.id];
+>>>>>>> 66374a1f2aa67f7658eb663720f8d28bde364583
                     if (el && record) {
                         this.activityListPopover.close();
                         this.openPopover(el, record);
