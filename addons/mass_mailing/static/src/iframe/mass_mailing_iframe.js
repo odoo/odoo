@@ -22,7 +22,7 @@ import { useBus, useChildRef, useForwardRefToParent, useService } from "@web/cor
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
@@ -175,36 +175,36 @@ export class MassMailingIframe extends Component {
             iframeResize();
             sidebarResize();
         });
-        useLayoutEffect(
-            () => {
-                this.iframeLoaded.promise.then(() => {
-                    if (status(this) === "destroyed") {
-                        return;
-                    }
-                    this.iframeRef.el.contentDocument.body.classList[
-                        this.state.showFullscreen ? "add" : "remove"
-                    ]("o_mass_mailing_iframe_fullscreen");
-                    this.throttledResize();
-                    this.editor?.shared.builderOverlay?.refreshOverlays();
-                });
-            },
-            () => [this.state.showFullscreen]
-        );
-        useLayoutEffect(
-            () => {
-                this.iframeLoaded.promise.then(() => {
-                    if (status(this) === "destroyed") {
-                        return;
-                    }
-                    this.iframeRef.el.contentDocument.body.classList[
-                        this.state.isMobile ? "add" : "remove"
-                    ]("o_mass_mailing_iframe_mobile");
-                    this.throttledResize();
-                    this.editor?.shared.builderOverlay?.refreshOverlays();
-                });
-            },
-            () => [this.state.isMobile]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.iframeLoaded.promise.then(() => {
+        //             if (status(this) === "destroyed") {
+        //                 return;
+        //             }
+        //             this.iframeRef.el.contentDocument.body.classList[
+        //                 this.state.showFullscreen ? "add" : "remove"
+        //             ]("o_mass_mailing_iframe_fullscreen");
+        //             this.throttledResize();
+        //             this.editor?.shared.builderOverlay?.refreshOverlays();
+        //         });
+        //     },
+        //     () => [this.state.showFullscreen]
+        // );
+        // useLayoutEffect(
+        //     () => {
+        //         this.iframeLoaded.promise.then(() => {
+        //             if (status(this) === "destroyed") {
+        //                 return;
+        //             }
+        //             this.iframeRef.el.contentDocument.body.classList[
+        //                 this.state.isMobile ? "add" : "remove"
+        //             ]("o_mass_mailing_iframe_mobile");
+        //             this.throttledResize();
+        //             this.editor?.shared.builderOverlay?.refreshOverlays();
+        //         });
+        //     },
+        //     () => [this.state.isMobile]
+        // );
         onWillUnmount(() => {
             if (this.htmlResizeObserver) {
                 this.htmlResizeObserver.disconnect();
