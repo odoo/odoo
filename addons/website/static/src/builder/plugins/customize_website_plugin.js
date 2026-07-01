@@ -39,7 +39,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 /**
- * @typedef {((color: string) => void)[]} on_website_color_updated_handlers
+ * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -1019,7 +1019,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
         await Promise.allSettled(
-            this.getResource("on_website_color_updated_handlers").map((handler) => handler(color))
+            this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
         );
     }
 }
