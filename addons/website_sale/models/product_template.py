@@ -79,6 +79,20 @@ class ProductTemplate(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
     )
+    dropzone_above_price = fields.Html(
+        string="Drop Zone Above Price",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
+        sanitize_form=False,
+    )
+    dropzone_above_specification = fields.Html(
+        string="Drop Zone Above Specification",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
+        sanitize_form=False,
+    )
 
     alternative_product_ids = fields.Many2many(
         string="Alternative Products",
