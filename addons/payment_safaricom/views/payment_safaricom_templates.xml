@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="inline_form">
+        <div name="o_safaricom_form">
+            <div class="mb-3">
+                <label for="o_safaricom_phone_number" class="form-label fw-bold">
+                    M-PESA Phone Number
+                </label>
+                <input type="text"
+                       id="o_safaricom_phone_number"
+                       name="o_safaricom_phone_number"
+                       class="form-control"
+                       placeholder="e.g., 254712345678"
+                       t-att-value="env.user.partner_id.phone or ''"
+                       required="required"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- Display of /payment/status -->
+    <template id="payment_status" inherit_id="payment.payment_status" primary="True">
+        <xpath expr="//div[hasclass('o_payment_status_pending')]" position="replace">
+            <div class="o_payment_status_pending text-center mb-3">
+                <div class="spinner-border mb-4 text-muted"/>
+                <h1 class="h3-fs">
+                    Waiting for your confirmation...
+                </h1>
+                <p>
+                    Check your phone and enter your M-PESA PIN to confirm the payment.
+                </p>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_payment_summary')]" position="after">
+            <div class="text-center mt-4">
+                <a name="o_safaricom_skip" href="#" class="text-muted me-3 d-none">Skip</a>
+                <a name="o_safaricom_cancel" href="#" class="text-muted d-none">Cancel</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

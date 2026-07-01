@@ -177,3 +177,13 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         self.assertDictEqual(
             token_values, {"payment_details": "2151", "provider_ref": "6645aaa2f00da60017cdc669"}
         )
+
+    def test_idr_currency_rounding_on_creation(self):
+        self.currency = (
+            self
+            .env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", "IDR")], limit=1)
+        )
+        tx = self._create_transaction("direct", amount=1111.87)
+        self.assertEqual(tx.amount, 1111)

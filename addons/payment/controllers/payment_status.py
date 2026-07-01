@@ -91,6 +91,7 @@ class PaymentStatus(http.Controller):
             "state": monitored_tx.state,
             "provider_code": monitored_tx.provider_code,
             "is_post_processed": monitored_tx.is_post_processed,
+            "landing_route": monitored_tx.landing_route,
         }
 
     @classmethod

@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_processing_values(processing_values)
 
         converted_amount = payment_utils.to_minor_currency_units(
-            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
+            self.amount, self.currency_id, self.provider_id._get_amount_precision(self.currency_id)
         )
         return {
             "converted_amount": converted_amount,
@@ -48,7 +48,7 @@ class PaymentTransaction(models.Model):
 
         # Prepare the payment request to Adyen.
         converted_amount = payment_utils.to_minor_currency_units(
-            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
+            self.amount, self.currency_id, self.provider_id._get_amount_precision(self.currency_id)
         )
         partner_country_code = (
             self.partner_country_id.code or self.provider_id.company_id.country_id.code or "NL"
@@ -111,7 +111,7 @@ class PaymentTransaction(models.Model):
 
         # Send the capture request to Adyen.
         converted_amount = payment_utils.to_minor_currency_units(
-            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
+            self.amount, self.currency_id, self.provider_id._get_amount_precision(self.currency_id)
         )
         data = {
             "merchantAccount": self.provider_id.adyen_merchant_account,
@@ -175,7 +175,7 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             -self.amount,  # The amount is negative for refund transactions
             self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+            arbitrary_decimal_number=self.provider_id._get_amount_precision(self.currency_id),
         )
         data = {
             "merchantAccount": self.provider_id.adyen_merchant_account,
@@ -227,7 +227,9 @@ class PaymentTransaction(models.Model):
                 converted_notification_amount = payment_utils.to_major_currency_units(
                     payment_data_amount,
                     source_tx.currency_id,
-                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+                    arbitrary_decimal_number=source_tx.provider_id._get_amount_precision(
+                        source_tx.currency_id
+                    ),
                 )
                 if tx and tx.amount != converted_notification_amount:
                     # If the void was requested expecting a certain amount but, in the meantime,
@@ -294,7 +296,9 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_major_currency_units(
             amount,
             source_tx.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+            arbitrary_decimal_number=source_tx.provider_id._get_amount_precision(
+                source_tx.currency_id
+            ),
         )
         return source_tx._create_child_transaction(
             converted_amount, is_refund=is_refund, provider_reference=provider_reference
@@ -423,17 +427,12 @@ class PaymentTransaction(models.Model):
             return super()._extract_amount_data(payment_data)
 
         amount_data = payment_data.get("amount", {})
+        precision = self.provider_id._get_amount_precision(self.currency_id)
         amount = payment_utils.to_major_currency_units(
-            amount_data.get("value", 0),
-            self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+            amount_data.get("value", 0), self.currency_id, arbitrary_decimal_number=precision
         )
         currency_code = amount_data.get("currency")
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
+        return {"amount": amount, "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

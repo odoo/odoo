@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">payment.provider.form.inherit.safaricom</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'safaricom'">
+                    <field name="safaricom_transaction_type" required="is_live"/>
+                    <field name="safaricom_consumer_key" required="is_live" widget="password"/>
+                    <field name="safaricom_consumer_secret" required="is_live" widget="password"/>
+                    <field name="safaricom_passkey" required="is_live" widget="password"/>
+                    <field name="safaricom_shortcode" required="is_live"/>
+                    <field name="safaricom_till_number"
+                           invisible="safaricom_transaction_type != 'CustomerBuyGoodsOnline'"
+                           required="safaricom_transaction_type == 'CustomerBuyGoodsOnline' and code == 'safaricom'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

@@ -25,7 +25,7 @@ class StripeCommon(PaymentCommon):
             "amount": payment_utils.to_minor_currency_units(
                 cls.amount,
                 cls.currency,
-                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(cls.currency.name),
+                arbitrary_decimal_number=cls.provider._get_amount_precision(cls.currency),
             ),
             "currency": cls.currency.name.lower(),
         }

@@ -55,6 +55,16 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                     f"the linked order.",
                 )
 
+    def test_failed_payment_reopens_sent_order_for_retry(self):
+        """Test that a website order moved to 'sent' by a pending payment is reopened to 'draft'
+        when the payment fails, so it remains usable as a cart for retrying."""
+        self.cart.action_quotation_sent()  # The pending transaction moves the order to 'sent'.
+        self._update_transaction(self.tx, state="error")
+        # Keep the 'error' state set above; the provider's _apply_updates is not under test here.
+        with patch.object(self.env.registry["payment.transaction"], "_apply_updates"):
+            self.tx.with_context(payment_safe_write=True)._process({})
+        self.assertEqual(self.cart.state, "draft")
+
     @mute_logger("odoo.http")
     def test_transaction_route_rejects_unexpected_kwarg(self):
         self.cart.partner_id.write(self.dummy_partner_address_values.copy())

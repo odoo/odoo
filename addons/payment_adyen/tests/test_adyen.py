@@ -568,3 +568,13 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         test_address = adyen_utils.format_partner_address(test_partner)
         for key in ("city", "country", "stateOrProvince", "street"):
             self.assertTrue(test_address.get(key))
+
+    def test_cve_currency_rounding_on_creation(self):
+        self.currency = (
+            self
+            .env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", "CVE")], limit=1)
+        )
+        tx = self._create_transaction("direct", amount=1111.87)
+        self.assertEqual(tx.amount, 1111)
