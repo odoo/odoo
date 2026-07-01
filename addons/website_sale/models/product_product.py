@@ -8,7 +8,7 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
+    _name = "product.product"
     _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
@@ -94,19 +94,31 @@ class ProductProduct(models.Model):
             return False
         if not self._get_available_uoms():
             return False
-        return not (
-            self.env.website.prevent_sale
-            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
+        return (
+            not (
+                self.env.website.prevent_sale
+                and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
+            )
+            and self._is_purchasable()
         )
 
     def _is_add_to_cart_allowed(self):
+        """Context-aware check to determine if the current user is permitted to buy the product.
+
+        :return: True if the current user session permits adding the item to cart, False otherwise.
+        :rtype: bool
+        """
         self.ensure_one()
-        if self.env.user.has_group("base.group_system"):
-            return True
         if self._is_donation():
             return True
+        if not self.product_tmpl_id._is_purchasable():
+            return False
+        if self.env.user.has_group("base.group_system"):
+            return True
+        # is archived or unpublished
         if not self.active or not self.website_published:
             return False
+        # is outside website domain
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
         website = self.env.website
@@ -114,7 +126,12 @@ class ProductProduct(models.Model):
             self, not self._get_contextual_price()
         ):
             return False
+        # has eCommerce rights
         return website.has_ecommerce_access()
+
+    def _is_purchasable(self):
+        """Extension hook for module-specific restrictions."""
+        return True
 
     @api.onchange("public_categ_ids")
     def _onchange_public_categ_ids(self):
@@ -127,7 +144,7 @@ class ProductProduct(models.Model):
         """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website = self.env.website or self.env["website"].browse(self.env.context.get("host_id"))
         base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
@@ -135,14 +152,11 @@ class ProductProduct(models.Model):
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        offer = {
-            "@type": "Offer",
-            "price": price,
-            "priceCurrency": website.currency_id.name,
-        }
+        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
         if self.is_product_variant and self.is_storable:
             offer["availability"] = (
-                "https://schema.org/OutOfStock" if self._is_sold_out()
+                "https://schema.org/OutOfStock"
+                if self._is_sold_out()
                 else "https://schema.org/InStock"
             )
 

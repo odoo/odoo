@@ -28,8 +28,8 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         if product_template._is_donation():
             return False
         single_product_variant = product_template.get_single_product_variant()
-        has_optional_products = bool(
-            product_template.optional_product_ids.filtered(self._should_show_product)
+        has_optional_products = any(
+            self._should_show_product(p) for p in product_template.optional_product_ids
         )
         return (
             has_optional_products
@@ -256,7 +256,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         if request.is_frontend:
             return (
                 should_show_product
-                and product_template._is_add_to_cart_possible()
+                and product_template._has_ecommerce_sellable_variants()
                 and product_template.filtered_domain(self.env.website.website_domain())
             )
         return should_show_product

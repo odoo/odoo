@@ -272,14 +272,10 @@ class ProductTemplate(models.Model):
         """
         res = super().get_single_product_variant()
         if res.get("product_id", False):
-            has_optional_products = False
-            for optional_product in self.product_variant_id.optional_product_ids:
-                if (
-                    optional_product.has_dynamic_attributes()
-                    or optional_product._get_possible_variants()
-                ):
-                    has_optional_products = True
-                    break
+            has_optional_products = any(
+                op.has_dynamic_attributes() or op._get_possible_variants()
+                for op in self.product_variant_id.optional_product_ids
+            )
             res.update({
                 "has_optional_products": has_optional_products,
                 "is_combo": self.type == "combo",
