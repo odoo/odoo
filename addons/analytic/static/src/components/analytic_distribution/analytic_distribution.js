@@ -4,6 +4,7 @@ import {
     onPatched,
     onWillStart,
     onWillUnmount,
+    plugin,
     proxy,
     signal,
     useListener,
@@ -11,6 +12,7 @@ import {
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { usePosition } from "@web/core/position/position_hook";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -55,6 +57,7 @@ export class AnalyticDistribution extends Component {
     setup(){
         this.orm = useService("orm");
         this.batchedOrm = useService("batchedOrm");
+        this.offlinePlugin = plugin(OfflinePlugin);
 
         this.state = proxy({
             showDropdown: false,
@@ -445,7 +448,7 @@ export class AnalyticDistribution extends Component {
     }
 
     get editingRecord() {
-        return !this.props.readonly;
+        return !this.props.readonly && !this.offlinePlugin.isOffline();
     }
 
     get isDropdownOpen() {
@@ -536,6 +539,9 @@ export class AnalyticDistribution extends Component {
     }
 
     async openAnalyticEditor() {
+        if (this.offlinePlugin.isOffline()) {
+            return;
+        }
         if (!this.allPlans.length) {
             await this.fetchAllPlans(this.props);
             await this.jsonToData(this.props.record.data[this.props.name]);
