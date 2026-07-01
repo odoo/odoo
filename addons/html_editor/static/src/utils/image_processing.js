@@ -252,6 +252,8 @@ export async function loadImageInfo(el, attachmentSrc = "") {
         newDataset.originalId = original.id;
         newDataset.originalSrc = original.image_src;
         newDataset.mimetypeBeforeConversion = original.mimetype;
+    } else {
+        newDataset.originalSrc = src;
     }
     return newDataset;
 }
