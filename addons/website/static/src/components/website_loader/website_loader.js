@@ -1,8 +1,7 @@
-// import { useLayoutEffect } from "@web/owl2/utils";
 import { delay } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
-import { Component, EventBus, proxy } from "@odoo/owl";
+import { Component, EventBus, proxy, useEffect } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
     static props = {
@@ -31,24 +30,21 @@ export class WebsiteLoader extends Component {
         this.stopProgressStepDelay = 300;
         this.stopProgressFinalPause = 1500;
 
-        // useLayoutEffect(
-        //     (isVisible) => {
-        //         if (isVisible) {
-        //             // Prevent user from closing/refreshing the window while the
-        //             // loader is visible.
-        //             window.addEventListener("beforeunload", this.showRefreshConfirmation);
-        //             this.startLoader();
-        //         } else {
-        //             window.removeEventListener("beforeunload", this.showRefreshConfirmation);
-        //         }
-        //
-        //         return () => {
-        //             window.removeEventListener("beforeunload", this.showRefreshConfirmation);
-        //             this.clearLoaderInterval();
-        //         };
-        //     },
-        //     () => [this.state.isVisible]
-        // );
+        useEffect(() => {
+            if (this.state.isVisible) {
+                // Prevent user from closing/refreshing the window while the
+                // loader is visible.
+                window.addEventListener("beforeunload", this.showRefreshConfirmation);
+                this.startLoader();
+            } else {
+                window.removeEventListener("beforeunload", this.showRefreshConfirmation);
+            }
+
+            return () => {
+                window.removeEventListener("beforeunload", this.showRefreshConfirmation);
+                this.clearLoaderInterval();
+            };
+        });
 
         useBus(this.props.bus, "SHOW-WEBSITE-LOADER", (ev) => {
             const payload = ev.detail;
