@@ -44,19 +44,21 @@
 
     <t t-name="stock.ReportMRPLines">
         <t t-foreach="lines" t-as="line" t-key="line.id">
-            <tr t-att-class="line.model === 'stock.move.line' ? 'o_stock_reports_level0' : 'o_stock_reports_default_style'">
+            <t t-if="!line.isFolded and line.line_type=='child' and line.lines.length" t-call="stock.ReportMRPLines"
+                lines="line.lines"/>
+            <tr t-att-class="line.model_name === 'stock.move.line' ? 'o_stock_reports_level0' : 'o_stock_reports_default_style'">
                 <t t-foreach="line.columns" t-as="col" t-key="col.name">
                     <td t-att-class="line.unfoldable ? 'o_stock_reports_unfoldable' : ''">
                         <t t-if="col_first">
                             <span t-attf-style="margin-left: {{line.level}}px"/>
-                            <t t-if="hasUpDown and line.is_used ">
-                                <span role="img" title="Traceability Report" aria-label="Traceability Report" t-on-click.prevent="() => this.onClickUpDownStream(line)">
-                                    <i class="fa fa-fw fa-level-up fa-rotate-270"/>
+                            <t t-if="line.line_type == 'child' and line.unfoldable">
+                                <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line, 'child')">
+                                    <i class="fa fa-fw fa-level-up" t-att-class="line.isFolded ? '' : 'fa-rotate-270'" role="img" aria-label="Expand" t-att-title="line.isFolded ? 'Expand' : 'Fold'"/>
                                 </span>
                             </t>
-                            <t t-elif="line.unfoldable">
-                                <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line)">
-                                    <i class="fa fa-fw" t-att-class="line.isFolded ? 'fa-caret-right' : 'fa-caret-down'" role="img" aria-label="Unfold" title="Unfold"/>
+                            <t t-elif="line.line_type == 'parent' and line.unfoldable">
+                                <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line, 'parent')">
+                                    <i class="fa fa-fw" t-att-class="line.isFolded ? 'fa-caret-right' : 'fa-caret-down'" role="img" aria-label="Unfold" t-att-title="line.isFolded ? 'Unfold' : 'Fold'"/>
                                 </span>
                             </t>
                         </t>
@@ -64,7 +66,7 @@
                         <span t-if="col.value and line.reference === col.value" t-att-class="!line.unfoldable ? 'o_stock_reports_nofoldable' : ''">
                             <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-out="col.value"/>
                         </span>
-                        <span t-elif="col.value and ((line.picking_type_code == 'incoming' and line.location_source === col.value) or (line.picking_type_code == 'outgoing' and line.location_destination === col.value))">
+                        <span t-elif="col.value and ((line.picking_type_code == 'incoming' and line.source_name === col.value) or (line.picking_type_code == 'outgoing' and line.destination_name === col.value))">
                             <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-out="col.value"/>
                         </span>
                         <span t-elif="col.value and line.lot_name === col.value">
@@ -75,9 +77,8 @@
                 </t>
             </tr>
 
-            <t t-if="!line.isFolded and line.lines.length" t-call="stock.ReportMRPLines"
-                lines="line.lines"
-                hasUpDown="false"/>
+            <t t-if="!line.isFolded and line.line_type=='parent' and line.lines.length" t-call="stock.ReportMRPLines"
+                lines="line.lines"/>
         </t>
     </t>
 

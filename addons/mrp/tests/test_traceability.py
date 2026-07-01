@@ -115,17 +115,8 @@ class TestTraceability(TestMrpCommon):
                 'model': 'mrp.production',
             })
             lines = self.env['stock.traceability.report'].with_context(context).get_lines()
-            self.assertEqual(len(lines), 1, "Should always return 1 line : the final product")
-            final_product = lines[0]
-            self.assertEqual(final_product['unfoldable'], True, "Final product should always be unfoldable")
-
-            # Find parts of the final products
-            lines = self.env['stock.traceability.report'].get_lines(final_product['id'], **{
-                'level': final_product['level'],
-                'model_id': final_product['model_id'],
-                'model_name': final_product['model'],
-            })
-            self.assertEqual(len(lines), 3, "There should be 3 lines. 1 for untracked, 1 for lot, and 1 for serial")
+            self.assertEqual(len(lines), 4, "Should always return 4 line : the final product first and the components")
+            lines = lines[1:]
 
             for line in lines:
                 columns = {column['name']: column['value'] for column in line['columns']}
