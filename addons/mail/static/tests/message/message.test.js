@@ -37,10 +37,8 @@ import {
     getService,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { getOrigin, url } from "@web/core/utils/urls";
-
-const { DateTime } = luxon;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1047,9 +1045,9 @@ test("basic rendering of message", async () => {
         text: "Demo",
     });
     await contains(
-        `.o-mail-Message .o-mail-Message-header .o-mail-Message-date[title='${deserializeDateTime(
-            "2019-04-20 10:00:00"
-        ).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}']`
+        `.o-mail-Message .o-mail-Message-header .o-mail-Message-date[title='${formatDateTime(
+            deserializeDateTime("2019-04-20 10:00:00")
+        )}']`
     );
 });
 
