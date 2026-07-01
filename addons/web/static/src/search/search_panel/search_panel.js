@@ -1,8 +1,8 @@
-import { render, useRef } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, signal, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useSetupAction } from "@web/search/action_hook";
@@ -57,7 +57,7 @@ export class SearchPanel extends Component {
             sidebarExpanded: true,
         });
         this.hasImportedState = false;
-        this.root = useRef("root");
+        this.root = signal.ref(HTMLDivElement);
         this.scrollTop = 0;
         this.dropdownStates = {};
         this.width = "10px";
@@ -74,15 +74,13 @@ export class SearchPanel extends Component {
             render(this);
         });
 
-        // useLayoutEffect(
-        //     (el) => {
-        //         if (el && this.hasImportedState) {
-        //             el.style["min-width"] = this.width;
-        //             el.scroll({ top: this.scrollTop });
-        //         }
-        //     },
-        //     () => [this.root.el]
-        // );
+        useEffect(() => {
+            const el = this.root();
+            if (el && this.hasImportedState) {
+                el.style["min-width"] = this.width;
+                el.scroll({ top: this.scrollTop });
+            }
+        });
 
         useSetupAction({
             getGlobalState: () => ({
@@ -118,7 +116,7 @@ export class SearchPanel extends Component {
     exportState() {
         const exported = {
             expanded: this.state.expanded,
-            scrollTop: this.root.el?.scrollTop || 0,
+            scrollTop: this.root()?.scrollTop || 0,
             sidebarExpanded: this.state.sidebarExpanded,
             width: this.width,
         };
@@ -389,7 +387,7 @@ export class SearchPanel extends Component {
         }
 
         const initialX = ev.pageX;
-        const initialWidth = this.root.el.offsetWidth;
+        const initialWidth = this.root().offsetWidth;
         const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup"];
 
         // Pointermove event : resize header
@@ -400,7 +398,7 @@ export class SearchPanel extends Component {
             const delta = ev.pageX - initialX;
             const newWidth = Math.min(maxWidth, Math.max(10, initialWidth + delta));
             this.width = `${newWidth}px`;
-            this.root.el.style["min-width"] = this.width;
+            this.root().style["min-width"] = this.width;
         };
         document.addEventListener("pointermove", resizePanel, true);
 
