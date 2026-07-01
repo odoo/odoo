@@ -4,10 +4,20 @@
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev)">
             <DiscussAvatar record="this.member"/>
             <div t-custom-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member.name" t-att-title="this.member.name"/>
+                <div class="ms-2 d-flex align-items-center overflow-hidden">
+                    <span
+                        class="text-truncate text-muted fw-bold"
+                        t-out="this.member.name"
+                        t-att-title="this.member.name"
+                    />
+                    <i t-if="this.member.channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>
+                    <i t-if="this.member.channel_role === 'admin'" class="ms-1 fa fa-star text-primary lh-sm" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+                </div>
+                <span
+                    t-if="this.member.is_invitation_pending"
+                    class="ms-2 text-truncate smaller fst-italic text-muted"
+                >Invitation Pending</span>
             </div>
-            <i t-if="this.member.channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="this.member.channel_role === 'admin'" class="ms-1 fa fa-star text-primary lh-sm" role="img" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="ms-auto">
                 <span t-if="this.member.in(this.member.channel_id.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
                 <span t-if="this.member.rtcSession?.is_muted and !this.member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>

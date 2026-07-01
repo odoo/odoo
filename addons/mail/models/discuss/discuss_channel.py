@@ -889,7 +889,18 @@ class DiscussChannel(models.Model):
                     "Could not contact the mail server, please check your outgoing email server configuration."
                 )
             raise UserError(error_msg) from mde
-
+        # Create pending guest members so the invitation is immediately visible in members list.
+        # sudo: mail.guest - search and fetch guests with sudo to get access rights as normal users won't have access to.
+        guests = self.env["mail.guest"].sudo().search_fetch([("email", "in", list(eligible_emails))])
+        guests_to_create = [
+            {"email": email, "name": email}
+            for email in eligible_emails
+            if email not in guests.mapped("email")
+        ]
+        if guests_to_create:
+            # sudo: mail.guest - creating guests with sudo to get access rights as normal users won't have access to.
+            guests |= self.env["mail.guest"].sudo().create(guests_to_create)
+        self._add_members(guests=guests.sudo(False), create_member_params={"is_invitation_pending": True}, post_joined_message=False)
     # ------------------------------------------------------------
     # RTC
     # ------------------------------------------------------------
@@ -1315,6 +1326,8 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         guest = self.env["mail.guest"]
         if member := self.self_member_id:
+            if member.is_invitation_pending:
+                member.is_invitation_pending = False
             return member.partner_id, member.guest_id
         if not self.env.user._is_public():
             self._add_members(users=self.env.user, post_joined_message=post_joined_message)

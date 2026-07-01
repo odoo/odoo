@@ -50,6 +50,7 @@ class DiscussChannelMember(models.Model):
         "Customized Notifications",
         help="Use default from user settings if not specified. This setting will only be applied to channels.",
     )
+    is_invitation_pending = fields.Boolean("Invitation Pending")
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
     unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
@@ -275,6 +276,7 @@ class DiscussChannelMember(models.Model):
         super()._sync_field_names(res)
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res["channel_id", None].attr("channel_role", sudo=True)
+        res["channel_id", None].attr("is_invitation_pending")
         res[None].extend(["custom_notifications", "is_favorite"])
         res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
         res[None].extend(["mute_until_dt", "new_message_separator"])
@@ -435,7 +437,7 @@ class DiscussChannelMember(models.Model):
     def _store_member_fields(self, res: Store.FieldList):
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res.attr("channel_role", sudo=True)
-        res.extend(["create_date", "last_seen_dt", "seen_message_id"])
+        res.extend(["create_date", "is_invitation_pending", "last_seen_dt", "seen_message_id"])
         self._store_persona_default_fields(res)
 
     # --------------------------------------------------------------------------

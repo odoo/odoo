@@ -62,11 +62,6 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
     def test_03_only_invite_by_email_on_allowed_channel_types(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
         john = new_test_user(self.env, "john", groups="base.group_user")
-        chat = (
-            self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
-        )
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
@@ -90,7 +85,8 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 f"Inviting by email is not allowed for this channel type ({channel.channel_type}).",
             )
         with self.mock_mail_gateway():
-            for channel in [chat, group_chat, public_channel]:
+            # Inviting by email on chat will be allowed but will convert it to a group channel first to allow multiple members.
+            for channel in [group_chat, public_channel]:
                 channel.invite_by_email(["some@email.com"])
                 self.assertMailMail(
                     self.env["res.partner"],
@@ -136,11 +132,6 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         alfred_guest = self.env["mail.guest"].create({"email": "alfred@test.com", "name": "Alfred"})
-        chat = (
-            self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
-        )
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
@@ -160,7 +151,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         )
         cases = [
             *product(
-                [chat, private_channel, group_chat, public_channel],
+                [private_channel, group_chat, public_channel],
                 ["foo@bar"],
                 [False],
             ),
@@ -172,7 +163,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             ),
             # Channel types that allow inviting by email, valid email, selectable.
             *product(
-                [chat, group_chat, public_channel],
+                [group_chat, public_channel],
                 ["bob@odoo.com", "alfred@odoo.com", "jane@odoo.com"],
                 [True],
             ),
