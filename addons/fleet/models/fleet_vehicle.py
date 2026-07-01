@@ -134,7 +134,7 @@ class FleetVehicle(models.Model):
          ('open', 'In Progress'),
          ('expired', 'Expired'),
          ('closed', 'Closed')
-        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
+        ], string='Last Contract State', compute='_compute_contract_reminder', required=False, groups="fleet.fleet_group_user")
     car_value = fields.Float(string="Catalog Value (Tax Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()

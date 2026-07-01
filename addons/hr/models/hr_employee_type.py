@@ -23,7 +23,7 @@ class HrEmployeeType(models.Model):
             contract_type.code = contract_type.name
 
     def _compute_employee_count(self):
-        employee_count_by_employee_type = dict(self.env['hr.employee']._read_group(
+        employee_count_by_employee_type = dict(self.env['hr.employee'].sudo()._read_group(
             domain=[
                     ('employee_type_id', 'in', self.ids),
                     ('company_id', 'in', self.env.companies.ids),
