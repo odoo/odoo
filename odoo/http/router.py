@@ -42,16 +42,16 @@ from odoo.tools.misc import submap
 
 from . import request, request_var
 from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
-from .response import Response
-from .retrying import retrying
-from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .stream import STATIC_CACHE, Stream
 from .requestlib import (
     HTTPRequest,
     Request,
     is_cors_preflight,
 )
+from .response import Response
+from .retrying import retrying
+from .routing_map import ROUTING_KEYS, _generate_routing_rules
 from .session import SessionExpiredException, get_default_session, logout, session_store
+from .stream import STATIC_CACHE, Stream
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

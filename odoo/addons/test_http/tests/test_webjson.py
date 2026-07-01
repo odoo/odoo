@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import html
-from http import HTTPStatus
 from base64 import b64encode
-from urllib.parse import parse_qs, urlsplit
-
 from datetime import date
+from http import HTTPStatus
+from urllib.parse import parse_qs, urlsplit
 
 from odoo.api import Environment
 from odoo.fields import Command

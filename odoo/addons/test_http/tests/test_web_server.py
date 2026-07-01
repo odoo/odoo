@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from os import getenv
-from odoo.tests import tagged
-from . import test_static
 
+from odoo.tests import tagged
+
+from . import test_static
 
 # Small configuration to run the tests against a web server.
 # WEB_SERVER_URL=http://localhost:80 odoo-bin -i test_http --test-tags webserver
@@ -13,6 +14,7 @@ WEB_SERVER_URL = getenv('WEB_SERVER_URL', 'http://localhost:80')
 @tagged('webserver', '-standard', '-at_install', 'post_install')
 class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpStaticCache):
     allow_inherited_tests_method = True
+
     @classmethod
     def base_url(cls):
         return WEB_SERVER_URL
@@ -24,11 +26,11 @@ class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpSt
         return super().assertDownloadGizeh(
             url,
             x_sendfile=False,
-            assert_filename=assert_filename
+            assert_filename=assert_filename,
         )
 
     def assertDownload(
-        self, url, headers, assert_status_code, assert_headers, assert_content=None
+        self, url, headers, assert_status_code, assert_headers, assert_content=None,
     ):
         assert_headers.pop('Content-Length', None)  # nginx compresses on-the-fly
         if assert_headers.pop('X-Sendfile', None):

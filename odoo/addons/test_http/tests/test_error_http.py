@@ -1,8 +1,10 @@
 import json
-from odoo.tools import mute_logger
+
 from odoo.tests import tagged
-from odoo.addons.test_http.controllers import CT_JSON
+from odoo.tools import mute_logger
+
 from .test_common import TestHttpBase
+from odoo.addons.test_http.controllers import CT_JSON
 
 
 @tagged('post_install', '-at_install')

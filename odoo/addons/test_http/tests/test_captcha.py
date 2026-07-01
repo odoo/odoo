@@ -17,7 +17,8 @@ class TestCaptcha(HttpCase):
     def patch_captcha_valid(self, validity):
         def _verify_request_recaptcha_token(self, captcha):
             if not validity:
-                raise UserError("CAPTCHA test")
+                e = "CAPTCHA test"
+                raise UserError(e)
         with patch.object(self.env.registry['ir.http'], '_verify_request_recaptcha_token', _verify_request_recaptcha_token):
             yield
 

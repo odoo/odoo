@@ -8,13 +8,13 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.http._facade import HTTPRequest
+from odoo.http.requestlib import Request
 from odoo.http.session import (
     DEVICE_ACTIVITY_UPDATE_FREQUENCY,
     SESSION_LIFETIME,
     session_store,
     update_device_fingerprint,
 )
-from odoo.http.requestlib import Request
 from odoo.tests import tagged
 from odoo.tools import config, mute_logger
 
@@ -65,7 +65,7 @@ class TestDevice(TestHttpBase):
                 'Host': '',
                 'X-Forwarded-For': ip,
                 'X-Forwarded-Host': 'odoo.com',
-                'X-Forwarded-Proto': 'https'
+                'X-Forwarded-Proto': 'https',
             }
         with freeze_time(time), \
             patch.dict(config.options, {'proxy_mode': bool(ip)}):
@@ -614,11 +614,11 @@ class TestDevice(TestHttpBase):
                     # A field which must compute information from user_agent
                     'device_type': {},
                 },
-            }
+            },
         }
 
         with freeze_time(
-            datetime.now() + timedelta(seconds=DEVICE_ACTIVITY_UPDATE_FREQUENCY - 1)
+            datetime.now() + timedelta(seconds=DEVICE_ACTIVITY_UPDATE_FREQUENCY - 1),
         ):
             res = self.url_open(url='/web/dataset/call_kw',
                 json={

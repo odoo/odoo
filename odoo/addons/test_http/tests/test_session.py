@@ -99,7 +99,7 @@ class TestHttpSession(TestHttpBase):
         res = self.multidb_url_open(
             '/web/session/authenticate', data=payload, headers={
                 'Content-Type': 'application/json',
-            }
+            },
         )
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)

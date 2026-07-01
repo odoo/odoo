@@ -1,4 +1,5 @@
 from odoo.tests import tagged
+
 from .test_common import TestHttpBase
 
 
