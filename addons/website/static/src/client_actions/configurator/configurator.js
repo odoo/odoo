@@ -1189,6 +1189,12 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
 
         iframe.style.setProperty("width", `${DESKTOP_PREVIEW_WIDTH}px`, "important");
+        // Reset to the natural viewport height before measuring
+        const naturalViewportHeight = Math.ceil(
+            availableHeight / Math.min(1, availableWidth / DESKTOP_PREVIEW_WIDTH)
+        );
+        iframe.style.setProperty("height", `${naturalViewportHeight}px`, "important");
+
         const contentSize = this.getPreviewIframeContentSize(iframe);
         const iframeWidth = contentSize?.width || DESKTOP_PREVIEW_WIDTH;
         const scale = Math.min(1, availableWidth / iframeWidth);
@@ -1209,11 +1215,35 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         iframe.style.setProperty("flex", "0 0 auto", "important");
     }
 
-    onPreviewIframeLoad(ev) {
+    async onPreviewIframeLoad(ev) {
         const iframe = ev.currentTarget;
         this.replacePreviewIframeHeading(iframe);
         this.replacePreviewIframeLogo(iframe);
         iframe.parentElement.classList.add("o_preview_loaded");
+        this.scalePreviewIframe(iframe);
+        // The ImageLazyLoading interaction gives lazy images min-height: 1px
+        // until they load, so the initial measurement underestimates the page height.
+        const iframeDoc = this.getPreviewIframeDocument(iframe);
+        if (!iframeDoc) {
+            return;
+        }
+        const lazyImgs = [...iframeDoc.querySelectorAll('img[loading="lazy"]')];
+        for (const img of lazyImgs) {
+            img.loading = "eager";
+        }
+        const pending = lazyImgs.filter((img) => !img.complete);
+        if (!pending.length) {
+            return;
+        }
+        await Promise.all(
+            pending.map(
+                (img) =>
+                    new Promise((resolve) => {
+                        img.addEventListener("load", resolve, { once: true });
+                        img.addEventListener("error", resolve, { once: true });
+                    })
+            )
+        );
         this.scalePreviewIframe(iframe);
     }
 
