@@ -242,3 +242,13 @@ export function addLoadingEffect(btnEl) {
         loaderEl.remove();
     };
 }
+
+/**
+ * Check if an element is clickable.
+ *
+ * @param {HTMLElement} el
+ * @returns {boolean}
+ */
+export function isClickable(el) {
+    return !el.closest(":disabled, [aria-disabled='true'], .disabled, [inert]");
+}
