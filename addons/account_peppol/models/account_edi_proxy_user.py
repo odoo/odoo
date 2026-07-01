@@ -345,7 +345,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_post_process_new_messages(self, moves):
         self.ensure_one()
-        self.company_id.peppol_purchase_journal_id._notify_einvoices_received(moves)
+        if peppol_journal := self.company_id.peppol_purchase_journal_id:
+            peppol_journal._notify_einvoices_received(moves)
         for partner in moves.partner_id.filtered(lambda partner: partner.peppol_verification_state in ('not_verified', False)):
             partner.button_account_peppol_check_partner_endpoint()
 
