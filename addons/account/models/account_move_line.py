@@ -314,7 +314,6 @@ class AccountMoveLine(models.Model):
              "the full reconcile if it exists.",
     )  # can also start with `I` for imports: see `_reconcile_marked`
     is_account_reconcile = fields.Boolean(
-        string='Account Reconcile',
         related='account_id.reconcile',
     )
 
