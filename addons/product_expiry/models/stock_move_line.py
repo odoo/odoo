@@ -47,8 +47,8 @@ class StockMoveLine(models.Model):
     @api.depends('product_id', 'expiration_date', 'lot_id.removal_date')
     def _compute_removal_date(self):
         for move_line in self:
-            if move_line.lot_id.removal_date:
-                move_line.removal_date = move_line.lot_id.removal_date
+            if lot_id := move_line.quant_id.lot_id or move_line.lot_id:
+                move_line.removal_date = lot_id.removal_date
             elif move_line.picking_type_use_create_lots:
                 if move_line.product_id.use_expiration_date and move_line.expiration_date:
                     move_line.removal_date = move_line.expiration_date - datetime.timedelta(days=move_line.product_id.removal_time)

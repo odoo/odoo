@@ -734,11 +734,10 @@ class TestStockLot(TestStockCommon):
         picking.button_validate()
         context = {
             'button_validate_picking_ids': [picking.id],
-            'default_picking_ids': [picking.id],
-            'default_lot_ids': [lot.id],
+            'default_move_line_ids': picking.move_line_ids.ids,
         }
         wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
-        self.assertFalse(wizard.picking_ids.move_line_ids.removal_date)
+        self.assertFalse(wizard.move_line_ids.removal_date)
         wizard.process_no_expired()
 
     def test_lot_dates_form_update(self):
