@@ -8,7 +8,6 @@ import {
     getAccountingData,
 } from "@spreadsheet_account/../tests/accounting_test_data";
 import { parseAccountingDate } from "@spreadsheet_account/accounting_functions";
-import { makeServerError } from "@web/../tests/web_test_helpers";
 import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -173,7 +172,7 @@ test("Handle error evaluation", async () => {
     const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_fetch_debit_credit") {
-                throw makeServerError({ description: "a nasty error" });
+                return [{ __error__: "a nasty error" }];
             }
         },
     });

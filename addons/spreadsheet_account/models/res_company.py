@@ -1,6 +1,7 @@
 from odoo import models, api, fields
 
 from odoo.tools import date_utils
+from odoo.addons.spreadsheet.utils.helpers import spreadsheet_safe_batch
 
 
 class ResCompany(models.Model):
@@ -8,6 +9,7 @@ class ResCompany(models.Model):
 
     @api.readonly
     @api.model
+    @spreadsheet_safe_batch
     def get_fiscal_dates(self, payload):
         companies = self.env["res.company"].browse(
             data["company_id"] or self.env.company.id for data in payload

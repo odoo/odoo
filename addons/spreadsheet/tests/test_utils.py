@@ -1,5 +1,6 @@
 import datetime
 
+from odoo.exceptions import UserError
 from odoo.tests.common import tagged, TransactionCase
 
 from odoo.addons.spreadsheet.utils.formatting import (
@@ -9,7 +10,8 @@ from odoo.addons.spreadsheet.utils.formatting import (
 from odoo.addons.spreadsheet.utils.json import extend_serialized_json
 from odoo.addons.spreadsheet.utils.helpers import (
     index_to_column_letter,
-    to_cell_reference
+    to_cell_reference,
+    spreadsheet_safe_batch
 )
 
 
@@ -91,3 +93,35 @@ class TestSpreadsheetUtils(TransactionCase):
         self.assertEqual(to_cell_reference(0, 1), "A2")
         self.assertEqual(to_cell_reference(1, 1), "B2")
         self.assertEqual(to_cell_reference(26, 9), "AA10")
+
+    def test_spreadsheet_safe_batch_user_error(self):
+        class BatchTester:
+            @spreadsheet_safe_batch
+            def test_method(self, requests):
+                results = []
+                for req in requests:
+                    if req == 5:
+                        raise UserError("Boom!")
+                    results.append(req * 2)
+                return results
+
+        batch_class = BatchTester()
+        result = batch_class.test_method([4, 5, 6])
+        self.assertEqual(
+            result,
+            [
+                8,
+                {"__error__": "Boom!"},
+                12,
+            ],
+        )
+
+    def test_spreadsheet_safe_batch_all_success(self):
+        class BatchTester:
+            @spreadsheet_safe_batch
+            def test_method(self, requests):
+                return [r * 2 for r in requests]
+
+        batch_class = BatchTester()
+        result = batch_class.test_method([1, 2, 3])
+        self.assertEqual(result, [2, 4, 6])

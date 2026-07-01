@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.addons.spreadsheet.utils.helpers import spreadsheet_safe_batch
 
 
 class ResCurrencyRate(models.Model):
@@ -19,6 +20,7 @@ class ResCurrencyRate(models.Model):
 
     @api.readonly
     @api.model
+    @spreadsheet_safe_batch
     def get_rates_for_spreadsheet(self, requests):
         result = []
         for request in requests:

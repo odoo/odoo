@@ -4,7 +4,6 @@ import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/ge
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
-import { RPCError } from "@web/core/network/rpc";
 
 describe.current.tags("headless");
 
@@ -95,9 +94,7 @@ test("invalid company id", async () => {
     const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
-                const error = new RPCError();
-                error.data = { message: "Invalid company id." };
-                throw error;
+                return [{ __error__: "Invalid company id." }];
             }
         },
     });

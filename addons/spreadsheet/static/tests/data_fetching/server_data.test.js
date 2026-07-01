@@ -3,6 +3,7 @@ import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
@@ -97,14 +98,40 @@ test("batch get with multiple items", async () => {
     expect.verifySteps([]);
 });
 
-test("batch get with one error", async () => {
+test("batch RPC failure propagates to all requests", async () => {
+    allowTranslations();
+    const orm = {
+        call: async (model, method) => {
+            expect.step(`${model}/${method}`);
+            throw new Error("error while fetching data");
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 4)).toThrow(
+        LoadingDataError
+    );
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(
+        LoadingDataError
+    );
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 6)).toThrow(
+        LoadingDataError
+    );
+    await animationFrame();
+
+    expect.verifySteps(["partner/get_something_in_batch", "data-fetching-notification"]);
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 4)).toThrow(Error);
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(Error);
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 6)).toThrow(Error);
+    expect.verifySteps([]);
+});
+
+test("batch RPC propagates per-item user errors while keeping successful results", async () => {
     const orm = {
         call: async (model, method, args) => {
             expect.step(`${model}/${method}`);
-            if (args[0].includes(5)) {
-                throw new Error("error while fetching data");
-            }
-            return args[0];
+            return args[0].map((arg) => (arg === 5 ? { __error__: "invalid value 5" } : arg));
         },
     };
     const serverData = new ServerData(orm, {
@@ -123,15 +150,7 @@ test("batch get with one error", async () => {
         { message: "it should throw when it's not loaded" }
     );
     await animationFrame();
-    expect.verifySteps([
-        // one call for the batch
-        "partner/get_something_in_batch",
-        "data-fetching-notification",
-        // retries one by one
-        "partner/get_something_in_batch",
-        "partner/get_something_in_batch",
-        "partner/get_something_in_batch",
-    ]);
+    expect.verifySteps(["partner/get_something_in_batch", "data-fetching-notification"]);
     expect(serverData.batch.get("partner", "get_something_in_batch", 4)).toBe(4);
     expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(Error);
     expect(serverData.batch.get("partner", "get_something_in_batch", 6)).toBe(6);
@@ -160,12 +179,8 @@ test("concurrently get and batch get the same request", async () => {
 
 test("Call the correct callback after a batch result", async () => {
     const orm = {
-        call: async (model, method, args) => {
-            if (args[0].includes(5)) {
-                throw new Error("error while fetching data");
-            }
-            return args[0];
-        },
+        call: async (_model, _method, args) =>
+            args[0].map((arg) => (arg === 5 ? { __error__: "invalid value 5" } : arg)),
     };
     const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
         whenDataStartLoading: () => {},
