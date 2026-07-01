@@ -692,7 +692,9 @@ class ProductProduct(models.Model):
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
             return seen_rules | rule
         else:
-            return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+            return self._get_rules_from_location(
+                rule.location_src_id, route_ids=route_ids, seen_rules=seen_rules | rule
+            )
 
     def _get_dates_info(self, date, location, route_ids=False):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
