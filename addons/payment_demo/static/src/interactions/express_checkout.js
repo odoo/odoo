@@ -35,6 +35,7 @@ patch(ExpressCheckout.prototype, {
             expressDeliveryAddress = {
                 'name': shippingInfo.querySelector('#o_payment_demo_shipping_name').value,
                 'email': shippingInfo.querySelector('#o_payment_demo_shipping_email').value,
+                'phone': '0123456789',
                 'street': shippingInfo.querySelector('#o_payment_demo_shipping_address').value,
                 'street2': shippingInfo.querySelector('#o_payment_demo_shipping_address2').value,
                 'zip': shippingInfo.querySelector('#o_payment_demo_shipping_zip').value,
@@ -65,6 +66,7 @@ patch(ExpressCheckout.prototype, {
                 'billing_address': {
                     'name': 'Demo User',
                     'email': 'demo@test.com',
+                    'phone': '0123456789',
                     'street': 'Rue des Bourlottes 9',
                     'street2': '23',
                     'country': 'BE',
