@@ -12,6 +12,7 @@ import logging
 from markupsafe import Markup
 import re
 import os
+import warnings
 from textwrap import shorten
 from urllib.parse import urlencode
 
@@ -6840,6 +6841,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _get_moves_zip_export_docs(self):
+        warnings.warn("The '_get_moves_zip_export_docs' method is deprecated and has been removed in future versions.", DeprecationWarning)
         docs = set()
         for move in self.filtered(lambda m: m.state == 'posted' and m.is_sale_document()):
             try:
@@ -6852,6 +6854,7 @@ class AccountMove(models.Model):
         return docs, filename
 
     def action_export_zip(self):
+        warnings.warn("The 'action_export_zip' method is deprecated and has been removed in future versions.", DeprecationWarning)
         attachment_ids, filename = self._get_moves_zip_export_docs()
         if not attachment_ids:
             raise UserError(_('Nothing to export.'))
