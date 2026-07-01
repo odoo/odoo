@@ -19,6 +19,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
+    peppol_purchase_journal_required = fields.Boolean(compute='_compute_peppol_purchase_journal_required')
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
     peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
     account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
@@ -102,6 +103,11 @@ class ResConfigSettings(models.TransientModel):
                 endpoint=record.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
                 params=params,
             )
+
+    @api.depends('account_peppol_proxy_state', 'peppol_participation_role')
+    def _compute_peppol_purchase_journal_required(self):
+        for config in self:
+            config.peppol_purchase_journal_required = config.peppol_participation_role != 'sending_only'
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
