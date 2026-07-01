@@ -1135,7 +1135,7 @@
                                 <label for="ref" string="Bill Reference"
                                        invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')" />
                                 <field name="ref" default_focus="1" nolabel="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')"/>
-                                <field name="ref" default_focus="1" invisible="move_type != 'entry'"/>
+                                <field name="ref" id="payslip_reference" default_focus="1" invisible="move_type != 'entry'"/>
                                 <field name="tax_cash_basis_origin_move_id" invisible="not tax_cash_basis_origin_move_id"/>
                                 <field name="invoice_vendor_bill_id"
                                        string="Auto-Complete"
