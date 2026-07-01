@@ -1,6 +1,6 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -14,6 +14,7 @@ export class SettingsPage extends Component {
         initialTab: { type: String, optional: true },
         slots: Object,
     };
+    settingsRef = signal(null);
     setup() {
         this.state = proxy({
             selectedTab: "",
@@ -38,7 +39,6 @@ export class SettingsPage extends Component {
             this.state.selectedTab = selectedTab;
         }
 
-        this.settingsRef = useRef("settings");
         this.scrollMap = Object.create(null);
         useLayoutEffect(
             (settingsEl, currentTab) => {
@@ -50,7 +50,7 @@ export class SettingsPage extends Component {
                 settingsEl.scrollTop = scrollTop;
                 this.tabChangeProm?.resolve();
             },
-            () => [this.settingsRef.el, this.state.selectedTab]
+            () => [this.settingsRef(), this.state.selectedTab]
         );
         onWillRender(() => {
             this.selectedModule = this.props.modules.find(
@@ -72,8 +72,9 @@ export class SettingsPage extends Component {
     }
 
     onSettingTabClick(key) {
-        if (this.settingsRef.el) {
-            const { scrollTop } = this.settingsRef.el;
+        const el = this.settingsRef();
+        if (el) {
+            const { scrollTop } = el;
             this.scrollMap[this.state.selectedTab] = { scrollTop };
         }
         this.state.selectedTab = key;

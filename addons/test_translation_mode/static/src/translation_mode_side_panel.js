@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { normalizedMatch } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
@@ -87,6 +86,8 @@ export class TranslationModeSidePanel extends Component {
      */
     hiddenTranslations = new Set();
 
+    rootRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.localization = useService("localization");
@@ -95,7 +96,6 @@ export class TranslationModeSidePanel extends Component {
 
         this.translationMode.useBodyClass("o-body-with-translate-side-panel");
 
-        this.rootRef = useRef("root");
         this.collapsedCategories = proxy(new Set());
         this.state = proxy({
             filter: "",
@@ -198,7 +198,7 @@ export class TranslationModeSidePanel extends Component {
      * @param {Event} ev
      */
     onPointerDown(ev) {
-        if (ev.composedPath().includes(this.rootRef.el)) {
+        if (ev.composedPath().includes(this.rootRef())) {
             // Stop all pointer events from within the side panel.
             // This is done to avoid dropdowns closing when focusing translations
             ev.stopImmediatePropagation();

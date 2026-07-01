@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
@@ -27,7 +27,6 @@ class PageUrlField extends UrlField {
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
-        this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
         // parameters as soon as the user t.
@@ -57,7 +56,7 @@ class PageUrlField extends UrlField {
                     };
                 }
             },
-            () => [this.inputRef.el]
+            () => [this.inputRef()]
         );
     }
 

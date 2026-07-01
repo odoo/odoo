@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect } from '@web/core/utils/ui';
 import { rpc } from "@web/core/network/rpc";
@@ -17,9 +16,9 @@ export class SignatureForm extends Component {
     static components = { NameAndSignature }
     static props = ["*"];
 
-    setup() {
-        this.rootRef = useRef("root");
+    rootRef = signal(null);
 
+    setup() {
         this.csrfToken = odoo.csrf_token;
         this.state = proxy({
             error: false,
@@ -46,7 +45,7 @@ export class SignatureForm extends Component {
 
         // Correctly set up the signature area if it is inside a modal
         onMounted(() => {
-            const modal_el = this.rootRef.el.closest('.modal');
+            const modal_el = this.rootRef()?.closest(".modal");
             if (modal_el !== null) {
                 modal_el.addEventListener('shown.bs.modal', () => {
                     this.signature.resetSignature();
@@ -57,7 +56,7 @@ export class SignatureForm extends Component {
     }
 
     toggleSignatureFormVisibility() {
-        this.rootRef.el.classList.toggle('d-none', document.querySelector('.editor_enable'));
+        this.rootRef()?.classList.toggle("d-none", document.querySelector(".editor_enable"));
     }
 
     get sendLabel() {

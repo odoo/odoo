@@ -1,6 +1,15 @@
-import { useRef } from "@web/owl2/utils";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, onMounted, onWillStart, props, proxy, t, useEffect } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillStart,
+    props,
+    proxy,
+    signal,
+    t,
+    useEffect,
+} from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -27,11 +36,12 @@ export class ProfileDialog extends Component {
         canEditCountry: t.boolean().optional(true),
     });
 
+    nameRef = signal(null);
+    profileImgRef = signal(null);
+
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.upload = useRef("upload");
-        this.profileImg = useRef("profileImg");
         this.profileImgData = null;
         this.state = proxy({
             isProcessing: false,
@@ -40,7 +50,7 @@ export class ProfileDialog extends Component {
             nameHasError: false,
         });
         const websiteDescriptionClass = "website_profile_profile_dialog_website_description";
-        useAutofocus({ refName: "name" });
+        useAutofocus({ ref: this.nameRef });
 
         this.user = proxy({});
         let isUserInitialized = false;
@@ -116,7 +126,10 @@ export class ProfileDialog extends Component {
 
     onClearProfileImg() {
         this.profileImgData = false;
-        this.profileImg.el.src = "/web/static/img/placeholder.png";
+        const el = this.profileImgRef();
+        if (el) {
+            el.src = "/web/static/img/placeholder.png";
+        }
     }
 
     async onConfirm() {
@@ -148,7 +161,10 @@ export class ProfileDialog extends Component {
     }
 
     onUploadProfileImg(file) {
-        this.profileImg.el.src = `data:${file.type};base64,${file.data}`;
+        const el = this.profileImgRef();
+        if (el) {
+            el.src = `data:${file.type};base64,${file.data}`;
+        }
         this.profileImgData = file.data;
     }
 
