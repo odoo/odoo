@@ -551,19 +551,20 @@ export class PosOrderline extends Base {
         const taxDetails = {};
         for (const taxData of baseLine.tax_details.taxes_data) {
             taxDetails[taxData.tax.id] = {
-                amount: taxData.tax_amount_currency,
-                base: taxData.base_amount_currency,
+                amount: taxData.raw_tax_amount_currency,
+                base: taxData.raw_base_amount_currency,
             };
         }
 
         return {
-            priceWithTax: baseLine.tax_details.total_included_currency,
-            priceWithoutTax: baseLine.tax_details.total_excluded_currency,
-            priceWithTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_included_currency,
-            priceWithoutTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_excluded_currency,
+            priceWithTax: baseLine.tax_details.raw_total_included_currency,
+            priceWithoutTax: baseLine.tax_details.raw_total_excluded_currency,
+            priceWithTaxBeforeDiscount: baseLineNoDiscount.tax_details.raw_total_included_currency,
+            priceWithoutTaxBeforeDiscount:
+                baseLineNoDiscount.tax_details.raw_total_excluded_currency,
             tax:
-                baseLine.tax_details.total_included_currency -
-                baseLine.tax_details.total_excluded_currency,
+                baseLine.tax_details.raw_total_included_currency -
+                baseLine.tax_details.raw_total_excluded_currency,
             taxDetails: taxDetails,
             taxesData: baseLine.tax_details.taxes_data,
         };
