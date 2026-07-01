@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-04-11 14:18+0000\n"
+"PO-Revision-Date: 2026-06-06 14:47+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/account_peppol/zh_Hans/>\n"
+"projects/odoo-s19-3/account_peppol/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -55,7 +55,7 @@ msgstr " （无增值税）"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid " Expected format: %(expected_format)s."
-msgstr ""
+msgstr " 预期格式：%(expected_format)s 。"
 
 #. module: account_peppol
 #. odoo-python
@@ -79,7 +79,7 @@ msgstr "%s 要求通过 Peppol 接收电子发票。"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authentify with itsme</b>"
-msgstr ""
+msgstr "<b>使用 itsme 进行身份验证</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -99,11 +99,13 @@ msgid ""
 "                            But you are receiving your e-invoices via this "
 "Access Point:"
 msgstr ""
+"<br/>\n"
+"                            但您通过该接入点接收电子发票："
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "<span><strong>Disconnected from Peppol!</strong></span>"
-msgstr ""
+msgstr "<span><strong>已与 Peppol 断开连接！</strong></span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
@@ -736,7 +738,7 @@ msgstr "需要提供联络电子邮箱和电话号码。"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Could not connect to Proxy Server."
-msgstr ""
+msgstr "无法连接到代理服务器。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1182,7 +1184,7 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__routing_scheme__odemo
 msgid "Odoo Demo ID"
-msgstr ""
+msgstr "Odoo 演示 ID"
 
 #. module: account_peppol
 #. odoo-python
@@ -1282,7 +1284,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Contact Email"
-msgstr ""
+msgstr "Peppol 联系人邮箱"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1539,6 +1541,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"请以正确的国际格式输入手机号码。\n"
+"例如：+32123456789，其中 +32 为国家/地区代码。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1556,7 +1560,7 @@ msgstr "请安装 phonenumbers 库."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please select a country for your company."
-msgstr ""
+msgstr "请为您的公司选择一个国家/地区。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1580,6 +1584,8 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"用于 Peppol 连接相关通信和通知的主要联系人邮箱。\n"
+"特别是，当数据库发生变更时，Odoo 将使用此邮箱重新连接您的 Peppol 账户。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1705,7 +1711,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Selected authentication method is not available."
-msgstr ""
+msgstr "所选认证方式暂不可用。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1757,7 +1763,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "部分附件无法随 XML 一起发送："
 
 #. module: account_peppol
 #. odoo-python
@@ -2317,7 +2323,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You are not authorized to change the contact email."
-msgstr ""
+msgstr "您无权更改联系人邮箱。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

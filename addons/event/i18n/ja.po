@@ -8,7 +8,7 @@
 # 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-04-30 07:33+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-06-08 09:02+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "event/ja/>\n"
 "Language: ja\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -238,7 +238,7 @@ msgid ""
 msgstr ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Youtubeと"
-"の連携によるトラックのオンライン配信</span>"
+"の連携によるセッションのオンライン配信</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -340,7 +340,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                    出席者の回答\n"
+"                                    参加者の回答\n"
 "                               </span>"
 
 #. module: event
@@ -3065,7 +3065,7 @@ msgstr "出席"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr "出席済"
+msgstr "参加済"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -3099,7 +3099,7 @@ msgstr "参加者リスト"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr "出席者名"
+msgstr "参加者名"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
@@ -3123,7 +3123,7 @@ msgstr "参加者リスト"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr "出席者"
+msgstr "参加者"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3424,7 +3424,7 @@ msgstr "設定"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "参加を確定しますか?"
 
 #. module: event
 #. odoo-javascript
@@ -4604,7 +4604,7 @@ msgstr "直近30日"
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__last_registration_id
 msgid "Last Attendee"
-msgstr "最後の出席者"
+msgstr "最後の参加者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
@@ -4795,7 +4795,7 @@ msgstr "最大"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 msgid "Maximum Attendees"
-msgstr "最大出席者数"
+msgstr "最大参加者数"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
@@ -4942,7 +4942,7 @@ msgstr "まだ参加予定者がいません！"
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr "出席者はまだいません！"
+msgstr "参加者はまだいません！"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
@@ -5449,7 +5449,7 @@ msgstr "スキャンまたはタップ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "スケジュールとトラック"
+msgstr "スケジュールとセッション"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -5502,7 +5502,7 @@ msgstr "シークレット"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr "出席者を選択"
+msgstr "参加者を選択"
 
 #. module: event
 #. odoo-javascript
@@ -5559,7 +5559,7 @@ msgstr "送信日"
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
 msgstr ""
-"イベントにリマインダが定義されている場合、出席者に自動的に送信されます。"
+"イベントにリマインダが定義されている場合、参加者に自動的に送信されます。"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
@@ -6115,7 +6115,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"チケットの種類によって、出席者を区別することができます。新しいものを<b>作成</"
+"チケットの種類によって、参加者を区別することができます。新しいものを<b>作成</"
 "b>しましょう。"
 
 #. module: event
@@ -6259,7 +6259,7 @@ msgstr ""
 "未確認: アクション(特定のケース、特に販売ステータス)を有する保留ステータスの"
 "登録\n"
 "登録済: 顧客によって登録されたとみなされる登録\n"
-"出席済: 出席者がイベントに出席した登録\n"
+"参加済: 参加者がイベントに参加した登録\n"
 "キャンセル済: 手動でキャンセルされた登録"
 
 #. module: event
