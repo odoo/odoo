@@ -108,6 +108,30 @@ export function doCashMove(amount, reason) {
         Dialog.proceed({ button: "Confirm" }),
     ];
 }
+export function snoozeServiceForHours(hour) {
+    return {
+        trigger: `.modal-body .btn-group .form-check-input[id="${hour}hour"]`,
+        run: "click",
+    };
+}
+export function orderTrackerShown() {
+    return {
+        trigger: ".order_tracker",
+    };
+}
+export function toggleOrderStatus() {
+    return [
+        {
+            trigger: ".order_tracker",
+            run: "click",
+        },
+        {
+            trigger: ".order_tracker_dropdown_container .form-switch input",
+            run: "click",
+        },
+    ];
+}
+
 export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",

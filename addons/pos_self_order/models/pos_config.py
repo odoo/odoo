@@ -298,7 +298,7 @@ class PosConfig(models.Model):
             'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze', 'pos.prep.order', 'pos.prep.line']
+            'res.country', 'res.country.state', 'mail.template', 'pos.snooze', 'pos.prep.order', 'pos.prep.line']
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):
@@ -388,6 +388,16 @@ class PosConfig(models.Model):
 
     def get_kiosk_url(self):
         return self.self_ordering_url
+
+    def get_paid_self_order_count(self):
+        self.ensure_one()
+        if self.current_session_id:
+            count = self.env['pos.order'].search_count([
+                ('session_id', '=', self.current_session_id.id),
+                ('state', 'in', ['paid', 'done']),
+                ('source', '=', 'mobile')
+            ])
+            self._notify("SELF_PAID_COUNT", count)
 
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
@@ -486,3 +496,8 @@ class PosConfig(models.Model):
             'redirect_url': url_form,
             'zip_archive': base64.b64encode(zip_buffer.read()).decode('utf-8'),
         }
+
+    def notify_self_order(self):
+        self.ensure_one()
+        if self.self_ordering_mode == 'mobile':
+            self._notify("SESSION_STATE_CHANGED", {})

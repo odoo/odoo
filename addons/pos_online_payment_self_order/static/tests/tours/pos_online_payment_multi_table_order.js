@@ -42,6 +42,7 @@ registry.category("web_tour.tours").add("test_online_payment_pos_self_order_prep
         [
             Chrome.startPoS(),
             Chrome.clickOrders(),
+            Chrome.orderTrackerShown(),
             TicketScreen.checkStatus("Self-order", "Ongoing"),
             TicketScreen.selectOrder("Self-order"),
             ProductScreen.clickReview(),

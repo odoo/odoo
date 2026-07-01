@@ -6,7 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
-import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
+import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide, expectActionTarget } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.fillTextArea(".cash-reason", "MOBT"),
             Dialog.confirm(),
             Chrome.clickMenuButton(),
+            negateStep(Chrome.orderTrackerShown()),
 
             // Order 1 is at Product Screen
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),

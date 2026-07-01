@@ -3,9 +3,9 @@ const { DateTime } = luxon;
 
 const REFRESH_DELAY = 1000;
 
-export class SnoozedProductTracker {
+export class SnoozeTracker {
     constructor(snoozes) {
-        this.state = proxy({ activeSnoozes: new Set(), snoozedProductIds: new Set() });
+        this.state = proxy({ activeSnoozes: new Array(), snoozedProductIds: new Set() });
         if (snoozes) {
             this.setSnoozes(snoozes);
         }
@@ -68,13 +68,16 @@ export class SnoozedProductTracker {
         this.updateTimeout = setTimeout(() => this.refresh(), delay + REFRESH_DELAY);
     }
 
-    getActiveSnooze(product) {
-        if (!this.isProductSnoozed(product)) {
-            return null;
-        }
-        for (const snooze of this.state.activeSnoozes) {
-            if (snooze.product_template_id?.id === product.id) {
-                return snooze;
+    getActiveSnooze(type, data = {}) {
+        // If a product is found, its snooze record returned; otherwise, the self-order snooze record returned.
+        if (type == "product" && data.product) {
+            if (!this.isProductSnoozed(data.product)) {
+                return null;
+            }
+            for (const snooze of this.state.activeSnoozes) {
+                if (snooze.product_template_id?.id === data.product.id) {
+                    return snooze;
+                }
             }
         }
         return null;

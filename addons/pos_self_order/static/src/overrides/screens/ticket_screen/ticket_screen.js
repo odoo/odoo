@@ -23,4 +23,11 @@ patch(TicketScreen.prototype, {
     getTableTag(order) {
         return super.getTableTag(order) || order?.self_ordering_table_id?.table_number;
     },
+    getFilteredOrderList() {
+        const orders = super.getFilteredOrderList();
+        if (this.state.search.fieldName == "SELF") {
+            return orders.filter((o) => o.source === "mobile");
+        }
+        return orders;
+    },
 });

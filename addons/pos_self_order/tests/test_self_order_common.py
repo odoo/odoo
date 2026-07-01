@@ -103,7 +103,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
         })
-        self.env["pos.product.template.snooze"].create({
+        self.env["pos.snooze"].create({
             "product_template_id": self.combo_product_2.product_tmpl_id.id,
             "pos_config_id": self.pos_config.id,
             "start_time": datetime.now(),

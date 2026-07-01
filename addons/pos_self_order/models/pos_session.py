@@ -44,14 +44,9 @@ class PosSession(models.Model):
 
     def close_session_from_ui(self, bank_payment_method_diff_pairs=None):
         result = super().close_session_from_ui(bank_payment_method_diff_pairs)
-
-        if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
-            self.config_id._notify("SESSION_STATE_CHANGED", {})
-
+        self.config_id.notify_self_order()
         return result
 
     def _set_opening_control_data(self, cashbox_value: int, notes: str):
         super()._set_opening_control_data(cashbox_value, notes)
-
-        if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
-            self.config_id._notify("SESSION_STATE_CHANGED", {})
+        self.config_id.notify_self_order()

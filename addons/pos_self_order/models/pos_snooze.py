@@ -1,8 +1,12 @@
-from odoo import api, models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
 
 
 class PosSnooze(models.Model):
-    _inherit = 'pos.product.template.snooze'
+    _inherit = 'pos.snooze'
+
+    type = fields.Selection(selection_add=[('self-ordering', 'Self Order Service')], ondelete={'self-ordering': 'cascade'})
 
     @api.model
     def _sync_snoozes(self, config, updated_records=None, deleted_record_ids=None):

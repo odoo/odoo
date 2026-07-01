@@ -17,6 +17,7 @@ class PaymentTransaction(models.Model):
                 if previous_states.get(tx.id) == 'draft':
                     tx.pos_order_id._send_self_order_receipt()
                 tx.pos_order_id._send_notification_online_payment_status('success')
+                tx.pos_order_id.config_id.get_paid_self_order_count()
 
     def _process(self, payment_data):
         super()._process(payment_data)
