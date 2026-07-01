@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 
 VALUATION_DICT = {
@@ -441,15 +441,26 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self._is_in():
-            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if self._is_out():
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
+        lot = lot or self.env['stock.lot']
+        cache = self.env.context.get('valued_qty_move_cache', {})
+        if (self, lot) in cache:
+            return cache[self, lot]
+        cache[self, lot] = 0.0
+        get_move_lines_by_lot = None
         if self.is_dropship:
-            if lot:
-                return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
-            return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
-        return 0
+            get_move_lines_by_lot = self._get_dropshipped_move_lines_by_lot
+        elif self._is_in():
+            get_move_lines_by_lot = self._get_in_move_lines_by_lot
+        elif self._is_out():
+            get_move_lines_by_lot = self._get_out_move_lines_by_lot
+
+        if get_move_lines_by_lot is None:
+            return 0
+
+        move_lines_by_lot = get_move_lines_by_lot()
+        for curr_lot, move_lines in move_lines_by_lot.items():
+            cache[self, curr_lot] = sum(move_lines.mapped('quantity_product_uom'))
+        return cache[self, lot]
 
     def _get_manual_value(self, quantity, at_date=None):
         valuation_data = dict(VALUATION_DICT)
@@ -514,6 +525,27 @@ class StockMove(models.Model):
     def _get_move_directions(self):
         return defaultdict(set)
 
+    def _get_in_move_lines_by_lot(self, lots=None):
+        lots = lots or self.env['stock.lot']
+        in_move_line_ids_by_lot = defaultdict(set)
+        prefetch_ids = self.move_line_ids._prefetch_ids
+        lot_ids = set(lots.ids)
+        for move_line in self.move_line_ids:
+            if lots and (not move_line.lot_id or move_line.lot_id not in lot_ids):
+                continue
+            if not move_line.picked:
+                continue
+            if move_line._should_exclude_for_valuation():
+                continue
+            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+                in_move_line_ids_by_lot[move_line.lot_id].add(move_line.id)
+                in_move_line_ids_by_lot[self.env['stock.lot']].add(move_line.id)
+
+        in_move_lines_by_lot = defaultdict(lambda: self.env['stock.move.line'])
+        for lot, in_move_line_ids in in_move_line_ids_by_lot.items():
+            in_move_lines_by_lot[lot] = self.env['stock.move.line'].browse(in_move_line_ids).with_prefetch(prefetch_ids)
+        return in_move_lines_by_lot
+
     def _get_in_move_lines(self, lot=None):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
         to the `_should_be_valued` method of their source and destionation location as well as their
@@ -522,17 +554,35 @@ class StockMove(models.Model):
         :returns: a subset of `self` containing the incoming records
         :rtype: recordset
         """
-        res = OrderedSet()
+        lot = lot or self.env['stock.lot']
+        return self._get_in_move_lines_by_lot(lots=lot)[lot]
+
+    def _get_dropshipped_move_lines_by_lot(self, lots=None):
+        lots = lots or self.env['stock.lot']
+        dropshipped_move_line_ids_by_lot = defaultdict(set)
+        prefetch_ids = self.move_line_ids._prefetch_ids
+        lot_ids = set(lots.ids)
         for move_line in self.move_line_ids:
-            if lot and move_line.lot_id != lot:
+            if lots and (not move_line.lot_id or move_line.lot_id not in lot_ids):
                 continue
-            if not move_line.picked:
-                continue
-            if move_line._should_exclude_for_valuation():
-                continue
-            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
-                res.add(move_line.id)
-        return self.env['stock.move.line'].browse(res)
+            dropshipped_move_line_ids_by_lot[move_line.lot_id].add(move_line.id)
+            dropshipped_move_line_ids_by_lot[self.env['stock.lot']].add(move_line.id)
+
+        dropshipped_move_lines_by_lot = defaultdict(lambda: self.env['stock.move.line'])
+        for lot, move_lines_ids in dropshipped_move_line_ids_by_lot.items():
+            dropshipped_move_lines_by_lot[lot] = self.env['stock.move.line'].browse(move_lines_ids).with_prefetch(prefetch_ids)
+        return dropshipped_move_lines_by_lot
+
+    def _get_dropshipped_move_lines(self, lot=None):
+        """ Returns the `stock.move.line` records of `self` considered as dropshipped. It is done thanks
+        to the `_should_be_valued` method of their source and destionation location as well as their
+        owner.
+
+        :returns: a subset of `self` containing the dropshipped records
+        :rtype: recordset
+        """
+        lot = lot or self.env['stock.lot']
+        return self._get_dropshipped_move_lines_by_lot(lots=lot)[lot]
 
     def _is_in(self):
         """Check if the move should be considered as entering the company so that the cost method
@@ -544,6 +594,27 @@ class StockMove(models.Model):
         self.ensure_one()
         return self._get_in_move_lines() and not self._is_dropshipped_returned()
 
+    def _get_out_move_lines_by_lot(self, lots=None):
+        lots = lots or self.env['stock.lot']
+        out_move_line_ids_by_lot = defaultdict(set)
+        prefetch_ids = self.move_line_ids._prefetch_ids
+        lot_ids = set(lots.ids)
+        for move_line in self.move_line_ids:
+            if lots and (not move_line.lot_id or move_line.lot_id not in lot_ids):
+                continue
+            if not move_line.picked:
+                continue
+            if move_line._should_exclude_for_valuation():
+                continue
+            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+                out_move_line_ids_by_lot[move_line.lot_id].add(move_line.id)
+                out_move_line_ids_by_lot[self.env['stock.lot']].add(move_line.id)
+
+        out_move_lines_by_lot = defaultdict(lambda: self.env['stock.move.line'])
+        for lot, out_move_line_ids in out_move_line_ids_by_lot.items():
+            out_move_lines_by_lot[lot] = self.env['stock.move.line'].browse(out_move_line_ids).with_prefetch(prefetch_ids)
+        return out_move_lines_by_lot
+
     def _get_out_move_lines(self, lot=None):
         """ Returns the `stock.move.line` records of `self` considered as outgoing. It is done thanks
         to the `_should_be_valued` method of their source and destionation location as well as their
@@ -552,17 +623,8 @@ class StockMove(models.Model):
         :returns: a subset of `self` containing the outgoing records
         :rtype: recordset
         """
-        res = self.env['stock.move.line']
-        for move_line in self.move_line_ids:
-            if lot and move_line.lot_id != lot:
-                continue
-            if not move_line.picked:
-                continue
-            if move_line._should_exclude_for_valuation():
-                continue
-            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
-                res |= move_line
-        return res
+        lot = lot or self.env['stock.lot']
+        return self._get_out_move_lines_by_lot(lots=lot)[lot]
 
     def _is_out(self):
         """Check if the move should be considered as leaving the company so that the cost method
