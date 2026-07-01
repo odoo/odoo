@@ -2707,7 +2707,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
         """
         self.ensure_one()
-        if not self.is_inventory and self.location_dest_usage == 'inventory':
+        if not self.is_inventory and self.location_dest_usage == 'inventory' and self.scrap_id:
             return {
                 'res_model': 'stock.scrap',
                 'type': 'ir.actions.act_window',
