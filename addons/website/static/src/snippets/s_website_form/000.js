@@ -22,7 +22,7 @@ import { addLoadingEffect } from "@web/core/utils/ui";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 const DEBOUNCE = 400;
 const { DateTime } = luxon;
-import wUtils from '@website/js/utils';
+import wUtils, { toggleSubmitButton } from '@website/js/utils';
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -97,12 +97,18 @@ import wUtils from '@website/js/utils';
                     this._getUserPreFillFields()
                 ))[0] || {};
             }
+            this.isDesignerUser = await user.hasGroup('website.group_website_designer')
             return res;
         },
         start: function () {
             // Reset the form first, as it is still filled when coming back
             // after a redirect.
             this.resetForm();
+
+            const formFields = this.$target.find('.s_website_form_field');
+            if (formFields.length === 0) {
+                toggleSubmitButton(this.$target, true, true, this.isDesignerUser);
+            }
 
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();

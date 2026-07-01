@@ -40,6 +40,7 @@ import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 import { Tooltip as OdooTooltip } from "@web/core/tooltip/tooltip";
 import { AddSnippetDialog } from "@web_editor/js/editor/add_snippet_dialog";
 import { scrollTo } from "@web_editor/js/common/scrolling";
+import { toggleSubmitButton } from '@website/js/utils';
 
 let cacheSnippetTemplate = {};
 
@@ -1645,7 +1646,25 @@ var SnippetEditor = publicWidget.Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.trigger_up('snippet_edition_request', {exec: this.removeSnippet.bind(this)});
+
+        const $form = this.$target.closest('form');
+        const hasFormField = this.$target.hasClass('s_website_form_field');
+
+        this.trigger_up('snippet_edition_request', {
+            exec: async () => {
+                await this.removeSnippet();
+
+                if (hasFormField && $form.length) {
+                    const remainingFields = $form.find('.s_website_form_field').filter(function () {
+                        return $(this).find('input, select, textarea').length > 0;
+                    }).length;
+
+                    if (remainingFields === 0) {
+                        toggleSubmitButton($form, true); // disable button
+                    }
+                }
+            }
+        });
     },
     /**
      * @private
