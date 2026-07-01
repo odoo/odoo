@@ -43,7 +43,7 @@
                            invisible="repartition_type == 'base'"
                            widget="account_tax_repartition_line_factor_percent"/>
                     <field name="repartition_type"/>
-                    <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}"/>
+                    <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}" domain="[('active', '=', True)]"/>
                     <field name="tag_ids"
                            widget="many2many_tags"
                            options="{'no_create': True}"
