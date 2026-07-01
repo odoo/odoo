@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { EventBus, markup, proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -15,6 +15,7 @@ import { redirect } from '@web/core/utils/urls';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 const { DateTime } = luxon;
 const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
@@ -39,7 +40,7 @@ const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
  * provide relevant information when adding a product to the cart.
  */
 export class CartService {
-    static dependencies = ['dialog'];
+    static dependencies = ["dialog", "public.interactions"];
 
     /**
      * Creates an instance of the service and initializes it using the {@link setup} method.
@@ -66,8 +67,10 @@ export class CartService {
      */
     setup(_env, services) {
         this.dialog = services.dialog;
+        this.interactions = services["public.interactions"];
         this.rpc = rpc;  // To be overridable in tests.
         this.notifications = proxy(new Set());
+        this.bus = new EventBus();
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',
@@ -77,9 +80,10 @@ export class CartService {
             }
         );
 
-        // Only expose `add` in the service registry.
         return {
+            bus: this.bus,
             add: (...args) => this.add(...args),
+            update: (...args) => this.update(...args),
             showWarning: (...args) => this.showWarning(...args),
         };
     }
@@ -113,6 +117,7 @@ export class CartService {
      * @param {Object} [options] - Define how to add products to the cart.
      * @param {Boolean} [options.isBuyNow=false] - Whether the product should be added immediately,
      *      bypassing optional configurations. Defaults to false.
+     * @param {Boolean} [options.source=false] - From what source the product was added.
      * @param {Boolean} [options.isConfigured=false] - Whether the product is already configured.
      *      Defaults to false.
      * @param {Boolean} [options.showQuantity=true] - Whether quantity selector should be shown
@@ -133,9 +138,15 @@ export class CartService {
         {
             isBuyNow=false,
             isConfigured=false,
+            source=false,
             showQuantity=true,
         } = {},
     ) {
+        const shouldRedirectToCart = (
+            isBuyNow
+            && !["cart_accessory", "quick_reorder"].includes(source)
+        );
+
         if (!productId && ptavs.length) {
             productId = await this.rpc('/sale/create_product_variant', {
                 product_template_id: productTemplateId,
@@ -155,24 +166,39 @@ export class CartService {
                 }
             );
             const preselectedComboItems = combos
-                 .map(combo => new ProductCombo(combo))
-                 .map(combo => combo.preselectedComboItem)
-                 .filter(Boolean);
+                .map(combo => new ProductCombo(combo))
+                .map(combo => combo.preselectedComboItem)
+                .filter(Boolean);
+
+            const selectedComboItems = combos
+                .map(combo => new ProductCombo(combo))
+                .map(combo => combo.selectedComboItem)
+                .filter(Boolean);
+
             // If the combo product is already fully configured (i.e. a combo item has been
-            // preselected for each combo choice), then it can be added to the cart without
-            // opening the combo configurator.
-            if (preselectedComboItems.length === combos.length) {
+            // preselected for each combo choice or all combo choices have been made from some
+            // flow like quick reorder), then it can be added to the cart without opening the combo
+            // configurator.
+            if (
+                preselectedComboItems.length === combos.length
+                || selectedComboItems.length === combos.length
+            ) {
+                const comboItems = preselectedComboItems.length
+                    ? preselectedComboItems
+                    : selectedComboItems;
+
                 return this._makeRequest({
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
                     uomId: uomId,
-                    linked_products: preselectedComboItems.map(
+                    linked_products: comboItems.map(
                         (comboItem) => this._serializeComboItem(
                             comboItem, productTemplateId, remainingData.quantity
                         )
                     ),
-                    shouldRedirectToCart: isBuyNow,
+                    shouldRedirectToCart: shouldRedirectToCart,
+                    source: source,
                     ...rest
                 });
             }
@@ -198,7 +224,8 @@ export class CartService {
                 uomId,
                 productCustomAttributeValues,
                 noVariantAttributeValues,
-                shouldRedirectToCart: isBuyNow,
+                shouldRedirectToCart: shouldRedirectToCart,
+                source: source,
                 ...rest
             });
         }
@@ -233,9 +260,29 @@ export class CartService {
             uomId,
             productCustomAttributeValues,
             noVariantAttributeValues,
-            shouldRedirectToCart: isBuyNow,
+            shouldRedirectToCart: shouldRedirectToCart,
+            source: source,
             ...rest
         });
+    }
+
+    async update(lineId, productId = undefined, quantity, fromCartPage = false) {
+        const data = await this.rpc("/shop/cart/update", {
+            line_id: lineId,
+            product_id: productId,
+            quantity: quantity,
+        });
+
+        // If update was done from cart page, and cart is empty after update, refresh the page to
+        // show the empty cart
+        if (fromCartPage & !data.cart_quantity) {
+            return redirect("/shop/cart");
+        }
+
+        this._updateCartIcon(data.cart_quantity);
+        this.showWarning(data.warning);
+        this.bus.trigger("cart_update");
+        this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
     }
 
     /**
@@ -467,6 +514,7 @@ export class CartService {
         productCustomAttributeValues=[],
         noVariantAttributeValues=[],
         shouldRedirectToCart=false,
+        source=false,
         ...rest
     }) {
         const data = await this.rpc('/shop/cart/add', {
@@ -476,6 +524,7 @@ export class CartService {
             uom_id: uomId,
             product_custom_attribute_values: productCustomAttributeValues,
             no_variant_attribute_value_ids: noVariantAttributeValues,
+            source: source,
             ...rest
         }).catch(error => {
             this._showCartNotification({
@@ -487,6 +536,7 @@ export class CartService {
         if (!data) {
             return 0;
         }
+        this.bus.trigger("cart_update");
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -495,12 +545,22 @@ export class CartService {
             data.cart_quantity !== browser.sessionStorage.getItem('website_sale_cart_quantity')
         )) {
             this._updateCartIcon(data.cart_quantity);
-        };
-        for (const notification of data.notifications) {
-            this._showCartNotification(notification);
+        }
+        if (!["cart_accessory", "quick_reorder"].includes(source)) {
+            for (const notification of data.notifications) {
+                this._showCartNotification(notification);
+            }
         }
         if (data.quantity) {
             this._trackProducts(data.tracking_info);
+        }
+        // Re-render the cart summary if the product was added from the quick reorder and the cart
+        // was empty. Because the cart summary won't be there in that case.
+        if (source == "quick_reorder" && !data.old_cart_quantity && data.cart_quantity) {
+            data["website_sale.shorter_cart_summary"] = markup(
+                data["website_sale.shorter_cart_summary"],
+            );
+            this._renderCartSummary(data);
         }
         return data.quantity;
     }
@@ -516,7 +576,7 @@ export class CartService {
         browser.sessionStorage.setItem('website_sale_cart_quantity', cartQuantity);
         // Mobile and Desktop elements have to be updated.
         const cartQuantityElements = document.querySelectorAll('.my_cart_quantity');
-        for(const cartQuantityElement of cartQuantityElements) {
+        for (const cartQuantityElement of cartQuantityElements) {
             if (cartQuantity === 0) {
                 cartQuantityElement.classList.add('d-none');
             } else {
@@ -559,11 +619,25 @@ export class CartService {
             );
         }
     }
+
+    /**
+     * Render the cart summary. This could be useful in cases like quick reorder where we add the
+     * product to the empty cart from cart page itself.
+     *
+     * @param {Object} data
+     *
+     * @returns {void}
+     */
+    _renderCartSummary(data) {
+        wSaleUtils.updateCartSummary(data);
+        const cartTotals = document.getElementById("cart_totals");
+        this.interactions.startInteractions(cartTotals);
+    }
 }
 
 export const cartService = {
     dependencies: CartService.dependencies,
-    async: ['add'],
+    async: ["add", "update"],
     start(env, dependencies) {
         return new CartService(env, dependencies);
     },

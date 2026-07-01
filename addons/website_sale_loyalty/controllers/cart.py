@@ -13,18 +13,6 @@ class Cart(WebsiteSaleCart):
             order_sudo._auto_apply_rewards()
         return super().cart(**post)
 
-    def _cart_values(self, **post):
-        values = super()._cart_values(**post)
-        if order_sudo := request.cart:
-            values["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()
-        return values
-
-    def _total_values(self):
-        values = super()._total_values()
-        if order_sudo := request.cart:
-            values["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()
-        return values
-
     @route("/wallet/top_up", type="http", auth="user", website=True, sitemap=False)
     def wallet_top_up(self, **kwargs):
         product = self.env["product.product"].browse(int(kwargs["trigger_product_id"]))
@@ -52,3 +40,30 @@ class Cart(WebsiteSaleCart):
                         notif["data"]["promotion_progress_bars"] = bars
                         break
         return result
+
+    def _prepare_cart_line_data(self, line):
+        line_data = super()._prepare_cart_line_data(line)
+        line_data["is_reward_line"] = line.is_reward_line
+        line_data["show_coupon_code"] = (
+            line.coupon_id
+            if line.order_id != line.coupon_id.order_id
+            and not line.coupon_id.program_id.is_nominative
+            else False
+        )
+
+        if line_data["show_coupon_code"]:
+            line_data["coupon_code"] = line.coupon_id.code
+            line_data["coupon_expiration_date"] = line.coupon_id.expiration_date
+
+        if line_data["is_reward_line"]:
+            line_data["reward_type"] = line.reward_id.reward_type
+
+        return line_data
+
+    @route()
+    def cart_totals(self, order_id):
+        cart_totals = super().cart_totals(order_id)
+        if order_sudo := request.cart:
+            cart_totals["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()
+
+        return cart_totals

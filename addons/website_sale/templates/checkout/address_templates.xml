@@ -5,7 +5,6 @@
     <template id="website_sale.checkout">
         <t t-call="website_sale.checkout_layout"
             additional_title.translate="Shop - Checkout"
-            redirect.f="/shop/checkout"
             same_shipping="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)">
             <div id="shop_checkout">
                 <t t-if="order._has_deliverable_products()">

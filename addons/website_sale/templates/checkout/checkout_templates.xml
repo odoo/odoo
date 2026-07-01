@@ -5,29 +5,6 @@
         <t t-call="website.step_wizard" wizard_step="website._get_checkout_breadcrumb_steps()"/>
     </template>
 
-    <!-- Called in `website_sale.reduction_code`. -->
-    <template id="website_sale.coupon_form" name="Coupon form">
-        <!-- Checkout context:
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
-            - website_sale_order: The current order.
-        -->
-        <form
-            class="mb-3"
-            t-attf-action="/shop/pricelist#{redirect and '?r=' + redirect or ''}"
-            method="post"
-            name="coupon_code"
-        >
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
-                <button type="submit" class="btn btn-light border">Apply</button>
-            </div>
-        </form>
-        <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <div class="alert alert-danger text-start" role="alert">This promo code is not available.</div>
-        </t>
-    </template>
-
     <!-- Called in `website_sale.checkout_layout`. -->
     <template id="navigation_buttons" name="Navigation buttons">
         <!-- Layout customization parameters:
@@ -57,6 +34,7 @@
                                    name="csrf_token"
                                    t-att-value="request.csrf_token()"/>
                             <t t-if="not hide_payment_button" t-call="payment.submit_button"/>
+
                         </form>
                     </div>
                     <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
@@ -167,7 +145,6 @@
                             default: `None`.
         -->
         <!-- Checkout context (non exhaustive):
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
         <t t-call="website.layout"
@@ -403,152 +380,96 @@
 
     <!-- Called in `website_sale.checkout_layout`. -->
     <template id="total">
-        <!-- Layout customization parameters:
-            - _cart_total_classes: CSS classes to append on the root div of the total template;
-                                   default `None`.
-        -->
         <div
             t-if="website_sale_order and website_sale_order.website_order_line"
-            t-attf-class="o_cart_total #{_cart_total_classes}"
+            t-attf-class="css_non_editable_mode_hidden #{_cart_total_classes}"
+            id="cart_totals_edit_mode"
         >
             <t
                 t-set="tax_included"
                 t-value="website_sale_order.website_id.show_line_subtotals_tax_selection == 'tax_included'"
             />
-            <table name="cart_total_table" class="table mb-0">
-                <tr
-                    t-if="website_sale_order._has_deliverable_products()"
-                    name="o_order_delivery"
-                >
-                    <td class="ps-0 pt-0 pb-2 border-0 text-muted" colspan="2">
+            <table class="table mb-0" name="cart_totals_edit_mode_table">
+                <tr name="o_order_delivery">
+                    <td class="ps-0 pt-0 pb-2 border-0 text-muted cart_delivery_label" colspan="2">
                         Delivery
                     </td>
-                    <td class="text-end pe-0 pt-0 pb-2 border-0">
-                        <span
-                            name="o_message_no_dm_set"
-                            t-att-class="'d-none' if website_sale_order.carrier_id else ''"
-                            title="Price will be updated after choosing a delivery method"
-                        >
-                            -
-                        </span>
-                        <span
-                            t-out="website_sale_order.amount_delivery"
-                            t-att-class="'monetary_field' + ('' if website_sale_order.carrier_id else ' d-none')"
-                            style="white-space: nowrap;"
-                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                        />
+                    <td class="pe-0 ps-2 pt-0 pb-2 border-0">
+                        <span class="placeholder w-100 d-block rounded"/>
                     </td>
                 </tr>
-                <!-- Tax excluded view -->
-                <tr
-                    t-if="not tax_included"
-                    name="o_order_total_untaxed"
-                >
+                <tr name="o_order_total_untaxed" t-attf-class="#{'d-none' if tax_included else ''}">
                     <td
-                        class="border-0 pb-2 ps-0 pt-0 text-muted"
+                        class="border-0 pb-2 ps-0 pt-0 text-muted cart_untaxed_label"
                         colspan="2"
                     >
                         Subtotal
                     </td>
-                    <td class="text-end border-0 pb-2 pe-0 pt-0">
-                        <span
-                            t-field="website_sale_order.amount_untaxed"
-                            class="monetary_field"
-                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                        />
+                    <td class="text-end border-0 ps-2 pb-2 pe-0 pt-0">
+                        <span class="placeholder w-100 d-block rounded"/>
                     </td>
                 </tr>
-                <t t-if="not tax_included" t-call="website_sale.order_tax_lines"/>
-                <!-- Total -->
+                <tr
+                    name="o_order_total_tax"
+                    t-attf-class="#{'d-none' if tax_included else ''}"
+                >
+                    <td class="w-50 border-0 p-0 pe-3 pb-2" colspan="2">
+                        <span class="placeholder w-100 d-block rounded"/>
+                    </td>
+                    <td class="w-25 border-0 p-0 ps-2 pb-2">
+                        <span class="placeholder w-100 d-block rounded"/>
+                    </td>
+                </tr>
                 <tr name="o_order_total" class="border-top">
-                    <td
-                        colspan="2"
-                        t-attf-class="border-0 ps-0 pt-2 #{'pb-1' if tax_included else 'pb-2'}"
-                    >
+                    <td colspan="2" class="border-0 ps-0 pt-2 cart_total_label">
                         <strong>Total</strong>
                     </td>
-                    <td t-attf-class="text-end border-0 px-0 pt-2 #{'pb-1' if tax_included else 'pb-2'}">
-                        <strong
-                            t-field="website_sale_order.amount_total"
-                            class="monetary_field"
-                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                        />
+                    <td class="w-25 border-0 ps-2 px-0 pt-2">
+                        <span class="placeholder w-100 d-block rounded"/>
                     </td>
                 </tr>
-                <!-- Tax included view -->
-                <t t-if="tax_included" t-call="website_sale.order_tax_lines" name="tax_included_order_tax_lines"/>
+                <tr
+                    name="o_order_total_tax"
+                    t-attf-class="#{'d-none' if not tax_included else ''}"
+                >
+                    <td class="border-0 p-0 pb-2" colspan="3">
+                        <span class="placeholder w-100 d-block rounded"/>
+                    </td>
+                </tr>
             </table>
         </div>
+        <!-- Layout customization parameters:
+            - _cart_total_classes: CSS classes to append on the root div of the total template;
+                                   default `None`.
+            - hide_promotions: Whether to hide coupon code input; default: `None`.
+        -->
+        <!-- encode order_id for confirmation page where website_sale_order will not be current cart -->
+        <div
+            id="cart_totals"
+            t-attf-class="#{_cart_total_classes}"
+            t-att-data-order-id="website_sale_order.id if request.cart != website_sale_order else None"
+            t-att-data-hide-promotions="hide_promotions"
+        />
     </template>
 
     <!-- Deactivatable through the website editor. -->
+    <!-- TODO NIPL: Only keep blank template to activate from website editor -->
     <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <!-- Checkout context:
-            - hide_promotions: Whether to hide promotion input; default: `None`.
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
-        <table name="cart_total_table" position="inside">
+        <table name="cart_totals_edit_mode_table" position="inside">
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-end text-xl-end border-0 p-0">
                 <span>
-                    <div class="coupon_form">
-                        <t t-call="website_sale.coupon_form"/>
+                    <div class="input-group w-100">
+                        <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
+                        <button class="btn btn-light border cart_apply_promo">Apply</button>
                     </div>
                 </span>
                 </td>
             </tr>
         </table>
-    </template>
-
-    <template id="order_tax_lines">
-        <tbody id="order_tax_lines_container">
-            <t
-                t-set="tax_included"
-                t-value="website_sale_order.website_id.show_line_subtotals_tax_selection == 'tax_included'"
-            />
-            <t t-if="website_sale_order.tax_totals and website_sale_order.tax_totals['subtotals']">
-                <t t-foreach="website_sale_order.tax_totals['subtotals']" t-as="line">
-                    <t t-foreach="line['tax_groups']" t-as="tax_line">
-                        <tr name="o_order_total_taxes">
-                            <!-- Tax included view -->
-                            <td
-                                t-if="tax_included"
-                                class="border-0 p-0 pb-2 small"
-                                colspan="3"
-                            >
-                                <p class="text-muted mb-0">
-                                    Including
-                                    <span
-                                        t-out="tax_line['tax_amount_currency']"
-                                        class="monetary_field"
-                                        t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                                    />
-                                    <t t-out="tax_line['group_name']"/>
-                                </p>
-                            </td>
-                            <!-- Tax excluded view -->
-                            <t t-else="">
-                                <td
-                                    class="text-muted border-0 p-0 pe-3 pb-2"
-                                    colspan="2"
-                                >
-                                    <t t-out="tax_line['group_name']"/>
-                                </td>
-                                <td class="text-end border-0 p-0 ps-3 pb-2">
-                                    <span
-                                        t-out="tax_line['tax_amount_currency']"
-                                        class="monetary_field"
-                                        style="white-space: nowrap;"
-                                        t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                                    />
-                                </td>
-                            </t>
-                        </tr>
-                    </t>
-                </t>
-            </t>
-        </tbody>
     </template>
 
     <template id="website_sale.alert_inline">

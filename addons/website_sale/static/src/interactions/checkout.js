@@ -2,8 +2,6 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { setElementContent } from '@web/core/utils/html';
-import { markup } from '@odoo/owl';
 
 export class Checkout extends Interaction {
     static selector = '#shop_checkout';
@@ -268,47 +266,10 @@ export class Checkout extends Interaction {
      * Update the order summary table with the delivery rate of the selected delivery method.
      *
      * @private
-     * @param {Object} result - The order summary values.
-     * @param {Object} targetEl - Specific cart summary to update.
      * @return {void}
      */
-    _updateCartSummary(result, targetEl) {
-        const amountDelivery = targetEl.querySelector(
-            'tr[name="o_order_delivery"] .monetary_field'
-        );
-        const amountUntaxed = targetEl.querySelector(
-            'tr[name="o_order_total_untaxed"] .monetary_field'
-        );
-        const amountTax = targetEl.querySelector('#order_tax_lines_container');
-        const amountTotal = targetEl.parentElement.querySelectorAll(
-            'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
-        );
-
-        // When no dm is set and a price span is hidden, hide the message and show the price span.
-        if (amountDelivery.classList.contains('d-none')) {
-            amountDelivery.querySelector('span[name="o_message_no_dm_set"]')?.classList.add('d-none');
-            amountDelivery.classList.remove('d-none');
-        }
-        amountDelivery.innerHTML = result.amount_delivery;
-        if (amountUntaxed) {
-            setElementContent(amountUntaxed, markup(result.amount_untaxed));
-        }
-        amountTax.outerHTML = result.amount_tax_lines;
-        amountTotal.forEach(total => total.innerHTML = result.amount_total);
-    }
-
-    /**
-     * Update the order summary table with the delivery rate of the selected delivery method.
-     *
-     * @private
-     * @param {Object} result - The order summary values.
-     * @return {void}
-     */
-    _updateCartSummaries(result) {
-        const parentElements = document.querySelectorAll(
-            '#o_cart_summary_offcanvas, div.o_total_card'
-        );
-        parentElements.forEach(el => this._updateCartSummary(result, el));
+    _updateCartSummaries(_result) {
+        this.services.cart.bus.trigger('cart_update');
     }
 
     /**
