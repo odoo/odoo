@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="hr_employee_view_form_inherit_applicant_button" model="ir.ui.view">
+        <field name="name">hr.employee.form.applicant.button</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <button name="action_open_versions" position="before">
+                <button name="action_open_applicant"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-id-card-o"
+                        groups="hr.group_hr_user"
+                        invisible="not applicant_ids">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="applicant_name" readonly="1"/>
+                        </span>
+                        <span class="o_stat_text">Applicant</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+</odoo>
