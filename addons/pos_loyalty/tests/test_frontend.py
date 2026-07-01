@@ -3430,9 +3430,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.assertEqual(loyalty_card.points, 90)
 
-    def test_customer_display_loyalty_points(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}", 'test_customer_display_loyalty_points', login="pos_user")
-
     def test_refund_order_deduct_loyalty_points(self):
         """
         Test workflow for refunding orders and deducting loyalty points.

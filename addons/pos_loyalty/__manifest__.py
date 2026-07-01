@@ -28,18 +28,16 @@
             'pos_loyalty/static/src/portal/*',
         ],
         'point_of_sale._assets_pos': [
-            'pos_loyalty/static/src/**/*',
-            ('remove', 'pos_loyalty/static/src/portal/*'),
-            ('remove', 'pos_loyalty/static/src/overrides/customer_display_overrides/customer_display.xml'),
+            'pos_loyalty/static/src/app/**/*',
         ],
         'point_of_sale.customer_display_assets': [
-            'pos_loyalty/static/src/overrides/customer_display_overrides/customer_display.xml',
-        ],
-        'point_of_sale.customer_display_assets_test': [
-            'pos_loyalty/static/tests/tours/customer_display_tour.js',
+            'pos_loyalty/static/src/customer_display/**/*',
         ],
         'web.assets_tests': [
             'pos_loyalty/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'pos_loyalty/static/src/customer_display/**/*',
         ],
         'web.assets_unit_tests': [
             'pos_loyalty/static/tests/unit/**/*'

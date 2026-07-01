@@ -118,7 +118,6 @@
         'web.assets_tests': [
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
-            'point_of_sale/static/tests/customer_display/**/*',
             'point_of_sale/static/src/utils.js',
         ],
         'web.assets_unit_tests_setup': [
@@ -133,6 +132,11 @@
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
             'point_of_sale/static/src/backend/views/**/*',
+
+            # customer display
+            'point_of_sale/static/src/customer_display/**/*',
+            ('remove', 'point_of_sale/static/src/customer_display/customer_display_root.js'),
+            ('remove', 'point_of_sale/static/src/customer_display/styles.scss'),
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
@@ -213,7 +217,6 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
-            'point_of_sale/static/src/customer_display/utils.js',
             ('include', 'point_of_sale.payment_terminals'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
@@ -233,6 +236,7 @@
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'google_address_autocomplete/static/src/**/*',
             'point_of_sale/static/src/backend/pos_res_partner_view/*',
+            'point_of_sale/static/src/customer_display/customer_display_service.js',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
@@ -263,17 +267,14 @@
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+            "point_of_sale/static/src/app/utils/pretty_console_log.js",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),
-            "point_of_sale/static/tests/pos/tours/utils/common.js",
-            "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
-            "point_of_sale/static/tests/generic_helpers/utils.js",
-            "point_of_sale/static/tests/customer_display/customer_display_utils.js",
-            "point_of_sale/static/tests/customer_display/customer_display_tour.js",
+            'point_of_sale/static/tests/customer_display/**/*',
         ],
         'point_of_sale.assets_debug': [
             ('include', 'point_of_sale.base_tests'),

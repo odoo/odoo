@@ -1,6 +1,6 @@
 
 declare module "services" {
-    import { CustomerDisplayDataService } from "@point_of_sale/customer_display/customer_display_data_service";
+    import { customerDisplayService } from "@point_of_sale/customer_display/customer_display_service";
     import { alertService } from "@point_of_sale/app/services/alert_service";
     import { barcodeReaderService } from "@point_of_sale/app/services/barcode_reader_service";
     import { contextualUtilsService } from "@point_of_sale/app/services/contextual_utils_service";
@@ -16,7 +16,7 @@ declare module "services" {
         alert: typeof alertService;
         barcode_reader: typeof barcodeReaderService;
         contextual_utils_service: typeof contextualUtilsService;
-        customer_display_data: typeof CustomerDisplayDataService;
+        customer_display_service: typeof customerDisplayService;
         number_buffer: typeof numberBufferService;
         pos: typeof posService;
         pos_data: typeof PosDataService;

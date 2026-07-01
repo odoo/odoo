@@ -279,10 +279,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
 
-    def test_customer_display_online_payment(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}",
-                        'CustomerDisplayTourOnlinePayment', login="pos_user")
-
     def test_refuse_online_payment_without_accounting_payment(self):
         """
         Test that a an order can not be paid through an online payment method from the backend

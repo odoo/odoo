@@ -243,6 +243,9 @@ patch(PosStore.prototype, {
             })
         );
         order._code_activated_coupon_ids = [["unlink", ...toUnlink]];
+        // Update the customer display after loyalty changes, as they are stored in the UI state
+        // and do not trigger the order record's `create` event.
+        this.debounceUpdateCustomerDisplay();
     },
     async activateCode(code) {
         const order = this.getOrder();
