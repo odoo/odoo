@@ -134,33 +134,33 @@ owl.useExternalListener = function useExternalListener(target, eventName, handle
  * @param {() => any[]} computeDependencies
  */
 owl.useLayoutEffect = function useLayoutEffect(effect, computeDependencies = () => [NaN]) {
-    // /** @type {Function} */
-    // let cleanup;
-    // /** @type {any[]} */
-    // let dependencies;
-    // owl.onWillRender(() => {
-    //     try {
-    //         computeDependencies();
-    //     } catch {
-    //         // just need to read dependencies to subscribe to signals
-    //     }
-    // });
-    // owl.onMounted(() => {
-    //     dependencies = computeDependencies();
-    //     cleanup = effect(...dependencies);
-    // });
-    // owl.onPatched(() => {
-    //     const newDeps = computeDependencies();
-    //     const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
-    //     if (shouldReapply) {
-    //         dependencies = newDeps;
-    //         if (cleanup) {
-    //             cleanup();
-    //         }
-    //         cleanup = effect(...dependencies);
-    //     }
-    // });
-    // owl.onWillUnmount(() => cleanup && cleanup());
+    /** @type {Function} */
+    let cleanup;
+    /** @type {any[]} */
+    let dependencies;
+    owl.onWillRender(() => {
+        try {
+            computeDependencies();
+        } catch {
+            // just need to read dependencies to subscribe to signals
+        }
+    });
+    owl.onMounted(() => {
+        dependencies = computeDependencies();
+        cleanup = effect(...dependencies);
+    });
+    owl.onPatched(() => {
+        const newDeps = computeDependencies();
+        const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
+        if (shouldReapply) {
+            dependencies = newDeps;
+            if (cleanup) {
+                cleanup();
+            }
+            cleanup = effect(...dependencies);
+        }
+    });
+    owl.onWillUnmount(() => cleanup && cleanup());
 };
 
 class EnvPlugin extends owl.Plugin {
