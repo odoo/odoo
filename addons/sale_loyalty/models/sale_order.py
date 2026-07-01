@@ -285,6 +285,11 @@ class SaleOrder(models.Model):
             # Gift cards and eWallets are applied on the total order amount
             # Other types of programs are not expected to apply on delivery lines
             lines -= self._get_no_effect_on_threshold_lines()
+        else:
+            # Prevent paying for a payment program's own top-up product using that
+            # same program (e.g. topping up an eWallet by paying with the eWallet).
+            top_up_products = reward.program_id.trigger_product_ids
+            lines -= lines.filtered(lambda line: line.product_id in top_up_products)
 
         discountable = 0
         discountable_per_tax = defaultdict(float)
