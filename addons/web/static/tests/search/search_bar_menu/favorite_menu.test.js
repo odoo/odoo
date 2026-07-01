@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { editValue } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
@@ -24,13 +24,7 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
 defineSearchBarModels();
 
 test("simple rendering with no favorite (without ability to save)", async () => {
-    const registryItem = favoriteMenuRegistry.content["custom-favorite-item"];
     favoriteMenuRegistry.remove("custom-favorite-item");
-    after(() => {
-        favoriteMenuRegistry.add("custom-favorite-item", registryItem[1], {
-            sequence: registryItem[1],
-        });
-    });
 
     await mountWithSearch(
         SearchBarMenu,

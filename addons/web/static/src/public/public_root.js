@@ -1,15 +1,10 @@
-import { cookie } from "@web/core/browser/cookie";
-
-import lazyloader from "@web/public/lazyloader";
-
-import { makeEnv, startServices } from "@web/env";
-import { getTemplate } from "@web/core/templates";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { appTranslateFn } from "@web/core/l10n/translation";
+import { cookie } from "@web/core/browser/cookie";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
-import { App, Component, whenReady } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { mountComponent } from "@web/env";
+import lazyloader from "@web/public/lazyloader";
 
 const { Settings } = luxon;
 
@@ -30,24 +25,15 @@ const lang = cookie.get("frontend_lang") || getLang(); // FIXME the cookie value
 export async function createPublicRoot() {
     await lazyloader.allScriptsLoaded;
     await whenReady();
-    const env = makeEnv();
-    Component.env = env;
-    const app = new App({
-        getTemplate,
-        dev: env.debug,
-        translateFn: appTranslateFn,
-        translatableAttributes: ["data-tooltip"],
-        plugins: services,
+    const { env, root } = await mountComponent(MainComponentsContainer, document.body, {
+        name: "Odoo public",
     });
-    await startServices(env, app);
-
     env.services["public.interactions"].isReady.then(() => {
         document.body.setAttribute("is-ready", "true");
     });
 
     const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;
-    const root = await app.createRoot(MainComponentsContainer, { env }).mount(document.body);
-    odoo.__WOWL_DEBUG__ = { root };
+
     return root;
 }

@@ -375,10 +375,11 @@ test("can be the UI active element", async () => {
         }
     }
     await makeDialogMockEnv();
+    const uiService = getService("ui");
     await mountWithCleanup(Parent);
     destroyApp();
     await Promise.resolve();
-    expect(getService("ui").activeElement).toBe(document, {
+    expect(uiService.activeElement).toBe(document, {
         message: "UI owner should be reset to the default (document)",
     });
 });

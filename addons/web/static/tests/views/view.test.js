@@ -6,6 +6,8 @@ import {
     defineModels,
     expectMarkup,
     fields,
+    getMockEnv,
+    getService,
     makeMockEnv,
     mockService,
     models,
@@ -1153,7 +1155,7 @@ test("react to prop 'domain' changes", async function () {
 ////////////////////////////////////////////////////////////////////////////
 
 test("Cache: refresh with debug mode", async () => {
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     onRpc("get_views", ({ kwargs }) => {
         expect.step("Fetch, debug = " + !!kwargs.options.debug);
@@ -1166,8 +1168,6 @@ test("Cache: refresh with debug mode", async () => {
             views: {},
         };
     });
-
-    const services = env.services;
 
     const context = {
         context: {},
@@ -1185,9 +1185,9 @@ test("Cache: refresh with debug mode", async () => {
         views: {},
     };
 
-    env.debug = "";
-    expect(await services.view.loadViews(context)).toEqual(expected);
-    env.debug = "1";
-    expect(await services.view.loadViews(context)).toEqual(expected);
+    getMockEnv().debug = "";
+    expect(await getService("view").loadViews(context)).toEqual(expected);
+    getMockEnv().debug = "1";
+    expect(await getService("view").loadViews(context)).toEqual(expected);
     expect.verifySteps(["Fetch, debug = false", "Fetch, debug = true"]);
 });

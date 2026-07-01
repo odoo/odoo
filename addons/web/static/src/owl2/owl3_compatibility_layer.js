@@ -165,7 +165,8 @@ owl.useLayoutEffect = function useLayoutEffect(effect, computeDependencies = () 
 
 class EnvPlugin extends owl.Plugin {
     static id = "__ENV__";
-    env = owl.config("env") ?? {};
+    static sequence = 0;
+    env = owl.config("env");
 }
 
 owl.useEnv = function useEnv() {
@@ -357,6 +358,16 @@ class App extends owl.App {
      * @param {any} config
      */
     constructor(config) {
+        const env = config.env ?? {};
+        if (config.plugins) {
+            if (config.plugins instanceof owl.Resource) {
+                config.plugins.add(EnvPlugin);
+            } else {
+                config.plugins.push(EnvPlugin);
+            }
+        } else {
+            config.plugins = [EnvPlugin];
+        }
         super({
             ...config,
             customDirectives: {
@@ -367,14 +378,9 @@ class App extends owl.App {
                 ...globalValues,
                 ...config.globalValues,
             },
-            config: config.config
-                ? Object.assign(Object.create(config.config), {
-                      env: config.env,
-                  })
-                : { env: config.env },
+            config: config.config ? Object.assign(Object.create(config.config), { env }) : { env },
         });
-        this.pluginManager.startPlugins([EnvPlugin]);
-        this.env = config.env ?? {};
+        this.env = env;
     }
 
     createRoot(component, config = {}) {

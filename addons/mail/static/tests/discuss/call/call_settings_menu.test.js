@@ -14,7 +14,7 @@ import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, keyDown, mockDate, test, expect } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
@@ -50,8 +50,8 @@ test("Renders the call settings", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
-    const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    await start();
+    const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
@@ -178,8 +178,8 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
     mockDate("2026-01-01 10:00:00");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env = await start();
-    const store = env.services["mail.store"];
+    await start();
+    const store = getService("mail.store");
     await openDiscuss(channelId);
     await click("button[title='New Meeting']");
     await contains(".o-mail-Meeting");

@@ -4,7 +4,7 @@ import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_help
 import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 
 import { registry } from "@web/core/registry";
-import { mockService } from "@web/../tests/web_test_helpers";
+import { getService, mockService } from "@web/../tests/web_test_helpers";
 
 function xipToBitmap(xmin, xmax, xip) {
     const bitCount = Number(xmax - xmin);
@@ -39,8 +39,8 @@ afterEach(() => {
 });
 
 async function start() {
-    const env = await start2();
-    return env.services.store;
+    await start2();
+    return getService("store");
 }
 
 const SINGLE_FIELD_CASES = [

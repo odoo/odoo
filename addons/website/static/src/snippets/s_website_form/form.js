@@ -242,7 +242,9 @@ export class Form extends Interaction {
                             type: fieldEl.matches(".s_website_form_date, .o_website_form_date")
                                 ? "date"
                                 : "datetime",
-                            value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                            value: defaultValue
+                                ? DateTime.fromSeconds(parseInt(defaultValue))
+                                : null,
                         },
                     })
                     .enable()
