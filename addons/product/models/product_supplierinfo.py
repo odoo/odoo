@@ -116,5 +116,11 @@ class ProductSupplierinfo(models.Model):
         return super().write(vals)
 
     def _get_filtered_supplier(self, company_id, product_id, params=False):
+<<<<<<< 6dc5a29d0b812706b4f89ec1cab2f1cea5dc02e4
         return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id))
                              and (not params or not params.get('partner_id') or s.partner_id == params.get('partner_id')))
+||||||| c37e76850d3ff790b76493bd1003d80e170bd4bf
+        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id)))
+=======
+        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.sudo().active and (not s.product_id or s.product_id == product_id)))
+>>>>>>> ddec3cb9cad9fc7414e39ebb1b4bad94d6fdc4a6
