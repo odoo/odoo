@@ -22,6 +22,10 @@ patch(PosOrder.prototype, {
     },
     get changes() {
         return this.lines.reduce((acc, line) => {
+            // Exclude the tip line so that adding/changing a tip does not count as an order change
+            if (line.isTipLine()) {
+                return acc;
+            }
             const diff = line.changes;
             if (
                 diff.qty ||

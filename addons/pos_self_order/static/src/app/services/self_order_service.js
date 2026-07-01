@@ -830,11 +830,11 @@ export class SelfOrder extends Reactive {
     }
 
     async sendDraftOrderToServer() {
-        if (
-            Object.keys(this.currentOrder.changes).length === 0 ||
-            this.currentOrder.lines.length === 0
-        ) {
-            return this.currentOrder;
+        const order = this.currentOrder;
+        const hasTipLine = this.config.tip_product_id && order.lines.some((l) => l.isTipLine());
+
+        if ((Object.keys(order.changes).length === 0 && !hasTipLine) || order.lines.length === 0) {
+            return order;
         }
 
         try {

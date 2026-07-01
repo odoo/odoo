@@ -37,14 +37,16 @@ class ProductTemplate(models.Model):
         )
         products.extend(combo_products_choice)
 
-        # Always include delivery product templates, even if the limit cut them off
+        # Always include special product templates (delivery, tip), even if the limit cut them off
         loaded_ids = {p['id'] for p in products}
-        delivery_tmpl_ids = self.env['pos.preset'].sudo().search([
+        special_tmpl_ids = self.env['pos.preset'].sudo().search([
             ('delivery_product_id', '!=', False),
         ]).delivery_product_id.product_tmpl_id.ids
-        missing_delivery = [tid for tid in delivery_tmpl_ids if tid not in loaded_ids]
-        if missing_delivery:
-            products.extend(self.browse(missing_delivery).read(fields, load=False))
+        if config.tip_product_id:
+            special_tmpl_ids += config.tip_product_id.product_tmpl_id.ids
+        missing = [tid for tid in special_tmpl_ids if tid not in loaded_ids]
+        if missing:
+            products.extend(self.browse(missing).exists().read(fields, load=False))
 
         service_fee_tmpl_ids = self.env['pos.preset'].sudo().search([
             ('service_fee_product_id', '!=', False),

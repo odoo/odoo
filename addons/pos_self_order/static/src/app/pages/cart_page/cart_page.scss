@@ -38,3 +38,36 @@
       }
    }
 }
+
+.o_tip_button {
+    min-width: 0;
+    padding: 1rem 0.5rem;
+
+    .o_tip_pct {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.1;
+        text-align: center;
+    }
+
+    .o_tip_amount {
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_tip_button {
+        padding: 1rem 0.5rem;
+
+        .o_tip_pct {
+            font-size: 1rem;
+        }
+
+        .o_tip_amount {
+            font-size: 0.75rem;
+        }
+    }
+}

@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="d-flex w-100 justify-content-between align-items-center mt-3 mt-md-4">
                                         <!-- Quantity -->
-                                        <div t-if="display_change_quantity and !this.isDeliveryLine(line) and !line.isServiceFeeLine()" class="btn-group" >
+                                        <div t-if="display_change_quantity and !line.isDeliveryLine and !line.isServiceFeeLine()" class="btn-group" >
                                             <button
                                                     t-if="this.canDeleteLine(line) &amp;&amp; this.getLineChangeQty(line) > 1"
                                                     type="button"
@@ -71,14 +71,56 @@
                 </div>
                 <div class="container o_self_container" t-if="!this.selfOrder.kioskMode">
                     <hr/>
-                    <div class="d-flex rounded-4 bg-secondary p-3 justify-content-between align-items-center order-note">
+                    <button class="d-flex rounded-4 bg-secondary p-3 justify-content-between align-items-center order-note w-100 border-0 text-start" t-on-click="this.openNotePopup">
                         <div>
                             <div class="fw-bolder" style="font-size: 1.1rem;" t-out="this.orderNote ? 'Order note' : 'Add an order note'"/>
                             <div t-if="this.orderNote" class="text-muted mt-1" t-out="this.orderNote"/>
                             <div t-else="" class="text-muted small">Utensils, special instructions, etc.</div>
                         </div>
-                        <button class="btn p-0 d-flex align-items-center justify-content-center" style="width: 2.2rem; height: 2.2rem;" t-on-click="this.openNotePopup">
+                        <span class="d-flex align-items-center justify-content-center" style="width: 2.2rem; height: 2.2rem;">
                             <i t-att-class="'fa ' + (this.orderNote ? 'fa-pencil' : 'fa-plus')"/>
+                        </span>
+                    </button>
+                </div>
+                <div class="container o_self_container" t-if="this.showTipSection">
+                    <hr/>
+                    <div class="fw-bolder mb-2" style="font-size: 1.1rem;">
+                        Add a tip
+                    </div>
+                    <div class="d-flex gap-1 w-100">
+                        <t t-foreach="this.tipPercentages" t-as="pct" t-key="pct">
+                            <button
+                                type="button"
+                                t-on-click="() => this.selectTipPct(pct)"
+                                class="btn bg-white rounded-4 flex-fill o_tip_button"
+                                t-att-class="this.tipAmountForPct(pct) === this.selfOrder.currentOrder.tip_amount ? 'border-2 border-primary' : 'border-transparent opacity-75'">
+                                <div class="o_tip_pct">
+                                    <t t-out="pct"/>%
+                                </div>
+                                <div class="o_tip_amount text-primary" t-out="this.selfOrder.formatMonetary(this.tipAmountForPct(pct))"/>
+                            </button>
+                        </t>
+                        <button
+                            type="button"
+                            t-on-click="this.openTipNumpad"
+                            class="btn bg-white rounded-4 flex-fill o_tip_button"
+                            t-att-class="this.isCustomTip ? 'border-2 border-primary' : 'border-transparent opacity-75'">
+                            <div
+                                class="o_tip_pct"
+                                t-att-class="{'text-primary': this.isCustomTip}">
+                                <t t-if="this.isCustomTip">
+                                    <t t-if="this.selfOrder.currentOrder.uiState.tip.type === 'percent'">
+                                        <t t-out="this.selfOrder.currentOrder.uiState.tip.value"/>%
+                                    </t>
+                                    <t t-else="" t-out="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.uiState.tip.value)"/>
+                                </t>
+                                <t t-else="">Other</t>
+                            </div>
+                            <div
+                                t-if="this.isCustomTip and this.selfOrder.currentOrder.uiState.tip.type === 'percent'"
+                                class="o_tip_amount text-primary"
+                                t-out="this.selfOrder.formatMonetary(this.tipAmountForPct(this.selfOrder.currentOrder.uiState.tip.value))"
+                            />
                         </button>
                     </div>
                 </div>
@@ -86,7 +128,7 @@
             <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
                 <div class="container o_self_container order-price d-flex flex-column gap-0 gap-lg-1 align-items-end px-md-4" >
                     <t t-set="total" t-value="this.totalPriceAndTax"/>
-                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-out="this.selfOrder.formatMonetary(total.priceWithTax)" /></span></div>
+                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-out="this.selfOrder.formatMonetary(total.priceWithTax)" /></span><span t-if="this.tipAmount" class="fs-6 fw-normal text-muted">&#160;(Tips included)</span></div>
                     <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="this.displayTaxes">Taxes: <t t-out="this.selfOrder.formatMonetary(total.tax)" /></div>
                  </div>
             </div>
