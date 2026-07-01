@@ -66,7 +66,7 @@
             <div t-else="" style="width: 260px;" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
-                        <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
+                        <span class="o_we_preview_favicon" style="width: 16px; height: 18px">
                             <img t-if="state.previewIcon.type === 'imgSrc'" t-att-src="state.previewIcon.value" class="align-content-center"/>
                             <span t-elif="state.previewIcon.type === 'mimetype'" class="o_image" t-att-data-mimetype="state.previewIcon.value"/>
                             <i t-else="" t-attf-class="fa fa-fw {{state.previewIcon.value}}"></i>
