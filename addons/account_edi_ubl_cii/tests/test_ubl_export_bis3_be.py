@@ -80,6 +80,20 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_price_unit_more_decimals')
 
+    def test_invoice_price_unit_precision_preserved(self):
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
+        decimal_precision.digits = 4
+        product = self._create_product(lst_price=10.2678, taxes_id=self.percent_tax(21))
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=1.0,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_price_unit_precision_preserved')
+
     def test_invoice_price_amount_rounding_precision_with_price_included_taxes(self):
         tax_21 = self.percent_tax(21.0, price_include=True)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)

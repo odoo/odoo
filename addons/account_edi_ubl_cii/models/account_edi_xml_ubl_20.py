@@ -482,15 +482,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A python dictionary.
         """
-        # Price subtotal without discount:
-        net_price_subtotal = line.price_subtotal
-        # Price subtotal with discount:
-        if line.discount == 100.0:
-            gross_price_subtotal = 0.0
+        if any(t.price_include for t in line.tax_ids):
+            # Price subtotal without discount:
+            net_price_subtotal = line.price_subtotal
+            # Price subtotal with discount:
+            if line.discount == 100.0:
+                gross_price_subtotal = 0.0
+            else:
+                gross_price_subtotal = net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0)
+            # Price subtotal with discount / quantity:
+            gross_price_unit = gross_price_subtotal / line.quantity if line.quantity and not line.currency_id.is_zero(gross_price_subtotal) else 0.0
         else:
-            gross_price_subtotal = net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0)
-        # Price subtotal with discount / quantity:
-        gross_price_unit = gross_price_subtotal / line.quantity if line.quantity and not line.currency_id.is_zero(gross_price_subtotal) else 0.0
+            gross_price_unit = line.price_unit
 
         uom = super()._get_uom_unece_code(line)
 
