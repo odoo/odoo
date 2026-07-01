@@ -1,8 +1,10 @@
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 
@@ -320,5 +322,34 @@ registry
                 ProductScreen.checkTotalAmount("0.81"),
                 ProductScreen.checkTaxAmount("0.14"),
                 ...payAndInvoice("0.81"),
+            ].flat(),
+    });
+
+registry.category("web_tour.tours").add("test_pos_downpayment_fixed_tax_included_rounding", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ...addDownPayment("500", 1, "fixed"),
+            ProductScreen.totalAmountIs("500.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Down Payment", price: "-500.00" }),
+            ProductScreen.totalAmountIs("500.00"),
+        ].flat(),
+});
+
+registry
+    .category("web_tour.tours")
+    .add("test_settle_sales_downpayment_fixed_tax_included_rounding", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                PosSale.settleNthOrder(1),
+                Order.hasLine({ productName: "Down Payment", price: "-500.00" }),
+                ProductScreen.totalAmountIs("500.00"),
             ].flat(),
     });

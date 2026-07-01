@@ -179,6 +179,20 @@ patch(PosStore.prototype, {
                 }
             }
             newLine.setQuantityFromSOL(converted_line);
+            if (
+                line.is_downpayment &&
+                line.tax_ids?.length &&
+                line.tax_ids.every((t) => t.price_include) &&
+                line.extra_tax_data?.manual_tax_amounts &&
+                line.extra_tax_data.manual_total_excluded_currency != null
+            ) {
+                converted_line.price_unit =
+                    line.extra_tax_data.manual_total_excluded_currency +
+                    Object.values(line.extra_tax_data.manual_tax_amounts).reduce(
+                        (sum, v) => sum + (v.tax_amount_currency || 0),
+                        0
+                    );
+            }
             newLine.setUnitPrice(converted_line.price_unit);
             newLine.setDiscount(line.discount);
 
