@@ -519,5 +519,11 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         """
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self._dropship_product1(bill_price=15)
+        user = self.env['res.users'].create({
+            'login': 'stock_user',
+            'name': 'Stock User',
+            'group_ids': (self.env.user.group_ids - self.env.ref('stock.group_stock_manager') + self.env.ref('stock.group_stock_user')).ids
+        })
+        with self.with_user(user.login):
+            self._dropship_product1(bill_price=15)
         self.assertEqual(self.product1.standard_price, 15)
