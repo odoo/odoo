@@ -65,6 +65,7 @@ export class MenuDialog extends Component {
         name: { type: String, optional: true },
         url: { type: String, optional: true },
         isMegaMenu: { type: Boolean, optional: true },
+        hasChildren: { type: Boolean, optional: true },
         save: Function,
         close: Function,
     };
@@ -81,6 +82,7 @@ export class MenuDialog extends Component {
             pageNotFound: false,
             url: this.props.url,
             name: this.props.name,
+            isMegaMenu: this.props.isMegaMenu,
             invalidName: false,
             invalidUrl: false,
         });
@@ -121,7 +123,7 @@ export class MenuDialog extends Component {
 
     getUrl() {
         let url = this.state.url;
-        if (!this.props.isMegaMenu) {
+        if (!this.state.isMegaMenu) {
             try {
                 url = toRelativeIfSameDomain(url);
             } catch {
@@ -137,7 +139,7 @@ export class MenuDialog extends Component {
             return;
         }
 
-        this.props.save(this.state.name, this.getUrl());
+        this.props.save(this.state.name, this.getUrl(), this.state.isMegaMenu);
         this.props.close();
     }
 
@@ -152,7 +154,7 @@ export class MenuDialog extends Component {
 
     onTitleInput(ev) {
         this.state.invalidName = false;
-        if (!this.urlInputEdited && !this.props.isMegaMenu) {
+        if (!this.urlInputEdited && !this.state.isMegaMenu) {
             const title = ev.target.value;
             this.state.url = title ? "/" + wUtils.slugify(title) : "";
         }
@@ -304,11 +306,10 @@ export class EditMenuDialog extends Component {
         }
     }
 
-    addMenu(isMegaMenu) {
+    addMenu() {
         this.dialogs.add(MenuDialog, {
-            isMegaMenu,
             url: "",
-            save: (name, url) => {
+            save: (name, url, isMegaMenu) => {
                 const newMenu = proxy({
                     fields: {
                         id: `menu_${new Date().toISOString()}`,
@@ -335,10 +336,13 @@ export class EditMenuDialog extends Component {
             name: menuToEdit.fields["name"],
             url: menuToEdit.fields["url"],
             isMegaMenu: menuToEdit.fields["is_mega_menu"],
-            save: (name, url) => {
+            hasChildren: menuToEdit.children.length > 0,
+            save: (name, url, isMegaMenu) => {
                 menuToEdit.fields["name"] = name;
-                menuToEdit.fields["url"] = url || "#";
+                menuToEdit.fields["url"] = isMegaMenu || !url ? "#" : url;
+                menuToEdit.fields["is_mega_menu"] = isMegaMenu;
                 menuToEdit.page_not_found = false;
+                menuToEdit.is_homepage = !isMegaMenu && menuToEdit.is_homepage
                 this.checkMenuUrlExists(menuToEdit, url);
             },
         });
@@ -385,7 +389,6 @@ export class EditMenuDialog extends Component {
                 data.push(menuFields);
             }
         });
-
         await this.orm.call(
             "website.menu",
             "save",

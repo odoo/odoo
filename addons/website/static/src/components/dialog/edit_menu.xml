@@ -12,7 +12,15 @@
                     class="form-control" t-att-class="{ 'is-invalid': this.state.invalidName }" t-custom-ref="autofocus"/>
             </div>
         </div>
-        <div t-if="!this.props.isMegaMenu" class="mb-3 row">
+        <div class="o_menu_dialog_form mb-3 row">
+            <label class="col-form-label col-md-3">
+                Mega Menu
+            </label>
+            <div class="col-md-9 d-flex align-items-center">
+                <input type="checkbox" t-custom-model="this.state.isMegaMenu" class="form-switch"/>
+            </div>
+        </div>
+        <div t-if="!this.state.isMegaMenu and !this.props.hasChildren" class="mb-3 row">
             <label class="col-form-label col-md-3">
                 Url or Email
             </label>
@@ -73,9 +81,6 @@
             <div class="d-flex flex-column">
                 <a href="#" t-on-click="() => this.addMenu(false)">
                     <i class="fa fa-plus-circle me-1"/> Add Menu Item
-                </a>
-                <a href="#" t-on-click="() => this.addMenu(true)">
-                    <i class="fa fa-plus-circle me-1"/> Add Mega Menu Item
                 </a>
             </div>
             <small class="text-muted">
