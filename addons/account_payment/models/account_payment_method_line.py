@@ -63,6 +63,8 @@ class AccountPaymentMethodLine(models.Model):
         """Ensure we don't remove an account.payment.method.line that is linked to an installed
         provider.
         """
+        if self.env.context.get('force_delete'):
+            return
         if active_providers := self.payment_provider_id.filtered(
             lambda p: p.module_state != "to remove"
         ):

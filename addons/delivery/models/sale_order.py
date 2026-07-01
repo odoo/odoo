@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 
 
 class SaleOrder(models.Model):
@@ -23,6 +23,23 @@ class SaleOrder(models.Model):
     )
     shipping_weight = fields.Float(compute="_compute_shipping_weight", store=True, readonly=False)
 
+    amount_on_delivery = fields.Monetary(
+        help="The amount that needs to be collected on the next delivery."
+        " Computed based on the delivered quantities.",
+        compute="_compute_amount_on_delivery",
+        compute_sudo=True,  # Need access to `transaction_ids`
+    )
+
+    @api.depends_context("skip_pending_delivery_payment")
+    def _compute_amount_paid(self):
+        super()._compute_amount_paid()
+
+        if self.env.context.get("skip_pending_delivery_payment"):
+            for order in self:
+                order.amount_paid -= sum(
+                    order.transaction_ids._filtered_pending_delivery_payment().mapped("amount")
+                )
+
     @api.depends("order_line")
     def _compute_is_service_products(self):
         for so in self:
@@ -40,6 +57,48 @@ class SaleOrder(models.Model):
     def _compute_delivery_state(self):
         for order in self:
             order.delivery_set = any(line.is_delivery for line in order.order_line)
+
+    @api.depends(
+        "order_line.qty_delivered",
+        "order_line.product_uom_qty",
+        "order_line.price_total",
+        "amount_paid",
+        "transaction_ids.state",
+        "transaction_ids.payment_id",
+    )
+    def _compute_amount_on_delivery(self):
+        """Compute the amount to collect on the next delivery.
+
+        For orders with a pending pay-on-delivery transaction, this is computed as the remaining
+        balance minus the value of products that are not delivered yet. If nothing is delivered,
+        the amount to collect is 0.
+        """
+        orders_pending_delivery_payment = self.filtered(
+            lambda order: order.transaction_ids._filtered_pending_delivery_payment()
+        ).with_context(skip_pending_delivery_payment=True)
+        (self - orders_pending_delivery_payment).amount_on_delivery = 0
+
+        # Use `_prepare_qty_delivered` because `qty_delivered` is stored and cannot depend on the
+        # context, whereas we need to compute the delivered amount for pickings about to be
+        # validated. See also `stock_delivery`.
+        deliverable_lines = orders_pending_delivery_payment._get_deliverable_lines()
+        qty_delivered_by_line = deliverable_lines._prepare_qty_delivered()
+
+        def get_qty_delivered(line_):
+            return qty_delivered_by_line.get(line_) or line_.qty_delivered
+
+        for order in orders_pending_delivery_payment:
+            if not any(map(get_qty_delivered, order.order_line & deliverable_lines)):
+                # If nothing was delivered yet, no payment should be collected.
+                order.amount_on_delivery = 0
+                continue
+
+            undelivered_amount = sum(
+                (1 - get_qty_delivered(line) / line.product_uom_qty) * line.price_total
+                for line in order.order_line & deliverable_lines
+            )
+
+            order.amount_on_delivery = order.amount_remaining - undelivered_amount
 
     @api.onchange("order_line", "partner_id", "partner_shipping_id")
     def onchange_order_line(self):
@@ -153,6 +212,51 @@ class SaleOrder(models.Model):
             "context": context,
         }
 
+    def action_open_pay_on_delivery_form(self):
+        self.ensure_one()
+        if not self.amount_on_delivery:
+            return True  # Nothing to confirm
+        return (
+            self
+            .env["pay.on.delivery"]
+            .create({"order_id": self.id})
+            ._get_records_action(target="new")
+        )
+
+    def _confirm_payment_on_delivery(self, log_action=True, **kwargs):
+        """Mark the last pending delivery transaction as done and trigger post-processing so payment
+        records are created ASAP. Other pending transactions are canceled.
+
+        :param bool log_action: Whether to post a message on related records of the confirmed
+            transactions.
+        :param dict kwargs: Arguments forwarded to
+            :meth:`payment.transaction._confirm_payment_on_delivery`.
+        :raises UserError: If an order doesn't have any payment to confirm.
+        :return: The confirmed transactions sudoed.
+        :rtype: payment.transaction
+        """
+        if nothing_to_collect := self.filtered(lambda order: not order.amount_on_delivery):
+            raise UserError(
+                self.env._(
+                    "There is no payment to collect for %(orders)s. Either nothing new has been"
+                    " delivered yet, or everything has already been paid for.",
+                    orders=", ".join(nothing_to_collect.mapped("display_name")),
+                )
+            )
+
+        delivered_txs_sudo = self.sudo().transaction_ids._confirm_payment_on_delivery(**kwargs)
+
+        if log_action:
+            for tx in delivered_txs_sudo:
+                tx._log_message_on_linked_documents(
+                    self.env._(
+                        "A payment amounting %(amount_on_delivery)s was collected on delivery.",
+                        amount_on_delivery=tx.currency_id.format(tx.amount),
+                    )
+                )
+
+        return delivered_txs_sudo
+
     def _prepare_delivery_line_vals(self, carrier, price_unit):
         context = {}
         if self.partner_id:
@@ -200,16 +304,21 @@ class SaleOrder(models.Model):
     def _get_estimated_weight(self):
         self.ensure_one()
         weight = 0.0
-        for order_line in self.order_line.filtered(
-            lambda ol: (
-                ol.product_id.type == "consu"
-                and not ol.is_delivery
-                and not ol.display_type
-                and ol.product_uom_qty > 0
-            )
-        ):
+        for order_line in self._get_deliverable_lines():
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
+
+    def _get_deliverable_lines(self):
+        return self.order_line.filtered_domain(self._get_deliverable_lines_domain())
+
+    @api.model
+    def _get_deliverable_lines_domain(self):
+        return Domain([
+            ("product_id.type", "=", "consu"),
+            ("is_delivery", "=", False),
+            ("display_type", "=", False),
+            ("product_uom_qty", ">", 0),
+        ])
 
     def _update_order_line_info(self, *args, **kwargs):
         """Override of `sale` to recompute the delivery prices.

@@ -109,15 +109,8 @@ class PaymentTransaction(models.Model):
 
             # Create and post missing payments.
             if tx._should_create_payment():
-                tx.with_company(tx.company_id)._create_payment()
+                tx.with_company(tx.company_id)._create_payment(log_action=True)
 
-            if tx.payment_id:
-                message = _(
-                    "The payment related to transaction %(ref)s has been posted: %(link)s",
-                    ref=tx._get_html_link(),
-                    link=tx.payment_id._get_html_link(),
-                )
-                tx._log_message_on_linked_documents(message)
         for tx in self.filtered(lambda t: t.state == 'cancel'):
             tx.payment_id.action_cancel()
 
@@ -139,7 +132,7 @@ class PaymentTransaction(models.Model):
             and not any(child.state in ["done", "cancel"] for child in self.child_transaction_ids)
         )
 
-    def _create_payment(self, **extra_create_values):
+    def _create_payment(self, *, log_action=False, **extra_create_values):
         """Create an `account.payment` record for the current transaction.
 
         If the transaction is linked to some invoices, their reconciliation is done automatically.
@@ -200,6 +193,14 @@ class PaymentTransaction(models.Model):
 
         # Track the payment to make a one2one.
         self.payment_id = payment
+
+        if log_action:
+            message = self.env._(
+                "The payment related to transaction %(ref)s has been posted: %(link)s",
+                ref=self._get_html_link(),
+                link=payment._get_html_link(),
+            )
+            self._log_message_on_linked_documents(message)
 
         # Reconcile the payment with the source transaction's invoices in case of a partial capture.
         if self.operation == self.source_transaction_id.operation:

@@ -3,6 +3,7 @@
 from . import (
     test_delivery_availability,
     test_delivery_cost,
+    test_pay_on_delivery,
     test_payment_provider,
     test_payment_transaction,
 )
