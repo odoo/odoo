@@ -14,6 +14,8 @@ export class ResPartner extends Record {
     country_id = fields.One("res.country");
     /** @type {string} */
     email;
+    /** @type {string} */
+    email_normalized;
     /**
      * function = job position (Frenchism)
      *
@@ -80,6 +82,11 @@ export class ResPartner extends Record {
      */
     get displayName() {
         return this.name || this.display_name;
+    }
+
+    /** The cleaned email to display, falling back to the raw email when there is no normalized form. */
+    get displayEmail() {
+        return this.email_normalized || this.email;
     }
 
     searchChat() {

@@ -543,9 +543,10 @@ export class Store extends BaseStore {
         validMentions.partners = mentionedPartners.filter((partner) =>
             segments.some((segment) => {
                 const name = thread?.getPersonaName(partner) ?? partner.displayName;
+                const partnerEmail = partner.displayEmail;
                 return Boolean(
                     (name && segment.includes(`@${name}`)) ||
-                        (partner.email && segment.includes(`@${partner.email}`))
+                        (partnerEmail && segment.includes(`@${partnerEmail}`))
                 );
             })
         );

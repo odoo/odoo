@@ -186,12 +186,12 @@ export class RecipientsInput extends Component {
             color: 4,
             text,
             tooltip: this.props.thread.followers
-                .map(
-                    (f) =>
-                        `${this.props.thread.getPersonaName(f.partner_id) || _t("Unnamed")} ${
-                            f.partner_id.email ? "<" + f.partner_id.email + ">" : ""
-                        }`
-                )
+                .map((f) => {
+                    const email = f.partner_id.displayEmail;
+                    return `${this.props.thread.getPersonaName(f.partner_id) || _t("Unnamed")} ${
+                        email ? "<" + email + ">" : ""
+                    }`;
+                })
                 .join("\n"),
         };
     }
