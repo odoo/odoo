@@ -53,6 +53,13 @@
                                    placeholder="Select a company for this working scheduled" domain="[('id', 'in', allowed_company_ids)]"
                                    invisible="context.get('allowed_company_ids', []).length &lt; 2"/>
                         </group>
+                        <group name="resource_working_hours">
+                            <field name="reference_calendar_id" placeholder="from company"/>
+                            <label for="work_time_rate" string="Work Time Rate" groups="base.group_no_one"/>
+                            <div groups="base.group_no_one">
+                                <field name="work_time_rate" nolabel="1" style="width: 6ch; " widget="percentage"/>
+                            </div>
+                        </group>
                     </group>
                     <group name="resource_details">
                         <group style="grid-template-columns: fit-content(50%) minmax(0, 1fr);" col="2">

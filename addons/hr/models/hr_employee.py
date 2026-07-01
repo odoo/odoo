@@ -231,6 +231,7 @@ class HrEmployee(models.Model):
     # (see _compute_restricted_phone_companion_fields) to keep the group invariant.
     emergency_phone_sanitized = fields.Char(compute='_compute_restricted_phone_companion_fields', store=False, export_string_translation=False, groups='hr.group_hr_user')
     emergency_phone_formatted = fields.Char(compute='_compute_restricted_phone_companion_fields', store=False, export_string_translation=False, groups='hr.group_hr_user')
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name")
     work_location_type = fields.Selection([
         ("home", "Home"),

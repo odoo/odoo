@@ -302,10 +302,13 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self:
             attendance.duration_based = not attendance.hour_from and not attendance.hour_to
 
-    @api.depends('duration_hours', 'hour_from', 'hour_to', 'calendar_id.hours_per_day')
+    @api.depends('duration_hours', 'hour_from', 'hour_to', 'calendar_id.hours_per_day', 'calendar_id.reference_calendar_id.hours_per_day')
     def _compute_day_period(self):
         for attendance in self:
-            if attendance.duration_hours > (0.75 * attendance.calendar_id.hours_per_day) or attendance.duration_based:
+            reference_hours_per_day = attendance.calendar_id.hours_per_day
+            if attendance.calendar_id.reference_calendar_id:
+                reference_hours_per_day = attendance.calendar_id.reference_calendar_id.hours_per_day
+            if attendance.duration_hours > (0.75 * reference_hours_per_day) or attendance.duration_based:
                 attendance.day_period = 'full_day'
             elif attendance.hour_from and attendance.hour_to:
                 if attendance.hour_from > 12 or (12 - attendance.hour_from <= attendance.hour_to - 12):
