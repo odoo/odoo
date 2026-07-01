@@ -7,6 +7,7 @@ import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
@@ -654,5 +655,38 @@ registry.category("web_tour.tours").add("test_settle_cancelled_sale_order", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_downpayment_rounding_discrepancy", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: `select nth order`,
+                trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${1}) td`,
+                run: "click",
+            },
+            {
+                content: `click on select the order`,
+                trigger: `.selection-item:contains('Apply a down payment')`,
+                run: "click",
+            },
+            Numpad.click("+50"),
+            Numpad.click("+50"),
+            Dialog.confirm("Ok"),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "44,301.24",
+            }),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "9,333.49",
+            }),
+            ProductScreen.totalAmountIs("53,634.73"),
         ].flat(),
 });

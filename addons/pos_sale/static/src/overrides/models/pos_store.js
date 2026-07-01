@@ -341,7 +341,7 @@ patch(PosStore.prototype, {
         const percentage = total_down_payment / sale_order.amount_total;
         const grouped = Object.groupBy(
             sale_order.order_line.filter((ol) => ol.product_id),
-            (ol) => ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b)
+            (ol) => ol.id
         );
 
         // We need one unique line for the fixed amount taxes
