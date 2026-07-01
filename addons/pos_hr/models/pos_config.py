@@ -24,7 +24,7 @@ class PosConfig(models.Model):
         group_users = self.sudo()._get_group_pos_manager().with_company(self.company_id).user_ids.filtered(
             lambda u: self.company_id in u.company_ids
         )
-        allowed_employees = group_users.sudo().mapped('employee_id')
+        allowed_employees = group_users.sudo().with_context(active_test=False).employee_ids.filtered(lambda e: e.company_id == self.company_id)
         if not allowed_employees and group_users:
             target_user = group_users.sudo().with_company(self.company_id).filtered(lambda user: not user.employee_id)[0]
             target_user.action_create_employee()
