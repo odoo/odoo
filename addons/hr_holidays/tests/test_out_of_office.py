@@ -100,6 +100,32 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         employees.invalidate_recordset(["leave_date_to"])
         self.assertEqual(employees.mapped("leave_date_to"), [date(2024, 6, 7), date(2024, 6, 6)])
 
+    @freeze_time('2026-01-30')
+    def test_next_working_day_on_leave(self):
+        leave = self.env['hr.leave'].create({
+            'name': 'test_leave',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2026-02-02",  # there is a weekend between th 30 and the 02
+            'request_date_to': "2026-02-04",
+        })
+        leave.write({'state': 'validate'})
+        # next working day is a leave, so next_working_day_on_leave is filled
+        self.assertEqual(self.employee_hruser.next_working_day_on_leave, date(2026, 2, 2))
+
+    @freeze_time('2026-01-30')
+    def test_next_working_day_not_on_leave(self):
+        leave = self.env['hr.leave'].create({
+            'name': 'test_leave',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2026-02-03",  # there is a weekend between th 30 and the 02
+            'request_date_to': "2026-02-04",
+        })
+        leave.write({'state': 'validate'})
+        # next working day is not on leave, so next_working_day_on_leave is None
+        self.assertFalse(self.employee_hruser.next_working_day_on_leave)
+
 
 @tagged('out_of_office')
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install

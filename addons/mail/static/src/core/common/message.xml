@@ -38,7 +38,7 @@
                     </div>
                     <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
                         <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote, 'pe-2': this.props.asCard and this.isMobileOS }" name="header">
-                            <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
+                            <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()" name="authorName">
                                 <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
                             </span>
                             <t t-if="!this.isAlignedRight" t-call="mail.Message.notification"/>

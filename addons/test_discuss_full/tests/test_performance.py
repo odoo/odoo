@@ -87,7 +87,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
@@ -160,7 +160,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -2090,7 +2090,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "active": employee.active,
             "company_id": employee.company_id.id,
             "id": employee.id,
+            "leave_date_from": False,
             "leave_date_to": False,
             "user_id": employee.user_id.id,
+            "request_date_from_period": False,
+            "next_working_day_on_leave": False,
             "work_location_type": False,
         }
