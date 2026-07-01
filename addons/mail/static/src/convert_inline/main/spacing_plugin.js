@@ -1,4 +1,4 @@
-import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import { isPhrasingContent, paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
@@ -152,7 +152,7 @@ export class SpacingPlugin extends Plugin {
         if (!contextNode) {
             contextNode = this.config.referenceDocument.body;
         }
-        if (!this.isBlock(contextNode)) {
+        if (!this.isBlock(contextNode) || isPhrasingContent(contextNode)) {
             return;
         }
         const context = { style: this.getTableContextStyleInfo(contextNode) };

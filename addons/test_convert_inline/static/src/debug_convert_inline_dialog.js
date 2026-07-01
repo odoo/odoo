@@ -52,7 +52,9 @@ export class DebugConvertInlineDialog extends Component {
             ];
             Promise.all(promises).then(async () => {
                 const referenceElement = renderToElement("mail.EmailHtmlConverterReference");
-                referenceElement.innerHTML = await convertToEmailHtml(this.props.fragment);
+                referenceElement.innerHTML = await convertToEmailHtml(this.props.fragment, {
+                    debug: true,
+                });
                 iframe.contentDocument.body.append(referenceElement);
             });
         });

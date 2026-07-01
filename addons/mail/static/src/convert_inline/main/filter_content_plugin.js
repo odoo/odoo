@@ -21,6 +21,8 @@ const INDIRECT_CSS_PROPERTY_VALUES = new Set([
     "revert-layer",
 ]);
 const ALLOWED_CSS_DISPLAY_VALUES = new Set(["block", "inline", "inline-block", "none"]);
+// TODO EGGMAIL: investigate if some more node should bypass this rule
+const ALLOWED_IF_INVISIBLE_ELEMENT = new Set(["BR", "T"]);
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
 export class FilterContentPlugin extends Plugin {
@@ -203,11 +205,11 @@ export class FilterContentPlugin extends Plugin {
         if (!rect) {
             rect = this.getBoundingClientRect(referenceNode);
         }
-        // TODO EGGMAIL: investigate if some more node should bypass this rule
+        const isBlock = this.isBlock(referenceNode);
         if (
-            referenceNode.nodeName !== "BR" &&
+            !ALLOWED_IF_INVISIBLE_ELEMENT.has(referenceNode.nodeName) &&
             rect &&
-            rect.height === 0 &&
+            rect[isBlock ? "height" : "width"] === 0 &&
             (referenceNode.nodeType !== Node.ELEMENT_NODE || !this.hasVisibleBorder(referenceNode))
         ) {
             return true;

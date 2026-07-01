@@ -75,8 +75,10 @@ export class HybridFluidCell extends LayoutModel {
 }
 
 export class HybridFluidEmptyCell extends HybridFluidCell {
+    static template = "mail.ElementLayout";
     constructor() {
         super(...arguments);
+        this.tag = "DIV";
         this.setAttributes({
             style: {
                 height: 0,
@@ -84,8 +86,15 @@ export class HybridFluidEmptyCell extends HybridFluidCell {
         });
     }
 
-    get isEmpty() {
-        return true;
+    renderToFragment(context = {}) {
+        const fragment = super.renderToFragment(context);
+        const comment = document.createComment("");
+        // TODO EGGMAIL: is there a better solution?
+        // body_html is normalized as xml, and empty elements in xml are
+        // self closing. This is not legal in html, so an empty comment is
+        // appended to avoid the issue.
+        fragment.firstElementChild.append(comment);
+        return fragment;
     }
 }
 

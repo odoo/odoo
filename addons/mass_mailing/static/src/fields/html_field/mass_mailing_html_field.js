@@ -452,7 +452,9 @@ export class MassMailingHtmlField extends HtmlField {
         const valueFragment = parseHTML(document, value);
         let inlineValue;
         try {
-            inlineValue = await this.converter.convertToEmailHtml(valueFragment);
+            inlineValue = await this.converter.convertToEmailHtml(valueFragment, {
+                debug: this.env.debug,
+            });
         } catch (error) {
             if (status(this) !== "destroyed") {
                 throw error;
