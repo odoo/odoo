@@ -480,6 +480,13 @@ class AccountMove(models.Model):
         tracking=True,
         compute='_compute_payment_reference', inverse='_inverse_payment_reference', store=True, readonly=False,
     )
+    sanitize_payment_reference = fields.Char(
+        string="Label sanitize",
+        copy=False,
+        compute='_compute_sanitize_payment_reference',
+        compute_sql='_compute_sql_sanitize_payment_reference',
+        compute_sudo=False,
+    )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
         compute='_compute_display_qr_code',
@@ -824,6 +831,11 @@ class AccountMove(models.Model):
         if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
             create_column(self.env.cr, "account_move", "preferred_payment_method_line_id", "int4")
 
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS account_move_sanitize_payment_ref_idx
+                ON account_move (regexp_replace(COALESCE(payment_reference, ''), '[^a-zA-Z0-9]', '', 'g'))
+        """)
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -865,6 +877,13 @@ class AccountMove(models.Model):
         )):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
+
+    def _compute_sanitize_payment_reference(self):
+        for move in self:
+            move.sanitize_payment_reference = re.sub(r'[^a-zA-Z0-9]', '', move.payment_reference or '')
+
+    def _compute_sql_sanitize_payment_reference(self, table):
+        return SQL("regexp_replace(COALESCE(%s, ''), '[^a-zA-Z0-9]', '', 'g')", table.payment_reference)
 
     def _get_accounting_date_source(self):
         self.ensure_one()
