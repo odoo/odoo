@@ -7,7 +7,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSearchPanel {
     static template = "purchase_stock.ProductCatalogSearchPanel";
-    static components = { TimePeriodSelectionField };
+    static components = { ...super.components, TimePeriodSelectionField };
     static basedOnOptions = [
         ["actual_demand", _t("Forecasted")],
         ["one_week", _t("Last 7 days")],
