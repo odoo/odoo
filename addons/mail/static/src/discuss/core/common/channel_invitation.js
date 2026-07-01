@@ -2,7 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -32,6 +32,8 @@ export function openChannelInvitationDialog(env, channel) {
 export class ChannelInvitation extends Component {
     static components = { ActionPanel, DiscussAvatar };
     static template = "discuss.ChannelInvitation";
+
+    inputRef = signal(null);
 
     setup() {
         super.setup();
@@ -72,7 +74,7 @@ export class ChannelInvitation extends Component {
             this.fetchPartnersToInvite.bind(this),
             250
         );
-        this.inputRef = useAutofocus({ refName: "input" });
+        useAutofocus({ ref: this.inputRef });
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
@@ -171,7 +173,7 @@ export class ChannelInvitation extends Component {
     }
 
     onInput() {
-        this.searchStr = this.inputRef.el.value;
+        this.searchStr = this.inputRef()?.value;
         this.debouncedFetchPartnersToInvite();
     }
 

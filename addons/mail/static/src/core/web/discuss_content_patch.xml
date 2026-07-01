@@ -5,7 +5,7 @@
             <attribute name="t-att-class">{ 'cursor-pointer': this.correspondentPartner }</attribute>
             <attribute name="t-on-click">this.onClickThreadAvatar</attribute>
         </xpath>
-        <xpath expr="//*[@t-custom-ref='main']" position="inside">
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-main')]" position="inside">
             <t t-if="!this.ui.isSmall" t-call="mail.Discuss.loading"/>
         </xpath>
         <xpath expr="//*[@name='thread']" position="inside">

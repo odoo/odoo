@@ -3,7 +3,7 @@
 
     <t t-name="mail.ActivityCell">
         <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="this.onClick">
-            <div class="d-flex position-relative" t-custom-ref="content">
+            <div class="d-flex position-relative" t-ref="this.contentRef">
                 <div class="position-absolute text-truncate px-2 w-100" t-out="this.displayedSummaries"/>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-4 px-2">

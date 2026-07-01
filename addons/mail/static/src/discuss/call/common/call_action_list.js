@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, computed, props, toRaw, types } from "@odoo/owl";
+import { Component, computed, props, signal, toRaw, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -15,6 +14,9 @@ export class CallActionList extends Component {
     static components = { ActionList };
     static template = "discuss.CallActionList";
 
+    more = signal(null);
+    root = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -27,8 +29,6 @@ export class CallActionList extends Component {
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
-        this.more = useRef("more");
-        this.root = useRef("root");
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });

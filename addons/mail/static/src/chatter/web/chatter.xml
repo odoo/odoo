@@ -3,7 +3,7 @@
 
 <t t-name="mail.Chatter">
     <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.thread().id === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
-        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-custom-ref="top">
+        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.activePanel === this.CHATTER_PANEL.SEARCH" class="flex-grow-1">
                     <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>

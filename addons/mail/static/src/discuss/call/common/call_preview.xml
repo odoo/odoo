@@ -6,7 +6,7 @@
     <t t-name="mail.CallPreview">
         <div class="o-mail-CallPreview ratio ratio-16x9">
             <div t-att-class="{'bg-dark rounded': this.env.inWelcomePage}">
-                <video t-if="this.state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-custom-ref="video"/>
+                <video t-if="this.state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-ref="this.videoRef"/>
                 <div t-else="" class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column align-items-center justify-content-center text-center px-3 z-1" t-att-class="{'text-white': this.env.inWelcomePage}">
                     <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1" t-att-class="{'mt-2': this.inWelcomePageMobile}">
                         <t t-if="this.env.inWelcomePage and this.rtc.cameraPermission !== 'granted'">
@@ -32,7 +32,7 @@
                     <t t-call="mail.CallPreview.actionList"/>
                 </div>
             </div>
-            <audio autoplay="" t-custom-ref="audio"/>
+            <audio autoplay="" t-ref="this.audioRef"/>
         </div>
         <div t-if="this.props.hasSettingsAtBottom" class="d-flex justify-content-center gap-2 flex-wrap flex-lg-nowrap w-100 mw-100 mt-2">
             <div class="o-mail-CallPreview-deviceSelect">

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -18,11 +18,13 @@ export class ExpertiseTagsAutocomplete extends Component {
     static props = ["channel", "disabled?"];
     static components = { BadgeTag, Many2XAutocomplete };
 
+    rootRef = signal(null);
+
     setup() {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        useTagNavigation("root", {
+        useTagNavigation(this.rootRef, {
             delete: (index) => {
                 const expertise = this.props.channel.livechat_expertise_ids[index];
                 if (expertise) {

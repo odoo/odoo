@@ -9,7 +9,7 @@ import {
 } from "@mail/discuss/call/common/call_actions";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,6 +17,8 @@ import { useService } from "@web/core/utils/hooks";
 export class CallInvitation extends Component {
     static template = "discuss.CallInvitation";
     static components = { ActionList, CallPreview };
+
+    root = signal(null);
 
     setup() {
         super.setup();

@@ -17,6 +17,8 @@ export class AvatarCard extends Component {
         return ["res.users", "res.partner"];
     }
 
+    viewProfileBtnRef = signal(null);
+
     setup() {
         this.props = props({
             close: t.function([]),

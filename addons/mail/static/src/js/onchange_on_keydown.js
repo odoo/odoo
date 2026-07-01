@@ -24,10 +24,11 @@ const onchangeOnKeydownMixin = () => ({
                 this.props.keydownDebounceDelay
             );
             useLayoutEffect(() => {
-                if (input.el) {
-                    input.el.addEventListener("keydown", triggerOnChange);
+                const inputEl = input();
+                if (inputEl) {
+                    inputEl.addEventListener("keydown", triggerOnChange);
                     return () => {
-                        input.el.removeEventListener("keydown", triggerOnChange);
+                        inputEl.removeEventListener("keydown", triggerOnChange);
                     };
                 }
             });
@@ -36,7 +37,7 @@ const onchangeOnKeydownMixin = () => ({
 
     triggerOnChange() {
         const input = this.input || this.textareaRef;
-        input.el.dispatchEvent(new Event("change"));
+        input().dispatchEvent(new Event("change"));
     },
 });
 

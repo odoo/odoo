@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
-    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': this.ui.isSmall, 'border-top border-dark o-border-opacity-15': !this.ui.isSmall }" t-att-data-active="this.store.discuss.isActive" t-custom-ref="root">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': this.ui.isSmall, 'border-top border-dark o-border-opacity-15': !this.ui.isSmall }" t-att-data-active="this.store.discuss.isActive" t-ref="this.root">
         <ResizablePanel t-if="!this.ui.isSmall and this.props.hasSidebar" class="'o-mail-DiscussApp-sidebar d-flex flex-column h-100 border-end border-dark o-border-opacity-15 z-1 o-mail-DiscussApp-sidebarBgColor d-print-none'" handleSide="'end'" initialWidth="this.store.discuss.sidebarWidth" minWidth="300" onResize="(width) => this.store.discuss.sidebarWidth = width">
             <MessagingMenu t-if="this.store.discuss.hasRestoredThread" state="this.menuState"/>
         </ResizablePanel>

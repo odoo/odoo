@@ -1,33 +1,35 @@
-import { useRef } from "@web/owl2/utils";
+import { signal } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-
 
 /*
  * Common code for EmojisTextField and EmojisCharField
  */
 export const EmojisFieldCommon = (T) =>
     class EmojisFieldCommon extends T {
+        emojisButtonRef = signal(null);
+
         /**
          * Create an emoji textfield view to enable opening an emoji popover
          */
         _setupOverride() {
             this.emojiPicker = useEmojiPicker(
-                useRef("emojisButton"),
+                this.emojisButtonRef,
                 {
                     onSelect: (codepoints) => {
-                        const originalContent = this.targetEditElement.el.value;
-                        const start = this.targetEditElement.el.selectionStart;
-                        const end = this.targetEditElement.el.selectionEnd;
+                        const targetEl = this.targetEditElement();
+                        const originalContent = targetEl.value;
+                        const start = targetEl.selectionStart;
+                        const end = targetEl.selectionEnd;
                         const left = originalContent.slice(0, start);
                         const right = originalContent.slice(end, originalContent.length);
-                        this.targetEditElement.el.value = left + codepoints + right;
+                        targetEl.value = left + codepoints + right;
                         // trigger onInput from input_field hook to set field as dirty
-                        this.targetEditElement.el.dispatchEvent(new InputEvent("input"));
+                        targetEl.dispatchEvent(new InputEvent("input"));
                         // keydown serves to both commit the changes in input_field and trigger onchange for some fields
-                        this.targetEditElement.el.dispatchEvent(new KeyboardEvent("keydown"));
-                        this.targetEditElement.el.focus();
+                        targetEl.dispatchEvent(new KeyboardEvent("keydown"));
+                        targetEl.focus();
                         const newCursorPos = start + codepoints.length;
-                        this.targetEditElement.el.setSelectionRange(newCursorPos, newCursorPos);
+                        targetEl.setSelectionRange(newCursorPos, newCursorPos);
                         if (this._emojiAdded) {
                             this._emojiAdded();
                         }

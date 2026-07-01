@@ -2,6 +2,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy, signal } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { debounce } from "@web/core/utils/timing";
 
 export class LivechatButton extends Component {
@@ -28,7 +29,7 @@ export class LivechatButton extends Component {
                     };
                 }
             },
-            () => [this.isShown, this.buttonRef()?.getRootNode().host?.classList]
+            () => [this.isShown, resolveRefEl(this.buttonRef)?.getRootNode().host?.classList]
         );
     }
 

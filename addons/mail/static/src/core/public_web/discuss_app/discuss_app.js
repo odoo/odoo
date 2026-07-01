@@ -1,7 +1,16 @@
 import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 
-import { Component, computed, onMounted, onWillUnmount, props, t, useListener } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onMounted,
+    onWillUnmount,
+    props,
+    signal,
+    t,
+    useListener,
+} from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
@@ -17,6 +26,8 @@ export class Discuss extends Component {
     };
     static template = "mail.Discuss";
 
+    root = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -26,7 +37,6 @@ export class Discuss extends Component {
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
-        this.root = useRef("root");
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useService("ui");

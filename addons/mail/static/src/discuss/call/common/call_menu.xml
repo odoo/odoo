@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallMenu">
-        <div class="dropdown" t-attf-class="{{ this.className }}" t-custom-ref="root">
+        <div class="dropdown" t-attf-class="{{ this.className }}" t-ref="this.root">
             <button t-if="this.rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-pill border-0 position-relative" t-att-title="this.buttonTitle" t-on-click="this.rtc.channel.open">
                 <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-pill overflow-hidden" t-att-class="{ 'o-is-talking': this.rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !this.isEnterprise }">
                     <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center gap-1 o-ps-1_5 pe-1 rounded-2 rounded-end-0 align-self-stretch bg-inherit opacity-75 opacity-100-hover" role="button" title="Open Conversation">

@@ -4,6 +4,7 @@ import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { is24HourFormat } from "@web/core/l10n/time";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
@@ -94,7 +95,7 @@ export class CalendarCommonRenderer extends Component {
                 fullCalendarResizeObserver.observe(el);
                 return () => fullCalendarResizeObserver.unobserve(el);
             },
-            () => [this.fc.el]
+            () => [resolveRefEl(this.fullCalendarRef)]
         );
 
         useSquareSelection(this.ref);

@@ -1,6 +1,6 @@
 import { CreatePollOptionDialog } from "@mail/core/common/create_poll_option_dialog";
 
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
@@ -11,6 +11,8 @@ export class CreatePollDialog extends Component {
     static template = "mail.CreatePollDialog";
     static components = { Dialog, EmojiPicker, CreatePollOptionDialog };
 
+    questionRef = signal(null);
+
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
@@ -18,7 +20,7 @@ export class CreatePollDialog extends Component {
             close: types.function([types.instanceOf(MouseEvent)]),
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });
-        useAutofocus({ refName: "question" });
+        useAutofocus({ ref: this.questionRef });
         this.state = proxy({
             allowMultipleOptions: false,
             duration: "10",

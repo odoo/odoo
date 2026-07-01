@@ -3,13 +3,16 @@ import { Message } from "@mail/core/common/message";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { useVisible } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessageCardList extends Component {
     static components = { Message };
     static template = "mail.MessageCardList";
+
+    messageListRef = signal(null);
+    loadMoreRef = signal(null);
 
     setup() {
         super.setup();
@@ -27,7 +30,7 @@ export class MessageCardList extends Component {
         });
         this.ui = useService("ui");
         useSubEnv({ messageCard: true });
-        useVisible("load-more", (isVisible) => {
+        useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.onLoadMoreVisible?.();
             }

@@ -1,6 +1,6 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -12,10 +12,12 @@ export class LivechatCommandDialog extends Component {
     static components = { ActionPanel };
     static props = ["thread", "close", "commandName", "placeholderText", "title", "icon"];
 
+    autofocusRef = signal(null);
+
     setup() {
         this.state = proxy({ inputText: "" });
         this.store = useService("mail.store");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
     }
 
     onKeydown(ev) {

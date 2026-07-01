@@ -4,7 +4,7 @@
         <t t-set="memberAtRender" t-value="this.member()"/>
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev, { memberAtRender })">
             <DiscussAvatar record="this.member()" className="this.attClassObjectToString(this.avatarClass)"/>
-            <div t-custom-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
+            <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
             </div>
             <i t-if="this.member().channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>

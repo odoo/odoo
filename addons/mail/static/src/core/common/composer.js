@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -36,6 +36,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import {
     createDocumentFragmentFromContent,
     htmlFormatList,
@@ -155,10 +156,10 @@ export class Composer extends Component {
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
+        this.ref = signal.ref(HTMLTextAreaElement);
+        this.fakeTextarea = signal.ref(HTMLTextAreaElement);
         this.inputContainerRef = signal.ref(HTMLSpanElement);
-        this.pickerContainerRef = useRef("picker-container");
+        this.pickerContainerRef = signal.ref(HTMLDivElement);
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
@@ -172,7 +173,7 @@ export class Composer extends Component {
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
-            refName: "textarea",
+            ref: this.ref,
             model: this.props.composer.selection,
             preserveOnClickAwayPredicate: async (ev) => {
                 // Let event be handled by bubbling handlers first.
@@ -207,9 +208,9 @@ export class Composer extends Component {
                 if (
                     this.ui.isSmall &&
                     this.composerActions.activeAction &&
-                    this.pickerContainerRef.el &&
-                    target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(target)
+                    this.pickerContainerRef() &&
+                    target !== this.pickerContainerRef() &&
+                    !this.pickerContainerRef().contains(target)
                 ) {
                     this.composerActions.activeAction.actionPanelClose();
                 }
@@ -239,17 +240,23 @@ export class Composer extends Component {
         }
         useChildSubEnv({ inComposer: true });
         useLayoutEffect(
-            (focus) => {
-                if (focus && this.ref.el) {
+            () => {
+                const focus = this.props.autofocus + this.props.composer.autofocus;
+                const el = resolveRefEl(this.ref);
+                if (focus && el) {
                     this.selection.restore();
-                    this.ref.el.focus();
+                    el.focus();
                 }
                 if (focus && this.editor) {
                     this.editor.shared.selection.focusEditable();
                     this.editor.shared.selection.selectAroundNonEditable();
                 }
             },
-            () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
+            () => [
+                this.props.autofocus + this.props.composer.autofocus,
+                this.props.placeholder,
+                resolveRefEl(this.ref),
+            ]
         );
         useLayoutEffect(
             () => {
@@ -261,20 +268,22 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                if (this.fakeTextarea.el?.scrollHeight) {
+                const fakeTextareaEl = resolveRefEl(this.fakeTextarea);
+                const textareaEl = resolveRefEl(this.ref);
+                if (fakeTextareaEl?.scrollHeight && textareaEl) {
                     let wasEmpty = false;
-                    if (!this.fakeTextarea.el.value) {
+                    if (!fakeTextareaEl.value) {
                         wasEmpty = true;
-                        this.fakeTextarea.el.value = "0";
+                        fakeTextareaEl.value = "0";
                     }
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                    textareaEl.style.height = fakeTextareaEl.scrollHeight + "px";
                     if (wasEmpty) {
-                        this.fakeTextarea.el.value = "";
+                        fakeTextareaEl.value = "";
                     }
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, this.ref.el]
+            () => [this.props.composer.composerText, resolveRefEl(this.ref)]
         );
         useLayoutEffect(
             () => {
@@ -346,11 +355,11 @@ export class Composer extends Component {
             () => [
                 this.state.isFullComposerOpen,
                 this.props.composer.restoredFromFullComposer,
-                this.rootRef()?.querySelector("button[name='open-full-composer']"),
+                resolveRefEl(this.rootRef)?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {
-            this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
+            this.ref()?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.composerText) {
                 this.restoreContent();
             }
@@ -835,7 +844,7 @@ export class Composer extends Component {
             }
             this.clear();
             this.state.active = true;
-            this.ref.el?.focus();
+            this.ref()?.focus();
         }
     }
 

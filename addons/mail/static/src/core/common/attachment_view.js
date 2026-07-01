@@ -9,12 +9,13 @@ class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
     static components = {};
 
+    iframeViewerPdfRef = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.thread = propSignal("thread", t.instanceOf(this.store["mail.thread"].Class));
         this.uiService = useService("ui");
-        this.iframeViewerPdfRef = signal.ref();
         useOnChange(
             () => [this.iframeViewerPdfRef()],
             (el) => {

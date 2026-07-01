@@ -1,5 +1,5 @@
+import { signal } from "@odoo/owl";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
-import { useRef } from "@web/owl2/utils";
 
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
@@ -97,11 +97,11 @@ registerComposerAction("upload-files", {
     icon: "fa fa-paperclip",
     name: _t("Attach Files"),
     onSelected: ({ composer, owner }, ev) => {
-        owner.fileUploaderRef.el?.click();
+        owner.fileUploaderRef()?.click();
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
-    setup: ({ owner }) => (owner.fileUploaderRef = useRef("file-uploader")),
+    setup: ({ owner }) => (owner.fileUploaderRef = signal(null)),
     sequence: 20,
 });
 registerComposerAction("open-full-composer", {

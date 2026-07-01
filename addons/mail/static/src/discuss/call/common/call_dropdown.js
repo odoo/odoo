@@ -2,7 +2,7 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, props, signal, t, useListener } from "@odoo/owl";
 
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -14,6 +14,8 @@ import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
 export class CallDropdown extends Component {
     static template = "discuss.CallDropdown";
 
+    menuRef = signal(null);
+
     setup() {
         super.setup();
         this.props = props({
@@ -22,9 +24,8 @@ export class CallDropdown extends Component {
             openByDefault: t.boolean().optional(false),
             position: t.string().optional("bottom"),
         });
-        this.menuRef = useRef("menu");
         this.isOpen = signal(this.props.openByDefault);
-        usePosition("menu", () => this.triggerRef.el, {
+        usePosition(this.menuRef, () => this.triggerRef.el, {
             position: this.props.position,
             margin: 4,
             flip: true,
@@ -35,8 +36,8 @@ export class CallDropdown extends Component {
         this.navigation = useNavigation(this.menuRef, {
             isNavigationAvailable: () => this.isOpen(),
             getItems: () => {
-                if (this.isOpen() && this.menuRef.el) {
-                    return this.menuRef.el.querySelectorAll(
+                if (this.isOpen() && this.menuRef()) {
+                    return this.menuRef().querySelectorAll(
                         ":scope .o-navigable, :scope .o-dropdown"
                     );
                 }
@@ -76,7 +77,7 @@ export class CallDropdown extends Component {
             return;
         }
         const isOutsideClick =
-            !this.triggerRef.el?.contains(ev.target) && !this.menuRef.el?.contains(ev.target);
+            !this.triggerRef.el?.contains(ev.target) && !this.menuRef()?.contains(ev.target);
         if (isOutsideClick) {
             this.close();
         }

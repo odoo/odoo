@@ -33,6 +33,11 @@ export class ChatWindow extends Component {
     };
     static template = "mail.ChatWindow";
 
+    actionsMenuButtonRef = signal(null);
+    parentChannelRef = signal(null);
+    needactionCounterRef = signal(null);
+    composerHiddenContainerRef = signal(null);
+
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
@@ -52,8 +57,8 @@ export class ChatWindow extends Component {
         this.ui = useService("ui");
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
-        this.actionsMenuButtonHover = useHover("actionsMenuButton");
-        this.parentChannelHover = useHover("parentChannel");
+        this.actionsMenuButtonHover = useHover(this.actionsMenuButtonRef);
+        this.parentChannelHover = useHover(this.parentChannelRef);
         this.isMobileOS = isMobileOS();
         this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);

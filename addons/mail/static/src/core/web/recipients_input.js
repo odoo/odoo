@@ -12,11 +12,13 @@ import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component, computed, props, types } from "@odoo/owl";
+import { Component, computed, props, signal, types } from "@odoo/owl";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
     static components = { AutoComplete, RecipientTag, BadgeTag };
+
+    recipientsInputRef = signal(null);
 
     setup() {
         this.orm = useService("orm");
@@ -28,7 +30,7 @@ export class RecipientsInput extends Component {
         });
         this.tags = computed(() => this.getTagsFromMailThread());
         this.recipientCheckerBus = useRecipientChecker(this.tags);
-        useTagNavigation("recipientsInputRef", {
+        useTagNavigation(this.recipientsInputRef, {
             delete: this.deleteTagByIndex.bind(this),
         });
 

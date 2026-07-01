@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList, openReactionMenuType } from "@mail/core/common/message_reaction_list";
@@ -13,13 +12,14 @@ export class MessageReactions extends Component {
     static template = "mail.MessageReactions";
     static components = { MessageReactionList, QuickReactionMenu };
 
+    addRef = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
         this.openReactionMenu = props.static("openReactionMenu", openReactionMenuType(this.store));
         this.ui = useService("ui");
-        this.addRef = useRef("add");
         this.isMobileOS = isMobileOS();
         this.messageActions = useMessageActions({ message: this.message });
         this.emojiPicker = useEmojiPicker(this.addRef, {

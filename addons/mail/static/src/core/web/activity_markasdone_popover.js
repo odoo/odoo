@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
 
 import { propSignal } from "@mail/utils/common/hooks";
@@ -6,6 +5,8 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
+
+    textArea = signal(null);
 
     setup() {
         super.setup();
@@ -22,10 +23,9 @@ export class ActivityMarkAsDone extends Component {
             "onClickDoneAndScheduleNext",
             t.function([]).optional()
         );
-        this.textArea = useRef("textarea");
         this.disableDoneButton = signal(false);
         onMounted(() => {
-            this.textArea.el.focus();
+            this.textArea()?.focus();
         });
         useListener(window, "keydown", (ev) => this.onKeydown(ev));
     }

@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useOnChange, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -46,6 +46,9 @@ export class GifPicker extends Component {
     static template = "discuss.GifPicker";
     static components = { Gif };
 
+    autofocusRef = signal(null);
+    scrollerRef = signal(null);
+
     setup() {
         super.setup();
         this.props = props({
@@ -55,9 +58,9 @@ export class GifPicker extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.sequential = useSequential();
-        this.inputRef = useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
         useOnBottomScrolled(
-            "scroller",
+            this.scrollerRef,
             () => {
                 if (!this.state.showCategories) {
                     if (!this.showFavorite) {
@@ -241,7 +244,7 @@ export class GifPicker extends Component {
     async onClickCategory(category) {
         this.clear();
         this.searchTerm = category.searchterm;
-        this.inputRef.el?.focus();
+        this.autofocusRef()?.focus();
         this.closeCategories();
     }
 

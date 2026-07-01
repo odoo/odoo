@@ -13,7 +13,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { useHover, useOnChange } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { props, status, t } from "@odoo/owl";
+import { props, signal, status, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -103,7 +103,8 @@ const chatterPatch = {
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(this.thread);
-        this.unfollowHover = useHover("unfollow");
+        this.unfollowRef = signal(null);
+        this.unfollowHover = useHover(this.unfollowRef);
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;

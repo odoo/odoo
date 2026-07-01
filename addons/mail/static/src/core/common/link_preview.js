@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
@@ -11,6 +10,9 @@ export class LinkPreview extends Component {
     static components = { Gif };
     static template = "mail.LinkPreview";
 
+    videoRef = signal(null);
+    imageRef = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -20,8 +22,6 @@ export class LinkPreview extends Component {
         this.dialogService = useService("dialog");
         this.ui = useService("ui");
         this.state = proxy({ startVideo: false, videoLoaded: false });
-        this.videoRef = signal.ref();
-        this.imageRef = useRef("image");
         useOnChange(
             () => [this.videoRef()],
             (el) => {
@@ -44,7 +44,7 @@ export class LinkPreview extends Component {
     }
 
     onImageLoaded() {
-        const img = this.imageRef?.el;
+        const img = this.imageRef();
         if (!img || !img.naturalWidth || !img.naturalHeight) {
             return;
         }

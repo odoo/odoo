@@ -4,7 +4,7 @@ import { useChannelMemberActions } from "@mail/discuss/core/common/channel_membe
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, t } from "@odoo/owl";
+import { Component, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -14,6 +14,8 @@ import { ActionList } from "@mail/core/common/action_list";
 export class ChannelMember extends Component {
     static components = { ActionList, ActionPanel, DiscussAvatar, Dropdown };
     static template = "discuss.ChannelMember";
+
+    displayNameRef = signal(null);
 
     setup() {
         super.setup();

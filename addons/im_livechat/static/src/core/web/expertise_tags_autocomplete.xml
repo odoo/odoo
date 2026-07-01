@@ -4,7 +4,7 @@
         <div
             class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input flex-wrap gap-1 mb-3"
             t-att-class="{'o_input': !this.props.disabled, 'o-disabled': this.props.disabled}"
-            t-custom-ref="root"
+            t-ref="this.rootRef"
         >
             <div class="d-flex flex-wrap gap-1">
                 <BadgeTag t-foreach="this.props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" color="expertise.color" onDelete="this.props.disabled ? null : () => this.unlinkExpertise(expertise)"/>

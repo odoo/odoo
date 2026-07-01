@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { Action } from "@mail/core/common/action";
-import { Component, props, t, useListener } from "@odoo/owl";
+import { Component, props, signal, t, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -12,6 +11,8 @@ export class QuickReactionMenu extends Component {
     static components = { Dropdown };
     static DEFAULT_EMOJIS = ["👍", "❤️", "🤣", "😯", "😅", "🙏"];
 
+    toggle = signal(null);
+
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
@@ -21,7 +22,6 @@ export class QuickReactionMenu extends Component {
             message: t.instanceOf(this.store["mail.message"].Class),
             messageActive: t.boolean().optional(),
         });
-        this.toggle = useRef("toggle");
         this.ui = useService("ui");
         this.loadEmoji = useLoadEmoji();
         this.picker = useEmojiPicker(
@@ -50,7 +50,7 @@ export class QuickReactionMenu extends Component {
             if (
                 !this.dropdown.isOpen ||
                 this.picker.isOpen ||
-                !this.toggle.el?.contains(ev.target) ||
+                !this.toggle()?.contains(ev.target) ||
                 ["Shift", "Control", "Meta", "Alt"].includes(ev.key)
             ) {
                 return;

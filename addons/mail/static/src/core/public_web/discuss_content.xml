@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
-        <div t-if="this.thread" class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-custom-ref="header" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
+        <div t-if="this.thread" class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
             <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                 <DiscussAvatar record="this.thread" size="26"/>
                 <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
@@ -53,9 +53,9 @@
                 <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="this.renameGuest" value="this.selfGuestName"/>
             </div>
         </div>
-        <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1" t-att-class="{ 'position-relative': this.ui.isSmall }" t-custom-ref="main">
+        <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1" t-att-class="{ 'position-relative': this.ui.isSmall }">
             <t t-if="this.ui.isSmall" t-call="mail.Discuss.loading"/>
-            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-custom-ref="core">
+            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100">
                 <t name="core-content">
                     <t t-if="this.thread">
                         <div t-if="!this.ui.isSmall or !this.threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit min-w-0">

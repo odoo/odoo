@@ -3,7 +3,7 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="this.props.onSwipeLeft ? this.props.onSwipeLeft : undefined" onRightSwipe="this.props.onSwipeRight ? this.props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-custom-click="this.onClick" t-custom-ref="root" t-att-class="this.attClass" data-available-offline="">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-custom-click="this.onClick" t-ref="this.rootRef" t-att-class="this.attClass" data-available-offline="">
             <div class="o-mail-MessagingMenuItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
                 <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 52 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-center position-relative o-mail-NotificationItem-counterArea align-self-stretch ms-1 flex-shrink-0">
                         <t t-call-slot="counterSideContent"/>
-                        <span t-if="this.props.hasMarkAsReadButton" t-custom-ref="markAsRead" class="o-mail-NotificationItem-markAsRead btn btn-light rounded-circle d-flex h-100 w-100 align-items-center justify-content-center position-absolute inset-0 border z-1" t-att-class="{'d-none': !this.rootHover.isHover}" title="Mark As Read"><i class="fa fa-check text-success"/></span>
+                        <span t-if="this.props.hasMarkAsReadButton" t-ref="this.markAsReadRef" class="o-mail-NotificationItem-markAsRead btn btn-light rounded-circle d-flex h-100 w-100 align-items-center justify-content-center position-absolute inset-0 border z-1" t-att-class="{'d-none': !this.rootHover.isHover}" title="Mark As Read"><i class="fa fa-check text-success"/></span>
                         <span t-if="this.props.counter > 0 or (this.props.counter === 0 and !this.props.muted and !this.props.important)" class="o-mail-NotificationItem-badge o-discuss-badge d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm" t-att-class="{
                             'o-important': this.props.important,
                             'o-empty me-1': this.props.counter === 0,

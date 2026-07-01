@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
@@ -8,7 +7,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, props, types, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, signal, types, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
@@ -19,10 +18,10 @@ export class CallParticipantCard extends Component {
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
+    root = signal(null);
 
     setup() {
         super.setup();
-        this.root = useRef("root");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.props = props({
@@ -50,7 +49,7 @@ export class CallParticipantCard extends Component {
             minimized: types.boolean().optional(),
         });
         this.ui = useService("ui");
-        this.rootHover = useHover("root");
+        this.rootHover = useHover(this.root);
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;
@@ -235,7 +234,7 @@ export class CallParticipantCard extends Component {
         }
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
-            const insetEl = this.root.el;
+            const insetEl = this.root();
             const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
             if (parseInt(insetEl.style.left) < insetEl.parentNode.offsetWidth / 2) {
                 insetEl.style.left = "1vh";
@@ -272,7 +271,7 @@ export class CallParticipantCard extends Component {
 
     drag(ev) {
         this.isDrag = true;
-        const insetEl = this.root.el;
+        const insetEl = this.root();
         const parent = insetEl.parentNode;
         const boundingRect =
             this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
@@ -293,10 +292,10 @@ export class CallParticipantCard extends Component {
     }
 
     onFullScreenChange() {
-        if (!this.root.el) {
+        if (!this.root()) {
             return;
         }
-        this.root.el.style.left = "";
-        this.root.el.style.top = "";
+        this.root().style.left = "";
+        this.root().style.top = "";
     }
 }

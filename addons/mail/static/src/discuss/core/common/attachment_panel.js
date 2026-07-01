@@ -2,13 +2,15 @@ import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useOnChange, useSequential, useVisible } from "@mail/utils/common/hooks";
 
 export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };
     static template = "mail.AttachmentPanel";
+
+    loadOlderRef = signal(null);
 
     setup() {
         super.setup();
@@ -25,7 +27,7 @@ export class AttachmentPanel extends Component {
             () => [this.props.channel],
             (channel) => channel.fetchMoreAttachments()
         );
-        useVisible("load-older", (isVisible) => {
+        useVisible(this.loadOlderRef, (isVisible) => {
             if (isVisible) {
                 this.props.channel.fetchMoreAttachments();
             }

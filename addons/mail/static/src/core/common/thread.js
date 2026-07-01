@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -22,6 +22,7 @@ import {
     proxy,
     signal,
     t,
+    untrack,
     useListener,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -29,6 +30,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
@@ -104,8 +106,10 @@ export class Thread extends Component {
             },
             () => [this.messageHighlight?.highlightedMessageId]
         );
-        this.present = useRef("load-newer");
-        this.jumpPresentRef = useRef("jump-present");
+        this.present = signal(null);
+        this.jumpPresentRef = signal(null);
+        this.loadOlderRef = signal(null);
+        this.presentThresholdRef = signal(null);
         this.rootRef = signal.ref(HTMLDivElement);
         this.visibleState = useVisible(this.rootRef, () => {
             this.updateShowJumpPresent();
@@ -122,7 +126,7 @@ export class Thread extends Component {
             () => (this.state.scrollTop = this.scrollableRef().scrollTop)
         );
         this.loadOlderState = useVisible(
-            "load-older",
+            this.loadOlderRef,
             async () => {
                 await Promise.all([
                     this.messageHighlight?.scrollPromise,
@@ -137,7 +141,7 @@ export class Thread extends Component {
             { ready: false }
         );
         this.loadNewerState = useVisible(
-            "load-newer",
+            this.present,
             async () => {
                 await Promise.all([
                     this.messageHighlight?.scrollPromise,
@@ -153,7 +157,7 @@ export class Thread extends Component {
             { ready: false }
         );
         this.messageSelection = useMessageSelection();
-        this.presentThresholdState = useVisible("present-treshold", () =>
+        this.presentThresholdState = useVisible(this.presentThresholdRef, () =>
             this.updateShowJumpPresent()
         );
         this.setupScroll();
@@ -169,7 +173,7 @@ export class Thread extends Component {
             () => {
                 this.computeJumpPresentPosition();
             },
-            () => [this.jumpPresentRef.el, this.viewportEl]
+            () => [resolveRefEl(this.jumpPresentRef), untrack(() => this.viewportEl)]
         );
         useLayoutEffect(
             () => this.updateShowJumpPresent(),
@@ -267,7 +271,7 @@ export class Thread extends Component {
     }
 
     computeJumpPresentPosition() {
-        if (!this.viewportEl || !this.jumpPresentRef.el) {
+        if (!this.viewportEl || !this.jumpPresentRef()) {
             return;
         }
         const width = this.viewportEl.clientWidth;
@@ -277,7 +281,7 @@ export class Thread extends Component {
         const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
         const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
         const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
-        this.jumpPresentRef.el.style.transform = `translate(${
+        this.jumpPresentRef().style.transform = `translate(${
             this.env.inChatter ? 22 : width - ps - pe - 22
         }px, ${
             this.env.inChatter && !this.env.inChatter.aside

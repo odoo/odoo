@@ -15,8 +15,9 @@ export class Tabs extends Component {
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
         this.navRef = signal();
+        this.rootRef = signal();
         this.scrollState = useScrollState(this.navRef);
-        useForwardRefToParent("ref");
+        useForwardRefToParent(this.rootRef, "ref");
         useChildSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,
@@ -38,7 +39,7 @@ export class Tabs extends Component {
      * @param {number} direction The direction to scroll (1 for forward, -1 for backward).
      */
     async scroll(direction) {
-        const navEl = this.navRef.el;
+        const navEl = this.navRef();
         if (this.props.direction === "v") {
             navEl?.scrollBy({ top: navEl?.clientHeight * direction, behavior: "smooth" });
         } else {

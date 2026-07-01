@@ -14,7 +14,7 @@ import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, computed, props, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, t, useApp } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -23,6 +23,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { createElementWithContent } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
 import { getOrigin } from "@web/core/utils/urls";
@@ -126,6 +127,7 @@ export class Message extends Component {
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = signal.ref(HTMLDivElement);
+        this.messageContentRef = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -139,13 +141,14 @@ export class Message extends Component {
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        useEffect(() => {
-            if (this.shadowBody()) {
-                this.shadowRoot.set(this.shadowBody().attachShadow({ mode: "open" }));
-                const color = this.store.isOdooWhiteTheme ? "dark" : "white";
-                loadCssFromBundle(this.shadowRoot(), "mail.assets_message_email");
-                const shadowStyle = document.createElement("style");
-                shadowStyle.textContent = `
+        useLayoutEffect(
+            () => {
+                if (resolveRefEl(this.shadowBody)) {
+                    this.shadowRoot.set(this.shadowBody().attachShadow({ mode: "open" }));
+                    const color = this.store.isOdooWhiteTheme ? "dark" : "white";
+                    loadCssFromBundle(this.shadowRoot(), "mail.assets_message_email");
+                    const shadowStyle = document.createElement("style");
+                    shadowStyle.textContent = `
                     * {
                         background-color: transparent !important;
                         color: ${color} !important;
@@ -160,11 +163,11 @@ export class Message extends Component {
                         background: ${this.constructor.SHADOW_HIGHLIGHT_COLOR} !important;
                     }
                 `;
-                if (!this.store.isOdooWhiteTheme) {
-                    this.shadowRoot().appendChild(shadowStyle);
-                }
-                const ellipsisStyle = document.createElement("style");
-                ellipsisStyle.textContent = `
+                    if (!this.store.isOdooWhiteTheme) {
+                        this.shadowRoot().appendChild(shadowStyle);
+                    }
+                    const ellipsisStyle = document.createElement("style");
+                    ellipsisStyle.textContent = `
                     .o-mail-ellipsis {
                         min-width: 2.7ch;
                         background-color: ButtonFace;
@@ -186,41 +189,58 @@ export class Message extends Component {
                         }
                     }
                 `;
-                this.shadowRoot().appendChild(ellipsisStyle);
-            }
-        });
-        useEffect(() => {
-            const shadowRoot = this.shadowRoot();
-            if (shadowRoot) {
-                const bodyEl = createElementWithContent(
-                    "span",
-                    this.message.showTranslation
-                        ? this.message.richTranslationValue
-                        : this.props.messageSearch?.highlight(this.message.richBody) ??
-                              this.message.richBody
-                );
-                const roots = this.prepareMessageBody(bodyEl) ?? [];
-                shadowRoot.appendChild(bodyEl);
-                return () => {
-                    for (const root of roots) {
-                        root.destroy();
-                    }
-                    shadowRoot.removeChild(bodyEl);
-                };
-            }
-        });
+                    this.shadowRoot().appendChild(ellipsisStyle);
+                }
+            },
+            () => [resolveRefEl(this.shadowBody)]
+        );
+        useLayoutEffect(
+            () => {
+                const shadowRoot = this.shadowRoot();
+                if (shadowRoot) {
+                    const bodyEl = createElementWithContent(
+                        "span",
+                        this.message.showTranslation
+                            ? this.message.richTranslationValue
+                            : this.props.messageSearch?.highlight(this.message.richBody) ??
+                                  this.message.richBody
+                    );
+                    const roots = this.prepareMessageBody(bodyEl) ?? [];
+                    shadowRoot.appendChild(bodyEl);
+                    return () => {
+                        for (const root of roots) {
+                            root.destroy();
+                        }
+                        shadowRoot.removeChild(bodyEl);
+                    };
+                }
+            },
+            () => [
+                this.shadowRoot(),
+                this.message.showTranslation,
+                this.message.richTranslationValue,
+                this.props.messageSearch?.searchTerm,
+                this.message.richBody,
+                this.isEditing,
+            ]
+        );
         useLayoutEffect(
             () => {
                 const roots = this.isEditing
                     ? []
-                    : this.prepareMessageBody(this.messageBody()) ?? [];
+                    : this.prepareMessageBody(resolveRefEl(this.messageBody)) ?? [];
                 return () => {
                     for (const root of roots) {
                         root.destroy();
                     }
                 };
             },
-            () => [this.isEditing, this.message.richBody, this.props.messageSearch?.searchTerm]
+            () => [
+                this.isEditing,
+                this.message.richBody,
+                this.props.messageSearch?.searchTerm,
+                resolveRefEl(this.messageBody),
+            ]
         );
     }
 

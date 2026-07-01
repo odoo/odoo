@@ -2,9 +2,9 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 import { ActionSwiper, onSwipeType } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
@@ -17,6 +17,9 @@ const isMiddleClick = t.boolean();
 export class NotificationItem extends Component {
     static components = { ActionSwiper, DiscussAvatar, MessageSeenIndicator };
     static template = "mail.NotificationItem";
+
+    markAsReadRef = signal(null);
+    rootRef = signal(null);
 
     setup() {
         super.setup();
@@ -46,8 +49,7 @@ export class NotificationItem extends Component {
             textClassName: t.string().optional(""),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
-        this.markAsReadRef = useRef("markAsRead");
-        this.rootHover = useHover("root");
+        this.rootHover = useHover(this.rootRef);
         useSubEnv({ inNotificationItem: true });
     }
 
@@ -79,6 +81,6 @@ export class NotificationItem extends Component {
     }
 
     onClick(ev, isMiddleClick) {
-        this.props.onClick(this.markAsReadRef.el?.contains(ev.target), isMiddleClick);
+        this.props.onClick(this.markAsReadRef()?.contains(ev.target), isMiddleClick);
     }
 }

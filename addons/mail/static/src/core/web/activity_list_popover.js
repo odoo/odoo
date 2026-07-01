@@ -2,13 +2,15 @@ import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_it
 import { useOnChange } from "@mail/utils/common/hooks";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, signal, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityListPopover extends Component {
     static components = { ActivityListPopoverItem };
     static template = "mail.ActivityListPopover";
+
+    rootRef = signal(null);
 
     setup() {
         super.setup();

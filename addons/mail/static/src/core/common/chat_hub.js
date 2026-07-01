@@ -1,8 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, signal, useListener } from "@odoo/owl";
 
 import { Action } from "@mail/core/common/action";
 import { browser } from "@web/core/browser/browser";
@@ -18,6 +17,11 @@ export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
     static template = "mail.ChatHub";
 
+    ref = signal(null);
+    root = signal(null);
+    moreButtonRef = signal(null);
+    moreMenuRef = signal(null);
+
     get chatHub() {
         return this.store.chatHub;
     }
@@ -27,15 +31,13 @@ export class ChatHub extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.busMonitoring = useService("bus.monitoring_service");
-        this.bubblesHover = useHover("bubbles");
-        this.moreHover = useHover(["more-button", "more-menu"], {
+        this.bubblesHover = useHover(this.ref);
+        this.moreHover = useHover([this.moreButtonRef, this.moreMenuRef], {
             onHover: () => (this.more.isOpen = true),
             onAway: () => (this.more.isOpen = false),
         });
         this.options = useDropdownState();
         this.more = useDropdownState();
-        this.ref = useRef("bubbles");
-        this.root = useRef("root");
         this.position = proxy({
             dragged: false,
             isDragging: false,

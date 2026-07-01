@@ -1,5 +1,5 @@
 import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -15,6 +15,9 @@ export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
     static components = { Dropdown };
 
+    reactionButtonRef = signal(null);
+    reactionListRef = signal(null);
+
     setup() {
         super.setup(...arguments);
         this.loadEmoji = useLoadEmoji();
@@ -24,7 +27,7 @@ export class MessageReactionList extends Component {
         this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions.Class));
         this.ui = useService("ui");
         this.preview = useDropdownState();
-        this.hover = useHover(["reactionButton", "reactionList"], {
+        this.hover = useHover([this.reactionButtonRef, this.reactionListRef], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
             stateObserver: () => [this.preview?.isOpen],

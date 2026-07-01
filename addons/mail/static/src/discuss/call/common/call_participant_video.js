@@ -1,9 +1,10 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, props, status, t, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, signal, status, t, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallParticipantVideo extends Component {
     static template = "discuss.CallParticipantVideo";
+
+    root = signal(null);
 
     setup() {
         super.setup();
@@ -19,7 +20,6 @@ export class CallParticipantVideo extends Component {
             session: t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
             type: t.selection(["camera", "screen"]),
         });
-        this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
         useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
@@ -28,20 +28,20 @@ export class CallParticipantVideo extends Component {
     }
 
     _update() {
-        if (!this.root.el) {
+        if (!this.root()) {
             return;
         }
         if (!this.props.session || !this.props.session.getStream(this.props.type)) {
-            this.root.el.srcObject = undefined;
+            this.root().srcObject = undefined;
         } else {
-            this.root.el.srcObject = this.props.session.getStream(this.props.type);
+            this.root().srcObject = this.props.session.getStream(this.props.type);
         }
-        this.root.el.load();
+        this.root().load();
     }
 
     async play() {
         try {
-            await this.root.el?.play?.();
+            await this.root()?.play?.();
             this.props.session.videoError = undefined;
         } catch (error) {
             if (status(this) === "destroyed") {

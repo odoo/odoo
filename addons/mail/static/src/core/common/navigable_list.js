@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, props, proxy, signal, t, useListener } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -13,6 +13,9 @@ import { useService } from "@web/core/utils/hooks";
 export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
+
+    rootRef = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -28,7 +31,6 @@ export class NavigableList extends Component {
             position: t.string().optional("bottom"),
             rememberPosition: t.boolean().optional(),
         });
-        this.rootRef = useRef("root");
         this.state = proxy({
             activeIndex: null,
             open: false,
@@ -37,7 +39,7 @@ export class NavigableList extends Component {
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
         useListener(this.env.pipWindow || window, "keydown", (ev) => this.onKeydown(ev), true);
-        onExternalClick("root", async (ev) => {
+        onExternalClick(this.rootRef, async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
             if (isEventHandled(ev, "composer.onClickTextarea")) {
@@ -46,7 +48,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef?.(), {
+        usePosition(this.rootRef, () => this.props.anchorRef?.(), {
             position: this.props.position,
             rememberPosition: this.props.rememberPosition,
         });

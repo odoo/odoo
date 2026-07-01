@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { ActionList } from "@mail/core/common/action_list";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
@@ -12,6 +12,9 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 export class CallMenu extends Component {
     static template = "discuss.CallMenu";
     static components = { ActionList, Dropdown };
+
+    root = signal(null);
+
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");

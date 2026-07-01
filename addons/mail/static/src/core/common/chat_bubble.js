@@ -1,4 +1,4 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
@@ -38,6 +38,8 @@ export class ChatBubble extends Component {
     static components = { CountryFlag, DiscussAvatar };
     static template = "mail.ChatBubble";
 
+    rootRef = signal(null);
+
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -61,15 +63,14 @@ export class ChatBubble extends Component {
             }
             this.popover.close();
         });
-        this.hover = useHover(["root", popoverRef], {
+        this.hover = useHover([this.rootRef, popoverRef], {
             onHover: () => {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
-                this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
+                this.popover.open(this.rootRef(), { chatWindow: this.props.chatWindow });
                 this.isPopoverOpen.set(true);
             },
             onAway: () => this.popover.close(),
         });
-        this.rootRef = useRef("root");
         this.bouncing = signal(false);
         const isImportant = computed(() => Boolean(this.channel?.importantCounter));
         useEffect(() => this.bouncing.set(isImportant));

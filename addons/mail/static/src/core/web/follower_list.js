@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, signal, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useVisible } from "@mail/utils/common/hooks";
@@ -11,6 +11,8 @@ export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem, Follower };
 
+    loadMoreRef = signal(null);
+
     setup() {
         super.setup();
         this.action = useService("action");
@@ -21,7 +23,7 @@ export class FollowerList extends Component {
             onFollowerChanged: types.function([]).optional(),
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });
-        useVisible("load-more", (isVisible) => {
+        useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();
             }
