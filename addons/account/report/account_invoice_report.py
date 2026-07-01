@@ -44,12 +44,37 @@ class AccountInvoiceReport(models.Model):
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True)
     price_subtotal_currency = fields.Float(string='Untaxed Amount in Currency', readonly=True)
-    price_subtotal = fields.Float(string='Untaxed Amount', readonly=True)
-    price_total = fields.Float(string='Total', readonly=True)
+    price_subtotal = fields.Monetary(
+        string='Untaxed Amount',
+        readonly=True,
+        currency_field='company_currency_id',
+        aggregator='sum_currency',
+    )
+    price_total = fields.Monetary(
+        string='Total',
+        readonly=True,
+        currency_field='company_currency_id',
+        aggregator='sum_currency',
+    )
     price_total_currency = fields.Float(string='Total in Currency', readonly=True)
-    price_average = fields.Float(string='Average Price', readonly=True, aggregator="avg")
-    price_margin = fields.Float(string='Margin', readonly=True)
-    inventory_value = fields.Float(string='Inventory Value', readonly=True)
+    price_average = fields.Monetary(
+        string='Average Price',
+        readonly=True,
+        currency_field='company_currency_id',
+        aggregator="avg",
+    )
+    price_margin = fields.Monetary(
+        string='Margin',
+        readonly=True,
+        currency_field='company_currency_id',
+        aggregator='sum_currency',
+    )
+    inventory_value = fields.Monetary(
+        string='Inventory Value',
+        readonly=True,
+        currency_field='company_currency_id',
+        aggregator='sum_currency',
+    )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
     @property
@@ -77,7 +102,6 @@ class AccountInvoiceReport(models.Model):
             table.currency_id,
             table.company_currency_id,
             SQL("%s AS commercial_partner_id", table.partner_id),
-            SQL("%s AS user_type", table.account_id.account_type),
             table.move_id.state,
             table.move_id.move_type,
             table.move_id.partner_id,
@@ -91,28 +115,28 @@ class AccountInvoiceReport(models.Model):
             SQL("%s AS product_categ_id", table.product_id.categ_id),
             SQL("%s * %s AS quantity", quantity, in_out_sign),
             SQL("%s * %s AS price_subtotal_currency", table.price_subtotal, in_out_sign),
-            SQL("-%s AS price_subtotal", table.consolidation_balance),
-            SQL("%s * %s / %s AS price_total", table.price_subtotal, in_out_sign, table.move_id.invoice_currency_rate),
+            SQL("-%s AS price_subtotal", table.balance),
+            SQL("%s * %s / %s AS price_total", table.price_total, in_out_sign, table.move_id.invoice_currency_rate),
             SQL("%s * %s AS price_total_currency", table.price_total, in_out_sign),
             SQL(
                 "-COALESCE((%s / NULLIF(%s, 0.0)) * %s, 0.0) AS price_average",
-                table.consolidation_balance, quantity, in_out_sign,
+                table.balance, quantity, in_out_sign,
             ),
             SQL(
                 """
                 CASE
                     WHEN %s NOT IN ('out_invoice', 'out_receipt', 'out_refund') THEN 0.0
-                    WHEN %s = 'out_refund' THEN %s * (-%s + %s * COALESCE(%s, 0.0))
-                    ELSE %s * (-%s - %s * COALESCE(%s, 0.0))
+                    WHEN %s = 'out_refund' THEN -%s + %s * COALESCE(%s, 0.0)
+                    ELSE -%s - %s * COALESCE(%s, 0.0)
                 END AS price_margin
                 """,
                 table.move_type,
-                table.move_type, table.consolidation_rate, table.balance, quantity, table_with_company.product_id.standard_price,
-                table.consolidation_rate, table.balance, quantity, table_with_company.product_id.standard_price,
+                table.move_type, table.balance, quantity, table_with_company.product_id.standard_price,
+                table.balance, quantity, table_with_company.product_id.standard_price,
             ),
             SQL(
-                "-%s * %s * %s * COALESCE(%s, 0.0) AS inventory_value",
-                table.consolidation_rate, quantity, in_out_sign, table_with_company.product_id.standard_price,
+                "-%s * %s * COALESCE(%s, 0.0) AS inventory_value",
+                quantity, in_out_sign, table_with_company.product_id.standard_price,
             ),
         ]
 
@@ -121,7 +145,9 @@ class AccountInvoiceReport(models.Model):
         if aggregate_spec != 'price_average:avg':
             return super()._read_group_select(table, aggregate_spec)
         return SQL(
-            'COALESCE(SUM(%s) / NULLIF(SUM(%s), 0.0), 0)', table.price_subtotal, table.quantity,
+            'COALESCE(%s / NULLIF(SUM(%s), 0.0), 0)',
+            super()._read_group_select(table, 'price_subtotal:sum_currency'),
+            table.quantity,
         )
 
 
