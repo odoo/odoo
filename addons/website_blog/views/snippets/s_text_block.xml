@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Default text blocks for blogs -->
+ <template id="blog_text_block" name="Text" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="replace">
+        <div class="container">
+            <p>Start writing here...</p>
+        </div>
+    </xpath>
+</template>
+
+<template id="blog_text_block_small" name="Text" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="replace">
+        <div class="o_container_small">
+            <p>Start writing here...</p>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

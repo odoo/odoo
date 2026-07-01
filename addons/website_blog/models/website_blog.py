@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from collections import defaultdict
-import random
 
-from odoo import api, models, fields, _
-from odoo.addons.website.tools import images_from_html, text_from_html
+from odoo import api, fields, models
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
-from odoo.tools import html_escape
+
+from odoo.addons.website.tools import images_from_html, text_from_html
 
 
 class BlogBlog(models.Model):
@@ -179,10 +176,10 @@ class BlogPost(models.Model):
                 blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
-        text = html_escape(_("Start writing here..."))
-        return """
-            <p>%(text)s</p>
-        """ % {"text": text}
+        is_regular_cover = self.env.website.is_view_active('website_blog.opt_blog_post_regular_cover')
+        template_to_render = 'website_blog.blog_text_block' if is_regular_cover else 'website_blog.blog_text_block_small'
+        return self.env['ir.ui.view'].with_context(inherit_branding=False)._render_template(template_to_render)
+
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
@@ -366,7 +363,6 @@ class BlogPost(models.Model):
 
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = self.get_base_url()
         post_url = f'{base_url}{self.website_url}'
         vals = {
@@ -390,11 +386,6 @@ class BlogPost(models.Model):
             image_url = html_images[0]
         if image_url:
             vals['image'] = image_url
-        if (
-            website.is_view_active('website_blog.opt_blog_post_comment')
-            and self.website_message_ids
-        ):
-            vals['commentCount'] = len(self.website_message_ids)
         if self.env.lang:
             vals['inLanguage'] = self.env.lang.replace('_', '-')
         if self.content and (content_text := text_from_html(self.content, True)):
