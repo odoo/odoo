@@ -1,18 +1,11 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-    onWillUpdateProps,
-    props,
-    t,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, t } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { router } from "@web/core/browser/router";
+import { propComputed, useOnChange } from "@mail/utils/common/hooks";
 
 export class DiscussClientAction extends Component {
     static components = { Discuss };
@@ -20,8 +13,9 @@ export class DiscussClientAction extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
-            action: t
+        this.action = propComputed(
+            "action",
+            t
                 .object({
                     context: t.object({
                         active_id: t.or([t.string(), t.number()]).optional(),
@@ -36,17 +30,13 @@ export class DiscussClientAction extends Component {
                 })
                 // The public page doesn't use the action service, but overrides
                 // `getActiveId` to provide the id from the URL instead of the action.
-                .optional(),
-        });
+                .optional()
+        );
         this.store = useService("mail.store");
-        onWillStart(() => {
-            // bracket to avoid blocking rendering with restore promise
-            this.restoreDiscussThread(this.props.action);
-        });
-        onWillUpdateProps((nextProps) => {
-            // bracket to avoid blocking rendering with restore promise
-            this.restoreDiscussThread(nextProps.action);
-        });
+        useOnChange(
+            () => [this.action()],
+            (action) => this.restoreDiscussThread(action())
+        );
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
