@@ -53486,7 +53486,14 @@ var PivotUIPlugin = class extends UIPlugin {
 		return this.pivots[pivotId];
 	}
 	isPivotUnused(pivotId) {
-		return this._getUnusedPivots().includes(pivotId);
+		try {
+			return this._getUnusedPivots().includes(pivotId);
+		} catch (e) {
+			if (e && e.value === "Loading...") {
+				return false;
+			}
+			throw e;
+		}
 	}
 	/**
 	* Refresh the cache of a pivot
