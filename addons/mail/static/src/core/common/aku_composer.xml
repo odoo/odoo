@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.AkuComposer">
+    <div class="d-flex o-mail-Composer-bg m-1 shadow-sm flex-grow-1 border border-secondary rounded-3"
+        t-att-class="{ 'o-iosPwa': isIosPwa }"
+        t-ref="input-container"
+    >
+        <textarea
+            class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto text-body o-mail-Composer-inputStyle form-control border-0 rounded-3"
+            t-ref="textarea"
+            t-model="props.composer.text"
+        />
+        <div class="o-mail-Composer-actions d-flex" name="root"
+            t-att-class="{ 'ms-1 rounded-3 o-mail-Composer-bg': compact and ui.isSmall }"
+        >
+            <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline gap-1" t-att-class="{ 'mt-2': !props.composer.message and !env.inChatWindow, 'mt-1': env.inChatWindow }" t-ref="main-actions">
+                <button class="o-mail-Composer-send btn p-3" t-on-click="sendMessage">
+                    <i class="fa fa-fw fa-lg fa-paper-plane-o"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
