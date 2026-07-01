@@ -463,37 +463,43 @@ export class ImageShapeOptionPlugin extends Plugin {
         const svgColors = this.getSvgColors(shapeSvgText);
         return svgColors.map((color, i) => (color !== null ? `o-color-${i + 1}` : null));
     }
+
+    getImageShape(shapeId){
+        return this.imageShapes[shapeId] || {};
+    }
+
     applyShapeColors(editingElement, newColors) {}
     isTransformableShape(shapeId) {
         if (!shapeId) {
             return false;
         }
-        const canTransform = this.imageShapes[shapeId].transform;
+
+        const canTransform = this.getImageShape(shapeId).transform;
         return typeof canTransform === "undefined" ? true : canTransform;
     }
     isTechnicalShape(shapeId) {
         if (!shapeId) {
             return false;
         }
-        return this.imageShapes[shapeId].isTechnical;
+        return !!this.getImageShape(shapeId).isTechnical;
     }
     getShapeLabel(shapeId) {
         if (!shapeId) {
             return _t("None");
         }
-        return this.imageShapes[shapeId].selectLabel || _t("None");
+        return this.getImageShape(shapeId).selectLabel || _t("None");
     }
     isAnimableShape(shape) {
         if (!shape) {
             return false;
         }
-        return this.imageShapes[shape].animated;
+        return !!this.getImageShape(shape).animated;
     }
     isTogglableRatioShape(shape) {
         if (!shape) {
             return false;
         }
-        return this.imageShapes[shape].togglableRatio;
+        return !!this.getImageShape(shape).togglableRatio;
     }
     getImageShapeGroups() {
         return imageShapeDefinitions;
