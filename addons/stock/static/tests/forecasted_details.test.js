@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { ForecastedDetails } from "@stock/stock_forecasted/forecasted_details";
+import { ForecastedHeader } from "@stock/stock_forecasted/forecasted_header";
 
 test("forecast detail sameDocument receipt date", async () => {
     const document_in = { id: 10, _name: "stock.picking", name: "PICK/001" };
@@ -20,4 +21,13 @@ test("forecast detail sameDocument receipt date", async () => {
     forecast2.NotAvailableLinesPerProduct = {};
     forecast2._mergeLines();
     expect(forecast2.mergesLinesData).toEqual({});
+});
+
+test("forecast header with empty products does not crash", async () => {
+    const docs = {
+        product: {}
+    };
+    const header = new ForecastedHeader({ docs });
+    expect(header.uom).toBe("");
+    expect(header.leadTime).toBe(null);
 });

@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-wrap pb-1 pt-2 justify-content-end">
+        <div class="d-flex flex-wrap pb-1 pt-2 justify-content-end" t-if="this.leadTime">
             <div class="row">
                 <h6>Time to replenish:
                     <span data-tooltip-template="LeadTimeTooltip" t-att-data-tooltip-info="this.toJsonString(this.leadTime)">
