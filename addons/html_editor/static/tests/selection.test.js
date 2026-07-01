@@ -142,6 +142,46 @@ test("getSelectionData should validate the offsets of activeSelection", async ()
     expect(selection.anchorOffset).toBe(0);
 });
 
+test("makeActiveSelection should not crash on a stale selection with an uncorrectable document selection", async () => {
+    // Reproduces an IndexSizeError seen in Safari/Firefox: a DOM mutation (e.g.
+    // link autoconversion) leaves activeSelection stale (offset out of range)
+    // while the document selection is "uncorrectable" (its anchorNode does not
+    // match its range). makeActiveSelection used to return the stale selection,
+    // which later made Range.setStart throw.
+    const { editor } = await setupEditor("<p>ab[]</p>");
+    const p = editor.editable.firstChild;
+    const text = p.firstChild;
+
+    const range = document.createRange();
+    range.setStart(text, 1);
+    range.setEnd(text, 1);
+    // anchorNode (<p>) differs from the range's container (the text node): this
+    // is the "uncorrectable" case, and its offset is out of range for <p>.
+    patchWithCleanup(document, {
+        getSelection: () => ({
+            anchorNode: p,
+            anchorOffset: 5,
+            focusNode: p,
+            focusOffset: 5,
+            rangeCount: 1,
+            isCollapsed: true,
+            getRangeAt: () => range,
+        }),
+    });
+    // Force activeSelection to be stale (offset beyond its node's size).
+    patchWithCleanup(SelectionPlugin.prototype, {
+        getSelectionData() {
+            this.activeSelection = { ...this.activeSelection, anchorOffset: 5 };
+            return super.getSelectionData();
+        },
+    });
+
+    // Should not throw, and should fall back to the range's collapsed position.
+    const selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorNode).toBe(text);
+    expect(selection.anchorOffset).toBe(1);
+});
+
 test("setEditableSelection should not crash if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
     let selection = editor.shared.selection.getEditableSelection();
