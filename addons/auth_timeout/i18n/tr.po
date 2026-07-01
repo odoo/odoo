@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2025-11-21 14:47+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -80,11 +80,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_timeout
-#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
-msgid "Inactivity"
-msgstr "Hareketsizlik"
-
-#. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity
 msgid "Inactivity timeout"
 msgstr "Hareketsizlik zaman aşımı"
@@ -120,7 +115,13 @@ msgid "Lock Timeout Inactivity Delay Unit"
 msgstr "Kilit Zaman Aşımı Hareketsizlik Gecikme Birimi"
 
 #. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Lock screen"
+msgstr ""
+
+#. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__without_2fa
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Logout"
 msgstr "Çıkış"
 
@@ -163,14 +164,21 @@ msgid "Screen lock with two-factor authentication"
 msgstr "İki faktörlü kimlik doğrulama ile ekran kilidi"
 
 #. module: auth_timeout
-#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
-msgid "Session"
-msgstr "Oturum"
-
-#. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout
 msgid "Session timeout"
 msgstr "Oturum zaman aşımı"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid ""
+"The screen of the users in this group will be locked after a defined delay"
+msgstr ""
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid ""
+"The users in this group will be automatically logout at regular intervals"
+msgstr ""
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity
@@ -194,6 +202,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Timeouts"
 msgstr "Zaman Aşımları"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Two-factor authentication"
+msgstr ""
 
 #. module: auth_timeout
 #: model:ir.model,name:auth_timeout.model_res_users

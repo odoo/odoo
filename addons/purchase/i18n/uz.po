@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -47,6 +47,20 @@ msgstr "# ta yetkazib beruvchi hisobi"
 #, fuzzy
 msgid "# of Lines"
 msgstr "# ta satr"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "%(added_lines_count)s PO lines added to the bill."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid ""
+"%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
+"unmatched remaining."
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -91,6 +105,12 @@ msgstr ""
 #, fuzzy
 msgid "-&gt;"
 msgstr "-&gt;"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "0 bill lines matched with this PO."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -318,20 +338,8 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #, fuzzy
-msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr "<span class=\"o_stat_text\">Hisob-kitob moslashtirish</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
 msgstr "<span class=\"o_stat_text\">Narxlarni taqqoslash</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
-#, fuzzy
-msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr "<span class=\"o_stat_text\">Xarid moslashtirish</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -405,13 +413,6 @@ msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
 msgstr "<strong class=\"d-block mt-3\">Yetkazib berish manzili</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-#, fuzzy
-msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Oraliq jami</strong>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #, fuzzy
 msgid "<strong>Amount</strong>"
@@ -453,6 +454,12 @@ msgstr "<strong>Kutilayotgan yetib kelish sanasi:</strong>"
 #, fuzzy
 msgid "<strong>Expected Date</strong>"
 msgstr "<strong>Kutilayotgan sana</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -972,11 +979,22 @@ msgid "Bill Lines"
 msgstr "Hisob-faktura qatorlari"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
+msgid "Bill Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #, fuzzy
 msgid "Bill Matching"
 msgstr "Hisob-fakturani moslashtirish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Bill Qty"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -1024,6 +1042,7 @@ msgstr "To‘lov holati"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #, fuzzy
 msgid "Bills"
 msgstr "Hisob-fakturalar"
@@ -1198,6 +1217,11 @@ msgid "Connect your software"
 msgstr "Dasturingizni ulang"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #, fuzzy
 msgid "Contact"
@@ -1280,7 +1304,10 @@ msgid "Customer Portal URL"
 msgstr "Mijozlar portali URL manzili"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__date
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Date"
 msgstr ""
 
@@ -1382,10 +1409,20 @@ msgstr ""
 "bo‘lgan muddatni bildiradi."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__description
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #, fuzzy
 msgid "Description"
 msgstr "Tavsif"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid ""
+"Difference between demand and quantity but not affected by invoice policy"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1410,6 +1447,11 @@ msgstr "Chegirma:"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
 msgid "Display Auto Complete Field"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
+msgid "Display Matching Tag"
 msgstr ""
 
 #. module: purchase
@@ -1446,6 +1488,12 @@ msgstr "Ko‘rsatish turi"
 #, fuzzy
 msgid "Distribution Analytic Account"
 msgstr "Taqsimot tahliliy hisobi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
+msgid "Document Tax Mode"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1746,9 +1794,16 @@ msgstr "Buyurtmada"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 #, fuzzy
 msgid "Incoterm"
 msgstr "Inkoterm"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
+msgid "Incoterm Location"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -1769,6 +1824,8 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,help:purchase.field_res_users__purchase_incoterm_id
 #, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
@@ -2003,6 +2060,29 @@ msgstr "Qo‘lda qabul qilingan miqdor"
 #, fuzzy
 msgid "Match"
 msgstr "Moslashtirish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Matched"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
+msgid "Matched Invoices Count"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "Matching"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "Matching Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -2258,6 +2338,11 @@ msgid "Not Acknowledged"
 msgstr "Tasdiqlanmagan"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid "Not Invoiced Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
 msgstr ""
@@ -2427,6 +2512,13 @@ msgid "Ordered Quantity:"
 msgstr "Buyurtma qilingan miqdor:"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_to_invoice_raw
+msgid ""
+"Ordered quantity not invoiced. This may or may not include quantities that "
+"won't be invoiced, depending on the product's Control Policy."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #, fuzzy
@@ -2450,6 +2542,16 @@ msgstr ""
 #, fuzzy
 msgid "Our Orders"
 msgstr "Bizning buyurtmalarimiz"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+msgid "PO Matching"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+msgid "PO Qty"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2525,7 +2627,7 @@ msgid "Preview the reminder email by sending it to yourself."
 msgstr "Eslatma xatini o‘zingizga yuborish orqali oldindan ko‘rib chiqing."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #, fuzzy
 msgid "Price"
 msgstr "Narx"
@@ -2554,6 +2656,7 @@ msgstr "Muhimlik darajasi"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -2567,12 +2670,6 @@ msgstr "Mahsulot"
 #, fuzzy
 msgid "Product Category"
 msgstr "Mahsulot toifasi"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
-#, fuzzy
-msgid "Product Description"
-msgstr "Mahsulot tavsifi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2597,6 +2694,11 @@ msgstr "Mahsulot o‘lchov birligi narxi"
 #, fuzzy
 msgid "Product Uom Qty"
 msgstr "Mahsulot o‘lchov birligi miqdori"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
+msgid "Product Uom Qty To Invoice"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2710,11 +2812,22 @@ msgstr ""
 "Xarid qatori va yetkazib beruvchi hisob-faktura qatori mosligi ko‘rinishi"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
+msgid "Purchase Matched Ratio"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, fuzzy
 msgid "Purchase Matching"
 msgstr "Xarid moslashtirish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
+msgid "Purchase Matching Issue Msg"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -2739,6 +2852,7 @@ msgstr "Xarid moslashtirish"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 #, fuzzy
 msgid "Purchase Order"
 msgstr "Xarid buyurtmasi"
@@ -2771,12 +2885,14 @@ msgstr "Xarid buyurtmalari soni"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 #, fuzzy
 msgid "Purchase Order Line"
 msgstr "Xarid buyurtmasi qatori"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 #, fuzzy
 msgid "Purchase Order Lines"
@@ -2911,22 +3027,17 @@ msgid "Purchased"
 msgstr "Xarid qilingan"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
+"orders not received, or partially received"
 msgstr ""
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 #, fuzzy
@@ -2974,6 +3085,16 @@ msgid "Qty Received"
 msgstr "Qabul qilingan miqdor"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
+msgid "Qty not invoiced"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "Qty to Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 #, fuzzy
 msgid "Qty to be Billed"
@@ -2981,14 +3102,15 @@ msgstr "Hisoblanishi kerak bo‘lgan miqdor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #, fuzzy
 msgid "Qty to invoice"
 msgstr "Hisob-faktura qilinishi kerak bo‘lgan miqdor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #, fuzzy
 msgid "Quantity"
@@ -3048,6 +3170,11 @@ msgstr "Narx so‘rovi %s bilan birlashtirildi"
 #, fuzzy
 msgid "RFQs and Purchases"
 msgstr "Narx so‘rovlari va xaridlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
+msgid "Rate"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -3130,6 +3257,7 @@ msgid "Reference"
 msgstr "Havola"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
 msgstr ""
@@ -3569,6 +3697,16 @@ msgid "Tax Country"
 msgstr "Soliq mamlakati"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
+msgid "Tax Excl."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
+msgid "Tax Incl."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 #, fuzzy
 msgid "Tax Totals"
@@ -3804,6 +3942,12 @@ msgid "To Approve"
 msgstr "Tasdiqlash uchun"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
+msgid "To Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 #, fuzzy
 msgid "To Invoice Quantity"
@@ -3853,6 +3997,7 @@ msgstr "Umumiy miqdor"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #, fuzzy
 msgid "Total Untaxed"
 msgstr "Jami soliqsiz"
@@ -3928,7 +4073,9 @@ msgstr "Birlik"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #, fuzzy
 msgid "Unit Price"
@@ -3966,6 +4113,16 @@ msgid "Unlock"
 msgstr "Qulfni ochish"
 
 #. module: purchase
+#: model:ir.actions.server,name:purchase.action_unmatch_lines
+msgid "Unmatch"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
+msgid "Unmatched"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
@@ -3990,6 +4147,12 @@ msgstr "Soliqsiz summa"
 #, fuzzy
 msgid "Untaxed Total"
 msgstr "Soliqsiz jami"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+msgid "Update"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -4038,8 +4201,10 @@ msgstr "Variantlar jadvali yozuvi"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -4066,6 +4231,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_view_form_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #, fuzzy
 msgid "Vendor Bills"
@@ -4078,6 +4244,18 @@ msgid "Vendor Country"
 msgstr "Yetkazib beruvchi mamlakati"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
+msgid "Vendor Incoterm"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
+msgid "Vendor Incoterm Location"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #, fuzzy
 msgid "Vendor Pricelists"
@@ -4085,6 +4263,7 @@ msgstr "Yetkazib beruvchi narxlari"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #, fuzzy
 msgid "Vendor Reference"
 msgstr "Yetkazib beruvchi havolasi"
@@ -4174,18 +4353,6 @@ msgstr "Xarid buyurtmalari va hisob-fakturalar bo‘yicha ogohlantirish"
 #, fuzzy
 msgid "Warnings"
 msgstr "Ogohlantirishlar"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-saytning aloqa tarixi"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -4307,18 +4474,16 @@ msgid "e.g. This vendor is on vacation until the end of August."
 msgstr "masalan, Ushbu sotuvchi avgust oyining oxirigacha ta'tilda."
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+msgid "id"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 #, fuzzy
 msgid "or create new"
 msgstr "yoki yangisini yaratish"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/account_invoice.py:0
-#: code:addons/purchase/models/purchase_order.py:0
-#, fuzzy
-msgid "partner_id"
-msgstr "hamkor_id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -4386,7 +4551,3 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Communication history"
-#~ msgstr "Muloqot tarixi"

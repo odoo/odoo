@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2026-02-28 13:30+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -329,16 +329,6 @@ msgid ""
 msgstr "연체된 청구서가 다른 통화로 되어 있는 경우 모두 결제할 수 없습니다."
 
 #. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"테스트 모드에서는 테스트 결제용 인터페이스를 통해서 결제를 가짜로 처리합니"
-"다.\n"
-"공급업체 설정 시 이 모드를 사용하시는 것이 좋습니다."
-
-#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
 msgstr "청구 대금 온라인 결제"
@@ -623,11 +613,6 @@ msgid "Source Payment"
 msgstr "원본 결제"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "시/도"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -758,13 +743,9 @@ msgstr "금지된 거래"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 수단은 삭제할 수 없습"
-"니다. \n"
-"연결되어 있는 업체: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -780,11 +761,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"전표 삭제 전에 먼저 결제대행업체를 비활성화해야 합니다.\n"
-"연결되어 있는 업체: %s"
 
 #. module: account_payment
 #. odoo-javascript

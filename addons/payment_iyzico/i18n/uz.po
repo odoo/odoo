@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,6 +30,11 @@ msgid "API Key"
 msgstr ""
 
 #. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_iyzico
 #. odoo-python
 #: code:addons/payment_iyzico/models/payment_transaction.py:0
 #, fuzzy
@@ -39,6 +44,16 @@ msgid ""
 msgstr ""
 "To‘lovingizni qayta ishlashda xatolik yuz berdi (kod %(code)s: %"
 "(explanation)s). Iltimos, qaytadan urinib ko‘ring."
+
+#. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_bank_transfer
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_card
+msgid "Card"
+msgstr ""
 
 #. module: payment_iyzico
 #: model:ir.model.fields,field_description:payment_iyzico.field_payment_provider__code
@@ -77,6 +92,11 @@ msgid "Iyzico Secret Key"
 msgstr ""
 
 #. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_iyzico
 #: model:ir.model,name:payment_iyzico.model_payment_provider
 #, fuzzy
 msgid "Payment Provider"
@@ -109,8 +129,18 @@ msgid "The technical code of this payment provider."
 msgstr "Ushbu to‘lov provayderining texnik kodi."
 
 #. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_troy
+msgid "Troy"
+msgstr ""
+
+#. module: payment_iyzico
 #. odoo-python
 #: code:addons/payment_iyzico/models/payment_transaction.py:0
 #, fuzzy
 msgid "Unknown status code: %s"
 msgstr "Noma'lum holat kodi: %s"
+
+#. module: payment_iyzico
+#: model:payment.method,name:payment_iyzico.payment_method_visa
+msgid "VISA"
+msgstr ""

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-04-30 07:37+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -74,7 +74,7 @@ msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
 msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>全ての採用情報"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
@@ -377,8 +377,14 @@ msgstr "当社製品について"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__display_name
 msgid "Display Name"
 msgstr "表示名"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
+msgid "Drag blocks here to add them on all jobs"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -492,6 +498,7 @@ msgstr "応募"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__id
 msgid "ID"
 msgstr "ID"
 
@@ -507,7 +514,7 @@ msgid "Industries Filter"
 msgstr "インダストリーフィルタ"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "Insert a Job Description..."
 msgstr "職務記述書を挿入"
 
@@ -578,7 +585,7 @@ msgstr "全セールスサイクルの指導"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "LinkedIn Profile"
 msgstr "LinkedIn プロファイル"
 
@@ -617,6 +624,14 @@ msgstr "次の検索結果が見つかりませんでした: 「"
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr "企業プロセス、真の責任、自律性に無駄はありません"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/website_published_multi_mixin.py:0
+msgid ""
+"No website found for the company. Please create a website for this company "
+"to be able to open the job offer on the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -671,7 +686,7 @@ msgstr "パークス"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Phone Number"
 msgstr "電話番号"
 
@@ -679,18 +694,6 @@ msgstr "電話番号"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr "同僚と好きなスポーツを楽しみましょう。<br>費用を会社が負担します。"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr "重複の可能性が検出されました: 進行中のアプリケーション"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Refused Application"
-msgstr "重複の可能性が検出されました: 拒否されたアプリケーション"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -793,7 +796,7 @@ msgstr "求人情報を共有"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Short Introduction"
 msgstr "短い紹介"
 
@@ -828,26 +831,6 @@ msgstr "強い分析スキル"
 #: model:website.page,name:website_hr_recruitment.thankyou
 msgid "Thank you (Recruitment)"
 msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following ongoing applications share an email address, phone number and/"
-"or linkedin profile with this application:"
-msgstr ""
-"以下の進行中のアプリケーションは、このアプリケーションとメールアドレス、電話"
-"番号、および/またはLinkedInプロフィールを共有しています："
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following recently refused applications share an email address, phone "
-"number and/or linkedin profile with this application:"
-msgstr ""
-"以下の最近却下された申請は、本申請とメールアドレス、電話番号、および/または"
-"LinkedInプロフィールを共有しています："
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
@@ -951,6 +934,11 @@ msgid "Website Absolute URL"
 msgstr "ウェブサイト絶対URL"
 
 #. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_published_multi_mixin
+msgid "Website Published Mixin"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "ウェブサイト採用情報フォーム"
@@ -1007,13 +995,13 @@ msgstr "<b>連絡先</b>情報:"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Email"
 msgstr "Eメール"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Name"
 msgstr "お名前"
 
@@ -1056,16 +1044,16 @@ msgid "job URL"
 msgstr "求人情報URL"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open position"
 msgstr "募集中の職種"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open positions"
 msgstr "募集職種"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "scheduled"
 msgstr "スケジュール済"

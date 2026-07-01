@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2025-11-14 15:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -29,10 +29,90 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_ach_direct_debit
+msgid "ACH Direct Debit"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_affirm
+msgid "Affirm"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_afterpay
+msgid "Afterpay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_alipay
+msgid "Alipay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_alma
+msgid "Alma"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_amazon_pay
+msgid "Amazon Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_apple_pay
+msgid "Apple Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_bacs_direct_debit
+msgid "BACS Direct Debit"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_becs_direct_debit
+msgid "BECS Direct Debit"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_bancontact
+msgid "Bancontact"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_boleto
+msgid "Boleto"
+msgstr ""
+
+#. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/payment_form.js:0
 msgid "Cannot display the payment form"
 msgstr "No es pot mostrar el formulari de pagament"
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_cartes_bancaires
+msgid "Cartes Bancaires"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_cash_app_pay
+msgid "Cash App Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_clearpay
+msgid "Clearpay"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -41,14 +121,24 @@ msgstr "Codi"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
-msgid "Connect Stripe"
-msgstr "Connecta Stripe"
+msgid "Connect"
+msgstr ""
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/express_checkout.js:0
 msgid "Delivery"
 msgstr "Lliurament"
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__display_name
@@ -58,9 +148,24 @@ msgid "Display Name"
 msgstr "Nom mostrat"
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_eps
+msgid "EPS"
+msgstr ""
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
 msgstr "Habilitar Apple Pay"
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_unknown
+msgid "Express Checkout"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_fpx
+msgid "FPX"
+msgstr ""
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -77,6 +182,16 @@ msgstr "Genera el teu webhook"
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
 msgstr "Obteniu les vostres claus secretes i publicables"
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_google_pay
+msgid "Google Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_grabpay
+msgid "GrabPay"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__id
@@ -102,9 +217,44 @@ msgid "Incorrect payment details"
 msgstr ""
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_klarna
+msgid "Klarna"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_mobile_pay
+msgid "MobilePay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_multibanco
+msgid "Multibanco"
+msgstr ""
+
+#. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Other Payment Providers"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_p24
+msgid "P24"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_paynow
+msgid "PayNow"
 msgstr ""
 
 #. module: payment_stripe
@@ -134,10 +284,25 @@ msgid "Payment processing failed"
 msgstr "Error en processar el pagament"
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_paypal
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_pix
+msgid "Pix"
+msgstr ""
+
+#. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Please use live credentials to enable Apple Pay."
 msgstr "Si us plau, utilitzeu les credencials actuals per habilitar Apple Pay."
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_promptpay
+msgid "Prompt Pay"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -155,6 +320,21 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with missing intent status."
 msgstr "S'han rebut dades amb l'estat d'intent que manquen."
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_revolut_pay
+msgid "Revolut Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_sepa_direct_debit
+msgid "SEPA Direct Debit"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_satispay
+msgid "Satispay"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
@@ -187,6 +367,11 @@ msgid "Stripe Payment Method ID"
 msgstr "ID del mètode de pagament Stripe"
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_swish
+msgid "Swish"
+msgstr ""
+
+#. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "The customer left the payment page."
@@ -211,15 +396,45 @@ msgid "The technical code of this payment provider."
 msgstr "El codi tècnic d'aquest proveïdor de pagaments."
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_twint
+msgid "Twint"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_upi
+msgid "UPI"
+msgstr ""
+
+#. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_token.py:0
 msgid "Unable to convert payment token to new API."
 msgstr "No es pot convertir el token de pagament a la nova API."
 
 #. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_wechat_pay
+msgid "WeChat Pay"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
 msgstr "Secret de la signatura del webhook"
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_wero_brand
+msgid "Wero"
+msgstr ""
 
 #. module: payment_stripe
 #. odoo-python
@@ -240,15 +455,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid ""
-"You cannot set the provider state to Enabled until your onboarding to Stripe "
-"is completed."
+"You cannot set the provider to live mode until your onboarding to Stripe is "
+"completed."
 msgstr ""
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid ""
-"You cannot set the provider to Test Mode while it is linked with your Stripe "
+"You cannot set the provider to test mode while it is linked with your Stripe "
 "account."
 msgstr ""
 
@@ -268,4 +483,15 @@ msgstr "La vostra comanda"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Your web domain was successfully verified."
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_zip
+msgid "Zip"
+msgstr ""
+
+#. module: payment_stripe
+#: model:payment.method,name:payment_stripe.payment_method_ideal
+#: model:payment.method,name:payment_stripe.payment_method_ideal_brand
+msgid "iDEAL"
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-06-30 00:52+0000\n"
 "PO-Revision-Date: 2026-04-23 11:51+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -39,18 +39,78 @@ msgid "%(weight_capacity)s %(weight_uom)s"
 msgstr "%(weight_capacity)s%(weight_uom)s"
 
 #. module: stock_fleet
-#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_kanban
+#: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr
+#: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr_batch
+msgid "'CMR - %s' % (object.name)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid "<b>In:</b>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid "<b>on:</b>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid ""
+"<br/>\n"
+"                                                            <span class=\"fw-"
+"bold invisible\">Address: </span>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid ""
+"<br/>\n"
+"                                            <span class=\"fw-bold "
+"invisible\">Address: </span>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid ""
+"<br/>\n"
+"                                        <span class=\"fw-bold "
+"invisible\">Address: </span><br/>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
 msgid "<i class=\"fa fa-cubes text-primary me-2\" title=\"Location\"/>"
 msgstr ""
 
 #. module: stock_fleet
-#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
 msgid "<i class=\"fa fa-long-arrow-right mx-2\" title=\"Arrow\"/>"
 msgstr ""
 
 #. module: stock_fleet
-#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
 msgid "<i class=\"fa fa-truck text-primary me-2\" title=\"Vehicle\"/>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid ""
+"<span class=\"d-block\">CMR INTERNATIONAL CONSIGNMENT NOTE</span>\n"
+"                                    <span class=\"d-block\">This carriage is "
+"subject notwithstanding any clause to the contrary, to the convention on the "
+"contact for the international carriage of goods by road (CMR)</span>\n"
+"                                    <br/>"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid "<span class=\"fs-6 me-1 align-middle\">☐</span>Freight paid"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid "<span class=\"fs-6 me-1 align-middle\">☐</span>Freight to be paid"
 msgstr ""
 
 #. module: stock_fleet
@@ -80,8 +140,28 @@ msgid "<strong>Vehicle:</strong>"
 msgstr "<strong>车辆</strong>："
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+msgid "ADR"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Address"
+msgstr ""
+
+#. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
 msgid "Allowed Docks"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Annexed documents"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Balance"
 msgstr ""
 
 #. module: stock_fleet
@@ -96,14 +176,99 @@ msgid "Batches by Route"
 msgstr "按路线划分批次"
 
 #. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr_batch
+msgid "CMR Batch Report"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "CMR INTERNATIONAL CONSIGNMENT NOTE"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr
+msgid "CMR Report"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Calendar"
 msgstr "日历"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Carriage charges"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Carrier (name, address, country)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Carrier's reservations and observations"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Cash on delivery"
+msgstr ""
+
+#. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_fleet_vehicle_model_category
 msgid "Category of the model"
 msgstr "模型的类别"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Class"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Consignee"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Consignee (name, address, country)"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.actions.report,name:stock_fleet.action_report_cmr
+#: model:ir.actions.report,name:stock_fleet.action_report_cmr_batch
+msgid "Consignment Note (CMR)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Copy for the carrier"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Copy for the consignee"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Copy for the sender"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Date"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Directions as to freight payment"
+msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
@@ -113,6 +278,8 @@ msgstr "调度管理"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
@@ -160,12 +327,34 @@ msgid "End Date"
 msgstr "结束日期"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Established in / on"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Freight paid"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Freight to be paid"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_graph
 msgid "Graph View"
 msgstr "图表视图"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Gross weight kg"
+msgstr ""
+
+#. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
+#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr__id
+#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
@@ -174,9 +363,26 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Letter"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Loading list of products"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Manage Batches"
 msgstr "管理批次"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Marks and Nos."
+msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
@@ -194,9 +400,40 @@ msgid "Max Weight"
 msgstr "最大重量"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Method of packing"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Miscellaneous"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Name"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Nature of the goods"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Next 7 Days"
 msgstr "之后 7 天"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Number"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Number of packages"
+msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -214,9 +451,51 @@ msgid "Picking Type"
 msgstr ""
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Place and date of taking over the goods (place, country, date)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Place of delivery of the goods (place, country)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Reductions"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+msgid "Reference No."
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Scheduled Date"
 msgstr "安排的日期"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "See the attached loading list of products"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Sender"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Sender (name, address, country)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Sender's instructions (customs and other formalities)"
+msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -234,9 +513,44 @@ msgid "Shipping Weight"
 msgstr "运输重量"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Signature and stamp of the carrier"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Signature and stamp of the consignee"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Signature and stamp of the sender"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Special agreements"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Statistical No."
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Statistics"
 msgstr "统计"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Successive carriers (name, address, country)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Supplement charges"
+msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -247,6 +561,29 @@ msgstr "第三方承运商"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Third Party Provider"
 msgstr "第三方供应商"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid ""
+"This carriage is subject notwithstanding any clause to the contrary, to the "
+"convention on the contact for the international carriage of goods by road "
+"(CMR)"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Time of arrival"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Time of departure"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "To be paid by"
+msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -267,6 +604,23 @@ msgstr "运输体积总量"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Total Shipping Weight"
 msgstr "运输重量总量"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Total to be paid"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Tractor licence plate"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_document
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Trailer licence plate"
+msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
@@ -311,6 +665,11 @@ msgid "Volume %"
 msgstr "体积 %"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
+msgid "Volume m³"
+msgstr ""
+
+#. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__volume_uom_name
 msgid "Volume unit of measure label"
@@ -341,6 +700,11 @@ msgstr "重量单位标签"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__zip
 msgid "Zip"
 msgstr "邮政编码"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_goods_table
+msgid "of"
+msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form

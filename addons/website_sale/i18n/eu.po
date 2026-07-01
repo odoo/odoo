@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-06-30 00:49+0000\n"
 "PO-Revision-Date: 2016-02-14 14:36+0000\n"
 "Last-Translator: ibinka lete <ilete@fpbidasoa.net>\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
@@ -26,8 +26,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"%(product_name)s has not been added to your cart since it is not available."
+msgid "%(product_name)s was not added to your cart because it is unavailable."
 msgstr ""
 
 #. module: website_sale
@@ -583,6 +582,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "<span class=\"fw-bold fs-5 w-100\">Donate</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -656,6 +660,35 @@ msgid ""
 "                                    <i class=\"fa fa-truck fa-fw o_not-"
 "animable\"/> Fast Shipping\n"
 "                                </span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "<span class=\"s_donation_currency pe-1\">$</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
 msgstr ""
 
 #. module: website_sale
@@ -768,12 +801,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "<strong>Total</strong>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-msgid "<strong>Warning!</strong>"
 msgstr ""
 
 #. module: website_sale
@@ -1222,6 +1249,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "A year of cultural awakening."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Abandoned"
 msgstr ""
@@ -1321,6 +1353,12 @@ msgid "Active"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
@@ -1333,9 +1371,10 @@ msgid "Add More"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
-#: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
-msgid "Add To Cart Action"
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option_plugin.js:0
+msgid "Add a description here"
 msgstr ""
 
 #. module: website_sale
@@ -1380,10 +1419,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product/product.xml:0
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add to Cart"
 msgstr ""
 
@@ -1426,13 +1464,16 @@ msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_address
 #: model:website.checkout.step,name:website_sale.checkout_step_delivery
 msgid "Address"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
-msgid "Address Autocomplete"
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__alerts
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__alerts
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__alerts
+msgid "Alerts"
 msgstr ""
 
 #. module: website_sale
@@ -1517,6 +1558,14 @@ msgid "Alternative Products"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "Amount"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
 msgstr ""
@@ -1543,6 +1592,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
 msgstr "Aplikatu"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+msgid "Apply Filters"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1843,7 +1897,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Buy Now"
 msgstr ""
@@ -1897,6 +1951,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Cards Design"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "Caring for a baby for 1 month."
 msgstr ""
 
 #. module: website_sale
@@ -2044,6 +2103,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Choose Your Amount"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Choose one pre-made preset and customise it as you wish"
 msgstr ""
@@ -2096,6 +2161,12 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click here to go back to block tab."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
 msgstr ""
 
@@ -2103,6 +2174,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on <em>Save</em> to create the product."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Content</b> category."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+msgid "Click on the <b>Text - Image</b> building block."
 msgstr ""
 
 #. module: website_sale
@@ -2118,8 +2201,9 @@ msgid "Clickable items"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/components/alert_banner/alert_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Close"
 msgstr ""
@@ -2186,7 +2270,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Company Name"
 msgstr ""
 
@@ -2445,6 +2529,18 @@ msgid "Current Category or All"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "Custom Amount"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "Custom amount"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer"
 msgstr ""
@@ -2527,6 +2623,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Default Amount"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Default Color"
 msgstr ""
@@ -2541,6 +2643,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Default Sort"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
+#: model:ir.model.fields,field_description:website_sale.field_website__journal_id
+msgid "Default Website Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Default accounting journal for online orders"
 msgstr ""
 
 #. module: website_sale
@@ -2586,6 +2699,11 @@ msgid "Delete Ribbon"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
+msgid "Deliveries"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2620,11 +2738,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
-msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale
@@ -2666,6 +2779,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Descriptions"
 msgstr ""
 
 #. module: website_sale
@@ -2802,6 +2921,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
@@ -2811,6 +2931,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Izena erakutsi"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Display Options"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2857,6 +2983,41 @@ msgstr ""
 #: code:addons/website_sale/models/product_document.py:0
 msgid ""
 "Documents shown on product page cannot be restricted to a specific variant"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
+msgid "Donate"
+msgstr ""
+
+#. module: website_sale
+#: model:product.template,name:website_sale.product_donation
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Donation"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
+msgid "Donation product not found."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "Donation products cannot be archived."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "Donation products cannot be deleted."
+msgstr ""
+
+#. module: website_sale
+#: model:product.category,name:website_sale.product_category_donations
+msgid "Donations"
 msgstr ""
 
 #. module: website_sale
@@ -3008,11 +3169,6 @@ msgid "Email"
 msgstr "Emaila"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
-msgid "Embed Code"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
@@ -3038,6 +3194,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_dynamic_snippet_categories/dynamic_snippet_category.js:0
 msgid "Explore Now"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
+msgid "External Identifier"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
+msgid ""
+"External Identifier will ensure a precise matching between your attributes "
+"and attributes in SEO and other external platforms."
 msgstr ""
 
 #. module: website_sale
@@ -3080,9 +3248,8 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__website_sequence_asc
 msgid "Featured"
 msgstr ""
 
@@ -3120,6 +3287,16 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by in stock products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "Filter by on sale products"
 msgstr ""
 
 #. module: website_sale
@@ -3368,24 +3545,6 @@ msgid "Go to Products Manager"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
-msgid "Go to cart"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/wishlist_tour_utils.js:0
-msgid "Go to wishlist"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Google Address Validation"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
 #: model:ir.model.fields.selection,name:website_sale.selection__product_feed__target__gmc
 msgid "Google Merchant Center"
@@ -3539,6 +3698,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__id
 #: model:ir.model.fields,field_description:website_sale.field_website__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__id
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_page__id
@@ -3676,6 +3836,11 @@ msgid "In accordion"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "In stock"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "In your wishlist"
 msgstr ""
@@ -3698,6 +3863,12 @@ msgid "Inline"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Input"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Instagram"
 msgstr ""
@@ -3712,12 +3883,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "Invalid Email"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid category."
 msgstr ""
 
 #. module: website_sale
@@ -3766,7 +3931,17 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__is_donation
+msgid "Is Donation"
 msgstr ""
 
 #. module: website_sale
@@ -3804,6 +3979,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Journal"
 msgstr ""
 
 #. module: website_sale
@@ -4047,6 +4227,11 @@ msgid "Main Image"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation
+msgid "Make a Donation"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage feeds"
 msgstr ""
@@ -4064,6 +4249,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__manual
 msgid "Manually"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Maximum"
 msgstr ""
 
 #. module: website_sale
@@ -4109,6 +4300,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Minimal Cards"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Minimum"
 msgstr ""
 
 #. module: website_sale
@@ -4198,9 +4395,8 @@ msgstr "Izena"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__name_asc
 msgid "Name (A-Z)"
 msgstr ""
 
@@ -4255,9 +4451,8 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr ""
 
@@ -4287,14 +4482,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"No delivery method is available for your current order and shipping address. "
-"Please contact us for more information."
 msgstr ""
 
 #. module: website_sale
@@ -4342,6 +4529,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
@@ -4455,6 +4643,11 @@ msgid "On Sale"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
+msgid "On sale"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
 msgid "On the website original price is crossed out."
 msgstr ""
@@ -4474,6 +4667,16 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, etc.)"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "One year in elementary school."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
+msgid "One year in high school."
 msgstr ""
 
 #. module: website_sale
@@ -4719,13 +4922,8 @@ msgid "Payment"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
-msgid "Payment Methods"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
-msgid "Payment Providers"
+#: model:website.checkout.step,name:website_sale.checkout_step_confirmation
+msgid "Payment Confirmation"
 msgstr ""
 
 #. module: website_sale
@@ -4734,18 +4932,8 @@ msgid "Payment Token"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
-msgid "Payment Tokens"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
-msgid "Payment Transactions"
 msgstr ""
 
 #. module: website_sale
@@ -4761,6 +4949,11 @@ msgid "Payment was not successful, please try again."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
+msgid "Payments"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
@@ -4768,7 +4961,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Phone Number"
 msgstr ""
 
@@ -4791,6 +4984,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
+msgid "Please select or enter an amount"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__4_5
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio_mobile__4_5
@@ -4807,14 +5006,14 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
-msgid "Preset"
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Pre-filled Options"
 msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
-msgid "Presets"
+msgid "Preset"
 msgstr ""
 
 #. module: website_sale
@@ -4855,17 +5054,15 @@ msgstr "Price"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_desc
 msgid "Price - High to Low"
 msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_asc
 msgid "Price - Low to High"
 msgstr ""
 
@@ -4918,6 +5115,12 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Prices have changed. Please review your cart."
 msgstr ""
 
 #. module: website_sale
@@ -5724,6 +5927,7 @@ msgid "Salesperson"
 msgstr "Salesperson"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_and_ribbon
 msgid "Sample"
 msgstr ""
@@ -5756,8 +5960,6 @@ msgid "Search globally"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-#: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in {{0}}"
 msgstr ""
@@ -5911,6 +6113,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/product_template.py:0
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6041,6 +6244,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Show Empty"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__show_in_breadcrumb
+msgid "Show In Breadcrumb"
 msgstr ""
 
 #. module: website_sale
@@ -6178,11 +6386,22 @@ msgstr "Y tamaina"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Slider"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_roundness__small
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__small
 msgid "Small"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_donation
+msgid "Small or large, your contribution is essential."
 msgstr ""
 
 #. module: website_sale
@@ -6201,12 +6420,6 @@ msgstr ""
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Sorry, we are unable to ship your order."
 msgstr ""
 
 #. module: website_sale
@@ -6273,8 +6486,9 @@ msgid "Status"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
-msgid "Stay on Product Page"
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+msgid "Step"
 msgstr ""
 
 #. module: website_sale
@@ -6482,7 +6696,9 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
-msgid "The delivery method is not compatible with your delivery address."
+msgid ""
+"The estimated delivery date was no longer possible. We apologize for any "
+"inconvenience."
 msgstr ""
 
 #. module: website_sale
@@ -6543,6 +6759,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
+msgid "The minimum donation amount is %(amount)s"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new "
@@ -6568,9 +6790,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The selected delivery date is no longer available. Please pick another "
+"The selected delivery date was no longer available. Please pick another "
 "delivery date."
 msgstr ""
 
@@ -6667,8 +6889,16 @@ msgid "This product has no valid combination."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
 msgstr ""
 
 #. module: website_sale
@@ -6831,6 +7061,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Unfortunately, the delivery method that you selected is no longer available. "
+"Please update your choice. We apologize for any inconvenience."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "Unfortunately, there is no longer enough stock to fulfill your order."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
 msgid "Unfulfilled Orders"
 msgstr ""
@@ -6875,11 +7119,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__url
 msgid "Url"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Use Google Places API to validate addresses"
 msgstr ""
 
 #. module: website_sale
@@ -7027,14 +7266,6 @@ msgid "Wardrobes"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
-msgid "Warning"
-msgstr ""
-
-#. module: website_sale
 #: model:product.template,name:website_sale.product_product_1_product_template
 msgid "Warranty"
 msgstr ""
@@ -7101,6 +7332,11 @@ msgid "Website Category"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_alert_mixin
+msgid "Website Checkout Alert Mixin"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
 msgstr ""
@@ -7108,12 +7344,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
-msgid "Website Messages"
 msgstr ""
 
 #. module: website_sale
@@ -7156,12 +7386,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_feed__website_message_ids
-#: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: website_sale
@@ -7208,11 +7432,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
 msgid "Websites"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "What should be done on \"Add to Cart\"?"
 msgstr ""
 
 #. module: website_sale
@@ -7321,21 +7540,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order_line.py:0
-msgid ""
-"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
-"available"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is available."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "You can compare up to 4 products at a time."
@@ -7359,6 +7563,22 @@ msgid "You don't have any order to invoice from the website"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid ""
+"You requested %(desired)g %(product_name)s, but only %(available)g are "
+"available in stock."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available "
+"in stock."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
@@ -7373,19 +7593,26 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Your Email"
 msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Your Name"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your billing address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
 msgid "Your cart is empty!"
 msgstr ""
 
@@ -7396,14 +7623,16 @@ msgid "Your cart is empty."
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "Your cart is not ready to be paid, please verify previous steps."
+#: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
+msgid "Your cart is waiting"
 msgstr ""
 
 #. module: website_sale
-#: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
-msgid "Your cart is waiting"
+#. odoo-python
+#: code:addons/website_sale/models/website_checkout_step.py:0
+msgid ""
+"Your delivery address appears to be incomplete or invalid. Please ensure all "
+"required fields are correctly filled and try again."
 msgstr ""
 
 #. module: website_sale
@@ -7597,26 +7826,8 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price asc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price desc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "name asc"
 msgstr ""
 
 #. module: website_sale
@@ -7678,9 +7889,8 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "publish_date desc"
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "slide"
 msgstr ""
 
 #. module: website_sale

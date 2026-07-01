@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-06-30 00:50+0000\n"
 "PO-Revision-Date: 2026-01-16 06:54+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -212,7 +212,7 @@ msgstr "读取网页时发生错误。"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Angle"
 msgstr ""
 
@@ -321,6 +321,12 @@ msgstr "横幅 - 警告"
 #: model:ir.model,name:html_editor.model_base
 msgid "Base"
 msgstr "基数"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Basic Block"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -449,6 +455,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "关闭"
@@ -474,7 +481,7 @@ msgstr "代码视图"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Colors"
 msgstr ""
 
@@ -504,7 +511,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Conic"
 msgstr ""
 
@@ -598,7 +605,8 @@ msgstr "裁剪图片"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/custom/color_picker_custom_tab.js:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 #: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Custom"
 msgstr "自定义"
@@ -624,7 +632,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.xml:0
 msgid "Define a custom gradient"
 msgstr "定义一个自定义渐变"
 
@@ -721,6 +729,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed %s Video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Embed Image"
 msgstr "嵌入图像"
@@ -730,6 +744,12 @@ msgstr "嵌入图像"
 #: code:addons/html_editor/static/src/main/youtube_plugin.js:0
 msgid "Embed Youtube Video"
 msgstr "嵌入油管视频"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
+msgid "Embed the %s video in the document."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -763,25 +783,25 @@ msgstr "展开工具栏"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest corner"
 msgstr "延伸到最近的角落"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the closest side"
 msgstr "延伸到最近的一侧"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest corner"
 msgstr "延伸到最远的角落"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Extend to the farthest side"
 msgstr "延伸到最远的一侧"
 
@@ -835,7 +855,13 @@ msgstr "格式"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Google Drive"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/gradient/color_picker_gradient_tab.js:0
 msgid "Gradient"
 msgstr "渐变"
 
@@ -976,6 +1002,12 @@ msgstr ""
 #. module: html_editor
 #: model:ir.model,name:html_editor.model_html_editor_converter_test
 msgid "Html Editor Converter Test"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Hue"
 msgstr ""
 
 #. module: html_editor
@@ -1157,9 +1189,15 @@ msgstr "插入右边"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
+msgid "Insert your email signature"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
-msgid "Insert your signature"
-msgstr "插入您的签名"
+msgid "Insert your handwritten signature"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1210,7 +1248,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Linear"
 msgstr ""
 
@@ -1262,6 +1300,12 @@ msgstr "登出"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Loom"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Loop"
 msgstr "循环"
@@ -1269,7 +1313,7 @@ msgstr "循环"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
-msgid "MM:SS"
+msgid "M:SS"
 msgstr ""
 
 #. module: html_editor
@@ -1311,6 +1355,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "缺少文件"
@@ -1433,6 +1478,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
+#: code:addons/html_editor/static/src/main/table/table_border_style_selector.xml:0
 msgid "None"
 msgstr ""
 
@@ -1492,11 +1538,18 @@ msgstr "哎呀，看来我们的人工智能无法连接！"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid ""
 "Oops, the file %s could not be found. Please replace this file box by a new "
 "one to re-upload the file."
 msgstr "哎呀，无法找到文件%s。请用一个新的文件框替换这个文件框，重新上传文件。"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Opacity"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1535,13 +1588,19 @@ msgstr "粘贴为网址"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Pick a color from the screen"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position X"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Position Y"
 msgstr ""
 
@@ -1657,7 +1716,7 @@ msgstr "Qweb 字段文本"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Radial"
 msgstr ""
 
@@ -1682,8 +1741,8 @@ msgstr "移除图片（删除）"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
-msgid "Remove Format"
-msgstr "移除格式"
+msgid "Remove Format (Ctrl + Space)"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1700,13 +1759,12 @@ msgstr "移除栏"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Repeating"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "Replace"
 msgstr "替换"
@@ -1734,6 +1792,12 @@ msgstr "替换图标"
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Replace media"
 msgstr "替换媒体"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/color_picker.xml:0
+msgid "Reset"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1835,6 +1899,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/mobile_table_picker.xml:0
 msgid "Row count"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "Saturation and brightness color picker."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.js:0
+msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
 msgstr ""
 
 #. module: html_editor
@@ -1960,12 +2036,13 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/signature_plugin.js:0
+#: code:addons/html_editor/static/src/main/user_signature_plugin.js:0
 msgid "Signature"
 msgstr "签名"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Size"
 msgstr ""
 
@@ -1981,6 +2058,12 @@ msgstr "小"
 #: code:addons/html_editor/static/src/main/font/font_type_plugin.js:0
 msgid "Small section heading"
 msgstr "小节标题"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/tabs/solid/color_picker_solid_tab.js:0
+msgid "Solid"
+msgstr ""
 
 #. module: html_editor
 #. odoo-python
@@ -2062,6 +2145,24 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border color"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border style"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_border_plugin.js:0
+msgid "Table border width"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
 msgid "Table of Contents"
@@ -2126,12 +2227,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url does not reference any supported video"
 msgstr "提供的网址不存在参考任何支持的视频"
-
-#. module: html_editor
-#. odoo-python
-#: code:addons/html_editor/tools.py:0
-msgid "The provided url is invalid"
-msgstr "提供的网址是无效的"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2285,7 +2380,13 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Twitch"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "Type"
 msgstr ""
 
@@ -2369,6 +2470,15 @@ msgstr "上传的图像格式不被支持。请尝试使用:%s"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid ""
+"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
+"keys to adapt the saturation. Press the Control or Command key at the same "
+"time to have finer control."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Vertical"
 msgstr ""
@@ -2394,7 +2504,7 @@ msgstr "视频播放器"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/custom_media_dialog.js:0
-#: code:addons/html_editor/static/src/main/media/video_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/video/video_plugin.js:0
 msgid "Videos"
 msgstr "视频"
 
@@ -2547,7 +2657,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "deg"
 msgstr "度"
 
@@ -2566,7 +2676,7 @@ msgstr "单据"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
-msgid "dynamic placeholder"
+msgid "dynamic"
 msgstr ""
 
 #. module: html_editor
@@ -2583,6 +2693,12 @@ msgstr "文件"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
+msgid "hex"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "line"
 msgstr ""
@@ -2591,6 +2707,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "or"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "personalize"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "placeholder"
 msgstr ""
 
 #. module: html_editor
@@ -2615,43 +2743,3 @@ msgstr "websocket消息处理"
 #: code:addons/html_editor/static/src/main/table/table_picker.xml:0
 msgid "x"
 msgstr ""
-
-#~ msgid ""
-#~ "'Alt tag' specifies an alternate text for an image, if the image cannot "
-#~ "be displayed (slow connection, missing image, screen reader ...)."
-#~ msgstr ""
-#~ "如果无法显示图像，则'Alt tag' 指定图像的替代文本（连接速度慢，图像丢失，屏"
-#~ "幕阅读器......）。"
-
-#~ msgid "'Title tag' is shown as a tooltip when you hover the picture."
-#~ msgstr "'标题标签' 当您移动鼠标到图片上面悬停的时候显示标记说明."
-
-#~ msgid "Click again to reset transformation"
-#~ msgstr "再次点击可重置转换"
-
-#~ msgid "Description"
-#~ msgstr "描述"
-
-#~ msgid "Edit media description"
-#~ msgstr "编辑媒体描述"
-
-#~ msgid "Set shape: Circle"
-#~ msgstr "设置形状：圆形"
-
-#~ msgid "Set shape: Rounded"
-#~ msgstr "设置形状：圆角"
-
-#~ msgid "Set shape: Shadow"
-#~ msgstr "设置形状：阴影"
-
-#~ msgid "Set shape: Thumbnail"
-#~ msgstr "设置形状：缩略图"
-
-#~ msgid "Tooltip"
-#~ msgstr "工具提示"
-
-#~ msgid "Transform the picture (click twice to reset transformation)"
-#~ msgstr "转换图片（双击重置转换）"
-
-#~ msgid "Select font style"
-#~ msgstr "选择字体样式"
