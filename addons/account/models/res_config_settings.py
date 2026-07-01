@@ -57,6 +57,7 @@ class ResConfigSettings(models.TransientModel):
         required=True,
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
+    vat_disabled = fields.Boolean(string="Not Subject to VAT", related='company_id.vat_disabled', readonly=False)
 
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)

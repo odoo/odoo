@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 class AccountJournal(models.Model):
@@ -65,3 +66,14 @@ class AccountJournal(models.Model):
             ('proxy_type', 'in', self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()),
         ])
         edi_users._peppol_get_message_status()
+
+    def _get_onboarding_action_data(self):
+        self.ensure_one()
+        if self.country_code in PEPPOL_DEFAULT_COUNTRIES:
+            peppol_setup_wizard = self.env['peppol.registration'].create({'company_id': self.company_id.id})
+            peppol_action = peppol_setup_wizard._get_records_action(target='new', name=_("Activate Peppol"))
+            return {
+                'title': _("Activate Peppol"),
+                'action': peppol_action,
+            }
+        return super()._get_onboarding_action_data()

@@ -41,6 +41,12 @@
                             </setting>
                         </block>
                         <block title="Taxes" name="default_taxes_setting_container">
+                            <setting id="vat_disabled_setting"
+                                help="If you are not subject to VAT, you will have no sale taxes and only Non deductible taxes activated"
+                                company_dependent="1"
+                                title="Not Subject to VAT">
+                                <field name="vat_disabled" readonly="has_accounting_entries"/>
+                            </setting>
                             <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied when creating new products."
                                 documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                 <div class="content-group">
@@ -66,7 +72,7 @@
                             </setting>
                             <setting id="avatax_settings" string="AvaTax" help="Automatically compute US and Canadian tax rates."
                                      documentation="/applications/finance/accounting/taxation/taxes/avatax.html"
-                                     invisible="country_code not in ('US', 'CA')" company_dependent="1">
+                                     invisible="vat_disabled or country_code not in ('US', 'CA')" company_dependent="1">
                                 <field name="module_account_avatax" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="eu_service" title="If you sell goods and services to customers in a
@@ -75,11 +81,12 @@
                                 string = "EU Intra-community Distance Selling"
                                 documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html"
                                 help="Apply VAT of the EU country to which goods and services are delivered."
-                                invisible="not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
+                                invisible="vat_disabled or not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
                                 <button type="object" name="action_eu_oss_tax_mapping" icon="fa-refresh" string="OSS Tax mapping" class="btn-link"/>
                             </setting>
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
-                                documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
+                                documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html"
+                                invisible="vat_disabled">
                                 <field name="tax_exigibility"/>
                                 <div class="content-group" invisible="not tax_exigibility" groups="account.group_account_user">
                                     <div class="row mt16">

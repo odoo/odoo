@@ -10,6 +10,10 @@
                     <div>
                         <span class="figure-caption">Never miss a deadline, with automated statements and alerts.</span>
                     </div>
+                    <div invisible="not company_vat_disabled" class="mt-2">
+                        <field name="company_vat_disabled"/>
+                        <span>Not Subject to VAT</span>
+                    </div>
                     <sheet>
                         <group>
                             <field name="company_id" invisible="1"/>  <!-- Otherwise not present in the vals in the create -->

@@ -1336,6 +1336,7 @@
                                                     'active_test': True,
                                                     'dynamic_fiscal_position_id': parent.fiscal_position_id,
                                                }"
+                                               column_invisible="parent.company_vat_disabled"
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="deductible_percentage"
