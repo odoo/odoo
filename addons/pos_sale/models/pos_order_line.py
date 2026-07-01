@@ -27,3 +27,26 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config)
         params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
         return params
+<<<<<<< a991a76192d153c993d6900ea4564b8e667f068e
+||||||| 62b4977f2cc0605a8632475c8217d8cc66684082
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+        orders = self.mapped('order_id')
+        for order in orders:
+            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
+        return super()._launch_stock_rule_from_pos_order_lines()
+=======
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+        orders = self.mapped('order_id')
+        for order in orders:
+            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
+        return super()._launch_stock_rule_from_pos_order_lines()
+
+    def _prepare_refund_data(self, refund_order, PosOrderLineLot):
+        data = super()._prepare_refund_data(refund_order, PosOrderLineLot)
+        data.update({
+            'sale_order_line_id': False,  # Remove the sale order line id to be coherent with frontend refund
+        })
+        return data
+>>>>>>> cffd8cc82456604ba6b74f157380a78cd2e17afc
