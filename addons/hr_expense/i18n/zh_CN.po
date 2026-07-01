@@ -18,16 +18,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-04-04 12:47+0000\n"
+"PO-Revision-Date: 2026-06-10 06:18+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/hr_expense/zh_Hans/>\n"
+"projects/odoo-s19-3/hr_expense/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -38,6 +38,9 @@ msgid ""
 "directly on the expense account, as usual.\n"
 "            "
 msgstr ""
+" - 若已存在应付账款，付款将使用供应商应付账户，以便与应付账款进行匹配。\n"
+"                 - 若不存在应付账款，付款将按惯例直接记入费用账户。\n"
+"            "
 
 #. module: hr_expense
 #. odoo-python
@@ -88,7 +91,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "--<br/>"
-msgstr ""
+msgstr "--<br/>"
 
 #. module: hr_expense
 #. odoo-python
@@ -468,6 +471,8 @@ msgid ""
 "Create prepaid virtual and physical cards for both one-time and recurring "
 "expenses, integrated into Odoo through Stripe Issuing."
 msgstr ""
+"利用整合至 Odoo 的 Stripe Issuing 功能，可以为一次性和经常性支出，建立预付储"
+"值的虚拟或实体开支卡。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -510,7 +515,7 @@ msgstr "汇率"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -661,7 +666,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
 "Enter a name then choose a product and configure the amount of your expense."
-msgstr ""
+msgstr "输入姓名，然后选择产品并配置费用金额。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
@@ -1812,6 +1817,9 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"向此邮箱别名发送一封附有收据的邮件，即可一键创建费用单。如果邮件主题的首个单"
+"词包含产品的内部参考号或产品名称，系统将自动设置对应的产品。在邮件主题中输入"
+"费用金额，该金额也会自动填入费用单中。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -2013,7 +2021,7 @@ msgstr ""
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
-msgstr ""
+msgstr "邮件标题首字段未匹配到任何产品编码，请在费用单据上手动选定产品。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2175,6 +2183,9 @@ msgid ""
 "Reach out to the administrators, flash your best smile, and see if they'll "
 "grant you the magical access you seek."
 msgstr ""
+"哎呀！您无法编辑此笔费用。\n"
+"\n"
+"请联系管理员，露出最灿烂的笑容，看看他们能否向您授予神奇的访问权限。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id

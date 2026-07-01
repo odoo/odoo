@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-05-06 14:30+0000\n"
+"PO-Revision-Date: 2026-06-10 10:13+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "fr/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -67,7 +67,7 @@ msgstr "# de commandes clients"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
 msgid "% Delivered"
-msgstr ""
+msgstr "% Livré"
 
 #. module: sale
 #. odoo-python
@@ -1091,6 +1091,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Selon la configuration du produit, la quantité livrée peut être calculée "
+"automatiquement selon le mécanisme suivant :\n"
+"- Manuel : la quantité est définie manuellement sur la ligne\n"
+"- Analytique à partir des notes de frais : la quantité correspond à la somme "
+"des quantités des notes de frais comptabilisées\n"
+"- Feuilles de temps : la quantité correspond à la somme des heures "
+"enregistrées sur les tâches liées à cette ligne\n"
+"- Mouvements de stock : la quantité provient des transferts confirmés\n"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1200,7 +1208,7 @@ msgstr "Ajouter plusieurs variantes à une commande à partir d'une grille"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "Ajouter à la commande"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1388,11 +1396,16 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.\n"
 "If you want to change it, please archive the product and create a new one."
 msgstr ""
+"Comme d'autres unités de mesure (ex : %(problem_uom)s) que %(uom)s ont déjà "
+"été utilisées pour ce produit, le changement d'unité de mesure ne peut pas "
+"être effectué.\n"
+"Si vous souhaitez la modifier, veuillez archiver le produit et créer un "
+"nouveau produit."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
 msgid "At Sales price"
-msgstr ""
+msgstr "Au prix de vente"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
@@ -1641,9 +1654,9 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
-"La modification de la société sur un devis existant pourrait nécessiter "
-"certains ajustements manuels dans les détails des lignes. Vous pourriez "
-"envisager de mettre à jour les pris."
+"La modification de la société d'un devis existant peut nécessiter des "
+"ajustements manuels dans les détails des lignes. Envisagez de mettre à jour "
+"les prix."
 
 #. module: sale
 #. odoo-javascript
@@ -1661,7 +1674,7 @@ msgstr "Cliquer pour configurer"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Cliquez pour définir un objectif de facturation"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1751,7 +1764,7 @@ msgstr "Configurer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Configurer les modes de livraison"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1759,6 +1772,8 @@ msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Configurez les modes de livraison ou travaillez avec des transporteurs grâce "
+"aux intégrations existantes."
 
 #. module: sale
 #. odoo-javascript
@@ -2169,7 +2184,7 @@ msgstr "Statut de livraison"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
 msgid "Delivery Time"
-msgstr ""
+msgstr "Délai de livraison"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2192,6 +2207,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Délai de livraison, en jours. Il s'agit du nombre de jours promis au client "
+"entre la confirmation de la commande client et la livraison."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2335,7 +2352,7 @@ msgstr "Nom d'affichage"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display Product Images"
-msgstr ""
+msgstr "Afficher les images des produits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
@@ -2429,7 +2446,7 @@ msgstr "Acompte <br/>"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
 msgid "Down payment Account Active"
-msgstr ""
+msgstr "Compte d'acompte actif"
 
 #. module: sale
 #. odoo-python
@@ -2509,7 +2526,7 @@ msgstr "E-mail envoyé au client une fois la facture disponible."
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
 msgid "Enable Services and Materials in Sales"
-msgstr ""
+msgstr "Activer les services et matériaux dans Ventes"
 
 #. module: sale
 #. odoo-javascript
@@ -2520,7 +2537,7 @@ msgstr "Saisissez une valeur personnalisée"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Excl. Tax)"
-msgstr ""
+msgstr "HTVA)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2530,7 +2547,7 @@ msgstr "Date prévue"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expenses, Services & Materials"
-msgstr ""
+msgstr "Notes de frais, services et matériaux"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2585,6 +2602,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Les positions fiscales sont utilisées pour adapter les taxes et les comptes "
+"pour certains clients ou certaines commandes client/factures. La valeur par "
+"défaut provient du client."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2617,6 +2637,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
 msgstr ""
+"Pour les prix fixes ou les prix basés sur une formule, le prix d'origine "
+"n'est pas affiché dans les commandes client."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -2887,6 +2909,8 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                            discount column."
 msgstr ""
+"Dans les lignes de commande client, le prix d'origine est le prix unitaire "
+"et la remise figure dans la colonne remise."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2897,7 +2921,7 @@ msgstr "Dans la commande"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Included"
-msgstr ""
+msgstr "Inclus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3566,6 +3590,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
 msgstr ""
+"Nombre de jours entre la confirmation de la commande et l'expédition des "
+"produits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3596,7 +3622,7 @@ msgstr "Les chaises de bureau peuvent abîmer votre sol : protégez-le"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "On"
-msgstr ""
+msgstr "Le"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -4244,7 +4270,7 @@ msgstr "Devis #"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Devis / Commande"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4391,7 +4417,7 @@ msgstr "Rejeter ce devis"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
 #. module: sale
 #. odoo-javascript
@@ -4890,7 +4916,7 @@ msgstr "Services et matériel"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
 msgid "Services & Materials"
-msgstr ""
+msgstr "Services et matériaux"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4949,7 +4975,7 @@ msgstr "Afficher les marges sur les commandes"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show product images on your PDF and online quotes."
-msgstr ""
+msgstr "Affichez les images des produits dans vos PDF et devis en ligne."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5219,7 +5245,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Template for Quotations"
-msgstr ""
+msgstr "Modèle de devis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -5354,6 +5380,8 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Les commandes client suivantes %(invalid_orders)s ne peuvent pas être "
+"livrées. Toutes les livraisons ont été annulées."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
@@ -5446,6 +5474,8 @@ msgid ""
 "The percentage of the amount that must be paid by the customer to confirm "
 "the order."
 msgstr ""
+"Le pourcentage du montant qui doit être payé par le client pour confirmer la "
+"commande."
 
 #. module: sale
 #. odoo-python
@@ -5853,6 +5883,8 @@ msgstr "Opportunité de vente incitative"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
+"Utilisez des services et matériaux à prix fixe ou basés sur les coûts pour "
+"la refacturation"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6113,7 +6145,7 @@ msgstr "Votre référence :"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Votre navigateur ne prend pas en charge iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6151,6 +6183,10 @@ msgid ""
 "Please change the company of your quotation or remove the products from "
 "other companies(%(bad_products)s)."
 msgstr ""
+"Votre devis contient des produits de la société %(product_company)s alors "
+"que votre devis appartient à la société %(quote_company)s.\n"
+"Veuillez modifier la société de votre devis ou supprimer les produits des "
+"autres sociétés (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript

@@ -8,14 +8,15 @@
 # Martin Trigaux, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:19+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"PO-Revision-Date: 2026-06-12 02:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-3/"
 "purchase_mrp/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
@@ -53,8 +54,11 @@ msgstr "Linie Factură Materiale"
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, fuzzy
 msgid "Components cost share have to be positive or equals to zero."
 msgstr ""
+"Partajarea costurilor componentelor trebuie să fie pozitivă sau egală cu "
+"zero."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
@@ -63,13 +67,15 @@ msgstr "Partajare cost (%)"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+#, fuzzy
 msgid "Count of MO Source"
-msgstr ""
+msgstr "Număr sursă CP"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+#, fuzzy
 msgid "Count of generated PO"
-msgstr ""
+msgstr "Număr de CA generate"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__display_name
@@ -81,8 +87,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__id
@@ -94,24 +101,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+#, fuzzy
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Raport general CP"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
+#, fuzzy
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Comanda de Producție"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/purchase.py:0
+#, fuzzy
 msgid "Manufacturing Source of %s"
-msgstr ""
+msgstr "Sursă producție pentru %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
@@ -136,18 +147,23 @@ msgstr "Mișcare stoc"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_rule
+#, fuzzy
 msgid "Stock Rule"
-msgstr ""
+msgstr "Regulă stoc"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+#, fuzzy
 msgid ""
 "The percentage of the component repartition cost when purchasing a kit.The "
 "total of all components' cost have to be equal to 100."
 msgstr ""
+"Procentajul costului de repartizare a componentei la achiziționarea unui "
+"kit.Totalul costurilor tuturor componentelor trebuie să fie egal cu 100."
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, fuzzy
 msgid "The total cost share for a BoM's component have to be 100"
-msgstr ""
+msgstr "Costul total al componentei unei LDM trebuie să fie 100"

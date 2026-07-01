@@ -9,14 +9,15 @@
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:32+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
+"PO-Revision-Date: 2026-06-12 05:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-3/"
 "pos_adyen/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -33,8 +34,9 @@ msgstr "Přidat spropitné přes platební terminál (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_payment_method_view_form_inherit_pos_adyen
+#, fuzzy
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -54,8 +56,9 @@ msgstr "Nejnovější odpověď Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_merchant_account
+#, fuzzy
 msgid "Adyen Merchant Account"
-msgstr ""
+msgstr "Obchodní účet Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
@@ -124,8 +127,9 @@ msgstr "Zobrazovací název"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_event_url
+#, fuzzy
 msgid "Event URL"
-msgstr ""
+msgstr "URL události"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__id
@@ -133,14 +137,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Invalid Adyen request"
-msgstr ""
+msgstr "Neplatná žádost Adyen"
 
 #. module: pos_adyen
 #. odoo-javascript
@@ -164,8 +170,9 @@ msgstr "Nastavení prodejního místa"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_order
+#, fuzzy
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Objednávka Pokladního systému"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment
@@ -174,8 +181,9 @@ msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Platební metoda Pokladního systému"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
@@ -190,27 +198,33 @@ msgstr "Spustit transakce v testovacím prostředí."
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Terminal %(terminal)s is already used in company %(company)s on payment "
 "method %(payment_method)s."
 msgstr ""
+"Terminál %(terminal)s se již používá ve společnosti %(company)s při platbě %"
+"(payment_method)s."
 
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Terminal %(terminal)s is already used on payment method %(payment_method)s."
-msgstr ""
+msgstr "Terminál %(terminal)s se již používá při platbě %(payment_method)s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_merchant_account
+#, fuzzy
 msgid "The POS merchant account code used in Adyen"
-msgstr ""
+msgstr "Kód účtu obchodníka v místě prodeje používaný v systému Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_event_url
+#, fuzzy
 msgid "This URL needs to be pasted on Adyen's portal terminal settings."
-msgstr ""
+msgstr "Tuto URL adresu je třeba vložit do nastavení terminálu portálu Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

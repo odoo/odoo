@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-06 14:30+0000\n"
+"PO-Revision-Date: 2026-06-06 13:12+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_account/fr/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -70,6 +70,8 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"Un numéro de lot/série est requis pour le produit \"%s\", car la "
+"valorisation par lot est activée."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -155,7 +157,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
 msgid "All Warehouses"
-msgstr ""
+msgstr "Tous les entrepôts"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -176,7 +178,7 @@ msgstr "Plan analytique"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "À la date du"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -192,7 +194,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "À la date du"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -449,7 +451,7 @@ msgstr "Compte de charges"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
 msgid "Expense Account Active"
-msgstr ""
+msgstr "Compte de charges actif"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -483,7 +485,7 @@ msgstr "Uniquement pour la méthode d’inventaire perpétuel (continental)"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entry"
-msgstr ""
+msgstr "Générer l’écriture"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -728,7 +730,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
@@ -789,7 +791,7 @@ msgstr "Compte d'écart de prix"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
 msgid "Price Difference Account Active"
-msgstr ""
+msgstr "Compte de différence de prix actif"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -974,7 +976,7 @@ msgstr "Compte de valorisation des stocks"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
 msgid "Stock Valuation Account Active"
-msgstr ""
+msgstr "Compte de valorisation du stock actif"
 
 #. module: stock_account
 #. odoo-javascript
@@ -993,7 +995,7 @@ msgstr "Compte de variation de stock"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
 msgid "Stock Variation Account Active"
-msgstr ""
+msgstr "Compte de variation de stock actif"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1138,7 +1140,7 @@ msgstr "Description de la valeur"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Valeur disponible :"
 
 #. module: stock_account
 #. odoo-python
@@ -1167,7 +1169,7 @@ msgstr "Compte de variation"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
 msgid "Variation Account Active"
-msgstr ""
+msgstr "Compte de variation de stock actif"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1230,6 +1232,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"Vous ne pouvez pas activer la valorisation par lot, car les produits "
+"suivants ont des quantités en stock sans numéro de lot/série :\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python

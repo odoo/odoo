@@ -7,15 +7,15 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:34+0000\n"
-"PO-Revision-Date: 2026-05-05 18:00+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 12:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_stock/es/>\n"
 "Language: es\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
@@ -56,7 +56,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 presupuesto"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
@@ -208,7 +208,7 @@ msgstr "Disponible"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Available in stock"
-msgstr ""
+msgstr "Unidades disponibles"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -217,8 +217,9 @@ msgstr "Elija aplicar rutas específicas para líneas del pedido de venta."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -390,7 +391,7 @@ msgstr "Ctd. disponible hoy"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "Bienes entregados sin facturar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -439,8 +440,9 @@ msgstr "Detalles del incoterm"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
+#, fuzzy
 msgid "Inventory Route"
-msgstr ""
+msgstr "Ruta de inventario"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -449,8 +451,9 @@ msgstr "Es una fabricación sobre pedido"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
+msgstr "Especifica si los artículos se entregan parcialmente o todos a la vez"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
@@ -564,7 +567,7 @@ msgstr "Todavía no hay entregas. Automatícelas con los pedidos de venta."
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "No future availability"
-msgstr ""
+msgstr "Sin disponibilidad en el futuro"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -586,7 +589,7 @@ msgstr "No entregado"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Not enough future availability"
-msgstr ""
+msgstr "No hay suficiente disponibilidad futura"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -599,7 +602,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "On"
-msgstr ""
+msgstr "Al"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
@@ -676,7 +679,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referencia entre documentos de stock"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
@@ -687,7 +690,7 @@ msgstr "Referencias"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "La demanda restante está disponible en"
 
 #. module: sale_stock
 #. odoo-python
@@ -852,7 +855,7 @@ msgstr "Política de envío"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Shipping Status"
-msgstr ""
+msgstr "Estado del envío"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
@@ -894,7 +897,7 @@ msgstr "Informe de regla de inventario"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "The delivery"
-msgstr ""
+msgstr "La entrega"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -937,6 +940,7 @@ msgstr "Traslados"
 #: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability
 msgid "True if any related picking has late availability"
 msgstr ""
+"True si alguna operación de picking relacionada tiene disponibilidad tardía"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -947,7 +951,7 @@ msgstr "Usuario"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
-msgstr ""
+msgstr "Ver pronóstico"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -1012,4 +1016,4 @@ msgstr "procesado en lugar de"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
-msgstr ""
+msgstr "se retrasará."

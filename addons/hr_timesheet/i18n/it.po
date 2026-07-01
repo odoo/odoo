@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-04 12:50+0000\n"
+"PO-Revision-Date: 2026-06-11 11:58+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_timesheet/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -126,6 +126,17 @@ msgid ""
 "text-danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
 "stat_success_rate &lt;= 100\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-clock-o\" title=\"Fogli ore\" "
+"invisible=\"stat_success_rate\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"success\" title=\"In tempo\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt;= 80\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"warning\" title=\"Avviso\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"danger\" title=\"In ritardo\" invisible=\"not stat_success_rate or "
+"stat_success_rate &lt;= 100\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -315,7 +326,7 @@ msgstr "Collaboratori nel progetto condiviso"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__color
 msgid "Color Index"
-msgstr ""
+msgstr "Indice colore"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -383,6 +394,8 @@ msgstr "Disattiva l'account."
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time type."
 msgstr ""
+"Valore predefinito del progetto per il foglio ore generato dalla tipologia "
+"di tempo."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -417,7 +430,7 @@ msgstr "Descrivi l'attività"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
 msgid "Describe your activity..."
-msgstr ""
+msgstr "Descrivi l'attività..."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -924,7 +937,7 @@ msgstr "Analisi lavori"
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Template for Timesheets"
-msgstr ""
+msgstr "Modello per fogli ore"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1476,7 +1489,7 @@ msgstr "per"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "incl."
-msgstr ""
+msgstr "incl."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1484,6 +1497,8 @@ msgid ""
 "on\n"
 "                            <span class=\"fw-bold ms-1\">Sub-tasks</span>"
 msgstr ""
+"nei\n"
+"                            <span class=\"fw-bold ms-1\">sottolavori</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1491,3 +1506,5 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold ms-1\">Sub-tasks</span>"
 msgstr ""
+"nei\n"
+"                        <span class=\"fw-bold ms-1\">sottolavori</span>"

@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-01-16 05:53+0000\n"
+"PO-Revision-Date: 2026-06-06 13:29+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_account/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -44,7 +44,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
-msgstr ""
+msgstr "%(quantity)s %(uom)s al coste del producto"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -68,6 +68,8 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"Se necesita un número de serie o de lote para el producto «%s », ya que "
+"tiene habilitada la valoración por lotes."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -152,7 +154,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
 msgid "All Warehouses"
-msgstr ""
+msgstr "Todos los almacenes"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -173,7 +175,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "Hasta el"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -189,7 +191,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "A fecha de"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -479,7 +481,7 @@ msgstr "Solo para el sistema de inventario perpetuo (método continental)"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entry"
-msgstr ""
+msgstr "Generar asiento"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -620,6 +622,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"Hay asientos de cierre con fecha posterior a la seleccionada. Debes "
+"cancelarlos antes de crear un asiento con una fecha anterior"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -640,7 +644,7 @@ msgstr "Apuntes contables"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
 msgid "Justification"
-msgstr ""
+msgstr "Justificación"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -700,13 +704,13 @@ msgstr "Movimiento"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "Nuevo valor"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
-msgstr ""
+msgstr "Solo se admite el valor (= True) en la búsqueda de remaining_qty."
 
 #. module: stock_account
 #. odoo-python
@@ -722,7 +726,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
 msgid "Options"
-msgstr ""
+msgstr "Opciones"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
@@ -861,7 +865,7 @@ msgstr "Referencia"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "Restante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1132,7 +1136,7 @@ msgstr "Descripción del valor"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Valor del stock real:"
 
 #. module: stock_account
 #. odoo-python
@@ -1204,6 +1208,8 @@ msgid ""
 "You can only get the standard price at a given date for products with "
 "'Standard Price' as cost method."
 msgstr ""
+"Solo se puede obtener el precio estándar en una fecha determinada para los "
+"productos con «Precio estándar» como método de coste."
 
 #. module: stock_account
 #. odoo-python
@@ -1220,6 +1226,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"No puedes habilitar una valoración por lote porque los siguientes productos "
+"tienen cantidades disponibles sin número de lote/serie:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1228,6 +1237,8 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"No es posible modificar la fecha programada de esta operación %s porque está "
+"dentro de un período fiscal bloqueado."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id

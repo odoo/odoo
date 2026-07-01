@@ -8,7 +8,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Martin Trigaux, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-07 08:33+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-06-08 09:03+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_sale/ja/>\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -586,6 +586,8 @@ msgid ""
 "<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
 "                                            Out of stock"
 msgstr ""
+"<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
+"                                            在庫切れ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -825,6 +827,8 @@ msgid ""
 "<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
 "            <span class=\"o_label small ms-2\">Compare</span>"
 msgstr ""
+"<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
+"            <span class=\"o_label small ms-2\">比較</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
@@ -1026,7 +1030,7 @@ msgstr "<span class=\"visually-hidden\">フィルタ使用中</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">単位</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
@@ -1504,6 +1508,337 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "
+"style=\"max-width: 590px; padding: 0px; background-color: white; color: "
+"#454748; border-collapse: collapse;\" role=\"presentation\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"max-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; line-height: 18px;\">\n"
+"                        <t t-out=\"object.partner_id.display_name or "
+"''\">Johnny Tester</t>様\n"
+"                        <br/><br/>\n"
+"                        いつもご利用いただきありがとうございます。オンライン"
+"でのご注文が完了しておりません。<br/>\n"
+"                        商品についてなにかご不明な点などございましたら<br/>\n"
+"                        本メールにご返信いただく形で、お気軽にお問い合わせく"
+"ださい。<br/>\n"
+"                    </p>\n"
+"                    <t t-if=\"not is_html_empty(user.signature)\">\n"
+"                        <div style=\"font-size: 14px; margin: 0 0 16px;\"><t "
+"t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                    </t>\n"
+"                    <t t-if=\"'hide_recovery_button' not in ctx\">\n"
+"                        <div t-attf-style=\"margin-bottom: 22px; font-size: "
+"14px;\">\n"
+"                            <a t-attf-href=\"{{ object.get_base_url() }}/"
+"shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
+"                                注文を再開する\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <!-- The following loop is also used in the addons > "
+"sale > data > mail_template_data.xml file because we want the same layout. --"
+">\n"
+"                        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"                            <t t-if=\"(not hasattr(line, 'is_delivery') or "
+"not line.is_delivery) and not line.combo_item_id\">\n"
+"                                <table width=\"100%\" style=\"max-width: "
+"590px; color: #454748; font-size: 14px; border-collapse: collapse;\" "
+"role=\"presentation\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"24%\" style=\"max-width: "
+"120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                            <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                        </td>\n"
+"                                        <td align=\"left\" style=\"vertical-"
+"align: top; padding-bottom: 22px;\">\n"
+"                                            <h3 t-attf-style=\"mso-line-"
+"height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-"
+"bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
+"                                                <strong t-"
+"out=\"line.product_id.name or ''\">樹木の手入れコース</strong>\n"
+"                                                <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                    <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                </span>\n"
+"                                            </h3>\n"
+"                                            <t t-set=\"combo_line_idx\" t-"
+"value=\"0\"/>\n"
+"                                            <t t-set=\"totalComboLines\" t-"
+"value=\"0\"/>\n"
+"                                            <t t-set=\"line_idx\" t-"
+"value=\"line_index\"/>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id "
+"== line.id) and line_idx == line_index\">\n"
+"                                                    <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
+"                                                        <t t-"
+"set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == "
+"line.id) and combo_line.combo_item_id and line_idx == line_index\">\n"
+"                                                        <t t-"
+"set=\"borderRadiusStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-"
+"set=\"borderTopStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-"
+"set=\"borderBottomStyle\" t-value=\"''\"/>\n"
+"\n"
+"                                                        <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"combo_line.id == line.id and line_idx != line_index\">\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"0\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"combo_line_idx == 1\">\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 1\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"/>\n"
+"                                                                <t t-"
+"set=\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-else=\"\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"totalComboLines == combo_line_idx\">\n"
+"                                                            <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"/>\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 2\">\n"
+"                                                                <t t-"
+"set=\"borderTopStyle\" t-value=\"'border-top: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <div t-attf-"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; "
+"{{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"                                                                    <t t-"
+"out=\"combo_line.product_id.name or ''\">樹木の手入れコース</t>\n"
+"                                                                    <span t-"
+"if=\"combo_line.product_id.product_template_attribute_value_ids\" "
+"style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                                    </span>\n"
+"                                                                    -\n"
+"                                                                    <span>\n"
+"                                                                        <t t-"
+"out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
+"                                                                        <t t-"
+"out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                                    </span>\n"
+"                                                                    <p t-"
+"if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"combo_line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                                    </p>\n"
+"                                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                                        <t t-"
+"set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
+"                                                                        <div "
+"t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
+"                                                                            <t "
+"t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                <p "
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
+"                                                                            </"
+"t>\n"
+"                                                                        </"
+"div>\n"
+"                                                                    </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                <t t-"
+"elif=\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                    <p t-if=\"hasattr(line, "
+"'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;"
+"\">\n"
+"                                                        <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                    </p>\n"
+"                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                        <t t-"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
+"                                                        <div t-"
+"if=\"product_description_lines\" style=\"color: #6c757d;\">\n"
+"                                                            <t t-"
+"foreach=\"product_description_lines\" t-as=\"product_description_line\">\n"
+"                                                                <p t-"
+"if=\"product_description_line\" t-out=\"product_description_line\" "
+"style=\"margin: 4px 0 0;\"/>\n"
+"                                                            </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <span style=\"display: inline-"
+"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
+"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                            </span>\n"
+"                                        </td>\n"
+"                                        <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                            <t t-if=\"line.product_type == "
+"'combo'\">\n"
+"                                                <span t-"
+"out=\"format_amount(line._get_cart_display_price(), object.currency_id) or "
+"''\">$ 10.00</span>\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                <span style=\"white-space: "
+"nowrap;\">\n"
+"                                                    <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
+"10.00</t>\n"
+"                                                    </t>\n"
+"                                                    <t t-else=\"\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\">$ 10.00</"
+"t>\n"
+"                                                    </t>\n"
+"                                                </span>\n"
+"                                            </t>\n"
+"                                            <t t-if=\"hasattr(line, "
+"'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                <br/>\n"
+"                                                <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; color: #495057;\">Delivery</td>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
+"align=\"right\">\n"
+"                                    <t t-"
+"out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">-</"
+"t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 4px; color: "
+"#495057;\">小計</td>\n"
+"                                <td style=\"padding-top: 4px; text-align: "
+"right; color: #495057;\" width=\"100px\" align=\"right\"><t t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</"
+"t></td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                        <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                            <t t-set=\"all_tax_lines\" t-value=\"[tax for "
+"line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/>\n"
+"                            <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"font-size: 14px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                                <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                    <td style=\"padding: 4px 0 8px 0; color: "
+"#495057;\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                    <td style=\"padding: 4px 0 8px 0; text-"
+"align: right; color: #495057;\" width=\"100px\" align=\"right\" t-"
+"out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or "
+"''\">$ 0.00</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40;\"><strong>合計</strong></td>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
+"                                    <strong t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">-</"
+"strong>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </t>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1691,6 +2026,8 @@ msgid ""
 "Add a reference price per UoM on products (e.g $/kg), in addition to "
 "the                           sale price"
 msgstr ""
+"販売価格とは別に、プロダクトに単位当たりの参考価格(例: ￥/kg)"
+"を                           設定します"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -1766,7 +2103,7 @@ msgstr "ウィッシュリストに追加"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Added to your wishlist"
-msgstr ""
+msgstr "ウィッシュリストに追加されました"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_address
@@ -1849,7 +2186,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Allow selection up to"
-msgstr ""
+msgstr "最大以下までの選択を許可："
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1981,17 +2318,17 @@ msgstr "カゴ落ちチェックアウトに関するメールを自動送信し
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_automate_suggested_products
 msgid "Automate suggested products"
-msgstr ""
+msgstr "関連プロダクトの自動表示"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_automate_suggested_products
 msgid "Automatically add optional, accessory and alternative products"
-msgstr ""
+msgstr "オプションプロダクト、付属品、代替プロダクトを自動的に追加"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically add optional, accessory, and alternative products."
-msgstr ""
+msgstr "オプションプロダクト、付属品、代替プロダクトを自動的に追加。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
@@ -2014,7 +2351,7 @@ msgstr "バックボタンラベル"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "再入荷通知"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
@@ -2047,7 +2384,7 @@ msgstr "背景色"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Background Zoom"
-msgstr ""
+msgstr "背景のズーム"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2059,7 +2396,7 @@ msgstr "バッジ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Based on"
-msgstr ""
+msgstr "基準"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
@@ -2084,7 +2421,7 @@ msgstr "ベッド"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Below"
-msgstr ""
+msgstr "下"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
@@ -2158,7 +2495,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Border-Primary"
-msgstr ""
+msgstr "ボーダー(プライマリ)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2170,7 +2507,7 @@ msgstr "枠線あり"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom"
-msgstr ""
+msgstr "下"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2188,7 +2525,7 @@ msgstr "ボックス"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Boxed"
-msgstr ""
+msgstr "ボックス表示"
 
 #. module: website_sale
 #. odoo-python
@@ -2338,7 +2675,7 @@ msgstr "カテゴリフッタ"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Category Header"
-msgstr ""
+msgstr "カテゴリヘッダー"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
@@ -2371,7 +2708,7 @@ msgstr "シーリングランプ"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Center"
-msgstr ""
+msgstr "中央"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2405,7 +2742,7 @@ msgstr "レジに進む"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Checkout Page"
-msgstr ""
+msgstr "チェックアウトページ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -2436,7 +2773,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
-msgstr ""
+msgstr "選択してください:"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -2738,12 +3075,12 @@ msgstr "コンテンツ幅"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "販売を続ける"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "在庫切れでも販売を続ける"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -2922,7 +3259,7 @@ msgstr "オーバーレイを暗くする"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__rating_email_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_delay
 msgid "Days After Order to Send Rating Email"
-msgstr ""
+msgstr "オーダから評価メール送信までの日数"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2951,7 +3288,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Default Color"
-msgstr ""
+msgstr "デフォルト色"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__currency_id
@@ -2982,6 +3319,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"新しく作成される在庫可能プロダクトに設定される、デフォルトの引当条件です。プ"
+"ロダクトごとに変更できます。"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -3051,17 +3390,17 @@ msgstr "配送量"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_calendar_id
 msgid "Delivery Calendar"
-msgstr ""
+msgstr "納品カレンダー"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_lead_days
 msgid "Delivery Estimate Lead Days"
-msgstr ""
+msgstr "納期(日数)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_range_days
 msgid "Delivery Estimate Range Days"
-msgstr ""
+msgstr "納期目安(日数)"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
@@ -3144,7 +3483,7 @@ msgstr "机"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "デスクトップ"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3177,7 +3516,7 @@ msgstr "レポート"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_dimensions
 msgid "Dimensions"
-msgstr ""
+msgstr "寸法"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3280,7 +3619,7 @@ msgstr "表示タイプ"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Display estimated date to your customer. Editable if range is defined."
-msgstr ""
+msgstr "顧客に予定日を表示します。期間が定義されている場合は編集可能です。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_description
@@ -3363,27 +3702,28 @@ msgstr "ここをダブルクリックして、製品を説明する画像をセ
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Invoice"
-msgstr ""
+msgstr "請求書をダウンロード"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Sale Order"
-msgstr ""
+msgstr "販売オーダをダウンロード"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Drag blocks here to add them on all products"
-msgstr ""
+msgstr "ここにブロックをドラッグして、すべてのプロダクトに追加してください"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag blocks here to customize the Shop page header"
 msgstr ""
+"ここにブロックをドラッグして、ショップページのヘッダーをカスタマイズします"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3391,6 +3731,8 @@ msgid ""
 "Drag blocks here to customize the footer of\n"
 "                                    the \""
 msgstr ""
+"ここにブロックをドラッグして、以下のフッターを\n"
+"                                    カスタマイズ： \""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3398,6 +3740,8 @@ msgid ""
 "Drag blocks here to customize the header of\n"
 "                                        the \""
 msgstr ""
+"ここにブロックをドラッグして、以下のヘッダを\n"
+"                                        カスタマイズ：\""
 
 #. module: website_sale
 #. odoo-python
@@ -3416,12 +3760,12 @@ msgstr "引き出し"
 #. module: website_sale
 #: model:ir.model.constraint,message:website_sale.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "この取引先のウィッシュリストに重複登録されているプロダクト。"
 
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_duration
 msgid "Duration"
-msgstr ""
+msgstr "期間"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
@@ -3472,7 +3816,7 @@ msgstr "Eコマース: カゴ落ち"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_order_rating
 msgid "Ecommerce: Order Rating Request"
-msgstr ""
+msgstr "eコマース：注文評価の依頼"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3522,7 +3866,7 @@ msgstr "エッセンシャル"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Estimated Delivery"
-msgstr ""
+msgstr "配送予定日"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3644,7 +3988,7 @@ msgstr "フィルタ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr "配送プロバイダーを見つける"
+msgstr "配送プロバイダーを探す"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -3655,19 +3999,19 @@ msgstr "フィットネス"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "固定 - ホバー時"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Fixed 33%"
-msgstr ""
+msgstr "固定33%"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3679,7 +4023,7 @@ msgstr "固定33%幅"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Fixed 50%"
-msgstr ""
+msgstr "固定50%"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3752,7 +4096,7 @@ msgstr "食品保管容器"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "For"
-msgstr ""
+msgstr "対象:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3773,7 +4117,7 @@ msgstr "無料"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__free_order_label
 msgid "Free Order Label"
-msgstr ""
+msgstr "無料オーダラベル"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -3850,13 +4194,13 @@ msgstr "一般"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_general_features
 msgid "General Features"
-msgstr ""
+msgstr "一般機能"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Get notified when back in stock"
-msgstr ""
+msgstr "再入荷時に通知を受け取る"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
@@ -3885,7 +4229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
 #: model:ir.model.fields.selection,name:website_sale.selection__product_feed__target__gmc
 msgid "Google Merchant Center"
-msgstr "Googleマーチャントセンター"
+msgstr "Google Merchant Center"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5475,7 +5819,7 @@ msgstr "プライバシーポリシー"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "Process the order once the payment is received."
-msgstr "支払いをもらったら注文を処理します。"
+msgstr "支払いを受け取り次第、オーダを処理します。"
 
 #. module: website_sale
 #. odoo-javascript

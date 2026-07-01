@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-05-05 11:55+0000\n"
+"PO-Revision-Date: 2026-06-09 15:29+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/stock/"
 "fr/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -492,7 +492,7 @@ msgstr "1 semaine"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7
 msgid "2 x 7"
-msgstr ""
+msgstr "2 x 7"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -513,7 +513,7 @@ msgstr "4 x 12 - Une par unité"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7
 msgid "4 x 7"
-msgstr ""
+msgstr "4 x 7"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -614,6 +614,54 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bonjour <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>,<br/><br/>\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            Votre commande a été retirée.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Nous avons le plaisir de vous informer que votre commande a été "
+"expédiée.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Votre numéro de suivi est\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Vous trouverez ci-joint votre bon de livraison pour plus "
+"d'informations..<br/><br/>\n"
+"       Merci,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1035,6 +1083,11 @@ msgid ""
 "Concerned package(s):\n"
 "%(package_names)s"
 msgstr ""
+"Un colis ne peut pas être déplacé plusieurs fois dans un même transfert ni "
+"réparti sur plusieurs emplacements.\n"
+"\n"
+"Colis concerné(s) :\n"
+"%(package_names)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1498,6 +1551,8 @@ msgid ""
 "Are you sure you want to proceed this transfer with moves that have no "
 "demand?"
 msgstr ""
+"Êtes-vous sûr de vouloir poursuivre ce transfert avec des mouvements sans "
+"demande ?"
 
 #. module: stock
 #. odoo-python
@@ -1699,7 +1754,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Average Stock:"
-msgstr ""
+msgstr "Stock moyen :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2638,7 +2693,7 @@ msgstr "Comptage cyclique"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
-msgstr ""
+msgstr "Demande quotidienne :"
 
 #. module: stock
 #. odoo-javascript
@@ -2845,15 +2900,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"Définissez vos emplacements de façon à ce qu'ils reflètent la structure de "
-"votre entrepôt et de votre\n"
-" organisation. Odoo est capable de gérer des emplacements physiques\n"
-" (entrepôts, étagères, bacs, etc.), des emplacements de partenaire "
-"(clients,\n"
-" fournisseurs) ainsi que des emplacements virtuels. Ces derniers servent de "
-"contrepartie aux\n"
-" opérations de stock, telles que les ordres de fabrication,\n"
-" la consommation, les inventaires, etc."
+"Définissez vos emplacements afin qu'ils reflètent la structure et "
+"l'organisation de votre entrepôt. Odoo est capable de gérer des emplacements "
+"physiques (entrepôts, étagères, bacs, etc.), des emplacements de partenaires "
+"(clients, fournisseurs) ainsi que des emplacements virtuels, qui servent de "
+"contrepartie aux opérations de stock telles que les consommations liées aux "
+"ordres de fabrication, les inventaires, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
@@ -3218,7 +3270,7 @@ msgstr "Opérations détaillées"
 #: model:ir.actions.act_window,name:stock.stock_quant_action
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Detailed Stock"
-msgstr ""
+msgstr "Stock détaillé"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3570,7 +3622,7 @@ msgstr "Échange"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 msgid "Exp"
-msgstr ""
+msgstr "Prévu"
 
 #. module: stock
 #. odoo-python
@@ -4908,7 +4960,7 @@ msgstr "Conserver les lignes actuelles"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Keep lines"
-msgstr ""
+msgstr "Conserver les lignes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -5156,7 +5208,7 @@ msgstr "Informations sur le délai"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Lead Time:"
-msgstr ""
+msgstr "Délai d'approvisionnement :"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5503,7 +5555,7 @@ msgstr "Gérer les règles de flux tirés/poussés."
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Manual"
-msgstr "Manuelle"
+msgstr "Manuel"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__manual
@@ -6346,7 +6398,7 @@ msgstr "Commandé"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Ordering Frequency:"
-msgstr ""
+msgstr "Fréquence de réapprovisionnement :"
 
 #. module: stock
 #. odoo-javascript
@@ -6974,7 +7026,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "Preceding operations"
-msgstr ""
+msgstr "Opérations précédentes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -7895,7 +7947,7 @@ msgstr "Supprimer"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Remove lines"
-msgstr ""
+msgstr "Supprimer les lignes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -8067,7 +8119,7 @@ msgstr "Méthode de réservation"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
-msgstr ""
+msgstr "Réserver"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8252,7 +8304,7 @@ msgstr "Société de la route"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id_placeholder
 msgid "Route Id Placeholder"
-msgstr "Espace réservé ID d’itinéraire"
+msgstr "Placeholder ID d’itinéraire"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -8904,7 +8956,7 @@ msgstr "Afficher la quantité"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
 msgid "Show Return Picking Type"
-msgstr ""
+msgstr "Afficher le type de transfert de retour"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
@@ -8941,7 +8993,7 @@ msgstr "Afficher lot_name"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_return
 msgid "Show return button"
-msgstr ""
+msgstr "Afficher le bouton de retour"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -9007,7 +9059,7 @@ msgstr "Reporté"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Some moves have zero demand quantity."
-msgstr ""
+msgstr "Certains mouvements ont une quantité demandée nulle."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -9295,7 +9347,7 @@ msgstr "Message de validation avec mouvement de stock"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "Stock à réserver :"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
@@ -9514,7 +9566,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Template for Inventory Adjustments"
-msgstr ""
+msgstr "Modèle pour les ajustements d'inventaire"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10143,7 +10195,7 @@ msgstr "Horizon temporel"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Time to replenish:"
-msgstr ""
+msgstr "Délai de réapprovisionnement :"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -10737,7 +10789,7 @@ msgstr "Valider"
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Valider l'inventaire"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10929,7 +10981,7 @@ msgstr "Routes de l'entrepôt"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 msgid "Warehouse:"
-msgstr ""
+msgstr "Entrepôt :"
 
 #. module: stock
 #. odoo-javascript
@@ -11669,14 +11721,14 @@ msgstr "Étiquettes ZPL - Une par unité"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_zero_demand_confirmation
 msgid "Zero Demand Confirmation"
-msgstr ""
+msgstr "Confirmation de demande nulle"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Zero Demand Warning"
-msgstr ""
+msgstr "Avertissement de demande nulle"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -11697,7 +11749,7 @@ msgstr "le plus près"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "day(s)"
-msgstr ""
+msgstr "jour(s)"
 
 #. module: stock
 #. odoo-javascript
@@ -11786,7 +11838,7 @@ msgstr "par ex. Réception en 2 étapes"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "expected on"
-msgstr ""
+msgstr "prévu le"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11839,7 +11891,7 @@ msgstr "de"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "planned on"
-msgstr ""
+msgstr "planifié le"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking

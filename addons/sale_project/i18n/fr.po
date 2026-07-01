@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-04-11 14:30+0000\n"
+"PO-Revision-Date: 2026-06-06 13:27+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_project/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_project
 #. odoo-python
@@ -160,6 +160,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Selon la configuration du produit, la quantité livrée peut être calculée "
+"automatiquement selon le mécanisme suivant :\n"
+"- Manuel : la quantité est définie manuellement sur la ligne\n"
+"- Analytique à partir des notes de frais : la quantité correspond à la somme "
+"des quantités des notes de frais comptabilisées\n"
+"- Feuilles de temps : la quantité correspond à la somme des heures "
+"enregistrées sur les tâches liées à cette ligne\n"
+"- Mouvements de stock : la quantité provient des transferts confirmés\n"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_analytic_line
@@ -170,7 +178,7 @@ msgstr "Ligne analytique"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivery (Manual)"
-msgstr ""
+msgstr "Basé sur la livraison (manuel)"
 
 #. module: sale_project
 #. odoo-python
@@ -199,12 +207,12 @@ msgstr "Annulé"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__category_report
 msgid "Category Report"
-msgstr ""
+msgstr "Rapport de catégorie"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
@@ -230,7 +238,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__costs
 msgid "Costs"
-msgstr ""
+msgstr "Coûts"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -640,12 +648,12 @@ msgstr "Ligne de modèle de devis"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Real Costs"
-msgstr ""
+msgstr "Coûts réels"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
 msgid "Revenues"
-msgstr ""
+msgstr "Revenus"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
@@ -670,7 +678,7 @@ msgstr "Rôle pour les utilisateurs"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales"
-msgstr ""
+msgstr "Ventes"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -899,6 +907,8 @@ msgid ""
 "The project couldn't be created because you don't have the right to create a "
 "project"
 msgstr ""
+"Le projet n'a pas pu être créé, car vous n'avez pas les droits nécessaires "
+"pour créer un projet"
 
 #. module: sale_project
 #. odoo-python
