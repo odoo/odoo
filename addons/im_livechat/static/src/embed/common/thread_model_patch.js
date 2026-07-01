@@ -28,9 +28,9 @@ patch(Thread.prototype, {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this,
-                        author_id: this.channel?.livechat_agent_history_ids.sort(
-                            (a, b) => a.id - b.id
-                        )[0]?.partner_id,
+                        author_id: [...(this.channel?.livechat_agent_history_ids), ...(this.channel?.livechat_bot_history_ids)]
+                            .sort((a, b) => a.id - b.id)[0]
+                            ?.partner_id,
                     };
                 }
             },
