@@ -18,6 +18,7 @@ import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { browser } from "@web/core/browser/browser";
 import {
@@ -1094,6 +1095,57 @@ QUnit.module("Fields", (hooks) => {
             "Should have created a new user"
         );
     });
+
+    QUnit.test(
+        "properties: a relational property with an unevaluable domain shows no record count",
+        async function (assert) {
+            async function mockRPC(route, { method, model }) {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
+                    return true;
+                } else if (method === "get_available_models" && model === "ir.model") {
+                    return [{ model: "res.users", display_name: "User" }];
+                } else if (method === "fields_get" && model === "res.users") {
+                    return { name: { searchable: true, string: "Name", type: "char" } };
+                } else if (method === "search_count" && model === "res.users") {
+                    throw makeServerError({ message: "Wrong path" });
+                }
+            }
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="company_id"/>
+                                <field name="properties"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                mockRPC,
+            });
+
+            const popover = () => target.querySelector(".o_property_field_popover");
+            for (const propertyType of ["many2one", "many2many"]) {
+                await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+                await changeType(target, propertyType);
+                // Selecting the model triggers the matching-records count, which fails here.
+                await click(popover(), ".o_field_property_definition_model input");
+                await click(popover(), ".o_field_property_definition_model .ui-menu-item:first-child");
+
+                assert.ok(popover(), `the ${propertyType} property editor stays open`);
+                assert.strictEqual(
+                    popover().textContent.includes("record(s)"),
+                    false,
+                    "no matching record count is shown when the domain cannot be evaluated"
+                );
+                await closePopover(target);
+            }
+        }
+    );
 
     /**
      * Test the properties many2many

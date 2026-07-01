@@ -358,15 +358,20 @@ export class PropertyDefinition extends Component {
      */
     async _updateMatchingRecordsCount() {
         if (this.state.resModel && this.state.resModel.length) {
-            const domainList = new Domain(this.state.propertyDefinition.domain || "[]").toList();
+            try {
+                const domainList = new Domain(this.state.propertyDefinition.domain || "[]").toList();
 
-            const result = await this.orm.call(
-                this.state.propertyDefinition.comodel,
-                "search_count",
-                [domainList]
-            );
+                const result = await this.orm.call(
+                    this.state.propertyDefinition.comodel,
+                    "search_count",
+                    [domainList]
+                );
 
-            this.state.matchingRecordsCount = result;
+                this.state.matchingRecordsCount = result;
+            } catch {
+                // An invalid domain shows no record count.
+                this.state.matchingRecordsCount = undefined;
+            }
         } else {
             this.state.matchingRecordsCount = undefined;
         }
