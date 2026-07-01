@@ -1,5 +1,12 @@
-.o_field_widget.o_field_boolean_icon {
-    button {
-        aspect-ratio: 1;
+.o_touch_device .o_field_boolean_icon .btn-outline-primary {
+    &:hover {
+        --btn-hover-color: var(--btn-color);
+        --btn-hover-bg: var(--btn-bg);
+        --btn-hover-border-color: var(--btn-border-color);
+    }
+    &:active {
+        --btn-active-color: var(--btn-color);
+        --btn-active-bg: var(--btn-bg);
+        --btn-active-border-color: var(--btn-border-color);
     }
 }
