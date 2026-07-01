@@ -303,6 +303,8 @@ class MrpProduction(models.Model):
     remaining_time = fields.Float('Remaining Working Time', compute='_compute_remaining_time',
                                   help="The remaining time to finish this production in hours.")
     active_workcenter_ids = fields.Many2many('mrp.workcenter', compute='_compute_active_workcenter_ids')
+    packages_count = fields.Integer(string='Packages Count', compute='_compute_packages_count', copy=False)
+    package_history_ids = fields.One2many('stock.package.history', 'production_id', string='Package History')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -581,6 +583,7 @@ class MrpProduction(models.Model):
     def _compute_lines(self):
         for production in self:
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
+            production.finished_move_line_ids.production_id = production  # to be removed?
 
     @api.depends(
         'move_raw_ids.state', 'move_raw_ids.quantity', 'move_finished_ids.state',
@@ -860,7 +863,7 @@ class MrpProduction(models.Model):
             else:
                 production.move_raw_ids = [Command.delete(move.id) for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.depends('product_id', 'bom_id', 'product_qty', 'uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids')
+    @api.depends('product_id', 'bom_id', 'product_qty', 'uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids', 'qty_producing')
     def _compute_move_finished_ids(self):
         production_with_move_finished_ids_to_unlink_ids = OrderedSet()
         ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
@@ -981,6 +984,10 @@ class MrpProduction(models.Model):
         self.active_workcenter_ids = False
         for production, workcenters in active_workcenters_by_mo:
             production.active_workcenter_ids = workcenters
+
+    def _compute_packages_count(self):
+        for mo in self:
+            mo.packages_count = len(mo.finished_move_line_ids.mapped('result_package_id'))
 
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
@@ -1275,6 +1282,40 @@ class MrpProduction(models.Model):
                         production._plan_workorders()
         self.is_outdated_bom = False
 
+    def action_mrp_detailed_operations(self):
+        view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
+        lines = self.finished_move_line_ids
+        hide_put_in_pack = bool(lines) and all(line.state == 'done' for line in lines)
+        return {
+            'name': self.env._('Detailed Operations'),
+            'view_mode': 'list',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'views': [(view_id, 'list')],
+            'domain': [('move_id.production_id', '=', self.id)],
+            'context': {
+                'sml_specific_default': True,
+                'default_production_id': self.id,
+                'default_location_dest_id': self.location_dest_id.id,
+                'default_company_id': self.company_id.id,
+                'picking_code': 'mrp_operation',
+                'create': self.state not in ('done', 'cancel'),
+                'hide_put_in_pack': hide_put_in_pack,
+            }
+        }
+
+    def action_view_packages(self):
+        self.ensure_one()
+        packages = self.finished_move_line_ids.mapped('result_package_id')
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package',
+            'view_mode': 'list',
+            'views': [(self.env.ref('stock.stock_package_view_list_editable').id, 'list'), (False, 'kanban'), (False, 'form')],
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', packages.ids)],
+        }
+
     def _get_bom_values(self, ratio=1):
         """ Returns the BoM lines, by-products and operations values needed to
         create a new BoM from this Manufacturing Order.
@@ -1455,10 +1496,7 @@ class MrpProduction(models.Model):
         if self.product_tracking == 'serial' and self.lot_producing_ids and float_is_zero(self.qty_producing, precision_digits=0):
             self.qty_producing = self.product_id.uom_id._compute_quantity(len(self.lot_producing_ids), self.uom_id, rounding_method='HALF-UP')
 
-        for move in (
-            self.move_raw_ids
-            | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
-        ):
+        for move in (self.move_raw_ids | self.move_finished_ids):
             is_byproduct = move in self.move_byproduct_ids
             # Never update already picked moves.
             # sudo needed for portal users
@@ -3099,6 +3137,12 @@ class MrpProduction(models.Model):
                     action = self.env.ref("stock.label_lot_template").report_action(lots_to_print.ids, config=False)
                     clean_action(action, self.env)
                     report_actions.append(action)
+        if self.env.user.has_group('stock.group_tracking_lot'):
+            mo_print_packages = self.filtered(lambda p: p.picking_type_id.auto_print_packages and p.finished_move_line_ids.result_package_id)
+            if mo_print_packages:
+                action = self.env.ref("mrp.action_report_mrp_packages").report_action(mo_print_packages.ids, config=False)
+                clean_action(action, self.env)
+                report_actions.append(action)
         return report_actions
 
     def _autoprint_generated_lots(self, lot_ids):
@@ -3286,3 +3330,13 @@ class MrpProduction(models.Model):
         """ remove the given references from the list of references. """
         self.ensure_one()
         self.reference_ids = [Command.unlink(reference.id) for reference in references]
+
+    def _get_packages_for_print(self):
+        package_ids = OrderedSet()
+        for mo in self:
+            if mo.state == 'done':
+                package_ids.update(mo.package_history_ids.package_id.ids)
+            else:
+                package_ids.update(mo.finished_move_line_ids.result_package_id._get_all_package_dest_ids())
+
+        return self.env['stock.package'].browse(package_ids)

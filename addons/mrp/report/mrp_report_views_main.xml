@@ -61,5 +61,16 @@
             <field name="binding_type">report</field>
             <field name="multi">True</field>
         </record>
+        <record id="action_report_mrp_packages" model="ir.actions.report">
+            <field name="name">Packages</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.report_mrp_packages</field>
+            <field name="print_report_name">'Packages - %s' % (object.name)</field>
+            <field name="report_file">mrp.report_mrp_packages</field>
+            <field name="binding_model_id" ref="model_mrp_production"/>
+            <field name="binding_type">report</field>
+            <field name="group_ids" eval="[Command.link(ref('stock.group_tracking_lot'))]"/>
+        </record>
     </data>
 </odoo>

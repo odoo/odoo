@@ -138,6 +138,10 @@
             <field name="auto_show_allocation_report" position="attributes">
                 <attribute name="invisible" add="code != 'mrp_operation'" separator="and"/>
             </field>
+            <xpath expr="//group[@name='second']/group[@name='stock_packages']" position="attributes">
+                <attribute name="invisible">code not in ['incoming', 'outgoing', 'internal', 'mrp_operation']</attribute>
+            </xpath>
+
             <xpath expr="//page[@name='hardware']" position="after">
                 <page name="mrp_hardware" string="Hardware" invisible="code != 'mrp_operation'">
                     <group>
@@ -155,8 +159,8 @@
                                 <label for="done_mrp_lot_label_to_print" string="Print labels as:" invisible="not auto_print_done_mrp_lot" class="fw-bold"/>
                                 <field name="done_mrp_lot_label_to_print" invisible="not auto_print_done_mrp_lot"/>
                             </div>
+                            <field name="auto_print_packages" string="Package Content" groups="stock.group_tracking_lot"/>
                             <field name="auto_print_mrp_reception_report" string="Allocation Report" invisible="not auto_show_allocation_report"/>
-                            <field name="auto_print_mrp_reception_report_labels" string="Allocation Report Labels" invisible="not auto_show_allocation_report"/>
                         </group>
                         <group string="">
                             <div colspan="2">
@@ -174,6 +178,14 @@
                                 <field name="generated_mrp_lot_label_to_print" invisible="not auto_print_generated_mrp_lot"/>
                             </div>
                         </group>
+                    </group>
+                    <group string='Print on "Put in Pack"' groups="stock.group_tracking_lot">
+                            <label for="auto_print_package_label" string="Package Label"/>
+                            <div class="o_row">
+                                <field name="auto_print_package_label" string="Package Label"/>
+                                <label for="package_label_to_print" string="Print label as:" invisible="not auto_print_package_label" class="fw-bold"/>
+                                <field name="package_label_to_print" invisible="not auto_print_package_label"/>
+                            </div>
                     </group>
                 </page>
             </xpath>

@@ -986,19 +986,7 @@ class StockMoveLine(models.Model):
         history_vals = []
         packages = self.env['stock.package'].browse(self.result_package_id._get_all_package_dest_ids())
         for package in packages:
-            history_vals.append({
-                'location_id': package.location_id.id,
-                'location_dest_id': package.location_dest_id.id,
-                'move_line_ids': [Command.set(package.move_line_ids.filtered(lambda ml: ml.result_package_id == package).ids)],
-                'picking_ids': [Command.set(package.picking_ids.ids)],
-                'package_id': package.id,
-                'package_name': package.complete_name,
-                'parent_orig_id': package.parent_package_id.id,
-                'parent_orig_name': package.parent_package_id.complete_name,
-                'parent_dest_id': package.package_dest_id.id,
-                'parent_dest_name': package.package_dest_id.dest_complete_name,
-                'outermost_dest_id': package.outermost_package_id.id,
-            })
+            history_vals.append(package._get_package_vals())
 
         return history_vals
 
