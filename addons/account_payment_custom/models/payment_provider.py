@@ -2,6 +2,9 @@
 
 from odoo import api, models
 
+from odoo.addons.account_payment_custom import const
+from odoo.addons.payment import utils as payment_utils
+
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
@@ -55,3 +58,19 @@ class PaymentProvider(models.Model):
         if self.code == "custom" and self.custom_mode == "wire_transfer":
             return self.custom_mode
         return res
+
+    def _find_available_providers(self, *args, is_invoice=False, report=None, **kwargs):
+        """Override of `payment` to exclude pay_on_invoice providers for invoices."""
+        providers = super()._find_available_providers(
+            *args, is_invoice=is_invoice, report=report, **kwargs
+        )
+        if is_invoice:
+            unfiltered_providers = providers
+            providers = providers.filtered(lambda p: p.custom_mode != "pay_on_invoice")
+            payment_utils.add_to_report(
+                report,
+                unfiltered_providers - providers,
+                available=False,
+                reason=const.REPORT_REASONS_MAPPING["unavailable_for_invoices"],
+            )
+        return providers
