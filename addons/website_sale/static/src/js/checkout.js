@@ -186,6 +186,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
                 await this._setPickupLocation(jsonLocation);
+                await this._onPickupLocationConfirmed();
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
@@ -556,6 +557,14 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     async _setPickupLocation(pickupLocationData) {
         await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
     },
+
+    /**
+     * Hook called after confirming a pickup location from the selector.
+     *
+     * @private
+     * @return {void}
+     */
+    async _onPickupLocationConfirmed() {},
 
     // #=== GETTERS & SETTERS ===#
 
