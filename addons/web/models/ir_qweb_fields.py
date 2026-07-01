@@ -69,20 +69,18 @@ class IrQwebFieldImage(models.AbstractModel):
         tmp_field_name = re.sub(r'_\d+$', '', field_name)
 
         # get maximum size of the image
-        max_size = '1920'
-        selected_preview_image = options.get('preview_image')
-        if selected_preview_image is not None:
-            selected_preview_image = selected_preview_image.split('_')
-            max_size = selected_preview_image[-1]
-
+        selected_image = options.get('preview_image') or field_name
+        max_size = selected_image.split('_')[-1]
         if not max_size.isdigit():
-            max_size = '1920'
+            max_size = field_name.split('_')[-1]
 
         for size in size_list:
             if int(size) > int(max_size):
                 break
 
             tmp_preview_image = tmp_field_name + '_' + size
+            if tmp_preview_image not in record:
+                continue
 
             preview_options = dict(options, preview_image=tmp_preview_image)
             if options.get('qweb_img_raw_data', False):

@@ -156,6 +156,26 @@ class TestIrQweb(TransactionCase):
             entry = next((entry for entry in entries if entry.endswith(f"{size}w")), None)
             self.assertTrue(entry, f"Unexpected srcset candidate list: {srcset}")
 
+    def test_image_srcset_uses_rendered_field_limit_and_available_fields(self):
+        class PartialImageRecord:
+            _name = "partial.image.record"
+            id = 1
+            display_name = "partial image record"
+
+            def __contains__(self, field_name):
+                return field_name in {"image_128", "image_512", "image_1024"}
+
+        srcset = self.env["ir.qweb.field.image"]._get_srcset(PartialImageRecord(), "image_512", {})
+
+        self.assertTrue(srcset)
+        entries = srcset.split(', ')
+        self.assertEqual(len(entries), 2)
+        self.assertIn("image_128", entries[0])
+        self.assertIn("image_512", entries[1])
+        self.assertNotIn("image_256", srcset)
+        self.assertNotIn("image_1024", srcset)
+        self.assertNotIn("image_1920", srcset)
+
     def test_image_srcset_not_generated_for_non_image_fields(self):
         partner = self.env["res.partner"].create({
             "name": "srcset avatar partner",
