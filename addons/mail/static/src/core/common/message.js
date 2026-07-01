@@ -96,6 +96,7 @@ export class Message extends Component {
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
+        console.log(this.props.message);
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             isHovered: false,

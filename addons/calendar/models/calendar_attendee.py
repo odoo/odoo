@@ -217,8 +217,7 @@ class CalendarAttendee(models.Model):
         if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
             for event, attendees in notified_attendees_per_event.items():
-                test = event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
-                print(test)
+                event._track_set_log_message(Markup('<p class="m-0">%s</p>') % notified_attendees_log_message + self._generate_notified_attendees_html_list(attendees))
 
     @api.model
     def _generate_notified_attendees_html_list(self, attendees):

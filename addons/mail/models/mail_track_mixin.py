@@ -66,6 +66,8 @@ class MailTrackMixin(models.AbstractModel):
             checked against model-based tracked fields
         """
         tracked_fnames = self._track_get_fields().intersection(field_names)
+        print("Those are the tracked_fnames")
+        print(tracked_fnames)
         if not self or not tracked_fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
@@ -120,20 +122,23 @@ class MailTrackMixin(models.AbstractModel):
 
         Also cleans precommit data, resetting state and avoiding multiple
         tracking generation. """
+        print("is passing inside the track finalize")
         # pop now, so that potentially nested calls do not loop (e.g. override a track
         # to generate sub-trackings)
         initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
+            print("is returning from the beginning")
             return
 
         # tracked fields to check are those at model level as well as those
         # manually put in initial values
         fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
         if not fnames:
+            print("is returning aftern the fnames")
             return
 
-        # Clean the context to get rid of residual default_* keys that could
+        # Clean the context to get rid of residual default_* keys that could_track_execute
         # cause issues afterward during the mail.message generation. Example:
         # 'default_parent_id' would refer to the parent_id of the current
         # record that was used during its creation, but could refer to wrong
@@ -148,6 +153,7 @@ class MailTrackMixin(models.AbstractModel):
             try:
                 trackings[record_su.id] = record_su._mail_track(tracked_fields_get, initial_values[record_su.id])
             except MissingError:
+                print("is passing here ?????????????????????????????????????????")
                 continue
 
         # launch business flow to manage tracking values
@@ -160,6 +166,8 @@ class MailTrackMixin(models.AbstractModel):
         # execute on parents records, if requested
         for record in records_su:
             changes, record_trackings = trackings.get(record.id, (None, None))
+            print("those are the changes ! Do you copy ?")
+            print(changes)
             if not changes:
                 continue
             required_fnames = parents_fnames_all.get(record.id, [])
@@ -183,6 +191,7 @@ class MailTrackMixin(models.AbstractModel):
 
         # cleanup precommit data
         self._track_clear()
+        print("pass ate the end of the finalize method")
         return records_su, initial_values, trackings
 
     @api.ormcache('self.env.uid', 'self.env.su')
@@ -261,6 +270,7 @@ class MailTrackMixin(models.AbstractModel):
             valid._track_set_log_author(author)
         if body:
             valid._track_set_log_message(body)
+        print("pass inside the add track")
 
     def _track_record(
             self,

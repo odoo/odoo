@@ -374,6 +374,14 @@ class CalendarEvent(models.Model):
                 editor_candidates.add(self.env.user)
             event.user_can_edit = self.env.user in editor_candidates
 
+    def add_notify_attendees_log_message(self, log_message):
+        print("those are the mail track tuple")
+        initial_values = self.env.cr.precommit.data.get(f'mail.tracking.{self._name}', {})
+        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
+        print("this is the fname, your are welcome")
+        print(fnames)
+        print(initial_values)
+
     @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
         for event in self:

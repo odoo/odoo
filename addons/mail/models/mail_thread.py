@@ -408,7 +408,9 @@ class MailThread(models.AbstractModel):
             return super().write(vals)
 
         if not self._track_disabled():
-            self._track_prepare(self._fields)
+            initial_values = self._track_prepare(self._fields)
+            print("this is the initial values")
+            print(initial_values)
 
         # Perform write
         result = super().write(vals)
@@ -573,11 +575,8 @@ class MailThread(models.AbstractModel):
         description (if set) and tracking values that make the core content of
         tracking message. """
         body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
-        print("those are the body values froml the original function")
-        print(body_values)
         for id_ in self.ids:
             body_values[id_] = message
-        print(body_values)
 
     def _track_set_log_message_for_target(self, message: str | Markup, track_records: BaseModel):
         """ Link tracking to a message logged as body, in addition to subtype
@@ -599,7 +598,6 @@ class MailThread(models.AbstractModel):
             author: BaseModel | None = None,
             body: str | Markup | None = None,
         ):
-        print("pass inside the track add values")
         # override to add log info
         super()._track_add(initial_values, end_values=end_values, fields_info=fields_info, author=author, body=body)
         # set log author and message if given
@@ -664,6 +662,8 @@ class MailThread(models.AbstractModel):
             author_id = authors[record.id].id if record.id in authors else None
             # _track_set_log_message takes priority over _track_log_get_default_body even if it's an empty string
             body = bodies[record.id] if record.id in bodies else record._track_log_get_default_body(record_init_values)
+            print("this is the body inside the _track log")
+            print(body)
             if subtype:
                 record.message_post(
                     body=body,
@@ -719,7 +719,7 @@ class MailThread(models.AbstractModel):
             self.env.cr.precommit.data.setdefault(f'mail.tracking.create.{self._name}', {})[record.id] = field_names
 
     def _track_finalize_for_template(self):
-        """ Generate template-based message generation for records that have been
+        """ Generate template-based message generation for records that have been_track_prepare
         prepared. """
         precommit_data = self.env.cr.precommit.data.get(f'mail.tracking.create.{self._name}', {})
         ids = [id_ for id_, vals in precommit_data.items() if vals]
@@ -741,7 +741,7 @@ class MailThread(models.AbstractModel):
         by ``_track_template`` parameters. Implements automatic posting of
         formatted messages e.g. stage change triggering automatic email.
 
-        :param Iterable[str] tracked_fields: name of fields being tracked and updated;
+        :param Iterable[str] tracked_fields: name of fields being trackeMissingd and updated;
         """
         if not self or not tracked_fields:
             return True
