@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { DomainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
+import { DomainField } from "@web/views/fields/domain/domain_field";
 
 export class DomainCountField extends DomainField {
     static template = "hr_work_entry.DomainCountField";
