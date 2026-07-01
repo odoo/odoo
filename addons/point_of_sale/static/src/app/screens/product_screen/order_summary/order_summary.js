@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, proxy } from "@odoo/owl";
+import { Component, computed } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -23,30 +23,16 @@ export class OrderSummary extends Component {
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.pos = usePos();
-        this.state = proxy({
-            potentialCombos: [],
-        });
 
         this.numberBuffer.use({
             triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
-
-        this.updatePotentialCombos();
-
-        // useLayoutEffect(
-        //     () => {
-        //         // We update the potential combos when the order changes
-        //         // or the quantity of the items changes.
-        //         this.updatePotentialCombos();
-        //     },
-        //     () => [this.currentOrder.totalQuantity, this.currentOrder.id]
-        // );
     }
 
-    updatePotentialCombos() {
-        this.state.potentialCombos = this.pos.getApplicableProductCombo("limited");
-    }
+    // We update the potential combos when the order changes
+    // or the quantity of the items changes.
+    potentialCombos = computed(() => this.pos.getApplicableProductCombo("limited"));
 
     get currentOrder() {
         return this.pos.selectedOrder;
@@ -390,7 +376,7 @@ export class OrderSummary extends Component {
         return newLine;
     }
     get isComboApplicable() {
-        return this.state.potentialCombos.length > 0;
+        return this.potentialCombos().length > 0;
     }
     getSortedBestPotentialCombos() {
         const bestCombos = {
@@ -428,8 +414,10 @@ export class OrderSummary extends Component {
     }
     get bestComboName() {
         let name = `
-            ${this.state.potentialCombos[0].quantity} ${this.state.potentialCombos[0].productTmpl.display_name}`;
-        if (this.state.potentialCombos.length > 1) {
+            ${this.potentialCombos()[0].quantity} ${
+            this.potentialCombos()[0].productTmpl.display_name
+        }`;
+        if (this.potentialCombos().length > 1) {
             name += " + Others";
         }
         return name;
