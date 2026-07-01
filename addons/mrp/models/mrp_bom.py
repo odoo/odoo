@@ -393,33 +393,53 @@ class MrpBom(models.Model):
 
         return bom_by_product
 
+    def preload_phantom_boms(self, products, picking_type, company_id):
+        """
+        This is a performance helper for :meth:`explode`, which traverses BoM trees depth-first
+        and would otherwise issue one :meth:`_bom_find` call per component. By pre-loading the
+        full reachable set of phantom BoMs before explosion, all look-ups become O(1) dict accesses
+        against the shared cache. The method performs a BFS over the forest whose roots are ``products``.
+        """
+        if not products:
+            return {}
+        
+        product_boms = {}
+        current_level = products.ids
+        next_level = list()
+        while current_level:
+            current_products = self.env['product.product'].browse(current_level)
+            level_boms = self._bom_find(current_products, picking_type=picking_type, company_id=company_id, bom_type='phantom')
+            product_boms.update(level_boms)
+            # Set missing keys to default value
+            for prod in current_products:
+                product_boms.setdefault(prod, self.env['mrp.bom'])
+            for bom in level_boms.values():
+                for bom_line in bom.bom_line_ids:
+                    if bom_line.product_id not in product_boms:  # Skip if already processed
+                        next_level.append(bom_line.product_id.id)
+            current_level = next_level
+            next_level = list()
+
+        return product_boms
+
     def explode(self, product, quantity, picking_type=False, never_attribute_values=False):
         """
             Explodes the BoM and creates two lists with all the information you need: bom_done and line_done
             Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
             and converted into its UoM
         """
-        self = self.with_context(bom_cost_share_cache=self.env.context.get('bom_cost_share_cache') or {})  # noqa: PLW0642
-        product_ids = set()
-        product_boms = {}
-        def update_product_boms():
-            products = self.env['product.product'].browse(product_ids)
-            product_boms.update(self._bom_find(products, picking_type=picking_type or self.picking_type_id,
-                company_id=self.company_id.id, bom_type='phantom'))
-            # Set missing keys to default value
-            for product in products:
-                product_boms.setdefault(product, self.env['mrp.bom'])
+        self.env.cr.cache.setdefault('bom_cost_share_cache', {})
+        product_boms = self.env.cr.cache.setdefault('phantom_boms_cache', {})
+        product_boms.update(self.preload_phantom_boms(
+            self.bom_line_ids.product_id.filtered(lambda p: p not in product_boms), 
+            picking_type=picking_type or self.picking_type_id, 
+            company_id=self.company_id.id,
+        ))
 
         boms_done = [(self, self.env['mrp.bom.line']._prepare_bom_done_values(quantity, product, quantity, []))]
         lines_done = []
+        bom_lines = [(line, product, quantity, False) for line in self.bom_line_ids]
 
-        bom_lines = []
-        for bom_line in self.bom_line_ids:
-            product_id = bom_line.product_id
-            bom_lines.append((bom_line, product, quantity, False))
-            product_ids.add(product_id.id)
-        update_product_boms()
-        product_ids.clear()
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
@@ -428,18 +448,12 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            if current_line.product_id not in product_boms:
-                update_product_boms()
-                product_ids.clear()
             bom = product_boms.get(current_line.product_id)
             if bom:
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(
                     line_quantity / bom.product_qty, bom.product_uom_id, round=False
                 )
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
-                for bom_line in bom.bom_line_ids:
-                    if bom_line.product_id not in product_boms:
-                        product_ids.add(bom_line.product_id.id)
                 boms_done.append((bom, current_line._prepare_bom_done_values(converted_line_quantity, current_product, quantity, boms_done)))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit

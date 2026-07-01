@@ -282,6 +282,21 @@ class ProductProduct(models.Model):
         )
         qties = self.env.context.get("mrp_compute_quantities", {})
         qties.update(res)
+
+        # preload product phantom boms to avoid individual calls to _bom_find in explode method
+        phantom_boms_cache = {}
+        grouped_bom_kits = collections.defaultdict(list)
+        for product, bom in bom_kits.items():
+            grouped_bom_kits[(bom.picking_type_id, bom.company_id.id)].append(product.id)
+        for (picking_type, company_id), product_ids in grouped_bom_kits.items():
+            phantom_boms_cache.update(self.env['mrp.bom'].preload_phantom_boms(
+                products=self.env['product.product'].browse(product_ids),
+                picking_type=picking_type,
+                company_id=company_id,
+            ))
+        self.env.cr.cache['phantom_boms_cache'] = phantom_boms_cache
+        self.env.cr.cache['bom_cost_share_cache'] = {}
+
         # pre-compute bom lines and identify missing kit components to prefetch
         bom_sub_lines_per_kit = {}
         prefetch_component_ids = set()
@@ -292,6 +307,7 @@ class ProductProduct(models.Model):
                 if bom_line.product_id.id not in qties:
                     prefetch_component_ids.add(bom_line.product_id.id)
         # compute kit quantities
+        compute_env = self.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids).env
         for product in bom_kits:
             bom_sub_lines = bom_sub_lines_per_kit[product]
             # group lines by component
@@ -305,7 +321,7 @@ class ProductProduct(models.Model):
             ratios_free_qty = []
 
             for component, bom_sub_lines in bom_sub_lines_grouped.items():
-                component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
+                component = component.with_env(compute_env)
                 qty_per_kit = 0
                 for bom_line, bom_line_data in bom_sub_lines:
                     if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
