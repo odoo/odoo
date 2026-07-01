@@ -498,23 +498,29 @@ export class Message extends Record {
         }
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is shown */
+    /** @param {import("models").Thread} thread @deprecated the thread where the message is shown */
     canAddReaction(thread) {
-        return Boolean(
-            !this.is_transient &&
-                !this.isPending &&
-                this.thread?.can_react &&
-                !this.thread.isTransient &&
-                this.thread.has_mail_thread
-        );
+        if (this.thread?.isTransient) {
+            return false;
+        }
+        if (this.is_transient || this.isPending) {
+            return false;
+        }
+        return Boolean(this.thread?.can_react && this.thread?.has_mail_thread);
     }
 
-    /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyTo(thread) {
-        return (
-            ["discuss.channel", "mail.box"].includes(thread?.model) &&
-            this.message_type !== "user_notification"
-        );
+        if (!this.thread?.canPostMessage || this.message_type === "user_notification") {
+            return false;
+        }
+        if (thread?.model === "mail.box") {
+            return true;
+        }
+        return this._canReplyTo(thread);
+    }
+
+    _canReplyTo(thread) {
+        return this.isNote && !this.isSelfAuthored;
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */

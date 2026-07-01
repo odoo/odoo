@@ -166,16 +166,19 @@ test('"reply to" composer should send message if message replied to is not a not
 
 test("show subject of message in Inbox", async () => {
     const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "my-channel" });
     const [messageId1, messageId2] = pyEnv["mail.message"].create([
         {
             body: "not empty",
             model: "discuss.channel",
+            res_id: channelId,
             needaction: true,
             subject: "Salutations, voyageur",
         },
         {
             body: "",
             model: "discuss.channel",
+            res_id: channelId,
             needaction: true,
             subject: "Hello, wanderer",
         },
@@ -203,10 +206,12 @@ test("show subject of message in Inbox", async () => {
 
 test("show subject of message in history", async () => {
     const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({ name: "my-record" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "discuss.channel",
+        model: "res.fake",
         subject: "Salutations, voyageur",
+        res_id: fakeId,
     });
     pyEnv["mail.notification"].create({
         is_read: true,
@@ -222,11 +227,11 @@ test("show subject of message in history", async () => {
 
 test("subject should not be shown when subject is the same as the thread name", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
+    const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
+        model: "res.fake",
+        res_id: fakeId,
         needaction: true,
         subject: "Salutations, voyageur",
     });

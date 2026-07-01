@@ -533,12 +533,28 @@ async function discuss_history_messages(request) {
         ]);
         return notifs.length > 0;
     });
+    const store = new mailDataHelpers.Store();
+    for (const message of messagesWithNotification) {
+        store.add(
+            MailMessage.browse(message.id),
+            makeKwArgs({
+                for_current_user: true,
+                add_followers: true,
+                extra_fields: {
+                    thread: mailDataHelpers.Store.one(
+                        message.model ? this.env[message.model].browse(message.res_id) : false,
+                        makeKwArgs({
+                            as_thread: true,
+                            fields: ["modelName", "display_name"],
+                        })
+                    ),
+                },
+            })
+        );
+    }
     return {
         ...res,
-        data: new mailDataHelpers.Store(
-            MailMessage.browse(messagesWithNotification.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true })
-        ).get_result(),
+        data: store.get_result(),
         messages: mailDataHelpers.Store.many(messages)._get_id(),
     };
 }
@@ -554,12 +570,28 @@ async function discuss_inbox_messages(request) {
     const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
     const { messages } = res;
     delete res.messages;
+    const store = new mailDataHelpers.Store();
+    for (const message of messages) {
+        store.add(
+            MailMessage.browse(message.id),
+            makeKwArgs({
+                for_current_user: true,
+                add_followers: true,
+                extra_fields: {
+                    thread: mailDataHelpers.Store.one(
+                        message.model ? this.env[message.model].browse(message.res_id) : false,
+                        makeKwArgs({
+                            as_thread: true,
+                            fields: ["modelName", "display_name"],
+                        })
+                    ),
+                },
+            })
+        );
+    }
     return {
         ...res,
-        data: new mailDataHelpers.Store(
-            MailMessage.browse(messages.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result(),
+        data: store.get_result(),
         messages: messages.map((message) => message.id),
     };
 }

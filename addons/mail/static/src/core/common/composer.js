@@ -750,6 +750,7 @@ export class Composer extends Component {
             mentionedRoles: composer.mentionedRoles || [],
             cannedResponseIds: composer.cannedResponses.map((c) => c.id),
             parentId: this.props.composer.replyToMessage?.id,
+            message_id: this.props.composer.replyToMessage?.message_id,
         };
     }
 

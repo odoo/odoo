@@ -1971,6 +1971,7 @@ test("Can't reply to user notifications", async () => {
         body: "Dear Mitchell Admin, you have received a new rank",
         message_type: "user_notification",
         model: "res.partner",
+        res_id: serverState.partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
