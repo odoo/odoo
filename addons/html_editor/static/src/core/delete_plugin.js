@@ -76,31 +76,22 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @typedef {((range: RangeLike) => void | true)[]} delete_forward_line_overrides
  * @typedef {((range: RangeLike) => void | true)[]} delete_range_overrides
  *
- * @typedef {((node: Node) => boolean | undefined)[]} is_functional_empty_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {((node: Node) => Node[])[]} removable_descendants_providers
  *
  * @typedef {CSSSelector[]} system_node_selectors
  */
-/**
- * The `root` argument is used by some predicates in which a node is
- * conditionally unremovable (e.g. a table cell is only removable if its
- * ancestor table is also being removed).
- * @typedef {((node: Node, root: HTMLElement) => boolean | undefined)[]} is_node_removable_predicates
- */
-
-// @todo @phoenix: move these predicates to different plugins
-export const removableNodePredicates = [
-    (node) => {
-        if (node.classList?.contains("oe_unremovable")) {
-            return false;
-        }
-    },
-];
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "input",
+        "userCommand",
+        "region",
+    ];
     static id = "delete";
     static shared = [
         "deleteBackward",
@@ -143,7 +134,7 @@ export class DeletePlugin extends Plugin {
         delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
         delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
-        is_node_removable_predicates: removableNodePredicates,
+        region_properties: { is: ".oe_unremovable", removable: false },
         is_valid_for_base_container_predicates: (node) => {
             if (this.isUnremovable(node, this.editable)) {
                 return false;
@@ -648,11 +639,18 @@ export class DeletePlugin extends Plugin {
         return { allNodesRemoved, range: { ...range, endOffset } };
     }
 
-    // The root argument is used by some predicates in which a node is
-    // conditionally unremovable (e.g. a table cell is only removable if its
-    // ancestor table is also being removed).
     isUnremovable(node, root = undefined) {
-        return !(this.checkPredicates("is_node_removable_predicates", node, root) ?? true);
+        if (this.dependencies.region.getProperty(node, "removable") ?? true) {
+            return false;
+        }
+        // A node flagged unremovable may still be removable when the structural
+        // unit it belongs to (declared via `removableWithin`) is itself within
+        // the removal root — e.g. a table cell when the whole table is removed.
+        const removableWithin = this.dependencies.region.getProperty(node, "removableWithin");
+        if (removableWithin && root?.contains(closestElement(node, removableWithin))) {
+            return false;
+        }
+        return true;
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -776,7 +774,7 @@ export class DeletePlugin extends Plugin {
      * merge are reverse operations from one another).
      */
     isUnmergeable(node) {
-        return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+        return this.dependencies.region.getProperty(node, "splittable") === false;
     }
 
     joinBlocks(left, right, commonAncestor) {
@@ -1249,7 +1247,7 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        if (this.checkPredicates("is_functional_empty_node_predicates", leaf) ?? false) {
+        if (this.dependencies.region.getProperty(leaf, "functionalEmpty") ?? false) {
             return false;
         }
         if (isEmpty(leaf) || isZWS(leaf)) {

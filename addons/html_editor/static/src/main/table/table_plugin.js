@@ -33,18 +33,6 @@ import { rgbaToHex } from "@web/core/utils/colors";
 
 export const BORDER_SENSITIVITY = 5;
 
-const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
-function isUnremovableTableComponent(node, root) {
-    if (!tableInnerComponents.has(node.nodeName)) {
-        return false;
-    }
-    if (!root) {
-        return true;
-    }
-    const closestTable = closestElement(node, "table");
-    return !root.contains(closestTable);
-}
-
 /**
  * @typedef { Object } TableShared
  * @property { TablePlugin['addColumn'] } addColumn
@@ -119,13 +107,6 @@ export class TablePlugin extends Plugin {
         toolbar_groups: withSequence(25, { id: "table" }),
 
         /** Providers */
-        toolbar_namespace_providers: [
-            withSequence(
-                90,
-                (targetedNodes, editableSelection) =>
-                    closestElement(editableSelection.anchorNode, ".o_selected_td") && "compact"
-            ),
-        ],
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
         selected_background_color_providers: withSequence(
@@ -183,33 +164,27 @@ export class TablePlugin extends Plugin {
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         /** Predicates */
-        is_node_removable_predicates: (node, root) => {
-            if (isUnremovableTableComponent(node, root)) {
-                return false;
-            }
-        },
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
-                return false;
-            }
-        },
         is_node_fully_selected_predicates: (node) => {
             if (closestElement(node, ".o_selected_td")) {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (node) => {
-            if (node.nodeName === "TABLE") {
-                return true;
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "TABLE") {
-                return false;
-            } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
-                return true;
-            }
-        },
+        /** Regions */
+        region_properties: [
+            { within: "TD, TH", powerButtons: false },
+            withSequence(90, { within: ".o_selected_td", toolbar: "compact" }),
+            {
+                // A table component is unremovable on its own, but removable when
+                // its whole table is being removed (see `removableWithin`);
+                // otherwise removing it would leave a structurally broken table.
+                is: "THEAD, TBODY, TFOOT, TR, TH, TD",
+                removable: false,
+                removableWithin: "table",
+                splittable: false,
+            },
+            { is: "TABLE", splittable: false, placeholderHost: false, selectionBlocker: true },
+            { is: ".o_table td, .o_table th", placeholderHost: true },
+        ],
 
         /** Selectors */
         move_node_whitelist_selectors: "table",

@@ -12,7 +12,7 @@ declare module "plugins" {
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
-    import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
+    import { is_node_empty_predicates, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
@@ -150,7 +150,6 @@ declare module "plugins" {
         get_overlay_buttons: get_overlay_buttons;
         has_overlay_options: has_overlay_options;
         is_movable_selectors: is_movable_selectors;
-        is_unremovable_selectors: is_unremovable_selectors;
         lower_panel_entries: lower_panel_entries;
         mark_color_level_selector_params: mark_color_level_selector_params;
         no_parent_containers: no_parent_containers;

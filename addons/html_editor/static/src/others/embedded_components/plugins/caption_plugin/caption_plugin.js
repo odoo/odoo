@@ -50,14 +50,10 @@ export class CaptionPlugin extends Plugin {
         on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
         on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
-        hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
-        is_node_splittable_predicates: [
-            (node) => {
-                // avoid merge
-                if (["FIGURE", "FIGCAPTION"].includes(node.nodeName)) {
-                    return false;
-                }
-            },
+        region_properties: [
+            // avoid merge
+            { is: "FIGCAPTION", hintText: _t("Write a caption..."), splittable: false },
+            { is: "FIGURE", splittable: false },
         ],
         is_link_allowed_on_selection_predicates: () => {
             if (this.isLinkAllowedOnSelection()) {

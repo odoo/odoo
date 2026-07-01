@@ -55,7 +55,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format", "delete"];
+    static dependencies = ["selection", "split", "history", "format", "delete", "region"];
     static shared = [
         "colorElement",
         "removeAllColor",
@@ -304,7 +304,7 @@ export class ColorPlugin extends Plugin {
                 (node) =>
                     !coloredNodes.has(node) &&
                     !(systemNodesSelector && closestElement(node, systemNodesSelector)) &&
-                    (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
+                    (this.dependencies.region.getProperty(node, "formattable") ?? true)
             )
             .map((node) => findTopMostDecoration(node));
 

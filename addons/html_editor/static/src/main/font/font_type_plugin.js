@@ -201,14 +201,15 @@ export class FontTypePlugin extends Plugin {
                 commandId: "setTagQuote",
             },
         ],
-        hints: [
-            { selector: "H1", text: _t("Heading 1") },
-            { selector: "H2", text: _t("Heading 2") },
-            { selector: "H3", text: _t("Heading 3") },
-            { selector: "H4", text: _t("Heading 4") },
-            { selector: "H5", text: _t("Heading 5") },
-            { selector: "H6", text: _t("Heading 6") },
-            { selector: "BLOCKQUOTE", text: _t("Quote") },
+        region_properties: [
+            { is: "H1", hintText: _t("Heading 1") },
+            { is: "H2", hintText: _t("Heading 2") },
+            { is: "H3", hintText: _t("Heading 3") },
+            { is: "H4", hintText: _t("Heading 4") },
+            { is: "H5", hintText: _t("Heading 5") },
+            { is: "H6", hintText: _t("Heading 6") },
+            { is: "BLOCKQUOTE", hintText: _t("Quote") },
+            { within: "pre", powerbox: false },
         ],
 
         /** Handlers */
@@ -231,11 +232,6 @@ export class FontTypePlugin extends Plugin {
 
         /** Predicates */
         are_shorthands_available_predicates: (node) => {
-            if (closestElement(node, "pre")) {
-                return false;
-            }
-        },
-        is_powerbox_available_predicates: (node) => {
             if (closestElement(node, "pre")) {
                 return false;
             }
