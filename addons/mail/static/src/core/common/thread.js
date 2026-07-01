@@ -534,6 +534,10 @@ export class Thread extends Component {
     }
 
     onClickRetry() {
+        if (!this.props.thread.oldestPersistentMessage) {
+            this.fetchInitialMessages();
+            return;
+        }
         this.onClickLoadOlder();
     }
 
