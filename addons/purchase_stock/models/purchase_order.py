@@ -380,7 +380,7 @@ class PurchaseOrder(models.Model):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 moves = order.order_line._create_stock_moves()
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).with_context({'move_picking_partner_id': self.partner_id}).sudo()._action_confirm()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).with_context(move_picking_partner_id=self.partner_id).sudo()._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
                     seq += 5
