@@ -1211,6 +1211,11 @@ class ProjectTask(models.Model):
                 task.message_subscribe(partners_with_internal_user.ids)
         return tasks
 
+    def _get_field_name_from_context_variable(self, name):
+        if name == 'default_create_in_project_id':
+            return 'project_id'
+        return super()._get_field_name_from_context_variable(name)
+
     def write(self, vals):
         self.check_access('write')
         if len(self) == 1:
