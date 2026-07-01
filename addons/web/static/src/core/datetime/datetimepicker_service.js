@@ -572,10 +572,27 @@ export const datetimePickerService = {
 
                     onMounted(setup);
                     onWillDestroy(destroy);
-                    // useLayoutEffect(initInputs, getInputs);
 
-                    // Note: this `onPatched` callback must be called after the `useLayoutEffect` since
-                    // the effect may change input values that will be selected by the patch callback.
+                    // Replacement for `useLayoutEffect(initInputs, getInputs)`: `initInputs` must run
+                    // after mount and after each patch, but only when the input elements returned by
+                    // `getInputs` actually change (`getInputs` reads untracked compat refs, and
+                    // `initInputs` reads reactive state, so `useEffect` can neither observe the inputs
+                    // nor be used without over-triggering). This mirrors the effect's dep-array semantics.
+                    let previousInputs = null;
+                    const initInputsIfChanged = () => {
+                        const inputs = getInputs();
+                        if (previousInputs && shallowEqual(previousInputs, inputs)) {
+                            return;
+                        }
+                        previousInputs = inputs;
+                        initInputs(...inputs);
+                    };
+                    onMounted(initInputsIfChanged);
+                    onPatched(initInputsIfChanged);
+
+                    // Note: this `focusIfNeeded` onPatched callback must be registered after the
+                    // `initInputsIfChanged` onPatched above since the latter may change input values
+                    // that will be selected by the focus callback.
                     onPatched(function focusIfNeeded() {
                         if (shouldFocus && isOpen()) {
                             focusActiveInput();
