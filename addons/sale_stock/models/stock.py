@@ -178,6 +178,26 @@ class StockMove(models.Model):
             "lot_name": ", ".join(self.lot_ids.mapped("name")),
         }
 
+    def _process_negative_moves(self):
+        res = super()._process_negative_moves()
+
+        neg_moves_ids = set(self.ids)
+        origin_moves_by_key = defaultdict(lambda: self.env['stock.move'])
+
+        for move in self.reference_ids.picking_ids.move_ids:
+            if move.state != 'done' and move.id in neg_moves_ids:
+                continue
+            origin_moves_by_key[move.picking_type_id.id, move.sale_line_id.id] |= move
+
+        # Link each reverse move to the original move from which it originated, similar to return moves.
+        for move in self:
+            if not move.sale_line_id:
+                continue
+            move_orig_to_link = origin_moves_by_key[move.picking_type_id.id, move.sale_line_id.id]
+            if move_orig_to_link:
+                move.move_orig_ids = [Command.link(m.id) for m in move_orig_to_link]
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"

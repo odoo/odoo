@@ -293,7 +293,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         ])
         self.assertEqual(po, so.stock_reference_ids.purchase_ids)
         self.assertRecordValues(po.order_line, [
-            {'product_id': self.mto_product.id, 'product_uom_qty': 4.0},
+            {'product_id': self.mto_product.id, 'product_uom_qty': 2.0},
         ])
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as line:
@@ -303,7 +303,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
             {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
         ])
         self.assertRecordValues(po.order_line, [
-            {'product_id': self.mto_product.id, 'product_uom_qty': 3.0},
+            {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
         ])
 
     def test_two_step_delivery_forecast_after_first_picking(self):
