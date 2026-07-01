@@ -11,7 +11,7 @@ class ImStatusController(http.Controller):
         if status not in ["online", "away", "busy", "offline"]:
             raise ValueError(_("Unexpected IM status %(status)s", status=status))
         self.env.user.manual_im_status = False if status == "online" else status
-        Store(bus_channel=self.env.user, bus_subchannel="presence").add(
+        Store.to(self.env.user, "presence").add(
             self.env.user,
             "_store_manual_im_status_fields",
         )

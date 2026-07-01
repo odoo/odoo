@@ -253,7 +253,7 @@ class DiscussChannel(models.Model):
         result = super().write(vals)
         need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
         group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
-        store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
+        store = Store.to(group_livechat_user, "LOOKING_FOR_HELP")
         store.add(need_help_after - need_help_before, "_store_channel_fields")
         store.add(need_help_before - need_help_after, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
@@ -587,9 +587,10 @@ class DiscussChannel(models.Model):
         stale_sessions.livechat_end_dt = fields.Datetime.now()
 
     def execute_command_history(self, **kwargs):
-        self._bus_send(
-            "im_livechat.history_command",
-            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+        Store.to(
+            self,
+            notification_type="im_livechat.history_command",
+            payload={"id": self.id, "partner_id": self.env.user.partner_id.id},
         )
 
     def _get_visitor_leave_message(self, correspondents=False, cancel=False):
@@ -771,10 +772,10 @@ class DiscussChannel(models.Model):
             subtype_xmlid="mail.mt_comment",
         )
         if rated_partner not in self.channel_member_ids.partner_id:
-            store = Store(
+            store = Store.to(
                 rated_partner.sudo().user_ids,
                 notification_type="livechat_rating_notification",
-                notification_payload={
+                payload={
                     "guest_id": guest.id,
                     "user_id": user.id,
                     "feedback": reason,
@@ -834,9 +835,8 @@ class DiscussChannel(models.Model):
             )
 
         ):
-            store = Store.Stores()
             for channel in first_agents.channel_id:
-                channel._notify_current_step_is_last(store[channel])
+                channel._notify_current_step_is_last()
             # Clearing the current step id to flag the end of the chatbot script
             #
             # In case of a concurrent step trigger of a chatbot and a new agent joining,
@@ -897,7 +897,7 @@ class DiscussChannel(models.Model):
                     store.add(message, "_store_message_fields")
                     store.add(question_msg.mail_message_id, "_store_message_fields")
                 user, guest = self.env["res.users"]._get_current_persona()
-                Store(bus_channel=user or guest).add_model_values(
+                Store.to(user or guest).add_model_values(
                     "ChatbotStep",
                     {
                         "id": (self.chatbot_current_step_id.id, question_msg.mail_message_id.id),
@@ -1092,7 +1092,7 @@ class DiscussChannel(models.Model):
                 if m.script_step_id == chatbot_script_step
                 and m.mail_message_id.author_id == chatbot_script_step.chatbot_script_id.operator_partner_id
             ), self.env["mail.message"])
-            Store(bus_channel=self).add_model_values(
+            Store.to(self).add_model_values(
                 "ChatbotStep",
                 {
                     "id": (chatbot_script_step.id, step_message.id),
@@ -1105,14 +1105,14 @@ class DiscussChannel(models.Model):
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()
 
-    def _notify_current_step_is_last(self, store):
+    def _notify_current_step_is_last(self):
         self.ensure_one()
         step_message = next((
             # sudo - chatbot.message.id: visitor can access chat bot messages.
             m.mail_message_id for m in self.sudo().chatbot_message_ids.sorted("id")
             if m.script_step_id == self.chatbot_current_step_id
         ), self.env["mail.message"])
-        store.add_model_values(
+        Store.to(self).add_model_values(
             "ChatbotStep",
             {
                 "id": (self.chatbot_current_step_id.id, step_message.id),

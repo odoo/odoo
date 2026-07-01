@@ -71,8 +71,8 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
         with self.assertBus(
             [
-                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id]}),
-                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id]}),
+                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id], "store_data": {}}),
+                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id], "store_data": {}}),
             ],
         ):
             message.unlink()

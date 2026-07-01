@@ -860,7 +860,11 @@ class MailMessage(models.Model):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():
-            partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
+            Store.to(
+                partner,
+                notification_type="mail.message/delete",
+                payload={"message_ids": messages.ids},
+            )
         return super().unlink()
 
     def export_data(self, fields_to_export):
@@ -904,9 +908,10 @@ class MailMessage(models.Model):
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        self.env.user._bus_send(
-            "mail.message/mark_as_read",
-            {
+        Store.to(
+            self.env.user,
+            notification_type="mail.message/mark_as_read",
+            payload={
                 "message_ids": notifications.mail_message_id.ids,
                 "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
             },
@@ -925,9 +930,10 @@ class MailMessage(models.Model):
             return
         notifications.write({'is_read': True})
         # notifies changes in messages through the bus.
-        self.env.user._bus_send(
-            "mail.message/mark_as_read",
-            {
+        Store.to(
+            self.env.user,
+            notification_type="mail.message/mark_as_read",
+            payload={
                 "message_ids": notifications.mail_message_id.ids,
                 "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
             },
@@ -943,10 +949,10 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        Store(
+        Store.to(
             self.env.user,
             notification_type="mail.message/mark_as_unread",
-            notification_payload={"message_ids": notifications.mail_message_id.ids},
+            payload={"message_ids": notifications.mail_message_id.ids},
         ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
@@ -1054,8 +1060,7 @@ class MailMessage(models.Model):
         self._bus_send_reaction_group(content)
 
     def _bus_send_reaction_group(self, content):
-        store = Store(bus_channel=self)
-        store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
+        Store.to(self).add(self, "_store_reaction_group_fields", fields_params={"content": content})
 
     def _store_reaction_group_fields(self, res: Store.FieldList, *, content=None):
         """Build field list to group reactions by content for each message.
@@ -1420,9 +1425,8 @@ class MailMessage(models.Model):
                 messages_per_partner[message.author_id] |= message
         for partner, messages in messages_per_partner.items():
             if user := partner.main_user_id:
-                store = Store(bus_channel=user)
                 user_messages = messages.with_user(user)._filtered_access('read')
-                store.add(user_messages, "_store_notification_fields")
+                Store.to(user).add(user_messages, "_store_notification_fields")
 
     def _bus_channels(self):
         return self.env.user._bus_channels()

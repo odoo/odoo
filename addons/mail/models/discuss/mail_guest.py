@@ -102,8 +102,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         for channel in self.channel_ids:
-            Store(bus_channel=channel).add(self, "_store_avatar_fields")
-        Store(bus_channel=self).add(self, "_store_avatar_fields")
+            Store.to(channel).add(self, "_store_avatar_fields")
+        Store.to(self).add(self, "_store_avatar_fields")
 
     def _update_timezone(self, timezone):
         query = """

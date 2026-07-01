@@ -175,7 +175,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         def notifications():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
-            store = Store(bus_channel=discuss_channel).add(messages[1], "_store_message_fields")
+            store = Store(target=discuss_channel).add(messages[1], "_store_message_fields")
             transfer_message_data = store._build_result()
             transfer_message_data["mail.message"][0].update(
                 {
@@ -183,7 +183,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "body": ["markup", "<p>I will transfer you to a human.</p>"],
                 }
             )
-            store = Store(bus_channel=discuss_channel).add(messages[0], "_store_message_fields")
+            store = Store(target=discuss_channel).add(messages[0], "_store_message_fields")
             joined_message_data = store._build_result()
             joined_message_data["mail.message"][0].update(
                 {
@@ -200,7 +200,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             member_emp = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee
             )
-            store = Store(bus_channel=member_emp)
+            store = Store(target=member_emp)
             store.add(discuss_channel, "_store_channel_fields")
             channel_data_join = store._build_result()
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_answer"
@@ -222,11 +222,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             return [
                 BusResult(
                     discuss_channel,
-                    "discuss.channel/new_message",
-                    {"store_data": transfer_message_data, "id": discuss_channel.id},
-                ),
-                BusResult(
-                    discuss_channel,
                     "mail.record/insert",
                     {
                         "discuss.channel": [
@@ -235,6 +230,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "livechat_channel_member_history_ids": [
                                     ["ADD", [agent_history_id]]
                                 ],
+                                "member_count": 2,
+                                "name": "OdooBot Ernest Employee",
                             },
                         ],
                         "im_livechat.channel.member.history": [
@@ -244,41 +241,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "livechat_member_type": "agent",
                                 "partner_id": self.partner_employee.id,
                                 "member_id": member_emp.id,
-                            }
+                            },
                         ],
-                        "res.partner": [
-                            {
-                                "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
-                                "id": self.partner_employee.id,
-                                "name": "Ernest Employee",
-                                "user_livechat_username": False,
-                                "write_date": fields.Datetime.to_string(
-                                    self.partner_employee.write_date
-                                ),
-                            }
-                        ],
-                    },
-                ),
-                BusResult(
-                    self.user_employee,
-                    "discuss.channel/joined",
-                    {
-                        "channel_id": discuss_channel.id,
-                        "invite_to_rtc_call": False,
-                        "store_data": channel_data_join,
-                        "invited_by_user_id": self.env.user.id,
-                    },
-                ),
-                BusResult(
-                    discuss_channel,
-                    "discuss.channel/new_message",
-                    {"store_data": joined_message_data, "id": discuss_channel.id},
-                ),
-                BusResult(
-                    discuss_channel,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
                         "discuss.channel.member": [
                             {
                                 "channel_role": False,
@@ -289,7 +253,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "partner_id": self.partner_employee.id,
                                 "seen_message_id": False,
                                 "channel_id": discuss_channel.id,
-                            }
+                            },
+                            {"_DELETE": True, "id": member_bot.id},
                         ],
                         "res.country": [
                             {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
@@ -307,8 +272,16 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "write_date": fields.Datetime.to_string(
                                     self.partner_employee.write_date
                                 ),
-                            }
+                            },
                         ),
+                        "ChatbotStep": [
+                            {
+                                "id": [self.step_forward_operator.id, False],
+                                "message": False,
+                                "operatorFound": True,
+                                "scriptStep": self.step_forward_operator.id,
+                            },
+                        ],
                     },
                 ),
                 BusResult(
@@ -336,37 +309,23 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 ),
                 BusResult(
                     discuss_channel,
-                    "mail.record/insert",
+                    "discuss.channel/new_message",
+                    {"store_data": transfer_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel/joined",
                     {
-                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
-                        "discuss.channel.member": [{"_DELETE": True, "id": member_bot.id}],
+                        "channel_id": discuss_channel.id,
+                        "invite_to_rtc_call": False,
+                        "store_data": channel_data_join,
+                        "invited_by_user_id": self.env.user.id,
                     },
                 ),
                 BusResult(
                     discuss_channel,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": discuss_channel.id,
-                                "name": "OdooBot Ernest Employee",
-                            },
-                        ],
-                    },
-                ),
-                BusResult(
-                    discuss_channel,
-                    "mail.record/insert",
-                    {
-                        "ChatbotStep": [
-                            {
-                                "id": [self.step_forward_operator.id, False],
-                                "message": False,
-                                "operatorFound": True,
-                                "scriptStep": self.step_forward_operator.id,
-                            }
-                        ]
-                    },
+                    "discuss.channel/new_message",
+                    {"store_data": joined_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(self.user_employee, "mail.record/insert", channel_data_emp),
             ]

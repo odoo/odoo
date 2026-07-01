@@ -253,7 +253,7 @@ class DiscussChannelMember(models.Model):
         for channel, members in name_members_by_channel.items():
             if channel.channel_name_member_ids == members:
                 continue
-            Store(bus_channel=channel).add(
+            Store.to(channel).add(
                 channel,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
             )
@@ -291,7 +291,8 @@ class DiscussChannelMember(models.Model):
             res.remove("is_pinned")
             res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_with_rtc_and_sub_members(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
         # always unlink members of sub-channels as well
@@ -313,21 +314,18 @@ class DiscussChannelMember(models.Model):
         members_by_channel = {
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
-        res = super().unlink()
-        stores = Store.Stores()
         for channel, members in name_members_by_channel.items():
             # sudo - discuss.channel: updating channel names according to members is allowed,
             # even after the member left the channel.
             channel_sudo = channel.sudo()
-            if channel_sudo.channel_name_member_ids == members:
+            if (channel_sudo.channel_name_member_ids - self) == members:
                 continue
-            stores[channel].add(
+            Store.to(channel).add(
                 channel_sudo,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
             )
         for channel, members in members_by_channel.items():
-            stores[channel].delete(members).add(channel, ["member_count"])
-        return res
+            Store.to(channel).delete(members).add(channel, ["member_count"])
 
     def _bus_channels(self):
         return self.partner_id._bus_channels() or self.guest_id._bus_channels()
@@ -337,7 +335,7 @@ class DiscussChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            Store(bus_channel=member.channel_id).add(
+            Store.to(member.channel_id).add(
                 member,
                 lambda res: (
                     res.from_method("_store_member_fields"),
@@ -363,9 +361,8 @@ class DiscussChannelMember(models.Model):
         """Returns the list of (member, store) combinations.
         This is necessary because members are currently linked to partners,
         which can have multiple users."""
-        stores = Store.Stores()
         return [
-            (member, stores[bus_channel])
+            (member, Store.to(bus_channel))
             for member in self
             for bus_channel in member._bus_channels()
         ]
@@ -588,7 +585,7 @@ class DiscussChannelMember(models.Model):
         )
         if members:
             members.rtc_inviting_session_id = self.rtc_session_ids.id
-            Store(bus_channel=self.channel_id).add(
+            Store.to(self.channel_id).add(
                 self.channel_id,
                 lambda res: res.many(
                     "invited_member_ids",
@@ -679,7 +676,7 @@ class DiscussChannelMember(models.Model):
         if not notify:
             return
         for bus_channel in bus_channels:
-            Store(bus_channel=bus_channel).add(self, "_store_seen_fields")
+            Store.to(bus_channel).add(self, "_store_seen_fields")
 
     def _set_new_message_separator(self, message_id):
         """
@@ -690,7 +687,7 @@ class DiscussChannelMember(models.Model):
         if message_id == self.new_message_separator:
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
             for bus_channel in self._bus_channels():
-                Store(bus_channel=bus_channel).add(
+                Store.to(bus_channel).add(
                     self,
                     lambda res: (
                         res.attr("message_unread_counter"),
