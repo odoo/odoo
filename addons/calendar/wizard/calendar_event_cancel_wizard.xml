@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="recurring_calendar_event_cancel_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.cancel.wizard.view.form</field>
+        <field name="model">calendar.event.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Recurring Events">
+                <field name="recurrence_choice" widget="radio"/>
+                <footer>
+                    <button name="action_proceed_recurrence_choice" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_event_cancel_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.cancel.wizard.form</field>
+        <field name="model">calendar.event.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Event">
+                <field name="calendar_event_id" invisible="1"/>
+                <div col="2" class="alert alert-warning" role="alert" invisible="not requested_action">
+                    <span>Are you sure you want to <field name="requested_action" readonly="1"/> this event? <br/></span>
+                </div>
+                <group col="2">
+                    <field name="recipient_ids"
+                           widget="many2many_tags_email"
+                           context="{'force_email': True,' show_email': True, 'no_create_edit': True}"
+                    />
+                </group>
+                <group col="2">
+                    <field name="subject" placeholder="Subject"/>
+                </group>
+                <field name="body"
+                       class="oe-bordered-editor"
+                       options="{'style-inline': true}"/>
+                <footer invisible="not requested_action">
+                    <button string="Send and delete"
+                            name="action_send_mail_and_delete"
+                            type="object"
+                            invisible="requested_action != 'delete'"
+                            class="btn-primary o_cw_send_notify_delete"/>
+                    <button string="Delete"
+                            name="action_delete"
+                            type="object"
+                            invisible="requested_action != 'delete'"
+                            class="btn-primary mx-1"/>
+                    <button string="Send and cancel"
+                            name="action_send_mail_and_cancel"
+                            type="object"
+                            invisible="requested_action != 'cancel'"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            name="action_cancel"
+                            type="object"
+                            invisible="requested_action != 'cancel'"
+                            class="btn-primary mx-1"/>
+                    <button class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+                <footer invisible="requested_action">
+                    <button string="Send" name="action_send_mail" type="object" class="btn-primary"/>
+                    <button string="Don't send" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

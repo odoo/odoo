@@ -248,6 +248,9 @@ class CalendarRecurrence(models.Model):
             return event._get_event_user()
         return self.env.user
 
+    def _is_confirmed(self):
+        return True
+
     def _is_google_insertion_blocked(self, sender_user):
         self.ensure_one()
         has_base_event = self.base_event_id

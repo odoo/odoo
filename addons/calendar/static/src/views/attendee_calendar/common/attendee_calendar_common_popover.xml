@@ -17,11 +17,6 @@
     </t>
 
     <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='this.isEventDeletable']" position="after">
-            <a t-if="this.isEventArchivable and this.isEventDetailsVisible" href="#" class="btn btn-secondary" t-on-click="this.onClickArchive">
-                <i class="fa fa-trash"/>
-            </a>
-        </xpath>
         <xpath expr="//t[@t-if='this.isEventDeletable']" position="before">
             <t t-if="this.displayAttendeeAnswerChoice">
                 <div class="btn-group w-100 w-auto me-auto me-lg-0 ms-lg-auto order-first order-lg-0 px-2 px-lg-0">

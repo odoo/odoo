@@ -1,13 +1,8 @@
 import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];
@@ -187,48 +182,13 @@ export class AttendeeCalendarModel extends CalendarModel {
         }
     }
 
-    /**
-     * Archives a record, ask for the recurrence update policy in case of recurrent event.
-     */
-    async archiveRecord(record) {
-        let recurrenceUpdate = false;
-        if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
-            if (!recurrenceUpdate) {
-                return;
-            }
-        } else {
-            const confirm = await new Promise((resolve) => {
-                this.dialog.add(ConfirmationDialog, {
-                    title: _t("Bye-bye, record!"),
-                    body: deleteConfirmationMessage,
-                    confirm: resolve.bind(null, true),
-                    confirmLabel: _t("Delete"),
-                    confirmClass: "btn-danger",
-                    cancel: () => resolve.bind(null, false),
-                    cancelLabel: _t("No, keep it"),
-                });
-            });
-            if (!confirm) {
-                return;
-            }
-        }
-        await this._archiveRecord(record.id, recurrenceUpdate);
-    }
-
-    async _archiveRecord(id, recurrenceUpdate) {
-        if (!recurrenceUpdate && recurrenceUpdate !== "self_only") {
-            await this.orm.call(this.resModel, "action_archive", [[id]]);
-        } else {
-            await this.orm.call(this.resModel, "action_mass_archive", [[id], recurrenceUpdate]);
-        }
-        await this.load();
-    }
-
     normalizeRecord(rawRecord) {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "fa fa-lock";
+        }
+        if (rawRecord.is_draft) {
+            normalizedRecord.title = `[Draft] ${normalizedRecord.title}`
         }
         return normalizedRecord;
     }

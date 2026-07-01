@@ -461,9 +461,9 @@
         </record>
 
         <record id="calendar_template_delete_event" model="mail.template">
-            <field name="name">Calendar: Event Deleted</field>
+            <field name="name">Calendar: Event Canceled</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>
-            <field name="subject">Deleted event: {{ object.name }}</field>
+            <field name="subject">Canceled event: {{ object.name }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to" eval="False"/>
             <field name="use_default_to" eval="True"/>

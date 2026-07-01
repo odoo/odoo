@@ -346,8 +346,8 @@ export class CalendarCommonRenderer extends Component {
             if (record.duration <= 0.25) {
                 classesToAdd.push("o_event_oneliner");
             }
-            if (DateTime.now() >= record.end) {
-                classesToAdd.push("o_past_event");
+            if (this.isEventToFade(record)) {
+                classesToAdd.push("o_event_faded");
             }
 
             if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
@@ -357,6 +357,9 @@ export class CalendarCommonRenderer extends Component {
             }
         }
         return classesToAdd;
+    }
+    isEventToFade(event) {
+        return event.end <= DateTime.now();
     }
     onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;

@@ -76,10 +76,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         return this.isEventPrivate ? this.isEventEditable : true;
     }
 
-    get isEventArchivable() {
-        return false;
-    }
-
     async onClickOpenRecord() {
         const action = await this.orm.call("calendar.event", "action_open_calendar_event", [
             this.props.record.id,
@@ -91,7 +87,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
-        return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
+        return super.isEventDeletable && this.isEventEditable;
     }
 
     /**
@@ -131,10 +127,5 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         ]);
         await this.props.model.load();
         this.props.close();
-    }
-
-    async onClickArchive() {
-        this.props.close();
-        await this.props.model.archiveRecord(this.props.record);
     }
 }

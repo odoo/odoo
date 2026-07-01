@@ -1497,7 +1497,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id,
                                               '%s_owner_id' % self.env.cr.dbname: other_user.id}},
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }, timeout=3)
 
     @patch_api

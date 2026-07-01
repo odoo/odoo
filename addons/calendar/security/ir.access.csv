@@ -1,6 +1,8 @@
 id,name,model_id,group_id/id,operation,domain
 access_calendar_attendee_employee,calendar.attendee_employee,calendar.attendee,base.group_user,crud,
-access_calendar_attendee_employee_delete_wizard,calendar.attendee_employee_delete_wizard,calendar.popover.delete.wizard,base.group_user,crud,
+access_calendar_attendee_employee_invite_wizard,calendar.attendee_employee_invite_wizard,calendar.attendee.invite.wizard,base.group_user,crud,
+access_calendar_attendee_employee_cancel_wizard,calendar.attendee_employee_cancel_wizard,calendar.event.cancel.wizard,base.group_user,crud,
+access_calendar_attendee_employee_multi_cancel_wizard,calendar.attendee_employee_multi_cancel_wizard,calendar.event.multi.cancel.wizard,base.group_user,crud,
 access_calendar_alarm,calendar.alarm,calendar.alarm,base.group_user,crud,
 calendar_event_rule_my,Own events,calendar.event,base.group_portal,r,"[('partner_ids', 'in', user.partner_id.id)]"
 calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,crud,
