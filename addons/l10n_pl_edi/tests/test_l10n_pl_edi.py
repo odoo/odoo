@@ -517,6 +517,19 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             )
 
     @freeze_time('2026-01-23')
+    def test_ksef_fa3_eu_service_b2b_includes_p13_9(self):
+        """
+        EU B2B service invoices tagged with K_12 must include P_13_9 as the net
+        amount of the supplied service.
+        """
+        service_tax = self.env['account.chart.template'].ref('vs_dostu')
+        service_product = self._create_product(name='EU Service', type='service', taxes_id=[(6, 0, [service_tax.id])])
+        invoice_line = self._prepare_invoice_line(product_id=service_product.id, quantity=1, price_unit=1000.0)
+        invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Fa/ns:P_13_9"), '1000.00')
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
         """
         Verification of Negative Values for Corrections (Difference Method).
