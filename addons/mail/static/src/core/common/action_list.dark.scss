@@ -13,4 +13,13 @@
             text-shadow: 0px 0px 1px darken($success, 10%);
         }
     }
+
+    & button.o-inDiscussCall.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+        background-color: #{$gray-200};
+        border: 1px solid rgba(white, 0.1);
+
+        &:hover {
+            background-color: mix($gray-200, white, 90%);
+        }
+    }
 }

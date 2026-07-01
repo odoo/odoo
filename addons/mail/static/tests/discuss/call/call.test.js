@@ -850,7 +850,7 @@ test("show call participants after stopping screen share", async () => {
     await click("[title='Stop Sharing Screen']");
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard-avatar .o-minimized");
 });
 
 test("show call participants after stopping camera share", async () => {
@@ -864,7 +864,7 @@ test("show call participants after stopping camera share", async () => {
     await click("[title='Turn camera off']");
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard-avatar .o-minimized");
 });
 
 test("Cross tab calls: tabs can interact with calls remotely", async () => {
