@@ -449,6 +449,12 @@ export class DragAndDropPlugin extends Plugin {
                 }
                 if (!hasSamePositionAsStart) {
                     this.dependencies.history.commit();
+                    // The commit above may be reported as a preview (stale
+                    // `isPreviewing` state from an unrelated option preview
+                    // started before the drag), in which case `onChange`
+                    // skips refreshing the "Invisible Elements" panel. Force
+                    // it here since a drop is never a preview.
+                    this.config.updateInvisibleElementsPanel();
                 } else {
                     this.cancelDragAndDrop();
                     return;
