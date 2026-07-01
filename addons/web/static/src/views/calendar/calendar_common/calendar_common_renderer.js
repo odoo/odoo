@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -86,13 +86,13 @@ export class CalendarCommonRenderer extends Component {
             trailing: true,
         });
         const fullCalendarResizeObserver = new ResizeObserver(fullCalendarRenderDebounced);
-        useLayoutEffect(
-            (el) => {
-                fullCalendarResizeObserver.observe(el);
-                return () => fullCalendarResizeObserver.unobserve(el);
-            },
-            () => [this.fc.el]
-        );
+        // useLayoutEffect(
+        //     (el) => {
+        //         fullCalendarResizeObserver.observe(el);
+        //         return () => fullCalendarResizeObserver.unobserve(el);
+        //     },
+        //     () => [this.fc.el]
+        // );
 
         this.ref = useRef("fullCalendar");
         useSquareSelection();
