@@ -6,22 +6,40 @@
             <div t-if="vals.productImage" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="vals.productImage"/>
             </div>
+
             <div class="d-flex flex-column w-100" t-att-class="lineClasses">
                 <div class="line-details d-flex justify-content-between" t-att-class="{ 'align-items-center' : vals.isReceipt }">
-                    <div class="product-name d-flex flex-grow-1 pe-2 text-truncate" t-att-class="{ 'align-items-center' : vals.isReceipt }">
+                    
+                    <div class="product-name d-flex flex-grow-1 pe-2" t-att-class="{ 'align-items-center' : vals.isReceipt }">
                         <span class="qty d-inline-block fw-bolder" t-attf-class="{{ vals.isReceipt ? 'pe-2' : 'px-1' }}">
                             <t t-esc="vals.unitPart"/>
                             <small t-if="vals.decimalPart" t-out="vals.decimalPart" class="fw-normal" style="font-size: 85%;" />
                         </span>
-                        <span class="text-wrap d-inline">
-                            <t t-esc="vals.name" /><br/>
-                            <small t-if="vals.attributeString" t-out="vals.attributeString" class="attribute-line fst-italic" />
-                        </span>
+
+                        <div class="d-flex align-items-start flex-grow-1 w-100">
+                            <div class="flex-grow-1 text-wrap">
+                                <t t-esc="vals.name"/>
+                                <br/>
+                                <small t-if="vals.attributeString"
+                                       t-out="vals.attributeString"
+                                       class="attribute-line fst-italic" />
+                            </div>
+
+                            <div class="ms-2 text-nowrap text-end" t-if="vals.default_code" style="min-width: 60px;">
+                                <t t-esc="vals.default_code"/>
+                            </div>
+                        </div>
                     </div>
-                    <div t-if="vals.price" t-out="vals.price" class="product-price price" t-attf-class="{{ vals.isReceipt ? 'font-monospace' : 'fw-bolder' }}"
-                    />
+
+                    <div t-if="vals.price" 
+                         t-out="vals.price" 
+                         class="product-price price text-end" 
+                         t-attf-class="{{ vals.isReceipt ? 'font-monospace' : 'fw-bolder' }}" 
+                         style="min-width: 80px;"/>
+
                     <div t-if="vals.taxGroup" t-esc="vals.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
+
                 <ul class="info-list d-flex flex-column mb-0 ms-2" t-att-style="vals.isReceipt and 'font-size: 75%;'" t-att-class="infoListClasses">
                     <li class="price-per-unit" t-if="vals.displayPriceUnit" t-out="vals.displayPriceUnit" />
                     <li t-if="vals.discount" class="price-per-unit">
