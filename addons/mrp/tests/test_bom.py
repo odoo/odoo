@@ -2862,6 +2862,233 @@ class TestBoM(TestMrpCommon):
         self.env['mrp.routing.workcenter'].search([]).unlink()
         self.assertFalse(self.bom_1.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
 
+    def test_bom_attachment_copy_to_product(self):
+        """Test that an attachment added to a BoM is correctly copied to the Product."""
+        product = self.make_prods(1)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Plan_Fabrication.pdf',
+            'type': 'binary',
+            'raw': b'mock_file_content',
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+        })
+        self.assertEqual(attachment.res_model, 'mrp.bom')
+        self.assertEqual(attachment.res_id, bom.id)
+        copied_attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Plan_Fabrication.pdf'),
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', product.product_tmpl_id.id),
+        ])
+        self.assertTrue(copied_attachment, "The document was not copied to the product.")
+        self.assertEqual(len(copied_attachment), 1, "There should be exactly one copy on the product.")
+
+    def test_bom_attachment_ignores_other_models(self):
+        """Test that the system ignores attachments from other models."""
+        partner = self.env['res.partner'].create({'name': 'Fournisseur Test'})
+        self.env['ir.attachment'].create({
+            'name': 'Contrat.pdf',
+            'type': 'binary',
+            'raw': b'mock_file_content',
+            'res_model': 'res.partner',
+            'res_id': partner.id,
+        })
+        wrong_copy = self.env['ir.attachment'].search([
+            ('name', '=', 'Contrat.pdf'),
+            ('res_model', '=', 'product.template'),
+        ])
+        self.assertFalse(wrong_copy, "An attachment not belonging to a BoM was copied by mistake.")
+
+    def test_bom_attachment_copy_to_product_variant(self):
+        """Test that an attachment on a variant BoM is copied to the variant (product.product)."""
+        variant = self.make_prods(1)
+        bom_variant = self.env['mrp.bom'].create({
+            'product_tmpl_id': variant.product_tmpl_id.id,
+            'product_id': variant.id,
+            'product_qty': 1.0,
+        })
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Blue_Instruction_Variant.pdf',
+            'type': 'binary',
+            'raw': b'mock_variant_file',
+            'res_model': 'mrp.bom',
+            'res_id': bom_variant.id,
+        })
+        self.assertEqual(attachment.res_model, 'mrp.bom')
+        self.assertEqual(attachment.res_id, bom_variant.id)
+        copied_attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Blue_Instruction_Variant.pdf'),
+            ('res_model', '=', 'product.product'),
+            ('res_id', '=', variant.id),
+        ])
+        wrong_template_attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Blue_Instruction_Variant.pdf'),
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', variant.product_tmpl_id.id),
+        ])
+        self.assertTrue(copied_attachment, "The document was not copied to the variant (product.product).")
+        self.assertEqual(len(copied_attachment), 1, "There should be exactly one copy on the variant.")
+        self.assertFalse(wrong_template_attachment, "The document was incorrectly copied to the product template instead of the variant.")
+
+    def test_bom_attachment_unlink_removes_product_template_copy(self):
+        """Test that deleting an attachment on a BoM removes the copy on the product template."""
+        product = self.make_prods(1)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Blueprint_to_delete.pdf',
+            'type': 'binary',
+            'raw': b'mock_file_to_delete',
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+        })
+        copied_attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Blueprint_to_delete.pdf'),
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', product.product_tmpl_id.id),
+        ])
+        self.assertTrue(copied_attachment, "The copy should exist before deletion.")
+        attachment.unlink()
+        copied_attachment_after = self.env['ir.attachment'].search([
+            ('id', 'in', copied_attachment.ids),
+        ])
+        self.assertFalse(copied_attachment_after, "The copy on the product template should have been deleted.")
+
+    def test_bom_attachment_unlink_removes_product_variant_copy(self):
+        """Test that deleting an attachment on a BoM variant removes the copy on the product variant."""
+        variant = self.make_prods(1)
+        bom_variant = self.env['mrp.bom'].create({
+            'product_tmpl_id': variant.product_tmpl_id.id,
+            'product_id': variant.id,
+            'product_qty': 1.0,
+        })
+
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Variant_blueprint_to_delete.pdf',
+            'type': 'binary',
+            'raw': b'mock_variant_file_to_delete',
+            'res_model': 'mrp.bom',
+            'res_id': bom_variant.id,
+        })
+        copied_attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Variant_blueprint_to_delete.pdf'),
+            ('res_model', '=', 'product.product'),
+            ('res_id', '=', variant.id)
+        ])
+        self.assertTrue(copied_attachment, "The copy should exist on the product variant before deletion.")
+        attachment.unlink()
+        copied_attachment_after = self.env['ir.attachment'].search([
+            ('id', 'in', copied_attachment.ids),
+        ])
+        self.assertFalse(copied_attachment_after, "The copy on the product variant should have been deleted.")
+
+    def test_bom_attachment_unlink_ignores_unrelated(self):
+        """Test that deletion still works normally for other models without throwing errors."""
+        partner = self.env['res.partner'].create({'name': 'Test Unlink Partner'})
+
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Contract_to_delete.pdf',
+            'type': 'binary',
+            'raw': b'mock_partner_file',
+            'res_model': 'res.partner',
+            'res_id': partner.id,
+        })
+
+        attachment.unlink()
+        self.assertFalse(attachment.exists(), "The standard attachment could not be deleted.")
+
+    def test_bom_attachment_shared_across_boms(self):
+        """ Test Case 1: Same attachment on 2 BOMs of the same product.
+        Deleting one should only remove one copy from the product. """
+        product = self.make_prods(1)
+        bom_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+        bom_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 2.0,
+        })
+        att_vals = {
+            'name': 'Shared_Blueprint.pdf',
+            'type': 'binary',
+            'raw': b'shared_mock_content',
+        }
+        att_bom_1 = self.env['ir.attachment'].create(dict(att_vals, res_model='mrp.bom', res_id=bom_1.id))
+        att_bom_2 = self.env['ir.attachment'].create(dict(att_vals, res_model='mrp.bom', res_id=bom_2.id))
+        copies = self.env['ir.attachment'].search([
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', product.product_tmpl_id.id),
+            ('name', '=', 'Shared_Blueprint.pdf')
+        ])
+        self.assertEqual(len(copies), 2, "There should be exactly 2 copies on the product template.")
+        att_bom_1.unlink()
+        copies_after_first_delete = self.env['ir.attachment'].search([
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', product.product_tmpl_id.id),
+            ('name', '=', 'Shared_Blueprint.pdf')
+        ])
+        self.assertEqual(len(copies_after_first_delete), 1, "One copy should remain on the product template after deleting the first BOM attachment.")
+        att_bom_2.unlink()
+        copies_after_second_delete = self.env['ir.attachment'].search([
+            ('id', 'in', copies_after_first_delete.ids)
+        ])
+        self.assertFalse(copies_after_second_delete, "The last copy should be removed from the product template.")
+
+    def test_bom_attachment_moves_on_bom_update(self):
+        """ Test Case 2: Updating a BOM to target a specific variant should move the attachment. """
+        variant = self.make_prods(1)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': variant.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+        self.env['ir.attachment'].create({
+            'name': 'Moving_Document.pdf',
+            'type': 'binary',
+            'raw': b'moving_mock_content',
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+        })
+        global_copy = self.env['ir.attachment'].search([
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', variant.product_tmpl_id.id),
+            ('name', '=', 'Moving_Document.pdf'),
+        ])
+        self.assertTrue(global_copy, "The copy should initially be on the global product template.")
+        bom.write({'product_id': variant.id})
+        global_copy_after = self.env['ir.attachment'].search([('id', '=', global_copy.id)])
+        self.assertEqual(global_copy_after.res_model, 'product.product', "The attachment's model should have moved to product.product.")
+        self.assertEqual(global_copy_after.res_id, variant.id, "The attachment's res_id should have moved to the variant's ID.")
+
+    def test_bom_attachment_removed_on_bom_unlink(self):
+        """ Test Case 3: Deleting the entire BOM should remove the copied attachments. """
+        product = self.make_prods(1)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+        self.env['ir.attachment'].create({
+            'name': 'Doomed_Blueprint.pdf',
+            'type': 'binary',
+            'raw': b'doomed_mock_content',
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+        })
+        copy_att = self.env['ir.attachment'].search([
+            ('res_model', '=', 'product.template'),
+            ('res_id', '=', product.product_tmpl_id.id),
+            ('name', '=', 'Doomed_Blueprint.pdf')
+        ])
+        self.assertTrue(copy_att, "The copy should exist on the product template.")
+        bom.unlink()
+        copy_after_bom_unlink = self.env['ir.attachment'].search([('id', 'in', copy_att.ids)])
+        self.assertFalse(copy_after_bom_unlink, "The copied attachment should be deleted when the BOM is deleted.")
+
 
 class TestTourBoM(HttpCase):
     @classmethod

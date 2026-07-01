@@ -259,12 +259,50 @@ class MrpBom(models.Model):
         return res
 
     def write(self, vals):
+        has_product_change = 'product_id' in vals or 'product_tmpl_id' in vals
+        old_targets = {}
+        if has_product_change:
+            boms_with_atts = self.env['ir.attachment'].search([
+                ('res_model', '=', 'mrp.bom'),
+                ('res_id', 'in', self.ids),
+            ]).mapped('res_id')
+            for bom in self:
+                if bom.id in boms_with_atts:
+                    old_model = 'product.product' if bom.product_id else 'product.template'
+                    old_id = bom.product_id.id if bom.product_id else bom.product_tmpl_id.id
+                    old_targets[bom.id] = (old_model, old_id)
+
         res = super().write(vals)
         relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty']
         if any(field_name in vals for field_name in relevant_fields):
             self._set_outdated_bom_in_productions()
         if 'sequence' in vals and self and self[-1].id == list(self._prefetch_ids)[-1]:
             self.browse(self._prefetch_ids)._check_bom_cycle()
+
+        if old_targets:
+            for bom in self:
+                if bom.id not in old_targets:
+                    continue
+                old_model, old_id = old_targets[bom.id]
+                new_model = 'product.product' if bom.product_id else 'product.template'
+                new_id = bom.product_id.id if bom.product_id else bom.product_tmpl_id.id
+                if (old_model != new_model or old_id != new_id) and new_id:
+                    bom_attachments = self.env['ir.attachment'].search([
+                        ('res_model', '=', 'mrp.bom'),
+                        ('res_id', '=', bom.id),
+                    ])
+                    for att in bom_attachments:
+                        copy_att = self.env['ir.attachment'].search([
+                            ('res_model', '=', old_model),
+                            ('res_id', '=', old_id),
+                            ('name', '=', att.name),
+                            ('checksum', '=', att.checksum),
+                        ], limit=1)
+                        if copy_att:
+                            copy_att.write({
+                                'res_model': new_model,
+                                'res_id': new_id,
+                            })
         return res
 
     def copy(self, default=None):
@@ -368,6 +406,28 @@ class MrpBom(models.Model):
     def _unlink_except_running_mo(self):
         if self.env['mrp.production'].search_count([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_bom_copied_attachments(self):
+        for bom in self:
+            target_model = 'product.product' if bom.product_id else 'product.template'
+            target_id = bom.product_id.id if bom.product_id else bom.product_tmpl_id.id
+            bom_attachments = self.env['ir.attachment'].search([
+                ('res_model', '=', 'mrp.bom'),
+                ('res_id', '=', bom.id),
+            ])
+            for att in bom_attachments:
+                domain = [
+                    ('res_model', '=', target_model),
+                    ('res_id', '=', target_id),
+                    ('name', '=', att.name),
+                    ('checksum', '=', att.checksum),
+                    ('id', '!=', att.id),
+                ]
+                copied_attachments = self.env['ir.attachment'].search(domain)
+                existing_copies = copied_attachments.exists()[:1]
+                if existing_copies:
+                    existing_copies.unlink()
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
