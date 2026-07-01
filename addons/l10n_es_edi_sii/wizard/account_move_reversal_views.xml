@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='journal_id']" position="after">
                 <field name="l10n_es_edi_is_required" invisible="1"/>
-                <field invisible="not l10n_es_edi_is_required" name="l10n_es_sii_refund_reason" widget="selection"/>
+                <field invisible="not l10n_es_edi_is_required" name="l10n_es_sii_refund_reason" widget="selection" readonly="False"/>
             </xpath>
         </field>
     </record>
