@@ -11,7 +11,7 @@
     }
     // Select inputs do not trigger the default browser behavior
     // Since we use a custom editable element
-    .s_website_form_field select {
+    .s_website_form_field select, .s_website_form_m2m_pills_container {
         pointer-events: none;
     }
 }
@@ -86,6 +86,44 @@
     }
     .s_website_form_field_description {
         display: block;
+    }
+
+    .s_website_form_m2m_selection {
+        .s_website_form_m2m_pills_container {
+            position: relative;
+            min-height: calc(#{$input-height} - 2 * #{$input-border-width});
+            &:focus-within {
+                border-color: $input-focus-border-color;
+                box-shadow: $input-focus-box-shadow;
+            }
+        }
+        button[data-bs-toggle="dropdown"] {
+            position: absolute;
+            inset: 0;
+            border: 0;
+            background: transparent;
+        }
+        .s_website_form_m2m_pill {
+            position: relative;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+        .dropdown-item::before {
+            content: "\f096";
+            display: inline-block;
+            width: 1.5em;
+            font-family: "FontAwesome";
+        }
+        .s_website_form_m2m_pill_remove {
+            padding: 0;
+            font-size: inherit;
+            line-height: 1;
+            color: inherit;
+        }
+        .dropdown-item[aria-checked="true"]::before {
+            content: "\f14a";
+            color: $primary;
+        }
     }
 
     // File blocks.

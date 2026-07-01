@@ -1108,6 +1108,98 @@ describe("Many2one Field", () => {
     });
 });
 
+describe("Many2Many Field", () => {
+    const allowEmptyCheckbox = "[data-label='Allow Empty'] input[type=checkbox]";
+    const selectedOptions = ":iframe select.s_website_form_input option[selected]";
+    const emptyOption = ":iframe .s_website_form_empty_option";
+
+    beforeEach(async () => {
+        onRpc("get_authorized_fields", () => ({
+            recipient_ids: {
+                name: "recipient_ids",
+                relation: "res.partner",
+                string: "To (Partners)",
+                type: "many2many",
+            },
+        }));
+        await setupWebsiteBuilder(`
+            <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" class="o_mark_required" data-model_name="res.partner">
+                        <div class="s_website_form_rows">
+                            <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2many_selection">
+                                <div class="row">
+                                    <label class="s_website_form_label">
+                                        <span class="s_website_form_label_content">To (Partners)</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <div class="s_website_form_m2m_selection dropdown">
+                                            <select multiple="multiple" class="s_website_form_input d-none" name="recipient_ids">
+                                                <option value="9" selected="selected">Acme Corporation</option>
+                                                <option value="36">Acme Corporation, Addison Olson</option>
+                                                <option value="20" selected="selected">Acme Corporation, Floyd Steward</option>
+                                            </select>
+                                            <div class="s_website_form_m2m_pills_container form-select d-flex flex-wrap align-items-center gap-1">
+                                                <button type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-display="static" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle options" id="or8osly1nfmg"/>
+                                                <span class="s_website_form_m2m_placeholder d-none">Please choose any one option</span>
+                                                <span class="s_website_form_m2m_pill badge rounded-pill text-bg-primary" data-value="9">Acme Corporation<button type="button" class="s_website_form_m2m_pill_remove" aria-label="Remove"><i class="fa fa-times"></i></button></span>
+                                                <span class="s_website_form_m2m_pill badge rounded-pill text-bg-primary d-none" data-value="36">Acme Corporation, Addison Olson<button type="button" class="s_website_form_m2m_pill_remove" aria-label="Remove"><i class="fa fa-times"></i></button></span>
+                                                <span class="s_website_form_m2m_pill badge rounded-pill text-bg-primary" data-value="20">Acme Corporation, Floyd Steward<button type="button" class="s_website_form_m2m_pill_remove" aria-label="Remove"><i class="fa fa-times"></i></button></span>
+                                                <div class="dropdown-menu w-100" role="menu">
+                                                    <button type="button" class="dropdown-item" role="menuitemcheckbox" aria-checked="true" data-value="9">Acme Corporation</button>
+                                                    <button type="button" class="dropdown-item" role="menuitemcheckbox" aria-checked="false" data-value="36">Acme Corporation, Addison Olson</button>
+                                                    <button type="button" class="dropdown-item" role="menuitemcheckbox" aria-checked="true" data-value="20">Acme Corporation, Floyd Steward</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        `);
+        await contains(":iframe .s_website_form_label_content").click();
+    });
+
+    test("Selection type for m2m fields lists a Multiple and a Single section", async () => {
+        await contains("button[id='existing_field_select_type_opt']").click();
+        expect(
+            ".o_popover .o-hb-select-dropdown-category:contains('Multiple Selection')"
+        ).toHaveCount(1);
+        expect(
+            ".o_popover .o-hb-select-dropdown-category:contains('Single Selection')"
+        ).toHaveCount(1);
+        expect(".o_popover [data-action-value='many2many_selection']").toHaveCount(1);
+    });
+
+    test("disabling Allow Empty selects the first record as default", async () => {
+        // Enable first so no record is selected.
+        await contains(allowEmptyCheckbox).click();
+        expect(selectedOptions).toHaveCount(0);
+        expect(emptyOption).toHaveCount(1);
+
+        await contains(allowEmptyCheckbox).click();
+        expect(emptyOption).toHaveCount(0);
+        expect(selectedOptions).toHaveCount(1);
+        expect(selectedOptions).toHaveText("Acme Corporation");
+    });
+
+    test("toggling only option off enables Allow Empty", async () => {
+        expect(selectedOptions).toHaveCount(2);
+        expect(emptyOption).toHaveCount(0);
+
+        await contains(".o_we_table_wrapper table tr:first input[type=checkbox]").click();
+        expect(selectedOptions).toHaveCount(1);
+        expect(emptyOption).toHaveCount(0);
+
+        await contains(".o_we_table_wrapper table input[type=checkbox]:checked").click();
+        expect(selectedOptions).toHaveCount(0);
+        expect(emptyOption).toHaveCount(1);
+    });
+});
+
 test("other option attributes are preserved when switching between radio and select, removed for other field types", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(formSelectXml);
