@@ -37,4 +37,5 @@
     'pre_init_hook': '_pre_init_pdp',
     'post_init_hook': '_post_init_pdp',
     'uninstall_hook': 'uninstall_hook',
+    # 'version': '1.1',
 }
