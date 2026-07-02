@@ -25,7 +25,7 @@
                     name="products_in_repair"
                     domain="[('product_catalog_product_is_in_repair', '=', True)]"/>
                 <separator />
-                <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]" invisible="context.get('active_model') != 'stock.move'"/>
+                <filter name="bom_parts" string="Product to Repair Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]" invisible="context.get('active_model') != 'stock.move'"/>
             </xpath>
         </field>
     </record>
