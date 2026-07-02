@@ -7,6 +7,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     partner_id = fields.Many2one("res.partner")
     allow_billable = fields.Boolean(related="template_id.allow_billable")
     role_to_users_ids = fields.One2many(compute="_compute_role_to_users_ids", readonly=False, store=True)
+    sale_warning_text = fields.Text('Project Template Warning', compute='_compute_sale_warning_text', help='Warning for the partner as set by the user.')
 
     @api.depends("template_id")
     def _compute_role_to_users_ids(self):
@@ -22,6 +23,14 @@ class ProjectTemplateCreateWizard(models.TransientModel):
                 ]
                 if wizard.template_id else [Command.clear()]
             )
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
+    def _compute_sale_warning_text(self):
+        for project in self:
+            warning = False
+            if partner_msg := project.partner_id.sale_warn_msg:
+                warning = project.partner_id.name + ' - ' + partner_msg
+            project.sale_warning_text = warning
 
     def _get_template_whitelist_fields(self):
         res = super()._get_template_whitelist_fields()
