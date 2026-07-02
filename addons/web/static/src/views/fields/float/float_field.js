@@ -18,6 +18,7 @@ export const floatFieldProps = {
     humanReadable: t.boolean().optional(false),
     decimals: t.number().optional(0),
     trailingZeros: t.boolean().optional(true),
+    externalPlaceholder: t.string().optional(),
 };
 
 export class FloatField extends Component {
@@ -50,13 +51,7 @@ export class FloatField extends Component {
             : parseFloat(value, { allowOperation: true });
     }
 
-    get formattedValue() {
-        if (
-            !this.props.formatNumber ||
-            (this.props.inputType === "number" && !this.props.readonly && this.value)
-        ) {
-            return this.value;
-        }
+    format(value) {
         const options = {
             digits: this.props.digits,
             minDigits: this.props.minDigits,
@@ -70,12 +65,36 @@ export class FloatField extends Component {
                 decimals: this.props.decimals,
             });
         } else {
-            return formatFloat(this.value, { ...options, humanReadable: false });
+            return formatFloat(value, { ...options, humanReadable: false });
         }
+    }
+
+    get formattedValue() {
+        if (!this.value && this.props.externalPlaceholder) {
+            return "";
+        }
+        if (
+            !this.props.formatNumber ||
+            (this.props.inputType === "number" && !this.props.readonly && this.value)
+        ) {
+            return this.value;
+        }
+        return this.format(this.value);
     }
 
     get value() {
         return this.props.record.data[this.props.name];
+    }
+
+    get placeholderValue() {
+        const externalPlaceholder = this.props.record.data[this.props.externalPlaceholder];
+        if (externalPlaceholder === undefined) {
+            return "...";
+        }
+        if (typeof externalPlaceholder === "number") {
+            return this.format(externalPlaceholder);
+        }
+        return externalPlaceholder;
     }
 }
 
@@ -131,6 +150,12 @@ export const floatField = {
             default: 0,
             help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
+        {
+            label: _t("Placeholder field"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["float"],
+        },
     ],
     supportedTypes: ["float", "monetary"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
@@ -156,6 +181,7 @@ export const floatField = {
             minDigits: options.min_display_digits,
             decimals: options.decimals || 0,
             trailingZeros: !options.hide_trailing_zeros,
+            externalPlaceholder: options.placeholder_field,
         };
     },
 };
