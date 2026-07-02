@@ -68,14 +68,8 @@ class ResDeviceLog(models.Model):
             )
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_current':
-            try:
-                session = getattr(request, 'session', None)
-                sid = getattr(session, 'sid', None) if session is not None else None
-                if sid:
-                    return SQL("session_identifier = %s DESC", sid[:42])
-            except Exception:
-                _logger.debug("Unable to read request.session.sid when ordering by is_current", exc_info=True)
+        if field_name == 'is_current' and request and request.session.sid:
+            return SQL("session_identifier = %s DESC", request.session.sid[:42])
         return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def _is_mobile(self, platform):
