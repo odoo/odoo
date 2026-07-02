@@ -169,6 +169,20 @@ class JSONFormatter(logging.Formatter):
             elif key == 'asctime':
                 record.asctime = self.formatTime(record, self.datefmt)
                 record_json[key] = record.asctime
+<<<<<<< aeffadf319b25ead36d8b179f9ed5cc274bc846b
+||||||| 06d14e855bbd9696c887d98c6218f635c5d83ee4
+            elif key == 'test':
+                from .modules import module  # noqa: PLC0415
+                if module.current_test:
+                    with contextlib.suppress(Exception):
+                        record_json[key] = module.current_test.get_log_metadata()
+=======
+            elif key == 'test':
+                from .modules import module  # noqa: PLC0415
+                if module.current_test:
+                    with contextlib.suppress(Exception):
+                        record_json[key] = module.current_test.get_log_metadata(record)
+>>>>>>> e86306a00449bd38256804d6fb9b671cb44c70d0
             else:
                 value = getattr(record, key, None)
                 if value is not None:
@@ -177,4 +191,4 @@ class JSONFormatter(logging.Formatter):
         return json.dumps(record_json, default=str)
 
     def _get_default_record_keys(self, record):
-        return list(record.__dict__.keys() | {'message'} - self.ignore_record_keys)
+        return list(record.__dict__.keys() | {'message'} | {'test'} - self.ignore_record_keys)
