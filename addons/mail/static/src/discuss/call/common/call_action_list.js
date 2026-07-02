@@ -87,8 +87,10 @@ export class CallActionList extends Component {
                                             CALL_PROMOTE_FULLSCREEN.ACTIVE
                                     ),
                                 }),
-                            dropdownMenuClass:
-                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden",
+                            dropdownMenuClass: attClassObjectToString({
+                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
+                                "o-inMeetingView": Boolean(this.env.inMeetingView),
+                            }),
                             dropdownPosition: "top-end",
                             id: "call-layout",
                             name: this.MORE,
