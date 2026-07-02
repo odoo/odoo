@@ -377,11 +377,14 @@ class PeppolRegistration(models.TransientModel):
         db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         connect_token = self._generate_connect_token(self.peppol_identifier, self.company_id)
         callback_url = urljoin(self.get_base_url(), '/peppol/authentication/callback')
+        webhook_url = urljoin(self.get_base_url(), '/peppol/authentication/webhook')
         return PeppolIAPConnector(self.company_id).can_connect(
             peppol_identifier=self.peppol_identifier,
             db_uuid=db_uuid,
             callback_url=callback_url,
             connect_token=connect_token,
+            contact_email=self.contact_email,
+            webhook_url=webhook_url,
         )
 
     @api.model
@@ -443,9 +446,13 @@ class PeppolRegistration(models.TransientModel):
             'supported_identifiers':  company._peppol_supported_document_types(),
         }
 
-    def button_register_with_itsme(self):
+    # def button_register_with_itsme(self):
+    #     self.ensure_one()
+    #     return self.button_register_peppol_participant(selected_auth='itsme')
+
+    def button_register_with_kyc(self):
         self.ensure_one()
-        return self.button_register_peppol_participant(selected_auth='itsme')
+        return self.button_register_peppol_participant(selected_auth='generic')
 
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
@@ -476,7 +483,7 @@ class PeppolRegistration(models.TransientModel):
             return {
                 'type': 'ir.actions.act_url',
                 'url': self.peppol_can_connect_data['available_auths'][selected_auth]['authorization_url'],
-                'target': 'new',
+                'target': 'self',
             }
 
         # No auth required
