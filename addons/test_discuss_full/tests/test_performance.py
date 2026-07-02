@@ -323,7 +323,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         # create groups
         self.channel_group_1 = Channel._create_group(self.users[0] + self.users[12])
         # create livechats
-        self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
+        self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', "review_link": "https://www.odoo.com", 'user_ids': [Command.link(self.users[0].id)]})
         self.env['mail.presence']._update_presence(self.users[0])
         self.authenticate('test1', self.password)
         self.channel_livechat_1 = Channel.browse(
@@ -614,6 +614,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
             ],
             "Store": {
+                "can_download_transcript": True,
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "emailActivityTypeId": xmlid_to_res_id("mail.mail_activity_data_email"),
@@ -1170,6 +1171,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_channel_member_history_ids": self.channel_livechat_1.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
+                "livechat_rating": False,
                 "livechat_status": "in_progress",
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
@@ -1206,6 +1208,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_channel_member_history_ids": self.channel_livechat_2.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
+                "livechat_rating": False,
                 "livechat_status": "in_progress",
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
@@ -1615,7 +1618,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _expected_result_for_livechat_channel(self):
-        return {"id": self.im_livechat_channel.id, "name": "support"}
+        return {"id": self.im_livechat_channel.id, "name": "support", "review_link": "https://www.odoo.com"}
 
     def _expected_result_for_livechat_member_history(self, channel):
         member_0 = channel.with_user(self.users[0]).self_member_id
