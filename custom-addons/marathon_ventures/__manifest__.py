@@ -2,7 +2,7 @@
 {
     'name': 'Marathon Ventures',
     'summary': 'Salesforce -> Odoo 19 migration of Marathon Ventures CRM/Sales/Traffic schema.',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'license': 'LGPL-3',
     'author': 'Marathon Ventures (generated)',
     'website': '',
@@ -116,7 +116,7 @@
         'views/phase9_deal_system_views.xml',
         'views/phase9_schedule_layout_views.xml',
         'data/phase9_calendar_settings.xml',
-        'views/phase10_deal_line_views.xml',
+        'views/phase10_units_report_tab.xml',
         'views/phase11_capping_tab.xml',
         'views/phase13_layout_views.xml',
         'views/phase14_report_types_views.xml',

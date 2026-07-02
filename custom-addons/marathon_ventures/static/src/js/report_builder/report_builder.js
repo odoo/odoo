@@ -237,11 +237,14 @@ export class MvReportBuilder extends Component {
         const f = this.state.dragField;
         if (!f) return;
         if (this.state.dragSource === "filters") return;
+        // Copy `selection` too so the template can render a proper
+        // <select> for selection-type fields without a round-trip.
         this.state.report.filters.push({
             field_id: f.id,
             field_name: f.name,
             label: f.label,
             ttype: f.ttype,
+            selection: f.selection || null,
             path: f.path,
             node_id: f.node_id || false,
             operator: f.ttype === 'char' ? 'ilike' : '=',

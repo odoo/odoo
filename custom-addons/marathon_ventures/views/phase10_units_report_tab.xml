@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 10/15 - Units Report tab on the Deal form.
+
+       This file was previously named phase10_deal_line_views.xml and
+       ALSO contained the mv.deal_line admin views/menu. In Phase 15
+       mv.deal_line was removed entirely; only the "Units Report" tab
+       mount remains, moved to this narrower file.
+
+       The tab mounts the mv_units_grid OWL widget via the standard
+       field-widget pattern (bound to `id` so the widget receives the
+       current deal's resId). -->
+
+  <record id="view_mv_deal_form_phase10_units_report" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase10.units_report</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="priority">255</field>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="Units Report" name="page_units_report"
+              invisible="not id">
+          <field name="id" widget="mv_units_grid" nolabel="1"/>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

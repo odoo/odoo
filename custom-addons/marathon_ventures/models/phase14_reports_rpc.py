@@ -143,16 +143,27 @@ class MvReport(models.Model):
     @api.model
     def _collect_model_fields(self, model, path_prefix, node_id):
         """Return field metadata dicts for a model, filtered to the
-        user-facing subset. Each entry carries an absolute `path`."""
+        user-facing subset. Each entry carries an absolute `path`.
+
+        For selection fields the entry also carries a `selection`
+        list ([{value, label}, ...]) so the Report Builder can render
+        a dropdown value input for filters on that field.
+        """
         Field = self.env['ir.model.fields']
         raw = Field.search([
             ('model_id', '=', model.id),
             ('name', 'not in', list(_HIDDEN_FIELDS)),
         ], order='field_description, name')
+        # Cache the model's runtime field map so we can pull selection
+        # tuples per field. Retrieved once per model, not per field.
+        try:
+            model_obj = self.env[model.model]
+        except KeyError:
+            model_obj = None
         out = []
         for f in raw:
             fullpath = ('%s.%s' % (path_prefix, f.name)) if path_prefix else f.name
-            out.append({
+            entry = {
                 'id': f.id,
                 'name': f.name,
                 'label': f.field_description or f.name,
@@ -161,8 +172,31 @@ class MvReport(models.Model):
                 'path': fullpath,
                 'node_id': node_id,
                 'model_tech': model.model,
-            })
+            }
+            if f.ttype == 'selection':
+                entry['selection'] = self._field_selection_options(
+                    model_obj, f.name,
+                )
+            out.append(entry)
         return out
+
+    @api.model
+    def _field_selection_options(self, model_obj, field_name):
+        """Return [{value, label}, ...] for a selection field. Handles
+        both static list and callable selection specs."""
+        if model_obj is None or field_name not in model_obj._fields:
+            return []
+        field = model_obj._fields[field_name]
+        sel = getattr(field, 'selection', None) or []
+        if callable(sel):
+            try:
+                sel = sel(model_obj)
+            except Exception:
+                return []
+        try:
+            return [{'value': v, 'label': str(l)} for v, l in sel]
+        except (TypeError, ValueError):
+            return []
 
     # =====================================================================
     # Report Load / Save
@@ -198,6 +232,14 @@ class MvReport(models.Model):
                 'field_name': f.field_id.name,
                 'label': f.field_id.field_description or f.field_id.name,
                 'ttype': f.field_id.ttype,
+                # selection options (if any) so the frontend can
+                # render a proper <select> value input.
+                # self.env doesn't have .get(); use `in` guard.
+                'selection': self._field_selection_options(
+                    (self.env[f.field_id.model_id.model]
+                     if f.field_id.model_id.model in self.env else None),
+                    f.field_id.name,
+                ) if f.field_id.ttype == 'selection' else None,
                 'path': f.path or f.field_id.name,
                 'node_id': f.node_id.id if f.node_id else False,
                 'operator': f.operator or '=',
@@ -519,9 +561,18 @@ class MvReportFilter(models.Model):
         (so filters on joined-model fields work), else fall back to
         the terminal field name.
 
+        Empty-value semantics: if the user hasn't typed a value yet
+        (raw == ''), the filter row is INCOMPLETE and should NOT
+        contribute a domain term. Otherwise Odoo's date/datetime
+        domain optimizer crashes trying to parse '' as an ISO date.
+        Returning None here silently drops the filter from the
+        composed domain, which matches user intent (empty = no
+        constraint) and gives the planner a chance to fill it in.
+
         Note: Odoo's ORM handles dotted paths natively for m2o hops.
         For o2m/m2m, the domain becomes an ANY-match condition (any
-        related row matching the filter includes the base row)."""
+        related row matching the filter includes the base row).
+        """
         self.ensure_one()
         if not self.field_id:
             return None
@@ -529,6 +580,25 @@ class MvReportFilter(models.Model):
         op = self.operator or '='
         raw = self.value or ''
         ttype = self.field_id.ttype
+        # Incomplete filter (no value) - skip. Special-case: boolean
+        # filters treat '' as False intentionally, so keep them.
+        if not raw and ttype != 'boolean':
+            return None
+        # Malformed date/datetime: Odoo's domain optimizer aggressively
+        # tries to parse the value as an ISO date and crashes on
+        # garbage like '2' or 'not-a-date'. Probe the format here and
+        # drop the filter row rather than passing garbage through.
+        if ttype in ('date', 'datetime'):
+            from datetime import date as _d, datetime as _dt
+            try:
+                if ttype == 'date':
+                    _d.fromisoformat(raw)
+                else:
+                    # datetime.fromisoformat accepts 'YYYY-MM-DD' too,
+                    # so it also validates dates-typed-as-datetime.
+                    _dt.fromisoformat(raw)
+            except (ValueError, TypeError):
+                return None
         try:
             if ttype in ('integer', 'monetary'):
                 val = int(raw) if raw else 0

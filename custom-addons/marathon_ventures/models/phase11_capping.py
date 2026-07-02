@@ -1,46 +1,35 @@
 # -*- coding: utf-8 -*-
-"""Phase 11 - Capping Report.
+"""Phase 15 - Capping Report (schedules-only, no mv.deal_line).
 
-Adds the two capping fields to mv.schedules used by the Capping Grid OWL
-widget on the Deal form, then exposes load_capping_grid /
-save_capping_grid RPC methods on mv.deal.
-
-cap_pct      -> Integer 0..100, default 100. The percentage of booked
-                spots that should actually deliver.
-effective_spots -> computed = units_available * cap_pct / 100.
+Same signature grouping as phase10_units_grid_rpc but scoped to the
+Capping tab. Uses the shared helpers from phase10 to keep the two
+grids in exact sync.
 """
-from datetime import date, timedelta
+import logging
 from odoo import models, fields, api
 
+from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
+    mondays_for_start_date,
+)
+from odoo.addons.marathon_ventures.models.phase10_units_grid_rpc import (
+    _sig_from_schedule, _parse_sig, _days_bits_from_allowed,
+    DAYPART_LABELS, _guess_daypart, _time_range_label,
+)
 
-def _quarter_mondays(today=None):
-    today = today or date.today()
-    q_start_month = ((today.month - 1) // 3) * 3 + 1
-    q_start = date(today.year, q_start_month, 1)
-    while q_start.weekday() != 0:
-        q_start -= timedelta(days=1)
-    return [q_start + timedelta(weeks=i) for i in range(13)]
+_logger = logging.getLogger(__name__)
 
 
-# ----------------------------------------------------------------------
-# mv.schedules - new fields
-# ----------------------------------------------------------------------
 class MvScheduleCapping(models.Model):
     _name = 'mv.schedules'
     _inherit = 'mv.schedules'
 
     cap_pct = fields.Integer(
-        string='Cap %',
-        default=100,
-        help='Percentage of booked spots that should actually deliver. '
-             '100 = full delivery, 0 = ghost (booked but not delivering), '
-             '50/80 = partially capped.',
+        string='Cap %', default=100,
+        help='Percentage of booked spots that should actually deliver.',
     )
     effective_spots = fields.Float(
         string='Effective Spots',
-        compute='_compute_effective_spots',
-        store=True,
-        digits=(17, 2),
+        compute='_compute_effective_spots', store=True, digits=(17, 2),
     )
 
     @api.depends('units_available', 'cap_pct')
@@ -51,48 +40,78 @@ class MvScheduleCapping(models.Model):
             rec.effective_spots = round(units * pct / 100.0, 2)
 
 
-# ----------------------------------------------------------------------
-# mv.deal - RPC methods
-# ----------------------------------------------------------------------
 class MvDealCappingRpc(models.Model):
     _name = 'mv.deal'
     _inherit = 'mv.deal'
 
+    _CAP_TO_PCT = {
+        'uncapped': 100, 'v_80': 80, 'v_50': 50, 'v_0': 0, 'ghost': 0,
+    }
+
+    @api.model
+    def _cap_pct_to_value(self, pct):
+        try:
+            pct = int(pct)
+        except (TypeError, ValueError):
+            pct = 100
+        if pct >= 100: return 'uncapped'
+        if pct == 80:  return 'v_80'
+        if pct == 50:  return 'v_50'
+        if pct == 0:   return 'v_0'
+        return None
+
     def load_capping_grid(self):
-        """Return the data the Capping Grid OWL widget needs."""
         self.ensure_one()
-        # Phase 12: derive week columns from the deal-level start date
-        from odoo.addons.marathon_ventures.models.phase12_deal_start_date \
-            import mondays_for_start_date
         weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
+
+        all_scheds = self.env['mv.schedules'].search([
+            ('deal_parent', '=', self.id),
+        ])
+        groups = {}
+        for sched in all_scheds:
+            sig = _sig_from_schedule(sched)
+            grp = groups.setdefault(sig, {
+                'active_by_week': {}, 'sample': sched,
+            })
+            if not sched.week or (sched.status or '') == 'canceled':
+                continue
+            w = sched.week.isoformat()
+            prev = grp['active_by_week'].get(w)
+            if prev is None or sched.id > prev.id:
+                grp['active_by_week'][w] = sched
+
+        def _row_sort_key(item):
+            sig, grp = item
+            samp = grp['sample']
+            return (samp.start_time or '', samp.rate or 0.0)
+
+        time_options_map = dict(
+            self.env['mv.schedules']._fields['start_time'].selection or []
+        )
 
         rows = []
         grand_booked = 0.0
         grand_effective = 0.0
         grand_revenue = 0.0
-        for dl in self.env['mv.deal_line'].search([('deal_id', '=', self.id)]):
-            sched_by_week = {
-                s.week.isoformat(): s for s in dl.schedule_ids if s.week
-            }
+        for sig, grp in sorted(groups.items(), key=_row_sort_key):
+            samp = grp['sample']
+            active_by_week = grp['active_by_week']
             cells = []
             row_booked = 0.0
             row_effective = 0.0
-            for w_iso, w_dt in zip(weeks_iso, weeks):
-                # Phase 12: week columns are already filtered to the
-                # deal's quarter, so every visible week is in-range.
-                sched = sched_by_week.get(w_iso)
+            for w_iso in weeks_iso:
+                sched = active_by_week.get(w_iso)
                 if not sched or not sched.units_available:
                     cells.append({
                         'week': w_iso, 'units_booked': 0,
                         'units_effective': 0, 'cap_pct': 100,
-                        'cap': 'uncapped',
-                        'state': 'dashed', 'sched_id': False,
+                        'cap': 'uncapped', 'state': 'dashed',
+                        'sched_id': False,
                     })
                     continue
                 booked = sched.units_available
                 pct = sched.cap_pct if sched.cap_pct is not None else 100
-                # clamp
                 pct = max(0, min(100, pct))
                 effective = round(booked * pct / 100.0)
                 if sched.status == 'canceled':
@@ -104,29 +123,28 @@ class MvDealCappingRpc(models.Model):
                 else:
                     state = 'amber'
                 cells.append({
-                    'week': w_iso,
-                    'units_booked': booked,
-                    'units_effective': effective,
-                    'cap_pct': pct,
-                    'cap': sched.cap or 'uncapped',
-                    'state': state,
+                    'week': w_iso, 'units_booked': booked,
+                    'units_effective': effective, 'cap_pct': pct,
+                    'cap': sched.cap or 'uncapped', 'state': state,
                     'sched_id': sched.id,
                 })
                 row_booked += booked
                 row_effective += effective
 
-            row_revenue = row_effective * (dl.rate or 0.0)
+            row_revenue = row_effective * (samp.rate or 0.0)
+            daypart = _guess_daypart(samp.start_time, samp.end_time)
+            days_bits = _days_bits_from_allowed(samp.days_allowed)
             rows.append({
-                'id': dl.id,
-                'daypart': dl.daypart,
-                'daypart_label': dict(dl._fields['daypart'].selection).get(
-                    dl.daypart, dl.daypart or '',
+                'id': sig, 'sig': sig,
+                'daypart': daypart,
+                'daypart_label': DAYPART_LABELS.get(daypart, daypart or ''),
+                'time_range': _time_range_label(
+                    samp.start_time, samp.end_time, time_options_map,
                 ),
-                'time_range': dl.time_range or '',
-                'days_mask': dl.days_mask(),
-                'rate': dl.rate,
-                'run_start': dl.run_start.isoformat() if dl.run_start else None,
-                'run_end':   dl.run_end.isoformat()   if dl.run_end   else None,
+                'days_mask': [b == '1' for b in days_bits],
+                'rate': samp.rate,
+                'run_start': weeks_iso[0] if weeks_iso else None,
+                'run_end':   weeks_iso[-1] if weeks_iso else None,
                 'cells': cells,
                 'row_booked': row_booked,
                 'row_effective': row_effective,
@@ -155,8 +173,6 @@ class MvDealCappingRpc(models.Model):
                 'symbol': self.currency_id.symbol or '$',
                 'position': self.currency_id.position or 'before',
             },
-            # Cap dropdown options for the front-end. Each entry is
-            # {value, label, pct} - pct drives the effective_spots math.
             'cap_options': [
                 {'value': 'uncapped', 'label': 'Uncapped', 'pct': 100},
                 {'value': 'v_80',     'label': '80%',      'pct': 80},
@@ -166,64 +182,14 @@ class MvDealCappingRpc(models.Model):
             ],
         }
 
-    # Map cap Selection value -> percentage. Mirrors the cap_options
-    # list returned by load_capping_grid so the backend can normalise
-    # whichever shape the front-end sends (cap, cap_pct, or both).
-    _CAP_TO_PCT = {
-        'uncapped': 100,
-        'v_80':     80,
-        'v_50':     50,
-        'v_0':      0,
-        'ghost':    0,
-    }
-
-    @api.model
-    def _cap_pct_to_value(self, pct):
-        """Reverse map: percentage -> cap Selection value. Used by the
-        legacy bulk-action endpoints that still hand us a raw pct."""
-        try:
-            pct = int(pct)
-        except (TypeError, ValueError):
-            pct = 100
-        if pct >= 100:
-            return 'uncapped'
-        if pct == 80:
-            return 'v_80'
-        if pct == 50:
-            return 'v_50'
-        if pct == 0:
-            return 'v_0'
-        # Non-canonical percentages have no matching Selection value;
-        # don't overwrite the existing cap field in that case.
-        return None
-
     def save_capping_grid(self, edits):
-        """Apply capping edits to schedules.
-
-        edits = {
-          'cell_updates':  [{row_id, week, sched_id, cap, cap_pct}, ...],
-          'row_cap_pct':   [{row_id, cap_pct}, ...]   # mass-set whole row
-          'row_ghost_all': [row_id, ...]              # ghost the row's schedules
-        }
-
-        For each cell_update we accept either `cap` (Selection value) or
-        `cap_pct` (Integer), and persist BOTH on the schedule so the
-        existing effective_spots compute (which depends on cap_pct)
-        recomputes correctly and the canonical Selection field stays
-        in sync.
-        """
         self.ensure_one()
         edits = edits or {}
         Sched = self.env['mv.schedules']
 
-        import logging
-        _logger = logging.getLogger(__name__)
         for cu in edits.get('cell_updates') or []:
             cap_value = cu.get('cap')
-            cap_value = cu.get('cap')
             pct = cu.get('cap_pct')
-            # Normalise: if only cap is sent, derive pct; if only pct,
-            # try to derive cap (might be None for off-grid pcts).
             if cap_value is not None and pct is None:
                 pct = self._CAP_TO_PCT.get(cap_value, 100)
             elif cap_value is None and pct is not None:
@@ -236,13 +202,16 @@ class MvDealCappingRpc(models.Model):
             sched_id = cu.get('sched_id')
             sched = Sched.browse(sched_id) if sched_id else Sched.browse([])
             if not sched_id or not sched.exists():
-                row_id = cu.get('row_id')
+                sig = cu.get('row_id')
                 week_iso = cu.get('week')
-                if row_id and week_iso:
-                    sched = Sched.search([
-                        ('deal_line_id', '=', row_id),
-                        ('week', '=', week_iso),
-                    ], limit=1)
+                if sig and week_iso and not (
+                    isinstance(sig, str) and sig.startswith('tmp:')
+                ):
+                    matches = self._capping_schedules_for_sig(sig)
+                    sched = matches.filtered(
+                        lambda s: s.week and s.week.isoformat() == week_iso
+                                  and (s.status or '') != 'canceled'
+                    )[:1]
             if sched and sched.exists():
                 vals = {}
                 if pct is not None:
@@ -250,36 +219,51 @@ class MvDealCappingRpc(models.Model):
                 if cap_value is not None:
                     vals['cap'] = cap_value
                 sched.write(vals)
-                _logger.info(
-                    "[MV phase11] capping write OK: sched=%s vals=%s",
-                    sched.id, vals,
-                )
             else:
                 _logger.warning(
                     "[MV phase11] no schedule found for cap edit: %s", cu,
                 )
 
-        # --- Mass-set the whole row to one cap %. We also map the pct
-        # back to a cap Selection value so the schedule's cap field
-        # stays in sync.
         for ru in edits.get('row_cap_pct') or []:
-            row_id = ru.get('row_id')
+            sig = ru.get('row_id')
             pct = ru.get('cap_pct')
-            if pct is None or not row_id:
+            if pct is None or not sig:
+                continue
+            if isinstance(sig, str) and sig.startswith('tmp:'):
                 continue
             pct = max(0, min(100, int(pct)))
-            dl = self.env['mv.deal_line'].browse(row_id)
-            if dl.exists() and dl.schedule_ids:
+            scheds = self._capping_schedules_for_sig(sig, active_only=True)
+            if scheds:
                 vals = {'cap_pct': pct}
                 cap_value = self._cap_pct_to_value(pct)
                 if cap_value is not None:
                     vals['cap'] = cap_value
-                dl.schedule_ids.write(vals)
+                scheds.write(vals)
 
-        # --- Ghost-all a row (cap_pct=0, cap='ghost')
-        for row_id in edits.get('row_ghost_all') or []:
-            dl = self.env['mv.deal_line'].browse(row_id)
-            if dl.exists() and dl.schedule_ids:
-                dl.schedule_ids.write({'cap_pct': 0, 'cap': 'ghost'})
+        for sig in edits.get('row_ghost_all') or []:
+            if isinstance(sig, str) and sig.startswith('tmp:'):
+                continue
+            scheds = self._capping_schedules_for_sig(sig, active_only=True)
+            if scheds:
+                scheds.write({'cap_pct': 0, 'cap': 'ghost'})
 
         return self.load_capping_grid()
+
+    def _capping_schedules_for_sig(self, sig, active_only=True):
+        """Same as phase10._schedules_for_sig but public here for
+        Capping. Uses phase10's parse_sig + days_bits helpers."""
+        self.ensure_one()
+        vals = _parse_sig(sig)
+        domain = [
+            ('deal_parent', '=', self.id),
+            ('rate', '=', vals['rate']),
+            ('start_time', '=', vals['start_time'] or False),
+            ('end_time',   '=', vals['end_time'] or False),
+            ('max_per_day', '=', vals['max_per_day']),
+        ]
+        if active_only:
+            domain.append(('status', '!=', 'canceled'))
+        candidates = self.env['mv.schedules'].search(domain)
+        return candidates.filtered(
+            lambda s: _days_bits_from_allowed(s.days_allowed) == vals['days_bits']
+        )

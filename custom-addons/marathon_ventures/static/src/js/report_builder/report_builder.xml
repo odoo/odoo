@@ -156,9 +156,54 @@
                   <option value="in" t-att-selected="f.operator === 'in' ? 'selected' : null">In</option>
                   <option value="not in" t-att-selected="f.operator === 'not in' ? 'selected' : null">Not In</option>
                 </select>
-                <input class="mv-rb__filter-value" t-att-value="f.value"
-                       placeholder="value…"
-                       t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                <!-- Type-aware value input: pick the widget per
+                     ttype so the planner enters a valid value the
+                     first time (date picker for date fields, dropdown
+                     for boolean/selection, numeric input for
+                     numbers, etc.). All variants share the same
+                     onFilterValueInput handler, which just stores
+                     ev.target.value verbatim. -->
+                <t t-if="f.ttype === 'date'">
+                  <input class="mv-rb__filter-value" type="date"
+                         t-att-value="f.value"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-elif="f.ttype === 'datetime'">
+                  <input class="mv-rb__filter-value" type="datetime-local"
+                         t-att-value="f.value"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-elif="f.ttype === 'boolean'">
+                  <select class="mv-rb__filter-value"
+                          t-on-change="(ev) => this.onFilterValueInput(f_index, ev)">
+                    <option value="" t-att-selected="!f.value ? 'selected' : null">—</option>
+                    <option value="true"
+                            t-att-selected="(f.value === 'true' || f.value === '1') ? 'selected' : null">True</option>
+                    <option value="false"
+                            t-att-selected="(f.value === 'false' || f.value === '0') ? 'selected' : null">False</option>
+                  </select>
+                </t>
+                <t t-elif="f.ttype === 'selection' and f.selection">
+                  <select class="mv-rb__filter-value"
+                          t-on-change="(ev) => this.onFilterValueInput(f_index, ev)">
+                    <option value="" t-att-selected="!f.value ? 'selected' : null">—</option>
+                    <option t-foreach="f.selection" t-as="opt" t-key="opt.value"
+                            t-att-value="opt.value"
+                            t-att-selected="f.value === opt.value ? 'selected' : null">
+                      <t t-esc="opt.label"/>
+                    </option>
+                  </select>
+                </t>
+                <t t-elif="f.ttype === 'integer' or f.ttype === 'float' or f.ttype === 'monetary'">
+                  <input class="mv-rb__filter-value" type="number" step="any"
+                         t-att-value="f.value" placeholder="value…"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-else="">
+                  <input class="mv-rb__filter-value" t-att-value="f.value"
+                         placeholder="value…"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
                 <button class="mv-rb__chip-x"
                         t-on-click="() => this.removeFilter(f_index)">×</button>
               </div>

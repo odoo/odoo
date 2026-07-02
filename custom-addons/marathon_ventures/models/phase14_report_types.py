@@ -162,6 +162,10 @@ class MvReportTypeNode(models.Model):
     # path_prefix = "advertiser_id.brand_ids".
     path_prefix = fields.Char(
         compute='_compute_path_prefix', store=True, readonly=True,
+        # Recursive: this compute reads parent_node_id.path_prefix
+        # (same field on a related record). Without recursive=True
+        # Odoo emits a warning about undeclared self-dependency.
+        recursive=True,
     )
 
     @api.depends('field_id', 'field_id.ttype')

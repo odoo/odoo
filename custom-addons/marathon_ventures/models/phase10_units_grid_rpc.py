@@ -1,107 +1,190 @@
 # -*- coding: utf-8 -*-
-"""Phase 10 - RPC methods backing the Units Grid OWL widget.
+"""Phase 15 - Units Grid RPC (schedules-only, no mv.deal_line).
 
-Exposed on mv.deal so the front-end can call:
-    self.env['mv.deal'].browse(deal_id).load_units_grid()
-    self.env['mv.deal'].browse(deal_id).save_units_grid(edits)
+Rows are groups of mv.schedules records sharing a signature:
+    days_bits | rate | start_time | end_time | max_per_day
+
+`days_bits` is a 7-char string M-T-W-T-F-S-S computed by projecting
+the schedule's days_allowed (Many2many of mv.days_allowed.tag records)
+onto the fixed weekday order. Note: mv.schedules DOES NOT have
+day_mon..day_sun boolean fields - those lived only on the (now-deleted)
+mv.deal_line. The signature converts between the tag-based M2M and a
+UI-friendly 7-bit mask.
 """
 from datetime import date, timedelta
 from odoo import models, api, _
 from odoo.exceptions import UserError, ValidationError
 
-# Phase 12: weeks are now derived from the Deal's units_start_date
-# (see models/phase12_deal_start_date.py). The old _quarter_mondays
-# helper is kept only as a fallback when units_start_date is missing.
 from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
     mondays_for_start_date,
 )
-from odoo.addons.marathon_ventures.models.mv_deal_line import (
-    DAYPART_DEFAULT_TIMES,
-)
 
 
-def _quarter_mondays(today=None):
-    """Legacy fallback - returns Mondays from the start of the current
-    quarter for 13 weeks. New code uses mondays_for_start_date()."""
-    return mondays_for_start_date(today or date.today())
+DAYPART_DEFAULT_TIMES = {
+    'early_morning': ('v_06_00a', 'v_09_00a'),
+    'morning':       ('v_09_00a', 'v_12_00p'),
+    'day':           ('v_12_00p', 'v_03_00p'),
+    'afternoon':     ('v_03_00p', 'v_06_00p'),
+    'early_fringe':  ('v_06_00p', 'v_08_00p'),
+    'prime':         ('v_08_00p', 'v_11_00p'),
+    'late_fringe':   ('v_11_00p', 'v_01_00a'),
+    'overnight':     ('v_01_00a', 'v_06_00a'),
+}
+
+DAYPART_LABELS = {
+    'early_morning': 'Early Morning',
+    'morning':       'Morning',
+    'day':           'Daytime',
+    'afternoon':     'Afternoon',
+    'early_fringe':  'Early Fringe',
+    'prime':         'Prime',
+    'late_fringe':   'Late Fringe',
+    'overnight':     'Overnight',
+    'custom':        'Custom',
+}
+
+DAY_CODES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 
+# ---------------------------------------------------------------------
+# Days-allowed <-> bit-string helpers
+# ---------------------------------------------------------------------
+def _days_bits_from_allowed(days_allowed_recordset):
+    """Project a days_allowed Many2many recordset onto a 7-char M..S
+    bit string. Missing == 0."""
+    if not days_allowed_recordset:
+        return '0' * 7
+    codes = set(days_allowed_recordset.mapped('code') or [])
+    return ''.join('1' if d in codes else '0' for d in DAY_CODES)
+
+
+def _days_bits_from_mask(days_mask):
+    """days_mask is a list of 7 truthy values [Mon,...,Sun]."""
+    if not days_mask:
+        return '0' * 7
+    bits = ['1' if bool(v) else '0' for v in days_mask]
+    return ''.join((bits + ['0'] * 7)[:7])
+
+
+def _tag_ids_from_bits(env, days_bits):
+    """Return mv.days_allowed.tag ids matching the '1' positions."""
+    codes = [DAY_CODES[i] for i in range(7) if i < len(days_bits) and days_bits[i] == '1']
+    if not codes:
+        return []
+    tags = env['mv.days_allowed.tag'].search([('code', 'in', codes)])
+    return tags.ids
+
+
+# ---------------------------------------------------------------------
+# Signature helpers
+# ---------------------------------------------------------------------
+def _sig_from_schedule(sched):
+    """Stable signature key for a schedule. Two schedules on the same
+    deal with the same signature = same grid row."""
+    days = _days_bits_from_allowed(sched.days_allowed)
+    rate = ('%.2f' % (sched.rate or 0.0))
+    start = sched.start_time or ''
+    end = sched.end_time or ''
+    mpd = int(sched.max_per_day or 0)
+    return '%s|%s|%s|%s|%s' % (days, rate, start, end, mpd)
+
+
+def _parse_sig(sig):
+    """Inverse of _sig_from_schedule - returns a dict where any
+    matching schedule must have these values."""
+    parts = (sig or '').split('|')
+    while len(parts) < 5:
+        parts.append('')
+    days, rate, start, end, mpd = parts[0], parts[1], parts[2], parts[3], parts[4]
+    days = (days + '0' * 7)[:7]
+    return {
+        'days_bits': days,
+        'rate': float(rate or 0.0),
+        'start_time': start or False,
+        'end_time': end or False,
+        'max_per_day': int(mpd or 0),
+    }
+
+
+def _guess_daypart(start, end):
+    """Reverse-lookup a Selection daypart from a (start, end) pair."""
+    for k, v in DAYPART_DEFAULT_TIMES.items():
+        if v == (start, end):
+            return k
+    return 'custom'
+
+
+def _time_range_label(start, end, time_options_map):
+    if not start and not end:
+        return ''
+    s = (time_options_map.get(start, start) or '').lower()
+    e = (time_options_map.get(end, end) or '').lower()
+    if s and e:
+        return '%s - %s' % (s, e)
+    return s or e
+
+
+# ---------------------------------------------------------------------
+# mv.deal RPC surface
+# ---------------------------------------------------------------------
 class MvDealUnitsGridRpc(models.Model):
     _name = 'mv.deal'
     _inherit = 'mv.deal'
 
-    # ------------------------------------------------------------------
-    # Read: full grid payload for the OWL widget
-    # ------------------------------------------------------------------
     def load_units_grid(self):
-        """Return the data the front-end needs to render the Units Grid.
-
-        Shape:
-            {
-              'deal': {'id': 12, 'name': 'D-001', 'program': 'WNBC Morning',
-                       'brand': 'Acme', 'advertiser': 'Acme Corp',
-                       'account': 'Acme Holdings', 'length': '30',
-                       'order_number': '12345'},
-              'weeks': ['2026-03-02', '2026-03-09', ...],  # ISO Mondays
-              'rows':  [
-                 {'id': 5, 'daypart': 'early_morning',
-                  'daypart_label': 'Early Morning',
-                  'time_range': '6a - 9a',
-                  'days_mask': [True,True,True,True,True,False,False],
-                  'rate': 85.0, 'run_start': '2026-03-02',
-                  'run_end': '2026-04-20',
-                  'cells': [
-                     {'week': '2026-03-02', 'units': 20, 'state': 'green',
-                      'sched_id': 17},
-                     ...
-                  ],
-                  'total_spots': 160, 'total_revenue': 13600.0},
-                 ...
-              ],
-              'grand_total_spots': 304,
-              'grand_total_revenue': 29260.0,
-              'currency': {'id': 1, 'symbol': '$', 'position': 'before'},
-            }
-        """
+        """Return the Units Grid payload."""
         self.ensure_one()
-        # Phase 12: derive the week columns from the deal-level start date
         weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
+
+        all_scheds = self.env['mv.schedules'].search([
+            ('deal_parent', '=', self.id),
+        ])
+        groups = {}
+        for sched in all_scheds:
+            sig = _sig_from_schedule(sched)
+            grp = groups.setdefault(sig, {
+                'active_by_week': {},
+                'cancelled_by_week': {},
+                'sample': sched,
+            })
+            if not sched.week:
+                continue
+            w = sched.week.isoformat()
+            if (sched.status or '') == 'canceled':
+                grp['cancelled_by_week'].setdefault(w, []).append(sched)
+            else:
+                prev = grp['active_by_week'].get(w)
+                if prev is None or sched.id > prev.id:
+                    if prev is not None:
+                        grp['cancelled_by_week'].setdefault(w, []).append(prev)
+                    grp['active_by_week'][w] = sched
+                else:
+                    grp['cancelled_by_week'].setdefault(w, []).append(sched)
+
+        def _row_sort_key(item):
+            sig, grp = item
+            samp = grp['sample']
+            return (samp.start_time or '', samp.rate or 0.0)
+
+        time_options_map = dict(
+            self.env['mv.schedules']._fields['start_time'].selection or []
+        )
 
         rows = []
         grand_spots = 0.0
         grand_rev = 0.0
         grand_cancelled = 0.0
-        for dl in self.env['mv.deal_line'].search([('deal_id', '=', self.id)]):
-            # Index schedules by week. A week can carry up to TWO
-            # schedules now: an active one (status != 'canceled') and a
-            # cancelled one (status == 'canceled'). They render as two
-            # separate UI elements in the same cell: the active is the
-            # editable input, the cancelled is the small red label below.
-            active_by_week = {}     # week_iso -> sched (status != canceled)
-            cancelled_by_week = {}  # week_iso -> [sched, sched, ...]
-            for sched in dl.schedule_ids:
-                if not sched.week:
-                    continue
-                w = sched.week.isoformat()
-                if (sched.status or '') == 'canceled':
-                    cancelled_by_week.setdefault(w, []).append(sched)
-                else:
-                    # If two non-canceled schedules ever exist for the
-                    # same week, keep the most recent (highest id) as
-                    # the active one; the rest fall back to the
-                    # cancelled bucket so they show up somewhere.
-                    prev = active_by_week.get(w)
-                    if prev is None or sched.id > prev.id:
-                        if prev is not None:
-                            cancelled_by_week.setdefault(w, []).append(prev)
-                        active_by_week[w] = sched
-                    else:
-                        cancelled_by_week.setdefault(w, []).append(sched)
+        for sig, grp in sorted(groups.items(), key=_row_sort_key):
+            samp = grp['sample']
+            active_by_week = grp['active_by_week']
+            cancelled_by_week = grp['cancelled_by_week']
 
             cells = []
+            row_active_spots = 0.0
+            row_active_revenue = 0.0
             row_cancelled_units = 0.0
-            for w_iso, w_dt in zip(weeks_iso, weeks):
+            for w_iso in weeks_iso:
                 active = active_by_week.get(w_iso)
                 cancelled_list = cancelled_by_week.get(w_iso) or []
                 cancelled_units = sum(
@@ -109,7 +192,6 @@ class MvDealUnitsGridRpc(models.Model):
                 )
                 row_cancelled_units += cancelled_units
 
-                # Active-side state (the editable input)
                 if not active or not active.units_available:
                     state = 'dashed'
                     active_units = 0
@@ -124,6 +206,10 @@ class MvDealUnitsGridRpc(models.Model):
                         state = 'amber'
                     active_units = active.units_available
                     active_id = active.id
+                    row_active_spots += (active.units_available or 0.0)
+                    row_active_revenue += (
+                        (active.units_available or 0.0) * (active.rate or 0.0)
+                    )
 
                 cells.append({
                     'week': w_iso,
@@ -134,28 +220,31 @@ class MvDealUnitsGridRpc(models.Model):
                     'cancelled_sched_ids': [s.id for s in cancelled_list],
                 })
 
-            row = {
-                'id': dl.id,
-                'daypart': dl.daypart,
-                'daypart_label': dict(dl._fields['daypart'].selection).get(
-                    dl.daypart, dl.daypart or '',
+            days_bits = _days_bits_from_allowed(samp.days_allowed)
+            days_mask = [b == '1' for b in days_bits]
+            daypart = _guess_daypart(samp.start_time, samp.end_time)
+            rows.append({
+                'id': sig,
+                'sig': sig,
+                'daypart': daypart,
+                'daypart_label': DAYPART_LABELS.get(daypart, daypart or ''),
+                'time_range': _time_range_label(
+                    samp.start_time, samp.end_time, time_options_map,
                 ),
-                'time_range': dl.time_range or '',
-                'start_time': dl.start_time or False,
-                'end_time':   dl.end_time   or False,
-                'days_mask': dl.days_mask(),
-                'rate': dl.rate,
-                'max_per_day': dl.max_per_day or 0,
-                'run_start': dl.run_start.isoformat() if dl.run_start else None,
-                'run_end':   dl.run_end.isoformat()   if dl.run_end   else None,
+                'start_time': samp.start_time or False,
+                'end_time':   samp.end_time   or False,
+                'days_mask': days_mask,
+                'rate': samp.rate or 0.0,
+                'max_per_day': samp.max_per_day or 0,
+                'run_start': weeks_iso[0] if weeks_iso else None,
+                'run_end':   weeks_iso[-1] if weeks_iso else None,
                 'cells': cells,
-                'total_spots': dl.total_spots,
-                'total_revenue': dl.total_revenue,
+                'total_spots': row_active_spots,
+                'total_revenue': row_active_revenue,
                 'total_cancelled': row_cancelled_units,
-            }
-            rows.append(row)
-            grand_spots += dl.total_spots
-            grand_rev += dl.total_revenue
+            })
+            grand_spots += row_active_spots
+            grand_rev += row_active_revenue
             grand_cancelled += row_cancelled_units
 
         return {
@@ -180,12 +269,6 @@ class MvDealUnitsGridRpc(models.Model):
                 'symbol': self.currency_id.symbol or '$',
                 'position': self.currency_id.position or 'before',
             },
-            # ---- Time-picker support for the editable start/end time
-            # dropdowns on each row. `time_options` is the full 30-min
-            # picklist from mv.schedules; `daypart_times` maps each
-            # predefined daypart -> (start, end) so the front-end can
-            # reverse-lookup and auto-select 'custom' when the planner
-            # picks a non-matching pair.
             'time_options': [
                 {'value': v, 'label': lbl}
                 for v, lbl in self.env['mv.schedules']
@@ -197,309 +280,225 @@ class MvDealUnitsGridRpc(models.Model):
             ],
         }
 
-    # ------------------------------------------------------------------
-    # Write: apply a batch of edits from the front-end
-    # ------------------------------------------------------------------
     def save_units_grid(self, edits):
-        """Persist a batch of edits.
-
-        `edits` shape:
-            {
-              'row_updates': [{'id': 5, 'rate': 90.0, ...}, ...],
-              'row_creates': [{'daypart': 'prime', 'rate': 140.0,
-                               'run_start': '...', 'run_end': '...',
-                               'days_mask': [t,t,t,t,t,f,f]}, ...],
-              'row_deletes': [7, 9],
-              'cell_updates': [{'row_id': 5, 'week': '2026-03-02',
-                                'units': 20}, ...],
-            }
-
-        Returns the fresh payload from load_units_grid().
-        """
+        """Persist a batch of edits from the OWL Units grid."""
         self.ensure_one()
         edits = edits or {}
 
-        # --- Phase 12: deal-level start date update
         deal_update = edits.get('deal_update') or {}
         if 'units_start_date' in deal_update:
             self.write({'units_start_date': deal_update['units_start_date']})
-            # When the deal-level start date moves, propagate the new
-            # range to every existing Deal Line so the load_*_grid
-            # cell-state logic no longer sees stale per-row ranges.
-            new_weeks = mondays_for_start_date(self.units_start_date)
-            if new_weeks:
-                self.env['mv.deal_line'].search(
-                    [('deal_id', '=', self.id)]
-                ).write({
-                    'run_start': new_weeks[0],
-                    'run_end':   new_weeks[-1],
-                })
 
-        # Compute the (deal-level) week range so new Deal Lines can
-        # inherit run_start / run_end from it.
-        weeks = mondays_for_start_date(self.units_start_date)
-        deal_run_start = weeks[0].isoformat() if weeks else None
-        deal_run_end   = weeks[-1].isoformat() if weeks else None
+        # row_deletes: sig strings
+        for sig in edits.get('row_deletes') or []:
+            self._delete_row_by_sig(sig)
 
-        # --- row deletes
-        if edits.get('row_deletes'):
-            self.env['mv.deal_line'].browse(edits['row_deletes']).unlink()
-
-        # --- row updates
+        # row_updates: change signature fields on all schedules of oldSig
+        sig_migration = {}
         for upd in edits.get('row_updates') or []:
-            rid = upd.pop('id', None)
-            if not rid:
+            old_sig = upd.get('id') or upd.get('sig')
+            if not old_sig or (isinstance(old_sig, str)
+                               and old_sig.startswith('tmp:')):
                 continue
-            days = upd.pop('days_mask', None)
-            if days is not None:
-                upd.update({
-                    'day_mon': bool(days[0]), 'day_tue': bool(days[1]),
-                    'day_wed': bool(days[2]), 'day_thu': bool(days[3]),
-                    'day_fri': bool(days[4]), 'day_sat': bool(days[5]),
-                    'day_sun': bool(days[6]),
-                })
-            dl = self.env['mv.deal_line'].browse(rid)
-            dl.write(upd)
-            # When the Deal Line itself changes (rate, days, start_time,
-            # end_time...), propagate the new values to ALL of its
-            # already-existing Schedule rows. Without this, schedules
-            # created on a previous Save retain the stale rate.
-            if dl.schedule_ids:
-                dl.schedule_ids.write(dl.schedule_inherit_vals())
+            new_sig = self._update_row_by_sig(old_sig, upd)
+            if new_sig and new_sig != old_sig:
+                sig_migration[old_sig] = new_sig
 
-        # --- row creates
-        new_ids_by_temp = {}
+        # row_creates: capture temp_id -> signature dict for later
+        # cell_update materialization
+        temp_sigs = {}
         for cre in edits.get('row_creates') or []:
-            temp_id = cre.pop('temp_id', None)
-            days = cre.pop('days_mask', None)
-            vals = dict(cre, deal_id=self.id)
-            # Phase 12: rows no longer carry run_start/run_end from the UI.
-            # Auto-fill from the deal-level start-of-quarter range so the
-            # required fields on mv.deal_line still get values.
-            vals.setdefault('run_start', deal_run_start)
-            vals.setdefault('run_end',   deal_run_end)
-            if days is not None:
-                vals.update({
-                    'day_mon': bool(days[0]), 'day_tue': bool(days[1]),
-                    'day_wed': bool(days[2]), 'day_thu': bool(days[3]),
-                    'day_fri': bool(days[4]), 'day_sat': bool(days[5]),
-                    'day_sun': bool(days[6]),
-                })
-            new = self.env['mv.deal_line'].create(vals)
-            if temp_id is not None:
-                new_ids_by_temp[temp_id] = new.id
+            temp_id = cre.get('temp_id')
+            if temp_id is None:
+                continue
+            days = cre.get('days_mask')
+            temp_sigs[str(temp_id)] = {
+                'days_bits': _days_bits_from_mask(days) if days else '0' * 7,
+                'rate': float(cre.get('rate') or 0.0),
+                'start_time': cre.get('start_time') or False,
+                'end_time': cre.get('end_time') or False,
+                'max_per_day': int(cre.get('max_per_day') or 0),
+            }
 
-        # --- cell updates: write units_available on the linked schedule,
-        # creating one if missing. If a cell is zeroed AND a schedule
-        # already exists for that (deal_line, week), DELETE the schedule
-        # so the grid stays clean.
-        #
-        # Exception - cell_update with `cancelled: True` is a
-        # cancellation marker (sent by Section 2 of the bulk allocation
-        # bar): set status='canceled' on the existing schedule, KEEP
-        # units_available unchanged, and DO NOT create a stub schedule
-        # if none exists yet.
+        # cell_updates: create/update/delete schedules per (sig, week)
         Sched = self.env['mv.schedules']
-        touched_dl_ids = set()
         for cu in edits.get('cell_updates') or []:
             row_id = cu.get('row_id')
+            week_iso = cu.get('week')
+            if not row_id or not week_iso:
+                continue
+
             if isinstance(row_id, str) and row_id.startswith('tmp:'):
                 temp = row_id[len('tmp:'):]
-                row_id = new_ids_by_temp.get(temp)
-            if not row_id:
-                continue
-            dl = self.env['mv.deal_line'].browse(row_id)
-            if not dl.exists():
-                # Row was deleted earlier in this same batch; skip.
-                continue
-            touched_dl_ids.add(dl.id)
-            week_iso = cu.get('week')
-            # ACTIVE schedule = anything not 'canceled'. We treat the
-            # cancelled schedule(s) as historical and never touch them
-            # during units writes.
-            active = Sched.search([
-                ('deal_line_id', '=', dl.id),
-                ('week', '=', week_iso),
-                ('status', '!=', 'canceled'),
-            ], limit=1)
+                sig_vals = temp_sigs.get(temp)
+                if not sig_vals:
+                    continue
+            else:
+                if row_id in sig_migration:
+                    row_id = sig_migration[row_id]
+                sig_vals = _parse_sig(row_id)
 
-            # --- Cancellation marker (Section 2 of bulk allocation)
+            active = self._find_active_schedule_by_sig(sig_vals, week_iso)
+
             if cu.get('cancelled'):
                 if active:
-                    # Flip the currently-active schedule to canceled.
-                    # Its units_available is preserved so the front-end
-                    # can render it as `x: 0/<units>` below the input.
                     active.write({'status': 'canceled'})
-                # else: no active schedule -> nothing to cancel.
                 continue
 
-            # --- Standard units write (affects ONLY the active schedule)
             units = cu.get('units') or 0
             if units <= 0:
-                # Zeroed cell -> drop the active schedule. Cancelled
-                # schedules at the same week stay intact.
                 if active:
                     active.unlink()
                 continue
-            # Fields the child Schedule inherits from its parent Deal Line
-            # (rate, days_allowed, start_time, end_time) - centralised on
-            # the Deal Line so changing them in one place propagates here.
-            inherit_vals = dl.schedule_inherit_vals()
+
+            tag_ids = _tag_ids_from_bits(self.env, sig_vals['days_bits'])
+            common_vals = {
+                'rate': sig_vals['rate'],
+                'start_time': sig_vals['start_time'] or False,
+                'end_time':   sig_vals['end_time'] or False,
+                'max_per_day': sig_vals['max_per_day'],
+                'days_allowed': [(6, 0, tag_ids)],
+            }
             if active:
                 active.write({
                     'units_available': units,
-                    **inherit_vals,
+                    **common_vals,
                 })
             else:
-                # New active schedule: default delivery to 100% so the
-                # Capping Report shows it green out of the box.
                 Sched.create({
                     'deal_parent': self.id,
-                    'deal_line_id': dl.id,
                     'week': week_iso,
                     'units_available': units,
                     'status': 'sold',
                     'cap_pct': 100,
-                    **inherit_vals,
+                    **common_vals,
                 })
 
-        # --- Auto-cleanup: any touched Deal Line that no longer has ANY
-        # --- LTC operations queued by the front-end (Section 2 Go
-        # button or the row-menu LTC dialog). Each op cancels every
-        # active schedule in weeks AFTER the LTC week and splits the
-        # LTC week off into a new Deal Line if days_allowed shrinks.
-        # NOTE: LTC ops can reparent a schedule away from its source
-        # deal_line; if that was the only schedule on the source, the
-        # deal_line becomes empty. We let the broader cleanup below
-        # catch this rather than tracking it inline.
+        # LTC ops
         for op in edits.get('ltc_ops') or []:
-            row_id = op.get('row_id')
+            sig = op.get('row_id') or op.get('sig')
             ltc_date = op.get('ltc_date')
-            if isinstance(row_id, str) and row_id.startswith('tmp:'):
-                temp = row_id[len('tmp:'):]
-                row_id = new_ids_by_temp.get(temp)
-            if not row_id or not ltc_date:
+            if isinstance(sig, str) and sig.startswith('tmp:'):
                 continue
-            self._do_apply_ltc(row_id, ltc_date)
-
-        # --- Auto-cleanup: ANY Deal Line on this deal that no longer
-        # has any linked schedule (sold OR canceled) is now empty and
-        # should be deleted. Scan all of the deal's deal_lines, not
-        # just touched_dl_ids, so we also catch lines that were left
-        # empty by reparenting in _do_apply_ltc.
-        self._unlink_empty_deal_lines()
+            if not sig or not ltc_date:
+                continue
+            if sig in sig_migration:
+                sig = sig_migration[sig]
+            self._do_apply_ltc_by_sig(sig, ltc_date)
 
         return self.load_units_grid()
 
-    def _unlink_empty_deal_lines(self):
-        """Delete every Deal Line on this deal that has zero linked
-        schedules (whether sold or canceled). The cascade ondelete on
-        schedules.deal_line_id makes this safe; we never run this when
-        a schedule is mid-write."""
-        self.ensure_one()
-        empty = self.env['mv.deal_line'].search([
-            ('deal_id', '=', self.id),
-        ]).filtered(lambda d: not d.schedule_ids)
-        if empty:
-            empty.unlink()
+    # ==================================================================
+    # sig-based schedule lookups
+    # ==================================================================
+    def _find_active_schedule_by_sig(self, sig_vals, week_iso):
+        """Return the ACTIVE schedule (if any) on (deal, week) matching
+        the sig_vals dict. Filters by scalar fields via SQL then by
+        days_bits in Python (since days_allowed is a M2M, not a
+        scalar column)."""
+        candidates = self.env['mv.schedules'].search([
+            ('deal_parent', '=', self.id),
+            ('week', '=', week_iso),
+            ('status', '!=', 'canceled'),
+            ('rate', '=', sig_vals['rate']),
+            ('start_time', '=', sig_vals['start_time'] or False),
+            ('end_time',   '=', sig_vals['end_time'] or False),
+            ('max_per_day', '=', sig_vals['max_per_day']),
+        ])
+        for s in candidates:
+            if _days_bits_from_allowed(s.days_allowed) == sig_vals['days_bits']:
+                return s
+        return self.env['mv.schedules']
 
-    # ------------------------------------------------------------------
-    # LTC ("Last To Cancel"): mid-week cancellation for one Deal Line
-    # ------------------------------------------------------------------
-    # Semantics:
-    #   - `ltc_date` falls inside one broadcast week (the LTC week,
-    #     i.e. the Monday on or before ltc_date).
-    #   - Every ACTIVE schedule whose week > ltc_week_monday is
-    #     cancelled (status='canceled', units preserved).
-    #   - The LTC week itself stays active but its days_allowed are
-    #     truncated to Mon..weekday(ltc_date) (Mon=0..Sun=6). If those
-    #     truncated days differ from the parent's, the LTC-week
-    #     schedule is moved to a freshly-cloned Deal Line carrying
-    #     the truncated days_allowed.
-    # ------------------------------------------------------------------
+    def _schedules_for_sig(self, sig, active_only=False):
+        """Every schedule on this deal matching sig (active + cancelled
+        by default)."""
+        self.ensure_one()
+        vals = _parse_sig(sig)
+        domain = [
+            ('deal_parent', '=', self.id),
+            ('rate', '=', vals['rate']),
+            ('start_time', '=', vals['start_time'] or False),
+            ('end_time',   '=', vals['end_time'] or False),
+            ('max_per_day', '=', vals['max_per_day']),
+        ]
+        if active_only:
+            domain.append(('status', '!=', 'canceled'))
+        candidates = self.env['mv.schedules'].search(domain)
+        return candidates.filtered(
+            lambda s: _days_bits_from_allowed(s.days_allowed) == vals['days_bits']
+        )
+
+    def _delete_row_by_sig(self, sig):
+        self.ensure_one()
+        self._schedules_for_sig(sig).unlink()
+
+    def _update_row_by_sig(self, old_sig, upd):
+        """Update every schedule matching old_sig with the row-level
+        vals in `upd`. Return the new sig (may equal old)."""
+        self.ensure_one()
+        scheds = self._schedules_for_sig(old_sig)
+        if not scheds:
+            return old_sig
+        write_vals = {}
+        days = upd.get('days_mask')
+        if days is not None:
+            tag_ids = _tag_ids_from_bits(
+                self.env, _days_bits_from_mask(days),
+            )
+            write_vals['days_allowed'] = [(6, 0, tag_ids)]
+        for k in ('rate', 'start_time', 'end_time', 'max_per_day'):
+            if k in upd:
+                write_vals[k] = upd[k]
+        if not write_vals:
+            return old_sig
+        scheds.write(write_vals)
+        return _sig_from_schedule(scheds[0])
+
+    # ==================================================================
+    # LTC (Last To Cancel)
+    # ==================================================================
     def apply_ltc(self, row_id, ltc_date):
-        """Public RPC entry point - applies a single LTC and returns
-        the fresh grid. Used when the front-end wants an immediate
-        commit. The save-on-Save flow goes through _do_apply_ltc
-        directly from save_units_grid."""
         self.ensure_one()
-        self._do_apply_ltc(row_id, ltc_date)
-        # Same broad cleanup as save_units_grid - delete any Deal
-        # Line left empty by the LTC reparenting.
-        self._unlink_empty_deal_lines()
+        if isinstance(row_id, str) and row_id.startswith('tmp:'):
+            return self.load_units_grid()
+        self._do_apply_ltc_by_sig(row_id, ltc_date)
         return self.load_units_grid()
 
-    def _do_apply_ltc(self, row_id, ltc_date):
-        """Worker: cancels post-LTC-week schedules + (maybe) splits
-        the LTC week into a new Deal Line. Does NOT return / refresh
-        - the caller is responsible for that."""
+    def _do_apply_ltc_by_sig(self, sig, ltc_date):
+        """Cancel post-LTC-week schedules matching sig, and truncate
+        the LTC-week schedule's days_allowed to Mon..weekday(ltc_date)."""
         self.ensure_one()
-        if not row_id or not ltc_date:
+        if not sig or not ltc_date:
             return
-        from datetime import date as _date, timedelta as _td
         if isinstance(ltc_date, str):
-            ltc_date = _date.fromisoformat(ltc_date)
-
-        # Stage-1 edits in save_units_grid use 'tmp:N' for unsaved
-        # rows. By the time _do_apply_ltc runs, those temp ids have
-        # already been resolved to real ids by save_units_grid's
-        # new_ids_by_temp map - the caller is expected to pass the
-        # resolved id. Defensive guard: if a 'tmp:' string slips
-        # through, skip the operation rather than crashing.
-        if isinstance(row_id, str) and row_id.startswith('tmp:'):
-            return
-        dl = self.env['mv.deal_line'].browse(row_id)
-        if not dl.exists():
-            return
+            ltc_date = date.fromisoformat(ltc_date)
 
         ltc_weekday = ltc_date.weekday()
-        ltc_week_mon = ltc_date - _td(days=ltc_weekday)
-        Sched = self.env['mv.schedules']
+        ltc_week_mon = ltc_date - timedelta(days=ltc_weekday)
 
-        # 1. Cancel every active schedule in weeks AFTER the LTC week.
-        post_active = Sched.search([
-            ('deal_line_id', '=', dl.id),
-            ('week', '>', ltc_week_mon),
-            ('status', '!=', 'canceled'),
-        ])
+        matching = self._schedules_for_sig(sig, active_only=True)
+
+        # 1. Cancel schedules after the LTC week
+        post_active = matching.filtered(
+            lambda s: s.week and s.week > ltc_week_mon,
+        )
         if post_active:
             post_active.write({'status': 'canceled'})
 
-        # 2. LTC week: truncate days_allowed and (maybe) split.
-        ltc_sched = Sched.search([
-            ('deal_line_id', '=', dl.id),
-            ('week', '=', ltc_week_mon),
-            ('status', '!=', 'canceled'),
-        ], limit=1)
+        # 2. LTC week: truncate the day set on that schedule in place
+        ltc_sched = matching.filtered(lambda s: s.week == ltc_week_mon)
         if ltc_sched:
-            day_flags = [
-                dl.day_mon, dl.day_tue, dl.day_wed,
-                dl.day_thu, dl.day_fri, dl.day_sat, dl.day_sun,
-            ]
-            new_day_flags = [
+            ltc_sched = ltc_sched[:1]
+            vals = _parse_sig(sig)
+            day_flags = [bit == '1' for bit in vals['days_bits']]
+            new_flags = [
                 bool(day_flags[i]) and i <= ltc_weekday
                 for i in range(7)
             ]
-            if new_day_flags != day_flags:
-                clone_vals = {
-                    'deal_id':    dl.deal_id.id,
-                    'daypart':    dl.daypart,
-                    'time_range': dl.time_range or '',
-                    'start_time': dl.start_time or False,
-                    'end_time':   dl.end_time   or False,
-                    'rate':       dl.rate,
-                    'run_start':  dl.run_start,
-                    'run_end':    dl.run_end,
-                    'day_mon': new_day_flags[0],
-                    'day_tue': new_day_flags[1],
-                    'day_wed': new_day_flags[2],
-                    'day_thu': new_day_flags[3],
-                    'day_fri': new_day_flags[4],
-                    'day_sat': new_day_flags[5],
-                    'day_sun': new_day_flags[6],
-                }
-                new_dl = self.env['mv.deal_line'].create(clone_vals)
-                ltc_sched.write({'deal_line_id': new_dl.id})
-                ltc_sched.write(new_dl.schedule_inherit_vals())
-        # No return - public apply_ltc / save_units_grid handle the
-        # grid refresh on their own.
+            if new_flags != day_flags:
+                new_bits = ''.join('1' if v else '0' for v in new_flags)
+                tag_ids = _tag_ids_from_bits(self.env, new_bits)
+                ltc_sched.write({
+                    'days_allowed': [(6, 0, tag_ids)],
+                })

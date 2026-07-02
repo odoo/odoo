@@ -116,8 +116,6 @@ from . import phase9_deal_ui
 from . import phase9_schedule_ui
 
 # Phase 10 — Deal Line model + Units Grid backend
-from . import mv_deal_line
-from . import phase10_schedule_link
 from . import phase10_units_grid_rpc
 
 # Phase 11 — Capping Grid (cap_pct + effective_spots + RPC)

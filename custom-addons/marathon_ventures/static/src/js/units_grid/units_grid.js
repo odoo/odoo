@@ -767,9 +767,10 @@ export class MvUnitsGrid extends Component {
 
     // Apply the typed Max/Day value to every selected row. Each
     // affected row gets row.max_per_day updated locally and a queued
-    // row_update with max_per_day, which save_units_grid then writes
-    // to mv.deal_line + propagates to every linked schedule via
-    // schedule_inherit_vals().
+    // row_update with max_per_day. save_units_grid then updates every
+    // schedule matching the row's signature to the new max_per_day
+    // (which itself IS part of the signature, so those schedules
+    // roll into a new sig group after the write).
     confirmBulkMaxDay() {
         const raw = this.state.bulkMaxDay;
         const n = parseInt(raw, 10);
@@ -974,6 +975,7 @@ export class MvUnitsGrid extends Component {
         return `/odoo/mv.schedules/${cell.sched_id}`;
     }
 }
+
 
 registry.category("fields").add("mv_units_grid", {
     component: MvUnitsGrid,
