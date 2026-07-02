@@ -141,8 +141,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         work_entry_types = (
             self.env["hr.work.entry.type"].search([]).grouped("requires_allocation")
         )
-        work_entry_types_alloc = work_entry_types.get(True)
-        work_entry_types_no_alloc = work_entry_types.get(False)
+        work_entry_types_alloc = work_entry_types.get(True, res)
+        work_entry_types_no_alloc = work_entry_types.get(False, res)
         res |= work_entry_types_no_alloc
         allocations = self.env['hr.leave.allocation'].search([
             ('work_entry_type_id', 'in', work_entry_types_alloc.ids),
