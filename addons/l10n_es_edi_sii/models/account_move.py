@@ -5,6 +5,7 @@ import math
 from odoo import api, fields, models, modules, tools
 from odoo.tools.date_utils import get_quarter_number
 from odoo.exceptions import LockError, UserError
+from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from markupsafe import Markup
 
@@ -31,34 +32,130 @@ class AccountMove(models.Model):
     l10n_es_edi_is_required = fields.Boolean(
         string="Is the Spanish EDI needed",
         compute='_compute_l10n_es_edi_is_required',
+        compute_sql='_compute_sql_l10n_es_edi_is_required',
+        compute_sudo=True,
     )
     l10n_es_edi_sii_state = fields.Selection(
         selection=[
             ('to_send', "To Send"),
+            ('to_cancel', "To Cancel"),
             ('sent', "Sent"),
+            ('accepted_with_errors', "Accepted with Errors"),
             ('cancelled', "Cancelled"),
         ],
         string="Spain SII Status",
         compute='_compute_l10n_es_edi_sii_data',
+        compute_sql='_compute_sql_l10n_es_edi_sii_state',
+        compute_sudo=True,
     )
     l10n_es_edi_csv = fields.Char(
         string="CSV",
         compute='_compute_l10n_es_edi_sii_data',
-        help="Secure Verification Code of the last accepted document",
+        compute_sql='_compute_sql_l10n_es_edi_csv',
+        compute_sudo=True,
+        help="Secure Verification Code of the last document",
     )
     l10n_es_edi_sii_error = fields.Html(
         string="SII Error",
         compute='_compute_l10n_es_edi_sii_data',
+        compute_sql='_compute_sql_l10n_es_edi_sii_error',
+        compute_sudo=True,
+    )
+    l10n_es_edi_sii_last_document_id = fields.Many2one(
+        comodel_name='l10n_es_edi_sii.document',
+        string="Last SII Document",
+        compute='_compute_l10n_es_edi_sii_data',
+        compute_sql='_compute_sql_l10n_es_edi_sii_last_document_id',
+        compute_sudo=True,
     )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+    @api.depends('move_type', 'company_id', 'commercial_partner_id.country_id.country_group_codes', 'commercial_partner_id.state_id', 'invoice_line_ids.tax_ids')
+    def _compute_l10n_es_edi_is_required(self):
+        eu_vat_country_group = self.env.ref('account.europe_vat')
+        for move in self:
+            if not move.is_invoice() or move.country_code != 'ES' or not move.company_id.l10n_es_sii_tax_agency:
+                move.l10n_es_edi_is_required = False
+                continue
+
+            partner_in_eu_vat = (
+                move.commercial_partner_id.country_id in eu_vat_country_group.country_ids
+                and (
+                    not move.commercial_partner_id.state_id
+                    or move.commercial_partner_id.state_id not in eu_vat_country_group.exclude_state_ids
+                )
+            )
+            purchase_requires_tax_check = move.is_purchase_document() and not partner_in_eu_vat
+
+            move.l10n_es_edi_is_required = not purchase_requires_tax_check or any(
+                t.l10n_es_type and t.l10n_es_type != 'ignore'
+                for t in move.invoice_line_ids.tax_ids
+            )
+
+    def _compute_sql_l10n_es_edi_is_required(self, table):
+        is_invoice = SQL("%s IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')", table.move_type)
+        is_purchase = SQL("%s IN ('in_invoice', 'in_refund')", table.move_type)
+        is_sii_company = SQL(
+            "%(country_code)s = 'ES' AND NULLIF(%(sii_tax_agency)s, '') IS NOT NULL",
+            country_code=table.company_id.account_fiscal_country_id.code,
+            sii_tax_agency=table.company_id.l10n_es_sii_tax_agency,
+        )
+        partner_in_eu_vat = SQL(
+            """EXISTS (
+                SELECT 1
+                  FROM res_country_res_country_group_rel rel
+                  JOIN res_country_group country_group ON country_group.id = rel.res_country_group_id
+                 WHERE rel.res_country_id = %(partner_country_id)s
+                   AND country_group.code = 'EU-VAT'
+                   AND NOT EXISTS (
+                       SELECT 1
+                         FROM res_country_group_res_country_state_rel state_rel
+                        WHERE state_rel.res_country_group_id = country_group.id
+                          AND state_rel.res_country_state_id = %(partner_state_id)s
+                   )
+            )""",
+            partner_country_id=table.commercial_partner_id.country_id,
+            partner_state_id=table.commercial_partner_id.state_id,
+        )
+        purchase_requires_tax_check = SQL(
+            "%(is_purchase)s AND NOT %(partner_in_eu_vat)s",
+            is_purchase=is_purchase,
+            partner_in_eu_vat=partner_in_eu_vat,
+        )
+        has_sii_tax = SQL(
+            """EXISTS (
+                SELECT 1
+                  FROM account_move_line line
+                  JOIN account_move_line_account_tax_rel tax_rel ON tax_rel.account_move_line_id = line.id
+                  JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+                 WHERE line.move_id = %(move_id)s
+                   AND line.display_type = 'product'
+                   AND tax.l10n_es_type IS NOT NULL
+                   AND tax.l10n_es_type != 'ignore'
+            )""",
+            move_id=table.id,
+        )
+        return SQL(
+            """CASE
+                WHEN NOT (%(is_invoice)s AND %(is_sii_company)s)
+                    THEN FALSE
+                WHEN %(purchase_requires_tax_check)s
+                    THEN %(has_sii_tax)s
+                ELSE TRUE
+               END""",
+            is_invoice=is_invoice,
+            is_sii_company=is_sii_company,
+            purchase_requires_tax_check=purchase_requires_tax_check,
+            has_sii_tax=has_sii_tax,
+        )
 
     @api.depends(
         'l10n_es_edi_is_required',
         'l10n_es_edi_sii_document_ids.state',
         'l10n_es_edi_sii_document_ids.csv',
+        'l10n_es_edi_sii_document_ids.response_message',
     )
     def _compute_l10n_es_edi_sii_data(self):
         for move in self:
@@ -69,51 +166,74 @@ class AccountMove(models.Model):
                 move.l10n_es_edi_sii_error = False
                 continue
 
-            sorted_docs = docs.sorted('create_date', reverse=True)
-            latest_doc = sorted_docs[:1]
-            accepted_docs = sorted_docs.filtered(lambda d: d.state in ('accepted', 'accepted_with_errors'))
-            move.l10n_es_edi_csv = accepted_docs[:1].csv
-
-            if latest_doc.state in ('accepted', 'accepted_with_errors'):
-                move.l10n_es_edi_sii_state = 'sent'
-                move.l10n_es_edi_sii_error = latest_doc.response_message if latest_doc.state == 'accepted_with_errors' else False
-            elif latest_doc.state == 'cancelled':
-                move.l10n_es_edi_sii_state = 'cancelled'
-                move.l10n_es_edi_sii_error = False
-            else:
-                move.l10n_es_edi_sii_state = 'sent' if accepted_docs else 'to_send'
-                move.l10n_es_edi_sii_error = latest_doc.response_message
-
-    @api.depends('move_type', 'company_id', 'invoice_line_ids.tax_ids')
-    def _compute_l10n_es_edi_is_required(self):
-        for move in self:
-            has_tax = not move.is_purchase_document() or any(t.l10n_es_type and t.l10n_es_type != 'ignore' for t in move.invoice_line_ids.tax_ids)
-
-            move.l10n_es_edi_is_required = (
-                move.is_invoice()
-                and move.country_code == 'ES'
-                and move.company_id.l10n_es_sii_tax_agency
-                and has_tax
+            latest_doc = max(docs, key=lambda doc: (doc.create_date, doc.id))
+            move.l10n_es_edi_csv = latest_doc.csv
+            move.l10n_es_edi_sii_state = 'sent' if latest_doc.state == 'accepted' else latest_doc.state
+            move.l10n_es_edi_sii_error = (
+                latest_doc.response_message
+                if latest_doc.state not in ('accepted', 'cancelled')
+                else False
             )
+            move.l10n_es_edi_sii_last_document_id = latest_doc.id
+
+    def _compute_sql_l10n_es_edi_sii_last_document_id(self, table):
+        latest_doc = table._make_alias('latest_sii_doc')
+        table._query.add_join(
+            kind='LEFT JOIN LATERAL',
+            alias=latest_doc,
+            table=SQL("""(
+                SELECT doc.state, doc.response_message, doc.csv
+                  FROM l10n_es_edi_sii_document doc
+                 WHERE doc.move_id = %(move_id)s
+              ORDER BY doc.create_date DESC, doc.id DESC
+                 LIMIT 1
+            )""", move_id=table.id),
+            condition=SQL("TRUE"),
+        )
+        return latest_doc
+
+    def _compute_sql_l10n_es_edi_sii_state(self, table):
+        is_required = self._compute_sql_l10n_es_edi_is_required(table)
+        latest_doc = self._compute_sql_l10n_es_edi_sii_last_document_id(table)
+        return SQL(
+            """CASE
+                WHEN NOT %(is_required)s THEN NULL
+                WHEN %(latest_doc_state)s IS NULL THEN 'to_send'
+                WHEN %(latest_doc_state)s = 'accepted' THEN 'sent'
+                ELSE %(latest_doc_state)s
+               END""",
+            is_required=is_required,
+            latest_doc_state=latest_doc.state,
+        )
+
+    def _compute_sql_l10n_es_edi_csv(self, table):
+        return self._compute_sql_l10n_es_edi_sii_last_document_id(table).csv
+
+    def _compute_sql_l10n_es_edi_sii_error(self, table):
+        latest_doc = self._compute_sql_l10n_es_edi_sii_last_document_id(table)
+        return SQL(
+            """%(latest_doc_message)s""",
+            latest_doc_message=latest_doc.response_message,
+        )
 
     @api.depends('l10n_es_edi_is_required', 'l10n_es_edi_sii_state')
     def _compute_need_cancel_request(self):
         super()._compute_need_cancel_request()
         for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':
+            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors', 'to_cancel'):
                 move.need_cancel_request = True
 
     @api.depends('l10n_es_edi_is_required', 'l10n_es_edi_sii_state')
     def _compute_show_reset_to_draft_button(self):
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':
+            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors'):
                 move.show_reset_to_draft_button = True
 
     def button_request_cancel(self):
         res = super().button_request_cancel()
         for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':
+            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors', 'to_cancel'):
                 move._send_l10n_es_sii_document(cancel=True)
         return res
 
