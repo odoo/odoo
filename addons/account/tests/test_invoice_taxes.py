@@ -903,14 +903,35 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         invoice = self.init_invoice('out_invoice', products=self.product_a)
         self.assertEqual(invoice.tax_totals['base_amount'], 1000.0)
         self.assertEqual(invoice.tax_totals['total_amount'], 1150.0)
+
         # The onchange is executed directly to simulate the following flow:
         # 1) unit price is changed to any value
-        # 2) product is changed to "Product B"
+        # 2) product is changed to "Product B" (which has double 15% tax)
         # 3) unit price is changed to 2000.0
+        fields_spec = {
+            'invoice_line_ids': {
+                'currency_rate': {},
+                'tax_base_amount': {},
+                'tax_line_id': {},
+                'price_total': {},
+                'price_subtotal': {},
+            },
+            'tax_totals': {},
+        }
+        # call onchange() on the line, and update it
+        line = invoice.invoice_line_ids[0]
+        line_values = {'price_unit': 2000.0, 'product_id': self.product_b.id}
+        line_result = line.onchange(
+            line_values,
+            ['price_unit', 'product_id'],
+            fields_spec['invoice_line_ids'],
+        )
+        line_values |= line_result['value']
+        # call onchange() on the invoice
         results = invoice.onchange(
-            {'invoice_line_ids': [Command.update(invoice.invoice_line_ids[0].id, {'price_unit': 2000.0, 'product_id': self.product_b.id})]},
+            {'invoice_line_ids': [Command.update(line.id, line_values)]},
             ['invoice_line_ids'],
-            {"invoice_line_ids": {}, 'tax_totals': {}}
+            fields_spec,
         )
         self.assertEqual(results['value']['tax_totals']['base_amount'], 2000.0)
         self.assertEqual(results['value']['tax_totals']['total_amount'], 2600.0)
