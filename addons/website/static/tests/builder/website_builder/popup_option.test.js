@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { advanceTime, queryOne, waitFor } from "@odoo/hoot-dom";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
     defineWebsiteModels,
@@ -211,8 +211,7 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
     });
 
-    test("emptied s_popup are removed and the options are updated correctly", async () => {
-        const editor = builder.getEditor();
+    test("deleting the inner content of a popup does not delete the popup", async () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
@@ -222,44 +221,25 @@ describe("Popup options: popup in page before edit", () => {
 
         await contains(":iframe section p:contains('Popup content')").click();
         await contains("div[data-container-title='Block'] button.fa-trash").click();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
         expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
+    });
 
-        expect(editor.shared.history.canRedo()).toBe(true);
-        redo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
-
-        // Undo -> Hide popup -> Redo -> Undo -> Popup expected to be visible
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
-
-        contains(".o_we_invisible_entry .fa-eye").click();
-        await animationFrame();
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
-
-        expect(editor.shared.history.canRedo()).toBe(true);
-        redo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
+    test("saving an empty popup deletes the popup", async () => {
+        onRpc("ir.ui.view", "save", ({ args }) => {
+            expect.step("save");
+            expect(args[1].includes("s_popup")).toBe(false);
+            return true;
+        });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye-slash").click()
+        );
+        await waitFor(":iframe .s_popup .modal", { visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(":iframe .s_popup .modal").toBeVisible();
+
+        await contains(":iframe section p:contains('Popup content')").click();
+        await contains(".o-overlay-container .btn[title='Remove']").click();
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+        expect.verifySteps(["save"]);
     });
 });

@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } PopupVisibilityShared
@@ -95,6 +96,17 @@ export class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
+        }
+
+        //Delete all empty popups upon save
+        for (const popupEl of selectElements(rootEl, ".s_popup")) {
+            const modelContent = popupEl.querySelector(".modal-content");
+            const hasOnlyCloseButton = [...modelContent.children].every((childEl) =>
+                childEl.classList.contains("s_popup_close")
+            );
+            if (hasOnlyCloseButton) {
+                popupEl.remove();
+            }
         }
     }
 
