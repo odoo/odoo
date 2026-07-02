@@ -1,4 +1,10 @@
-html:has(.o_layout, .o_basic_theme) {
+html:has(.o_layout) {
+    margin: 0 !important;
+    padding: 0 !important;
+    // Redeclare CSS values that use color-mix()
+    // to avoid issues with mail rendering engines
+    --o-border-color: #{o-color('300')};
+
     &:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
         height: auto !important;
     }
@@ -15,6 +21,11 @@ html:has(.o_layout, .o_basic_theme) {
     }
 
     body {
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+        overflow-wrap: break-word;
+        margin: 0 !important;
+        padding: 0 !important;
+
         &.o_mass_mailing_iframe_fullscreen, &.o_mass_mailing_iframe_mobile {
             .note-editable {
                 overflow: auto;
@@ -39,6 +50,12 @@ html:has(.o_layout, .o_basic_theme) {
             .o_table {
                 table-layout: fixed;
             }
+            .o_layout {
+                overflow: visible;
+                * {
+                    box-sizing: border-box !important;
+                }
+            }
         }
         .o_mass_mailing_value {
             overflow-wrap: break-word !important;
@@ -52,26 +69,6 @@ html:has(.o_layout, .o_basic_theme) {
         }
     }
 
-    .container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-:host(.o_mail_favorite_preview) {
-    .o_layout.o_basic_theme {
-        padding: 16px;
-    }
-    .o_layout .o_mail_wrapper {
-        max-width: unset;
-    }
-    .container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-html:has(.o_layout) {
     .editor_enable .o_mail_wrapper_td.oe_empty:empty {
         cursor: pointer;
         background-color: rgba(1, 186, 210, 0.5) !important;
@@ -99,6 +96,19 @@ html:has(.o_layout) {
                 pointer-events: none;
             }
         }
+    }
+}
+
+:host(.o_mail_favorite_preview) {
+    .o_layout.o_basic_theme {
+        padding: 16px;
+    }
+    .o_layout .o_mail_wrapper {
+        max-width: unset;
+    }
+    .container {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 

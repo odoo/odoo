@@ -21,7 +21,7 @@ import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
-    static shared = ["savePendingImages"];
+    static shared = ["createAttachment", "savePendingImages"];
     static dependencies = ["imagePostProcess"];
 
     /** @type {import("plugins").EditorResources} */

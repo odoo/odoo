@@ -120,20 +120,25 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_editor/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+        ],
+        'mass_mailing.assets_mail_clients': [
+            # style sheet added in _prepare_mail_values in the
+            # email sent, they are added here to create as many inline style
+            # rules as possible during html conversion.
+            # Files added here should also be handled in _prepare_mail_values
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         # style assets used to view the mail content with a basic editor
         'mass_mailing.assets_inside_basic_editor_iframe': [
             ('include', 'mass_mailing.assets_iframe_style'),
             ('include', 'html_editor.assets_editor'),
         ],
+        # TODO EGGMAIL: fix bundle definitions
         # style assets used to view the mail content in Odoo, but not used
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
