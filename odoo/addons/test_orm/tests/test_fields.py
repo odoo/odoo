@@ -5471,8 +5471,10 @@ class TestCompanyDependent(TransactionCase):
             for field in model._fields.values():
                 if field.company_dependent and field.type == 'many2one' and field.ondelete.lower() == 'restrict':
                     for comodel_field in self.env[field.comodel_name]._fields.values():
-                        self.assertFalse(
-                            comodel_field.type == 'many2one' and comodel_field.ondelete == 'cascade',
+                        if comodel_field.type != 'many2one':
+                            continue
+                        self.assertNotEqual(
+                            comodel_field.ondelete, 'cascade',
                             (f'when a row for {comodel_field.comodel_name} is deleted, a row for {comodel_field.model_name} '
                              f'may also be deleted for sake of on delete cascade field {comodel_field}, which will '
                              f'bypass the ORM ondelete="restrict" check for a company dependent many2one field {field}. '

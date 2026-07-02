@@ -131,7 +131,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 
         for field_name in self.write_protected_fields_task:
             field = task._fields[field_name]
-            if field.comodel_name == 'project.task':
+            if field.relational and field.comodel_name == 'project.task':
                 other_task = self.env['project.task'].create({'name': 'Parent task', 'project_id': task.project_id.id})
                 value = other_task.id if field.type == 'many2one' else other_task.ids
                 task.write({field_name: value})

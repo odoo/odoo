@@ -1730,7 +1730,7 @@ actual arch.
         # contain fields on the comodel
         name = node.get('name')
         field = name_manager.model._fields.get(name)
-        if not field or not field.comodel_name:
+        if not field or not field.relational:
             return
         # post-process the node as a nested view, and associate it to the field
         node_info['children'] = []
@@ -2450,7 +2450,7 @@ actual arch.
                         field=name, field_path=field_path, use=use,
                     )
                     self._raise_view_error(msg, node)
-                Model = self.pool.get(field.comodel_name)
+                Model = self.pool.get(field.comodel_name) if field.relational else None
 
     #------------------------------------------------------
     # QWeb template views

@@ -33,7 +33,7 @@ _schema = logging.getLogger('odoo.schema')
 class _Relational(Field[BaseModel]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
-    comodel_name: str
+    comodel_name: str = ''
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
     bypass_search_access: bool = False  # whether access rights are bypassed on the comodel
@@ -130,6 +130,9 @@ class _Relational(Field[BaseModel]):
             return lambda recs: validated(self.domain(recs.env[self.model_name]))  # pylint: disable=not-callable
         else:
             return validated(self.domain)
+
+    # property used by setup_related() to copy values from related field
+    _related_comodel_name = property(attrgetter('comodel_name'))
 
     _related_context = property(attrgetter('context'))
 

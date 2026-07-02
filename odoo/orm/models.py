@@ -1525,8 +1525,11 @@ class BaseModel(metaclass=MetaModel):
             # retrieve the last field in the sequence
             model = self
             for fname in field_name.split('.'):
+                if model is None:
+                    raise ValueError(f"Traversing non-relational field in {self._name}._rec_names_search or {self._name}._rec_name")
                 field = model._fields[fname]
-                model = self.env.get(field.comodel_name)
+                comodel_name = field.comodel_name if field.relational else None
+                model = self.env.get(comodel_name) if comodel_name else None
             # depending on the operator, we may need to cast the value to the type of the field
             # ignore if we cannot convert
             if field.relational:

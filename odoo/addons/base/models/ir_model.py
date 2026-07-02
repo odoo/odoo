@@ -1241,7 +1241,7 @@ class IrModelFields(models.Model):
             'help': field.help or None,
             'ttype': field.type,
             'state': 'manual' if field.manual else 'base',
-            'relation': field.comodel_name or None,
+            'relation': field.comodel_name if field.relational else None,
             'index': bool(field.index),
             'store': bool(field.store),
             'copied': bool(field.copy),
