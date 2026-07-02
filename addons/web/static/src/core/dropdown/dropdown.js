@@ -1,8 +1,9 @@
-import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { onRendered, useChildEnv } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillUpdateProps,
     proxy,
@@ -182,10 +183,20 @@ export class Dropdown extends Component {
             })
         );
 
-        useLayoutEffect(
-            (target) => this.setTargetElement(target),
-            () => [this.target]
-        );
+        let targetCleanup = null;
+        let currentTarget = null;
+        const applyTarget = () => {
+            const target = this.target;
+            if (target === currentTarget) {
+                return;
+            }
+            targetCleanup?.();
+            currentTarget = target;
+            targetCleanup = this.setTargetElement(target);
+        };
+        onMounted(applyTarget);
+        onPatched(applyTarget);
+        onWillDestroy(() => targetCleanup?.());
 
         onWillUpdateProps(({ disabled }) => {
             if (disabled) {
