@@ -26,7 +26,7 @@ patch(Navbar.prototype, {
         this.pos.floorPlanStyle = mode;
     },
     get showEditPlanButton() {
-        return true;
+        return this.pos.employeeIsAdmin;
     },
     setFloatingOrder(floatingOrder) {
         this.pos.selectedTable = null;

@@ -201,3 +201,20 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             Utils.negateStep(FloorScreen.isChildTable("5")),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_table_merging_with_pos_user", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.selectedFloorIs("Main Floor"),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            // Edit Plan should be hidden for PoS Users
+            Chrome.notExistMenuOption("Edit Plan"),
+            FloorScreen.linkTables("2", "4"),
+            FloorScreen.isChildTable("2"),
+            FloorScreen.clickTable("2"),
+            Chrome.isTabActive("4 & 2"),
+        ].flat(),
+});
