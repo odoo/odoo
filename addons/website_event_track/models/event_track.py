@@ -755,5 +755,5 @@ class EventTrack(models.Model):
 
         return {
             'google_url': GOOGLE_CALENDAR_URL + werkzeug.urls.url_encode(google_params),
-            'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics',
+            'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics?lang={self.env.context["lang"]}',
         }

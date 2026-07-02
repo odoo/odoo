@@ -13,10 +13,7 @@ class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
     def event_ics_file(self, event, **kwargs):
-        lang = request.env.context.get('lang', request.env.user.lang)
-        if request.env.user._is_public():
-            lang = request.cookies.get('frontend_lang')
-        event = event.with_context(lang=lang)
+        event = event.with_context(lang=kwargs.get('lang', request.cookies.get('frontend_lang')))
         slot_id = int(kwargs['slot_id']) if kwargs.get('slot_id') else False
         files = event._get_ics_file(slot=request.env['event.slot'].sudo().browse(slot_id))
         if not event.id in files:

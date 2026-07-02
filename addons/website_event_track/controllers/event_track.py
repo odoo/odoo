@@ -454,7 +454,7 @@ class EventTrackController(http.Controller):
             return {'success': False, 'message': error_message}
 
         template.sudo().with_context(
-            lang=request.cookies.get('frontend_lang') if request.env.user._is_public() else request.env.context.get('lang', request.env.user.lang)
+            lang=request.cookies.get('frontend_lang')
         ).send_mail(track.id, email_values={'email_to': valid_email_to})
         return {'success': True}
 
@@ -541,11 +541,8 @@ class EventTrackController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public")
-    def event_track_ics_file(self, event, track):
-        lang = request.env.context.get('lang', request.env.user.lang)
-        if request.env.user._is_public():
-            lang = request.cookies.get('frontend_lang')
-        track = track.with_context(lang=lang)
+    def event_track_ics_file(self, event, track, **kwargs):
+        track = track.with_context(lang=kwargs.get('lang', request.cookies.get('frontend_lang')))
         files = track._get_ics_file()
         content = files.get(track.id)
         if not content:
