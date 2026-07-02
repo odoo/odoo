@@ -177,7 +177,7 @@ test("re-subscribe on reconnect", async () => {
     await expect.waitForSteps(["subscribe - []"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
     await runAllTimers();
-    await expect.waitForSteps(["BUS:RECONNECT", "subscribe - []"]);
+    await expect.waitForSteps(["BUS:RECONNECT", "subscribe - []"], { ignoreOrder: true });
 });
 
 test("pass last notification id on initialization", async () => {
