@@ -20,14 +20,51 @@ export class QrCodeCustomerDisplay extends Component {
         return generateQRCodeDataUrl(this.props.customerDisplayURL, { useThemeQr: true });
     }
 
-    openOnThisDevice() {
-        window.open(
-            this.props.customerDisplayURL,
-            "newWindow",
-            "width=800,height=600,left=200,top=200"
-        );
-        this.notification.add(_t("PoS Customer Display opened in a new window"));
+    openWindow(target, features, message) {
+        window.open(this.props.customerDisplayURL, target, features);
+        this.notification.add(message);
         this.props.close();
+    }
+
+    openOnThisDevice() {
+        this.openWindow(
+            "newWindow",
+            "width=800,height=600,left=200,top=200",
+            _t("PoS Customer Display opened in a new window")
+        );
+    }
+
+    async openDisplay() {
+        try {
+            if ("getScreenDetails" in window) {
+                const screenDetails = await window.getScreenDetails();
+
+                if (screenDetails.screens.length >= 2) {
+                    const secondScreen =
+                        screenDetails.screens.find(
+                            (screen) => screen !== screenDetails.currentScreen
+                        ) || screenDetails.screens[1];
+
+                    this.openWindow(
+                        "customerDisplay",
+                        [
+                            "popup=yes",
+                            `left=${secondScreen.availLeft}`,
+                            `top=${secondScreen.availTop}`,
+                            `width=${secondScreen.availWidth}`,
+                            `height=${secondScreen.availHeight}`,
+                        ].join(","),
+                        _t("Customer Display opened on the secondary display.")
+                    );
+                    return;
+                }
+            }
+
+            this.openOnThisDevice();
+        } catch (error) {
+            console.error(error);
+            this.openOnThisDevice();
+        }
     }
 
     showQr() {
