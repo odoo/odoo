@@ -137,7 +137,8 @@ class TestMailSchedule(EventMailCommon):
         self.assertFalse(event_prev_scheduler.error_datetime)
         self.assertEqual(event_prev_scheduler.scheduled_date, self.event_date_begin + relativedelta(days=-1))
         self.assertFalse(event_prev_scheduler.mail_done)
-        self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
+        with self.mock_datetime_and_now(self.reference_now):
+            self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
         self.assertEqual(event_prev_scheduler.mail_count_done, 0)
         # check after event scheduler
         event_next_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
@@ -308,7 +309,8 @@ class TestMailSchedule(EventMailCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 15, 'event: should have 15 scheduled communication (1 / registration)')
         self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
-        self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
+        with self.mock_datetime_and_now(now_registration):
+            self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 15,
                          'All subscriptions emails should have been sent')
 
@@ -327,14 +329,16 @@ class TestMailSchedule(EventMailCommon):
         # --------------------------------------------------
 
         self.assertFalse(event_prev_scheduler.mail_done)
-        self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
+        with self.mock_datetime_and_now(now):
+            self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
 
         # simulate cron running before scheduled date -> should not do anything
         now_start = self.event_date_begin + relativedelta(hours=-25, microsecond=654321)
         self.execute_event_cron(freeze_date=now_start)
 
         self.assertFalse(event_prev_scheduler.mail_done)
-        self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
+        with self.mock_datetime_and_now(now_start):
+            self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
         self.assertEqual(event_prev_scheduler.mail_count_done, 0)
         self.assertEqual(len(self._new_mails), 0)
 
@@ -681,7 +685,8 @@ class TestMailSchedule(EventMailCommon):
         current = self.event_date_begin - relativedelta(hours=2)
         self.execute_event_cron(freeze_date=current)
         self.assertFalse(event_prev_scheduler.mail_done)
-        self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
+        with self.mock_datetime_and_now(current):
+            self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
         self.assertEqual(event_prev_scheduler.mail_count_done, 0)
         self.assertEqual(len(self._new_mails), 0)
 
@@ -845,9 +850,58 @@ class TestMailSchedule(EventMailCommon):
 @tagged('event_mail', 'post_install', '-at_install')
 class TestMailScheduleInternals(EventMailCommon):
 
+    def test_event_mail_scheduler_cancellation_and_validation(self):
+        """Test cancellation of overdue event mail schedulers and validation scheduling emails after the event ends."""
+        scheduler = self.env["event.mail"].create({
+            "event_id": self.test_event.id,
+            "interval_nbr": 1,
+            "interval_unit": "hours",
+            "interval_type": "after_sub",
+            "template_ref": f"mail.template,{self.template_reminder.id}",
+        })
+
+        for vals, exp_mail_done, exp_mail_state in [
+            ({"interval_unit": "now", "interval_type": "after_sub"}, False, "running"),
+            ({"interval_unit": "days", "interval_type": "before_event"}, False, "cancelled"),
+            ({"interval_unit": "hours", "interval_type": "after_event_start"}, False, "cancelled"),
+            ({"interval_unit": "hours", "interval_type": "after_event"}, True, "sent"),
+            ({"interval_unit": "hours", "interval_type": "before_event_end"}, False, "cancelled"),
+        ]:
+            with self.subTest(**vals):
+                scheduler.write({**vals, "mail_done": False})
+                self.execute_event_cron(freeze_date=self.event_date_end + relativedelta(hours=2))
+                self.assertEqual(scheduler.mail_done, exp_mail_done)
+                self.assertEqual(scheduler.mail_state, exp_mail_state)
+                self.assertEqual(scheduler.mail_count_done, 0)
+
+        # ValidationError when scheduled date falls after event end
+        with self.assertRaises(exceptions.ValidationError):
+            scheduler.write({"interval_nbr": 3, "interval_unit": "days", "interval_type": "after_event_start"})
+        # ValidationError with 'before_event_end' sent immediately, i.e. exactly at the event end
+        with self.assertRaises(exceptions.ValidationError):
+            scheduler.write({"interval_unit": "now", "interval_type": "before_event_end"})
+
+        scheduler.write({"interval_nbr": 1, "interval_unit": "days", "interval_type": "after_event_start"})
+        # ValidationError when changing event end date which puts an existing communication after it ends
+        with self.assertRaises(exceptions.ValidationError):
+            self.test_event.write({"date_end": self.event_date_begin + relativedelta(hours=2)})
+
+        zero_duration_event = self.env["event.event"].create({
+            "name": "Zero Duration Event",
+            "date_begin": self.event_date_begin,
+            "date_end": self.event_date_begin,
+        })
+        # ValidationError with 'before_event' as well, which can overshoot the end date of a zero duration event
+        with self.assertRaises(exceptions.ValidationError):
+            scheduler.write({
+                "event_id": zero_duration_event.id,
+                "interval_unit": "now",
+                "interval_type": "before_event",
+            })
+
     def test_scheduled_date(self):
         now = self.reference_now.replace(microsecond=0)
-        start, end = now + relativedelta(days=1), now + relativedelta(days=5)
+        start, end = now + relativedelta(days=1), now + relativedelta(months=4)
         with self.mock_datetime_and_now(self.reference_now):
             event = self.env["event.event"].create({
                 "event_mail_ids": False,
@@ -882,7 +936,6 @@ class TestMailScheduleInternals(EventMailCommon):
             ("after_event", "days", 3, end + relativedelta(days=3)),
             ("after_event", "weeks", 3, end + relativedelta(weeks=3)),
             ("after_event", "days", 3, end + relativedelta(days=3)),
-            ("before_event_end", "now", 3, end),
             ("before_event_end", "hours", 3, end - relativedelta(hours=3)),
             ("before_event_end", "days", 3, end - relativedelta(days=3)),
             ("before_event_end", "weeks", 3, end - relativedelta(weeks=3)),
