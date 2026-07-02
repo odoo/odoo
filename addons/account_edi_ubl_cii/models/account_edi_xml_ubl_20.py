@@ -1012,7 +1012,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         of each quantity in the invoice.
         """
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
-            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
             return 'invoice', 1
