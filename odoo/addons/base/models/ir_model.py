@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import copy
 import itertools
 import logging
 import random
@@ -2440,10 +2441,10 @@ class IrModelData(models.Model):
                         field.prefetch = False
                     else:
                         # the field is shared across registries; don't modify it
-                        Field = type(field)
-                        field_ = Field(_base_fields__=(field, Field(prefetch=False)))
-                        add_field(self.env.registry[ir_field.model], ir_field.name, field_)
-                        field_.setup(model)
+                        field_ = copy.copy(field)
+                        add_field(self.env.registry[ir_field.model], ir_field.name, field_, shareable=True)
+                        field_._shareable = False
+                        field_.prefetch = False
                         has_shared_field = True
         if has_shared_field:
             reset_cached_properties(self.env.registry)
