@@ -1,0 +1,44 @@
+// Prevent website_forum theme styles from affecting WYSIWYG overlays.
+
+.o-we-toolbar, .o-we-toolbar-dropdown, .o_font_selector_menu {
+    --border-radius: 0.25rem;
+    border-radius: var(--border-radius);
+
+    .btn, .fa, span {
+        --btn-font-size: 0.875rem;
+        font-size: var(--btn-font-size) !important;
+    }
+
+    .btn {
+        &.active, &.show {
+            box-shadow: inset 0 0 0 $border-width $component-active-bg;
+            border-color: transparent;
+            background-color: mix($component-active-bg, $light, 10%) !important;
+        }
+    }
+}
+
+.o-toolbar-above-keyboard {
+    .o-we-toolbar {
+        .btn {
+            padding: 7px 10px;
+        }
+    }
+}
+
+.o-dropdown, .o-dropdown-item {
+    font-family: $o-we-font-family;
+    font-weight: 500;
+}
+
+.o-EmojiPicker {
+    font-size: $btn-font-size !important;
+
+    .o-Emoji {
+        font-size: 1.5rem !important;
+    }
+
+    .o-EmojiPicker-navbar .o-Emoji {
+        font-size: $btn-font-size !important;
+    }
+}
