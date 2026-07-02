@@ -782,10 +782,10 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.versions_count = version_count_per_employee.get(employee, 0)
 
-    @api.depends('version_ids.date_version')
+    @api.depends('version_ids.write_date')
     def _compute_version_revision(self):
         for employee in self:
-            employee.version_revision = ",".join(f"{v.id},{v.date_version!s}" for v in employee.version_ids)
+            employee.version_revision = ",".join(f"{v.id},{v.write_date!s}" for v in employee.version_ids)
 
     def _search_newly_hired(self, operator, value):
         if operator not in ('in', 'not in'):
