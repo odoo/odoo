@@ -16,21 +16,29 @@
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
             <t t-set="information_block">
-                <strong>
-                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                    <strong>
                         Invoicing and Shipping Address
-                    </t>
-                    <t t-else="">
-                        Invoicing Address
-                    </t>
-                </strong>
-                <div t-field="doc.partner_invoice_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong class="d-block mt-3">Shipping Address</strong>
-                    <div t-field="doc.partner_shipping_id"
+                    </strong>
+                    <div t-field="doc.partner_invoice_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 </t>
+                <div t-else="" class="row">
+                    <div t-if="doc.partner_id != doc.partner_invoice_id" t-att-class="doc.partner_id != doc.partner_shipping_id and 'col-6 pe-1'">
+                        <strong>
+                            Invoicing Address
+                        </strong>
+                        <div t-field="doc.partner_invoice_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                    <div t-if="doc.partner_id != doc.partner_shipping_id" t-att-class="doc.partner_id != doc.partner_invoice_id and 'col-6 ps-1'">
+                        <strong>
+                            Shipping Address
+                        </strong>
+                        <div t-field="doc.partner_shipping_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
             </t>
         </t>
         <div class="page">
