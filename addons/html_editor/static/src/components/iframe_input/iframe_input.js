@@ -1,7 +1,6 @@
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { cookie } from "@web/core/browser/cookie";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class IframeInput extends Component {
     static template = "html_editor.IframeInput";
@@ -100,15 +99,13 @@ export class IframeInput extends Component {
             this.input = null;
         });
 
-        useLayoutEffect(
-            () => {
-                if (this.input) {
-                    // Update value whenever it changes.
-                    this.input.value = this.props.value;
-                }
-            },
-            () => [this.props.value]
-        );
+        useEffect(() => {
+            void this.props.value; // subscribe to value prop changes
+            if (this.input) {
+                // Update value whenever it changes.
+                this.input.value = this.props.value;
+            }
+        });
     }
 
     _bindInputEvents() {
