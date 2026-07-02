@@ -145,7 +145,9 @@ class SaleOrderLine(models.Model):
         :return: Whether the line is sellable or not.
         :rtype: bool
         """
-        return self.product_id.is_published and not self.is_delivery
+        return (
+            self.env.user.has_group("base.group_system") or self.product_id.is_published
+        ) and not self.is_delivery
 
     @api.depends("product_id")
     def _compute_is_donation(self):
