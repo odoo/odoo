@@ -78,6 +78,21 @@
     }
 }
 
+.o_leave_report_employee_row {
+    display: flex;
+    align-items: center;
+    gap: map-get($spacers, 2);
+
+    .o_field_many2one_avatar_employee,
+    .o_many2one {
+        min-width: 0;
+    }
+
+    .o_field_badge {
+        width: auto !important;
+    }
+}
+
 .o_cw_popover_holidays {
     max-width: 448px !important;
     min-width: 250px;
