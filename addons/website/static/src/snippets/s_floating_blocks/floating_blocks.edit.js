@@ -3,12 +3,6 @@ import { FloatingBlocks } from "./floating_blocks";
 
 const FloatingBlocksEdit = (I) =>
     class extends I {
-        dynamicContent = {
-            ...this.dynamicContent,
-            ".s_floating_blocks_alert_empty": {
-                "t-on-click": this.onAddCard.bind(this),
-            },
-        };
         isImpactedBy(el) {
             return (
                 this.el.contains(el) &&
@@ -24,22 +18,6 @@ const FloatingBlocksEdit = (I) =>
             // not needed). A more complex approach would be to assign unique
             // IDs to the blocks and check if their order has changed.
             return true;
-        }
-        start() {
-            // The "No card" message must be injected *before* the removal of
-            // the last block, otherwise the snippet could be automatically
-            // removed by the editor during edition:
-            // see remove_plugin.isEmptyAndRemovable()
-            this.renderAt(
-                "website.s_floating_blocks.alert.empty",
-                {},
-                this.el.querySelector(".s_floating_blocks_wrapper")
-            );
-            super.start();
-        }
-        onAddCard() {
-            const applySpec = { editingElement: this.el };
-            this.services["website_edit"].applyAction("addFloatingBlockCard", applySpec);
         }
     };
 
