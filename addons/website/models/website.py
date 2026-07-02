@@ -1233,6 +1233,28 @@ class Website(models.CachedModel):
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
 
+    def _bootstrap_contactus(self):
+        Page = self.env['website.page']
+        standard_contactus = self.env.ref('website.contactus', raise_if_not_found=False)
+        if not standard_contactus:
+            return
+
+        new_contactus_view = standard_contactus.arch_db
+        standard_contactus.with_context(website_id=self.id).arch_db = new_contactus_view
+
+        contactus_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_contactus.key),
+        ], limit=1)
+        if not contactus_page:
+            contactus_page = Page.create({
+                'website_published': True,
+                'url': '/contactus',
+                'view_id': self.with_context(website_id=self.id).viewref('website.contactus').id,
+            })
+
+        contactus_page.url = '/contactus'
+
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
             new_menu = menu.copy({
