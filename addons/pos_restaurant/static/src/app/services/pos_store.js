@@ -146,6 +146,56 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, opts);
     },
+    _assignCoursesToOrderLines(order, affectedLines) {
+        for (const line of affectedLines) {
+            const { course } = this._setCourseToProduct(line.product_id, order) || {};
+            if (course) {
+                line.course_id = course;
+            }
+        }
+    },
+    breakCombo(orderline) {
+        const order = this.selectedOrder;
+        const affectedLines = orderline.getAllLinesInCombo()[0]?.combo_line_ids;
+        const result = super.breakCombo(...arguments);
+
+        this._assignCoursesToOrderLines(order, affectedLines);
+        order.cleanCourses();
+
+        return result;
+    },
+    _setCourseToProduct(product, order) {
+        const config = this.config;
+
+        if (!config.module_pos_restaurant || !config.use_course_allocation) {
+            return { course: null, isNew: false };
+        }
+
+        const categories = product.pos_categ_ids
+            .map((c) => c.id)
+            .includes(this.selectedCategory?.id)
+            ? [this.selectedCategory]
+            : product.pos_categ_ids;
+        const courseCandidate = categories
+            .map((c) => c.course_id)
+            .filter(Boolean)
+            .sort((a, b) => a.sequence - b.sequence);
+
+        if (courseCandidate.length === 0) {
+            return { course: null, isNew: false };
+        }
+
+        let isNew = false;
+        let course = order.course_ids.find((c) => c.name === courseCandidate[0].name);
+        if (!course) {
+            isNew = true;
+            course = this.addCourse({ backendCourse: courseCandidate[0] });
+        }
+
+        order.selectCourse(course);
+
+        return { course, isNew };
+    },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
