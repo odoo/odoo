@@ -13,6 +13,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False), ('is_timeoff_task', '=', False)]")
 
     _timeoff_timesheet_idx = models.Index('(task_id) WHERE (global_leave_id IS NOT NULL OR holiday_id IS NOT NULL) AND project_id IS NOT NULL')
+    _is_timeoff_task_idx = models.Index('(task_id, holiday_id, global_leave_id) WHERE project_id IS NOT NULL')
 
     def _is_readonly(self):
         return super()._is_readonly() or self.holiday_id or self.global_leave_id
