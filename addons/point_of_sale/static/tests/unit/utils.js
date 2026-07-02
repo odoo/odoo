@@ -1,5 +1,6 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import {
+    contains,
     getService,
     makeDialogMockEnv,
     mountWithCleanup,
@@ -7,6 +8,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
@@ -36,6 +38,12 @@ export const setupPosEnv = async () => {
         checkAccessRight: (model, operation) =>
             (operation === "create" && model === "product.product") ||
             (operation === "write" && model === "product.template"),
+    });
+    patchWithCleanup(store.router, {
+        navigate(routeName, routeParams = {}) {
+            this.state.current = routeName;
+            this.state.params = routeParams;
+        },
     });
     return store;
 };
@@ -185,3 +193,16 @@ export const normalizeFunctionsInObject = (obj) =>
             typeof value === "function" ? "function" : value,
         ])
     );
+
+export async function setupAndMountPosApp(config = {}, opts = { openRegister: true }) {
+    const store = await setupPosEnv();
+    Object.assign(store.config, config);
+    await mountPosApp(store);
+
+    if (opts.openRegister) {
+        await contains(".screen-login .btn.open-register-btn").click();
+        await animationFrame();
+    }
+
+    return store;
+}
