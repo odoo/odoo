@@ -25,18 +25,15 @@
 </t>
 
 <t t-name="web.SwitchCompanyMenu.Items">
-    <div class="d-flex flex-row pe-2 mb-2" t-att-class="{ 'visually-hidden': !this.state.showFilter }">
-        <div
-            role="menuitemcheckbox"
-            t-att-aria-checked="this.hasSelectedCompanies ? 'true' : 'false'"
-            t-att-aria-label="this.hasSelectedCompanies ? 'Deselect all' : 'Select all'"
-            t-att-title="this.hasSelectedCompanies ? 'Deselect all' : 'Select all'"
-            t-on-click="() => this.selectAll()"
-        >
-            <span class="btn border-0 pt-2 px-2" t-att-class="this.selectAllClass">
-                <i class="fa fa-fw" t-att-class="this.selectAllIcon"/>
-            </span>
-        </div>
+    <div class="d-flex flex-row pe-2 mb-2">
+        <CheckBox
+            value="this.isAllCompaniesSelected"
+            onChange.alike="()=>this.selectAll()"
+            indeterminate="this.isIndeterminate"
+            className="'ms-2 d-flex align-items-center'"
+            ariaLabel="this.checkboxTitleLabel"
+            title="this.checkboxTitleLabel"
+        />
         <div
             class="form-control d-flex align-items-center py-1"
             role="search"
@@ -61,16 +58,15 @@
             <SwitchCompanyItem company="entry.company" level="entry.level"/>
         </t>
     </div>
-
-    <div t-if="this.companySelector.hasSelectionChanged" class="o_switch_company_menu_buttons d-flex justify-content-end gap-2 px-2 pt-2">
+    <div t-if="this.companySelector.hasSelectionChanged" class="o_switch_company_menu_buttons d-flex gap-2 px-2 pt-2">
         <button
-            class="btn btn-primary o-navigable flex-grow-1 text-center"
+            class="btn btn-primary o-navigable flex-fill"
             t-on-click="() => this.confirm()"
         >
             Confirm
         </button>
         <button
-            class="btn btn-secondary o-navigable flex-grow-1 text-center"
+            class="btn btn-secondary o-navigable flex-fill"
             t-on-click="() => this.companySelector.reset()"
         >
             Discard

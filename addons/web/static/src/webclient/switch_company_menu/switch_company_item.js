@@ -1,10 +1,12 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Component, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { _t } from "@web/core/l10n/translation";
 
 export class SwitchCompanyItem extends Component {
     static template = "web.SwitchCompanyItem";
-    static components = { DropdownItem, SwitchCompanyItem };
+    static components = { DropdownItem, SwitchCompanyItem, CheckBox };
     static props = {
         company: {},
         level: { type: Number },
@@ -24,6 +26,12 @@ export class SwitchCompanyItem extends Component {
 
     get isCurrent() {
         return this.props.company.id === user.activeCompany.id;
+    }
+
+    get checkboxTitle() {
+        return this.isCompanySelected
+            ? _t("Hide %s content.", this.props.company.name)
+            : _t("Show %s content.", this.props.company.name);
     }
 
     logIntoCompany() {
