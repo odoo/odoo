@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.PartnerLine" t-inherit="point_of_sale.PartnerLine" t-inherit-mode="extension">
+        <xpath expr="//Dropdown[button[hasclass('fa-bars')]]" position="attributes">
+            <attribute name="t-if">!this.pos.hasEmployeeRole(['restrictive'])</attribute>
+        </xpath>
+        <xpath expr="//Dropdown[button/i[hasclass('fa-bars')]]" position="attributes">
+            <attribute name="t-if">!this.pos.hasEmployeeRole(['restrictive'])</attribute>
+        </xpath>
+    </t>
+</templates>

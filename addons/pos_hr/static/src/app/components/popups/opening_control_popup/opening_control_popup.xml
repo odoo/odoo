@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_hr.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
-        <xpath expr="//button[hasclass('toggle-favourite')]" position="attributes">
+    <t t-name="pos_hr.OpeningControlPopup" t-inherit="point_of_sale.OpeningControlPopup" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('open-register')]" position="attributes">
             <attribute name="t-if">!this.pos.hasEmployeeRole(['supervised', 'restrictive'])</attribute>
         </xpath>
     </t>

@@ -4,7 +4,7 @@
         <t t-set="productInfo" t-value="this.props.info.productInfo"/>
         <Dialog contentClass="'product-info-popup'">
             <t t-set-slot="header">
-                <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'restrictive'">
+                <button t-on-click="this.toggleFavorite" class="toggle-favourite border-0 bg-transparent mb-2">
                     <i t-attf-class="fa fa-lg fa-fw  {{this.props.productTemplate.is_favorite ? 'fa-star' : 'fa-star-o'}}"
                         t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>

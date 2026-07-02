@@ -46,6 +46,8 @@ class HrEmployee(models.Model):
                 role = 'restrictive'
             elif employee['id'] in config.cashier_employee_ids.ids:
                 role = 'cashier'
+            elif employee['id'] in config.supervised_employee_ids.ids:
+                role = 'supervised'
             else:
                 role = 'none'
             employee['_role'] = role
@@ -68,14 +70,24 @@ class HrEmployee(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
-        configs_with_employees = self.env['pos.config'].sudo().search([('module_pos_hr', '=', True)]).filtered(lambda c: c.current_session_id)
-        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.cashier_employee_ids and not c.manager_employee_ids and not c.restrictive_employee_ids)
-        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.cashier_employee_ids or c.manager_employee_ids or c.restrictive_employee_ids) & self)
-        if configs_with_all_employees or configs_with_specific_employees:
-            error_msg = _("You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n")
-            for employee in self:
-                config_ids = configs_with_all_employees | configs_with_specific_employees.filtered(lambda c: employee in c.cashier_employee_ids)
-                if config_ids:
-                    error_msg += _("Employee: %(employee)s - PoS Config(s): %(config_list)s \n", employee=employee.name, config_list=config_ids.mapped("name"))
-
-            raise UserError(error_msg)
+        configs = self.env['pos.config'].sudo().search([
+            ('module_pos_hr', '=', True),
+            ('current_session_id', '!=', False),
+        ])
+        for employee in self:
+            linked_configs = configs.filtered(
+                lambda c: employee in (
+                    c.cashier_employee_ids
+                    | c.manager_employee_ids
+                    | c.supervised_employee_ids
+                    | c.restrictive_employee_ids
+                )
+            )
+            if linked_configs:
+                raise UserError(_(
+                    "You cannot delete an employee that may be used in an active PoS session. "
+                    "Close the session(s) first:\n"
+                    "Employee: %(employee)s - PoS Config(s): %(config_list)s",
+                    employee=employee.name,
+                    config_list=", ".join(linked_configs.mapped("name")),
+                ))

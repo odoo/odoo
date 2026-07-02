@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_discount.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
-            <t t-if="this.pos.config.module_pos_discount and this.pos.config.discount_product_id and this.pos.cashier._role !== 'restrictive'" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.config.module_pos_discount and this.pos.config.discount_product_id and !this.pos.hasEmployeeRole(['supervised', 'restrictive'])" t-call="point_of_sale.controlButton"
                 iconClasses="'fa fa-tag'"
                 btnText.translate="Discount"
                 btnClasses="'js_discount btn-secondary '"

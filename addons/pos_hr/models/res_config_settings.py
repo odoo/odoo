@@ -8,11 +8,13 @@ class ResConfigSettings(models.TransientModel):
 
     # pos.config fields
     pos_cashier_employee_ids = fields.Many2many(related='pos_config_id.cashier_employee_ids', readonly=False,
-        help='If left empty, all employees can log in to PoS')
+        help='If left empty, no employees can log in to PoS')
     pos_manager_employee_ids = fields.Many2many(related='pos_config_id.manager_employee_ids', readonly=False,
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
     pos_restrictive_employee_ids = fields.Many2many(related='pos_config_id.restrictive_employee_ids', readonly=False,
-        help='If left empty, all employees can log in to PoS')
+        help='If left empty, no employees can log in to PoS')
+    pos_supervised_employee_ids = fields.Many2many(related='pos_config_id.supervised_employee_ids', readonly=False,
+        help='If left empty, no employees can log in to PoS')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -31,6 +33,8 @@ class ResConfigSettings(models.TransientModel):
                 self.pos_cashier_employee_ids -= employee
             elif employee in self.pos_manager_employee_ids:
                 self.pos_manager_employee_ids -= employee
+            elif employee in self.pos_supervised_employee_ids:
+                self.pos_supervised_employee_ids -= employee
 
     @api.onchange('pos_cashier_employee_ids')
     def _onchange_cashier_employee_ids(self):
@@ -41,11 +45,27 @@ class ResConfigSettings(models.TransientModel):
                 self.pos_manager_employee_ids -= employee
             elif employee in self.pos_restrictive_employee_ids:
                 self.pos_restrictive_employee_ids -= employee
+            elif employee in self.pos_supervised_employee_ids:
+                self.pos_supervised_employee_ids -= employee
 
     @api.onchange('pos_manager_employee_ids')
     def _onchange_manager_employee_ids(self):
         for employee in self.pos_manager_employee_ids:
             if employee in self.pos_cashier_employee_ids:
                 self.pos_cashier_employee_ids -= employee
-            if employee in self.pos_restrictive_employee_ids:
+            elif employee in self.pos_restrictive_employee_ids:
+                self.pos_restrictive_employee_ids -= employee
+            elif employee in self.pos_supervised_employee_ids:
+                self.pos_supervised_employee_ids -= employee
+
+    @api.onchange('pos_supervised_employee_ids')
+    def _onchange_supervised_employee_ids(self):
+        for employee in self.pos_supervised_employee_ids:
+            if employee.user_id._has_group('point_of_sale.group_pos_manager'):
+                self.pos_supervised_employee_ids -= employee
+            elif employee in self.pos_cashier_employee_ids:
+                self.pos_cashier_employee_ids -= employee
+            elif employee in self.pos_manager_employee_ids:
+                self.pos_manager_employee_ids -= employee
+            elif employee in self.pos_restrictive_employee_ids:
                 self.pos_restrictive_employee_ids -= employee

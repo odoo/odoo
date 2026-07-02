@@ -50,7 +50,7 @@ export class ProductInfoPopup extends Component {
         if (!this.pos.config.is_margins_costs_accessible_to_every_user) {
             return false;
         }
-        return ["manager", "cashier"].includes(this.pos.getCashier()._role);
+        return true;
     }
     editProduct() {
         this.pos.editProduct(this.props.productTemplate);

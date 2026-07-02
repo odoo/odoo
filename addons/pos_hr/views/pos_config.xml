@@ -19,6 +19,10 @@
                     <label for="restrictive_employee_ids" string="Restrictive" class="col-lg-5 o_light_label" />
                     <field name="restrictive_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
                 </div>
+                <div class="row">
+                    <label for="supervised_employee_ids" string="Supervised" class="col-lg-5 o_light_label" />
+                    <field name="supervised_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
+                </div>
             </xpath>
         </field>
     </record>

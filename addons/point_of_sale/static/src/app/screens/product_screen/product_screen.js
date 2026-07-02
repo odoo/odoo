@@ -138,7 +138,8 @@ export class ProductScreen extends Component {
             cursor: "move",
             tolerance: 10,
             connectGroups: false,
-            enable: () => this.canReorderProducts,
+            enable: () =>
+                this.canReorderProducts && !this.pos.hasEmployeeRole(["supervised", "restrictive"]),
             preventDrag: (element) => isNaN(Number(element.dataset.productId)),
             onDragStart: () => {
                 this.longPressHandlers.onMouseUp();
@@ -229,7 +230,7 @@ export class ProductScreen extends Component {
                 text: _t("%"),
                 disabled:
                     !this.pos.config.manual_discount ||
-                    this.pos.cashier._role === "minimal" ||
+                    this.pos.hasEmployeeRole(["supervised", "restrictive"]) ||
                     order?.getSelectedOrderline()?.isServiceFeeLine(),
             },
             {
@@ -237,14 +238,20 @@ export class ProductScreen extends Component {
                 text: _t("Price"),
                 disabled:
                     !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                    this.pos.hasEmployeeRole(["supervised", "restrictive"]),
             },
-            BACKSPACE,
+            {
+                ...BACKSPACE,
+                disabled:
+                    !this.currentOrder?.getSelectedOrderline()?.uiState?.hasChange &&
+                    this.pos.hasEmployeeRole(["supervised"]),
+            },
         ]).map((button) => ({
             ...button,
             disabled:
                 button.disabled ||
-                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal") ||
+                (button.value === SWITCHSIGN.value &&
+                    this.pos.hasEmployeeRole(["supervised", "restrictive"])) ||
                 (order?.getSelectedOrderline()?.isServiceFeeLine() &&
                     order?.preset_id?.service_fee_type === "percent"),
             class: `

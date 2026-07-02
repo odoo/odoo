@@ -65,9 +65,7 @@ export class CashierSelector {
 
         let employee = false;
         const allEmployees = this.pos.models["hr.employee"].filter(
-            (employee) =>
-                employee.id !== this.pos.getCashier()?.id &&
-                ["manager", "cashier", "restrictive"].includes(employee._role)
+            (employee) => employee.id !== this.pos.getCashier()?.id
         );
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
@@ -110,12 +108,15 @@ export class CashierSelector {
             }
         }
 
+        const currentScreen = this.pos.router.state.current;
+        if (currentScreen === "PaymentScreen" && employee._role === "supervised") {
+            return this.notification.add(_t("Access Denied"));
+        }
         if (login && employee) {
             this.pos.hasLoggedIn = true;
             this.pos.setCashier(employee);
         }
 
-        const currentScreen = this.pos.router.state.current;
         if (currentScreen === "LoginScreen" && login && employee) {
             const selectedScreen = this.pos.defaultPage;
             const props = {
@@ -127,7 +128,6 @@ export class CashierSelector {
             }
             this.pos.navigate(selectedScreen.page, props);
         }
-
         return employee;
     }
 }

@@ -93,11 +93,10 @@ export class PaymentScreen extends Component {
 
     showPaymentMethod(paymentMethod) {
         return (
-            !(this.pos.cashier._role === "minimal" && paymentMethod.type === "pay_later") &&
-            (!this.isRefundOrder ||
-                !paymentMethod.payment_interface ||
-                paymentMethod.payment_interface.supports_refunds ||
-                false)
+            !this.isRefundOrder ||
+            !paymentMethod.payment_interface ||
+            paymentMethod.payment_interface.supports_refunds ||
+            false
         );
     }
 

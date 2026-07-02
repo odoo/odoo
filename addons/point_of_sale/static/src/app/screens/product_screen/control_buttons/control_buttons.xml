@@ -46,6 +46,7 @@
                 <!-- Bill Button -->
                 <t t-if="this.pos.config.iface_printbill">
                     <t t-call="point_of_sale.controlButton"
+                        name="o_print_bill_button"
                         iconClasses="'fa fa-print'"
                         btnText.translate="Bill"
                         btnClasses="'btn-secondary '"
@@ -58,7 +59,7 @@
                         <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
-                <t t-if="this.pos.cashier._role != 'restrictive'" t-call="point_of_sale.controlButton"
+                <t t-call="point_of_sale.controlButton"
                     name="o_pricelist_button"
                     iconClasses="'fa fa-th-list'"
                     btnText.translate="Pricelist"
@@ -72,7 +73,8 @@
                         <small t-out="this.currentOrder.fiscal_position_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
-                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'restrictive'" t-call="point_of_sale.controlButton"
+                <t t-if="this.pos.config.fiscal_position_ids.length" t-call="point_of_sale.controlButton"
+                    name="o_fiscal_position_button"
                     iconClasses="'fa fa-book'"
                     btnText.translate="Tax"
                     btnClasses="'o_fiscal_position_button btn-secondary '"
@@ -94,7 +96,8 @@
                     onClick="() => this.breakSelectedCombo()">
                 </t>
                 <!-- Cancel Order Button -->
-                <t t-if="this.pos.cashier._role != 'restrictive'" t-call="point_of_sale.controlButton"
+                <t t-call="point_of_sale.controlButton"
+                    name="o_cancel_order_button"
                     iconClasses="'fa fa-trash'"
                     btnText.translate="Cancel Order"
                     btnClasses="'btn-danger '"

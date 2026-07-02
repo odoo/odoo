@@ -20,13 +20,13 @@
                     btnClasses="'btn-secondary ' + ((_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? ' highlight text-action': ' disabled')"
                     onClick="this.onClickWallet"/>
             </t>
-            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type)) and !this.pos.hasEmployeeRole(['supervised', 'restrictive'])" t-call="point_of_sale.controlButton"
                 iconClasses="'fa fa-percent'"
                 btnText.translate="Enter Code"
                 btnClasses="'btn-secondary '"
                 onClick="() => this.clickPromoCode()">
             </t>
-            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'restrictive'" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.models['loyalty.program'].length and !this.pos.hasEmployeeRole(['supervised', 'restrictive'])" t-call="point_of_sale.controlButton"
                 iconClasses="'fa fa-star'"
                 btnText.translate="Reward"
                 btnClasses="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"
@@ -35,7 +35,7 @@
             </t>
         </xpath>
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
-             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'restrictive'" t-call="point_of_sale.controlButton"
+             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and !this.pos.hasEmployeeRole(['supervised', 'restrictive'])" t-call="point_of_sale.controlButton"
                  iconClasses="'fa fa-star'"
                  btnText.translate="Reset Programs"
                  btnClasses="'btn-secondary '"

@@ -28,6 +28,10 @@ export class HrEmployee extends models.ServerModel {
             id: 4,
             name: "A Little Guy",
         },
+        {
+            id: 5,
+            name: "Supervised Employee",
+        },
     ];
 
     _load_pos_data_read(records) {
@@ -35,6 +39,7 @@ export class HrEmployee extends models.ServerModel {
             2: "manager",
             3: "cashier",
             4: "restrictive",
+            5: "supervised",
         };
         records.forEach((emp) => {
             emp._role = employeeRoles[emp.id] || "manager";
