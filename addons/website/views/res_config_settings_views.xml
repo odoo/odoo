@@ -194,6 +194,16 @@
                             </div>
                         </setting>
                         <setting
+                            id="llms_setting"
+                            string="LLMs"
+                            help="LLMs.txt: This file helps LLMs on how your content should be accessed and used. Write it as a plain text, human-readable markdown document."
+                            documentation="https://llmstxt.org/"
+                        >
+                            <div class="mt4">
+                                <button type="object" name="action_open_llms" string="Edit llms.txt" class="btn-link" icon="fa-android" noSaveDialog="true"/>
+                            </div>
+                        </setting>
+                        <setting
                             id="social_default_image_setting"
                             string="Default Social Share Image"
                             help="If set, replaces the website logo as the default social share image."

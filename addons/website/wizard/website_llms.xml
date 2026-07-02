@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edit_llms" model="ir.ui.view">
+        <field name="name">Edit LLMs.txt</field>
+        <field name="model">website.llms</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="content" placeholder="# Title
+&#10;&#10;
+&gt; Optional description goes here
+&#10;&#10;
+Optional details go here
+&#10;&#10;
+Write the document in markdown language"/>
+                <footer>
+                    <button string="Save" name="action_save" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

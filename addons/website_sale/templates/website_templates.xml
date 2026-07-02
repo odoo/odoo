@@ -423,4 +423,15 @@
         </xpath>
     </template>
 
+    <template id="robots" inherit_id="website.robots">
+        <xpath expr="//t[@id='robots_module_rules']" position="inside">
+<t t-translation="off">
+Disallow: /shop/cart
+Disallow: /shop/checkout
+Disallow: /shop/payment
+Disallow: /shop/confirmation
+</t>
+        </xpath>
+    </template>
+
 </odoo>

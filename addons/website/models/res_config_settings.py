@@ -235,6 +235,17 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
         }
 
+    def action_open_llms(self):
+        self.website_id._force()
+        return {
+            'name': _("LLMs.txt"),
+            'view_mode': 'form',
+            'res_model': 'website.llms',
+            'type': 'ir.actions.act_window',
+            'views': [[False, 'form']],
+            'target': 'new',
+        }
+
     def action_open_blocked_third_party_domains(self):
         self.website_id._force()
         return {
