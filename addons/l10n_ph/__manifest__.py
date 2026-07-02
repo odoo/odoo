@@ -16,7 +16,11 @@
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
-        'data/menuitem_data.xml',
+        'security/security.xml',
+        'wizard/l10n_ph_discount_privilege_wizard_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/l10n_ph_discount_privilege_views.xml',
+        'views/account_move_views.xml',
         'views/account_tax_views.xml',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
@@ -24,6 +28,8 @@
         'views/report_disbursement_voucher_internal_template.xml',
         'views/account_report.xml',
         'views/report_templates.xml',
+        'data/menuitem_data.xml',
+        'security/ir.access.csv'
     ],
     'demo': [
         'demo/demo_company.xml',

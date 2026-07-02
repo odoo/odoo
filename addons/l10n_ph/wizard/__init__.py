@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import common, test_discount_privilege_wizard
+from . import l10n_ph_discount_privilege_wizard

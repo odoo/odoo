@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_move_form_l10n_ph_discount_privilege_button" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_ph.discount_privilege</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="before">
+               <field name="l10n_ph_has_discount_privilege" invisible="1"/> <!-- Needed for conditional button visibility-->
+                <div class="d-flex w-100 justify-content-end d-print-none mb-2 p-0" name="inv_button_below_order_lines"
+                     groups="l10n_ph.group_l10n_ph_discount_privilege">
+                    <button name="action_open_discount_privilege_wizard"
+                            string="Edit Discount Privileges"
+                            type="object"
+                            class="btn btn-secondary"
+                            groups="account.group_account_invoice,account.group_account_basic"
+                            invisible="not l10n_ph_has_discount_privilege or state != 'draft' or move_type not in ('out_invoice', 'out_refund')"
+                    />
+                    <button name="action_open_discount_privilege_wizard"
+                            string="Discount Privileges"
+                            type="object"
+                            class="btn btn-secondary"
+                            groups="account.group_account_invoice,account.group_account_basic"
+                            invisible="l10n_ph_has_discount_privilege or state != 'draft' or move_type not in ('out_invoice', 'out_refund')"
+                    />
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="after">
+                <field name="l10n_ph_regular_discount_amount" readonly="1" optional="hide"
+                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"
+                       column_invisible="parent.country_code != 'PH'"/>
+                <field name="l10n_ph_special_discount_amount" readonly="1" optional="hide"
+                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"
+                       column_invisible="parent.country_code != 'PH'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="attributes">
+                <attribute name="readonly">parent.state != 'draft' or l10n_ph_discount_privilege_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
