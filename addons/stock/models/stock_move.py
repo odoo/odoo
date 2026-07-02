@@ -2622,10 +2622,22 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
             return
 
+<<<<<<< 2d54db3ac0b6d807e580315e2633f3e2b10a700c
         product_domains = Domain.OR(
             [('product_id', '=', move.product_id.id), ('location_id', 'parent_of', move.location_dest_id.id)]
             for move in self
         )
+||||||| e12153f1b03d77044a895dad85ffb42b8c99b46b
+        domains = [
+            [('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)]
+            for move in self
+        ]
+=======
+        domains = [
+            [('product_id', 'in', moves.product_id.ids), ('location_id', '=', location_dest.id)]
+            for location_dest, moves in self.grouped('location_dest_id').items()
+        ]
+>>>>>>> d54e82c3b367535c699a5c814e1af559a43771e1
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
                          '|',
