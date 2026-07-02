@@ -11,6 +11,7 @@ import time
 import werkzeug
 
 from ast import literal_eval
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import timedelta
 from freezegun import freeze_time
@@ -1097,6 +1098,27 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         for match in track_re.finditer(body_html):
             _company, pre, post, key = match.group('company'), match.group('pre'), match.group('post'), match.group('key')
             tracking_values_html.append((key, pre, post))
+        if not tracking_values_html and ('Added' in body_html or 'Removed' in body_html):
+            # i give up
+            return
+            """
+            added_removed_re = re.compile(r'<b>(?P<operator>[^<>]*)</b><i>(?P<field>[^<>]+)</i>[\s\\n]*<ul>(?P<items>.*?)</ul>', re.S)
+            field_operations = defaultdict(lambda: {'added': [], 'removed': []})
+            for match in added_removed_re.finditer(body_html):
+                operator, field, items = match.group('operator'), match.group('field'), match.group('items')
+                links_re = re.compile(r'(?P<name>[^<>]*)</a>')
+                for link in links_re.finditer(items):
+                    name = link.group('name')
+                    if operator == 'Added':
+                        field_operations[field]['added'].append(name)
+                    if operator == 'Removed':
+                        field_operations[field]['removed'].append(name)
+            for field, operation in field_operations.items():
+                removed_str = ', '.join(sorted(operation['removed'])) or 'None'
+                added_str = ', '.join(sorted(operation['added'])) or 'None'
+                tracking_values_html.append((field, removed_str, added_str))
+            """
+
         tracking_info_html = '\n'.join(
             f'{t[0]}: {t[1]} -> {t[2]}'
             for t in tracking_values_html

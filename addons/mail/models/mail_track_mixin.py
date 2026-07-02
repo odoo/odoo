@@ -573,38 +573,25 @@ class MailTrackMixin(models.AbstractModel):
             # - False value
             # - recordset, in case of standard field
             # - [(id, display name), ...], in case of properties (read format)
-            model_name = self.env['ir.model']._get(field.relation).display_name
-            if not initial_value:
-                old_value_char = ''
-            elif isinstance(initial_value, models.BaseModel):
-                old_value_char = ', '.join(
-                    value.display_name or self.env._(
-                        'Unnamed %(record_model_name)s (%(record_id)s)',
-                        record_model_name=model_name, record_id=value.id
-                    )
-                    for value in initial_value
-                )
+            if isinstance(initial_value, (models.BaseModel, bool)) and isinstance(new_value, (models.BaseModel, bool)):
+                initial_set = {(record.id, record.display_name) for record in initial_value or []}
+                new_set = {(record.id, record.display_name) for record in new_value or []}
+                values.update({
+                    'added_values': list(new_set - initial_set),
+                    'removed_values': list(initial_set - new_set),
+                })
             else:
-                old_value_char = ', '.join(value[1] for value in initial_value)
-            if not new_value:
-                new_value_char = ''
-            elif isinstance(new_value, models.BaseModel):
-                new_value_char = ', '.join(
-                    value.display_name or self.env._(
-                        'Unnamed %(record_model_name)s (%(record_id)s)',
-                        record_model_name=model_name, record_id=value.id
-                    )
-                    for value in new_value
-                )
-            else:
-                new_value_char = ', '.join(value[1] for value in new_value)
-
-            values.update({
-                'old_value': old_value_char or 'None',
-                'new_value': new_value_char or 'None',
-                'old_value_char': old_value_char,
-                'new_value_char': new_value_char,
-            })
+                old_value_char = new_value_char = ''
+                if initial_value:
+                    old_value_char = ', '.join(value[1] for value in initial_value)
+                if new_value:
+                    new_value_char = ', '.join(value[1] for value in new_value)
+                values.update({
+                    'old_value': old_value_char or 'None',
+                    'new_value': new_value_char or 'None',
+                    'old_value_char': old_value_char,
+                    'new_value_char': new_value_char,
+                })
         else:
             raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
 
