@@ -77,7 +77,7 @@ class AccountBankStatementLine(models.Model):
         string='Journal Currency',
         compute='_compute_currency_id', store=True,
     )
-    amount = fields.Monetary()
+    amount = fields.Monetary(default=0)
 
     # Note the values of this field does not necessarily correspond to the cumulated balance in the account move line.
     # here these values correspond to occurrence order (the reality) and they should match the bank report but in
@@ -188,8 +188,8 @@ class AccountBankStatementLine(models.Model):
             company: self.env['res.company'].search([('id', 'child_of', company.id)])
             for company in self.journal_id.company_id
         }
-        for journal in self.journal_id:
-            journal_lines_indexes = self.filtered(lambda line: line.journal_id == journal)\
+        for journal, journal_lines in self.grouped('journal_id').items():
+            journal_lines_indexes = journal_lines\
                 .sorted('internal_index')\
                 .mapped('internal_index')
             min_index, max_index = journal_lines_indexes[0], journal_lines_indexes[-1]
@@ -241,7 +241,7 @@ class AccountBankStatementLine(models.Model):
                 company2children[journal.company_id].ids,
                 extra_clause,
             ))
-            pending_items = self
+            pending_items_ids = set(record_by_id.keys())
             for st_line_id, amount, is_anchor, balance_start, state in self.env.cr.fetchall():
                 if is_anchor:
                     current_running_balance = balance_start
@@ -249,9 +249,10 @@ class AccountBankStatementLine(models.Model):
                     current_running_balance += amount
                 if record_by_id.get(st_line_id):
                     record_by_id[st_line_id].running_balance = current_running_balance
-                    pending_items -= record_by_id[st_line_id]
+                    pending_items_ids.discard(st_line_id)
             # Lines manually deleted from the form view still require to have a value set here, as the field is computed and non-stored.
-            for item in pending_items:
+            for st_line_id in pending_items_ids:
+                item = record_by_id[st_line_id]
                 item.running_balance = item.running_balance
 
     @api.depends('date', 'sequence')
@@ -289,10 +290,10 @@ class AccountBankStatementLine(models.Model):
         Also computes the residual amount of the statement line.
         """
         for st_line in self:
-            _liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
+            liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
 
             # Compute residual amount
-            transaction_amount_residual, _company_amount_residual = st_line._get_statement_line_residual_amounts()
+            transaction_amount_residual, _company_amount_residual = st_line._get_statement_line_residual_amounts(liquidity_lines, suspense_lines)
             st_line.amount_residual = transaction_amount_residual
 
             # Compute is_reconciled
@@ -387,20 +388,16 @@ class AccountBankStatementLine(models.Model):
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
 
-            #Set the amount to 0 if it's not specified.
-            if 'amount' not in vals:
-                vals['amount'] = 0
-
         st_lines = super(AccountBankStatementLine, self.with_context(is_statement_line=True)).create([{
             'name': False,
             **vals,
         } for vals in vals_list])
         to_create_lines_vals = []
-        for i, (st_line, vals) in enumerate(zip(st_lines, vals_list)):
-            if 'line_ids' not in vals_list[i]:
+        for st_line, vals, counterpart_account_id in zip(st_lines, vals_list, counterpart_account_ids):
+            if 'line_ids' not in vals:
                 to_create_lines_vals.extend(
                     line_vals
-                    for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_ids[i])
+                    for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_id)
                 )
             to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
@@ -540,8 +537,10 @@ class AccountBankStatementLine(models.Model):
         if not statement.is_complete:
             return statement
 
-    def _get_statement_line_residual_amounts(self):
+    def _get_statement_line_residual_amounts(self, liquidity_lines=None, suspense_lines=None):
         """Retrieve the residual amount for this line in terms of the transaction and company currency,
+        :param liquidity_lines:                 The line using the liquidity account.
+        :param suspense_lines:                  The line using the transfer account.
 
         :return: (
             transaction_amount_residual,
@@ -549,7 +548,8 @@ class AccountBankStatementLine(models.Model):
         )
         """
         self.ensure_one()
-        liquidity_lines, suspense_lines, _other_lines = self._seek_for_lines()
+        if liquidity_lines is None or suspense_lines is None:
+            liquidity_lines, suspense_lines, _other_lines = self._seek_for_lines()
 
         if self.review_state in ('todo', 'anomaly'):
             transaction_amount_residual = -self.amount_currency if self.foreign_currency_id else -self.amount
@@ -560,19 +560,25 @@ class AccountBankStatementLine(models.Model):
 
         return (transaction_amount_residual, company_amount_residual)
 
-    def _get_accounting_amounts_and_currencies(self):
+    def _get_accounting_amounts_and_currencies(self, liquidity_line=None, suspense_line=None, other_lines=None):
         """ Retrieve the transaction amount, journal amount and the company amount with their corresponding currencies
         from the journal entry linked to the statement line.
         All returned amounts will be positive for an inbound transaction, negative for an outbound one.
 
-        :return: (
-            transaction_amount, transaction_currency,
-            journal_amount, journal_currency,
-            company_amount, company_currency,
-        )
+        :param liquidity_line:                  The line using the liquidity account.
+        :param suspense_line:                   The line using the transfer account.
+        :param other_lines:                     The lines not being in one of the two above categories.
+        :return:                                A python dictionary containing:
+            transaction_amount:                 Amount expressed in the transaction's currency.
+            transaction_currency:               Currency of the transaction amount.
+            journal_amount:                     Amount expressed in the journal currency.
+            journal_currency:                   Currency of the journal amount.
+            company_amount:                     Amount expressed in the company currency.
+            company_currency:                   The company currency.
         """
         self.ensure_one()
-        liquidity_line, suspense_line, other_lines = self._seek_for_lines()
+        if liquidity_line is None or suspense_line is None or other_lines is None:
+            liquidity_line, suspense_line, other_lines = self._seek_for_lines()
         if suspense_line and not other_lines:
             transaction_amount = -suspense_line.amount_currency
             transaction_currency = suspense_line.currency_id
@@ -580,14 +586,14 @@ class AccountBankStatementLine(models.Model):
             # In case of to_check or partial reconciliation, we can't trust the suspense line.
             transaction_amount = self.amount_currency if self.foreign_currency_id else self.amount
             transaction_currency = self.foreign_currency_id or liquidity_line.currency_id
-        return (
-            transaction_amount,
-            transaction_currency,
-            sum(liquidity_line.mapped('amount_currency')),
-            liquidity_line.currency_id,
-            sum(liquidity_line.mapped('balance')),
-            liquidity_line.company_currency_id,
-        )
+        return {
+            'transaction_amount': transaction_amount,
+            'transaction_currency': transaction_currency,
+            'journal_amount': sum(liquidity_line.mapped('amount_currency')),
+            'journal_currency': liquidity_line.currency_id,
+            'company_amount': sum(liquidity_line.mapped('balance')),
+            'company_currency': liquidity_line.company_currency_id,
+        }
 
     def _prepare_counterpart_amounts_using_st_line_rate(self, currency, balance, amount_currency):
         """ Convert the amounts passed as parameters to the statement line currency using the rates provided by the
@@ -605,8 +611,13 @@ class AccountBankStatementLine(models.Model):
         """
         self.ensure_one()
 
-        transaction_amount, transaction_currency, journal_amount, journal_currency, company_amount, company_currency \
-            = self._get_accounting_amounts_and_currencies()
+        accounting_amounts_and_currencies = self._get_accounting_amounts_and_currencies()
+        transaction_amount = accounting_amounts_and_currencies['transaction_amount']
+        transaction_currency = accounting_amounts_and_currencies['transaction_currency']
+        journal_amount = accounting_amounts_and_currencies['journal_amount']
+        journal_currency = accounting_amounts_and_currencies['journal_currency']
+        company_amount = accounting_amounts_and_currencies['company_amount']
+        company_currency = accounting_amounts_and_currencies['company_currency']
 
         rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
         rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
@@ -768,19 +779,13 @@ class AccountBankStatementLine(models.Model):
                         "To be consistent, the journal entry must always have exactly one suspense line.",
                         move=st_line.move_id.display_name,
                     ))
-                elif len(suspense_lines) == 1:
-                    if journal_currency and suspense_lines.currency_id == journal_currency:
+
+                if len(suspense_lines) == 1:
+                    effective_currency = journal_currency or company_currency
+                    if suspense_lines.currency_id == effective_currency:
 
                         # The suspense line is expressed in the journal's currency meaning the foreign currency
                         # set on the statement line is no longer needed.
-
-                        st_line_vals_to_write.update({
-                            'amount_currency': 0.0,
-                            'foreign_currency_id': False,
-                        })
-
-                    elif not journal_currency and suspense_lines.currency_id == company_currency:
-
                         # Don't set a specific foreign currency on the statement line.
 
                         st_line_vals_to_write.update({
@@ -826,15 +831,14 @@ class AccountBankStatementLine(models.Model):
             journal_currency = journal.currency_id if journal.currency_id != company_currency else False
 
             line_vals_list = st_line._prepare_move_line_default_vals()
-            line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
+            line_ids_commands = [Command.update(liquidity_lines.id, line_vals_list[0])]
 
             if suspense_lines:
-                line_ids_commands.append((1, suspense_lines.id, line_vals_list[1]))
+                line_ids_commands.append(Command.update(suspense_lines.id, line_vals_list[1]))
             else:
-                line_ids_commands.append((0, 0, line_vals_list[1]))
+                line_ids_commands.append(Command.create(line_vals_list[1]))
 
-            for line in other_lines:
-                line_ids_commands.append((2, line.id))
+            line_ids_commands.extend(Command.delete(line.id) for line in other_lines)
 
             st_line_vals = {
                 'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,

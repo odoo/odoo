@@ -527,4 +527,5 @@ class TestAccountPayment(AccountPaymentCommon):
             'amount': 100.0,
         })
         inv_line = payment.move_id.line_ids.filtered(lambda l: l.balance == 200)
-        self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100))
+        accounting_amounts_and_currencies = statement_line._get_accounting_amounts_and_currencies()
+        self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100, accounting_amounts_and_currencies))

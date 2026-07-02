@@ -35,7 +35,6 @@ class AccountBankStatement(models.Model):
     # The date field cannot be used as there might be more than one statement in one day.
     # keeping this order is important because the validity of the statements are based on their order
     first_line_index = fields.Char(
-        comodel_name='account.bank.statement.line',
         compute='_compute_first_line_index', store=True,
     )
 
@@ -202,9 +201,9 @@ class AccountBankStatement(models.Model):
         if len(self) == 1:
             self.is_valid = self._get_statement_validity()
         else:
-            invalids = self.filtered(lambda s: s.id in self._get_invalid_statement_ids())
-            invalids.is_valid = False
-            (self - invalids).is_valid = True
+            invalid_ids = set(self._get_invalid_statement_ids())
+            for stmt in self:
+                stmt.is_valid = stmt.id not in invalid_ids
 
     @api.depends('is_valid', 'is_complete')
     def _compute_problem_description(self):
