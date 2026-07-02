@@ -460,8 +460,15 @@ export class CallDebrief extends Component {
      * Handles the end of the current media segment.
      * Transitions to the next segment if possible otherwise pauses.
      */
-    onMediaEnded() {
+    onMediaEnded(ev) {
         if (this.isSwitchingSegment) {
+            return;
+        }
+        // Unmounting can take time; generating ended event after we've switched media
+        if (ev && ev.target !== this.mediaPlayer()) {
+            return;
+        }
+        if (!this.state.currentSegment) {
             return;
         }
         this.isSwitchingSegment = true;
