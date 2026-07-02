@@ -1,5 +1,5 @@
-import { useChildSubEnv, useEnv, useLayoutEffect } from "@web/owl2/utils";
-import { EventBus, onWillDestroy, useEffect } from "@odoo/owl";
+import { useChildSubEnv, useEnv } from "@web/owl2/utils";
+import { EventBus, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 
@@ -82,14 +82,11 @@ export function useDropdownNesting(state) {
 
     // Set up UI active element related behavior ---------------------------
     const uiService = useService("ui");
-    useLayoutEffect(
-        () => {
-            Promise.resolve().then(() => {
-                current.activeEl = uiService.activeElement;
-            });
-        },
-        () => []
-    );
+    onMounted(() => {
+        Promise.resolve().then(() => {
+            current.activeEl = uiService.activeElement;
+        });
+    });
 
     useChildSubEnv({ [DROPDOWN_NESTING]: current });
     useBus(BUS, "dropdown-opened", ({ detail: other }) => current.handleChange(other));
