@@ -1114,15 +1114,13 @@ class ResCompany(models.Model):
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_vat_placeholder(self):
         for company in self:
-            placeholder = _("/ if not applicable")
+            expected_vat = ''
             if company.country_id or company.account_fiscal_country_id:
                 expected_vat = _ref_vat.get(
                     (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
-                if expected_vat:
-                    placeholder = _("%s, or / if not applicable", expected_vat)
 
-            company.company_vat_placeholder = placeholder
+            company.company_vat_placeholder = expected_vat
 
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_registry_placeholder(self):
