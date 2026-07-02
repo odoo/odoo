@@ -36,6 +36,12 @@ test("allowProductCreation", async () => {
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
     expect(await store.allowProductCreation()).toBe(false);
+    const restrictive = store.models["hr.employee"].get(4);
+    store.setCashier(restrictive);
+    expect(await store.allowProductCreation()).toBe(false);
+    const supervised = store.models["hr.employee"].get(5);
+    store.setCashier(supervised);
+    expect(await store.allowProductCreation()).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();

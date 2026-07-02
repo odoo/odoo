@@ -27,7 +27,7 @@ test("allowProductEdition", async () => {
     expect(comp.allowProductEdition).toBe(false);
 });
 
-test("financials for minimal employee", async () => {
+test("financials for all employee", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const product = store.models["product.template"].get(5);
@@ -44,8 +44,15 @@ test("financials for minimal employee", async () => {
     store.setCashier(admin);
     expect(".financials-order").toHaveCount(1);
 
-    const minimalEmployee = store.models["hr.employee"].get(4);
-    store.setCashier(minimalEmployee);
+    const restrictiveEmployee = store.models["hr.employee"].get(4);
+    store.setCashier(restrictiveEmployee);
     await animationFrame();
-    expect(".financials-order").toHaveCount(0);
+
+    expect(".financials-order").toHaveCount(1);
+
+    const supervisedEmployee = store.models["hr.employee"].get(5);
+    store.setCashier(supervisedEmployee);
+    await animationFrame();
+
+    expect(".financials-order").toHaveCount(1);
 });

@@ -62,10 +62,10 @@
                                 <DropdownItem onSelected="() => this.openCustomerDisplay()">
                                     <i class="fa fa-fw fa-desktop" aria-hidden="true" /> Customer Display
                                 </DropdownItem>
-                                <DropdownItem t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
+                                <DropdownItem t-if="!this.isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
                                     <i class="fa fa-fw fa-download" aria-hidden="true" /> Install App
                                 </DropdownItem>
-                                <DropdownItem t-if="this.showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
+                                <DropdownItem t-if="this.showCashMoveButton" onSelected="() => this.pos.cashMove()">
                                     <i class="fa fa-fw fa-money" aria-hidden="true" /> Cash In/Out
                                 </DropdownItem>
                                 <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">

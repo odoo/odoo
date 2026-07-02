@@ -40,8 +40,7 @@
                 <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-custom-model="this.state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
-                <button class="button btn btn-lg btn-primary"
-                t-if="!(this.pos.cashier._role === 'minimal')"
+                <button class="open-register button btn btn-lg btn-primary"
                     t-on-click="this.confirm"
                     t-att-disabled="!this.env.utils.isValidFloat(this.state.openingCash)">
                     Open Register

@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
+registry.category("web_tour.tours").add("test_cashier_user_can_change_price", {
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -191,13 +191,13 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_minimal_employee_refund", {
+registry.category("web_tour.tours").add("test_restrictive_employee_refund", {
     steps: () =>
         [
             Chrome.clickBtn("Unlock Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Minimal Employee", { run: "click" }),
+            CashierSelectionPopup.has("Restrictive Employee", { run: "click" }),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),

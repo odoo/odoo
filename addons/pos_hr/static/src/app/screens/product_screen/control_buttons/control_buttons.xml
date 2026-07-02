@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//t[@name='o_cancel_order_button']" position="attributes">
+            <attribute name="t-if">!this.pos.hasEmployeeRole(['supervised', 'restrictive'])</attribute>
+        </xpath>
+        <xpath expr="//t[@name='o_pricelist_button']" position="attributes">
+            <attribute name="t-if">!this.pos.hasEmployeeRole(['supervised', 'restrictive'])</attribute>
+        </xpath>
+        <xpath expr="//t[@name='o_fiscal_position_button']" position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised', 'restrictive'])" separator=" and "/>
+        </xpath>
+        <xpath expr="//t[@t-if='this.pos.config.iface_printbill']" position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised'])" />
+        </xpath>
+    </t>
+</templates>

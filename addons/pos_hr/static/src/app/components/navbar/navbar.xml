@@ -20,6 +20,22 @@
                 <i class="fa fa-fw fa-lock" aria-hidden="true" /> Lock
             </DropdownItem>
         </xpath>
+        <xpath expr="//DropdownItem/i[hasclass('fa-file-pdf-o')]/.." position="attributes">
+            <attribute name="t-if"
+            add="(!this.pos.config.module_pos_hr or this.pos.employeeIsAdmin or this.pos.getCashierUserId() === this.pos.session.user_id?.id)" separator=" and "/>
+        </xpath>
+        <xpath expr="//DropdownItem/i[hasclass('fa-desktop')]/.." position="attributes">
+            <attribute name="t-if">
+                !this.pos.hasEmployeeRole(['supervised'])
+            </attribute>
+        </xpath>
+        <xpath expr="//DropdownItem/i[hasclass('fa-download')]/.." position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised', 'restrictive'])" separator=" and "/>
+        </xpath>
+        <xpath expr="//DropdownItem/i[hasclass('fa-money')]/.." position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised', 'restrictive'])" separator=" and "/>
+        </xpath>
+        
     </t>
 
 </templates>

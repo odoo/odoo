@@ -10,7 +10,7 @@
                         <b t-out="this.props.partner.name or ''" />
                         <div class="company-field text-bg-muted" t-out="this.props.partner.parent_name or ''" />
                     </div>
-                    <Dropdown t-if="this.pos.cashier._role !== 'minimal'">
+                    <Dropdown>
                         <button class="btn btn-ligth fa fa-bars" />
                         <t t-set-slot="content">
                             <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
@@ -66,21 +66,19 @@
                     </button>
                 </td>
                 <td class="edit-partner-button-cell align-middle">
-                    <t t-if="this.pos.cashier._role !== 'minimal'">
-                        <Dropdown>
-                            <button class="btn btn-light btn-lg lh-lg border float-end">
-                                <i class="fa fa-fw fa-bars"/>
-                            </button>
-                            <t t-set-slot="content">
-                                <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
-                                    Edit Details
-                                </DropdownItem>
-                                <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
-                                    All Orders
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </t>
+                    <Dropdown>
+                        <button class="btn btn-light btn-lg lh-lg border float-end">
+                            <i class="fa fa-fw fa-bars"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
+                                Edit Details
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
+                                All Orders
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
                 </td>
             </tr>
         </t>

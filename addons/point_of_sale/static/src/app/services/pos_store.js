@@ -1412,6 +1412,12 @@ export class PosStore extends WithLazyGetterTrap {
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
+    hasEmployeeRole(roles = []) {
+        if (!this.config.module_pos_hr) {
+            return;
+        }
+        return roles.includes(this.cashier?._role);
+    }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id

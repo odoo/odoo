@@ -106,7 +106,7 @@
                                                 </button>
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
-                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
+                                                <button t-if="!this.shouldHideDeleteButton(order)" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
@@ -139,7 +139,7 @@
                                                 </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div t-if="!this.shouldHideDeleteButton(order)" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="fa fa-trash" aria-hidden="true"/>
                                             </div>
@@ -205,10 +205,10 @@
                                         t-if="this.showInvoiceButton"
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
-                                    <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
+                                    <button class="receipt-button control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
                                         <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Receipt
                                     </button>
-                                    <button t-if="this.pos.canSendReceipt" class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
+                                    <button t-if="this.pos.canSendReceipt" class="send-button control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
                                         <i class="fa fa-send me-1" />Send
                                     </button>
                                 </div>
