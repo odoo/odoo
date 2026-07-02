@@ -23,6 +23,8 @@
                     <group>
                         <group>
                             <field name="l10n_vn_edi_symbol_id"
+                                domain="[('usage', '=', 'invoice')]"
+                                context="{'default_company_id': company_id, 'default_usage': 'invoice'}"
                                 options="{'no_open': True, 'no_create': True}"
                                 readonly="l10n_vn_edi_is_sent"/>
                             <field name="l10n_vn_edi_issue_date" readonly="1"/>

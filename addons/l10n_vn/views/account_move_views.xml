@@ -6,16 +6,18 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@id='other_tab_entry']" position="after">
-                <page id="l10n_vn"
-                      string="E-Invoice"
-                      invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
-                    <group>
-                        <group>
-                            <field name="l10n_vn_e_invoice_number"/>
-                        </group>
-                    </group>
-                </page>
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group id="l10n_vn_invoice_references"
+                       string="E-Invoice Symbols"
+                       invisible="country_code != 'VN' or move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']">
+                    <field name="l10n_vn_sinvoice_symbol_id"
+                           string="Invoice Symbol"
+                           class="oe_inline"
+                           domain="[('company_id', '=', company_id), ('usage', '=', l10n_vn_sinvoice_symbol_usage)]"
+                           context="{'default_company_id': company_id, 'default_usage': l10n_vn_sinvoice_symbol_usage}"/>
+                    <field name="l10n_vn_sinvoice_template_code" string="Template Code"/>
+                    <field name="l10n_vn_invoice_number" string="Invoice Number"/>
+                </group>
             </xpath>
         </field>
     </record>

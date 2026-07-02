@@ -3,12 +3,15 @@
     <record id="res_config_settings_view_form_inherit_l10n_vn_edi_pos_account" model="ir.ui.view">
         <field name="name">res.config.settings.form.inherit.l10n_vn_edi_pos.account</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="l10n_vn_edi_viettel.res_config_settings_view_form_inherit_l10n_vn_edi"/>
         <field name="arch" type="xml">
-            <xpath expr="//setting[@id='sinvoice_setting']" position="inside">
-                <div class="row" title="Used for all POS invoices unless a specific symbol is defined in each POS.">
+            <xpath expr="//div[@id='l10n_vn_edi_symbol_content']/div[last()]" position="after">
+                <div class="row align-items-end" title="Used for all POS invoices unless a specific symbol is defined in each POS.">
                     <label for="l10n_vn_edi_pos_default_symbol" class="col-3 col-lg-3 o_light_label"/>
-                    <field name="l10n_vn_edi_pos_default_symbol" nolabel="1"/>
+                    <field name="l10n_vn_edi_pos_default_symbol"
+                           nolabel="1"
+                           domain="[('usage', '=', 'invoice')]"
+                           context="{'default_company_id': company_id, 'default_usage': 'invoice'}"/>
                 </div>
             </xpath>
         </field>
@@ -26,7 +29,9 @@
                         <div class="col mt16">
                             <div class="content-group row" title="Used for only this POS. Leave it blank to use global default POS symbol">
                                 <label string="Symbol" for="pos_l10n_vn_pos_symbol" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="pos_l10n_vn_pos_symbol"/>
+                                <field name="pos_l10n_vn_pos_symbol"
+                                       domain="[('usage', '=', 'invoice')]"
+                                       context="{'default_company_id': company_id, 'default_usage': 'invoice'}"/>
                             </div>
                         </div>
                     </div>

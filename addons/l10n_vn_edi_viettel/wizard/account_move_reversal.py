@@ -53,7 +53,7 @@ class AccountMoveReversal(models.TransientModel):
         # EXTEND 'account'
         for move in self.move_ids.filtered(lambda m: m._l10n_vn_edi_is_sent()):
             # If an invoice has a tax code (symbol starts with C) and the code has not been approved by the tax authorities, you cannot adjust/reverse it.
-            if move.l10n_vn_edi_invoice_symbol.name.startswith('C'):
+            if move.l10n_vn_sinvoice_symbol_id.name.startswith('C'):
                 invoice_lookup, _error_message = move._l10n_vn_edi_lookup_invoice()
                 if 'result' in invoice_lookup and invoice_lookup['result'][0].get('exchangeStatus') != 'INVOICE_HAS_CODE_APPROVED':
                     raise UserError(_('You cannot adjust/replace invoice %s, it has not been approved by the tax authorities.\n'

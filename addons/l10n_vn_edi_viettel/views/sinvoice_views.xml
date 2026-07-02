@@ -1,68 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
-    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_search" model="ir.ui.view" >
-        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.search</field>
-        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+    <record id="view_l10n_vn_sinvoice_symbol_search_inherit_l10n_vn_edi_viettel" model="ir.ui.view">
+        <field name="name">l10n_vn.sinvoice.symbol.search.inherit.l10n_vn_edi_viettel</field>
+        <field name="model">l10n_vn.sinvoice.symbol</field>
+        <field name="inherit_id" ref="l10n_vn.view_l10n_vn_sinvoice_symbol_search"/>
         <field name="arch" type="xml">
-            <search>
-                <field name="name" string="Symbol"/>
-                <field name="invoice_template_code"/>
-                <filter name="symbol_inactive" string="Inactive" domain="[('active', '=', False)]"/>
-            </search>
+            <filter name="symbol_invoice_usage" position="before">
+                <filter name="symbol_fetched" string="Fetched from SInvoice" domain="[('is_fetched', '=', True)]"/>
+            </filter>
         </field>
     </record>
 
-    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_list" model="ir.ui.view" >
-        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.list</field>
-        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+    <record id="view_l10n_vn_sinvoice_symbol_list_inherit_l10n_vn_edi_viettel" model="ir.ui.view">
+        <field name="name">l10n_vn.sinvoice.symbol.list.inherit.l10n_vn_edi_viettel</field>
+        <field name="model">l10n_vn.sinvoice.symbol</field>
+        <field name="inherit_id" ref="l10n_vn.view_l10n_vn_sinvoice_symbol_list"/>
         <field name="arch" type="xml">
-            <list create="0">
+            <field name="name" position="before">
                 <header>
-                    <button name="action_fetch_symbols" 
-                            string="Fetch" 
-                            type="object" 
-                            class="btn-primary"
+                    <button name="action_fetch_symbols"
+                            string="Fetch"
+                            type="object"
+                            class="btn-secondary"
                             display="always"/>
                 </header>
-                <field name="name"/>
-                <field name="invoice_template_code"/>
-            </list>
+            </field>
         </field>
     </record>
-
-    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_form" model="ir.ui.view" >
-        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.form</field>
-        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="invoice_template_code"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="action_sinvoice_symbol" model="ir.actions.act_window">
-        <field name="name">Symbols</field>
-        <field name="res_model">l10n_vn_edi_viettel.sinvoice.symbol</field>
-        <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a symbol
-            </p>
-            <p>
-                A SInvoice symbol is used when sending invoices to SInvoice in order to generate the
-                invoice sequence.
-            </p>
-        </field>
-    </record>
-
-    <menuitem id="l10n_vn_edi_sinvoice_menu" name="SInvoice" groups="account.group_account_manager"
-              parent="account.menu_finance_configuration" sequence="99">
-        <menuitem id="l10n_vn_edi_sinvoice_symbols" action="action_sinvoice_symbol"/>
-    </menuitem>
 </odoo>

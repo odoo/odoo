@@ -20,12 +20,12 @@ class TestVNEDI(AccountTestInvoicingCommon):
 
         # Setup the default symbol and template.
         cls.template = '1/001'
-        cls.symbol = cls.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+        cls.symbol = cls.env['l10n_vn.sinvoice.symbol'].create({
             'name': 'K24TUT',
             'invoice_template_code': cls.template,
         })
         cls.env.company.write({
-            'l10n_vn_edi_symbol_id': cls.symbol.id,
+            'l10n_vn_symbol_id': cls.symbol.id,
         })
         # Setup a vietnamese address on the partner and company.
         cls.partner_a.write({
@@ -61,7 +61,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             products=self.product_a,
         )
         self.assertFalse(invoice.l10n_vn_edi_invoice_state)  # State should be False before posting.
-        self.assertEqual(invoice.l10n_vn_edi_invoice_symbol.id, self.symbol.id)
+        self.assertEqual(invoice.l10n_vn_sinvoice_symbol_id.id, self.symbol.id)
         invoice.action_post()
         self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'ready_to_send')
 
@@ -216,7 +216,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             post=True,
         )
         invoice.write({  # Would be set by sending it to the edi
-            'l10n_vn_edi_invoice_number': 'K24TUT01',
+            'l10n_vn_invoice_number': 'K24TUT01',
             'l10n_vn_edi_issue_date': fields.Datetime.now(),
             'l10n_vn_edi_invoice_state': 'sent',
         })
@@ -268,7 +268,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             post=True,
         )
         invoice.write({  # Would be set by sending it to the edi
-            'l10n_vn_edi_invoice_number': 'K24TUT01',
+            'l10n_vn_invoice_number': 'K24TUT01',
             'l10n_vn_edi_issue_date': fields.Datetime.now(),
             'l10n_vn_edi_invoice_state': 'sent',
         })
@@ -338,7 +338,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
         self.assertRecordValues(
             invoice,
             [{
-                'l10n_vn_edi_invoice_number': 'K24TUT01',
+                'l10n_vn_invoice_number': 'K24TUT01',
                 'l10n_vn_edi_reservation_code': '123456',
                 'l10n_vn_edi_invoice_state': 'sent',
             }]

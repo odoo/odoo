@@ -7,9 +7,10 @@ class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     l10n_vn_edi_sinvoice_symbol_id = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
+        comodel_name='l10n_vn.sinvoice.symbol',
         string="Default Warehouse Symbol",
         help="Used only for this Warehouse. Leave it blank to use global default symbol.",
+        domain=[('usage', '=', 'invoice')],
     )
     l10n_vn_edi_country_code = fields.Char(
         string="Country",

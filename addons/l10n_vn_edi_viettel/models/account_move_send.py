@@ -39,12 +39,12 @@ class AccountMoveSend(models.AbstractModel):
         if invoice_edi_format == 'vn_sinvoice' and move.company_id._l10n_vn_edi_get_credentials_company():
             results.extend([{
                 'id': 'placeholder_sinvoice.pdf',
-                'name': f'{move.company_id.vat}-{move.l10n_vn_edi_invoice_symbol.name}101.pdf',
+                'name': f'{move.company_id.vat}-{move.l10n_vn_sinvoice_symbol_id.name}101.pdf',
                 'mimetype': 'application/pdf',
                 'placeholder': True,
             }, {
                 'id': 'placeholder_sinvoice.xml',
-                'name': f'{move.company_id.vat}-{move.l10n_vn_edi_invoice_symbol.name}101.xml',
+                'name': f'{move.company_id.vat}-{move.l10n_vn_sinvoice_symbol_id.name}101.xml',
                 'mimetype': 'application/xml',
                 'placeholder': True,
             }])

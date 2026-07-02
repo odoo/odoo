@@ -14,18 +14,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_vn_edi_password',
         readonly=False,
     )
-    l10n_vn_edi_default_symbol_id = fields.Many2one(
-        related='company_id.l10n_vn_edi_symbol_id',
-        string='Default Symbol',
-        domain="[('company_id', '=', company_id)]",
-        groups='base.group_system',
-        help='This is the symbol that will be used on invoices by default.',
-        readonly=False,
-    )
 
     def action_fetch_symbols(self):
-        self.env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        return self.env['l10n_vn.sinvoice.symbol'].action_fetch_symbols()

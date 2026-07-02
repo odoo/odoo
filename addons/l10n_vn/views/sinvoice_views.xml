@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_l10n_vn_sinvoice_symbol_search" model="ir.ui.view" >
+        <field name="name">l10n_vn.sinvoice.symbol.search</field>
+        <field name="model">l10n_vn.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Symbol"/>
+                <field name="usage"/>
+                <field name="invoice_template_code"/>
+                <field name="company_id"/>
+                <filter name="symbol_invoice_usage" string="Invoice" domain="[('usage', '=', 'invoice')]"/>
+                <filter name="symbol_vendor_bill_usage" string="Vendor Bill" domain="[('usage', '=', 'vendor_bill')]"/>
+                <filter name="symbol_inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_l10n_vn_sinvoice_symbol_list" model="ir.ui.view" >
+        <field name="name">l10n_vn.sinvoice.symbol.list</field>
+        <field name="model">l10n_vn.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="not active">
+                <field name="name" readonly="is_used or is_fetched"/>
+                <field name="usage" readonly="is_used or is_fetched"/>
+                <field name="invoice_template_code" readonly="is_used or is_fetched"/>
+                <field name="company_id" readonly="is_used"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_vn_sinvoice_symbol_form" model="ir.ui.view" >
+        <field name="name">l10n_vn.sinvoice.symbol.form</field>
+        <field name="model">l10n_vn.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <!-- The active field drives the archive ribbon visibility. -->
+                    <group>
+                        <group>
+                            <field name="name" readonly="is_used or is_fetched"/>
+                            <field name="usage" readonly="is_used or is_fetched"/>
+                            <field name="company_id" readonly="is_used"/>
+                        </group>
+                        <group>
+                            <field name="invoice_template_code" readonly="is_used or is_fetched"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_vn_sinvoice_symbol" model="ir.actions.act_window">
+        <field name="name">Symbols</field>
+        <field name="res_model">l10n_vn.sinvoice.symbol</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add an e-invoice symbol
+            </p>
+            <p>
+                A SInvoice symbol is used when sending invoices to SInvoice in order to generate the        
+                invoice sequence.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="l10n_vn_sinvoice_menu" name="E-Invoice" groups="account.group_account_manager"
+              parent="account.menu_finance_configuration" sequence="99">
+        <menuitem id="l10n_vn_sinvoice_symbols" action="action_l10n_vn_sinvoice_symbol"/>
+    </menuitem>
+</odoo>

@@ -13,7 +13,10 @@
                         <div class="row">
                             <label for="l10n_vn_edi_stock_default_sinvoice_symbol_id" string="Default Symbol" class="col-lg-3 o_light_label"
                             title="Used for all Internal deliveries unless a specific symbol is defined in each Warehouse."/>
-                            <field name="l10n_vn_edi_stock_default_sinvoice_symbol_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="l10n_vn_edi_stock_default_sinvoice_symbol_id"
+                                   domain="[('usage', '=', 'invoice')]"
+                                   context="{'default_company_id': company_id, 'default_usage': 'invoice'}"
+                                   options="{'no_open': True, 'no_create': True}"/>
                         </div>
                     </div>
                 </setting>

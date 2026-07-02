@@ -36,19 +36,6 @@ class AccountMove(models.Model):
         export_string_translation=False,
         copy=False,
     )
-    l10n_vn_edi_invoice_symbol = fields.Many2one(
-        string='SInvoice Symbol',
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
-        compute='_compute_l10n_vn_edi_invoice_symbol',
-        readonly=False,
-        store=True,
-    )
-    l10n_vn_edi_invoice_number = fields.Char(
-        string='SInvoice Number',
-        help='Invoice Number as appearing on SInvoice.',
-        copy=False,
-        readonly=True,
-    )
     l10n_vn_edi_reservation_code = fields.Char(
         string='Secret Code',
         help='Secret code that can be used by a customer to lookup an invoice on SInvoice.',
@@ -131,7 +118,7 @@ class AccountMove(models.Model):
     )
     l10n_vn_edi_reversed_entry_invoice_number = fields.Char(
         string='Revered Entry SInvoice Number',  # Need string here to avoid same label warning
-        related='reversed_entry_id.l10n_vn_edi_invoice_number',
+        related='reversed_entry_id.l10n_vn_invoice_number',
         export_string_translation=False,
     )
 
@@ -153,16 +140,6 @@ class AccountMove(models.Model):
                 invoice.l10n_vn_edi_invoice_state = 'payment_state_to_update'
             else:
                 invoice.l10n_vn_edi_invoice_state = invoice.l10n_vn_edi_invoice_state
-
-    @api.depends('company_id', 'journal_id')
-    def _compute_l10n_vn_edi_invoice_symbol(self):
-        """ Use the property l10n_vn_edi_symbol to set a default invoice symbol. """
-        for invoice in self:
-            if invoice.country_code == 'VN':
-                # Use journal's default symbol, fallback to company symbol if not set
-                invoice.l10n_vn_edi_invoice_symbol = invoice.journal_id.l10n_vn_edi_default_symbol_id or invoice.company_id.l10n_vn_edi_symbol_id
-            else:
-                invoice.l10n_vn_edi_invoice_symbol = False
 
     def _get_fields_to_detach(self):
         # EXTENDS account
@@ -186,8 +163,8 @@ class AccountMove(models.Model):
 
         with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
             zip_data, error = sinvoice.get_invoice_file(
-                self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-                self.l10n_vn_edi_invoice_number,
+                self.l10n_vn_sinvoice_symbol_id.invoice_template_code,
+                self.l10n_vn_invoice_number,
                 'ZIP',
             )
             if error:
@@ -215,8 +192,8 @@ class AccountMove(models.Model):
 
         with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
             file_data, error = sinvoice.get_invoice_file(
-                self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-                self.l10n_vn_edi_invoice_number,
+                self.l10n_vn_sinvoice_symbol_id.invoice_template_code,
+                self.l10n_vn_invoice_number,
                 'PDF',
             )
         if error:
@@ -306,15 +283,15 @@ class AccountMove(models.Model):
                     sinvoice_status = 'unpaid' if invoice_data['status'] == 'Chưa thanh toán' else 'paid'
 
                 issue_date_ms = SInvoiceService.format_date(invoice.l10n_vn_edi_issue_date)
-                template_code = invoice.l10n_vn_edi_invoice_symbol.invoice_template_code
+                template_code = invoice.l10n_vn_sinvoice_symbol_id.invoice_template_code
 
                 if invoice.payment_state in {'in_payment', 'paid'} and sinvoice_status == 'unpaid':
                     _resp, error_message = sinvoice.update_payment_status(
-                        invoice.l10n_vn_edi_invoice_number, issue_date_ms, template_code
+                        invoice.l10n_vn_invoice_number, issue_date_ms, template_code
                     )
                 elif invoice.payment_state not in {'in_payment', 'paid'} and sinvoice_status == 'paid':
                     _resp, error_message = sinvoice.cancel_payment_status(
-                        invoice.l10n_vn_edi_invoice_number, issue_date_ms
+                        invoice.l10n_vn_invoice_number, issue_date_ms
                     )
                 else:
                     continue
@@ -362,9 +339,9 @@ class AccountMove(models.Model):
         commercial_partner_phone = commercial_partner.phone and SInvoiceService.format_phone_number(commercial_partner.phone)
         if commercial_partner_phone and not commercial_partner_phone.isdecimal():
             errors.append(_('Phone number for partner %s must only contain digits or +.', commercial_partner.display_name))
-        if not self.l10n_vn_edi_invoice_symbol:
+        if not self.l10n_vn_sinvoice_symbol_id:
             errors.append(_('The invoice symbol must be provided.'))
-        if self.l10n_vn_edi_invoice_symbol and not self.l10n_vn_edi_invoice_symbol.invoice_template_code:
+        if self.l10n_vn_sinvoice_symbol_id and not self.l10n_vn_sinvoice_symbol_id.invoice_template_code:
             errors.append(_("The invoice symbol's template must be provided."))
         if self.move_type == 'out_refund' and (not self.reversed_entry_id or not self.reversed_entry_id._l10n_vn_edi_is_sent()):
             errors.append(_('You can only send a credit note linked to a previously sent invoice.'))
@@ -414,7 +391,7 @@ class AccountMove(models.Model):
 
         self.write({
             'l10n_vn_edi_reservation_code': invoice_data.get('reservationCode'),
-            'l10n_vn_edi_invoice_number': invoice_data.get('invoiceNo'),
+            'l10n_vn_invoice_number': invoice_data.get('invoiceNo'),
             'l10n_vn_edi_invoice_state': 'sent',
         })
 
@@ -441,8 +418,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         invoice_data = {
             'transactionUuid': str(uuid.uuid4()),
-            'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-            'invoiceSeries': self.l10n_vn_edi_invoice_symbol.name,
+            'templateCode': self.l10n_vn_sinvoice_symbol_id.invoice_template_code,
+            'invoiceSeries': self.l10n_vn_sinvoice_symbol_id.name,
             # This timestamp is important as it is used to check the chronological order of Invoice Numbers.
             # Since this xml is generated upon posting, just like the invoice number, using now() should keep that order
             # correct in most case.
@@ -475,9 +452,9 @@ class AccountMove(models.Model):
             invoice_data.update({
                 'adjustmentType': '5' if self.move_type == 'out_refund' else '3',  # Adjustment or replacement
                 'adjustmentInvoiceType': self.l10n_vn_edi_adjustment_type or '',
-                'originalInvoiceId': adjustment_origin_invoice.l10n_vn_edi_invoice_number,
+                'originalInvoiceId': adjustment_origin_invoice.l10n_vn_invoice_number,
                 'originalInvoiceIssueDate': SInvoiceService.format_date(adjustment_origin_invoice.l10n_vn_edi_issue_date),
-                'originalTemplateCode': adjustment_origin_invoice.l10n_vn_edi_invoice_symbol.invoice_template_code,
+                'originalTemplateCode': adjustment_origin_invoice.l10n_vn_sinvoice_symbol_id.invoice_template_code,
                 'additionalReferenceDesc': self.l10n_vn_edi_agreement_document_name,
                 'additionalReferenceDate': SInvoiceService.format_date(self.l10n_vn_edi_agreement_document_date),
             })
@@ -634,7 +611,7 @@ class AccountMove(models.Model):
         """ Fetch the tax code assigned by sinvoice for this invoice. """
         self.ensure_one()
 
-        if not self.l10n_vn_edi_invoice_number.startswith('C'):
+        if not self.l10n_vn_invoice_number.startswith('C'):
             raise UserError(_("This invoice uses a symbol without the tax authority's code. There is no code to be fetched."))
 
         access_token, error = self.company_id._l10n_vn_edi_get_access_token()

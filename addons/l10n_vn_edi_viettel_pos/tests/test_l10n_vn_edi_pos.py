@@ -18,7 +18,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         super().setUpClass()
 
         cls.template_2 = "2/0024"
-        cls.symbol_2 = cls.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+        cls.symbol_2 = cls.env['l10n_vn.sinvoice.symbol'].create({
             'name': 'C25MNK',
             'invoice_template_code': cls.template_2,
         })
@@ -59,7 +59,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         pos_order = self._create_simple_order()
         invoice_vals = pos_order._prepare_invoice_vals()
         self.assertEqual(
-            invoice_vals["l10n_vn_edi_invoice_symbol"],
+            invoice_vals["l10n_vn_sinvoice_symbol_id"],
             self.symbol.id,
             "The invoice symbol on the invoice values should be the default symbol of the company.",
         )
@@ -70,7 +70,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         pos_order = self._create_simple_order()
         invoice_vals = pos_order._prepare_invoice_vals()
         self.assertEqual(
-            invoice_vals["l10n_vn_edi_invoice_symbol"],
+            invoice_vals["l10n_vn_sinvoice_symbol_id"],
             self.symbol_2.id,
             "The invoice symbol on the invoice values should be the symbol set in the POS configuration.",
         )
@@ -89,7 +89,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         self.assertRecordValues(
             invoice,
             [{
-                'l10n_vn_edi_invoice_number': 'K24TUT01',
+                'l10n_vn_invoice_number': 'K24TUT01',
                 'l10n_vn_edi_reservation_code': '123456',
                 'l10n_vn_edi_invoice_state': 'sent',
             }]
@@ -117,7 +117,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         self.assertRecordValues(
             refund_invoice,
             [{
-                'l10n_vn_edi_invoice_number': 'K24TUT01',
+                'l10n_vn_invoice_number': 'K24TUT01',
                 'l10n_vn_edi_reservation_code': '123456',
                 'l10n_vn_edi_invoice_state': 'sent',
             }]
