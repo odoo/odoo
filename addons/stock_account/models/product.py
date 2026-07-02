@@ -546,8 +546,10 @@ class ProductProduct(models.Model):
                 in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
             else:
-                in_qty = move._get_valued_qty()
+                in_qty = move._get_valued_qty(lot=lot)
                 in_value = move_value
+                if lot:
+                    in_value = in_value * in_qty / move._get_valued_qty()
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity
@@ -603,7 +605,7 @@ class ProductProduct(models.Model):
         while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
             move = moves_in[0]
             moves_in = moves_in[1:]
-            in_qty = move._get_valued_qty()
+            in_qty = move._get_valued_qty(lot=lot)
             fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
