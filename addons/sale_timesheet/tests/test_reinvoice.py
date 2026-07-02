@@ -11,6 +11,8 @@ from odoo.tests import Form, tagged
 @tagged('-at_install', 'post_install')
 class TestReInvoice(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

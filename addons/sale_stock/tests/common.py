@@ -7,6 +7,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 class TestSaleStockCommon(TestSaleCommon, ProductVariantsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

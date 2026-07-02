@@ -6,6 +6,8 @@ from odoo.tests import Form
 
 
 class TestWarehouseMrp(common.TestMrpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -355,6 +357,8 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
 
 class TestKitPicking(common.TestMrpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

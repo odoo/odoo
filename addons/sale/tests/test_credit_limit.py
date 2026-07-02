@@ -9,6 +9,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleOrderCreditLimit(TestSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

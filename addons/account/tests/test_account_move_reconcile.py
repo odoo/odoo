@@ -14,6 +14,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     ''' Tests about the account.partial.reconcile model, not the reconciliation itself but mainly the computation of
     the residual amounts on account.move.line.
     '''
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

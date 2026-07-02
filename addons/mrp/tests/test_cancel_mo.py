@@ -7,6 +7,8 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMrpCancelMO(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_cancel_mo_without_routing_1(self):
         """ Cancel a Manufacturing Order with no routing, no production.
         """

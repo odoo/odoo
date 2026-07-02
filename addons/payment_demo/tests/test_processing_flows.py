@@ -11,6 +11,8 @@ from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 @tagged("-at_install", "post_install")
 class TestProcessingFlows(PaymentDemoCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_portal_payment_triggers_processing(self):
         """Test that paying from the frontend triggers the processing of the payment data."""
         self._create_transaction(flow="direct")

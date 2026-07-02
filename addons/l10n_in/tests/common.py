@@ -5,6 +5,8 @@ from odoo import Command
 
 
 class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('in')
     def setUpClass(cls):

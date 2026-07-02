@@ -10,6 +10,8 @@ from .common import PartnershipCommon
 @tagged('post_install', '-at_install')
 class TestPartnership(PartnershipCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_sell_basic_partnership(self):
         self.sale_order_partnership.action_confirm()
         self.assertEqual(

@@ -9,6 +9,8 @@ CALL_API_METHOD = 'odoo.addons.l10n_tw_edi_ecpay.utils.EcPayAPI.call_ecpay_api'
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class L10nTWITestEdiSaleOrder(L10nTWITestEdi):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_so_data_forward_to_invoice(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,

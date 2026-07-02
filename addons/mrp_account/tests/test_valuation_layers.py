@@ -8,6 +8,8 @@ PRICE = 718.75 - 100  # total price minus glass
 
 
 class TestMrpValuationStandard(TestBomPriceCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def _get_production_cost_move_lines(self):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.account_production.id),

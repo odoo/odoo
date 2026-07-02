@@ -12,6 +12,8 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged("-at_install", "post_install")
 class TestUnlinkReward(TestSaleCouponCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

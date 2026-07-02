@@ -13,6 +13,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 class TestWebsiteSaleStockProductWarehouse(
     TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase
 ):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

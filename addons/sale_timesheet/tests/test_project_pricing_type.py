@@ -10,6 +10,8 @@ from .common import TestCommonSaleTimesheet
 @tagged('-at_install', 'post_install')
 class TestProjectPricingType(TestCommonSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pricing_type(self):
         """ Test the _compute_pricing_type when the user add a sales order item or some employee mappings in the project
 

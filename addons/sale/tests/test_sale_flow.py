@@ -9,6 +9,7 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 @tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleFlow(TestSaleCommon):
     """Test running at-install to test flows independently to other modules, e.g. 'sale_stock'."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

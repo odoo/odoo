@@ -5,6 +5,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class WorldlineCommon(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

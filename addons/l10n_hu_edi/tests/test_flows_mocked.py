@@ -14,6 +14,8 @@ import contextlib
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
     """ Test the Hungarian EDI flows using mocked data from the test servers. """
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         with freeze_time('2024-01-25T15:28:53Z'):

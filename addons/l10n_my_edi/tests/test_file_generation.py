@@ -16,6 +16,8 @@ from odoo.addons.l10n_my_edi.tests.test_file_generation_common import (
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2024-07-15 10:00:00")
     def test_01_can_generate_file(self):
         """

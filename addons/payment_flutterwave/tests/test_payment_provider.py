@@ -11,6 +11,8 @@ from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(FlutterwaveCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_available_for_unsupported_currencies(self):
         available_providers = self.env["payment.provider"]._find_available_providers(
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id

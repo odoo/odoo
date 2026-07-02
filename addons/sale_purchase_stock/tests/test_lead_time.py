@@ -11,6 +11,8 @@ from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 @tagged('post_install', '-at_install')
 class TestLeadTime(TestCommonSalePurchaseNoChart):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super(TestLeadTime, cls).setUpClass()

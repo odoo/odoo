@@ -8,6 +8,8 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

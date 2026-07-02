@@ -6,6 +6,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 class TestL10nEsEdiVerifactuPosCommon(TestL10nEsEdiVerifactuCommon, TestPoSCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

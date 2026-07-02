@@ -9,6 +9,8 @@ from odoo.tests import users
 
 class TestLotValuation(TestStockValuationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

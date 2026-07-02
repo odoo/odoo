@@ -8,6 +8,8 @@ from odoo.addons.pos_bancontact_pay.tests.common import TestBancontactPay
 @tagged("post_install", "-at_install")
 class TestModels(TestBancontactPay):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_check_unsupported_kiosks(self):
         kiosk_config = self.env["pos.config"].create(
             {

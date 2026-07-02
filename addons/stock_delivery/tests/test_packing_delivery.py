@@ -9,6 +9,8 @@ from unittest.mock import patch
 
 class TestPackingDelivery(TestPackingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

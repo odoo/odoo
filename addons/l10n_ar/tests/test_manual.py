@@ -10,6 +10,8 @@ from odoo.exceptions import ValidationError
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class TestArManual(common.TestArCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

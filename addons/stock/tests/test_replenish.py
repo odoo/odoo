@@ -10,6 +10,8 @@ from odoo import Command, fields
 
 class TestStockReplenish(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_base_delay(self):
         """Open the replenish view and check if delay is taken into account
             in the base date computation

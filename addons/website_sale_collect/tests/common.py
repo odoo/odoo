@@ -7,6 +7,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -2,6 +2,8 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 class CommonPosEsEdiTest(CommonPosTest):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()

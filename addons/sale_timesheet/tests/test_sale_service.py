@@ -10,6 +10,7 @@ from odoo.tests import Form
 @tagged('-at_install', 'post_install')
 class TestSaleService(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

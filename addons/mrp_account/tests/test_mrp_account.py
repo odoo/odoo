@@ -11,6 +11,8 @@ from odoo import Command, fields
 
 class TestMrpAccount(TestBomPriceCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_00_production_order_with_accounting(self):
         # Inventory Product Table
         quants = self.env['stock.quant'].with_context(inventory_mode=True).create([{
@@ -222,6 +224,8 @@ class TestMrpAccount(TestBomPriceCommon):
 
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_01_compute_price_operation_cost(self):
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")

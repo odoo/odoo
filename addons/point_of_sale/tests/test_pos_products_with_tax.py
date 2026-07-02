@@ -12,6 +12,7 @@ from odoo.exceptions import UserError
 class TestPoSProductsWithTax(TestPoSCommon):
     """ Test normal configuration PoS selling products with tax
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super(TestPoSProductsWithTax, self).setUp()

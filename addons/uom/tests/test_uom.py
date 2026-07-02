@@ -9,6 +9,12 @@ from odoo.addons.uom.tests.common import UomCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUom(UomCommon):
 
+    _test_groups = (
+        'base.group_user',
+    )
+
+    _test_user_name = 'Test User'
+
     def test_10_conversion(self):
         qty = self.uom_gram._compute_quantity(1020000, self.uom_ton)
         self.assertEqual(qty, 1.02, "Converted quantity does not correspond.")
@@ -30,12 +36,12 @@ class TestUom(UomCommon):
         self.assertEqual(qty, 1.24, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
-        product_uom = self.env['uom.uom'].create({
+        product_uom = self.env['uom.uom'].sudo().create({
             'name': 'Score',
             'relative_factor': 20,
             'relative_uom_id': self.uom_unit.id,
         })
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEqual(qty, 1, "Converted quantity should be rounded up.")

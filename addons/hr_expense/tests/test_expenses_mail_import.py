@@ -7,6 +7,8 @@ from odoo.exceptions import ValidationError
 
 @tagged('-at_install', 'post_install')
 class TestExpensesMailImport(TestExpenseCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_import_expense_from_email(self):
         messages = (
             {

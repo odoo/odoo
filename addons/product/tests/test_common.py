@@ -10,6 +10,13 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('post_install', '-at_install')
 class TestProduct(ProductCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_common(self):
         self.assertEqual(self.product.type, 'consu')
         self.assertEqual(self.service_product.type, 'service')
@@ -27,7 +34,7 @@ class TestProduct(ProductCommon):
         self.assertEqual(self.pricelist.currency_id.name, self.currency.name)
 
     def test_any_user_can_print_product_labels(self):
-        base_user = self.env['res.users'].create({
+        base_user = self.env['res.users'].sudo().create({
             'name': 'Base user',
             'login': 'base_user',
             'email': 'base.user@test.com',

@@ -15,6 +15,7 @@ class TestUblExportBis3PartyNodes(TestUblBis3Common, TestUblCiiBECommon):
     - cac:PartyLegalEntity/cbc:CompanyID (BT-30/BT-47)
     - cac:PartyTaxScheme/cbc:CompanyID (BT-31/BT-48)
     """
+    _test_groups = None  # FIXME list needed groups
 
     # -------------------------------------------------------------------------
     # HELPERS

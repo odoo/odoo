@@ -8,6 +8,8 @@ from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 @tagged('post_install', '-at_install')
 class TestPosRestaurantFlow(TestFrontendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_table_parent_circular_relation_is_rejected(self):
         table_a, table_b = self.env['restaurant.table'].create([
             {

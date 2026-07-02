@@ -7,6 +7,8 @@ from .common import TestL10nFrPdpCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nFrPdpXml(TestL10nFrPdpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def subfolders(cls):
         return 'ubl_21_fr', 'invoice', 'fr'

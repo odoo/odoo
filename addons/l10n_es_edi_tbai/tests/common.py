@@ -14,6 +14,8 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 
 class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
@@ -168,6 +170,8 @@ def create_mock_response(content, headers=None):
 
 class TestEsEdiTbaiCommonGipuzkoa(TestEsEdiTbaiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -179,6 +183,8 @@ class TestEsEdiTbaiCommonGipuzkoa(TestEsEdiTbaiCommon):
 
 
 class TestEsEdiTbaiCommonBizkaia(TestEsEdiTbaiCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

@@ -21,6 +21,8 @@ from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
 
 @tagged("-at_install", "post_install")
 class TestPDFQuoteBuilder(SaleManagementCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

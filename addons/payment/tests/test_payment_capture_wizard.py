@@ -7,6 +7,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentCaptureWizard(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_partial_capture_wizard(self):
         self.provider.update({"capture_manually": True, "support_manual_capture": "partial"})
         source_tx = self._create_transaction("direct", state="authorized")

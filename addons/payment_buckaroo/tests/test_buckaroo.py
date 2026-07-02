@@ -12,6 +12,8 @@ from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 
 @tagged("post_install", "-at_install")
 class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_redirect_form_values(self):
         self.patch(self, "base_url", lambda: "http://127.0.0.1:8069")
         self.patch(type(self.env["base"]), "get_base_url", lambda _: "http://127.0.0.1:8069")

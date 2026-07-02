@@ -6,6 +6,8 @@ from odoo.tests import Form
 
 class TestWorkorder(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_workorder_operation_assignment(self):
         """Test that moves aren't automatically assigned to the last workorder
         when the quantity to produce (`product_qty`) is changed.

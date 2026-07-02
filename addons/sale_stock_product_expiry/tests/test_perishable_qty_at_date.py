@@ -7,6 +7,8 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2025-10-01")
     def test_forecast_widget_perishable_qty_at_date(self):
         product_exp = self.env['product.product'].create([{

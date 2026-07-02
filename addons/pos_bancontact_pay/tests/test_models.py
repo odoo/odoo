@@ -26,6 +26,8 @@ class TestModels(TestBancontactPay, CommonPosTest):
     # --------------------------
     # Currency
     # --------------------------
+    _test_groups = None  # FIXME list needed groups
+
     def test_journal_supported_currency(self):
         ### Company EUR ###
         # EUR --> USD

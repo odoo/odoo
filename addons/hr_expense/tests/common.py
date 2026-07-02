@@ -11,6 +11,8 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 
 class TestExpenseCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
     """ Main test class for the l10n_it_edi vendor bills XML import"""
+    _test_groups = None  # FIXME list needed groups
 
     fake_test_content = b"""<?xml version="1.0" encoding="UTF-8"?>
         <p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"

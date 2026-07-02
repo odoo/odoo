@@ -17,6 +17,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
     """The goal of this method class is to test the address management on
     express checkout.
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

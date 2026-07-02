@@ -10,6 +10,8 @@ from freezegun import freeze_time
 @tagged('post_install', '-at_install')
 class TestAccountPartner(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2023-05-31")
     def test_days_sales_outstanding(self):
         partner = self.env['res.partner'].create({'name': 'MyCustomer'})

@@ -18,6 +18,7 @@ class TestSaEdiCommon(AccountTestInvoicingCommon):
     - Products and taxes
     - XPath templates for XML comparison
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template('sa')

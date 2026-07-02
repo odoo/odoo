@@ -8,6 +8,8 @@ from .common import TestPosQrCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiSEPA(TestPosQrCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestPosQrCommon.setup_country('be')
     def setUpClass(cls):
@@ -62,6 +64,8 @@ class TestUiSEPA(TestPosQrCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiCH(TestPosQrCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @TestPosQrCommon.setup_country('ch')
@@ -122,6 +126,8 @@ class TestUiCH(TestPosQrCommon):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiHK(TestPosQrCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):
         # Hong Kong doesn't have any tax, so this methods will throw errors if we don't return None
@@ -180,6 +186,8 @@ class TestUiHK(TestPosQrCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUIBR(TestPosQrCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @TestPosQrCommon.setup_country('br')

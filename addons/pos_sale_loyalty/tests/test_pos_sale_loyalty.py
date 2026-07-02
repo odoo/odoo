@@ -6,6 +6,8 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()

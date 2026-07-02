@@ -7,6 +7,8 @@ from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 class TestPosStockFlow(CommonPosStockTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders

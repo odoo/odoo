@@ -5,6 +5,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 
 class Testl10nFrPosCert(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -16,6 +18,8 @@ class Testl10nFrPosCert(TestPointOfSaleHttpCommon):
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestUi(Testl10nFrPosCert):
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_use_ticket_qr_code_for_fr(self):
         company = self.main_pos_config.company_id
         self.assertEqual(company.country_id.code, "FR", "Company should be set to France (FR)")

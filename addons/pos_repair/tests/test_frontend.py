@@ -6,6 +6,8 @@ from odoo.addons.pos_stock.tests.test_frontend import TestPosStockHttpCommon
 @tagged('post_install', '-at_install')
 class TestUi(TestPosStockHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_repair(self):
         self.product_1 = self.env['product.product'].create({
             'name': 'Test product 1'

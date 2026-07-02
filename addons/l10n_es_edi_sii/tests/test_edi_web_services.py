@@ -9,6 +9,8 @@ from .common import TestEsEdiCommon
 @tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
 class TestEdiWebServices(TestEsEdiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

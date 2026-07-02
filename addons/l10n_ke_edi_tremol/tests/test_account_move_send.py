@@ -9,6 +9,8 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestKEAccountMoveSend(TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestAccountMoveSendCommon.setup_country('ke')
     def setUpClass(cls):

@@ -6,6 +6,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 
 class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -84,6 +86,8 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_pos_hr_tour(self):
         self.pos_admin.write({
             "group_ids": [

@@ -12,6 +12,8 @@ from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignature
 @tagged("post_install", "-at_install")
 class TestWebhook(CommonPosTest, TestPointOfSaleHttpCommon):
     # ----- Payment Status ----- #
+    _test_groups = None  # FIXME list needed groups
+
     def test_bancontact_webhook(self):
         payload = self._make_payload("any_id", "any_status")
 

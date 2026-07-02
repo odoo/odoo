@@ -10,6 +10,8 @@ from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentCustomCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

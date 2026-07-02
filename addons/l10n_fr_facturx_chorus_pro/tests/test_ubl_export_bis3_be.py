@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblExportBis3BE.extra_tags)
 class TestUblExportBis3BEChorusPro(TestUblCiiCommonChorusPro, TestUblExportBis3BE):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_customer_party_identifiers_partner_chorus_pro(self):
         # VAT and siret set.
         # Supplier:

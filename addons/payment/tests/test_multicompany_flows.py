@@ -9,6 +9,8 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged("post_install", "-at_install")
 class TestMultiCompanyFlows(PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

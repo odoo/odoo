@@ -7,6 +7,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTax(TestTaxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _check_compute_all_results(self, taxes, expected_values, price_unit, **kwargs):
         results = taxes.compute_all(price_unit, **kwargs)
         self.assertAlmostEqual(results['total_included'], expected_values['total_included'])

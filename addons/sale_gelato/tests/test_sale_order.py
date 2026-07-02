@@ -9,6 +9,8 @@ from odoo.addons.sale_gelato.tests.common import GelatoCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleOrder(GelatoCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_allow_adding_generic_service_product_to_gelato_order(self):
         """Test that adding a non-gelato, service product to a Gelato order is allowed."""
         self.env["sale.order.line"].create({

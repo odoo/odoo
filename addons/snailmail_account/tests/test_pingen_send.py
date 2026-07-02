@@ -12,6 +12,8 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install', '-standard', 'external')
 class TestPingenSend(AccountTestInvoicingCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super(TestPingenSend, self).setUp()
         self.pingen_url = "https://stage-api.pingen.com/document/upload/token/30fc3947dbea4792eb12548b41ec8117/"

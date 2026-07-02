@@ -12,6 +12,8 @@ from odoo.addons.analytic.tests.common import AnalyticCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

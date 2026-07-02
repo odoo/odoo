@@ -8,6 +8,7 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 class TestPoSOtherCurrencyConfig(TestPoSCommon):
     """ Test PoS with basic configuration
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super(TestPoSOtherCurrencyConfig, self).setUp()

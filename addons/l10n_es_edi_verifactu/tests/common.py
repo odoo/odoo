@@ -10,6 +10,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):

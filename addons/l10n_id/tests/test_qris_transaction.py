@@ -8,6 +8,7 @@ from unittest.mock import patch
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestQrisTransaction(AccountTestInvoicingCommon):
     """ Testing the behaviours of QRIS Transaction """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template('id')

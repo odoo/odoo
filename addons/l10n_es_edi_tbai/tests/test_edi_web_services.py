@@ -12,6 +12,8 @@ from .common import TestEsEdiTbaiCommon
 @tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
 class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

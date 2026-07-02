@@ -12,6 +12,8 @@ from .common import TestSaleProjectCommon
 @tagged('post_install', '-at_install')
 class TestSaleProject(TestSaleProjectCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

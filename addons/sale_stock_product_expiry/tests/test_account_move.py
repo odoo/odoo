@@ -7,6 +7,8 @@ from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 
 class TestInvoicedLotValues(TestSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_lot_expiration(self):
         """ Checks if lot expiration date is included in `_get_invoiced_lot_values()` """
         expiration_date = fields.Datetime.today() + relativedelta(days=3)

@@ -7,6 +7,8 @@ from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(AuthorizeCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_search_by_reference_finds_transaction_from_webhook_data(self):
         """Test that a transaction is correctly found from webhook data using invoiceNumber."""
         tx = self._create_transaction("direct")

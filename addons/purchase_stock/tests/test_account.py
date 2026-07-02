@@ -9,6 +9,8 @@ from .common import PurchaseTestCommon
 
 
 class TestPurchaseOrderInvoice(PurchaseTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_standard(self):
         po = self._create_purchase(self.product_standard, price_unit=12)
         self._receive(po)

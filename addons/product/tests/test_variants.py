@@ -19,6 +19,13 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 @tagged('post_install', '-at_install')
 class TestVariantsSearch(ProductVariantsCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_attribute_line_search(self):
         product_template_shirt = self.env['product.template'].create({
             'name': 'Shirt',
@@ -77,6 +84,23 @@ class TestVariantsSearch(ProductVariantsCommon):
 
 @tagged('post_install', '-at_install')
 class TestVariants(ProductVariantsCommon):
+
+    # FIXME cross-module regressions (groups ignored when their module is absent):
+    # - 'stock.group_stock_user': mrp.product_product.action_archive() searches
+    #   mrp.bom.line without sudo (mrp/models/product.py) -> test_archive_*/test_template_barcode.
+    # - 'point_of_sale.group_pos_user': product.template.copy() carries over the
+    #   urbanpiper_pos_config_ids field (pos.config m2m), whose write triggers a
+    #   pos.config read check (enterprise pos_urban_piper) -> test_variants_copy.
+    # To be fixed by the respective teams.
+    _test_groups = (
+        'base.group_user',
+        'base.group_partner_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+        'point_of_sale.group_pos_user',
+    )
+
+    _test_user_name = 'Test Product & Contact Manager'
 
     def test_variants_is_product_variant(self):
         template = self.product_template_sofa
@@ -283,7 +307,8 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(one_variant_product.product_variant_count, 1)
 
         company_a = self.env.company
-        company_b = self.env['res.company'].create({'name': 'CB', 'currency_id': self.env.ref('base.VEF').id})
+        company_b = self.env['res.company'].sudo().create({'name': 'CB', 'currency_id': self.env.ref('base.VEF').id})
+        self.env.user.sudo().company_ids += company_b
 
         self.assertEqual(one_variant_product.cost_currency_id, company_a.currency_id)
         self.assertEqual(one_variant_product.with_company(company_b).cost_currency_id, company_b.currency_id)
@@ -631,6 +656,19 @@ class TestVariants(ProductVariantsCommon):
 @tagged('post_install', '-at_install')
 class TestVariantsNoCreate(ProductVariantsCommon):
 
+    # FIXME cross-module regression (group ignored when its module is absent):
+    # 'point_of_sale.group_pos_user' is only required because (un)archiving writes the
+    # urbanpiper_pos_config_ids field (pos.config m2m), whose write triggers a pos.config
+    # read check (enterprise pos_urban_piper) -> test_unarchive_multiple_products_with_variants.
+    # To be fixed by the pos_urban_piper team.
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'point_of_sale.group_pos_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -963,6 +1001,13 @@ class TestVariantsManyAttributes(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestVariantsImages(ProductVariantsCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     @classmethod
     def setUpClass(cls):
         res = super().setUpClass()
@@ -1070,6 +1115,23 @@ class TestVariantsArchive(ProductVariantsCommon):
        In these tests, we use the commands sent by the JS framework to the ORM
        when using the interface.
     """
+    # FIXME cross-module regressions (groups ignored when their module is absent),
+    # all triggered by product.template.write() of uom_id calling each module's
+    # _update_uom() override without sudo -> test_uom_update_variant:
+    # - 'sales_team.group_sale_salesman': sale._update_uom() _read_group's sale.order.line
+    #   (sale/models/product_product.py).
+    # - 'stock.group_stock_user': repair._update_uom() reads repair.order
+    #   (repair/models/product.py); also grants mrp.bom.line read for archive paths.
+    # To be fixed by the respective teams.
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_salesman',
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     @classmethod
     def setUpClass(cls):
         res = super().setUpClass()
@@ -1693,6 +1755,13 @@ class TestVariantsArchive(ProductVariantsCommon):
 @tagged('post_install', '-at_install')
 class TestVariantWrite(ProductVariantsCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_write_inherited_field(self):
         product = self.env['product.product'].create({'name': 'Foo', 'sequence': 1})
         self.assertEqual(product.name, 'Foo')
@@ -1762,6 +1831,13 @@ class TestVariantWrite(ProductVariantsCommon):
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):
+
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

@@ -9,6 +9,8 @@ def mocked_l10n_es_edi_call_web_service_sign(invoices, info_list):
 
 class TestEsEdiCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):

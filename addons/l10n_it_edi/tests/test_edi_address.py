@@ -6,6 +6,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(HttpCaseWithUserPortal, TestItEdi):
+    _test_groups = None  # FIXME list needed groups
+
     def test_portal_user_codice_fiscale(self):
         self.env.company.country_id = self.env.ref('base.it')
         it_user_portal = self._create_new_portal_user(name='IT User')

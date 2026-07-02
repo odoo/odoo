@@ -10,6 +10,8 @@ from odoo.addons.base.tests.common import BaseCommon
 @tagged('-at_install', 'post_install')
 class TestPortalAddresses(BaseCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

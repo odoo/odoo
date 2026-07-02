@@ -12,6 +12,8 @@ from .common import ID_CLIENT, FAKE_UUID, TestL10nFrPdpCommon
 @tagged('-at_install', 'post_install', 'post_install_l10n')
 class TestPdpUser(TestL10nFrPdpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _get_mock_responses(cls):
         participant_state = cls.env.context.get('participant_state', 'receiver')

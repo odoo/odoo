@@ -43,6 +43,8 @@ def skip_unless_external(func):
 
 class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
+    _test_groups = None  # FIXME list needed groups
+
     chart_template = False
     country_code = False
     extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
@@ -1638,6 +1640,8 @@ class AccountTestInvoicingCommon(ProductCommon):
 
 
 class AccountTestInvoicingWithBanksCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1695,11 +1699,15 @@ class AccountTestMockOnlineSyncCommon(HttpCase):
 
 
 class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, AccountTestMockOnlineSyncCommon):
+    _test_groups = None  # FIXME list needed groups
+
     pass
 
 
 @tagged('is_tour')
 class TestTaxCommon(AccountTestInvoicingHttpCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):
@@ -2335,6 +2343,8 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
 
 
 class TestAccountMergeCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -21,6 +21,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         - As it should be a one-to-one relation between model, we need to ensure that one expense only impacts one SOL
     The test tries to cover all the possible combinations of expense and invoicing policies, as well as the different actions
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

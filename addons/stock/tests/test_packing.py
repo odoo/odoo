@@ -7,6 +7,8 @@ from odoo.tests import Form, tagged
 
 
 class TestPackingCommon(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -20,6 +22,8 @@ class TestPackingCommon(TestStockCommon):
 
 
 class TestPacking(TestPackingCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that
@@ -1754,6 +1758,8 @@ class TestPacking(TestPackingCommon):
 
 @tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking

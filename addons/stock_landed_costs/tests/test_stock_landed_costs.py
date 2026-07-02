@@ -12,6 +12,8 @@ from odoo import fields
 @skip('Temporary to fast merge new valuation')
 class TestStockLandedCosts(TestStockLandedCostsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_stock_landed_costs(self):
         # In order to test the landed costs feature of stock,
         # I create a landed cost, confirm it and check its account move created

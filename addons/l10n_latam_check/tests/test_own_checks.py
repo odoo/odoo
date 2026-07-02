@@ -8,6 +8,8 @@ from odoo import Command, fields
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestOwnChecks(L10nLatamCheckTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_pay_with_own_checks(self):
         """ Create and post a manual checks with deferred date """
 

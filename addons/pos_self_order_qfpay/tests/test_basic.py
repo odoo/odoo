@@ -9,6 +9,8 @@ from odoo.tests.common import tagged
 @tagged("post_install", "-at_install")
 class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

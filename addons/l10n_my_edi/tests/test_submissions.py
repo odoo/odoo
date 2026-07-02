@@ -21,6 +21,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
     to test the features of the EDI.
     These will fully replace the old tests in master.
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('my')

@@ -17,6 +17,8 @@ from odoo.tools import formataddr, mute_logger
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_flow')
 class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -501,6 +503,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -539,6 +543,8 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

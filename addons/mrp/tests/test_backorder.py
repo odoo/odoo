@@ -9,6 +9,8 @@ from odoo.tests.common import TransactionCase, freeze_time
 
 class TestMrpProductionBackorder(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

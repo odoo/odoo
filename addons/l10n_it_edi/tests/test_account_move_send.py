@@ -13,6 +13,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _create_invoice_it(self, **invoice_args):
         invoice_args.setdefault('name', 'test line')
         invoice_args.setdefault('price_unit', 1000.0)

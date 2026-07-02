@@ -10,6 +10,8 @@ from odoo.tests import tagged, Form
 @skip('Temporary to fast merge new valuation')
 class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super(TestStockLandedCostsMrp, cls).setUpClass()

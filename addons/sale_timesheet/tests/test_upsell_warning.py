@@ -8,6 +8,8 @@ from .common import TestCommonSaleTimesheet
 
 @tagged('-at_install', 'post_install')
 class TestUpsellWarning(TestCommonSaleTimesheet):
+    _test_groups = None  # FIXME list needed groups
+
     def test_display_upsell_warning(self):
         """ Test to display an upsell warning
 

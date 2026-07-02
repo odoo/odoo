@@ -144,6 +144,8 @@ def _patch_request_ciusro_xml_to_pdf(company, xml_data):
 
 class TestUBLROCommon(TestUBLCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestUBLCommon.setup_country('ro')
     def setUpClass(cls):
@@ -233,6 +235,8 @@ class TestUBLRO(TestUBLROCommon):
     ####################################################
     # Testing of the XML generation
     ####################################################
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_export_invoice(self):
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)

@@ -9,6 +9,8 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class TestSaleCouponCommon(SaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -261,6 +263,8 @@ class TestSaleCouponCommon(SaleCommon):
 
 
 class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

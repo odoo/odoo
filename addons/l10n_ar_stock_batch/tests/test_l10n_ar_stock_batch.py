@@ -8,6 +8,7 @@ from odoo.addons.l10n_ar_stock.tests.test_l10n_ar_delivery_guide import (
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestArStockBatch(TestArDeliveryGuide):
     """Tests for the l10n_ar_stock_batch bridge module."""
+    _test_groups = None  # FIXME list needed groups
 
     def _create_batch_with_pickings(self, count=2, validate=True):
         """Create pickings inside a batch. Pickings must be added before

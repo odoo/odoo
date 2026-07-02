@@ -7,6 +7,8 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBEPayableRoundingAmount(TestUblImportBis3InvoiceBE):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2020-01-01')
     def test_import_cash_rounding_add_invoice_line(self):
         tax_21 = self.percent_tax(21.0)

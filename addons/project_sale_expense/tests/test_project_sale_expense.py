@@ -8,6 +8,8 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_analytic_account_reinvoice_policy(self):
         product_form = Form(self.product_a.product_tmpl_id)
         product_form.can_be_expensed = True

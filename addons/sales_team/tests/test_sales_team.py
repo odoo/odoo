@@ -230,6 +230,13 @@ class TestMultiCompany(TestSalesMC):
 @tagged('post_install', '-at_install')
 class TestAccessRights(SalesTeamCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales Manager'
+
     @users('salesmanager')
     def test_access_sales_manager(self):
         """ Test sales manager's access rights """

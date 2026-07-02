@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestSetupWizard(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_setup_bank_account(self):
         """
         Test that no error is raised when creating the bank setup wizard

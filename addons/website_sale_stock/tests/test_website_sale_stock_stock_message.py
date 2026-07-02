@@ -8,6 +8,8 @@ from odoo.addons.product.tests.common import ProductCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_stock_message_update_after_close_with_optional_products(self):
         self.env["delivery.carrier"].search([]).is_published = False
         product_product_with_options = self.env["product.product"].create({

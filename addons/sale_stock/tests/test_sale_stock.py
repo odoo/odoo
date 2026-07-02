@@ -13,6 +13,8 @@ from odoo.tests.common import new_test_user
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

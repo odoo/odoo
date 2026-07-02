@@ -5,6 +5,8 @@ from odoo.addons.payment_toss_payments.tests.common import TossPaymentsCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(TossPaymentsCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_reference_uses_only_alphanumeric_chars(self):
         """The computed reference must be made of alphanumeric and symbols '-' and '_'."""
         reference = self.env["payment.transaction"]._compute_reference("toss_payments")

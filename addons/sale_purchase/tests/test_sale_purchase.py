@@ -10,6 +10,8 @@ from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 @tagged('-at_install', 'post_install')
 class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

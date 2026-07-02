@@ -7,6 +7,8 @@ from odoo.addons.l10n_mx.tests.common import TestMxCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMove(TestMxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_credit_note_assign_right_account_on_lines(self):
         """
         This test check if the lines of a credit note created for MX, reference the

@@ -12,6 +12,8 @@ from odoo.tests import tagged, Form, freeze_time
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseLeadTime(PurchaseTestCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_00_product_company_level_delays(self):
         """ To check dates, set product's Delivery Lead Time
             and company's Purchase Lead Time."""

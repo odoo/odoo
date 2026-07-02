@@ -9,6 +9,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 @tagged('post_install', '-at_install')
 class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_loyalty_history(self):
         partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
         self.whiteboard_pen.product_variant_ids.write({'lst_price': 10})

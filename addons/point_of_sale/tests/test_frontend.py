@@ -31,6 +31,8 @@ def _create_image(color: int | str = 0, dims=(1920, 1080), format='JPEG'):
 
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _get_main_company(cls):
         return cls.company_data['company']
@@ -642,6 +644,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_pos_basic_order(self):
         self.start_pos_tour('pos_pricelist')
 
@@ -3900,12 +3904,16 @@ class TestUi(TestPointOfSaleHttpCommon):
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
+    _test_groups = None  # FIXME list needed groups
+
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True
 
 
 class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

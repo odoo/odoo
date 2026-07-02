@@ -6,6 +6,8 @@ from odoo.addons.account.tests.common import TestTaxCommon
 @tagged('post_install', '-at_install')
 class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

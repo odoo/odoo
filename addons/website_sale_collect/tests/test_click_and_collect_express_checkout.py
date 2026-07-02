@@ -9,6 +9,8 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestClickAndCollectExpressCheckout(ClickAndCollectCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_exclude_in_store_delivery_methods(self):
         website = self.env["website"].search([], limit=1)
         with MockRequest(website.env, website=website):

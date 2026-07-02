@@ -8,6 +8,8 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def pay_pos_order(self, pos_order, with_error=False):
         context_make_payment = {

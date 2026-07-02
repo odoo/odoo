@@ -9,6 +9,14 @@ from odoo.addons.sale.tests.common import SaleCommon
 # TODO VFE move to test_sale_product_configurators
 @tagged("post_install", "-at_install")
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     def test_sale_combo_configurator(self):
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
@@ -51,7 +59,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             type="combo",
             combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
         )
-        self.start_tour("/odoo", "sale_combo_configurator", login="salesman")
+        self.start_tour("/odoo", "sale_combo_configurator", login=self.env.user.login)
 
     def test_sale_combo_configurator_with_optional_products(self):
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
@@ -78,7 +86,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             "combo_ids": [Command.link(combo_a.id), Command.link(combo_b.id)],
             "optional_product_ids": [Command.link(optional_product.id)],
         })
-        self.start_tour("/odoo", "sale_combo_configurator_with_optional_products", login="salesman")
+        self.start_tour("/odoo", "sale_combo_configurator_with_optional_products", login=self.env.user.login)
 
         order = self.env["sale.order"].search([("partner_id.name", "=", "Test Partner")], limit=1)
         self.assertTrue(order, "A new Sale order should be created.")
@@ -104,9 +112,8 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
 
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
-        self.env["res.users"].search([("login", "=", "salesman")]).group_ids += self.env.ref(
-            "product.group_product_manager"
-        )
+        # The tour runs as self.env.user (the test_user), which already holds
+        # product.group_product_manager via _test_groups, so no extra grant is needed here.
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
@@ -164,7 +171,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         self.start_tour(
             "/odoo",
             "sale_combo_configurator_preselect_single_unconfigurable_items",
-            login="salesman",
+            login=self.env.user.login,
         )
 
     def test_sale_combo_configurator_preconfigure_unconfigurable_ptals(self):
@@ -201,7 +208,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         })
         self._create_product(name="Combo product", type="combo", combo_ids=[Command.link(combo.id)])
         self.start_tour(
-            "/odoo", "sale_combo_configurator_preconfigure_unconfigurable_ptals", login="salesman"
+            "/odoo", "sale_combo_configurator_preconfigure_unconfigurable_ptals", login=self.env.user.login
         )
 
     def _create_combo_from_attribute(self, attribute, product_name, combo_name):

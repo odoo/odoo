@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestTaxesTaxTotalsSummaryAccountTaxPython(TestTaxCommonPOS, TestTaxesTaxTotalsSummary):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_point_of_sale_custom_tax_with_extra_product_field(self):
         assert 'weight' not in self.env['product.template']._load_pos_data_fields(self.main_pos_config)
 

@@ -15,6 +15,8 @@ from odoo.addons.payment_iyzico.tests.common import IyzicoCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_no_item_missing_from_cf_initialize_payload(self):
         """Test that the request values are conform to the transaction fields."""
         tx = self._create_transaction("redirect")

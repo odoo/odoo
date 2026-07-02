@@ -6,6 +6,8 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('hu')
     def setUpClass(cls):

@@ -14,6 +14,19 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSalePrices(SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        # FIXME: grants write on res.company, needed by sale.order.discount._get_discount_product
+        # which lazily auto-creates the company's discount product on first use (business logic,
+        # not test setup). Prefer the user-level group 'base.group_user' once that flow no longer
+        # requires res.company write access.
+        'base.group_erp_manager',
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -26,7 +39,7 @@ class TestSalePrices(SaleCommon):
         # Needed when run without demo data
         #   s.t. taxes creation doesn't fail
         belgium = cls.env.ref("base.be")
-        cls.env.company.account_fiscal_country_id = belgium
+        cls.env.company.sudo().account_fiscal_country_id = belgium
         for model in ("account.tax", "account.tax.group"):
             cls.env.add_to_compute(
                 cls.env[model]._fields["country_id"],
@@ -206,7 +219,7 @@ class TestSalePrices(SaleCommon):
             "currency_id": other_currency.id,
         })
         with freeze_time("2022-08-19"):
-            self.env["res.currency.rate"].create({
+            self.env["res.currency.rate"].sudo().create({
                 "name": fields.Date.today() - timedelta(days=1),
                 "rate": 2.0,
                 "currency_id": other_currency.id,
@@ -288,14 +301,14 @@ class TestSalePrices(SaleCommon):
         self.product.lst_price = 100
 
         currency_eur = self._enable_currency("EUR")
-        self.env["res.currency.rate"].create({
+        self.env["res.currency.rate"].sudo().create({
             "name": "2018-07-10",
             "rate": 2.0,
             "currency_id": currency_eur.id,
             "company_id": self.env.company.id,
         })
         with mute_logger("odoo.models.unlink"):
-            self.env["res.currency.rate"].search([
+            self.env["res.currency.rate"].sudo().search([
                 ("currency_id", "=", self.env.company.currency_id.id)
             ]).unlink()
         new_uom = self.env["uom.uom"].create({
@@ -399,11 +412,11 @@ class TestSalePrices(SaleCommon):
         current_curr = self.env.company.currency_id  # USD
         other_curr = self._enable_currency("EUR")
         # main_company.currency_id = other_curr # product.currency_id when no company_id set
-        other_company = self.env["res.company"].create({
+        other_company = self.env["res.company"].sudo().create({
             "name": "Test",
             "currency_id": other_curr.id,
         })
-        user_in_other_company = self.env["res.users"].create({
+        user_in_other_company = self.env["res.users"].sudo().create({
             "company_id": other_company.id,
             "company_ids": [Command.set([other_company.id])],
             "name": "E.T",
@@ -415,8 +428,8 @@ class TestSalePrices(SaleCommon):
         })
         user_in_other_company.group_ids += self.env.ref("product.group_product_manager")
         with mute_logger("odoo.models.unlink"):
-            self.env["res.currency.rate"].search([]).unlink()
-        self.env["res.currency.rate"].create({
+            self.env["res.currency.rate"].sudo().search([]).unlink()
+        self.env["res.currency.rate"].sudo().create({
             "name": "2009-12-31",
             "rate": 2.0,
             "currency_id": main_curr.id,
@@ -595,12 +608,12 @@ class TestSalePrices(SaleCommon):
 
     def test_sale_tax_mapping(self):
         country_belgium = self.env["res.country"].search([("name", "=", "Belgium")], limit=1)
-        fiscal_pos = self.env["account.fiscal.position"].create({
+        fiscal_pos = self.env["account.fiscal.position"].sudo().create({
             "name": "Test Fiscal Position",
             "auto_apply": True,
             "country_id": country_belgium.id,
         })
-        tax_a, tax_b = self.env["account.tax"].create([
+        tax_a, tax_b = self.env["account.tax"].sudo().create([
             {
                 "name": "Test tax A",
                 "type_tax_use": "sale",
@@ -669,7 +682,7 @@ class TestSalePrices(SaleCommon):
 
         (fpos_incl_incl, fpos_excl_incl, fpos_incl_excl, fpos_excl_excl) = self.env[
             "account.fiscal.position"
-        ].create([
+        ].sudo().create([
             {"name": "incl -> incl", "sequence": 1},
             {"name": "excl -> incl", "sequence": 2},
             {"name": "incl -> excl", "sequence": 3},
@@ -683,7 +696,7 @@ class TestSalePrices(SaleCommon):
             tax_include_dst,
             tax_exclude_src,
             tax_exclude_dst,
-        ) = self.env["account.tax"].create([
+        ) = self.env["account.tax"].sudo().create([
             {
                 "name": "fixed include",
                 "amount": 10.00,
@@ -830,12 +843,12 @@ class TestSalePrices(SaleCommon):
         self.assertRecordValues(sale_order.order_line, [{"price_unit": 100, "price_subtotal": 100}])
 
     def test_so_tax_mapping(self):
-        fpos = self.env["account.fiscal.position"].create({
+        fpos = self.env["account.fiscal.position"].sudo().create({
             "name": "Test Fiscal Position",
             "sequence": 1,
         })
 
-        tax_include, tax_exclude = self.env["account.tax"].create([
+        tax_include, tax_exclude = self.env["account.tax"].sudo().create([
             {
                 "name": "Include Tax",
                 "amount": "21.00",
@@ -861,9 +874,9 @@ class TestSalePrices(SaleCommon):
         )
 
     def test_so_tax_mapping_multicompany(self):
-        fpos = self.env["account.fiscal.position"].create({"name": "B2B"})
-        tax_group = self.env["account.tax.group"].create({"name": "10%"})
-        tax_include = self.env["account.tax"].create({
+        fpos = self.env["account.fiscal.position"].sudo().create({"name": "B2B"})
+        tax_group = self.env["account.tax.group"].sudo().create({"name": "10%"})
+        tax_include = self.env["account.tax"].sudo().create({
             "name": "10% Tax Inc.",
             "type_tax_use": "sale",
             "amount": 10.0,
@@ -878,11 +891,12 @@ class TestSalePrices(SaleCommon):
             "original_tax_ids": tax_include.ids,
         })
         self.product.write({"list_price": 110.0, "taxes_id": tax_include.ids})
-        branch_company = self.env["res.company"].create({
+        branch_company = self.env["res.company"].sudo().create({
             "name": "Branch Co.",
             "parent_id": self.env.company.id,
             "account_fiscal_country_id": self.env.company.account_fiscal_country_id.id,
         })
+        self.env.user.sudo().company_ids += branch_company
         order = self._create_so(
             company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False
         ).with_company(branch_company)
@@ -893,7 +907,7 @@ class TestSalePrices(SaleCommon):
 
     def test_free_product_and_price_include_fixed_tax(self):
         """Check that fixed tax include are correctly computed while the price_unit is 0."""
-        taxes = self.env["account.tax"].create([
+        taxes = self.env["account.tax"].sudo().create([
             {
                 "name": "BEBAT 0.05",
                 "type_tax_use": "sale",
@@ -932,7 +946,7 @@ class TestSalePrices(SaleCommon):
     def test_sale_with_taxes(self):
         """Test SO with taxes applied on its lines and check subtotal applied on its lines and total
         applied on the SO."""
-        tax_include, tax_exclude = self.env["account.tax"].create([
+        tax_include, tax_exclude = self.env["account.tax"].sudo().create([
             {
                 "name": "Tax with price include",
                 "amount": 10,
@@ -1272,12 +1286,12 @@ class TestSalePrices(SaleCommon):
     def test_so_included_tax_mapping(self):
         country_belgium = self.env["res.country"].search([("name", "=", "Belgium")], limit=1)
 
-        fiscal_pos = self.env["account.fiscal.position"].create({
+        fiscal_pos = self.env["account.fiscal.position"].sudo().create({
             "name": "Test tax mapping 21% to 6%",
             "auto_apply": True,
             "country_id": country_belgium.id,
         })
-        tax_a, tax_b = self.env["account.tax"].create([
+        tax_a, tax_b = self.env["account.tax"].sudo().create([
             {
                 "name": "Test tax 21% inc",
                 "type_tax_use": "sale",

@@ -9,6 +9,8 @@ from odoo.tests.common import tagged
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestRazorPayPoS(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     external_ref_number = ""
     is_cancel_payment_test = False
 

@@ -15,6 +15,8 @@ from dateutil.relativedelta import relativedelta
 
 
 class TestPickShip(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
@@ -885,6 +887,8 @@ class TestPickShip(TestStockCommon):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestSinglePicking(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
         """
@@ -2588,6 +2592,8 @@ class TestSinglePicking(TestStockCommon):
 
 
 class TestStockUOM(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2707,6 +2713,8 @@ class TestStockUOM(TestStockCommon):
 
 
 class TestRoutes(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -3007,6 +3015,8 @@ class TestRoutes(TestStockCommon):
 
 
 class TestAutoAssign(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def create_pick_ship(self):
         self.warehouse_1.delivery_route_id.rule_ids.action = 'pull'
         picking_client = self.env['stock.picking'].create({
@@ -3388,6 +3398,8 @@ class TestAutoAssign(TestStockCommon):
 
 
 class TestPickShipBackorder(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

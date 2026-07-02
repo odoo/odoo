@@ -11,6 +11,8 @@ from odoo.addons.payment_nuvei.tests.common import NuveiCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(NuveiCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_nuvei.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         """Test that receiving a redirect notification triggers the processing of the notification

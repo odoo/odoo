@@ -10,6 +10,8 @@ from odoo.addons.website_sale.tests.test_abandoned_cart import TestWebsiteSaleCa
 @tagged('post_install', '-at_install')
 class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAbandonedCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

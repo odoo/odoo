@@ -3,6 +3,8 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 class TestAnalyticToSaleStock(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

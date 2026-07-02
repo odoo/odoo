@@ -11,6 +11,8 @@ from odoo.exceptions import UserError
 
 class TestProcurement(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_procurement(self):
         """This test case when create production order check procurement is create"""
         # Update BOM

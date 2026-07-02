@@ -7,6 +7,8 @@ from odoo import Command, fields
 @tagged('post_install', '-at_install')
 class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

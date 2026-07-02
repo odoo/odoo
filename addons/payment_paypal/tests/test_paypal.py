@@ -13,6 +13,8 @@ from odoo.addons.payment_paypal.tests.common import PaypalCommon
 
 @tagged("post_install", "-at_install")
 class PaypalTest(PaypalCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_processing_values(self):
         tx = self._create_transaction(flow="direct")
         with patch(

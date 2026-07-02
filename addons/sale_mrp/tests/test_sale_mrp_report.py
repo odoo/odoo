@@ -12,6 +12,8 @@ from odoo.addons.stock.tests.test_report import TestReportsCommon
 @tagged('post_install', '-at_install')
 class TestSaleMrpInvoices(TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

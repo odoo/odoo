@@ -9,6 +9,8 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def subfolders(cls):
         subfolder_format, _subfolder_document, subfolder_country = super().subfolders()

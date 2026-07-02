@@ -14,6 +14,8 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged("post_install", "-at_install")
 class TestFlows(PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def _test_flow(self, flow):
         """Simulate the given online payment flow and tests the tx values at each step.
 

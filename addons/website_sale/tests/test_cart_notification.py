@@ -8,6 +8,8 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -8,6 +8,8 @@ from odoo.exceptions import ValidationError
 
 
 class TestLotSerial(TestStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -9,6 +9,8 @@ from odoo.tests import Form
 
 class TestWorkcenterOverview(common.TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2020-03-13')  # Friday
     def test_workcenter_graph_data(self):
         fake_bom = self.env['mrp.bom'].create({

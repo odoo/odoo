@@ -4,6 +4,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class JoEdiCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('jo')
     def setUpClass(cls):

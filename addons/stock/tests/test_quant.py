@@ -14,6 +14,8 @@ from odoo.tests import tagged, Form
 
 class TestStockQuant(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1500,6 +1502,8 @@ class TestStockQuant(TestStockCommon):
 
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

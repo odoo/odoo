@@ -8,6 +8,8 @@ from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(AsiaPayCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_not_available_for_unsupported_currencies(self):
         available_providers = self.env["payment.provider"]._find_available_providers(
             self.env.company.id,

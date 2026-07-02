@@ -10,6 +10,13 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('post_install', '-at_install')
 class TestPricelistReport(ProductCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_product_template_pricelist_report(self):
         """Load report for `product.template` records."""
         self.env['report.product.report_pricelist'].get_html(data={
@@ -43,13 +50,20 @@ class TestPricelistReport(ProductCommon):
 @tagged('post_install', '-at_install')
 class TestPricelistReportController(ProductCommon, HttpCase):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.pricelist = cls._enable_pricelists()
 
     def test_csv_export(self):
-        self.authenticate('admin', 'admin')
+        self.authenticate(self.env.user.login, 'test_user')
         response = self.url_open(
             "/product/export/pricelist/",
             data={
@@ -68,7 +82,7 @@ class TestPricelistReportController(ProductCommon, HttpCase):
         self.assertEqual(response.status_code, 200)
 
     def test_xlsx_export(self):
-        self.authenticate('admin', 'admin')
+        self.authenticate(self.env.user.login, 'test_user')
         response = self.url_open(
             "/product/export/pricelist/",
             data={

@@ -17,6 +17,8 @@ class TestExpenses(TestExpenseCommon):
     #############################################
     #  Test Expense flows
     #############################################
+    _test_groups = None  # FIXME list needed groups
+
     def test_expense_main_flow(self):
         """
         Test the main flows of expense

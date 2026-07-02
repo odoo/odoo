@@ -11,6 +11,8 @@ from .common import TestL10nFrPdpCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_pdp_identifier_derivation(self):
         # `routing_identifier` is no longer auto-computed from the registry: the PDP routing endpoint
         # is set explicitly, while the SIREN is derived from the FR SIRET/SIREN identifier.

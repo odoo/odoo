@@ -11,6 +11,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("post_install", "-at_install")
 class TestUtils(PaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_verify_signature_does_not_raise_if_valid_signature(self):
         self._assert_does_not_raise(
             Forbidden, payment_utils.verify_signature, "valid_signature", "valid_signature"

@@ -9,6 +9,8 @@ from lxml import etree
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLNL(TestUBLCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestUBLCommon.setup_country('nl')
     def setUpClass(cls):

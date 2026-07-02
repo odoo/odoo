@@ -9,6 +9,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

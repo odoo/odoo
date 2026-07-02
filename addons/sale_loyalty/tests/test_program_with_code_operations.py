@@ -12,6 +12,8 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on a coupon program on which we should apply the
     # reward when the code is correct or remove the reward automatically when the reward is not
     # valid anymore.
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

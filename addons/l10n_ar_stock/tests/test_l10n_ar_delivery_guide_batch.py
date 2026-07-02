@@ -11,6 +11,7 @@ from odoo.addons.l10n_ar_stock.tests.test_l10n_ar_delivery_guide import (
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestArDeliveryGuideBatch(TestArDeliveryGuide):
     """ Tests for the multi-record / batch delivery guide."""
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

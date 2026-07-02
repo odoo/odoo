@@ -9,6 +9,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_automatic_invoice_on_zero_amount(self):
         # Set automatic invoice
         self.env.company.sale_automatic_invoice = True

@@ -12,6 +12,8 @@ from odoo.tests.common import tagged
 @tagged('mail_track', 'post_install', '-at_install')
 class TestTracking(AccountTestInvoicingCommon, MailCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def default_env_context(cls):
         # OVERRIDE

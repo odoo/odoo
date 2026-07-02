@@ -9,6 +9,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestDownloadDocs(HttpCase, TestItEdi):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_download_invoice_documents_fatturapa(self):
         invoice = self._create_invoice(
             partner_id=self.italian_partner_a.id,

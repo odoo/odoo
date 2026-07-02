@@ -9,6 +9,7 @@ class TestPoSStockBasicConfig(TestPoSBasicConfig, TestPosStockCommon):
     The tests contain base scenarios in using pos.
     More specialized cases are tested in other tests.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super().setUp()

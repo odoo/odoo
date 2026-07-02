@@ -12,6 +12,8 @@ from odoo.addons.payment_dpo.tests.common import DPOCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(DPOCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_dpo.controllers.main")
     def test_redirect_notification_triggers_processing(self):
         """Test that receiving a valid redirect notification triggers the processing of the

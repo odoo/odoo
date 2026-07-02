@@ -6,6 +6,8 @@ from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nSaInvoice(TestSaEdiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_section_lines_rendering(self):
         invoice = self.env['account.move'].create([{
             'move_type': 'out_invoice',

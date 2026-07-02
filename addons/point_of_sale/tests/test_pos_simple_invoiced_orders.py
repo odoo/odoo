@@ -12,6 +12,7 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
     Each test case only make a single **invoiced** order.
     Name of each test corresponds to a sheet in: https://docs.google.com/spreadsheets/d/1mt2jRSDU7OONPBFjwyTcnhRjITQI8rGMLLQA5K3fAjo/edit?usp=sharing
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super(TestPosSimpleInvoicedOrders, self).setUp()

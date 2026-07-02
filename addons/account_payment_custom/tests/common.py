@@ -6,6 +6,8 @@ from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 # AccountPaymentCommon enables post-processing (disabled in default payment test commons)
 class AccountPaymentCustomCommon(AccountPaymentCommon, PaymentCustomCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

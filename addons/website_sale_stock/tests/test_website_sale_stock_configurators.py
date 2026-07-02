@@ -8,6 +8,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_sale_stock_product_configurator(self):
         stock_attribute = self.env["product.attribute"].create({
             "name": "Stock",

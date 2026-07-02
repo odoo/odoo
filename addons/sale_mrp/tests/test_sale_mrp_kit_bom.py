@@ -11,6 +11,8 @@ from odoo.addons.base.tests.common import BaseCommon
 @tagged('post_install', '-at_install')
 class TestSaleMrpKitBom(BaseCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

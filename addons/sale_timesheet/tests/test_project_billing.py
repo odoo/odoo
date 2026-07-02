@@ -8,6 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 @tagged('post_install', '-at_install')
 class TestProjectBilling(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

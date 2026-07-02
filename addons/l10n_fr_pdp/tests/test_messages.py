@@ -18,6 +18,8 @@ from .common import FAKE_UUID, FILE_PATH, TestL10nFrPdpCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

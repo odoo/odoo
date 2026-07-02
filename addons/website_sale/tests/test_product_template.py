@@ -10,6 +10,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_website_sale_get_configurator_display_price(self):
         self.website.show_line_subtotals_tax_selection = "tax_included"
         tax = self.env["account.tax"].create({"name": "Test tax", "amount": 10})

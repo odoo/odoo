@@ -16,6 +16,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('-at_install', 'post_install')
 class TestPurchase(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1449,6 +1451,8 @@ class TestPurchase(AccountTestInvoicingCommon):
 
 @tagged('at_install', '-post_install')
 class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_qty_received_with_different_purchase_and_product_uom(self):
         """Ensure that when a purchase order line uses a UoM different from the

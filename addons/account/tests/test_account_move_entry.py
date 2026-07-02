@@ -14,6 +14,8 @@ from itertools import zip_longest
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

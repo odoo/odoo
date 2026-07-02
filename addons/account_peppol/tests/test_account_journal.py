@@ -7,6 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('-at_install', 'post_install')
 class TestPeppolAccountJournal(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_peppol_journal_type_change(self):
         self.env.company.write({"account_peppol_proxy_state": "receiver"})
         journal = self.env.company.peppol_purchase_journal_id

@@ -19,6 +19,8 @@ from odoo.addons.stock.tests.common import TestStockCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_anglosaxon_valuation_price_total_diff_discount(self):
         """
         PO:  price unit: 110

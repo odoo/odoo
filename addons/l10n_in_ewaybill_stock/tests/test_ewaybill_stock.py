@@ -10,6 +10,8 @@ from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestStockEwaybill(L10nInTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

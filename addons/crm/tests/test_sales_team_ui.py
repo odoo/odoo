@@ -10,6 +10,8 @@ from odoo.addons.sales_team.tests.common import SalesTeamCommon
 @tests.tagged('post_install', '-at_install')
 class TestUi(HttpCase, SalesTeamCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @users('salesmanager')
     def test_crm_team_members_mono_company(self):
         """ Make sure you can create crm.team records with members in a mono-company scenario """

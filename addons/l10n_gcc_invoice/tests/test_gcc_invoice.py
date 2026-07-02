@@ -9,6 +9,8 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestGccInvoice(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_narration_translation(self):
         ''' The narration field should be copied translations included'''
 

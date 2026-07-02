@@ -8,6 +8,8 @@ from odoo.addons.stock.tests.test_packing import TestPackingCommon
 
 class TestPackingNeg(TestPackingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_packing_neg(self):
         partner_2 = self.env['res.partner'].create({
             'name': 'Ready Mat',

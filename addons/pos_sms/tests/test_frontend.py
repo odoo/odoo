@@ -4,6 +4,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 @tagged('post_install', '-at_install')
 class TestAutofill(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_pos_number_autofill(self):
         self.partner_full.write({'phone': '9876543210'})
         self.main_pos_config.with_user(self.pos_user).open_ui()

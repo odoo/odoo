@@ -5,6 +5,8 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -507,6 +509,8 @@ class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveTaxMode(TestDocumentTaxModeCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

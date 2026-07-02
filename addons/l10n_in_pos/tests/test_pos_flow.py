@@ -7,6 +7,7 @@ class TestPosFlow(TestInPosBase):
     """
     Test class for GSTR-related POS functionality.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def test_invoice_order_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.

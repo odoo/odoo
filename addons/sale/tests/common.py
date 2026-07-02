@@ -11,6 +11,14 @@ class SaleCommon(
     ProductCommon,  # BaseCommon, UomCommon
     SalesTeamCommon,
 ):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -51,6 +59,8 @@ class SaleCommon(
 
 
 class TestSaleCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -224,6 +234,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
 
 
 class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

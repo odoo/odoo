@@ -18,6 +18,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         For that, we check the task/project created, the invoiced amounts, the delivered
         quantities changes,  ...
     """
+    _test_groups = None  # FIXME list needed groups
 
     def test_compute_commercial_partner(self):
         """Ensure user without project access can compute commercial partner without AccessError.
@@ -1380,6 +1381,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

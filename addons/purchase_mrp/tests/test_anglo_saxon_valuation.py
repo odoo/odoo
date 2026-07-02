@@ -10,6 +10,8 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('post_install', '-at_install')
 class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @skip('Temporary to fast merge new valuation')
     def test_kit_anglo_saxo_price_diff(self):
         """

@@ -6,6 +6,8 @@ from odoo.addons.pos_sale.tests.test_pos_sale_report import TestPoSSaleReport
 
 class TestPoSSaleStockReport(TestPoSSaleReport, TestPosStockCommon, TestPosStockHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_different_shipping_address(self):
         product_0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
         sale_order = self.env['sale.order'].sudo().create({

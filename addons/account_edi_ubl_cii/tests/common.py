@@ -5,6 +5,8 @@ from odoo.tools import config, file_open
 
 class TestUblCiiCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -190,6 +192,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
 class TestUblCiiBECommon(TestUblCiiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)
@@ -213,6 +217,8 @@ class TestUblCiiBECommon(TestUblCiiCommon):
 
 class TestUblCiiFRCommon(TestUblCiiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)
@@ -235,6 +241,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
 
 class TestUblCiiNOCommon(TestUblCiiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)
@@ -249,6 +257,8 @@ class TestUblCiiNOCommon(TestUblCiiCommon):
 
 
 class TestUblBis3Common(TestUblCiiCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def _create_partner_default_values(cls):

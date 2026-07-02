@@ -14,6 +14,8 @@ class TestIndonesianEfakturDownload(TestEfakturCoretax, AccountTestInvoicingHttp
     # Test outcome of downloading files
     # ==========================================
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2019-05-01')
     def test_efaktur_download_one_document(self):
         """ Test that when downloading the invoice, csv file should be generated in format of

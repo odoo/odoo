@@ -5,6 +5,8 @@ from odoo.tests import tagged, Form
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestClLatamDocumentType(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('cl')
     def setUpClass(cls):

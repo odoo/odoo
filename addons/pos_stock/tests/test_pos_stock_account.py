@@ -11,6 +11,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 class TestPoSStock(TestPoSCommon):
     """ Tests for anglo saxon accounting scenario.
     """
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
 

@@ -5,6 +5,8 @@ from odoo.fields import Command
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericLocalization(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     allow_inherited_tests_method = True
 
     @classmethod

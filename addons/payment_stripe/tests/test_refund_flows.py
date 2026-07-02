@@ -12,6 +12,8 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 @tagged("post_install", "-at_install")
 class TestRefundFlows(StripeCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_refund_id_is_set_as_provider_reference(self):
         """Test that the id of the refund object is set as the provider reference of the refund

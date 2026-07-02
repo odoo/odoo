@@ -6,6 +6,8 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(cls):
         super().setUp()
         cls.config = cls.basic_config

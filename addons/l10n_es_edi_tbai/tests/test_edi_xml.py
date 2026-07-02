@@ -15,6 +15,8 @@ from .common import TestEsEdiTbaiCommon
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

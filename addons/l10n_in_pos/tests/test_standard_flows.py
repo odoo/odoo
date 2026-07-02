@@ -5,6 +5,7 @@ from odoo.tests import Form, tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestStandardFlows(L10nInTestInvoicingCommon):
     """ Tests for standard flows not related to PoS but that can be impacted by it """
+    _test_groups = None  # FIXME list needed groups
 
     def test_open_payment_register_with_upi_qr_method(self):
         self.env.company.l10n_in_upi_id = 12345

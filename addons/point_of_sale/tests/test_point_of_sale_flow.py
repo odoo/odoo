@@ -13,6 +13,8 @@ from odoo.exceptions import ValidationError, UserError
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(CommonPosTest):
 
+    _test_groups = None  # FIXME list needed groups
+
     def setup_tags(self):
         tags = self.env['account.account.tag'].create([
             {

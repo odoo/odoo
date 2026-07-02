@@ -14,6 +14,8 @@ from odoo.tests import tagged, Form
 @skip('Temporary to fast merge new valuation')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -364,6 +366,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 
 @tagged('post_install', '-at_install')
 class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_after_lc(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'

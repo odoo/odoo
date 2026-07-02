@@ -8,6 +8,8 @@ from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 @tagged("post_install", "-at_install")
 class TestTaxesTaxTotalsSummarySale(TestTaxCommonSale, TestTaxesTaxTotalsSummary):
+    _test_groups = None  # FIXME list needed groups
+
     def test_taxes_l10n_in_sale_orders(self):
         for test_index, document, expected_values in self._test_taxes_l10n_in():
             with self.subTest(test_index=test_index):

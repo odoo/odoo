@@ -13,6 +13,8 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
         response = self.url_open(self.gmc_feed.url)
 

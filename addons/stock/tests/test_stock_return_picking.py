@@ -7,6 +7,8 @@ from odoo.tests import tagged, Form
 
 class TestReturnPicking(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_stock_return_picking_line_creation(self):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out.id,

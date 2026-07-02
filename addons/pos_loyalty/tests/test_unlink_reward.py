@@ -6,6 +6,8 @@ from odoo.tests.common import tagged
 
 @tagged('-at_install', 'post_install')
 class TestUnlinkReward(CommonPosLoyaltyTest):
+    _test_groups = None  # FIXME list needed groups
+
     def test_pos_unlink_reward(self):
         self.create_backend_pos_order({
             'order_data': {

@@ -4,6 +4,15 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class SaleManagementCommon(SaleCommon):
+    # Common (non-final): design groups inherited from SaleCommon; final subclasses redefine the full list.
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

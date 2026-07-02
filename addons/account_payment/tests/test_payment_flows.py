@@ -18,6 +18,8 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 @tagged('post_install', '-at_install')
 class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_payment_flow(self):
         """Test the payment of an invoice through the payment/pay route"""
 

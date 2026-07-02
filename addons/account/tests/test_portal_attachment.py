@@ -11,6 +11,8 @@ from odoo.tools import file_open, mute_logger
 @tagged('post_install', '-at_install')
 class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

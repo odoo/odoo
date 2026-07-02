@@ -8,6 +8,8 @@ from odoo import tools
 
 class PurchaseTestCommon(TestStockValuationCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _create_bill(self, product=None, quantity=None, price_unit=None, post=True, **kwargs):
         if 'purchase_order' not in kwargs:
             return super()._create_bill(product=product, quantity=quantity, price_unit=price_unit, **kwargs)

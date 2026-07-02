@@ -9,6 +9,8 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestStockWarehouse(ClickAndCollectCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_geolocation_updates_unset_coordinates_of_valid_addresses(self):
         """Test that valid addresses with default coordinates are geolocated."""
         with patch(

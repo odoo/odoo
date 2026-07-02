@@ -7,6 +7,8 @@ from odoo import Command
 
 @tagged("post_install", "-at_install")
 class TestPoSRestaurantLoyalty(TestFrontend):
+    _test_groups = None  # FIXME list needed groups
+
     def test_change_table_rewards_stay(self):
         """
         Test that make sure that rewards stay on the order when leaving the table

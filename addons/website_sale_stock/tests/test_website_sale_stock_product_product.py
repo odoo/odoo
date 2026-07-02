@@ -9,6 +9,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockProductProduct(HttpCase, WebsiteSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_get_max_quantity_with_max(self):
         product = self._create_product(is_storable=True, allow_out_of_stock_order=False)
         self.env["stock.quant"].create({

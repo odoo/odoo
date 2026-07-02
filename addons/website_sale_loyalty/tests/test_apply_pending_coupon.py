@@ -12,6 +12,8 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 @tagged("-at_install", "post_install")
 class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

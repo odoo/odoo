@@ -19,6 +19,7 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
 
     NOTE That both receivable accounts above are different from the pos receivable account.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super(TestPoSMultipleReceivableAccounts, self).setUp()

@@ -11,6 +11,8 @@ from odoo.addons.pos_bancontact_pay.tests.test_frontend import (
 @tagged("post_install", "-at_install")
 class TestKioskFrontend(TestFrontend):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

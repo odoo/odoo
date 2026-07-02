@@ -14,6 +14,13 @@ from odoo.addons.product.tests.common import ProductCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductCombo(ProductCommon):
 
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
+
     def test_combo_item_count(self):
         combo = self.env['product.combo'].create({
             'name': "Test combo",
@@ -43,6 +50,7 @@ class TestProductCombo(ProductCommon):
         company_isk = self._create_company(
             name="Company ISK", currency_id=self._enable_currency('ISK').id
         )
+        self.env.user.sudo().company_ids = [Command.link(company_eur.id), Command.link(company_isk.id)]
 
         combo = self.env['product.combo'].create({
             'name': "Test combo",
@@ -61,6 +69,7 @@ class TestProductCombo(ProductCommon):
         self.setup_main_company(currency_code='GBP')
         currency_eur = self._enable_currency('EUR')
         company = self._create_company(currency_id=currency_eur.id)
+        self.env.user.sudo().company_ids = [Command.link(company.id)]
         # For the sake of this test, we consider that 1 EUR is equivalent to 0.5 GBP.
         currency_eur.rate_ids = [Command.create({
             'name': '2000-01-01', 'rate': 2, 'company_id': company.id
@@ -115,6 +124,7 @@ class TestProductCombo(ProductCommon):
     def test_multi_company_consistency(self):
         company_a = self._create_company(name="Company A")
         company_b = self._create_company(name="Company B")
+        self.env.user.sudo().company_ids = [Command.link(company_a.id), Command.link(company_b.id)]
         product_in_company_a = self._create_product(company_id=company_a.id)
 
         # Raise if we try to create a combo in company B with a product in company A.

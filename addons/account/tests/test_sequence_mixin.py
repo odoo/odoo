@@ -14,6 +14,8 @@ from unittest.mock import patch, Mock
 
 
 class TestSequenceMixinCommon(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -51,6 +53,8 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixin(TestSequenceMixinCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -777,6 +781,8 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
 @tagged('post_install', '-at_install')
 class TestSequenceGaps(TestSequenceMixinCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -948,6 +954,8 @@ class TestSequenceGaps(TestSequenceMixinCommon):
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1090,6 +1098,8 @@ class TestSequenceMixinConcurrency(TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_failed_import_bank_statement_cache_shouldnt_get_invalidated(self):
         """ Ensure that even with a failed import, we mostly hit the sequence cache and don't create tons of savepoint"""
         bank_journal = self.company.bank_journal_ids[:1]  # there could be several journal in some builds

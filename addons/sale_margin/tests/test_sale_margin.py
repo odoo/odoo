@@ -35,6 +35,14 @@ TAX_INCL_DISCOUNT_VALUES = [
 
 @tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleMargin(SaleCommon):
+    _test_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -43,7 +51,7 @@ class TestSaleMargin(SaleCommon):
         cls.product_50_margin = cls._create_product(
             list_price=100.0, standard_price=50.0, taxes_id=[Command.set([])]
         )
-        tax_group = cls.env["account.tax.group"].create({"name": "Tax Group A"})
+        tax_group = cls.env["account.tax.group"].sudo().create({"name": "Tax Group A"})
         cls.tax_included, cls.tax_excluded, cls.tax_default = cls.env["account.tax"].create([
             {
                 "name": "Tax with price include",

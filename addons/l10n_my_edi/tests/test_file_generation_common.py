@@ -19,6 +19,8 @@ NS_MAP = {
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class L10nMyEDITestFileGenerationCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('my')
     def setUpClass(cls):

@@ -9,6 +9,8 @@ from .common import TestEsEdiTbaiCommonBizkaia
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_post_and_cancel_bill_tbai_success(self):
         bill = self._create_posted_bill()
 

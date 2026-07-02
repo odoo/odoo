@@ -7,6 +7,8 @@ from odoo.addons.account_payment_custom.tests.common import AccountPaymentCustom
 
 @tagged("-at_install", "post_install")
 class TestAccountBankStatementLine(AccountPaymentCustomCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_matching_statement_line_confirms_wire_transfer_transaction(self):
         """Test that wire transfer transactions are confirmed when a matching bank statement line
         is found."""

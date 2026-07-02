@@ -20,6 +20,8 @@ from odoo.addons.mail.tests.common import MailCommon
 @freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
+    _test_groups = None  # FIXME list needed groups
+
     MESSAGE_UUID = '87b3d068-4da3-49c8-845c-ff2540e6b7d9'
 
     @classmethod

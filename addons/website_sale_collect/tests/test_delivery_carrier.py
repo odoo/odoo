@@ -12,6 +12,8 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged("post_install", "-at_install")
 class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_prevent_publishing_when_no_warehouse(self):
         self.in_store_dm.is_published = False
         self.in_store_dm.warehouse_ids = [Command.clear()]

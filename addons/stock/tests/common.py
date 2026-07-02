@@ -36,6 +36,8 @@ class TestStockCommon(ProductVariantsCommon):
     references instead of obtaining global objects on their own. That's because,
     in the future, stock tests will be using a dedicated set of test data.
     """
+    _test_groups = None  # FIXME list needed groups
+
     def _create_move(self, product, src_location, dst_location, **values):
         # TDE FIXME: user as parameter
         Move = self.env['stock.move'].with_user(self.user_stock_manager)

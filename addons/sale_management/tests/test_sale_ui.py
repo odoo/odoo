@@ -9,6 +9,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestUi(AccountTestInvoicingCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -42,6 +44,8 @@ class TestUi(AccountTestInvoicingCommon, HttpCase):
 
 @tagged("-at_install", "post_install")
 class TestSaleFlowTourPostInstall(TestSaleCommon, HttpCase):
+    _test_groups = None  # FIXME list needed groups
+
     def test_basic_sale_flow_with_minimal_access_rights(self):
         """
         Test that a sale user with minimal access rights (own document only) can open both the

@@ -11,6 +11,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         self.Controller = Delivery()

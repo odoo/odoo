@@ -13,6 +13,8 @@ def archive_products(env):
 
 
 class CommonPosStockTest(ValuationReconciliationTestCommon, CommonPosTest):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()
@@ -26,6 +28,7 @@ class TestPosStockCommon(TestPoSCommon, ValuationReconciliationTestCommon):
     and implement different special scenarios by inheriting
     this class.
     """
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):

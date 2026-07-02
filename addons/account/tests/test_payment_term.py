@@ -9,6 +9,8 @@ from odoo.tools.safe_eval import datetime
 
 @tagged('post_install', '-at_install')
 class TestAccountPaymentTerms(AccountTestInvoicingCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

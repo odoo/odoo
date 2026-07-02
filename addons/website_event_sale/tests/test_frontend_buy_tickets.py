@@ -15,6 +15,8 @@ from .common import TestWebsiteEventSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
 
@@ -123,6 +125,8 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
 @tagged('post_install', '-at_install')
 class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @mute_logger('odoo.http')
     def test_check_seats_avail_before_purchase(self):

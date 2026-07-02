@@ -8,6 +8,8 @@ from odoo.addons.point_of_sale.tests.test_res_config_settings import TestConfigu
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
+    _test_groups = None  # FIXME list needed groups
+
     def test_properly_deleting_pos_hr_group_all_members(self):
         self._remove_on_payment_taxes()
 

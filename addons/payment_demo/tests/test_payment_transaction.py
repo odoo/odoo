@@ -11,6 +11,8 @@ from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_apply_updates_sets_transaction_pending(self):
         """Test that the transaction state is set to 'pending' when the payment data indicate
         a pending payment."""

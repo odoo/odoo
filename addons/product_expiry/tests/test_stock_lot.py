@@ -13,6 +13,8 @@ from odoo.tests import tagged, Form
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockLot(TestStockCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -9,6 +9,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class TestL10nECAccountSale(TestSaleCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @TestSaleCommon.setup_country('ec')
     def setUpClass(cls):

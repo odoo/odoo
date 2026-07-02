@@ -4,6 +4,8 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 class NuveiCommon(PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

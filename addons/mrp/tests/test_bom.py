@@ -14,6 +14,8 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -6,6 +6,8 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItAccountMoveDocumentType(TestItEdi):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_account_move_document_type(self):
         # l10n_it_document_type_01: "TD01 - Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> are completed)"
         # l10n_it_document_type_04: "TD04 - Credit note"

@@ -8,6 +8,8 @@ from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 @tagged('-at_install', 'post_install')
 class TestPaymentProvider(AccountPaymentCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_duplicate_provider_child_company_no_journal_id(self):
         """
         When you duplicate a payment provider from a parent company and set it to a child company,

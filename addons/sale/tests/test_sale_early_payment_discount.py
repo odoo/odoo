@@ -9,6 +9,8 @@ from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 @tagged("post_install", "-at_install")
 class TestSaleEarlyPaymentDiscount(TestTaxCommonSale, TestTaxesTaxTotalsSummary):
+    _test_groups = None  # FIXME list needed groups
+
     def test_apply_mixed_epd_discount(self):
         """When applying an epd - mixed payment term, the tax should be computed based on the
         discounted untaxed amount."""

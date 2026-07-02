@@ -5,6 +5,8 @@ from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 
 class CashOnDeliveryCommon(PaymentCustomCommon, DeliveryCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

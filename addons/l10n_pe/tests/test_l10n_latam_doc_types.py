@@ -7,6 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('-at_install', 'post_install', 'post_install_l10n')
 class TestL10nPeLatamDocTypes(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('pe')
     def setUpClass(cls):

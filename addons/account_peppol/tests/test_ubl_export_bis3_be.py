@@ -6,6 +6,8 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblExportBis3BE.extra_tags)
 class TestUblExportBis3BEPeppol(TestUblExportBis3BE):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_invoice_PEPPOL_EN16931_R010_R020_ensure_customer_supplier_endpoint_id(self):
         """
         [PEPPOL-EN16931-R010] Buyer electronic address MUST be provided.

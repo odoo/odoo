@@ -16,6 +16,8 @@ class TestSelfOrderFrontendMobile(SelfOrderCommonTest):
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestUi(TestFrontendCommon, OnlinePaymentCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -40,6 +42,8 @@ class TestUi(TestFrontendCommon, OnlinePaymentCommon):
 
 
 class TestSelfOrderOnlinePayment(TestUi):
+    _test_groups = None  # FIXME list needed groups
+
     def test_01_online_payment_with_multi_table(self):
         # No need to check preparation printer in this test.
         self.env["pos.printer"].search([]).unlink()

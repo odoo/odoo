@@ -13,6 +13,8 @@ from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoy
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

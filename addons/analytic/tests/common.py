@@ -4,6 +4,8 @@ from odoo.tests.common import new_test_user
 
 class AnalyticCommon(BaseCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

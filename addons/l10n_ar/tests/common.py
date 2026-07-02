@@ -11,6 +11,8 @@ _logger = logging.getLogger(__name__)
 
 class TestArCommon(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template('ar_ri')
     def setUpClass(cls):

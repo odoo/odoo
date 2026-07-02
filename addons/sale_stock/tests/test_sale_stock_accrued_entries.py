@@ -13,6 +13,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestAccruedStockSaleOrders(TestSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def _make_in_move(self,
             product,
             quantity,

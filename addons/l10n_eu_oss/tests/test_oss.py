@@ -10,6 +10,8 @@ from odoo.tests import tagged
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSBelgium(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('be')
     def setUpClass(cls):
@@ -85,6 +87,8 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSSpain(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
@@ -126,6 +130,8 @@ class TestOSSSpain(AccountTestInvoicingCommon):
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSUSA(AccountTestInvoicingCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):
@@ -182,6 +188,8 @@ class TestOSSUSA(AccountTestInvoicingCommon):
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSMap(AccountTestInvoicingCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_oss_eu_tag_map(self):
         """ Checks that the xml_id referenced in the map are correct.

@@ -12,6 +12,8 @@ from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(FlutterwaveCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time("2011-11-02 12:00:21")  # Freeze time for consistent singularization behavior.
     def test_reference_is_singularized(self):
         """Test that transaction references are unique at the provider level."""

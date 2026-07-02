@@ -10,6 +10,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestApiMocked(L10nHuEdiTestCommonReceive):
 
+    _test_groups = None  # FIXME list needed groups
+
     def _get_mocked_requests(self):
         return ['queryInvoiceDigest', 'queryInvoiceData']
 

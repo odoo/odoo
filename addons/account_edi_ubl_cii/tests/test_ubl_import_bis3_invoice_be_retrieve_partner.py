@@ -7,6 +7,8 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
 
+    _test_groups = None  # FIXME list needed groups
+
     @freeze_time('2020-01-01')
     def test_import_partner_creation(self):
         self.partner_be.unlink()

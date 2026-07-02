@@ -9,6 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     class RepartitionLine:
         def __init__(self, factor_percent, repartition_type, tag_ids):
             self.factor_percent = factor_percent

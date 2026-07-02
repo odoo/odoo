@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -232,6 +234,8 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
 
 class TestFrontend(TestFrontendCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_01_pos_restaurant(self):
         self.pos_user.write({

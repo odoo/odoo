@@ -6,6 +6,8 @@ from .common import PurchaseTestCommon
 
 
 class TestPurchaseStockValuation(PurchaseTestCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def test_move_value(self):
         """This test ensure the move value is correct. The move value
         doesn't depend on the cost method. It represents the real price

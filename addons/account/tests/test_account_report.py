@@ -8,6 +8,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountReport(AccountTestInvoicingCommon):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_copy_report(self):
         """ Ensure that copying a report correctly adjust codes, formulas and subformulas. """
         report = self.env['account.report'].create({

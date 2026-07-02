@@ -8,6 +8,8 @@ from odoo.fields import Command
 @tagged('post_install', '-at_install')
 class TestPerformanceTimesheet(TestSaleTimesheet):
 
+    _test_groups = None  # FIXME list needed groups
+
     def test_performance_billable_project_change_customer(self):
         """
             Use case: change the partner of a billable project containing many tasks having no SOL, which should trigger _compute_sale_line_id() of all tasks.

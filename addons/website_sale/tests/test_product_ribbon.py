@@ -4,6 +4,8 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 class TestProductRibbon(WebsiteSaleCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def setUp(self):
         super().setUp()
         # Manual ribbon

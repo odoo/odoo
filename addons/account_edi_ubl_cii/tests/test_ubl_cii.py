@@ -12,6 +12,8 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 @tagged('post_install', '-at_install')
 class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

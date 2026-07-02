@@ -10,6 +10,7 @@ class TestPosStockMargin(TestPosMargin):
     Test the margin computation on orders with basic configuration
     The tests contain the base scenarios.
     """
+    _test_groups = None  # FIXME list needed groups
 
     def setUp(self):
         super().setUp()

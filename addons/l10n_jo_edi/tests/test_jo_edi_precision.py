@@ -7,6 +7,8 @@ from odoo.addons.l10n_jo_edi.models.account_edi_xml_ubl_21_jo import JO_MAX_DP
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestJoEdiPrecision(JoEdiCommon):
+    _test_groups = None  # FIXME list needed groups
+
     def _equality_check(self, vals_dict, up_to_jo_max_dp=True):
         def equal_strict(val1, val2):
             return val1 == val2

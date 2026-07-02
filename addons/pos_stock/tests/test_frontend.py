@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 
 class TestPosStockHttpCommon(TestPointOfSaleHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -19,6 +21,8 @@ class TestPosStockHttpCommon(TestPointOfSaleHttpCommon):
 
 
 class TestUi(TestPosStockHttpCommon):
+
+    _test_groups = None  # FIXME list needed groups
 
     def test_receipt_screen_tour(self):
         self.tip.write({
@@ -457,6 +461,8 @@ class TestUi(TestPosStockHttpCommon):
 
 
 class MobileTestUi(TestUi):
+    _test_groups = None  # FIXME list needed groups
+
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True

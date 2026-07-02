@@ -15,6 +15,8 @@ from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(XenditCommon, PaymentHttpCommon):
+    _test_groups = None  # FIXME list needed groups
+
     @mute_logger("odoo.addons.payment_xendit.controllers.main")
     def test_webhook_notification_triggers_processing(self):
         """Test that receiving a valid webhook notification and signature verified triggers the
