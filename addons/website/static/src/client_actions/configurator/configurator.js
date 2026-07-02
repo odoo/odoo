@@ -838,7 +838,35 @@ export class ApplyConfiguratorScreen extends Component {
         };
 
         if (themeName !== undefined) {
-            const loadingSteps = [
+            const selectedTypeName = WEBSITE_TYPES[this.state.selectedType]?.name;
+            const typeModules = {
+                ecommerce: "website_sale",
+                blog: "website_blog",
+                event: "website_event",
+                elearning: "website_slides",
+            };
+            const installStepDescriptions = {
+                ecommerce: _t("Installing eCommerce..."),
+                blog: _t("Installing Blog..."),
+                event: _t("Installing Events..."),
+                elearning: _t("Installing eLearning..."),
+            };
+            const moduleName = typeModules[selectedTypeName];
+            const needsInstall =
+                moduleName &&
+                (await this.orm.silent.searchCount("ir.module.module", [
+                    ["name", "=", moduleName],
+                    ["state", "!=", "installed"],
+                ])) > 0;
+
+            const loadingSteps = [];
+            if (needsInstall) {
+                loadingSteps.push({
+                    description: installStepDescriptions[selectedTypeName],
+                    flag: "generic",
+                });
+            }
+            loadingSteps.push(
                 {
                     description: _t("Applying your colors and design..."),
                     flag: "colors",
@@ -855,8 +883,8 @@ export class ApplyConfiguratorScreen extends Component {
                     title: _t("Finalizing."),
                     description: _t("Activating your website."),
                     flag: "generic",
-                },
-            ];
+                }
+            );
 
             // The apply call is long-running, so real-time progress can't be
             // fetched. We simulate it instead.
