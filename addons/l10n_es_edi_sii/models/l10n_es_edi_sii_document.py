@@ -161,14 +161,24 @@ class L10nEsEdiSiiDocument(models.Model):
             'Cabecera': self._get_web_service_header(company, communication_type),
             'Cuerpo': info_list,
         }
-
         attachment = self.env['ir.attachment']
+
         for doc, (success, response_data) in response_results.items():
             if response_data.get('error_1117'):
                 results[doc] = {'error_1117': True}
                 continue
 
             if success:
+                if not attachment:
+                    attachment = self.env['ir.attachment'].sudo().create({
+                        'name': 'sii_payload.json',
+                        'raw': json.dumps(full_payload, indent=4).encode('utf-8'),
+                        'mimetype': 'application/json',
+                        'res_model': 'account.move',
+                        'res_id': doc.move_id.id,
+                    })
+                doc.sudo().write({'attachment_id': attachment.id})
+
                 state = 'cancelled' if doc.state == 'to_cancel' else 'accepted'
                 if response_data.get('accepted_with_errors'):
                     state = 'accepted_with_errors'
@@ -190,16 +200,6 @@ class L10nEsEdiSiiDocument(models.Model):
                 }
                 doc.move_id.message_post(body=messages[state])
 
-                if doc.state in ('accepted', 'accepted_with_errors'):
-                    if not attachment:
-                        attachment = self.env['ir.attachment'].sudo().create({
-                            'name': doc._get_attachment_name(),
-                            'raw': json.dumps(full_payload, indent=4).encode('utf-8'),
-                            'mimetype': 'application/json',
-                            'res_model': 'account.move',
-                            'res_id': doc.move_id.id,
-                        })
-                    doc.sudo().write({'attachment_id': attachment.id})
             else:
                 response_msg = response_data.get('response_message', self.env._('Unknown Error'))
                 doc.sudo().write({'response_message': response_msg})
