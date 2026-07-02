@@ -1,13 +1,14 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { getCSSVariableValue, getHtmlStyle, removeStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { TableBorderStyleSelector } from "./table_border_style_selector";
 import { TableBorderWidthSelector } from "./table_border_width_selector";
+import { isTableCell } from "@html_editor/utils/dom_info";
 
 const borderStyleItems = [
     {
@@ -61,7 +62,7 @@ export class TableBorderPlugin extends Plugin {
                 isAvailable: () =>
                     this.dependencies.selection
                         .getTargetedNodes()
-                        .some((node) => closestElement(node, "td, th")),
+                        .some((node) => closestElement(node, isTableCell)),
                 Component: ColorSelector,
                 props: {
                     ...this.dependencies.colorUi.getPropsForColorSelector("foreground"),
@@ -84,7 +85,7 @@ export class TableBorderPlugin extends Plugin {
                     onClose: () => this.dependencies.selection.focusEditable(),
                     getTargetedElements: () => {
                         const nodes = this.dependencies.selection.getTargetedNodes();
-                        return nodes.map((node) => closestElement("table"));
+                        return nodes.map((node) => closestElement(node, "table"));
                     },
                     getDefaultColor: () => "var(--gray-300)",
                 },
@@ -96,7 +97,7 @@ export class TableBorderPlugin extends Plugin {
                 isAvailable: () =>
                     this.dependencies.selection
                         .getTargetedNodes()
-                        .some((node) => closestElement(node, "td, th")),
+                        .some((node) => closestElement(node, isTableCell)),
                 Component: TableBorderWidthSelector,
                 props: {
                     getItems: () => borderWidthItems,
@@ -117,7 +118,7 @@ export class TableBorderPlugin extends Plugin {
                 isAvailable: () =>
                     this.dependencies.selection
                         .getTargetedNodes()
-                        .some((node) => closestElement(node, "td, th")),
+                        .some((node) => closestElement(node, isTableCell)),
                 Component: TableBorderStyleSelector,
                 props: {
                     getItems: () => borderStyleItems,
@@ -182,12 +183,16 @@ export class TableBorderPlugin extends Plugin {
      * @returns {string} property value
      */
     getTableSelectedBorder(subProperty, defaultReplacement) {
-        const table = this.dependencies.selection
-            .getTargetedNodes()
-            .map((node) => closestElement(node, "table"))
-            .filter((node) => node)[0];
+        const cells = [
+            ...new Set(
+                this.dependencies.selection
+                    .getTargetedNodes()
+                    .map((node) => closestElement(node, isTableCell))
+                    .filter(Boolean)
+            ),
+        ];
         let value;
-        for (const cell of table.querySelectorAll(".o_selected_td")) {
+        for (const cell of cells) {
             const cellValue = this.getCellBorder(cell, subProperty, defaultReplacement);
             if (value && cellValue !== value) {
                 return undefined;
@@ -207,17 +212,17 @@ export class TableBorderPlugin extends Plugin {
      * @param {string} value
      */
     applyBorder(subProperty, value) {
-        const tables = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((node) => closestElement(node, "table"))
-                .filter((node) => node)
-        );
+        const cells = [
+            ...new Set(
+                this.dependencies.selection
+                    .getTargetedNodes()
+                    .map((node) => closestElement(node, isTableCell))
+                    .filter(Boolean)
+            ),
+        ];
         if (value === "") {
-            for (const table of tables) {
-                for (const cell of table.querySelectorAll(".o_selected_td")) {
-                    cell.style.removeProperty(`border-${subProperty}`);
-                }
+            for (const cell of cells) {
+                removeStyle(cell, `border-${subProperty}`);
             }
             return;
         }
@@ -225,23 +230,28 @@ export class TableBorderPlugin extends Plugin {
             const htmlStyle = getHtmlStyle(this.document);
             value = getCSSVariableValue(value.substring(2), htmlStyle);
         }
-        for (const table of tables) {
-            for (const cell of table.querySelectorAll(".o_selected_td")) {
-                const property = `border-${subProperty}`;
-                if (!cell.style.getPropertyValue(property)) {
-                    // Copy defaults.
-                    for (const prop of ["color", "width", "style"]) {
-                        cell.style.setProperty(`border-${prop}`, this.getCellBorder(cell, prop));
-                    }
-                }
-                cell.style.setProperty(property, value);
-                if (property === "border-style" && value === "double") {
-                    // Set a minimum of 3px by default
-                    if (parseInt(cell.style.getPropertyValue("border-width")) < 3) {
-                        cell.style.setProperty("border-width", "3px");
-                    }
+        const tables = new Set();
+        for (const cell of cells) {
+            const property = `border-${subProperty}`;
+            if (!cell.style.getPropertyValue(property)) {
+                // Copy defaults.
+                for (const prop of ["color", "width", "style"]) {
+                    cell.style.setProperty(`border-${prop}`, this.getCellBorder(cell, prop));
                 }
             }
+            cell.style.setProperty(property, value);
+            if (property === "border-style" && value === "double") {
+                // Set a minimum of 3px by default
+                if (parseInt(cell.style.getPropertyValue("border-width")) < 3) {
+                    cell.style.setProperty("border-width", "3px");
+                }
+            }
+            const table = closestElement(cell, "table");
+            if (table) {
+                tables.add(table);
+            }
+        }
+        for (const table of tables) {
             table.classList.add("o-table-cellbordered");
         }
     }
