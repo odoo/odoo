@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://sdk.qfapi.com/integration/online-shop/checkout-integration/payment-element -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_alipay" model="payment.method">
+        <field name="name">Alipay</field>
+        <field name="code">alipay</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay.png"/>
+    </record>
+
+    <record id="payment_method_alipay_hk" model="payment.method">
+        <field name="name">AlipayHK</field>
+        <field name="code">alipay_hk</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay_hk.png"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_fps" model="payment.method">
+        <field name="name">FPS</field>
+        <field name="code">fps</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/fps.png"/>
+    </record>
+
+    <record id="payment_method_payme" model="payment.method">
+        <field name="name">PayMe</field>
+        <field name="code">payme</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/payme.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_wechat_pay" model="payment.method">
+        <field name="name">WeChat Pay</field>
+        <field name="code">wechat_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/wechat_pay.png"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_qfpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_qfpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_qfpay"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

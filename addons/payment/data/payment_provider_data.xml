@@ -109,6 +109,12 @@
         <field name="module_id" ref="base.module_payment_paypal"/>
     </record>
 
+    <record id="payment_provider_qfpay" model="payment.provider">
+        <field name="name">QFPay</field>
+        <field name="image_128" type="bytes" file="payment_qfpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_qfpay"/>
+    </record>
+
     <record id="payment_provider_razorpay" model="payment.provider">
         <field name="name">Razorpay</field>
         <field name="image_128" type="bytes" file="payment_razorpay/static/description/icon.png"/>
