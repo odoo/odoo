@@ -1,6 +1,7 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { manuallyDispatchProgrammaticEvent, queryOne, queryRect, scroll } from "@odoo/hoot-dom";
 
 setupInteractionWhiteList("website.parallax");
@@ -77,4 +78,19 @@ test("[scroll down] s_parallax_bg does not move when the speed is 1", async () =
     for (let i = 0; i < spacings.length - 1; i++) {
         expect(Math.round(spacings[i] - spacings[i + 1])).toBe(0);
     }
+});
+
+test("parallax on carousel-item uses parent height", async () => {
+    const { core } = await startInteractions(`
+        <div class="carousel-inner" style="height: 600px; display: block;">
+            <div class="carousel-item parallax" data-scroll-background-ratio="2" style="height: 0px; display: block;">
+                <div class="s_parallax_bg" style="height: 500px;"></div>
+            </div>
+        </div>
+    `);
+    await animationFrame();
+    //Verify that the parallaxHeight is taken from carousel-inner (600px) instead
+    // of carousel-item (0px)
+    const parallaxInteraction = core.interactions[0].interaction;
+    expect(parallaxInteraction.parallaxHeight).toBe(600);
 });
