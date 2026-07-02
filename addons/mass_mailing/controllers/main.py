@@ -514,9 +514,15 @@ class MassMailController(http.Controller):
         )[document_id]
         # Update generic URLs (without parameters) to final ones
         if document_id:
+            # Keep the unsubscribe link on the recipient's website, as is done when
+            # the mail is sent (see mail.mail._prepare_outgoing_list). Sudo as the
+            # route is public and the record is only used to resolve the base URL.
+            recipient = request.env[mailing_sudo.mailing_model_real].sudo().browse(document_id)
             html_markupsafe = html_markupsafe.replace(
                 '/unsubscribe_from_list',
-                mailing_sudo._get_unsubscribe_url(email, document_id)
+                mailing_sudo.with_context(
+                    mailing_recipient_record=recipient
+                )._get_unsubscribe_url(email, document_id)
             )
         else:  # when manually trying a /view on a mailing, not through email link
             html_markupsafe = html_markupsafe.replace(

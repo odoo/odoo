@@ -3,6 +3,7 @@
 import contextlib
 import json
 import logging
+import logging.config
 import logging.handlers
 import os
 import platform
@@ -50,18 +51,20 @@ class PostgreSQLHandler(logging.Handler):
     the current database, can be set using --log-db=DBNAME
     """
 
-    def __init__(self):
+    def __init__(self, log_db=None):
         super().__init__()
         self._support_metadata = False
-        if tools.config['log_db'] != '%d':
-            with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(tools.config['log_db'], allow_uri=True).cursor() as cr:
+        self._log_db = log_db or tools.config['log_db']
+
+        if self._log_db != '%d':
+            with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(self._log_db, allow_uri=True).cursor() as cr:
                 cr.execute("""SELECT 1 FROM information_schema.columns WHERE table_name='ir_logging' and column_name='metadata'""")
                 self._support_metadata = bool(cr.fetchone())
 
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
+        dbname = self._log_db if self._log_db and self._log_db != '%d' else ct_db
         if not dbname:
             return
         with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
@@ -240,6 +243,18 @@ def init_logger():
     from .tools.translate import resetlocale
     resetlocale()
 
+    conf = tools.config['log_config']
+    if conf:
+        with open(conf, 'rb') as fobj:
+            conf = json.load(fobj)
+            # since we create a bunch of loggers at import, if this is enabled
+            # (default) none of the loggers created before loading the config
+            # will fire unless they're forcefully enabled in the config file
+            conf['disable_existing_loggers'] = False
+        logging.config.dictConfig(conf)
+        if not conf.get('keep_odoo_default', False):
+            return
+
     # create a format for log messages and dates
     format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s'
     # Normal Handler on stderr
@@ -335,7 +350,8 @@ PSEUDOCONFIG_MAPPER = {
 }
 
 logging.RUNBOT = 25
-logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.addLevelName(logging.RUNBOT, "RUNBOT")
+logging._levelToName[logging.RUNBOT] = "INFO"  # displayed as info in log
 IGNORE = {
     'Comparison between bytes and int', # a.foo != False or some shit, we don't care
 }

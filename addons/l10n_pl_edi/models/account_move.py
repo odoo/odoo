@@ -1,15 +1,17 @@
+import base64
 import logging
 import re
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
+from hashlib import sha256
 from lxml import etree
 from stdnum.pl.nip import compact
 from decimal import Decimal
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_repr, OrderedSet
+from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -23,6 +25,9 @@ class AccountMove(models.Model):
         ('sent', 'Sent (In Progress)'),
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
+        ('fetch_ready', 'Fetch Ready'),
+        ('fetched', 'Fetched'),
+        ('fetch_failed', 'Fetch Failed'),
     ], string='KSeF Status', readonly=True, copy=False)
     l10n_pl_edi_ref = fields.Char(string='KSeF Reference Number', readonly=True, copy=False)
     l10n_pl_edi_register = fields.Boolean(related='company_id.l10n_pl_edi_register')
@@ -48,9 +53,11 @@ class AccountMove(models.Model):
         depends=['l10n_pl_edi_upo_file'],
     )
 
-    _sql_constraints = [
-        ('unique_l10n_pl_edi_number', 'UNIQUE(l10n_pl_edi_number)', 'The KSeF number must be unique'),
-    ]
+    _sql_constraints = [(
+        'unique_l10n_pl_edi_number_company_id_move_type',
+        'UNIQUE(l10n_pl_edi_number, company_id, move_type)',
+        'The KSeF number must be unique per company per move_type'
+    )]
 
     def _l10n_pl_edi_check_mandatory_fields(self):
         errors = {}
@@ -162,6 +169,12 @@ class AccountMove(models.Model):
             conversion_rate = abs(conversion_line.balance / conversion_line.amount_currency) if self.currency_id != self.env.ref('base.PLN') and conversion_line else 1
             return get_amounts_from_tag(tax_group_id) * conversion_rate
 
+        def get_base_amounts_from_tag(tax_tag_string):
+            lines = self.line_ids.filtered(lambda line: line.tax_tag_ids & get_tags(tax_tag_string))
+            if 'OSS' in tax_tag_string:
+                lines = lines.filtered(lambda line: line.tax_ids if 'Base' in tax_tag_string else not line.tax_ids)
+            return -self.direction_sign * sum(lines.mapped('price_subtotal'))
+
         def compute_p_12(tag_names):
             """
                 Determines the KSeF tax rate code (P_12) based on the line's tax.
@@ -218,7 +231,7 @@ class AccountMove(models.Model):
                 'P_7': line.name,
                 'P_8A': line.product_uom_id.name or 'szt.',
                 'P_8B': line.quantity * sign,
-                'P_9A': float_repr(line.price_unit, 2),
+                'P_9A': float_repr(line.price_unit, 8),
                 'P_11': float_repr(line.price_subtotal * sign, 2),
                 'P_12': compute_p_12(tag_names),
             }
@@ -264,11 +277,14 @@ class AccountMove(models.Model):
             'get_vat_number': get_vat_number,
             'get_amounts_from_tag': get_amounts_from_tag,
             'get_amounts_from_tag_in_PLN_currency': get_amounts_from_tag_in_PLN_currency,
+            'get_base_amounts_from_tag': get_base_amounts_from_tag,
             'invoice_type': ksef_type,
             'related_invoices': self._l10n_pl_edi_get_related_invoices(),
             'correction_info': correction_info,
             'special_transactions': {'OSS_Base', 'OSS_Tax', 'Triangular Sale'} & invoice_tag_names,
             'triangular_transaction': '1' if 'Triangular Sale' in invoice_tag_names else '2',
+            'prefiks_podatnika': bool({'K_21', 'K_12', 'Triangular Sale'} & invoice_tag_names),
+            'reverse_charge': any(invoice_line_vals['P_12'] in ('np I', 'np II', 'oo') for invoice_line_vals in invoice_lines_vals),
         }
 
     def _l10n_pl_edi_render_xml(self):
@@ -280,6 +296,31 @@ class AccountMove(models.Model):
         ksef_values = self._l10n_pl_edi_get_xml_values()
         xml_content = self.env['ir.qweb']._render(qweb_template.id, ksef_values)
         return "\n".join([line for line in xml_content.splitlines() if line.strip()])
+
+    def _l10n_pl_edi_generate_qr_link(self):
+        self.ensure_one()
+        if self.l10n_pl_edi_attachment_file:
+            mode = self.env['ir.config_parameter'].sudo().get_param('l10n_pl_edi_ksef.mode', 'prod')
+            base_link = "https://qr.ksef.mf.gov.pl/invoice/" if mode == 'prod' else "https://qr-test.ksef.mf.gov.pl/invoice/"
+            return (
+                f"{base_link}"
+                f"{compact(self.company_id.vat)}/"
+                f"{self.invoice_date.strftime('%d-%m-%Y')}/"
+                f"{base64.urlsafe_b64encode(sha256(base64.b64decode(self.l10n_pl_edi_attachment_file)).digest()).decode()}"
+            )
+        return ""
+
+    def _l10n_pl_edi_generate_qr(self):
+        self.ensure_one()
+        return base64.b64encode(
+            self.env['ir.actions.report'].barcode(
+                barcode_type='QR',
+                value=self._l10n_pl_edi_generate_qr_link(),
+                width=180,
+                height=180,
+                quiet=0,
+            )
+        )
 
     def _l10n_pl_edi_get_status_mapping(self):
         """
@@ -411,9 +452,7 @@ class AccountMove(models.Model):
 
     def _cron_l10n_pl_edi_check_invoice_status(self):
         """get all moves that are in state sent run action_update_invoice_status on all of them"""
-        to_update_moves = self.env['account.move'].search([*self.env['account.move']._check_company_domain(self.env.company), ('l10n_pl_edi_status', '=', 'sent')])
-        for move in to_update_moves:
-            self.env['res.company']._with_locked_records(move)
+        for move in self.env['account.move'].search([('l10n_pl_edi_status', '=', 'sent')]):
             move.action_l10n_pl_edi_update_invoice_status()
 
     def button_draft(self):
@@ -502,7 +541,7 @@ class AccountMove(models.Model):
                     else:
                         raise UserError(self.env._("Tax corresponding to '%s' required to derive the net unit price from gross price during KSeF import was not found in the mapping.", tax_name))
                 else:
-                    raise UserError(self.env._("No net or gross unit price found in the FA (3) for the line with product '%s'.", name))
+                    price_unit = 0.0
 
                 if P_10 := get_value(line_node, '{*}P_10'):
                     price_unit = float(Decimal(str(price_unit)) - Decimal(P_10))
@@ -550,7 +589,7 @@ class AccountMove(models.Model):
                     },
                 )
 
-            currency = self.env['res.currency'].search([('name', '=', data['currency_code'])], limit=1)
+            currency = self.env['res.currency'].with_context(active_test=False).search([('name', '=', data['currency_code'])], limit=1)
 
             move_vals = {
                 'move_type': 'in_invoice',
@@ -595,105 +634,124 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_pl_edi_download_bills_from_ksef(self):
-
-        def handle_download_bills_from_ksef_error(error):
-            if not (delay := error.get('retry_after')):
-                raise UserError(error.get('message'))
-
-            cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-            cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
-            return True
-
         service = KsefApiService(self.env.company)
+        blocking_error = self._fetch_bills_metadata(service)
+        to_process = self.search([
+            ('l10n_pl_edi_number', '!=', False),
+            ('move_type', '=', 'in_invoice'),
+            ('l10n_pl_edi_status', '=', 'fetch_ready'),
+            *self._check_company_domain(self.env.company),
+        ])
+        blocking_error = blocking_error or self._fetch_bills_data(service, to_process)
+        return blocking_error
+
+    def _handle_download_bills_from_ksef_error(self, error):
+        if not (delay := error.get('retry_after')):
+            raise UserError(error.get('message'))
+
+        cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+        cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
+        return True
+
+    def _fetch_bills_metadata(self, service):
 
         last_processed_move = self.search([
             ('l10n_pl_edi_number', '!=', False),
             ('move_type', '=', 'in_invoice'),
-            *self._check_company_domain(self.env.company)
+            ('invoice_date', '!=', False),
+            *self._check_company_domain(self.env.company),
         ], order='invoice_date DESC', limit=1)
 
         if last_processed_move:
             date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
         else:
-            date_from = fields.Datetime.now() - relativedelta(months=1)
+            date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
+
+        tomorrow = fields.Datetime.now() + relativedelta(days=1)
+        date_to = min(date_from + relativedelta(months=2), tomorrow)
 
         query = {
             'subjectType': 'Subject2',
             'dateRange': {
                 'from': date_from.isoformat(),
-                'to': fields.Datetime.now().isoformat(),
+                'to': date_to.isoformat(),
                 'dateType': 'Invoicing',
             },
         }
 
-        # Rate Limiting of get_invoice_by_ksef_number
-        #
-        #     req/s  |  req/m  |  req/h
-        #   -----------------------------
-        #       8    |    16   |    64
-        #
-        # Page size shouldn't be more than 64.
-
-        page_offset = 0
-        page_size = 64
-
-        has_more = True
-
-        invoice_numbers = []
         blocking_error = False
+        page_offset = 0
+        page_size = 200
+        has_more = True
+        invoice_numbers = []
 
         while has_more:
             response = service.query_invoice_metadata(query, page_size, page_offset)
             if response.get('error'):
-                blocking_error = handle_download_bills_from_ksef_error(response['error'])
+                blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
                 break
+
+            if not response['invoices'] and date_to < tomorrow:
+                # We must keep the time window moving until we find something
+                date_from = date_to
+                date_to = min(date_from + relativedelta(months=2), tomorrow)
+                query['dateRange']['from'] = date_from.isoformat()
+                query['dateRange']['to'] = date_to.isoformat()
+                continue
+
             invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
             has_more = response['hasMore']
             page_offset += 1
 
         already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers)
+            ('l10n_pl_edi_number', 'in', invoice_numbers),
+            ('move_type', '=', 'in_invoice'),
+            *self._check_company_domain(self.env.company),
         ]).mapped('l10n_pl_edi_number'))
 
-        to_process = [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]
+        if to_process := [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]:
 
-        bills_to_create = {}
-
-        for invoice_nr in to_process:
-            response = service.get_invoice_by_ksef_number(invoice_nr)
-            error_msg = False
-            try:
-                if response.get('error'):
-                    blocking_error = handle_download_bills_from_ksef_error(response['error'])
-                    break
-                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
-            except UserError as e:
-                bill_data = {'move_type': 'in_invoice'}
-                error_msg = str(e)
-            bill_data['l10n_pl_edi_number'] = invoice_nr
-            bills_to_create[invoice_nr] = {
-                'vals': bill_data,
-                'xml_content': response.get('xml_content'),
-                'error_msg': error_msg,
-            }
-
-        created_moves = self.create([bill['vals'] for bill in bills_to_create.values()])
-
-        for created_move in created_moves:
-            if content := bills_to_create[created_move.l10n_pl_edi_number].get('xml_content'):
-                self.env['ir.attachment'].sudo().create({
-                    'description': self.env._('KSeF Fetched Invoice XML'),
-                    'name': f"KSeF-{created_move.l10n_pl_edi_number.replace('/', '_')}.xml",
-                    'type': 'binary',
-                    'mimetype': 'application/xml',
-                    'raw': content,
-                    'res_id': created_move.id,
-                    'res_model': created_move._name,
-                })
-
-            if error_msg := bills_to_create[created_move.l10n_pl_edi_number].get('error_msg'):
-                created_move.message_post(
-                    body=self.env._("KSeF XML failed. The bill was created empty. Reason: %s", error_msg)
-                )
+            for move in self.create([
+                {
+                    'move_type': 'in_invoice',
+                    'l10n_pl_edi_number': invoice_nr,
+                    'l10n_pl_edi_status': 'fetch_ready',
+                } for invoice_nr in to_process
+            ]):
+                move.message_post(body=self.env._("Fetching Bill from KSeF ..."))
 
         return blocking_error
+
+    def _fetch_bills_data(self, service, bills_to_fetch):
+        for bill in bills_to_fetch:
+            invoice_nr = bill.l10n_pl_edi_number
+            response = service.get_invoice_by_ksef_number(invoice_nr)
+            try:
+                if response.get('error'):
+                    return self._handle_download_bills_from_ksef_error(response['error'])
+
+                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
+                with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
+                    bill.write({
+                        'l10n_pl_edi_status': 'fetched',
+                        'l10n_pl_edi_header': 'Fetched From KSeF',
+                        **bill_data
+                    })
+                    bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
+            except UserError as e:
+                bill.l10n_pl_edi_status = 'fetch_failed'
+                bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
+            except Exception:  # noqa: BLE001
+                bill.l10n_pl_edi_status = 'fetch_failed'
+                bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
+            finally:
+                if response.get('xml_content'):
+                    self.env['ir.attachment'].sudo().create({
+                        'description': self.env._('KSeF Fetched Invoice XML'),
+                        'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
+                        'type': 'binary',
+                        'mimetype': 'application/xml',
+                        'raw': response['xml_content'],
+                        'res_id': bill.id,
+                        'res_model': bill._name,
+                    })
