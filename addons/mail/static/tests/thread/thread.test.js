@@ -19,6 +19,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
+import { Thread } from "@mail/core/common/thread";
+
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceFrame, animationFrame, press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
@@ -27,6 +29,7 @@ import {
     getService,
     makeKwArgs,
     onRpc,
+    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
@@ -64,6 +67,45 @@ test("messages still render when thread is reloaded twice in a row", async () =>
     await advanceFrame(1);
     await animationFrame();
     await contains(".o-mail-Message");
+});
+
+test("messages still render when a reset strands mountedAndLoaded", async () => {
+    // Regression for runbot 940032. `reset()` forces `mountedAndLoaded` false;
+    // the mirror effect only re-syncs it to `isLoaded` on a patch. A reset
+    // landing while `mountedAndLoaded` is already false (e.g. an out-of-render-
+    // cycle `applyScroll` from a late image load) used to schedule no patch,
+    // because `resetCount` was not reactive, stranding `mountedAndLoaded` at
+    // false so the empty phantom rendered no message. Here `applyScroll` is
+    // neutralized so nothing else re-syncs, and the flag is forced false to
+    // hold the strand deterministically.
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    let thread;
+    patchWithCleanup(Thread.prototype, {
+        setup() {
+            super.setup();
+            thread = this;
+        },
+        applyScroll() {},
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 1 });
+    thread.state.mountedAndLoaded = false;
+    await advanceFrame(1);
+    await contains(".o-mail-Message", { count: 0 });
+    thread.reset();
+    await advanceFrame(1);
+    await animationFrame();
+    await contains(".o-mail-Message", { count: 1 });
 });
 
 test("dragover files on thread with composer", async () => {
