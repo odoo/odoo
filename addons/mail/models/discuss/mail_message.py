@@ -2,6 +2,18 @@
 
 from odoo import api, models, fields
 from odoo.addons.mail.tools.discuss import Store
+import re
+
+_QUOTE_ENTITY_RE = re.compile(r"&quot;|&#x27;|&#x60;", re.IGNORECASE)
+_QUOTE_ENTITY_DICT = {
+    "&quot;": '"',
+    "&#x27;": "'",
+    "&#x60;": "`",
+}
+
+
+def _normalize_search_term(term):
+    return _QUOTE_ENTITY_RE.sub(lambda m: _QUOTE_ENTITY_DICT[m.group(0).lower()], term)
 
 
 class MailMessage(models.Model):
@@ -53,3 +65,29 @@ class MailMessage(models.Model):
         if self.env.user._is_public() and guest:
             return guest._bus_channels()
         return super()._bus_channels()
+
+    @api.model
+    def _message_fetch(
+        self,
+        domain,
+        *,
+        thread=None,
+        search_term=None,
+        is_notification=None,
+        before=None,
+        after=None,
+        around=None,
+        limit=30,
+    ):
+        if search_term:
+            search_term = _normalize_search_term(search_term)
+        return super()._message_fetch(
+            domain,
+            thread=thread,
+            search_term=search_term,
+            is_notification=is_notification,
+            before=before,
+            after=after,
+            around=around,
+            limit=limit,
+        )
