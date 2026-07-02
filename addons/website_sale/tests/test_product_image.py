@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
-import unittest
 
 from PIL import Image
 
@@ -326,7 +325,6 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
 
-    @unittest.skip("test broke #271724 and we (rd-framework-py) couldn't fix it")
     def test_03_shop_zoom_grid_image_order(self):
         image_red = _create_image(color='#FF0000', dims=(1800, 1500))
         image_green = _create_image(color='#00FF00')
