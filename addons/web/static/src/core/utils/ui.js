@@ -229,16 +229,32 @@ export function getPreviousTabableElement(container = document.body) {
  *         initial state
  */
 export function addLoadingEffect(btnEl) {
-    // Note that pe-none is used alongside "disabled" so that the behavior is
-    // the same on links not using the "btn" class -> pointer-events disabled.
-    btnEl.classList.add("o_btn_loading", "disabled", "pe-none");
-    btnEl.disabled = true;
-    const loaderEl = document.createElement("span");
-    loaderEl.classList.add("fa", "fa-circle-o-notch", "fa-spin", "me-2");
-    btnEl.prepend(loaderEl);
+    let loaderContainerEl;
+    if (!btnEl.classList.contains("o_btn_loading")) {
+        // Note that pe-none is used alongside "disabled" so that the behavior
+        // is the same on links not using the "btn" class -> pointer-events
+        // disabled.
+        btnEl.classList.add("o_btn_loading", "disabled", "pe-none");
+        btnEl.disabled = true;
+        btnEl.setAttribute("aria-disabled", "true");
+        loaderContainerEl = document.createElement("span");
+        loaderContainerEl.classList.add("o_btn_loading_spinner");
+        const loaderEl = document.createElement("span");
+        loaderEl.classList.add("spinner-border", "spinner-border-sm");
+        loaderContainerEl.appendChild(loaderEl);
+        btnEl.prepend(loaderContainerEl);
+    } else {
+        btnEl.classList.add("o_btn_keep_loading");
+        loaderContainerEl = btnEl.querySelector(".o_btn_loading_spinner");
+    }
     return () => {
+        if (btnEl.classList.contains("o_btn_keep_loading")) {
+            btnEl.classList.remove("o_btn_keep_loading");
+            return;
+        }
         btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");
         btnEl.disabled = false;
-        loaderEl.remove();
+        btnEl.removeAttribute("aria-disabled");
+        loaderContainerEl.remove();
     };
 }

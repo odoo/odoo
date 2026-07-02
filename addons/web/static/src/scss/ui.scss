@@ -13,10 +13,16 @@
 }
 
 .o_btn_loading {
+    position: relative;
     opacity: $btn-disabled-opacity;
 
-    .fa:not(.fa-spin) {
-        display: none;
+    .o_btn_loading_spinner {
+        @include o-position-absolute(-1px, -1px, -1px, -1px);
+        z-index: 1;
+        display: grid;
+        place-content: center;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: inherit;
     }
 }
 
