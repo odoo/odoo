@@ -78,7 +78,7 @@
                             <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
                                 <button class="btn btn-secondary" data-available-offline="">
                                     <t t-set="activeView" t-value="this.env.config.viewSwitcherEntries.find((view) => view.active)"/>
-                                    <i class="oi-fw" t-att-class="activeView.icon"/>
+                                    <i class="oi-fw" t-att-class="activeView.icon" data-tooltip="Switch view" />
                                 </button>
                                 <t t-set-slot="content">
                                     <t t-foreach="this.env.config.viewSwitcherEntries" t-as="view" t-key="view.type">

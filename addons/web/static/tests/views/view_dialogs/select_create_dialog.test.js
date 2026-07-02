@@ -891,7 +891,7 @@ test("SelectCreateDialog with open action", async () => {
     await contains(`.o_field_widget[name="instrument"] .dropdown input`).click();
     await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
     await contains(
-        `.o_list_renderer .o_data_row .o_field_cell.o_list_char[data-tooltip="Instrument 10"]`
+        `.o_list_renderer .o_data_row .o_field_cell.o_list_char:text("Instrument 10")`
     ).click();
     expect("input").toHaveValue("Instrument 10");
     expect.verifySteps([]);
@@ -900,10 +900,14 @@ test("SelectCreateDialog with open action", async () => {
     await runAllTimers();
     await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
     expect.verifySteps(["name_search"]);
-    expect(searchLimit).toBe(1000, { message: "The name_search should have been called with a limit of 1000" });
+    expect(searchLimit).toBe(1000, {
+        message: "The name_search should have been called with a limit of 1000",
+    });
 
     expect(".modal .modal-lg").toHaveCount(1);
-    expect(".modal .modal-lg .o_data_row").toHaveCount(25, { message: "should contain 25 records" });
+    expect(".modal .modal-lg .o_data_row").toHaveCount(25, {
+        message: "should contain 25 records",
+    });
 });
 
 test.tags("mobile");

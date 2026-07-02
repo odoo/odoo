@@ -1147,7 +1147,7 @@ test("many2one in edit mode", async () => {
     await animationFrame();
     expect(".modal tbody tr").toHaveCount(10);
     // choose a record
-    await contains(".modal .o_data_cell[data-tooltip='Partner 20']").click();
+    await contains(".modal .o_data_cell:text('Partner 20')").click();
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toHaveCount();
     expect(".o_field_many2one input").toHaveValue("Partner 20");

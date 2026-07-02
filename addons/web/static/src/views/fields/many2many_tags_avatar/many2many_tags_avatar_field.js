@@ -63,12 +63,20 @@ export const many2ManyTagsAvatarField = {
 
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
+export class ListAvatarTag extends AvatarTag {
+    static template = "web.ListAvatarTag";
+}
+
 export const listMany2ManyTagsAvatarFieldProps = {
     ...many2ManyTagsAvatarFieldProps,
     tagLimit: t.number().optional(5),
 };
 
 export class ListMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
+    static components = {
+        ...super.components,
+        Tag: ListAvatarTag,
+    };
     props = props(listMany2ManyTagsAvatarFieldProps);
 }
 

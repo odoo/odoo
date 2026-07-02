@@ -5122,8 +5122,8 @@ test("one2many list with a many2one", async () => {
             </form>`,
         resId: 1,
     });
-    expect(".o_data_cell[data-tooltip='xphone']").toHaveCount(1);
-    expect(".o_data_cell[data-tooltip='xpad']").toHaveCount(0);
+    expect(".o_data_cell:text('xphone')").toHaveCount(1);
+    expect(".o_data_cell:text('xpad')").toHaveCount(0);
 
     await contains(".o_field_x2many_list_row_add button").click();
 
@@ -5132,8 +5132,8 @@ test("one2many list with a many2one", async () => {
     await contains('div[name="product_id"] .o_input_dropdown li:eq(1)').click();
 
     await contains(".modal .modal-footer button").click();
-    expect(".o_data_cell[data-tooltip='xphone']").toHaveCount(1);
-    expect(".o_data_cell[data-tooltip='xpad']").toHaveCount(1);
+    expect(".o_data_cell:text('xphone')").toHaveCount(1);
+    expect(".o_data_cell:text('xpad')").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -5189,10 +5189,10 @@ test("one2many list with inline form view", async () => {
     // save and close
     await contains(".modal .o_form_button_save").click();
 
-    expect(".o_data_cell[data-tooltip='xphone']").toHaveCount(1);
+    expect(".o_data_cell:text('xphone')").toHaveCount(1);
 
     // reopen the record in form view
-    await contains(".o_data_cell[data-tooltip='xphone']").click();
+    await contains(".o_data_cell:text('xphone')").click();
     expect(".modal .modal-body input:eq(0)").toHaveValue("xphone");
 
     await contains('.modal .modal-body div[name="int_field"] input').edit("456", {
@@ -5203,7 +5203,7 @@ test("one2many list with inline form view", async () => {
     await contains(".modal .o_form_button_cancel").click();
 
     // reopen the record in form view
-    await contains(".o_data_cell[data-tooltip='xphone']").click();
+    await contains(".o_data_cell:text('xphone')").click();
 
     expect('.modal .modal-body div[name="int_field"] input').toHaveValue("123", {
         message: "should display 123 (previous change has been discarded)",
@@ -5216,7 +5216,7 @@ test("one2many list with inline form view", async () => {
     // save and close
     await contains(".modal .o_form_button_save").click();
 
-    expect(".o_data_cell[data-tooltip='xpad']").toHaveCount(1);
+    expect(".o_data_cell:text('xpad')").toHaveCount(1);
 
     // save the record
     await clickSave();
@@ -5297,7 +5297,7 @@ test("one2many list with inline form view with context with parent key", async (
     });
 
     // open a modal
-    await contains("tr.o_data_row td[data-tooltip='xphone']").click();
+    await contains("tr.o_data_row td:text('xphone')").click();
 
     // write in the many2one field
     await contains(".modal .o_field_many2one input").click();
@@ -5355,7 +5355,7 @@ test("one2many list, editable, with many2one and with context with parent key", 
         resId: 1,
     });
 
-    await contains("tr.o_data_row td[data-tooltip='xphone']").click();
+    await contains("tr.o_data_row td:text('xphone')").click();
 
     // trigger a name search
     await contains("table td input").click();

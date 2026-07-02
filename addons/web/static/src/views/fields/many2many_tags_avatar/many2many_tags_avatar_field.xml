@@ -59,4 +59,9 @@
         </Many2XAutocomplete>
     </t>
 
+    <t t-name="web.ListAvatarTag" t-inherit="web.AvatarTag" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
+            <attribute name="t-att-data-tooltip" />
+        </xpath>
+    </t>
 </templates>
