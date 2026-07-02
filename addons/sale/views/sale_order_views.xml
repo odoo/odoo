@@ -695,6 +695,8 @@
                                     </list>
                                 </field>
                                 <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                                <field name="section_qty" column_invisible="1"/>
+                                <field name="section_uom_id" optional="hide"/>
                                 <field name="technical_price_unit" column_invisible="1"/>
                                 <field name="linked_line_id" column_invisible="1"/>
                                 <field name="combo_item_id" column_invisible="1"/>
@@ -759,6 +761,16 @@
                                     readonly="is_downpayment"/>
                                 <widget name="simple_qty_at_date_widget" width="20px"/>
                                 <field
+                                    name="product_uom_id"
+                                    force_save="1"
+                                    readonly="product_uom_readonly"
+                                    required="not display_type and not is_downpayment"
+                                    widget="many2one_uom"
+                                    groups="uom.group_uom"
+                                    options='{"no_open": True, "no_create": True}'
+                                    width="60px"
+                                    optional="show"/>
+                                <field
                                     name="qty_delivered_percent"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
@@ -781,16 +793,6 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     column_invisible="parent.state != 'sale'"
-                                    optional="show"/>
-                                <field
-                                    name="product_uom_id"
-                                    force_save="1"
-                                    readonly="product_uom_readonly"
-                                    required="not display_type and not is_downpayment"
-                                    widget="many2one_uom"
-                                    groups="uom.group_uom"
-                                    options='{"no_open": True, "no_create": True}'
-                                    width="60px"
                                     optional="show"/>
                                 <field
                                     name="customer_lead"

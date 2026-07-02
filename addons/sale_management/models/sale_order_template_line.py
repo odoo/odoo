@@ -72,6 +72,15 @@ class SaleOrderTemplateLine(models.Model):
     is_optional = fields.Boolean(string="Optional Line", copy=True, default=False)
     collapse_composition = fields.Boolean()
     collapse_prices = fields.Boolean()
+    section_qty = fields.Float(
+        string="Section Quantity",
+        default=1.0,
+    )
+    section_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Section Unit of Measure",
+        default=lambda self: self.env.ref("uom.product_uom_unit"),
+    )
 
     # Technical fields which stores values for product SO line without product_id
     discount = fields.Float(string="Discount (%)", digits="Discount")
@@ -178,6 +187,8 @@ class SaleOrderTemplateLine(models.Model):
             "product_uom_qty": self.product_uom_qty,
             "product_uom_id": self.product_uom_id.id,
             "sequence": self.sequence,
+            "section_qty": self.section_qty,
+            "section_uom_id": self.section_uom_id.id,
         }
         if self.name:
             vals["name"] = self.name

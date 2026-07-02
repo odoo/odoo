@@ -404,6 +404,14 @@ class SaleOrderLine(models.Model):
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
     )
+    section_qty = fields.Float(
+        string="Section Quantity", default=1.0
+    )  # The total quantity of the section
+    section_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Section Unit of Measure",
+        default=lambda self: self.env.ref("uom.product_uom_unit"),
+    )  # The unit of measure of the section
 
     # === COMPUTE METHODS ===#
 
@@ -1557,6 +1565,20 @@ class SaleOrderLine(models.Model):
         self.mandatory_product = (
             self.env["ir.config_parameter"].sudo().get_bool("sale.mandatory_product")
         )
+
+    @api.model
+    def compute_uom_ratio(self, old_uom_id, new_uom_id):
+        """Compute the ratio between 2 UoM."""
+        if not old_uom_id or not new_uom_id or old_uom_id == new_uom_id:
+            return 1.0
+
+        old_uom = self.env["uom.uom"].browse(old_uom_id)
+        new_uom = self.env["uom.uom"].browse(new_uom_id)
+
+        if not old_uom._has_common_reference(new_uom):
+            return 1.0
+
+        return old_uom._compute_quantity(1.0, new_uom, round=False)
 
     # === CONSTRAINT METHODS ===#
 

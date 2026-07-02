@@ -110,6 +110,8 @@ class SaleOrderLine(models.Model):
             "is_optional": self.is_optional,
             "collapse_composition": self.collapse_composition,
             "collapse_prices": self.collapse_prices,
+            "section_qty": self.section_qty,
+            "section_uom_id": self.section_uom_id.id,
         }
 
         if not self.product_id:

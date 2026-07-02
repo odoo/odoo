@@ -1,4 +1,5 @@
-import { Component, computed, onPatched, props, t } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, computed, onWillUpdateProps, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -89,14 +90,168 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
-        onPatched(() => {
-            this.focusToName(this.editedRecord());
+        this.state.hoveredSectionId = null;
+        this.state.focusedSectionId = null;
+        this.patchedRecords = new WeakSet();
+        this.sectionQtyClicked = false;
+        this.sectionUOMClicked = false;
+        this._mouseButtonDown = false;
+
+        useExternalListener(document, "pointerdown", () => { this._mouseButtonDown = true; });
+        useExternalListener(document, "pointerup", () => { this._mouseButtonDown = false; });
+
+        if (Array.isArray(this.props?.list?.records)) {
+            this.patchRecords(this.props.list.records);
+        }
+
+        onWillUpdateProps((nextProps) => {
+            if (Array.isArray(nextProps?.list?.records)) {
+                this.patchRecords(nextProps.list.records);
+            }
         });
     }
 
     parentSectionMap = computed(() =>
         this.buildParentSectionMap(this.props.list.records)
     );
+
+    /**
+     * @override
+     */
+    async onCellClicked(record, column, ev) {
+        if (column && column.name === "section_qty") {
+            this.sectionQtyClicked = true;
+        } else if (column && column.name === "section_uom_id") {
+            this.sectionUOMClicked = true;
+        } else {
+            this.sectionQtyClicked = false;
+            this.sectionUOMClicked = false;
+        }
+        return super.onCellClicked(record, column, ev);
+    }
+
+    /**
+     * @override
+     */
+    focusCell(column, ...args) {
+        const result = super.focusCell(column, ...args);
+        if (this.sectionQtyClicked && this.isSection(this.editedRecord())) {
+            this.sectionQtyClicked = false;
+            const originalCol = this.columns.find(c => c.name === "product_uom_qty" || c.name === "quantity");
+            if (originalCol) {
+                return super.focusCell(originalCol, ...args);
+            }
+        }
+        if (this.sectionUOMClicked && this.isSection(this.editedRecord())) {
+            this.sectionUOMClicked = false;
+            const originalCol = this.columns.find(c => c.name === "product_uom_id");
+            if (originalCol) {
+                return super.focusCell(originalCol, ...args);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @override
+     * We don't want to display the `section_uom_id` field in the optional columns
+     */
+    get optionalFieldGroups() {
+        const groups = super.optionalFieldGroups;
+        return groups.map(group => {
+            return {
+                ...group,
+                optionalFields: group.optionalFields.filter(field => field.name !== "section_uom_id")
+            };
+        });
+    }
+
+    patchRecords(records) {
+        for (const record of records) {
+            if (!this.patchedRecords.has(record)) {
+                this.patchedRecords.add(record);
+                const originalUpdate = record.update.bind(record);
+
+                record.update = async (changes) => {
+                    const isSectionQtyChanged = this.isSection(record) && "section_qty" in changes;
+                    const isSectionUomChanged = this.isSection(record) && "section_uom_id" in changes;
+                    let ratio = 1;
+
+                    if (isSectionQtyChanged) {
+                        const oldQty = record.data.section_qty || 1;
+                        const newQty = changes.section_qty;
+                        if (oldQty && newQty) {
+                            ratio = oldQty !== 0 ? newQty / oldQty : newQty;
+                        }
+                    } else if (isSectionUomChanged) {
+                        const oldUom = record.data.section_uom_id.id;
+                        const newUom = changes.section_uom_id.id
+                        if (oldUom && newUom && oldUom !== newUom) {
+                            ratio = 1 / await this.env.services.orm.call(
+                                "sale.order.line",
+                                "compute_uom_ratio",
+                                [],
+                                {
+                                    old_uom_id: oldUom,
+                                    new_uom_id: newUom,
+                                }
+                            );
+                        }
+                    }
+
+                    const result = await originalUpdate(changes);
+
+                    if ((isSectionQtyChanged || isSectionUomChanged) && ratio !== 1) {
+                        const updatePromises = [];
+                        for (const child of getSectionRecords(this.props.list, record).filter(r => r.id !== record.id)) {
+                            if (isSectionQtyChanged && this.isSection(child)) {
+                                // Update subsection_qty visually without retriggering its onchange
+                                updatePromises.push(child._update(
+                                    { section_qty: child.data.section_qty * ratio },
+                                    { withoutParentUpdate: true }
+                                ));
+                            } else if (!this.isSectionOrNote(child)) {
+                                const qtyField = "product_uom_qty" in child.fields ? "product_uom_qty" : "quantity";
+                                updatePromises.push(child._update(
+                                    { [qtyField]: child.data[qtyField] * ratio },
+                                    { withoutParentUpdate: true }
+                                ));
+                            }
+                        }
+                        await Promise.all(updatePromises);
+                        await this.props.list._onUpdate();
+                    }
+
+                    return result;
+                };
+            }
+        }
+    }
+
+    async onSectionMouseEnter(record) {
+        if (!this.isSection(record) || this._mouseButtonDown) {
+            return;
+        }
+        this.state.hoveredSectionId = record.id;
+    }
+
+    async onSectionMouseLeave(record) {
+        if (!this.isSection(record) || this._mouseButtonDown) {
+            return;
+        }
+        this.state.hoveredSectionId = null;
+    }
+
+    onSectionFocusIn(record) {
+        if (!this.isSection(record)) return;
+        this.state.focusedSectionId = record.id;
+    }
+
+    onSectionFocusOut(record, ev) {
+        if (!this.isSection(record)) return;
+        this.state.focusedSectionId = null;
+    }
 
     get disabledMoveDownItemTooltip() {
         return DISABLED_MOVE_DOWN_ITEM_TOOLTIP;
@@ -125,7 +280,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     get sectionColumns() {
-        return [...this.props.aggregatedFields, 'section_state'];
+        return [...this.props.aggregatedFields, 'section_state', 'product_uom_qty', 'product_uom_id', 'quantity']
     }
 
     buildParentSectionMap(records) {
@@ -267,7 +422,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         }
 
         const iter = getRecordsUntilSection(this.props.list, record, true, true);
-        if (this.isSection(record) || iter.sectionRecords.length === 1) {
+        if (iter.sectionRecords.length === 1) {
             return this.props.list.addNewRecordAtIndex(iter.sectionIndex - 1);
         } else {
             return super.editNextRecord(record, group);
@@ -276,13 +431,6 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     expandPager() {
         return this.props.list.load({ limit: this.props.list.count });
-    }
-
-    focusToName(editRec) {
-        if (editRec && editRec.isNew && this.isSectionOrNote(editRec)) {
-            const col = this.columns.find((c) => c.name === this.titleField);
-            this.focusCell(col, null);
-        }
     }
 
     hasNextSection(record) {
@@ -392,6 +540,9 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     getCellClass(column, record) {
         let classNames = super.getCellClass(column, record);
+        if (this.isSection(record) && record.isInEdition) {
+            classNames += " border-bottom-0";
+        }
         // For hiding columnns of section and note
         if (
             this.isSectionOrNote(record)
@@ -407,6 +558,10 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             && this.priceColumns.includes(column.name)
         ) {
             classNames += " text-muted";
+        }
+        // Remove bold and add muted effect on section_qty and section_uom_id
+        if (this.isSection(record) && ["section_qty", "section_uom_id"].includes(column.name)) {
+            classNames += " fw-normal text-muted";
         }
 
         return classNames;
@@ -435,12 +590,53 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return super.getFormattedValue(column, record);
     }
 
+    changeFieldSection(columns, record) {
+        columns = columns.map(col => {
+            if (col.name === "product_uom_qty") {
+                return {
+                    ...col,
+                    name: "section_qty",
+                };
+            }
+            if (col.name === "quantity") {
+                return {
+                    ...col,
+                    name: "section_qty",
+                };
+            }
+            if (col.name === "product_uom_id") {
+                return {
+                    ...col,
+                    name: "section_uom_id",
+                };
+            }
+            return { ...col };
+        });
+        return columns;
+    }
+
     getSectionAndNoteColumns(columns, record) {
-        const sectionCols = columns.filter(
+        let sectionCols = columns.filter(
             (col) =>
                 col.widget === "handle"
                 || col.name === this.titleField
                 || (this.isSection(record) && this.sectionColumns.includes(col.name))
+        );
+        columns = this.changeFieldSection(columns, record);
+        sectionCols = this.changeFieldSection(sectionCols, record);
+        const showQtyUnit = this.state.hoveredSectionId === record.id || this.state.focusedSectionId === record.id;
+        if (showQtyUnit) {
+            const isSectionCol = (col) => sectionCols.some((s) => s.id === col.id);
+            const titleIndex = columns.findIndex((col) => col.name === this.titleField);
+            const colspanBonus = columns.slice(0, titleIndex).filter((col) => !isSectionCol(col)).length;
+            return columns.flatMap((col, i) => {
+                if (col.name === this.titleField) return [colspanBonus ? { ...col, colspan: colspanBonus + 1 } : col];
+                if (i < titleIndex && !isSectionCol(col)) return []; // absorbed by colspan
+                return [isSectionCol(col) ? col : { ...col, invisible: "1" }];
+            });
+        }
+        sectionCols = sectionCols.filter(
+            (col) => !["section_qty", "section_uom_id"].includes(col.name)
         );
         return sectionCols.map((col) => {
             if (col.name === this.titleField) {
