@@ -543,6 +543,11 @@ export function htmlToHtmlInline(htmlString) {
             } else if (href) {
                 const link = body.ownerDocument.createElement("a");
                 link.setAttribute("href", href);
+                for (const attr of ["target", "rel"]) {
+                    if (node.hasAttribute(attr)) {
+                        link.setAttribute(attr, node.getAttribute(attr));
+                    }
+                }
                 link.append(body.ownerDocument.createTextNode(href));
                 parent.append(link);
             }
