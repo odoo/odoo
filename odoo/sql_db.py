@@ -46,6 +46,26 @@ if typing.TYPE_CHECKING:
 else:
     _CursorProtocol = object
 
+try:
+    from pygments import highlight
+    from pygments.formatters import TerminalFormatter
+    from pygments.lexers import SqlLexer
+
+    def highlight_sql(sql_query: str) -> str:
+        """
+        Applies ANSI syntax highlighting to a SQL string for terminal output.
+
+        Enable it via the ~/.odoorc (-c/--config) configuration file::
+
+            [colors]
+            sql = auto
+        """
+        return highlight(sql_query, SqlLexer(), TerminalFormatter()).strip()
+except ImportError:
+    def highlight_sql(sql_query: str) -> str:
+        warnings.warn("Pygments needs to be installed in order to highlight SQL")
+        return sql_query
+
 
 def undecimalize(value, cr) -> float | None:
     if value is None:
@@ -363,7 +383,11 @@ class Cursor(_CursorProtocol):
 
     def _format(self, query, params=None) -> str:
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
-        return self.mogrify(query, params).decode(encoding, 'replace')
+        formatted = self.mogrify(query, params).decode(encoding, 'replace')
+        if config.colors['sql']:
+            return highlight_sql(formatted)
+        return formatted
+
 
     def mogrify(self, query, params=None) -> bytes:
         if isinstance(query, SQL):
