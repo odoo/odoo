@@ -2,6 +2,8 @@
 <odoo>
     <data>
         <template id="account_invoice_line_it_simplified_FatturaPA">
+            <t t-set="it_values" t-value="base_line['it_values']"/>
+            <t t-set="line" t-value="base_line['record']"/>
             <DatiBeniServizi>
                 <Descrizione>
                     <t t-out="format_alphanumeric(line.name, 1000)"/>
@@ -11,7 +13,7 @@
                 <DatiIVA>
                     <Imposta t-out="format_monetary(line.price_total - line.price_subtotal, currency)"/>
                 </DatiIVA>
-                <Natura t-if="line.tax_ids.l10n_it_exempt_reason" t-out="line.tax_ids.l10n_it_exempt_reason"/>
+                <Natura t-if="it_values['natura']" t-out="it_values['natura']"/>
             </DatiBeniServizi>
         </template>
 
@@ -95,7 +97,7 @@
                             <ElementiRettificati t-out="format_alphanumeric(record.ref, 1000)"/>
                         </DatiFatturaRettificata>
                     </DatiGenerali>
-                    <t t-foreach="record.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))" t-as="line">
+                    <t t-foreach="base_lines" t-as="base_line">
                         <t t-call="l10n_it_edi.account_invoice_line_it_simplified_FatturaPA"/>
                     </t>
                     <Allegati t-if="pdf">
