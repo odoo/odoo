@@ -92,5 +92,15 @@
             <field name="code">model._cleanup_expired_mutes()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_discuss_channel_sync_last_interest_dt" model="ir.cron">
+            <field name="name">Discuss: sync channel last interest</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="model_id" ref="model_discuss_channel"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="code">model._cron_sync_last_interest_dt()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

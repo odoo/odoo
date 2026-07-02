@@ -7,9 +7,10 @@ from secrets import choice
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models, tools
-from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo import Command, SUPERUSER_ID, _, api, fields, models, tools
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.modules.registry import Registry
 from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape
 from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
 from odoo.tools.sql import SQL
@@ -571,65 +572,93 @@ class DiscussChannel(models.Model):
         res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
 
     def _update_last_interest_dt(self, date=None):
-        """Update last_interest_dt in a way that prevents concurrency errors against parallel
-        callers of this method.
+        """Update last_interest_dt while avoiding concurrency errors between parallel posters.
 
-        The goal is to allow several users to post messages in parallel by not holding a lock on a
-        common table, including in situations where one post is particularly slow. If the channel
-        row is locked through another flow, it is acceptable to have the concurrency error still
-        happening, as other channel writes should be infrequent enough compared to posting messages.
+        Updating it to a recent value is important to unhide (if necessary) and to bump the channel
+        to the top of the list when new messages are posted.
 
-        In particular, if the row is locked to write another field than last_interest_dt, the error
-        must not be ignored and a retry is expected to happen to guarantee last_interest_dt does
-        get updated to a recent value, which is very important to unhide (if necessary) and to bump
-        the channel to the top of the list when new messages are posted.
-
-        On the other hand, if the row is locked specifically to write last_interest_dt, it means
-        another message is being posted and it is acceptable to not update last_interest_dt in this
-        case, as it should be updated by the concurrent flow. This explains why
-        pg_try_advisory_xact_lock is used rather than FOR UPDATE NOWAIT or ON CONFLICT DO NOTHING.
-
-        Important note: this method is meant to be called only in flows where no other writes on
-        channel occur on the main transaction, as this would create a guaranteed concurrency issue.
-        This constraint is acceptable, as if there was another write that locks the channel row in
-        the same flow, it would imply the goal of allowing concurrent posts would not be achieved.
-
-        Using a separate transaction allows to quickly release the lock, which reduces situations
-        where an old transaction could keep the lock for a long time and prevent newer transactions
-        from updating the field to a more recent value. If this was allowed, this would create a
-        situation where the channel would not be bumped to the top of the list even though it
-        contains newer messages. The separate transaction implies last_interest_dt might be updated
-        even if the main transaction is rolled back, but this is an acceptable trade-off as it is
-        less problematic to bump the channel by mistake than not bumping it when necessary,
-        especially because if a user attempted to post a message, they are likely to try again soon
-        afterwards.
-
-        Finally, it is preferable to update last_interest_dt through the ORM rather than with a
-        custom query, as its change must be caught to both trigger _sync_field_names to send the newer
-        value on the bus, and as a dependency of some compute fields.
+        Writing the channel row directly would lock it for the rest of the (possibly slow, e.g. AI
+        flow) request transaction, so parallel posts on a busy channel pile up on that lock and crash
+        with a Postgres serialization error (could not serialize access due to concurrent update).
+        Instead the new value is appended to ``discuss.channel.last.interest.update`` (an INSERT never
+        serializes against parallel posters and commits atomically with the message) and synced onto
+        the channel after commit by ``_sync_last_interest_dt``, and only if that sync fails is the
+        ``ir_cron_discuss_channel_sync_last_interest_dt`` cron triggered to drain the durable rows.
+        Tests and module install/upgrade keep writing synchronously (see below). Reads and sorting keep
+        using the indexed channel column.
         """
         date = date or fields.Datetime.now()
-        if not self.env.context.get("mail_post_check_concurrency"):
+        # Postcommit hooks are skipped by TestCursor.commit() in tests, and the separate transaction
+        # below is unsafe while the registry is still loading (module install/upgrade); in both cases
+        # nothing drains the queue, so write synchronously to avoid stale reads.
+        if tools.config['test_enable'] or not self.env.registry.ready:
             # sudo: discuss.channel - can update last interest in controlled flows
             self.sudo().last_interest_dt = date
             return
-        for channel in self:
-            with self.env.registry.cursor() as cr:
-                cr.execute(
-                    SQL(
-                        "SELECT pg_try_advisory_xact_lock(hashtext('discuss_channel.last_interest_dt'), %(channel_id)s)",
-                        channel_id=channel.id,
-                    ),
-                )
-                if not cr.fetchone()[0]:
-                    continue
-                # sudo: discuss.channel - can update last interest in controlled flows
+        # sudo: discuss.channel.last.interest.update - internal bookkeeping in controlled flows
+        self.env["discuss.channel.last.interest.update"].sudo().create(
+            [{"channel_id": channel.id, "last_interest_dt": date} for channel in self]
+        )
+        cr = self.env.cr
+        channel_ids = cr.postcommit.data.get("mail.sync_last_interest_dt")
+        if channel_ids is None:
+            channel_ids = cr.postcommit.data["mail.sync_last_interest_dt"] = set()
+            dbname = cr.dbname
+
+            @cr.postcommit.add
+            def sync_last_interest_dt():
+                # Fast path: a fresh transaction (hence a fresh snapshot) so the channel UPDATE does not
+                # conflict with writes committed during the request, applying the update within a second.
+                # The appended rows are durable, so the cron is only triggered if this sync fails.
+                # SUPERUSER_ID: the request user is gone in this detached transaction, and the poster may
+                # be a public/guest visitor with no write access to the channel, so the sync must run as
+                # superuser (same as the cron, which runs as root).
                 try:
-                    channel.with_env(self.env(cr=cr)).sudo().last_interest_dt = date
-                except MissingError:
-                    # when the channel is created in the outer transaction it is not yet visible
-                    # by the inner transaction and there can be no concurrency issue
-                    channel.sudo().last_interest_dt = date
+                    with Registry(dbname).cursor() as new_cr:
+                        env = api.Environment(new_cr, SUPERUSER_ID, {})
+                        env["discuss.channel"]._sync_last_interest_dt(list(channel_ids))
+                except Exception:  # noqa: BLE001 - best effort, trigger the cron to drain the durable rows later
+                    with Registry(dbname).cursor() as new_cr:
+                        env = api.Environment(new_cr, SUPERUSER_ID, {})
+                        env.ref("mail.ir_cron_discuss_channel_sync_last_interest_dt")._trigger()
+        channel_ids.update(self.ids)
+
+    def _sync_last_interest_dt(self, channel_ids):
+        """Apply the appended ``last_interest_dt`` updates onto the given channel rows.
+
+        Meant to run in a privileged background transaction (the post-commit hook builds a superuser
+        environment, the cron runs as root), hence with a fresh snapshot, so the channel UPDATE does
+        not conflict with writes committed during the original request. Channel rows are locked with
+        ``try_lock_for_update`` (``FOR NO KEY UPDATE SKIP LOCKED``, allowed since ``last_interest_dt``
+        is not an identifier): a row held by a concurrent syncer or a direct writer is skipped so we
+        neither block nor delete its pending rows, and the cron is retriggered to drain them later.
+        Rows inserted after the read also stay queued.
+        """
+        LastInterestUpdate = self.env["discuss.channel.last.interest.update"]
+        channels = self.browse(channel_ids)
+        lockable = channels.try_lock_for_update(allow_referencing=True)
+        for channel in lockable:
+            pending = LastInterestUpdate.search([("channel_id", "=", channel.id)])
+            if not pending:
+                continue
+            max_dt = max(pending.mapped("last_interest_dt"))
+            if not channel.last_interest_dt or channel.last_interest_dt < max_dt:
+                channel.last_interest_dt = max_dt
+            pending.unlink()
+        if len(lockable) != len(channels):
+            self.env.ref("mail.ir_cron_discuss_channel_sync_last_interest_dt")._trigger()
+
+    def _cron_sync_last_interest_dt(self, batch_size=1000):
+        """Drain pending appended ``last_interest_dt`` updates (durable fallback for the post-commit
+        sync; also recovers updates whose worker died before the post-commit hook ran)."""
+        LastInterestUpdate = self.env["discuss.channel.last.interest.update"]
+        pending = LastInterestUpdate.search([], limit=batch_size)
+        channel_ids = list(set(pending.channel_id.ids))
+        if not channel_ids:
+            return
+        self._sync_last_interest_dt(channel_ids)
+        if LastInterestUpdate.search_count([], limit=1):
+            self.env.ref("mail.ir_cron_discuss_channel_sync_last_interest_dt")._trigger()
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT

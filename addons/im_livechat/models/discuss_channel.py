@@ -932,7 +932,11 @@ class DiscussChannel(models.Model):
             author_history.response_time_hour = (
                 fields.Datetime.now() - author_history.create_date
             ).total_seconds() / 3600
-        if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
+        if (
+            not self.livechat_end_dt
+            and author_history.livechat_member_type == "agent"
+            and self.livechat_failure != "no_failure"
+        ):
             self.livechat_failure = "no_failure"
         return super()._message_post_after_hook(message)
 
