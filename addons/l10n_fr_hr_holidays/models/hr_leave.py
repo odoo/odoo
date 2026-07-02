@@ -76,7 +76,7 @@ class HrLeave(models.Model):
         # the employee calendar as otherwise days worked on by the company
         # calendar before the actual start of the leave would be taken into
         # account.
-        working_attendances = self.resource_calendar_id._get_working_attendances()
+        working_attendances = self.resource_calendar_id.attendance_ids._filter_by_working()
         while not working_attendances._filter_by_date(date_start.date()):
             date_start += relativedelta(days=1)
         while not working_attendances._filter_by_date((date_target + relativedelta(days=1)).date()):
