@@ -41,13 +41,11 @@ class AccountChartTemplate(models.AbstractModel):
             'sale': {
                 "name": _("Sales"),
                 "code": "0001",
-                "l10n_latam_use_documents": True,
                 "refund_sequence": False,
             },
             'purchase': {
                 "name": _("Purchases"),
                 "code": "0002",
-                "l10n_latam_use_documents": True,
                 "refund_sequence": False,
             },
         }
