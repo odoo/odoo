@@ -565,10 +565,16 @@ export function totalAmountIs(amount) {
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));
 }
+export function hasNoCashDifference() {
+    return {
+        content: "Closing popup should not have any cash difference",
+        trigger: ".close-pos-popup:not(.cash-difference)",
+    };
+}
 export function cashDifferenceIs(val) {
     return [
         {
-            trigger: `.payment-methods-overview .cash-difference:contains(${val})`,
+            trigger: `.close-pos-popup .cash-difference:contains(${val})`,
         },
     ];
 }

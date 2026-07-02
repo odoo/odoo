@@ -12,4 +12,12 @@ patch(ClosePosPopup.prototype, {
             this.allowedDifference()
         );
     },
+    get cashTransactionSummary() {
+        const transactions = super.cashTransactionSummary;
+        const cashBreakdown = this.props.default_cash_details.cash_breakdown;
+        if (this.pos.config.module_pos_hr && cashBreakdown.amount_per_employee.length) {
+            transactions.list.splice(-1, 1, ...cashBreakdown.amount_per_employee);
+        }
+        return transactions;
+    },
 });

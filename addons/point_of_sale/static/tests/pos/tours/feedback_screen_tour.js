@@ -209,7 +209,7 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             // Close the session
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("25"),
-            ProductScreen.cashDifferenceIs("0.00"),
+            ProductScreen.hasNoCashDifference(),
             {
                 trigger: ".modal .modal-footer .btn:contains(close register)",
                 run: "click",

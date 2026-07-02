@@ -618,7 +618,7 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
             FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
-            ProductScreen.cashDifferenceIs(0),
+            ProductScreen.hasNoCashDifference(),
         ].flat(),
 });
 

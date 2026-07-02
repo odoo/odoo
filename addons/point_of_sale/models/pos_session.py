@@ -631,13 +631,17 @@ class PosSession(models.Model):
     def _get_message_author(self):
         return self.env.user.partner_id
 
-    def update_closing_control_state_session(self, notes):
+    def update_closing_control_state_session(self, notes={}):
         # Prevent closing the session again if it was already closed
         if self.state == 'closed':
             raise UserError(_('This session is already closed.'))
+        closing_notes = notes.get('closing_notes')
         # Prevent the session to be opened again.
-        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
-        self._post_cash_details_message('Closing', self.cash_register_balance_end, self.cash_register_difference, notes)
+        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': closing_notes})
+
+        if opening_notes := notes.get('opening_notes'):
+            self._update_opening_notes(opening_notes)
+        self._post_cash_details_message('Closing', self.cash_register_balance_end, self.cash_register_difference, closing_notes)
 
     def post_closing_cash_details(self, counted_cash):
         """
@@ -763,20 +767,53 @@ class PosSession(models.Model):
             })
         return cash_in_out_list
 
+    def _get_closing_control_payment_method_ids(self):
+        """Return IDs of payment methods to show in the session closing control popup."""
+        return self.payment_method_ids.ids
+
     def get_closing_control_data(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("You don't have the access rights to get the point of sale closing control data."))
         self.ensure_one()
         orders = self._get_closed_orders()
-        payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
-        cash_payment_method_ids = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
-        default_cash_payment_method_id = cash_payment_method_ids[0] if cash_payment_method_ids else None
-        default_cash_payments = payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id) if default_cash_payment_method_id else []
-        total_default_cash_payment_amount = sum(default_cash_payments.mapped('amount')) if default_cash_payment_method_id else 0
-        non_cash_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
-        non_cash_payments_grouped_by_method_id = {pm: orders.payment_ids.filtered(lambda p: p.payment_method_id == pm) for pm in non_cash_payment_method_ids}
+        if default_cash_pm := self.payment_method_ids.filtered(lambda pm: pm.type == 'cash'):
+            default_cash_pm = default_cash_pm[0]
+        default_cash_details = {}
+        non_cash_payment_methods = []
 
-        cash_in_out_list = self.get_cash_in_out_list()
+        for payment_method, amount in self.env['pos.payment']._read_group(
+            domain=[
+                ('pos_order_id', 'in', orders.ids),
+                ('payment_method_id', 'in', self._get_closing_control_payment_method_ids()),
+            ],
+            groupby=['payment_method_id'],
+            aggregates=['amount:sum'],
+        ):
+            payment_data = {
+                'id': payment_method.id,
+                'name': payment_method.name,
+                'type': payment_method.type,
+                'amount': amount,
+                'editable': payment_method.type in ['cash', 'bank'],
+            }
+            if payment_method == default_cash_pm:
+                default_cash_details = payment_data
+            else:
+                non_cash_payment_methods.append(payment_data)
+
+        if default_cash_pm:
+            cash_breakdown = {
+                'statement_amount': sum(self.sudo().statement_line_ids.mapped('amount')),
+                'payment_amount': default_cash_details.get('amount', 0),
+                'opening': self.cash_register_balance_start,
+            }
+            default_cash_details = {
+                'cash_breakdown': cash_breakdown,
+                'amount': sum(cash_breakdown.values()),
+                'id': default_cash_pm.id,
+                'name': default_cash_pm.name,
+                **default_cash_details,
+            }
 
         return {
             'orders_details': {
@@ -784,24 +821,9 @@ class PosSession(models.Model):
                 'amount': sum(orders.mapped('amount_total'))
             },
             'opening_notes': self.opening_notes,
-            'default_cash_details': {
-                'name': default_cash_payment_method_id.name,
-                'amount': self.cash_register_balance_start
-                          + total_default_cash_payment_amount
-                          + sum(self.sudo().statement_line_ids.mapped('amount')),
-                'opening': self.cash_register_balance_start,
-                'payment_amount': total_default_cash_payment_amount,
-                'moves': cash_in_out_list,
-                'id': default_cash_payment_method_id.id
-            } if default_cash_payment_method_id else {},
-            'non_cash_payment_methods': [{
-                'name': pm.name,
-                'amount': sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')),
-                'number': len(non_cash_payments_grouped_by_method_id[pm]),
-                'id': pm.id,
-                'type': pm.type,
-            } for pm in non_cash_payment_method_ids],
-            'is_manager': self.env.user.has_group("point_of_sale.group_pos_manager"),
+            'default_cash_details': default_cash_details,
+            'non_cash_payment_methods': non_cash_payment_methods,
+            'is_manager': self.env.user.has_group('point_of_sale.group_pos_manager'),
             'amount_authorized_diff': self.config_id.amount_authorized_diff if self.config_id.set_maximum_difference else None
         }
 
@@ -1649,6 +1671,14 @@ class PosSession(models.Model):
 
         self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
 
+    def _update_opening_notes(self, updated_opening_notes):
+        if updated_opening_notes != self.opening_notes:
+            self.opening_notes = updated_opening_notes
+            self.message_post(
+                body=plaintext2html(_('Opening control message updated: %s', updated_opening_notes)),
+                email_from=self.env.user.email or "admin@example.com"
+            )
+
     def _post_cash_details_message(self, state, expected, difference, notes):
         expected_formatted = self.currency_id.format(expected)
         difference_formatted = self.currency_id.format(difference)
@@ -1664,7 +1694,7 @@ class PosSession(models.Model):
             message += _("Closing counted: %s \n", counted_formatted)
 
         if notes:
-            message += _('Opening control message: ')
+            message += _('%s control message: ', _('Opening') if state == 'Opening cash' else _('Closing'))
             message += notes
         if message:
             self.message_post(body=plaintext2html(message), email_from=self.env.user.email or "admin@example.com")
