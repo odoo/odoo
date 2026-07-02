@@ -35,12 +35,18 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     'depends': [
         'base',
         'account',
+        'base_address_extended',
     ],
     'auto_install': ['account'],
     'data': [
+        'data/res_city_data.xml',
+        'data/res_country_data.xml',
         'views/account_move_view.xml',
         'views/account_report.xml',
         'views/report_voucher.xml',
+        'views/account_move_line_view.xml',
+        'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
