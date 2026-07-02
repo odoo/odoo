@@ -1,6 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test, waitUntil } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, press, queryAllAttributes, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import {
@@ -130,6 +130,25 @@ class Mailing extends models.Model {
                                         <p>Builder</p>
                                     </div>
                                 </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+        },
+        {
+            id: 6,
+            display_name: "Social Media",
+            mailing_model_id: 1,
+            body_arch: `
+                <div data_name="Mailing">
+                    <div class="row">
+                        <div class="o_mail_wrapper_td">
+                            <div class="s_social_media">
+                                <span class="s_social_media_links">
+                                    <a data-platform="social_facebook" href="https://www.facebook.com/odoo"> </a>
+                                    <a data-platform="social_twitter" href="https://x.com/Odoo"> </a>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -527,5 +546,48 @@ describe("field HTML", () => {
         expect(getPagerValue()).toEqual([1]);
         expect(htmlField.state.activeTheme).toBe("default");
         expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
+    });
+});
+
+describe("social media options", () => {
+    test("reorder social medias with keyboard", async () => {
+        onRpc("res.company", "read", () => [
+            {
+                id: 1,
+                social_facebook: "https://www.facebook.com/odoo",
+                social_twitter: "https://x.com/Odoo",
+            },
+        ]);
+        onRpc("res.company", "has_access", () => true);
+        const platformsInPanel = () =>
+            queryAllAttributes("[data-sortable-platform]", "data-sortable-platform");
+        const platformsInSnippet = () =>
+            queryAllAttributes(":iframe .s_social_media_links a", "data-platform");
+        expect(platformsInPanel()).toEqual(["social_facebook", "social_twitter"]);
+        expect(platformsInSnippet()).toEqual(["social_facebook", "social_twitter"]);
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 6,
+            arch: mailViewArch,
+        });
+        // The builder sidebar is only shown in fullscreen.
+        await contains(".o_mass_mailing_can_edit_overlay").click();
+        await contains(":iframe .s_social_media").click();
+        await waitFor("[data-sortable-platform]");
+
+        await contains("[data-sortable-platform='social_facebook']").click();
+        await press("ArrowDown");
+        await animationFrame();
+        expect(platformsInPanel()).toEqual(["social_twitter", "social_facebook"]);
+        expect(platformsInSnippet()).toEqual(["social_twitter", "social_facebook"]);
+        expect("[data-sortable-platform='social_facebook']").toBeFocused();
+
+        // ArrowUp moves it back to the top.
+        await press("ArrowUp");
+        await animationFrame();
+        expect(platformsInPanel()).toEqual(["social_facebook", "social_twitter"]);
+        expect(platformsInSnippet()).toEqual(["social_facebook", "social_twitter"]);
+        expect("[data-sortable-platform='social_facebook']").toBeFocused();
     });
 });

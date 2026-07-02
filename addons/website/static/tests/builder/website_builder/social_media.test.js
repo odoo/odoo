@@ -232,6 +232,42 @@ test("reorder social medias", async () => {
     expect(":iframe a:nth-of-type(8)").toHaveAttribute("href", "https://www.example.com/first");
 });
 
+test("reorder social medias with keyboard", async () => {
+    await setupSocialMediaSnippet({
+        social_facebook: "https://fb.com/odoo",
+        social_twitter: "https://x.com/odoo",
+    });
+
+    await click(":iframe .s_social_media_title");
+    await animationFrame();
+
+    expect("tr:nth-child(1) input[type=text]").toHaveValue("https://fb.com/odoo");
+    expect("tr:nth-child(2) input[type=text]").toHaveValue("https://x.com/odoo");
+    expect(":iframe a:nth-of-type(1)").toHaveAttribute("href", "https://fb.com/odoo");
+    expect(":iframe a:nth-of-type(2)").toHaveAttribute("href", "https://x.com/odoo");
+
+    // The focus follows the moved link.
+    await contains("tr:nth-child(1) button.o_drag_handle").click();
+    await press("ArrowDown");
+    await animationFrame();
+
+    expect("tr:nth-child(1) input[type=text]").toHaveValue("https://x.com/odoo");
+    expect("tr:nth-child(2) input[type=text]").toHaveValue("https://fb.com/odoo");
+    expect(":iframe a:nth-of-type(1)").toHaveAttribute("href", "https://x.com/odoo");
+    expect(":iframe a:nth-of-type(2)").toHaveAttribute("href", "https://fb.com/odoo");
+    expect("tr:nth-child(2) button.o_drag_handle").toBeFocused();
+
+    // ArrowUp moves it back to the top.
+    await press("ArrowUp");
+    await animationFrame();
+
+    expect("tr:nth-child(1) input[type=text]").toHaveValue("https://fb.com/odoo");
+    expect("tr:nth-child(2) input[type=text]").toHaveValue("https://x.com/odoo");
+    expect(":iframe a:nth-of-type(1)").toHaveAttribute("href", "https://fb.com/odoo");
+    expect(":iframe a:nth-of-type(2)").toHaveAttribute("href", "https://x.com/odoo");
+    expect("tr:nth-child(1) button.o_drag_handle").toBeFocused();
+});
+
 test("social media snippet should not be user-selectable", async () => {
     await setupSocialMediaSnippet({}, { loadIframeBundles: true });
     expect(":iframe .s_social_media").toHaveStyle({ "user-select": "none" });

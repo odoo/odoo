@@ -192,7 +192,7 @@
         'web.assets_unit_tests': [
             ('include', 'mass_mailing.assets_builder'),
             'mass_mailing/static/tests/mailing_contact_to_list.test.js',
-            'mass_mailing/static/tests/mass_mailing_html_field.test.js',
+            'mass_mailing/static/tests/mass_mailing_editor.test.js',
             'mass_mailing/static/tests/mass_mailing_link_plugin.test.js',
         ],
     },
