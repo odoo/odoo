@@ -263,7 +263,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         in_stock=None,
         **_kwargs,
     ):
-        return {
+        res = {
             "search": search,
             "min_price": min_price,
             "max_price": max_price,
@@ -273,6 +273,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "in_stock": in_stock,
             **request.session.get("attribute_value_params", {}),
         }
+        if _kwargs.get("attribute_range"):
+            res["attribute_range"] = _kwargs["attribute_range"]
+        return res
 
     def _get_additional_shop_values(self, _values, **_kwargs):
         """Update values used for rendering website_sale.products template."""
@@ -385,6 +388,31 @@ class WebsiteSale(payment_portal.PaymentPortal):
             else:
                 post["tags"] = None
                 tags = {}
+
+        attribute_range = request.httprequest.args.get("attribute_range", "")
+        attr_range_filters = {}
+        if attribute_range:
+            for part in attribute_range.split(","):
+                try:
+                    attr_id, rest = part.split("-")
+                    min_pav_id, max_pav_id = rest.split("<")
+                    attr_range_filters[int(attr_id)] = (int(min_pav_id), int(max_pav_id))
+                except (ValueError, AttributeError):
+                    continue
+        if attr_range_filters:
+            for attribute_id, (min_pav_id, max_pav_id) in attr_range_filters.items():
+                attribute = self.env["product.attribute"].browse(attribute_id)
+                pavs = attribute.value_ids.sorted(key=lambda v: v.sequence)
+                if not pavs:
+                    continue
+                # Find PAVs between min and max ids by sequence
+                min_pav = self.env["product.attribute.value"].browse(min_pav_id)
+                max_pav = self.env["product.attribute.value"].browse(max_pav_id)
+                selected_pavs = pavs.filtered(
+                    lambda p: min_pav.sequence <= p.sequence <= max_pav.sequence
+                )
+                if selected_pavs:
+                    attribute_value_dict[attribute_id] = selected_pavs.ids
 
         url = category.website_url if category else SHOP_PATH
         keep = QueryURL(
@@ -626,6 +654,26 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 aggregates=["id:recordset"],
             )
             pavs_per_attribute.update(grouped_pavs)
+            if attr_range_filters:
+                # Keep all range values available when a range filter is active,
+                # so users can adjust the selected range.
+                product_query = self.env["product.template"]._search(
+                    website.sale_product_domain()
+                )
+                range_grouped_pavs = ProductAttributeValue._read_group(
+                    domain=[
+                        ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
+                        ("attribute_id", "in", list(attr_range_filters.keys())),
+                        ("attribute_id.visibility", "=", "visible"),
+                    ],
+                    groupby=["attribute_id"],
+                    order="attribute_id",
+                    aggregates=["id:recordset"],
+                )
+
+                for attribute, pavs in range_grouped_pavs:
+                    pavs_per_attribute[attribute] = pavs
+
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
@@ -673,6 +721,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda: products._get_previewed_attribute_values(product_query_params)
             ),
             "pavs_per_attribute": pavs_per_attribute,
+            "attr_range_filters": attr_range_filters,
         }
         nb_filter_sections = len(attributes)
         if filter_by_price_enabled:

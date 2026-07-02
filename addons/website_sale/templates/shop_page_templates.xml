@@ -188,7 +188,7 @@
                 t-set="hasLeftColumn"
                 t-value="
                     (opt_wsale_categories and categories)
-                    or (opt_wsale_attributes and (attributes or all_tags or opt_wsale_filter_price))
+                    or (opt_wsale_attributes and (attributes or attr_range_filters or all_tags or opt_wsale_filter_price))
                     or show_price_filter
                     or show_on_sale_filter
                     or show_in_stock_filter
@@ -251,6 +251,7 @@
                                     t-value="(
                                         attrib_values
                                         or tags
+                                        or attr_range_filters
                                         or (show_on_sale_filter and on_sale_active)
                                         or (show_in_stock_filter and in_stock_active)
                                         or (show_price_filter and isFilteringByPrice)
@@ -258,11 +259,7 @@
                                 />
                                 <div t-if="has_active_filters" class="py-3 border-bottom">
                                     <a
-                                        t-att-href="keep(
-                                            **reset_attribute_value_params, tags=0,
-                                            min_price=0, max_price=0,
-                                            on_sale=0, in_stock=0,
-                                        )"
+                                        t-att-href="keep(**reset_attribute_value_params, attribute_range=0, tags=0, min_price=0, max_price=0)"
                                         t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
                                         title="Clear Filters"
                                     >
@@ -829,6 +826,39 @@
         </t>
     </template>
 
+    <template id="website_sale.filter_range_attributes" name="Range attributes in Filter">
+        <t t-set="values" t-value="sorted(pavs_per_attribute[a], key=lambda v: v.sequence)"/>
+        <t t-if="values and len(values) > 1">
+            <t t-set="value_names" t-value="[v.name for v in values]"/>
+            <t t-set="value_ids" t-value="[v.id for v in values]"/>
+            <t t-set="attribute_range" t-value="request.httprequest.args.get('attribute_range', '')"/>
+            <t t-set="min_idx" t-value="0"/>
+            <t t-set="max_idx" t-value="len(values) - 1"/>
+            <t t-foreach="attribute_range.split(',') if attribute_range else []" t-as="part">
+                <t t-if="part.startswith(str(a.id) + '-')">
+                    <t t-set="rest" t-value="part.split('-')[1]"/>
+                    <t t-set="min_pav_id" t-value="int(rest.split('&lt;')[0])"/>
+                    <t t-set="max_pav_id" t-value="int(rest.split('&lt;')[1])"/>
+                    <t t-set="min_idx" t-value="value_ids.index(min_pav_id) if min_pav_id in value_ids else 0"/>
+                    <t t-set="max_idx" t-value="value_ids.index(max_pav_id) if max_pav_id in value_ids else len(values) - 1"/>
+                </t>
+            </t>
+            <input
+                type="range"
+                multiple="multiple"
+                class="form-range range-with-input o_attr_range"
+                t-att-data-attribute-id="a.id"
+                t-att-data-values="json.dumps(value_names)"
+                t-att-data-value-ids="json.dumps(value_ids)"
+                min="0"
+                t-att-max="len(values) - 1"
+                t-att-value="'%d,%d' % (min_idx, max_idx)"
+                step="1"
+                form=""
+            />
+        </t>
+    </template>
+
     <template
         id="website_sale.product_attribute_filters_form"
         name="Product Attribute Filters Form"
@@ -848,12 +878,16 @@
                     t-set="_status"
                     t-value="'active'"
                 />
+                <t t-if="a.display_type == 'range' and a.id in attr_range_filters"
+                    t-set="_status"
+                    t-value="'active'"
+                />
                 <t
                     t-set="_expand_attributes"
                     t-value="_status == 'active' or default_expand_filter_sections"
                 />
                 <div
-                    t-if="current_attribute_pavs"
+                    t-if="current_attribute_pavs and not(a.display_type == 'range' and len(current_attribute_pavs) &lt;= 1)"
                     t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
                 >
                     <h2
@@ -910,6 +944,12 @@
                                 data-bs-toggle="buttons"
                             >
                                 <t t-call="website_sale.filter_pills_attributes"/>
+                            </div>
+                            <div
+                                t-elif="a.display_type == 'range'"
+                                t-attf-class="{{'my-2' if isMobile else 'mb-3'}}"
+                            >
+                                <t t-call="website_sale.filter_range_attributes"/>
                             </div>
                         </div>
                     </div>
@@ -1050,6 +1090,7 @@
                     t-set="has_active_filters"
                     t-value="(
                         attrib_values
+                        or attr_range_filters
                         or tags
                         or (show_on_sale_filter and on_sale_active)
                         or (show_in_stock_filter and in_stock_active)
@@ -1061,7 +1102,7 @@
                     t-att-aria-disabled="'true' if not has_active_filters else 'false'"
                     t-att-href="keep(
                         **reset_attribute_value_params, tags=0,
-                        min_price=0, max_price=0,
+                        min_price=0, max_price=0, attribute_range=0,
                         on_sale=0, in_stock=0,
                     )"
                     title="Clear Filters"
