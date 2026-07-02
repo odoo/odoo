@@ -26,10 +26,12 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
+    destroyApp,
     getService,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -1849,4 +1851,25 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     await press("Control+a");
     cut(editor);
     await contains(editor.editable, { textContent: "" });
+});
+
+test("composer should not restore sent content when unmounted during pending post", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    await start();
+    const store = getService("mail.store");
+    const thread = await store["mail.thread"].getOrFetch({ model: "res.partner", id: partnerId });
+    await mountWithCleanup(Composer, { props: { composer: thread.composer, type: "message" } });
+    await insertText(".o-mail-Composer-input", "One");
+    await advanceTime(5000);
+    expect(JSON.stringify(await getIndexedDB("composer", thread.composer.localId))).toBe(
+        '{"emailAddSignature":true,"composerHtml":["markup","One"],"fromFullComposer":false}'
+    );
+    await insertText(".o-mail-Composer-input", "Two");
+    const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
+    onRpcBefore("/mail/message/post", () => postPromise);
+    await click("button[aria-label='Send']");
+    destroyApp();
+    expect(await getIndexedDB("composer", thread.composer.localId)).toBe(undefined);
+    resolvePost();
 });

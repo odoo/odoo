@@ -918,6 +918,7 @@ export class Composer extends Component {
      */
     async _sendMessage(value, postData, extraData) {
         const post = this.thread.post.bind(this.thread, value, postData, extraData);
+        this.deleteSavedContent();
         let message;
         if (this.thread.channel) {
             // feature of (optimistic) temp message
@@ -933,7 +934,6 @@ export class Composer extends Component {
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
-        this.deleteSavedContent();
         return message;
     }
 
@@ -1036,7 +1036,10 @@ export class Composer extends Component {
     }
 
     saveContent() {
-        if (this.props.composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
+        if (
+            !this.state.active ||
+            (this.props.composer.restoredFromFullComposer && !this.state.isFullComposerOpen)
+        ) {
             return;
         }
         const saveContentToLocalStorage = async ({
