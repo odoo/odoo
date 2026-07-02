@@ -1159,6 +1159,17 @@ class Users(models.Model):
         # Need sudo to bypass access error for removing the devices of portal user
         return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
 
+    def action_change_password_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Change Password"),
+            'res_model': 'change.password.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_user_id': self.id},
+        }
+
     def _action_revoke_all_devices(self):
         devices = self.env["res.device"].search([("user_id", "=", self.id)])
         devices.filtered(lambda d: not d.is_current)._revoke()
