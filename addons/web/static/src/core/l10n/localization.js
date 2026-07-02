@@ -28,8 +28,11 @@ export const localization = new Proxy(
     {
         get: (target, p) => {
             // "then" can be called implicitly if the object is returned in an
-            // `async` function, so we need to allow it.
-            if (p in target || p === "then" || typeof p === "symbol") {
+            // `async` function, so we need to allow it. Symbol keys (e.g.
+            // Symbol.toStringTag, accessed by Object.prototype.toString) are not
+            // localization parameters and must be let through, otherwise probing
+            // the object (serializing, stringifying, ...) would crash.
+            if (typeof p === "symbol" || p in target || p === "then") {
                 return Reflect.get(target, p);
             }
             throw new Error(
