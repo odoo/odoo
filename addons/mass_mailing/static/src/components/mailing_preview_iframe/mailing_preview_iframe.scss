@@ -44,6 +44,16 @@
     .o_is_mobile {
         width: 367px;
         background-repeat: no-repeat;
+
+        .o_mass_mailing_preview_pager {
+            .o_row {
+                width: 100% !important; // neutralize width: auto;
+                .o_mass_mailing_preview_record_selector_width {
+                    // fixed width; note that parent .o_is_mobile is already fixed with 
+                    width: 205px;
+                }
+            }
+        }
     }
     .o_is_mobile_header {
         background-color: var(--modal-bg);

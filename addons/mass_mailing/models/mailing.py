@@ -2,10 +2,12 @@
 
 import base64
 from collections import defaultdict
+from datetime import UTC
 import hashlib
 import hmac
 import io
 import logging
+from zoneinfo import ZoneInfo
 import lxml
 import random
 import re
@@ -76,7 +78,7 @@ class MailingMailing(models.Model):
 
     active = fields.Boolean(default=True, tracking=True)
     subject = fields.Char(
-        'Subject', required=True, translate=False)
+        'Subject', translate=False)
     preview = fields.Char(
         'Preview', translate=False,
         render_engine='inline_template', render_options={'post_process': True})
@@ -567,6 +569,8 @@ class MailingMailing(models.Model):
             if values.get('ab_testing_schedule_datetime'):
                 at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
                 ab_testing_cron._trigger(at=at)
+            if not values.get('subject'):
+                values['subject'] = self._default_subject_on_save()
         mailings = super().create(vals_list)
         mailings._create_ab_testing_utm_campaigns()
         mailings._fix_attachment_ownership()
@@ -588,6 +592,8 @@ class MailingMailing(models.Model):
         if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
+        if not self.subject or (self.subject and not values.get('subject', -1)):
+            vals['subject'] = self._default_subject_on_save()
         result = super().write(values)
         if values.get('ab_testing_enabled'):
             self._create_ab_testing_utm_campaigns()
@@ -622,6 +628,12 @@ class MailingMailing(models.Model):
             if mailing.ab_testing_enabled:
                 vals['ab_testing_schedule_datetime'] = mailing.ab_testing_schedule_datetime
         return vals_list
+
+    @api.model
+    def _default_subject_on_save(self):
+        user_tz = ZoneInfo(self.env.user.tz or 'UTC')
+        now_tz = fields.Datetime.now().replace(tzinfo=UTC).astimezone(user_tz)
+        return _('My New Mailing (%(datetime_now)s)', datetime_now=now_tz.strftime('%d %B, %H:%M'))
 
     # ------------------------------------------------------
     # ACTIONS

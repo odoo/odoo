@@ -26,20 +26,20 @@
                         <div class="o_mass_mailing_preview_avatar d-flex align-items-center">
                             <img class="w-100" src="/mail/static/src/img/smiley/avatar.jpg"/>
                         </div>
-                        <div class="o_mass_mailing_preview_from_to d-flex ps-2 flex-column justify-content-evenly overflow-hidden flex-shrink-1">
+                        <div class="o_mass_mailing_preview_from_to d-flex ps-2 flex-column justify-content-evenly overflow-hidden flex-shrink-1"
+                            style="display: none !important;">
                             <div class="text-truncate" t-out="this.props.record.data.email_from"/>
                             <div class="text-truncate text-muted"
                                 t-if="this.props.record.data.preview_record_ref"
                                 t-out="'To ' + this.props.record.data.preview_record_ref.displayName"/>
                         </div>
                         <div class="o_mass_mailing_preview_pager d-flex align-items-center ms-auto flex-grow-1">
-                            <MailPreviewRecordField t-props="{
+                            <MassMailingPreviewRecordField t-props="{
                                 name: 'preview_record_ref',
                                 record: this.props.record,
                                 canCreate: false,
                                 canOpen: false,
                                 hideModel: true,
-                                hideRecordSelector: true,
                             }"/>
                         </div>
                     </div>
