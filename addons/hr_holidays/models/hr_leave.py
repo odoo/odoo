@@ -1347,6 +1347,7 @@ class HrLeave(models.Model):
             'LEAVE229',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
             'LEAVE271',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis (Short Term Employee)
             'LEAVE117',  # Work Accident (Unpaid)
+            'LEAVE207',  # Public Holiday during periods of economic unemployment
         ]
         return self.filtered(
             lambda l: l.employee_id and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
