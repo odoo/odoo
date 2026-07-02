@@ -249,3 +249,13 @@ test("htmlToHtmlInline inserts spaces between adjacent block elements", () => {
         "Before\u00a0After"
     );
 });
+
+test("htmlToHtmlInline copies rel and target attributes from links", () => {
+    expect(
+        htmlToHtmlInline(
+            markup`<a href="https://odoo.com" target="_blank" rel="noreferrer noopener" id="link-id">Odoo</a>`
+        ).toString()
+    ).toBe(
+        '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>'
+    );
+});
