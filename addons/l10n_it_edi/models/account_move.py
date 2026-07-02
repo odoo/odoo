@@ -1425,7 +1425,7 @@ class AccountMove(models.Model):
         # See _l10n_it_edi_search_tax_for_import: one cache per invoice, shared
         # by every tax lookup we do while importing it.
         l10n_it_edi_tax_cache = {}
-        self = self.with_context(l10n_it_edi_tax_cache=l10n_it_edi_tax_cache)
+        record = self.with_context(l10n_it_edi_tax_cache=l10n_it_edi_tax_cache)
         extra_info = {
             'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type),
             'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
@@ -1469,7 +1469,7 @@ class AccountMove(models.Model):
                 _("ENASARCO tax (type %(wtype)s) has wrong reason %(reason)s",
                   wtype=withholding_type, reason=withholding_reason))
             ]):
-                if withholding_tax := self._l10n_it_edi_search_tax_for_import(
+                if withholding_tax := record._l10n_it_edi_search_tax_for_import(
                     company, withholding_percentage, extra_domain,
                 ):
                     withholding_taxes.append(withholding_tax)
@@ -1492,7 +1492,7 @@ class AccountMove(models.Model):
             tax_factor_percent = float(tax_factor_percent.text or "0.0")
             vat_tax_factor_percent = float(vat_tax_factor_percent.text or "0.0")
             pension_fund_natura = pension_fund_natura.text if pension_fund_natura is not None else False
-            pension_fund_tax = self._l10n_it_edi_search_tax_for_import(
+            pension_fund_tax = record._l10n_it_edi_search_tax_for_import(
                 company,
                 tax_factor_percent,
                 ([('l10n_it_pension_fund_type', '=', pension_fund_type)]
@@ -1830,8 +1830,9 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_import_line(self, element, move_line, extra_info=None):
         extra_info = extra_info or {}
+        record = self
         if (tax_cache := extra_info.get('l10n_it_edi_tax_cache')) is not None:
-            self = self.with_context(l10n_it_edi_tax_cache=tax_cache)
+            record = self.with_context(l10n_it_edi_tax_cache=tax_cache)
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
@@ -1924,7 +1925,7 @@ class AccountMove(models.Model):
                 extra_domain = list(extra_domain)
                 tax_scope = 'service' if move_line.product_id.type == 'service' else 'consu'
                 extra_domain += [('tax_scope', 'in', [tax_scope, False])]
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
+            if tax := record._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
                 move_line.tax_ids |= tax
             else:
                 message = Markup("<br/>").join((
@@ -1996,7 +1997,7 @@ class AccountMove(models.Model):
                     continue
                 enasarco_amount = float(number_element[0].text)
                 enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
-                enasarco_tax = self._l10n_it_edi_search_tax_for_import(
+                enasarco_tax = record._l10n_it_edi_search_tax_for_import(
                     company,
                     enasarco_percentage,
                     [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain)
