@@ -2,7 +2,7 @@ import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { findComponent, mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, makeMockEnv } from "./app_test_helpers";
+import { assignTestEnv, getMockEnv } from "./app_test_helpers";
 
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
@@ -100,8 +100,8 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
     }
 
     const fullConfig = { ...getDefaultConfig(), ...config };
-    const env = await makeMockEnv({ config: fullConfig });
-    const root = await mountWithCleanup(ComponentWithSearch, { env });
+    assignTestEnv({ config: fullConfig });
+    const root = await mountWithCleanup(ComponentWithSearch);
     return findComponent(root, (component) => component instanceof componentConstructor);
 }
 

@@ -3,8 +3,8 @@ import { animationFrame } from "@odoo/hoot-dom";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
     allowTranslations,
+    assignTestEnv,
     clearRegistry,
-    makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -166,7 +166,7 @@ test("each getter should only be called once and only when needed", async () => 
     });
 
     const store = proxy(new AppStore());
-    await makeMockEnv({ store });
+    assignTestEnv({ store });
     await mountWithCleanup(Root, {
         noMainContainer: true,
     });
@@ -209,7 +209,7 @@ test("only dependent components rerender", async () => {
     });
 
     const store = proxy(new AppStore());
-    await makeMockEnv({ store });
+    assignTestEnv({ store });
     await mountWithCleanup(Root, {
         noMainContainer: true,
     });

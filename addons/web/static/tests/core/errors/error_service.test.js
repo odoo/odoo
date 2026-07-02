@@ -8,6 +8,7 @@ import {
 } from "@odoo/hoot";
 import { Component, onWillStart, props, xml } from "@odoo/owl";
 import {
+    assignTestEnv,
     makeMockEnv,
     mockService,
     mountWithCleanup,
@@ -172,7 +173,8 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 });
 
 test("will let handlers from the registry handle errors first", async () => {
-    await makeMockEnv({ someValue: 14 });
+    assignTestEnv({ someValue: 14 });
+    await makeMockEnv();
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(originalError).toBe(error);
         expect(env.someValue).toBe(14);

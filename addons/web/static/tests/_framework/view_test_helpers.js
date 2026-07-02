@@ -216,9 +216,7 @@ export function fieldInput(name, options) {
  * @param {MountViewParams} params
  */
 export async function mountViewInDialog(params) {
-    const container = await mountWithCleanup(MainComponentsContainer, {
-        env: params.env,
-    });
+    const container = await mountWithCleanup(MainComponentsContainer);
     const deferred = Promise.withResolvers();
     getService("dialog").add(ViewDialog, {
         viewEnv: { config: params.config },

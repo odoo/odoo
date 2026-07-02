@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
@@ -7,6 +7,11 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 definePosModels();
 
 test("_getLoyaltyPointsRepr", async () => {
+    mockService("contextual_utils_service", (env) => {
+        env.utils = {
+            formatCurrency: (val) => `$${val.toFixed(2)}`,
+        };
+    });
     const store = await setupPosEnv();
     const models = store.models;
 
@@ -32,12 +37,6 @@ test("_getLoyaltyPointsRepr", async () => {
             onClickUnselect: () => {},
             onClickPartner: () => {},
             onClickOrders: () => {},
-        },
-        env: {
-            ...store.env,
-            utils: {
-                formatCurrency: (val) => `$${val.toFixed(2)}`,
-            },
         },
     });
 

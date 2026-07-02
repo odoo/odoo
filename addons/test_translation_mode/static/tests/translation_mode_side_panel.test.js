@@ -10,8 +10,8 @@ import {
     test,
 } from "@odoo/hoot";
 import {
+    assignTestEnv,
     defineModels,
-    makeMockEnv,
     models,
     mountWithCleanup,
     serverState,
@@ -83,7 +83,7 @@ test("side panel with no translation", async () => {
 
     expect(document.body).not.toHaveClass("o-body-with-translate-side-panel");
 
-    await makeMockEnv({ debug: "translate" });
+    assignTestEnv({ debug: "translate" });
     await mountWithCleanup(/* xml */ `
         <div class="sample-element">
             ${mockEncodedTranslation("Component", "Component")}
@@ -105,7 +105,7 @@ test("side panel with translations", async () => {
 
     expect(document.body).not.toHaveClass("o-body-with-translate-side-panel");
 
-    await makeMockEnv({ debug: "translate" });
+    assignTestEnv({ debug: "translate" });
     await mountWithCleanup(/* xml */ `
         <div class="sample-element">
             ${mockEncodedTranslation("Component", "Composant")}

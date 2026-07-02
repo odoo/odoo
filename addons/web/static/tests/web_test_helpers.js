@@ -38,12 +38,14 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
  */
 
 export {
+    assignDialogTestEnv,
+    assignTestEnv,
     clearRegistry,
+    clearTestEnv,
     destroyApp,
     getMockEnv,
     getService,
     getTestApp,
-    makeDialogMockEnv,
     makeMockEnv,
     mockOffline,
     mockService,

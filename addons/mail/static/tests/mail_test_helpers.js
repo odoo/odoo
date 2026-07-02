@@ -15,6 +15,7 @@ import {
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { microTick } from "@odoo/hoot-mock";
 import {
+    assignTestEnv,
     MockServer,
     authenticate,
     defineModels,
@@ -398,7 +399,8 @@ export async function start(options) {
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
         const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
-        env = await makeMockEnv({ discussAsTabId, selector }, { makeNew: true });
+        assignTestEnv({ discussAsTabId, selector });
+        env = await makeMockEnv(null, { makeNew: true });
     }
     patchWithCleanup(SoundEffects.prototype, {
         _setAudioSrc(audio, srcPath) {

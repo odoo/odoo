@@ -1,9 +1,9 @@
 import { animationFrame, describe, expect, press, test, tick } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import {
+    assignDialogTestEnv,
     contains,
     getService,
-    makeDialogMockEnv,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -11,9 +11,8 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 describe.current.tags("desktop");
 
 test("check content confirmation dialog", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -27,9 +26,8 @@ test("check content confirmation dialog", async () => {
 });
 
 test("Without dismiss callback: pressing escape to close the dialog", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -51,9 +49,8 @@ test("Without dismiss callback: pressing escape to close the dialog", async () =
 });
 
 test("With dismiss callback: pressing escape to close the dialog", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -77,9 +74,8 @@ test("With dismiss callback: pressing escape to close the dialog", async () => {
 });
 
 test("Without dismiss callback: clicking on 'X' to close the dialog", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -99,9 +95,8 @@ test("Without dismiss callback: clicking on 'X' to close the dialog", async () =
 });
 
 test("With dismiss callback: clicking on 'X' to close the dialog", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -124,9 +119,8 @@ test("With dismiss callback: clicking on 'X' to close the dialog", async () => {
 });
 
 test("clicking on 'Ok'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -147,9 +141,8 @@ test("clicking on 'Ok'", async () => {
 });
 
 test("clicking on 'Cancel'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -170,9 +163,8 @@ test("clicking on 'Cancel'", async () => {
 });
 
 test("hotkey on 'Ok'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -194,9 +186,8 @@ test("hotkey on 'Ok'", async () => {
 });
 
 test("hotkey on 'Cancel'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -218,9 +209,8 @@ test("hotkey on 'Cancel'", async () => {
 });
 
 test("can't click twice on 'Ok'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -241,9 +231,8 @@ test("can't click twice on 'Ok'", async () => {
 });
 
 test("can't click twice on 'Cancel'", async () => {
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -265,9 +254,8 @@ test("can't click twice on 'Cancel'", async () => {
 
 test("can't cancel (with escape) after confirm", async () => {
     const def = Promise.withResolvers();
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -295,9 +283,8 @@ test("can't cancel (with escape) after confirm", async () => {
 
 test("wait for confirm callback before closing", async () => {
     const def = Promise.withResolvers();
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ConfirmationDialog, {
-        env,
         props: {
             body: "Some content",
             title: "Confirmation",
@@ -322,7 +309,7 @@ test("Focus is correctly restored after confirmation", async () => {
         static template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
     }
 
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
 
     await contains(".my-input").focus();

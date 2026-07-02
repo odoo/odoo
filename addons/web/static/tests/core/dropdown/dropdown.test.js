@@ -17,6 +17,7 @@ import { Component, onMounted, onPatched, xml, proxy } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
+    assignTestEnv,
     contains,
     defineParams,
     getMockEnv,
@@ -284,7 +285,7 @@ test("close on outside click in shadow dom", async () => {
         }
     }
 
-    await makeMockEnv({ rootId: shadowRootId });
+    assignTestEnv({ rootId: shadowRootId });
     await mountWithCleanup(ShadowDom, {
         noMainContainer: true,
     });

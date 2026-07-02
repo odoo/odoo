@@ -1,7 +1,8 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import {
+    assignDialogTestEnv,
     getService,
-    makeDialogMockEnv,
+    makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
     onRpc,
@@ -26,7 +27,8 @@ export const setupPosEnv = async () => {
         isEnterprise: true,
     };
 
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
+    await makeMockEnv();
     onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);

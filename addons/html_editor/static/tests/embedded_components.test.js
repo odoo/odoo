@@ -35,7 +35,7 @@ import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { commit, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
-import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { assignTestEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { cleanHints, processThroughCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -726,7 +726,7 @@ describe("Mount processing", () => {
             }
         }
 
-        await makeMockEnv({ somevalue: 1 });
+        assignTestEnv({ somevalue: 1 });
         await setupEditor(`<p><span data-embedded="counter"></span></p>`, {
             config: getConfig([embedding("counter", Test)]),
         });

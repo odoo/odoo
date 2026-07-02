@@ -10,13 +10,13 @@ import {
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
+    assignDialogTestEnv,
     clearRegistry,
     contains,
     defineModels,
     defineWebModels,
     fields,
     getService,
-    makeDialogMockEnv,
     models,
     mountWithCleanup,
     onRpc,
@@ -140,9 +140,8 @@ describe("DebugMenu", () => {
     });
 
     test("Don't display the DebugMenu if debug mode is disabled", async () => {
-        const env = await makeDialogMockEnv();
+        assignDialogTestEnv();
         await mountWithCleanup(ActionDialog, {
-            env,
             props: { close: () => {} },
         });
         expect(".o_dialog").toHaveCount(1);
@@ -184,9 +183,8 @@ describe("DebugMenu", () => {
             }
         }
         serverState.debug = "1";
-        const env = await makeDialogMockEnv();
+        assignDialogTestEnv();
         await mountWithCleanup(WithCustom, {
-            env,
             props: { close: () => {} },
         });
         expect(".o_dialog").toHaveCount(1);

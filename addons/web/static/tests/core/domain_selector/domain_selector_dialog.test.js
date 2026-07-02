@@ -11,9 +11,9 @@ import {
     Team,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
+    assignDialogTestEnv,
     contains,
     defineModels,
-    makeDialogMockEnv,
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -41,8 +41,8 @@ async function makeDomainSelectorDialog(params = {}) {
         }
     }
 
-    const env = await makeDialogMockEnv();
-    return mountWithCleanup(Parent, { env, props });
+    assignDialogTestEnv();
+    return mountWithCleanup(Parent, { props });
 }
 
 defineModels([Partner, Product, Team, Player, Country, Stage]);

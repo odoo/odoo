@@ -3,9 +3,9 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml, proxy } from "@odoo/owl";
 import {
+    assignTestEnv,
     defineModels,
     fields,
-    makeMockEnv,
     models,
     mountWithCleanup,
     mountWithSearch,
@@ -56,9 +56,8 @@ test(`Simple rendering`, async () => {
         static components = { Layout };
     }
 
-    await mountWithCleanup(ToyComponent, {
-        env: await makeMockEnv({ config: {} }),
-    });
+    assignTestEnv({ config: {} });
+    await mountWithCleanup(ToyComponent);
     expect(`.o_view_sample_data`).toHaveCount(1);
     expect(`.o_control_panel`).toHaveCount(0);
     expect(`.o_component_with_search_panel`).toHaveCount(0);
@@ -112,13 +111,12 @@ test(`Rendering with default ControlPanel and SearchPanel`, async () => {
         }
     }
 
-    await mountWithCleanup(ToyComponent, {
-        env: await makeMockEnv({
-            config: {
-                breadcrumbs: getDefaultConfig().breadcrumbs,
-            },
-        }),
+    assignTestEnv({
+        config: {
+            breadcrumbs: getDefaultConfig().breadcrumbs,
+        },
     });
+    await mountWithCleanup(ToyComponent);
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_control_panel`).toHaveCount(1);
     expect(`.o_breadcrumb`).toHaveCount(1);

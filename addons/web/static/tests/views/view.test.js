@@ -3,6 +3,7 @@ import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
 import {
+    assignTestEnv,
     defineModels,
     expectMarkup,
     fields,
@@ -167,7 +168,7 @@ test("rendering with given 'views' param", async function () {
             toolbar: false,
         });
     });
-    await makeMockEnv({ config: { views: [[1, "toy"]] } });
+    assignTestEnv({ config: { views: [[1, "toy"]] } });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
@@ -196,7 +197,7 @@ test("rendering with given 'views' param not containing view id", async function
             toolbar: false,
         });
     });
-    await makeMockEnv({ config: { views: [[false, "other"]] } });
+    assignTestEnv({ config: { views: [[false, "other"]] } });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
@@ -225,7 +226,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
             toolbar: false,
         });
     });
-    await makeMockEnv({
+    assignTestEnv({
         config: {
             views: [
                 [3, "toy"],

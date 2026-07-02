@@ -5,14 +5,17 @@ import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, getMockEnv } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
 
 test("can change granularity", async () => {
-    const env = await makeSpreadsheetMockEnv();
-    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await makeSpreadsheetMockEnv();
+    const setupModel = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
+    );
     const chartId = insertChartInSpreadsheet(setupModel, "line", {
         dataSource: {
             metaData: {

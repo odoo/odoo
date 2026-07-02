@@ -13,10 +13,10 @@ import {
 } from "@odoo/hoot";
 import { Component, onMounted, proxy, xml } from "@odoo/owl";
 import {
+    assignDialogTestEnv,
     contains,
     destroyApp,
     getService,
-    makeDialogMockEnv,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -34,7 +34,7 @@ test("simple rendering", async () => {
         `;
         static props = ["*"];
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog header .modal-title").toHaveCount(1, {
@@ -58,7 +58,7 @@ test("simple rendering - touch display with trap focus", async () => {
       `;
         static props = ["*"];
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
 
     expect(".o_dialog").toHaveCount(1);
@@ -94,11 +94,9 @@ test("hotkeys work on dialogs", async () => {
             expect.step("clickOk");
         }
     }
-    await makeDialogMockEnv({
-        dialogData: {
-            close: () => expect.step("close"),
-            dismiss: () => expect.step("dismiss"),
-        },
+    assignDialogTestEnv({
+        close: () => expect.step("close"),
+        dismiss: () => expect.step("dismiss"),
     });
     await mountWithCleanup(Parent);
     expect("header .modal-title").toHaveText("Wow(l) Effect");
@@ -141,7 +139,7 @@ test("hotkey control+enter on input triggers blur event before clicking dialog b
         }
     }
 
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
 
     await contains(".test_input").edit("new value", { confirm: false });
@@ -169,7 +167,7 @@ test("simple rendering with two dialogs", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(2);
     expect(queryAllTexts("header .modal-title")).toEqual(["First Title", "Second Title"]);
@@ -187,11 +185,9 @@ test("click on the button x triggers the service close", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv({
-        dialogData: {
-            close: (params) => expect.step(`close ${JSON.stringify(params)}`),
-            dismiss: () => expect.step("dismiss"),
-        },
+    assignDialogTestEnv({
+        close: (params) => expect.step(`close ${JSON.stringify(params)}`),
+        dismiss: () => expect.step("dismiss"),
     });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
@@ -220,7 +216,7 @@ test("click on the button x triggers the close and dismiss defined by a Child co
         static props = ["*"];
         static components = { Child, Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
 
@@ -260,7 +256,7 @@ test("render custom footer buttons is possible", async () => {
             });
         }
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog footer button").toHaveCount(2);
@@ -290,7 +286,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
             expect.step("message received by parent");
         }
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog main .o_subcomponent").toHaveCount(1);
@@ -308,7 +304,7 @@ test("dialog without header/footer", async () => {
         `;
         static props = ["*"];
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog header").toHaveCount(0);
@@ -330,7 +326,7 @@ test("dialog size can be chosen", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(4);
     expect(".o_dialog .modal-dialog.modal-xl .xl").toHaveCount(1);
@@ -348,7 +344,7 @@ test("dialog can be rendered on fullscreen", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog .modal").toHaveClass("o_modal_full");
@@ -374,9 +370,9 @@ test("can be the UI active element", async () => {
             });
         }
     }
-    await makeDialogMockEnv();
-    const uiService = getService("ui");
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
+    const uiService = getService("ui");
     destroyApp();
     await Promise.resolve();
     expect(uiService.activeElement).toBe(document, {
@@ -392,7 +388,7 @@ test("dialog can't be moved on small screen", async () => {
         static props = ["*"];
     }
 
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
 
     expect(".modal-content").toHaveStyle({
@@ -426,7 +422,7 @@ test("dialog can be moved", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".modal-content").toHaveStyle({
         left: "0px",
@@ -457,7 +453,7 @@ test("dialog's position is reset on resize", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".modal-content").toHaveStyle({
         left: "0px",
@@ -500,10 +496,8 @@ test("back button closes dialog in mobile", async () => {
         `;
         static props = ["*"];
     }
-    await makeDialogMockEnv({
-        dialogData: {
-            dismiss: () => expect.step("dismiss"),
-        },
+    assignDialogTestEnv({
+        dismiss: () => expect.step("dismiss"),
     });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);

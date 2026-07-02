@@ -1,11 +1,12 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import {
+    assignDialogTestEnv,
     getService,
     onRpc,
     patchWithCleanup,
     MockServer,
     mountWithCleanup,
-    makeDialogMockEnv,
+    makeMockEnv,
 } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
@@ -89,7 +90,8 @@ export const setupSelfPosEnv = async (
     serviceNames.forEach((serviceName) => registry.category("services").remove(serviceName));
 
     initMockRpc();
-    await makeDialogMockEnv();
+    assignDialogTestEnv();
+    await makeMockEnv();
     const store = getService("self_order");
 
     store.config.self_ordering_mode = mode;

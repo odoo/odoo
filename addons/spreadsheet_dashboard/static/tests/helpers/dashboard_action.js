@@ -3,6 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import {
+    getMockEnv,
     getService,
     makeMockServer,
     MockServer,
@@ -63,12 +64,14 @@ export async function createDashboardActionWithData(data) {
  * @returns {Promise<DashboardLoader>}
  */
 export async function createDashboardLoader(params = {}) {
-    const env = await makeSpreadsheetMockEnv({
+    await makeSpreadsheetMockEnv({
         serverData: params.serverData || getDashboardServerData(),
         mockRPC: params.mockRPC,
     });
-    return new DashboardLoader(env, env.services.orm, async (dashboardId) => {
-        const [record] = await env.services.orm.read(
+    const env = getMockEnv();
+    const orm = getService("orm");
+    return new DashboardLoader(env, orm, async (dashboardId) => {
+        const [record] = await orm.read(
             "spreadsheet.dashboard",
             [dashboardId],
             ["spreadsheet_data"]

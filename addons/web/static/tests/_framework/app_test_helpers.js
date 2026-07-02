@@ -51,6 +51,7 @@ const registriesContent = new WeakMap();
  * @type {App | null}
  */
 let currentApp = null;
+let testEnv = {};
 
 // Registers all registries for cleanup in all tests
 beforeEach(function registerMainRegistryForCleanup() {
@@ -58,6 +59,7 @@ beforeEach(function registerMainRegistryForCleanup() {
 });
 afterEach(function restoreMainRegistry() {
     restoreRegistry(registry);
+    clearTestEnv();
 });
 
 beforeEach(() => {
@@ -78,6 +80,29 @@ beforeEach(() => {
 //-----------------------------------------------------------------------------
 
 /**
+ * @deprecated
+ * @param {Record<PropertyKey, any>} [dialogData]
+ */
+export function assignDialogTestEnv(dialogData) {
+    assignTestEnv({
+        dialogData: {
+            close: () => {},
+            isActive: true,
+            scrollToOrigin: () => {},
+            ...dialogData,
+        },
+    });
+}
+
+/**
+ * @deprecated
+ * @param {Record<PropertyKey, any>} env
+ */
+export function assignTestEnv(env) {
+    Object.assign(testEnv, env);
+}
+
+/**
  * Empties the given registry.
  *
  * @param {Registry} registry
@@ -86,6 +111,13 @@ export function clearRegistry(registry) {
     registry.content = {};
     registry.elements = null;
     registry.entries = null;
+}
+
+/**
+ * @deprecated
+ */
+export function clearTestEnv() {
+    testEnv = {};
 }
 
 /**
@@ -146,12 +178,12 @@ export function getTestApp(options) {
 /**
  * Makes a mock environment along with a mock server
  *
- * @param {Partial<OdooEnv>} [partialEnv]
+ * @param {Partial<OdooEnv>} [_partialEnv]
  * @param {{
  *  makeNew?: boolean;
  * }} [options]
  */
-export async function makeMockEnv(partialEnv, options) {
+export async function makeMockEnv(_partialEnv, options) {
     if (currentApp && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
@@ -167,29 +199,11 @@ export async function makeMockEnv(partialEnv, options) {
     }
 
     const env = makeEnv();
-    Object.assign(env, partialEnv, createDebugContext(env)); // This is needed if the views are in debug mode
+    Object.assign(env, testEnv, createDebugContext(env)); // This is needed if the views are in debug mode
     const app = getTestApp({ ...options, env });
     await app.pluginManager.ready;
 
     return env;
-}
-
-/**
- * Makes a mock environment for dialog tests
- *
- * @param {Partial<OdooEnv>} [partialEnv]
- * @returns {Promise<OdooEnv>}
- */
-export async function makeDialogMockEnv(partialEnv) {
-    return makeMockEnv({
-        ...partialEnv,
-        dialogData: {
-            close: () => {},
-            isActive: true,
-            scrollToOrigin: () => {},
-            ...partialEnv?.dialogData,
-        },
-    });
 }
 
 /**

@@ -3,7 +3,7 @@ import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@od
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
 import {
-    makeMockEnv,
+    assignTestEnv,
     mockService,
     mountWithCleanup,
     registerTemplate,
@@ -192,7 +192,7 @@ test("tooltip with a template, no info", async () => {
     }
 
     registerTemplate("my_tooltip_template", /* xml */ `<i t-out='env.tooltip_text'/>`);
-    await makeMockEnv({ tooltip_text: "tooltip" });
+    assignTestEnv({ tooltip_text: "tooltip" });
     await mountWithCleanup(MyComponent);
 
     expect(".o-tooltip").toHaveCount(0);

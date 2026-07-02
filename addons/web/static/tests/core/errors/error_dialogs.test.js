@@ -2,10 +2,10 @@ import { browser } from "@web/core/browser/browser";
 import { describe, test, expect } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
+    assignDialogTestEnv,
     mountWithCleanup,
     patchWithCleanup,
     mockService,
-    makeDialogMockEnv,
 } from "@web/../tests/web_test_helpers";
 import { click, freezeTime, queryAllTexts } from "@odoo/hoot-dom";
 import {
@@ -23,9 +23,8 @@ describe.current.tags("desktop");
 test("ErrorDialog with traceback", async () => {
     freezeTime();
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ErrorDialog, {
-        env,
         props: {
             message: "Something bad happened",
             data: { debug: "Some strange unreadable stack" },
@@ -65,9 +64,8 @@ test("ErrorDialog with traceback", async () => {
 
 test("Client ErrorDialog with traceback", async () => {
     freezeTime();
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ClientErrorDialog, {
-        env,
         props: {
             message: "Something bad happened",
             data: { debug: "Some strange unreadable stack" },
@@ -119,9 +117,8 @@ test("button clipboard copy error traceback", async () => {
             );
         },
     });
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ErrorDialog, {
-        env,
         props: {
             message: error.message,
             name: error.name,
@@ -144,9 +141,8 @@ test("Display a tooltip on clicking copy button", async () => {
         },
     }));
 
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ErrorDialog, {
-        env,
         props: {
             message: "This is the message",
             name: "ERROR_NAME",
@@ -161,9 +157,8 @@ test("Display a tooltip on clicking copy button", async () => {
 
 test("WarningDialog", async () => {
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(WarningDialog, {
-        env,
         props: {
             exceptionName: "odoo.exceptions.UserError",
             message: "...",
@@ -185,9 +180,8 @@ test("RedirectWarningDialog", async () => {
         },
     });
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(RedirectWarningDialog, {
-        env,
         props: {
             data: {
                 arguments: [
@@ -217,8 +211,8 @@ test("RedirectWarningDialog", async () => {
 
 test("Error504Dialog", async () => {
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
-    await mountWithCleanup(Error504Dialog, { env, props: { close() {} } });
+    assignDialogTestEnv();
+    await mountWithCleanup(Error504Dialog, { props: { close() {} } });
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Request timeout");
     expect("main p").toHaveText(
@@ -234,8 +228,8 @@ test("SessionExpiredDialog", async () => {
         },
     });
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
-    await mountWithCleanup(SessionExpiredDialog, { env, props: { close() {} } });
+    assignDialogTestEnv();
+    await mountWithCleanup(SessionExpiredDialog, { props: { close() {} } });
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Odoo Session Expired");
@@ -251,9 +245,8 @@ test("SessionExpiredDialog", async () => {
 test("ErrorDialog with timestamp provided", async () => {
     freezeTime();
     expect(".o_dialog").toHaveCount(0);
-    const env = await makeDialogMockEnv();
+    assignDialogTestEnv();
     await mountWithCleanup(ErrorDialog, {
-        env,
         props: {
             message: "Something bad happened",
             data: { debug: "Some strange unreadable stack", timestamp: 1700006000 },

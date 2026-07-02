@@ -78,7 +78,7 @@ test("Step Tour validity", async () => {
     tourRegistry.add("tour1", {
         steps: () => steps,
     });
-    await makeMockEnv({});
+    await makeMockEnv();
     await getService("tour_service").startTour("tour1");
     await animationFrame();
     expect.verifySteps([
@@ -244,7 +244,7 @@ test("empty run function is rejected", async () => {
         null,
         2
     )}`;
-    await makeMockEnv({});
+    await makeMockEnv();
     await getService("tour_service").startTour("tour_reject_empty_run");
     await animationFrame();
     expect.verifySteps([expectedError, expectedError, expectedError]);

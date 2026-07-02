@@ -78,7 +78,8 @@ test("middle-click a menu link", async () => {
         },
     });
 
-    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    const env = getMockEnv();
     const data = {
         sheets: [
             {
@@ -110,7 +111,8 @@ test("click a menu link [2]", async () => {
         loadAction: undefined,
     };
     mockService("action", fakeActionService);
-    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    const env = getMockEnv();
     const view = {
         name: "an odoo view",
         viewType: "list",
@@ -140,7 +142,8 @@ test("Click a link containing an action xml id", async () => {
             expect(action.domain).toEqual([[1, "=", 1]]);
         },
     });
-    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    const env = getMockEnv();
 
     const view = {
         name: "My Action Name",
@@ -163,7 +166,8 @@ test("Click a link containing an action xml id", async () => {
 });
 
 test("Can open link when some views are absent from the referred action", async () => {
-    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    const env = getMockEnv();
     mockService("action", {
         doAction(action) {
             expect.step("do-action");
@@ -203,7 +207,8 @@ test("Can open link when some views are absent from the referred action", async 
 });
 
 test("Context is passed correctly to the action service", async () => {
-    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    const env = getMockEnv();
     mockService("action", {
         loadAction(_, context) {
             expect.step("load-action");

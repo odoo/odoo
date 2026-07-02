@@ -6,8 +6,8 @@ import {
     contains,
     defineModels,
     mountWithCleanup,
-    makeDialogMockEnv,
     mockService,
+    assignDialogTestEnv,
 } from "@web/../tests/web_test_helpers";
 import {
     Country,
@@ -46,8 +46,8 @@ async function makeExpressionEditorDialog(params = {}) {
             await animationFrame();
         }
     }
-    const env = await makeDialogMockEnv();
-    return mountWithCleanup(Parent, { env, props });
+    assignDialogTestEnv();
+    return mountWithCleanup(Parent, { props });
 }
 
 defineModels([Partner, Product, Team, Player, Country, Stage]);
