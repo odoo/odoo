@@ -93,6 +93,12 @@ export class DiscussChannel extends mailModels.DiscussChannel {
             predicate: isLivechatChannel,
             value: (channel) => ResCountry.browse(channel.country_id),
         });
+        // sudo - visitor can access to the livechat channel name and review link of an accessible channel
+        res.one("livechat_channel_id", ["name", "review_link"], {
+            predicate: isLivechatChannel,
+            sudo: true,
+            value: (channel) => LivechatChannel.browse(channel.livechat_channel_id),
+        });
         res.attr("livechat_end_dt", undefined, { predicate: isLivechatChannel });
         // sudo - visitor can access to the channel member history of an accessible channel
         res.many("livechat_channel_member_history_ids", "_store_member_history_fields", {
@@ -102,11 +108,6 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 LivechatChannelMemberHistory.browse(channel.livechat_channel_member_history_ids),
         });
         if (res.is_for_internal_users()) {
-            res.one("livechat_channel_id", ["name"], {
-                predicate: isLivechatChannel,
-                sudo: true,
-                value: (channel) => LivechatChannel.browse(channel.livechat_channel_id),
-            });
             res.attr("description", undefined, { predicate: isLivechatChannel });
             res.one("livechat_lang_id", ["name", "code"], {
                 predicate: isLivechatChannel,
