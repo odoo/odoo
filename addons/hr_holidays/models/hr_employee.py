@@ -752,6 +752,7 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
+        res.attr("avatar_leave_summary", lambda employee: employee.get_avatar_leave_summary())
 
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
@@ -813,3 +814,41 @@ class HrEmployee(models.Model):
         hour_to = max((att['hour_to'] for att in attendances), default=default_end)
 
         return (hour_from, hour_to)
+
+    def get_avatar_leave_summary(self):
+        self.ensure_one()
+        if not self.env.user.has_groups('hr.group_hr_user'):
+            return []
+
+        valid_work_entry_types = self.env['hr.work.entry.type'].search([
+            '|',
+                ('country_id', 'in', self.company_id.country_id.ids),
+                ('country_id', '=', False),
+        ])
+
+        # _store_avatar_card_fields is called with sudo causing the time off data to be visible for all users
+        # Use sudo=False to avoid showing leave data to unauthorized users
+        consumed_leaves, _ = self.sudo(False)._get_consumed_leaves(valid_work_entry_types)
+
+        leaves_summary = []
+        for work_entry_type, allocations in consumed_leaves.get(self, {}).items():
+            leaves_taken = 0
+            remaining_leaves = 0
+            max_leaves = 0
+
+            for allocation in allocations.values():
+                leaves_taken += allocation['leaves_taken']
+                remaining_leaves += allocation['remaining_leaves']
+                max_leaves += allocation['max_leaves']
+
+            if max_leaves > 0 or leaves_taken > 0:
+                leaves_summary.append({
+                    'display_name': work_entry_type.name,
+                    'leaves_taken': leaves_taken,
+                    'remaining_leaves': remaining_leaves,
+                    'requires_allocation': work_entry_type.requires_allocation,
+                    'max_leaves': max_leaves,
+                    'unit': self.env._('days') if work_entry_type.unit_of_measure == 'day' else self.env._('hours'),
+                })
+
+        return sorted(leaves_summary, key=lambda x: x['remaining_leaves'])

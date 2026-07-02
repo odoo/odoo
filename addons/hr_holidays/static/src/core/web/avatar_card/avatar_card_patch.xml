@@ -10,5 +10,33 @@
             <!-- Employee is on time off and he is not connected -->
             <i t-if="this.employee?.hr_icon_display === 'presence_holiday_absent'" class="fa fa-fw fa-plane text-warning me-1" title="On Time Off" role="img" aria-label="On Time Off"/>
         </xpath>
+        <xpath expr="//div[hasclass('o_avatar_card_details')]" position="inside">
+            <div t-if="this.leaveSummary.length" class="o_avatar_card_leave_summary">
+                <div class="d-flex align-items-center text-info fw-bold fs-5 cursor-pointer" 
+                    t-on-click="this.onTimeOffClick">
+                    <i class="fa fa-calendar me-2"/> 
+                    Time Off
+                </div>
+                <t t-foreach="this.leaveSummary" t-as="leave" t-key="leave_index">
+                    <div class="d-flex align-items-baseline small">
+                        <span class="me-1">
+                            <t t-out="leave.display_name"/>:
+                        </span>
+
+                        <div>
+                            <span class="fw-bold text-dark">
+                                <t t-out="leave.leaves_taken"/> <t t-out="leave.unit"/>
+                            </span>
+                            
+                            <t t-if="leave.requires_allocation">
+                                <span class="text-muted">
+                                    (<t t-out="leave.remaining_leaves"/> <t t-out="leave.unit"/>)
+                                </span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
     </t>
 </templates>
