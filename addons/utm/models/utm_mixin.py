@@ -238,6 +238,7 @@ class UtmMixin(models.AbstractModel):
         return {
             'utm.utm_medium_direct': ('Direct', 'utm.medium'),
             'utm.utm_medium_email': ('Email', 'utm.medium'),
+            'utm.utm_medium_messaging': ('Messaging', 'utm.medium'),
             'utm.utm_medium_social_media': ('Social Media', 'utm.medium'),
             'utm.utm_medium_website': ('Website', 'utm.medium'),
             'utm.utm_source_facebook': ('Facebook', 'utm.source'),
