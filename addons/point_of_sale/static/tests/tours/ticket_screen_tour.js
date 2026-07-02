@@ -394,3 +394,15 @@ registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_refund_backend_duplicate", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            TicketScreen.receiptTotalAmountIs("-10.00"),
+        ].flat(),
+});

@@ -91,6 +91,9 @@ export class Thread extends Component {
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
         this.root = useRef("messages");
+        this.visibleState = useVisible("messages", () => {
+            this.updateShowJumpPresent();
+        });
         /**
          * This is the reference element with the scrollbar. The reference can
          * either be the chatter scrollable (if chatter) or the thread
@@ -514,7 +517,8 @@ export class Thread extends Component {
 
     updateShowJumpPresent() {
         this.state.showJumpPresent =
-            this.props.thread.loadNewer || this.presentThresholdState.isVisible === false;
+            this.visibleState.isVisible &&
+            (this.props.thread.loadNewer || this.presentThresholdState.isVisible === false);
     }
 
     onClickLoadOlder() {

@@ -920,7 +920,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _convert_hu_local_to_eu_vat(self, local_vat):
-        if self.__check_tin_hu_companies_re.match(local_vat):
+        if self.__check_tin_hu_companies_re.match(local_vat) or self.__check_tin_hu_european_re.match(local_vat):
             return f'HU{local_vat[:8]}'
         return False
 

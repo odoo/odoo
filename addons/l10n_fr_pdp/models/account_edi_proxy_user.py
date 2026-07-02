@@ -75,7 +75,8 @@ DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_
     },
     'participant_status': lambda params: {},
     'send_document': lambda params: {
-        'ppf_messages': [{'uid': f'demo_{uuid.uuid4()}', 'flow_id': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
+        'messages': [{'message_uuid': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
+        'ppf_messages': [{'uuid': f'demo_{uuid.uuid4()}', 'flow_id': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
     },
     'pdp_state': lambda params: {},
 }
@@ -168,6 +169,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'company_id': company.id,
                     'peppol_identifier': peppol_identifier,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
+                    'auth_url_hash': company.pdp_authentication_uuid,
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)

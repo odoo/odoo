@@ -5,7 +5,7 @@
         <field name="model">pdp.registration</field>
         <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
-            <form>
+            <form js_class="pdp_status_listener">
                 <sheet>
                     <div class="m-0" name="warnings" invisible="not warnings or not account_peppol_proxy_state">
                         <field name="warnings" class="o_field_html" widget="actionable_errors"/>
@@ -19,13 +19,13 @@
                         <!-- business fields -->
                         <field name="pdp_identifier"
                                string="Identifier"
-                               invisible="pdp_kyc_status != 'success'"/>
+                               readonly="pdp_kyc_status in ('processing', 'success')"/>
                         <field name="contact_email"
                                string="Email"
-                               readonly="pdp_kyc_status in ('processing', 'success')"/>
+                        />
                         <field name="pdp_pilot_phase"
                                string="Pilot Phase"
-                               invisible="pdp_kyc_status != 'success'"/>
+                               readonly="pdp_kyc_status in ('processing', 'success')"/>
 
                     </group>
 

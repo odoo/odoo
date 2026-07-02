@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from freezegun import freeze_time
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from odoo import Command
 
@@ -24,6 +25,8 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         cls.verification_sudo = cls.env['l10n_pl.bank.account.verification'].sudo()
         cls.pl_supplier, cls.pl_supplier_bank_account, cls.pl_supplier_move = cls._create_partner_bank_and_move(cls, '1111111111', 'PL61109010140000071219812874')  # valid bank account number
         cls.startClassPatcher(freeze_time('2026-01-31 10:00:00'))
+        date = datetime(2026, 1, 31, 10, 0).replace(tzinfo=ZoneInfo('Europe/Warsaw')).astimezone(timezone.utc)
+        cls.date = date.replace(tzinfo=None)
 
     def _create_payments_for_moves(self, moves):
         action_register_payment = moves.action_register_payment()
@@ -104,7 +107,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'valid',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -128,7 +131,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'valid',
             'verification_request_id': 'AZERTYUIOP-01',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
             'partner_id': self.pl_supplier.id,
@@ -156,7 +159,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         payment = self._create_payments_for_moves(move)
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'not_found_partner',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-15',
             'partner_bank_id': bank_account.id,
             'partner_bank_account_number': bank_account.sanitized_acc_number,
@@ -171,7 +174,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         payment = self._create_payments_for_moves(move)
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'invalid',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-04',
             'partner_bank_id': supplier_bank.id,
             'partner_bank_account_number': supplier_bank.sanitized_acc_number,
@@ -185,13 +188,11 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         moves = move + self.pl_supplier_move
         self._check_form_fields(moves, not_found_partners=supplier)
 
-        date = datetime(2026, 1, 31, 10, 0, 0)
-
         payments = self._create_payments_for_moves(moves)
         self.assertRecordValues(payments.l10n_pl_verification_id, [
             {
                 'verification_status': 'not_found_partner',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-02',
                 'partner_bank_id': supplier_bank.id,
                 'partner_bank_account_number': supplier_bank.sanitized_acc_number,
@@ -200,7 +201,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             },
             {
                 'verification_status': 'valid',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-02',
                 'partner_bank_id': self.pl_supplier_bank_account.id,
                 'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -215,13 +216,11 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         moves = move + self.pl_supplier_move
         self._check_form_fields(moves)
 
-        date = datetime(2026, 1, 31, 10, 0, 0)
-
         payments = self._create_payments_for_moves(moves)
         self.assertRecordValues(payments.l10n_pl_verification_id, [
             {
                 'verification_status': 'valid',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-03',
                 'partner_bank_id': supplier_bank.id,
                 'partner_bank_account_number': supplier_bank.sanitized_acc_number,
@@ -230,7 +229,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             },
             {
                 'verification_status': 'valid',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-03',
                 'partner_bank_id': self.pl_supplier_bank_account.id,
                 'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -245,14 +244,12 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         moves = move + self.pl_supplier_move
         self._check_form_fields(moves, invalid_bank_accounts=bank_account)
 
-        date = datetime(2026, 1, 31, 10, 0, 0)
-
         payments = self._create_payments_for_moves(moves)
         self.assertRecordValues(payments.l10n_pl_verification_id, [
             {
                 'verification_status': 'invalid',
                 'verification_request_id': 'AZERTYUIOP-03',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'partner_bank_id': bank_account.id,
                 'partner_bank_account_number': bank_account.sanitized_acc_number,
                 'partner_id': supplier.id,
@@ -261,7 +258,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             {
                 'verification_status': 'valid',
                 'verification_request_id': 'AZERTYUIOP-03',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'partner_bank_id': self.pl_supplier_bank_account.id,
                 'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
                 'partner_id': self.pl_supplier.id,
@@ -274,14 +271,13 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         supplier, bank_account, move = self._create_partner_bank_and_move('PL3333333333', '61109010140000071219812999')  # invalid bank account number
         moves = move + self.pl_supplier_move
         self._check_form_fields(moves, invalid_bank_accounts=bank_account)
-        date = datetime(2026, 1, 31, 10, 0, 0)
 
         payments = self._create_payments_for_moves(moves)
         self.assertRecordValues(payments.l10n_pl_verification_id, [
             {
                 'verification_status': 'invalid',
                 'verification_request_id': 'AZERTYUIOP-05',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'partner_bank_id': bank_account.id,
                 'partner_bank_account_number': bank_account.sanitized_acc_number,
                 'partner_id': supplier.id,
@@ -290,7 +286,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             {
                 'verification_status': 'valid',
                 'verification_request_id': 'AZERTYUIOP-05',
-                'verification_timestamp': date,
+                'verification_timestamp': self.date,
                 'partner_bank_id': self.pl_supplier_bank_account.id,
                 'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
                 'partner_id': self.pl_supplier.id,
@@ -304,7 +300,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         self.verification_sudo.create({
             'verification_status': 'valid',
             'verification_request_id': 'AZERTYUIOP-99',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
             'partner_id': self.pl_supplier.id,
@@ -320,7 +316,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         self.verification_sudo.create({
             'verification_status': 'incomplete_partner',
             'verification_request_id': False,
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'partner_bank_id': False,
             'partner_bank_account_number': False,
             'partner_id': supplier.id,
@@ -356,7 +352,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         payments = self._create_payments_for_moves(moves)
         self.assertRecordValues(payments.l10n_pl_verification_id, [{
             'verification_status': 'valid',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -387,7 +383,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         payment = self._create_payment()
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'valid',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -401,7 +397,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         payment = self._create_payment()
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'invalid',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
@@ -414,7 +410,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         old_verif = self.verification_sudo.create({
             'verification_status': 'valid',
             'verification_request_id': 'AZERTYUIOP-99',
-            'verification_timestamp': datetime(2026, 1, 31, 10, 0, 0),
+            'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
             'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
             'partner_id': self.pl_supplier.id,

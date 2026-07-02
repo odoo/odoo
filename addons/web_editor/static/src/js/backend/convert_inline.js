@@ -8,7 +8,6 @@ import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from 
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
-const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])|@page/;
@@ -503,24 +502,7 @@ function classToStyle($editable, cssRules) {
             // Append non-breaking spaces to empty table cells.
             writes.push(() => { node.appendChild(document.createTextNode('\u00A0')); });
         }
-        // Outlook
-        if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
-            writes.push(() => {
-                node.before(_createMso(`<table align="center" border="0"
-                    role="presentation" cellpadding="0" cellspacing="0"
-                    style="border-radius: 6px; border-collapse: separate !important;">
-                        <tbody>
-                            <tr>
-                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '').replaceAll('"', '&quot;')}" ${
-                                    node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
-                                }bgcolor="${rgbToHex(node.style.backgroundColor)}">
-                    `));
-                node.after(_createMso(`</td>
-                        </tr>
-                    </tbody>
-                </table>`));
-            });
-        } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
+        if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
         }
 
@@ -1289,7 +1271,9 @@ function normalizeRem($editable, rootFontSize=16) {
         // The opening tag of `td` is for the others.
         _hideForOutlook(td, 'opening');
     }
-}
+    equalizeCardHeights(editable);
+    applyVmlToButtons(editable);
+ }
 
 /**
  * Convert image element to an image element with type png
@@ -1322,6 +1306,66 @@ async function convertToPng(img) {
     image.setAttribute('width', width);
     image.setAttribute('height', height);
     return image;
+}
+
+
+function equalizeCardHeights(editable) {
+    for (const td of editable.querySelectorAll(".s_three_columns .align-items-stretch td")) {
+        const cards = [...td.querySelectorAll(":scope > div.o_stacking_wrapper table.card")];
+        if (cards.length < 2) {
+            continue;
+        }
+        const cardBodies = cards.map((card) => card.querySelector("td.card-body"));
+        const heights = cardBodies.map((body) => body.offsetHeight);
+        const maxHeight = Math.max(...heights);
+        for (let i = 0; i < cardBodies.length; i++) {
+            const body = cardBodies[i];
+            if (!body.hasAttribute("height")) {
+                // Set fixed height attribute + valign directly on card-body td
+                // To make the height work for Outlook 2019
+                body.setAttribute("height", maxHeight);
+                body.setAttribute("valign", "top");
+                body.style.setProperty("height", maxHeight + "px");
+            }
+        }
+    }
+}
+
+function applyVmlToButtons(editable) {
+    function computeArcsize(s, heightPx) {
+        const radius = parseFloat(s.borderRadius || s.borderTopLeftRadius) || 0;
+        if (!radius || !heightPx) return 0;
+        return Math.round((radius / heightPx) * 100);
+    }
+
+    editable.querySelectorAll("a.btn").forEach((btn) => {
+        const s = btn.style;
+        const rawBg = s.backgroundColor || s.background;
+        if (!rawBg) return;
+
+        const bg = rgbToHex(rawBg);
+        const arcsize = computeArcsize(s, btn.offsetHeight);
+        const href = btn.getAttribute('href') || '';
+        const target = btn.getAttribute('target') || '_blank';
+        const rel = btn.getAttribute('rel') || 'noopener';
+
+        const msoA = btn.cloneNode(true);
+        msoA.style.removeProperty('background-color');
+        msoA.style.removeProperty('background');
+        msoA.style.removeProperty('border-radius');
+
+        btn.before(_createMso(
+            `<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" ` +
+            `href="${href}" rel="${rel}" target="${target}" ` +
+            `style="mso-wrap-style:none;mso-position-horizontal:center;mso-position-vertical:top;" ` +
+            `arcsize="${arcsize}%" stroke="f" fillcolor="${bg}">` +
+            `<w:anchorlock/><v:textbox inset="0,0,0,0" style="mso-fit-shape-to-text:true;"><center>` +
+            msoA.outerHTML +
+            `</center></v:textbox></v:roundrect>`
+        ));
+
+        _hideForOutlook(btn);
+    });
 }
 
 /**
@@ -1495,8 +1539,8 @@ function _createColumnGrid() {
  * @param {string} content
  * @returns {Comment}
  */
-function _createMso(content = "") {
-    // We remove commets having opposite condition fron the one we will insert
+function _createMso(content = '') {
+    // We remove comments having opposite condition from the one we will insert
     // We remove comment tags having the same condition
     const showRegex = /<!--\[if\s+mso\]>([\s\S]*?)<!\[endif\]-->/g;
     const hideRegex = /<!--\[if\s+!mso\]>([\s\S]*?)<!\[endif\]-->/g;

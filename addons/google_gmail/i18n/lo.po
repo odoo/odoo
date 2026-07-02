@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_gmail
+# * google_gmail
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-29 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-06-06 11:37+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/google_gmail/"
+"lo/>\n"
+"Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\" title=\"ແກ້ໄຂການຕັ້ງຄ່າ\"/>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -28,6 +32,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Gmail account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        ເຊື່ອມຕໍ່ບັນຊີ Gmail ຂອງທ່ານ"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -36,6 +42,10 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
+"                        ໂທເຄັນ Gmail ຖືກຕ້ອງ\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -44,49 +54,53 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        ໂທເຄັນ Gmail ຖືກຕ້ອງ\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token
 msgid "Access Token"
-msgstr ""
+msgstr "ໂທເຄັນການເຂົ້າເຖິງ"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr ""
+msgstr "ເວລາໝົດອາຍຸຂອງໂທເຄັນການເຂົ້າເຖິງ"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງຂະບວນການຢືນຢັນຕົວຕົນ."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ດຶງຂໍ້ມູນໂທເຄັນການເຂົ້າເຖິງ."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "ຢືນຢັນຕົວຕົນດ້ວຍ"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "ລະຫັດການອະນຸຍາດ"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າການກຳນົດຄ່າ"
 
 #. module: google_gmail
 #. odoo-python
@@ -95,6 +109,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"ເຊື່ອມຕໍ່ບັນຊີ Gmail ຂອງທ່ານດ້ວຍຂະບວນການຢືນຢັນຕົວຕົນ OAuth. \n"
+"ທ່ານຈະຖືກນຳໄປຫາໜ້າເຂົ້າສູ່ລະບົບ Gmail ບ່ອນທີ່ທ່ານຈຳເປັນຕ້ອງຍອມຮັບການອະນຸຍາດ."
 
 #. module: google_gmail
 #. odoo-python
@@ -103,42 +119,45 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"ເຊື່ອມຕໍ່ບັນຊີ Gmail ຂອງທ່ານດ້ວຍຂະບວນການຢືນຢັນຕົວຕົນ OAuth. \n"
+"ໂດຍເລີ່ມຕົ້ນ, ມີພຽງແຕ່ຜູ້ໃຊ້ທີ່ມີທີ່ຢູ່ອີເມລທີ່ກົງກັນເທົ່ານັ້ນທີ່ຈະສາມາດໃຊ້ເຊີເວີນີ້ໄດ້. ເພື່ອຂະຫຍາຍການນຳໃຊ້, ທ່ານ"
+"ຄວນຕັ້ງຄ່າພາຣາມີເຕີລະບົບ \"mail.default.from\"."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "Gmail Client Id"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmail Client Secret"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນ Gmail OAuth"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail Mixin"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "ID ຂອງແອັບ Google ຂອງທ່ານ"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "ເຊີເວີເມລຂາເຂົ້າ"
 
 #. module: google_gmail
 #. odoo-python
@@ -147,23 +166,25 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"ຄວາມປອດໄພການເຊື່ອມຕໍ່ບໍ່ຖືກຕ້ອງສຳລັບເຊີເວີເມລ Gmail “%s”. ກະລຸນາຕັ້ງຄ່າເປັນ \"TLS (STARTTLS)"
+"\"."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "ເຊີເວີເມລ"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "ມີພຽງແຕ່ຜູ້ເບິ່ງແຍງລະບົບເທົ່ານັ້ນທີ່ສາມາດເຊື່ອມໂຍງເຊີເວີເມລ Gmail ໄດ້."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "ກະລຸນາຕັ້ງຄ່າຂໍ້ມູນປະຈຳຕົວ Gmail ຂອງທ່ານ."
 
 #. module: google_gmail
 #. odoo-python
@@ -173,6 +194,8 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"ກະລຸນາຕື່ມຂໍ້ມູນໃສ່ຫ້ອງ \"ຊື່ຜູ້ໃຊ້\" ດ້ວຍຊື່ຜູ້ໃຊ້ Gmail ຂອງທ່ານ (ທີ່ຢູ່ອີເມລຂອງທ່ານ). ນີ້ຄວນເປັນບັນຊີດຽວກັນ"
+"ກັບບັນຊີທີ່ໃຊ້ສຳລັບ Gmail OAuthentication Token."
 
 #. module: google_gmail
 #. odoo-python
@@ -181,33 +204,35 @@ msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
 msgstr ""
+"ກະລຸນາປະຫ້ອງລະຫັດຜ່ານໃຫ້ວ່າງໄວ້ສຳລັບເຊີເວີເມລ Gmail “%s”. ຂະບວນການ OAuth ບໍ່ຈຳເປັນຕ້ອງໃຊ້ລະຫັ"
+"ດຜ່ານ"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Read More"
-msgstr ""
+msgstr "ອ່ານເພີ່ມເຕີມ"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_refresh_token
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
 msgid "Refresh Token"
-msgstr ""
+msgstr "ໂທເຄັນການຟື້ນຟູ (Refresh Token)"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret"
-msgstr ""
+msgstr "ຄວາມລັບ (Secret)"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "ຄວາມລັບຂອງແອັບ Google ຂອງທ່ານ"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
 msgid "Server Type"
-msgstr ""
+msgstr "ປະເພດເຊີເວີ"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -216,17 +241,18 @@ msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
 msgstr ""
+"ຕັ້ງຄ່າຂໍ້ມູນປະຈຳຕົວ Gmail API ຂອງທ່ານໃນການຕັ້ງຄ່າທົ່ວໄປເພື່ອເຊື່ອມໂຍງບັນຊີ Gmail."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "URL ເພື່ອສ້າງລະຫັດການອະນຸຍາດຈາກ Google"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"

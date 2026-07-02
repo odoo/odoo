@@ -508,7 +508,7 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
 
         # cannot unlink alias domain as there are aliases linked to it
-        with self.assertRaises(psycopg2.errors.ForeignKeyViolation), self.cr.savepoint(), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg2.errors.IntegrityError), self.cr.savepoint(), mute_logger('odoo.sql_db'):
             mail_alias_domain.unlink()
 
         # eject linked aliases then remove alias domain of first company; should
@@ -695,20 +695,39 @@ class TestMailAliasDomain(TestMailAliasCommon):
         alias_domain = self.mail_alias_domain.with_env(self.env)
 
         # sanitization of name (both create and write)
-        for failing_name in [
-            'outlook.fr, gmail.com',
+        for failing_name, expected_name in [
+            ('outlook.fr, gmail.com', 'outlook.fr-gmail.com'),
             # accents
-            'provaïder',
-            'provaïder.cöm',
-            # fail
-            '', ' ',
+            ('provaïder', 'provaider'),
+            ('provaïder.cöm', 'provaider.com'),
+            # capitalization
+            ('Test.mycompany.com', 'test.mycompany.com'),
+            ('test.mycompany.Com', 'test.mycompany.com'),
         ]:
             with self.subTest(failing_name=failing_name):
-                with self.assertRaises(exceptions.ValidationError):
-                    _new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
+                new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
+                self.assertEqual(new_domain.name, expected_name)
 
-                with self.assertRaises(exceptions.ValidationError):
-                    alias_domain.write({'name': failing_name})
+                new_domain.write({'name': failing_name})
+                self.assertEqual(new_domain.name, expected_name)
+
+                # Cleanup
+                new_domain.unlink()
+
+        # empty domains
+        with self.subTest(failing_name=''):
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                self.env['mail.alias.domain'].create({'name': ''})
+
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                alias_domain.write({'name': ''})
+
+        with self.subTest(failing_name=' '):
+            with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.NotNullViolation):
+                self.env['mail.alias.domain'].create({'name': ' '})
+
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                alias_domain.write({'name': ' '})
 
         # sanitization of bounce / catchall
         for (

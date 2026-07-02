@@ -1524,6 +1524,35 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 f"{data['name']} should have {expected_days} days duration"
             )
 
+    def test_flexible_single_day_leave_on_public_holiday_include_in_duration(self):
+        """
+        Test that a single-day flexible leave on a public holiday counts
+        as 1 day when include_public_holidays_in_duration is True on the leave type.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40,
+            'flexible_hours': True,
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 9, 0, 0, 0),
+            'date_to': datetime(2022, 3, 9, 23, 59, 59),
+            'calendar_id': calendar.id,
+            'company_id': self.employee_emp.company_id.id,
+            'resource_id': False,
+        })
+        self.holidays_type_1.include_public_holidays_in_duration = True
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 9),
+            'request_date_to': date(2022, 3, 9),
+        })
+        self.assertEqual(leave.number_of_days, 1)
+
     def test_coextensive_holidays_one_include_public_leave(self):
         """
             The purpose is to test whether two holidays that span the same time frame,

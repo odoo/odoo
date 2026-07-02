@@ -297,13 +297,13 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     watermark_pdf = PdfFileReader(packet, overwriteWarnings=False)
     new_pdf = PdfFileWriter()
     for p in range(old_pdf.getNumPages()):
-        new_page = old_pdf.getPage(p)
+        new_pdf.addPage(old_pdf.getPage(p))
+        new_page = new_pdf.getPage(-1)
         # Remove annotations (if any), to prevent errors in PyPDF2
         if '/Annots' in new_page:
             del new_page['/Annots']
         new_page.mergePage(watermark_pdf.getPage(p))
-        new_pdf.addPage(new_page)
-        new_pdf.getPage(-1).compressContentStreams()
+        new_page.compressContentStreams()
 
     # Write the new pdf into a new output stream
     output = io.BytesIO()
@@ -412,19 +412,35 @@ class OdooPdfFileWriter(PdfFileWriter):
             adapted_subtype = ''
         return adapted_subtype
 
-    def add_attachment(self, name, data, subtype=None):
+    def add_attachment(self, name, data, subtype=None, afrelationship='/Data'):
         """
         Add an attachment to the pdf. Supports adding multiple attachment, while respecting PDF/A rules.
         :param name: The name of the attachement
         :param data: The data of the attachement
         :param subtype: The mime-type of the attachement. This is required by PDF/A, but not essential otherwise.
+        :param afrelationship: The relationship between the embedded file and the PDF content. This is required by PDF/A.
         """
+        # NOTE: Currently AFRelationship can only be '/Alternative' as it is coupled to the hardcoded
+        # <fx:ConformanceLevel>EXTENDED</fx:ConformanceLevel> in the XMP metadata template
+        # (account_invoice_pdfa_3_facturx_metadata). If support for MINIMUM/BASIC-WL is ever added,
+        # both afrelationship and ConformanceLevel must change together.
+
+        # Valid AFRelationship values per PDF 2.0 spec (ISO 32000-2, section 7.11.3)
+        valid_afrelationships = {'/Source', '/Data', '/Alternative', '/Supplement', '/Unspecified', '/EncryptedPayload', '/FormData', '/Schema'}
+        if afrelationship not in valid_afrelationships:
+            _logger.warning(
+                "Invalid AFRelationship value '%s', falling back to '/Data'. "
+                "Valid values are: %s",
+                afrelationship, ', '.join(sorted(valid_afrelationships))
+            )
+            afrelationship = '/Data'
         adapted_subtype = self.format_subtype(subtype)
 
         attachment = self._create_attachment_object({
             'filename': name,
             'content': data,
             'subtype': adapted_subtype,
+            'afrelationship': afrelationship,
         })
         if self._root_object.get('/Names') and self._root_object['/Names'].get('/EmbeddedFiles'):
             names_array = self._root_object["/Names"]["/EmbeddedFiles"]["/Names"]
@@ -457,9 +473,9 @@ class OdooPdfFileWriter(PdfFileWriter):
             })
     addAttachment = add_attachment
 
-    def embed_odoo_attachment(self, attachment, subtype=None):
+    def embed_odoo_attachment(self, attachment, subtype=None, afrelationship='/Data'):
         assert attachment, "embed_odoo_attachment cannot be called without attachment."
-        self.addAttachment(attachment.name, attachment.raw, subtype=subtype or attachment.mimetype)
+        self.addAttachment(attachment.name, attachment.raw, subtype=subtype or attachment.mimetype, afrelationship=afrelationship)
 
     def cloneReaderDocumentRoot(self, reader):
         super().cloneReaderDocumentRoot(reader)
@@ -654,7 +670,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         file_entry_object = self._addObject(file_entry)
         filename_object = createStringObject(attachment['filename'])
         filespec_object = DictionaryObject({
-            NameObject("/AFRelationship"): NameObject("/Data"),
+            NameObject("/AFRelationship"): NameObject(attachment.get('afrelationship', '/Data')),
             NameObject("/Type"): NameObject("/Filespec"),
             NameObject("/F"): filename_object,
             NameObject("/EF"):

@@ -1,7 +1,9 @@
 from datetime import datetime
 from markupsafe import Markup
+from lxml import etree
 
 from odoo import _, api, models
+from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero, float_repr, format_list, html2plaintext
@@ -184,6 +186,25 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    def _vals_to_etree(self, vals):
+        document_node = vals['document_node']
+        return dict_to_xml(document_node, nsmap=document_node['_nsmap'], template=document_node['_template'])
+
+    def _etree_to_string(self, tree):
+        return etree.tostring(tree, xml_declaration=True, encoding='UTF-8')
+
+    def _define_document_type(self, vals, document_type):
+        vals['_document_type'] = {
+            'name': document_type,
+            'model': self,
+        }
+
+    def _get_document_type(self, vals):
+        return vals.get('_document_type', {}).get('name')
+
+    def _is_document(self, vals, *document_types):
+        return self._get_document_type(vals) in document_types
 
     def module_installed(self, module_name):
         return self.env['ir.module.module']._get(module_name).state == 'installed'
@@ -467,10 +488,13 @@ class AccountEdiCommon(models.AbstractModel):
                 'res_id': invoice.id,
             })
 
+        attachments = self._import_attachments(invoice, tree)
+        if attachments:
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+
         return True
 
     def _import_attachments(self, invoice, tree):
-        # Unused method, kept to avoid breaking stable
         # Import the embedded documents in the xml if some are found
         attachments = self.env['ir.attachment']
         if invoice.message_main_attachment_id:
@@ -478,6 +502,11 @@ class AccountEdiCommon(models.AbstractModel):
             return attachments
 
         attachments_data = attachments._extract_additional_documents(tree)
+        for data in attachments_data:
+            data.update({
+                'res_id': invoice.id,
+                'res_model': invoice._name,
+            })
         attachments = self.env['ir.attachment'].create(attachments_data)
         # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
         # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.

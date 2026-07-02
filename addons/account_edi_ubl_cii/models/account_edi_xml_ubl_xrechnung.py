@@ -87,8 +87,12 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
     def _ubl_add_buyer_reference_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_buyer_reference_node(vals)
-
         node = vals['document_node']['cbc:BuyerReference']
+
+        customer = vals['customer'].commercial_partner_id
+        if customer.peppol_eas == "0204":
+            node['_text'] = customer.peppol_endpoint
+
         if not node['_text']:
             node['_text'] = 'N/A'
 

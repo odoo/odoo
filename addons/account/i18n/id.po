@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-05-28 09:59+0000\n"
+"PO-Revision-Date: 2026-06-23 09:06+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
 "account/id/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -1244,7 +1244,7 @@ msgstr "<span>Disc.%</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span>Draft</span>"
-msgstr "<span>Draf</span>"
+msgstr "<span>Draft</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1616,8 +1616,8 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"Pembayaran dengan akun hutang tidak dapat dikonfirmasi bila tidak memiliki "
-"entri jurnal."
+"Pembayaran dengan akun belum lunas tidak dapat dikonfirmasi bila tidak "
+"memiliki entri jurnal."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -3142,7 +3142,7 @@ msgid ""
 "criterias (VAT/Country) are met."
 msgstr ""
 "Terapkan mapping pajak & akun pada faktur secara otomatis bila kriteria "
-"pencocokkan (PPN/Negara) terpenuhi."
+"pencocokan (PPN/Negara) terpenuhi."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3552,8 +3552,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Nomor Akun Bank yang mana akan dibayarkan pada faktur. Akun bank sebuah "
-"perusahaan jika fakturnya adalah Faktur Pelanggan atau Catatan Kredit "
-"Pemasok, jika tidak menjadi nomor akun bank rekanan."
+"perusahaan jika fakturnya adalah Faktur Pelanggan atau Nota Kredit Pemasok, "
+"jika tidak menjadi nomor akun bank rekanan."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -5433,7 +5433,7 @@ msgstr "Pergerakan Kredit"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
-msgstr "Catatan Kredit"
+msgstr "Nota Kredit"
 
 #. module: account
 #. odoo-python
@@ -5459,7 +5459,7 @@ msgstr "Nota Kredit: Mengirim"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Credit Notes"
-msgstr "Catatan Kredit"
+msgstr "Nota Kredit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_credit_statement_tree
@@ -5586,7 +5586,7 @@ msgstr "Nilai tukar mata uang dari mata uang perusahaan ke mata uang dokumen."
 #: model:account.account,name:account.1_current_assets
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 msgid "Current Assets"
-msgstr "Aktiva Terkini"
+msgstr "Aktiva Lancar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -5653,7 +5653,7 @@ msgstr "Akun Bank Pelanggan"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Catatan Kredit Pelanggan"
+msgstr "Nota Kredit Pelanggan"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -5971,7 +5971,7 @@ msgstr "Pemisah Desimal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Nomor Catatan Kredit Khusus"
+msgstr "Nomor Nota Kredit Khusus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -6710,7 +6710,7 @@ msgstr "Rancangan Tagihan"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Credit Note"
-msgstr "Catatan Kredit Rancangan"
+msgstr "Nota Kredit Rancangan"
 
 #. module: account
 #. odoo-python
@@ -10475,7 +10475,7 @@ msgstr "Matched Payments"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Matched Transactions"
-msgstr "Transaksi-Transaksi Cocok"
+msgstr "Transaksi Cocok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -10518,7 +10518,7 @@ msgstr "Matching partners"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Matching rules"
-msgstr "Peraturan pencocokkan"
+msgstr "Peraturan pencocokan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -10627,7 +10627,7 @@ msgstr "Metode"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Misc. Operations"
-msgstr "Misc. Operations"
+msgstr "Operasi Lain-Lain"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -10789,7 +10789,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline Kegiatan Saya"
+msgstr "Tenggat Aktivitas Saya"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10948,7 +10948,7 @@ msgstr "Kalender Acara Aktivitas Berikutnya"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Batas Waktu Aktivitas Berikutnya"
+msgstr "Tenggat Aktivitas Berikutnya"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_summary
@@ -11045,7 +11045,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr "Tidak ada akun hutang yang dapat ditemukan untuk melakukan pembayaran"
+msgstr ""
+"Tidak ada akun belum lunas yang dapat ditemukan untuk melakukan pembayaran"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -11120,7 +11121,7 @@ msgstr "Not Contains"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Not Due"
-msgstr "Not Due"
+msgstr "Belum Jatuh Tempo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -11705,7 +11706,7 @@ msgstr "Pembayaran Keluar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Akun Hutang"
+msgstr "Akun Belum Lunas"
 
 #. module: account
 #. odoo-python
@@ -13302,12 +13303,12 @@ msgstr "Resequence"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Reset To Draft"
-msgstr "Reset Menjadi Draft"
+msgstr "Reset ke Draft"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
-msgstr "Reset ke Rancangan"
+msgstr "Reset ke Draft"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -13672,7 +13673,7 @@ msgstr "Pajak Penjualan"
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Sales Taxes"
-msgstr "Pajak Penjuala"
+msgstr "Pajak Penjualan"
 
 #. module: account
 #. odoo-python
@@ -13845,7 +13846,7 @@ msgstr "Bagian Dari"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 msgid "Sections"
-msgstr "Bagian-Bagian"
+msgstr "Bagian"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
@@ -14200,7 +14201,7 @@ msgstr "Layanan"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
-msgstr "Tetapkan Data Perusahaa"
+msgstr "Tetapkan Data Perusahaan"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
@@ -16838,7 +16839,7 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
-"Peraturan pencocokkan digunakan saat user tidak yakin mengenai semua "
+"Peraturan pencocokan digunakan saat user tidak yakin mengenai semua "
 "informasi di counterpart."
 
 #. module: account
@@ -17285,7 +17286,7 @@ msgstr "Transaction Type Parameter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr "Transaksi-transaksi"
+msgstr "Transaksi"
 
 #. module: account
 #. odoo-python
@@ -17987,7 +17988,7 @@ msgstr "Akun Diskon Tagihan Vendor"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Catatan Kredit Pemasok"
+msgstr "Nota Kredit Pemasok"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2025-12-16 13:08+0000\n"
 "Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
@@ -140,6 +140,14 @@ msgstr "%(name)s ( %(maximum)g өдрөөс %(time)g үлдсэн)"
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
 msgstr "%(name)s (%(maximum)g цагаас %(time)g үлдсэн)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3635,12 +3643,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Уг хүсэлтийг хангах чөлөөний эрхийн үлдэгдэл хүрэлцэхгүй байна."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "This allocation have already ran once, any modification won't be effective "
@@ -4848,3 +4850,6 @@ msgstr "батлах"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "баталгаажуулсан"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Уг хүсэлтийг хангах чөлөөний эрхийн үлдэгдэл хүрэлцэхгүй байна."
