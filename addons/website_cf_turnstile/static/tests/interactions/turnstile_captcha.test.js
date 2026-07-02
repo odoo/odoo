@@ -42,14 +42,24 @@ test("turnstile appearance defaults to interaction-only", async () => {
 });
 
 test("turnstile appearance is always with ?cf=show", async () => {
-    history.pushState({}, "", `${window.location.pathname}?cf=show`);
+    const originalGet = URLSearchParams.prototype.get;
+    URLSearchParams.prototype.get = function (key) {
+        if (key === "cf") {
+            return "show";
+        }
+        return originalGet.call(this, key);
+    };
     session.turnstile_site_key = "test";
-    const { core } = await startInteractions(`
-        <form data-captcha="test">
-            <input name="test"/>
-            <button type="submit">Submit</a>
-        </form>
-    `);
-    expect(queryOne("form .cf-turnstile")).toHaveAttribute("data-appearance", "always");
-    core.stopInteractions();
+    try {
+        const { core } = await startInteractions(`
+            <form data-captcha="test">
+                <input name="test"/>
+                <button type="submit">Submit</a>
+            </form>
+        `);
+        expect(queryOne("form .cf-turnstile")).toHaveAttribute("data-appearance", "always");
+        core.stopInteractions();
+    } finally {
+        URLSearchParams.prototype.get = originalGet;
+    }
 });
