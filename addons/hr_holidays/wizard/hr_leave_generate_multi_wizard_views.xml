@@ -26,7 +26,7 @@
                         <field name="hour_to" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                     </div>
                     <field name="work_entry_type_id" class="w-100"
-                        domain="[('id', 'in', allowed_work_entry_type_ids)]"/>
+                        domain="[('id', 'in', allowed_work_entry_type_ids),('time_off_selectable', '=', True)]"/>
                 </group>
                 <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>
                 <footer>

@@ -598,15 +598,17 @@
             </xpath>
             <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
                 <attribute name="domain">[
-                    '|',
-                        ('requires_allocation', '=', False),
-                        '&amp;',
-                            ('has_valid_allocation', '=', True),
-                            '|',
-                                ('allows_negative', '=', True),
-                                '&amp;',
-                                    ('virtual_remaining_leaves', '&gt;', 0),
-                                    ('allows_negative', '=', False),
+                                    ('id', 'in', allowed_work_entry_type_ids),
+                                    ('time_off_selectable', '=', True),
+                                    '|',
+                                        ('requires_allocation', '=', False),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
                 ]</attribute>
             </xpath>
             <xpath expr="//div[@name='warning_wrong_company']" position="replace"/>
