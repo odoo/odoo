@@ -118,6 +118,7 @@ export class ThemeTabPlugin extends Plugin {
             ChangeColorPaletteAction,
             CustomizeWebsiteFontFamilyAction,
             CustomizeWebsiteFontWeightAction,
+            CustomizeInputFocusShadowAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
         },
@@ -425,6 +426,15 @@ export class ConfigureApiKeyAction extends BuilderAction {
     }
     apply() {
         this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    }
+}
+
+export class CustomizeInputFocusShadowAction extends CustomizeWebsiteVariableAction {
+    static id = "customizeInputFocusShadow";
+    async clean({ params: { mainParam: variable } }) {
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+            [variable]: null,
+        });
     }
 }
 
