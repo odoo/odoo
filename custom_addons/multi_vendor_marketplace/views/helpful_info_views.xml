@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Helpful info form view-->
+    <record id="helpful_info_view_form" model="ir.ui.view">
+        <field name="name">helpful.info.view.form</field>
+        <field name="model">helpful.info</field>
+        <field name="arch" type="xml">
+            <form string="Helpful Info ">
+                <group>
+                    <field name="customer_id"/>
+                    <field name="msg"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

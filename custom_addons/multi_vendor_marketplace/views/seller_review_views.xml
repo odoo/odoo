@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--        SELLER REVIEW TREE VIEW-->
+    <record id="seller_review_action" model="ir.actions.act_window">
+        <field name="name">Seller Review</field>
+        <field name="res_model">seller.review</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="context">{"search_default_state_filter":1}</field>
+    </record>
+<!--    Tree view-->
+    <record id="seller_review_view_tree" model="ir.ui.view">
+        <field name="name">Seller Review</field>
+        <field name="model">seller.review</field>
+        <field name="arch" type="xml">
+            <tree string="Seller Review">
+                <field name="seller_id"/>
+                <field name="rating"/>
+            </tree>
+        </field>
+    </record>
+    <!--    SELLER REVIEW KANBAN VIEW-->
+    <record id="seller_review_view_kanban" model="ir.ui.view">
+        <field name="name">seller.review.view.kanban</field>
+        <field name="model">seller.review</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="bg-light d-flex justify-content-between oe_kanban_global_click">
+                            <div style="align:left; width: 150px;">
+                                <div>
+                                    <strong>Seller:</strong>
+                                    <field name="seller_id"/>
+                                </div>
+                                <div>
+                                    <strong>By:</strong>
+                                    <field name="customer_id"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-thumbs-up fa-1x"/>
+                                    <field name="like_count"/>
+                                    <i class="fa fa-thumbs-down fa-1x">
+                                        <field name="unlike_count"/>
+                                    </i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="o_kanban_record_top mb-0">
+                                    <div class="o_kanban_record_headings">
+                                    </div>
+                                </div>
+                                <div name="detail" class="mt-1">
+                                    <i class="fa fa-cog fa-spin fa-1x fa-fw"/>
+                                    <strong>Rating:</strong>
+                                    <field name="rating"/>
+                                </div>
+                                <strong>
+                                    <field name="date"/>
+                                </strong>
+                                <br/>
+                                <br/>
+                                <div>
+                                    <div class="bg-info text-dark"
+                                         style="display: inline-flex;">
+                                        <field name="state"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+<!--    Search view-->
+    <record id="seller_review_view_search" model="ir.ui.view">
+        <field name="name">Seller Review Search view</field>
+        <field name="model">seller.review</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="seller_id"/>
+                <field name="customer_id"/>
+                <filter string="Website Status" name="state_filter"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+    <!--    SELLER REVIEW FORM VIEW-->
+    <record id="seller_review_view_form" model="ir.ui.view">
+        <field name="name">seller.review.view.form</field>
+        <field name="model">seller.review</field>
+        <field name="arch" type="xml">
+            <form string="Social Media">
+                <header>
+                    <button class="oe_highlight" icon="fa-globe"
+                            string="Publish on Website"
+                            type="object" name="action_publish"
+                            states="unpublished"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="published,unpublished"/>
+                    <button class="oe_highlight" icon="fa-globe"
+                            string="Unpublish on Website"
+                            type="object" name="action_unpublish"
+                            states="published"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="review_title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="seller_id"/>
+                            <field name="customer_id"/>
+                            <field name="customer_email"/>
+                            <field name="message"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="rating"/>
+                        </group>
+                    </group>
+                    <br/>
+                    <div style="color: #7c6ca1; font-size:20px;">
+                        Review Helpful / Not Helpful
+                    </div>
+                    <field name="help_info_ids" widget="one2many_list">
+                        <tree editable="bottom">
+                            <field name="customer_id"/>
+                            <field name="msg"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <data>
+<!--        Like button adding for review page-->
+        <record id="invoice_smart_button" model="ir.ui.view">
+            <field name="name">Like Smart button</field>
+            <field name="model">seller.review</field>
+            <field name="inherit_id"
+                   ref="seller_review_view_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button"
+                            icon="fa-star">
+                        <field string="Rating" name="rating"
+                               widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+<!--        Seller Review menu-->
+        <menuitem id="seller_reviews" parent="seller"
+                  groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                  name="Seller Reviews" sequence="17"
+                  action="seller_review_action"/>
+    </data>
+</odoo>
