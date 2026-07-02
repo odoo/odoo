@@ -122,13 +122,15 @@ export class ConfirmationPage extends Component {
                 if (!this.selfOrder.has_paper) {
                     this.updateHasPaper(true);
                 }
-                order.nb_print = 1;
-                if (order.isSynced && result) {
-                    await rpc("/pos_self_order/kiosk/increment_nb_print/", {
-                        access_token: this.selfOrder.access_token,
-                        order_id: order.id,
-                        order_access_token: order.access_token,
-                    });
+                if (order.state === "paid") {
+                    order.nb_print = 1;
+                    if (order.isSynced && result) {
+                        await rpc("/pos_self_order/kiosk/increment_nb_print/", {
+                            access_token: this.selfOrder.access_token,
+                            order_id: order.id,
+                            order_access_token: order.access_token,
+                        });
+                    }
                 }
             } catch (e) {
                 if (["EPTR_REC_EMPTY", "EPTR_COVER_OPEN"].includes(e.errorCode)) {
