@@ -98,11 +98,6 @@ class TestChannelRTC(MailCommon, HttpCase):
             call_history = self.channel_internal.call_history_ids.filtered("end_dt")
             return [
                 BusResult(
-                    self.user_employee,
-                    "discuss.channel.rtc.session/ended",
-                    {"sessionId": initial_rtc_session.id},
-                ),
-                BusResult(
                     self.channel_internal,
                     "mail.record/insert",
                     {
@@ -116,32 +111,10 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.channel_internal.id,
-                                "rtc_session_ids": [("DELETE", initial_rtc_session.ids)],
-                            },
-                        ],
-                    },
-                ),
-                BusResult(
-                    self.user_employee,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_employee_in_channel_internal,
-                                new_message_separator=message.id + 1,
-                            ),
-                        ],
-                    },
-                ),
-                BusResult(self.channel_internal, "discuss.channel/new_message"),
-                BusResult(
-                    self.channel_internal,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_internal.id,
-                                "rtc_session_ids": [("ADD", rtc_session.ids)],
+                                "rtc_session_ids": [
+                                    ("DELETE", initial_rtc_session.ids),
+                                    ("ADD", rtc_session.ids),
+                                ],
                             },
                         ],
                         "discuss.channel.member": [
@@ -164,6 +137,24 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                     },
                 ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel.rtc.session/ended",
+                    {"sessionId": initial_rtc_session.id},
+                ),
+                BusResult(
+                    self.user_employee,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_employee_in_channel_internal,
+                                new_message_separator=message.id + 1,
+                            ),
+                        ],
+                    },
+                ),
+                BusResult(self.channel_internal, "discuss.channel/new_message"),
             ]
 
         with self.assertBus(notifications):
@@ -222,8 +213,59 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
             rtc_session = self.member_of_employee_in_chat.sudo().rtc_session_ids
             return [
-                # update channel interest date on first call participant
-                BusResult(self.chat, "mail.record/insert"),
+                BusResult(
+                    self.chat,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "id": self.chat.id,
+                                "invited_member_ids": [
+                                    ("ADD", self.member_of_test_user_in_chat.ids),
+                                ],
+                                "last_interest_dt": fields.Datetime.to_string(
+                                    self.chat.last_interest_dt,
+                                ),
+                                "rtc_session_ids": [("ADD", rtc_session.ids)],
+                            },
+                        ],
+                        "discuss.channel.member": [
+                            self._res_for_member(self.member_of_employee_in_chat),
+                            self._res_for_member(self.member_of_test_user_in_chat),
+                        ],
+                        "discuss.channel.rtc.session": [
+                            self._res_for_rtc_session(rtc_session),
+                        ],
+                        "mail.message": [
+                            {
+                                "call_history_ids": message.call_history_ids.ids,
+                                "id": message.id,
+                            },
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(self.partner_employee),
+                            self._res_for_partner(self.test_partner),
+                        ),
+                    },
+                ),
+                BusResult(
+                    (self.chat, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(
+                                self.partner_employee,
+                                common=False,
+                                internal=True,
+                            ),
+                            self._res_for_partner(self.test_partner, common=False, internal=True),
+                        ),
+                        "res.users": self._filter_users_fields(
+                            self._res_for_user(self.user_employee, internal=True),
+                            self._res_for_user(self.test_user, internal=True),
+                        ),
+                    },
+                ),
                 BusResult(
                     # update new message separator (message_post)
                     self.user_employee,
@@ -238,49 +280,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.chat, "discuss.channel/new_message"),
-                BusResult(
-                    self.chat,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.chat.id,
-                                "rtc_session_ids": [("ADD", rtc_session.ids)],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_employee_in_chat),
-                        ],
-                        "discuss.channel.rtc.session": [
-                            self._res_for_rtc_session(rtc_session),
-                        ],
-                        "mail.message": [
-                            {
-                                "call_history_ids": message.call_history_ids.ids,
-                                "id": message.id,
-                            },
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.partner_employee),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.chat, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(
-                                self.partner_employee,
-                                common=False,
-                                internal=True,
-                            ),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee, internal=True),
-                        ),
-                    },
-                ),
                 BusResult(
                     # incoming invitation
                     self.test_user,
@@ -301,38 +300,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             self._res_for_user(self.user_employee, internal=True),
-                        ),
-                    },
-                ),
-                BusResult(
-                    self.chat,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.chat.id,
-                                "invited_member_ids": [
-                                    ("ADD", self.member_of_test_user_in_chat.ids),
-                                ],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_test_user_in_chat),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.chat, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner, common=False, internal=True),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -362,8 +329,72 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
             rtc_session = self.member_of_employee_in_group_a.sudo().rtc_session_ids
             return [
-                # update channel interest date on first call participant
-                BusResult(self.channel_group_a, "mail.record/insert"),
+                BusResult(
+                    self.channel_group_a,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "id": self.channel_group_a.id,
+                                "invited_member_ids": [
+                                    (
+                                        "ADD",
+                                        (
+                                            self.member_of_test_user_in_group_a
+                                            + self.member_of_guest_in_group_a
+                                        ).ids,
+                                    ),
+                                ],
+                                "last_interest_dt": fields.Datetime.to_string(
+                                    self.channel_group_a.last_interest_dt,
+                                ),
+                                "rtc_session_ids": [("ADD", rtc_session.ids)],
+                            },
+                        ],
+                        "discuss.channel.member": [
+                            self._res_for_member(self.member_of_employee_in_group_a),
+                            self._res_for_member(self.member_of_test_user_in_group_a),
+                            self._res_for_member(self.member_of_guest_in_group_a),
+                        ],
+                        "discuss.channel.rtc.session": [
+                            self._res_for_rtc_session(rtc_session),
+                        ],
+                        "mail.guest": [
+                            self._res_for_guest(self.guest),
+                        ],
+                        "mail.message": [
+                            {
+                                "call_history_ids": message.call_history_ids.ids,
+                                "id": message.id,
+                            },
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(self.partner_employee),
+                            self._res_for_partner(self.test_partner),
+                        ),
+                    },
+                ),
+                BusResult(
+                    (self.channel_group_a, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            self._res_for_guest(self.guest, common=False, internal=True),
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(
+                                self.partner_employee,
+                                common=False,
+                                internal=True,
+                            ),
+                            self._res_for_partner(self.test_partner, common=False, internal=True),
+                        ),
+                        "res.users": self._filter_users_fields(
+                            self._res_for_user(self.user_employee, internal=True),
+                            self._res_for_user(self.test_user, internal=True),
+                        ),
+                    },
+                ),
                 BusResult(
                     self.user_employee,
                     # Update of the author's member record after posting the call message.
@@ -378,49 +409,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.channel_group_a, "discuss.channel/new_message"),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
-                                "rtc_session_ids": [("ADD", rtc_session.ids)],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_employee_in_group_a),
-                        ],
-                        "discuss.channel.rtc.session": [
-                            self._res_for_rtc_session(rtc_session),
-                        ],
-                        "mail.message": [
-                            {
-                                "call_history_ids": message.call_history_ids.ids,
-                                "id": message.id,
-                            },
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.partner_employee),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_a, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(
-                                self.partner_employee,
-                                common=False,
-                                internal=True,
-                            ),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee, internal=True),
-                        ),
-                    },
-                ),
                 BusResult(
                     # incoming invitation
                     self.test_user,
@@ -464,51 +452,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                     },
                 ),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
-                                "invited_member_ids": [
-                                    (
-                                        "ADD",
-                                        (
-                                            self.member_of_test_user_in_group_a
-                                            + self.member_of_guest_in_group_a
-                                        ).ids,
-                                    ),
-                                ],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_test_user_in_group_a),
-                            self._res_for_member(self.member_of_guest_in_group_a),
-                        ],
-                        "mail.guest": [
-                            self._res_for_guest(self.guest),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_a, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "mail.guest": [
-                            self._res_for_guest(self.guest, common=False, internal=True),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner, common=False, internal=True),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user, internal=True),
-                        ),
-                    },
-                ),
             ]
 
         with self.assertBus(notifications):
@@ -526,6 +469,43 @@ class TestChannelRTC(MailCommon, HttpCase):
             rtc_session = self.member_of_test_user_in_group_a.sudo().rtc_session_ids
             return [
                 BusResult(
+                    self.channel_group_a,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "id": self.channel_group_a.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_test_user_in_group_a.ids),
+                                ],
+                                "rtc_session_ids": [("ADD", rtc_session.ids)],
+
+                            },
+                        ],
+                        "discuss.channel.member": [
+                            self._res_for_member(self.member_of_test_user_in_group_a),
+                        ],
+                        "discuss.channel.rtc.session": [
+                            self._res_for_rtc_session(rtc_session),
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(self.test_partner),
+                        ),
+                    },
+                ),
+                BusResult(
+                    (self.channel_group_a, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            self._res_for_partner(self.test_partner, common=False, internal=True),
+                        ),
+                        "res.users": self._filter_users_fields(
+                            self._res_for_user(self.test_user, internal=True),
+                        ),
+                    },
+                ),
+                BusResult(
                     self.test_user,
                     "mail.record/insert",
                     {
@@ -537,71 +517,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                     },
                 ),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
-                                "invited_member_ids": [
-                                    ("DELETE", self.member_of_test_user_in_group_a.ids),
-                                ],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_test_user_in_group_a),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_a, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner, common=False, internal=True),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user, internal=True),
-                        ),
-                    },
-                ),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
-                                "rtc_session_ids": [("ADD", rtc_session.ids)],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_test_user_in_group_a),
-                        ],
-                        "discuss.channel.rtc.session": [
-                            self._res_for_rtc_session(rtc_session),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_a, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner, common=False, internal=True),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user, internal=True),
-                        ),
-                    },
-                ),
             ]
 
         with self.assertBus(notifications):
@@ -610,18 +525,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         def notifications_2():
             rtc_session = self.member_of_guest_in_group_a.sudo().rtc_session_ids
             return [
-                BusResult(
-                    self.guest,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_guest_in_group_a,
-                                rtc_inviting_session_id=False,
-                            ),
-                        ],
-                    },
-                ),
                 BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
@@ -632,32 +535,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 "invited_member_ids": [
                                     ("DELETE", self.member_of_guest_in_group_a.ids),
                                 ],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(self.member_of_guest_in_group_a),
-                        ],
-                        "mail.guest": [
-                            self._res_for_guest(self.guest),
-                        ],
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_a, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "mail.guest": [
-                            self._res_for_guest(self.guest, common=False, internal=True),
-                        ],
-                    },
-                ),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],
@@ -678,6 +555,18 @@ class TestChannelRTC(MailCommon, HttpCase):
                     {
                         "mail.guest": [
                             self._res_for_guest(self.guest, common=False, internal=True),
+                        ],
+                    },
+                ),
+                BusResult(
+                    self.guest,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_guest_in_group_a,
+                                rtc_inviting_session_id=False,
+                            ),
                         ],
                     },
                 ),
@@ -695,18 +584,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(
             [
                 BusResult(
-                    self.test_user,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_test_user_in_group_a,
-                                rtc_inviting_session_id=False,
-                            ),
-                        ],
-                    },
-                ),
-                BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
                     {
@@ -738,24 +615,24 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                     },
                 ),
+                BusResult(
+                    self.test_user,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_test_user_in_group_a,
+                                rtc_inviting_session_id=False,
+                            ),
+                        ],
+                    },
+                ),
             ],
         ):
             self.member_of_test_user_in_group_a.sudo()._rtc_leave_call()
 
         with self.assertBus(
             [
-                BusResult(
-                    self.guest,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_guest_in_group_a,
-                                rtc_inviting_session_id=False,
-                            ),
-                        ],
-                    },
-                ),
                 BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
@@ -785,6 +662,18 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                     },
                 ),
+                BusResult(
+                    self.guest,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_guest_in_group_a,
+                                rtc_inviting_session_id=False,
+                            ),
+                        ],
+                    },
+                ),
             ],
         ):
             self.member_of_guest_in_group_a.sudo()._rtc_leave_call()
@@ -799,33 +688,16 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(
             [
                 BusResult(
-                    self.test_user,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_test_user_in_group_a,
-                                rtc_inviting_session_id=False,
-                            ),
-                        ],
-                    },
-                ),
-                BusResult(
-                    self.guest,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            self._res_for_member(
-                                self.member_of_guest_in_group_a,
-                                rtc_inviting_session_id=False,
-                            ),
-                        ],
-                    },
-                ),
-                BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
                     {
+                        "discuss.call.history": [
+                            {
+                                "duration_hour": 0.0,
+                                "end_dt": "2023-03-15 12:34:56",
+                                "id": self.channel_group_a.call_history_ids.id,
+                            },
+                        ],
                         "discuss.channel": [
                             {
                                 "id": self.channel_group_a.id,
@@ -838,6 +710,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                                         ).ids,
                                     ),
                                 ],
+                                "rtc_session_ids": [("DELETE", last_rtc_session.ids)],
                             },
                         ],
                         "discuss.channel.member": [
@@ -868,28 +741,33 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    self.test_user,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_test_user_in_group_a,
+                                rtc_inviting_session_id=False,
+                            ),
+                        ],
+                    },
+                ),
+                BusResult(
+                    self.guest,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            self._res_for_member(
+                                self.member_of_guest_in_group_a,
+                                rtc_inviting_session_id=False,
+                            ),
+                        ],
+                    },
+                ),
+                BusResult(
                     self.user_employee,
                     "discuss.channel.rtc.session/ended",
                     {"sessionId": last_rtc_session.id},
-                ),
-                BusResult(
-                    self.channel_group_a,
-                    "mail.record/insert",
-                    {
-                        "discuss.call.history": [
-                            {
-                                "duration_hour": 0.0,
-                                "end_dt": "2023-03-15 12:34:56",
-                                "id": self.channel_group_a.call_history_ids.id,
-                            },
-                        ],
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_a.id,
-                                "rtc_session_ids": [("DELETE", last_rtc_session.ids)],
-                            },
-                        ],
-                    },
                 ),
             ],
         ):
@@ -912,20 +790,121 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
             rtc_session_of_employee = self.member_of_employee_in_group_b.sudo().rtc_session_ids
             return [
-                # discuss.channel (channel_name_member_ids)
-                BusResult(self.channel_group_b, "mail.record/insert"),
-                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
+                # discuss.channel (channel_name_member_ids, member_count), discuss.channel.member
+                BusResult(
+                    self.channel_group_b,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "channel_name_member_ids": self.channel_group_b.channel_name_member_ids.ids,
+                                "id": self.channel_group_b.id,
+                                "invited_member_ids": [
+                                    (
+                                        "ADD",
+                                        [member_of_test_user.id, member_of_guest.id],
+                                    ),
+                                ],
+                                "member_count": self.channel_group_b.member_count,
+                            },
+                        ],
+                        "discuss.channel.member": [
+                            {
+                                **self._res_for_member(self.member_of_employee_in_group_b),
+                                "channel_role": self.member_of_employee_in_group_b.sudo().channel_role,
+                                "create_date": fields.Datetime.to_string(
+                                    self.member_of_employee_in_group_b.sudo().create_date,
+                                ),
+                                "last_seen_dt": fields.Datetime.to_string(
+                                    self.member_of_employee_in_group_b.sudo().last_seen_dt,
+                                ),
+                                "seen_message_id": self.member_of_employee_in_group_b.sudo().seen_message_id.id,
+                            },
+                            {
+                                **self._res_for_member(member_of_test_user),
+                                "channel_role": member_of_test_user.sudo().channel_role,
+                                "create_date": fields.Datetime.to_string(
+                                    member_of_test_user.sudo().create_date,
+                                ),
+                                "last_seen_dt": False,
+                                "seen_message_id": False,
+                            },
+                            {
+                                **self._res_for_member(member_of_guest),
+                                "channel_role": member_of_guest.sudo().channel_role,
+                                "create_date": fields.Datetime.to_string(
+                                    member_of_guest.sudo().create_date,
+                                ),
+                                "last_seen_dt": False,
+                                "seen_message_id": False,
+                            },
+                        ],
+                        "mail.guest": [
+                            self._res_for_guest(self.guest),
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                **self._res_for_partner(self.partner_employee),
+                                "active": self.partner_employee.active,
+                                "is_company": self.partner_employee.is_company,
+                                "main_user_id": self.partner_employee.main_user_id.id,
+                                "partner_share": self.partner_employee.partner_share,
+                            },
+                            {
+                                **self._res_for_partner(self.test_partner),
+                                "active": self.test_partner.active,
+                                "is_company": self.test_partner.is_company,
+                                "main_user_id": self.test_partner.main_user_id.id,
+                                "partner_share": self.test_partner.partner_share,
+                            },
+                        ),
+                        "res.users": [
+                            {
+                                "id": self.user_employee.id,
+                                "partner_id": self.user_employee.partner_id.id,
+                                "active": self.user_employee.active,
+                                "share": self.user_employee.share,
+                            },
+                            {
+                                "id": self.test_user.id,
+                                "partner_id": self.test_user.partner_id.id,
+                                "active": self.test_user.active,
+                                "share": self.test_user.share,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
+                    (self.channel_group_b, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            self._res_for_guest(self.guest, common=False, internal=True),
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                **self._res_for_partner(self.partner_employee, common=False, internal=True),
+                                "email": self.partner_employee.email,
+                                "tz": self.partner_employee.tz,
+                            },
+                            {
+                                **self._res_for_partner(self.test_partner, common=False, internal=True),
+                                "email": self.test_partner.email,
+                                "tz": self.test_partner.tz,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            self._res_for_user(self.user_employee, internal=True),
+                            self._res_for_user(self.test_user, internal=True),
+                        ),
+                    },
+                ),
                 BusResult(self.test_user, "discuss.channel/joined"),
                 # discuss.channel.member (message_unread_counter, new_message_separator, …)
                 BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
                 BusResult(self.guest, "discuss.channel/joined"),
-                # discuss.channel.member (message_unread_counter, new_message_separator, …)
-                BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
-                # discuss.channel (member_count), discuss.channel.member
-                BusResult(self.channel_group_b, "mail.record/insert"),
-                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
                 BusResult(
                     self.test_user,
                     "mail.record/insert",
@@ -967,48 +946,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                     },
                 ),
-                BusResult(
-                    self.channel_group_b,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [
-                            {
-                                "id": self.channel_group_b.id,
-                                "invited_member_ids": [
-                                    (
-                                        "ADD",
-                                        [member_of_test_user.id, member_of_guest.id],
-                                    ),
-                                ],
-                            },
-                        ],
-                        "discuss.channel.member": [
-                            self._res_for_member(member_of_test_user),
-                            self._res_for_member(member_of_guest),
-                        ],
-                        "mail.guest": [
-                            self._res_for_guest(self.guest),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner),
-                        ),
-                    },
-                ),
-                BusResult(
-                    (self.channel_group_b, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "mail.guest": [
-                            self._res_for_guest(self.guest, common=False, internal=True),
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            self._res_for_partner(self.test_partner, common=False, internal=True),
-                        ),
-                        "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user, internal=True),
-                        ),
-                    },
-                ),
             ]
 
         with self.assertBus(notifications):
@@ -1028,11 +965,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(
             [
                 BusResult(
-                    self.user_employee,
-                    "discuss.channel.rtc.session/ended",
-                    {"sessionId": last_rtc_session.id},
-                ),
-                BusResult(
                     self.channel_group_b,
                     "mail.record/insert",
                     {
@@ -1050,6 +982,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             },
                         ],
                     },
+                ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel.rtc.session/ended",
+                    {"sessionId": last_rtc_session.id},
                 ),
             ],
         ):
@@ -1070,11 +1007,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(
             [
                 BusResult(
-                    self.user_employee,
-                    "discuss.channel.rtc.session/ended",
-                    {"sessionId": last_rtc_session.id},
-                ),
-                BusResult(
                     self.channel_group_b,
                     "mail.record/insert",
                     {
@@ -1092,6 +1024,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             },
                         ],
                     },
+                ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel.rtc.session/ended",
+                    {"sessionId": last_rtc_session.id},
                 ),
             ],
         ):
@@ -1107,11 +1044,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(
             [
                 BusResult(
-                    self.user_employee,
-                    "discuss.channel.rtc.session/ended",
-                    {"sessionId": last_rtc_session.id},
-                ),
-                BusResult(
                     self.channel_group_b,
                     "mail.record/insert",
                     {
@@ -1129,6 +1061,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             },
                         ],
                     },
+                ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel.rtc.session/ended",
+                    {"sessionId": last_rtc_session.id},
                 ),
             ],
         ):

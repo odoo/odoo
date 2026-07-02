@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsersSettings(models.Model):
@@ -27,7 +28,7 @@ class ResUsersSettings(models.Model):
 
     def set_res_users_settings(self, new_settings):
         formatted = super().set_res_users_settings(new_settings)
-        self._bus_send("res.users.settings", formatted)
+        Store.to(self, notification_type="res.users.settings", payload=formatted)
         return formatted
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
@@ -51,6 +52,4 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'guest_id': guest_id,
             })
-        self._bus_send(
-            "res.users.settings.volumes", volume_setting._discuss_users_settings_volume_format()
-        )
+        Store.to(self, notification_type="res.users.settings.volumes", payload=volume_setting._discuss_users_settings_volume_format())

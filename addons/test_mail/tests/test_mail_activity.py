@@ -689,9 +689,9 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
         """Check creating and unlinking activities notifies of the change in 'to be done' activity count per user."""
         for user in self.env.user + self.user_employee_2:
             user_activity_vals = [vals | {'user_id': user.id} for vals in self.activity_vals]
-            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_created": True, "count_diff": 2})):
+            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_created": True, "count_diff": 2, "store_data": {}})):
                 activities = self.env['mail.activity'].create(user_activity_vals)
-            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_deleted": True, "count_diff": -2})):
+            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_deleted": True, "count_diff": -2, "store_data": {}})):
                 activities.unlink()
 
     @users('employee')
@@ -700,7 +700,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
             return BusResult(
                 user,
                 "mail.activity/updated",
-                {"count_diff": count_diff} | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
+                {"count_diff": count_diff, "store_data": {}} | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
             )
 
         cases = [

@@ -483,7 +483,7 @@ class DiscussChannel(models.Model):
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
-            Store(bus_channel=self.env.user).add(channels, "_store_channel_fields")
+            Store.to(self.env.user).add(channels, "_store_channel_fields")
         return channels
 
     def action_reset_invitation_uuid(self):
@@ -496,7 +496,11 @@ class DiscussChannel(models.Model):
     def _unlink_channel(self):
         # Delete discuss.channel
         for channel in self:
-            channel._bus_send("discuss.channel/delete", {"id": channel.id})
+            Store.to(
+                channel,
+                notification_type="discuss.channel/delete",
+                payload={"id": channel.id},
+            )
 
     def write(self, vals):
         if 'channel_type' in vals:
@@ -682,8 +686,7 @@ class DiscussChannel(models.Model):
             ]
         )
         for bus_channel in ((member or partner or guest)._bus_channels()):
-            custom_store = Store(bus_channel=bus_channel)
-            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False})
+            Store.to(bus_channel).add(self, {"close_chat_window": True, "isLocallyPinned": False})
         if not member:
             return
         if self.channel_type != "channel" and post_leave_message:
@@ -710,7 +713,6 @@ class DiscussChannel(models.Model):
     ):
         """Adds the given users, partners and guests as member of self channels.
         Prefer giving users rather than partners when possible."""
-        stores = Store.Stores()
         inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
         if users:
@@ -751,10 +753,10 @@ class DiscussChannel(models.Model):
                     }
                     if not member.is_self and not self.env.user._is_public():
                         payload["invited_by_user_id"] = self.env.user.id
-                    store = Store(
+                    store = Store.to(
                         bus_channel,
                         notification_type="discuss.channel/joined",
-                        notification_payload=payload,
+                        payload=payload,
                     )
                     store.add(member.channel_id, "_store_channel_fields")
                     store.add(member, ["unpin_dt"])
@@ -767,8 +769,8 @@ class DiscussChannel(models.Model):
                         subtype_xmlid="mail.mt_comment",
                     )
             if new_members:
-                stores[channel].add(channel, ["member_count"])
-                stores[channel].add(new_members, "_store_member_fields")
+                Store.to(channel).add(channel, ["member_count"])
+                Store.to(channel).add(new_members, "_store_member_fields")
                 if channel.channel_type == "channel":
                     devices, private_key, public_key = channel._web_push_get_partners_parameters(new_members.partner_id.ids)
                     if devices:
@@ -797,8 +799,10 @@ class DiscussChannel(models.Model):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                stores[bus_channel].add(channel, ["member_count"])
-                stores[bus_channel].add(existing_members, "_store_member_fields")
+                Store.to(bus_channel).add(channel, ["member_count"]).add(
+                    existing_members,
+                    "_store_member_fields",
+                )
         if invite_to_rtc_call:
             for channel in self:
                 # sudo: discuss.channel.rtc.session - reading rtc sessions of current user
@@ -914,7 +918,7 @@ class DiscussChannel(models.Model):
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
         if members:
-            Store(bus_channel=self).add(
+            Store.to(self).add(
                 self,
                 lambda res: res.many(
                     "invited_member_ids",
@@ -1066,11 +1070,8 @@ class DiscussChannel(models.Model):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
             payload["silent"] = True
-        store = Store(
-            self,
-            notification_type="discuss.channel/new_message",
-            notification_payload=payload,
-        ).add(message, "_store_message_fields")
+        store = Store.to(self, notification_type="discuss.channel/new_message", payload=payload)
+        store.add(message, "_store_message_fields")
         if message.channel_id.parent_channel_id:
             store.add(message.channel_id, ["message_count"])
         return rdata
@@ -1241,13 +1242,12 @@ class DiscussChannel(models.Model):
     # BROADCAST
     # ------------------------------------------------------------
 
-    # Anonymous method
     def _broadcast(self, users):
         """ Broadcast the current channel header to the given users
             :param users : the users to notify
         """
         for user in users:
-            Store(bus_channel=user).add(
+            Store.to(user.with_context(self.env.context)).add(
                 self.with_user(user).with_context(allowed_company_ids=[]),
                 "_store_channel_fields",
             )
@@ -1367,9 +1367,8 @@ class DiscussChannel(models.Model):
         all_members.sudo().mapped("channel_role")
         # prefetch in batch, including nested relations (member, guest, ...).
         # `_build_result` must be called as store is lazy.
-        Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel).add(
-            all_members,
-            "_store_member_fields",
+        Store(target=res.target.channel).add(
+            all_members, "_store_member_fields",
         )._build_result()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
         res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token(), predicate=is_channel_or_group)

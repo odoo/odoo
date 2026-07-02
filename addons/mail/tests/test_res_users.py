@@ -256,6 +256,7 @@ class TestUserSettings(MailCommon):
                 {
                     "id": settings.id,
                     "channel_notifications": "no_notif",
+                    "store_data": {},
                 },
             ),
         ):

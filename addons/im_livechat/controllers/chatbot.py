@@ -40,7 +40,7 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         user, guest = self.env["res.users"]._get_current_persona()
-        store = Store(bus_channel=user or guest)
+        store = Store.to(user or guest)
         store.data_id = data_id
         # sudo: discuss.channel - checking whether there is an agent is allowed
         if discuss_channel.sudo().livechat_agent_partner_ids:
@@ -53,7 +53,7 @@ class LivechatChatbotScriptController(http.Controller):
                     sudo=True,
                 ),
             )
-            discuss_channel._notify_current_step_is_last(store)
+            discuss_channel._notify_current_step_is_last()
             store.resolve_data_request()
             return None
 

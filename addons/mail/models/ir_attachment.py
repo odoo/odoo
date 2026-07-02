@@ -80,9 +80,10 @@ class IrAttachment(models.Model):
             # sudo: mail.message - safe write just updating the date, because guests don't have the rights
             message.sudo().write({})  # to make sure write_date on the message is updated
         for attachment in self:
-            attachment._bus_send(
-                "ir.attachment/delete",
-                {
+            Store.to(
+                attachment,
+                notification_type="ir.attachment/delete",
+                payload={
                     "id": attachment.id,
                     "message": (
                         {"id": message.id, "write_date": message.write_date} if message else None

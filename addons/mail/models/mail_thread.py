@@ -3034,7 +3034,7 @@ class MailThread(models.AbstractModel):
             "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
             {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
         )
-        Store(bus_channel=message).add(message, ["pinned_at"])
+        Store.to(message).add(message, ["pinned_at"])
         return True
 
     # ------------------------------------------------------------
@@ -3478,12 +3478,12 @@ class MailThread(models.AbstractModel):
             )
             batch_vals = {"inbox_fields": True, "followers": followers}
             for user in users:
-                store = Store(
+                stores = Store.to(
                     user,
                     notification_type="mail.message/inbox",
-                    notification_payload={"message_id": message.id},
+                    payload={"message_id": message.id},
                 )
-                store.add(
+                stores.add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
                     "_store_message_fields",
                     fields_params=batch_vals,
@@ -3492,7 +3492,8 @@ class MailThread(models.AbstractModel):
                 # resulting mail unlink invalidates the ORM cache; call `as_dict()` now to
                 # benefit from the cache and maintain a realistic query count.
                 if modules.module.current_test:
-                    store.as_dict()
+                    for store in stores.values():
+                        store.as_dict()
 
     def _notify_thread_by_email(self, message, recipients_data, *,
                                 mail_auto_delete=True,  # mail.mail
@@ -5105,7 +5106,7 @@ class MailThread(models.AbstractModel):
             self.env["mail.message.translation"].sudo().search(
                 [("message_id", "=", message.id)],
             ).unlink()
-        Store(bus_channel=message).add(
+        Store.to(message).add(
             message,
             lambda res: (
                 res.many("attachment_ids", "_store_attachment_fields", sort="id"),

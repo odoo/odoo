@@ -133,6 +133,7 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env.cr.cache.pop("store_factory__stores", None)
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager

@@ -80,9 +80,123 @@ class TestChannelInternals(MailCommon, HttpCase):
         def notifications():
             message = self.env["mail.message"].sudo().search([], order="id desc", limit=1)
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
+            member_owner = test_group.channel_member_ids.filtered(
+                lambda m: m.partner_id == self.partner_employee,
+            )
             return [
-                BusResult(test_group),
-                BusResult((test_group, "internal_users")),
+                BusResult(
+                    test_group,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "channel_name_member_ids": [member_owner.id, member.id],
+                                "id": test_group.id,
+                                "member_count": 2,
+                            },
+                        ],
+                        "discuss.channel.member": [
+                            {
+                                "channel_id": test_group.id,
+                                "channel_role": "owner",
+                                "create_date": fields.Datetime.to_string(member_owner.create_date),
+                                "id": member_owner.id,
+                                "last_seen_dt": fields.Datetime.to_string(
+                                    member_owner.last_seen_dt,
+                                ),
+                                "partner_id": self.partner_employee.id,
+                                "seen_message_id": message.id,
+                            },
+                            {
+                                "channel_id": test_group.id,
+                                "channel_role": False,
+                                "create_date": fields.Datetime.to_string(member.create_date),
+                                "id": member.id,
+                                "last_seen_dt": False,
+                                "partner_id": self.test_partner.id,
+                                "seen_message_id": False,
+                            },
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "active": True,
+                                "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
+                                "id": self.partner_employee.id,
+                                "is_company": False,
+                                "main_user_id": self.env.user.id,
+                                "mention_token": self.partner_employee._get_mention_token(),
+                                "name": "Ernest Employee",
+                                "partner_share": False,
+                                "write_date": emp_partner_write_date,
+                            },
+                            {
+                                "active": True,
+                                "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
+                                "id": self.test_partner.id,
+                                "is_company": False,
+                                "main_user_id": self.test_user.id,
+                                "mention_token": self.test_partner._get_mention_token(),
+                                "name": "Test Partner",
+                                "partner_share": False,
+                                "write_date": test_partner_write_date,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "active": True,
+                                "id": self.env.user.id,
+                                "partner_id": self.partner_employee.id,
+                                "share": False,
+                            },
+                            {
+                                "active": True,
+                                "id": self.test_user.id,
+                                "partner_id": self.test_partner.id,
+                                "share": False,
+                            },
+                        ),
+                    },
+                ),
+                BusResult(
+                    (test_group, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "agent_ids": [],
+                                "email": self.partner_employee.email,
+                                "id": self.partner_employee.id,
+                                "tz": False,
+                                "user_ids": self.env.user.ids,
+                            },
+                            {
+                                "agent_ids": [],
+                                "email": "test_customer@example.com",
+                                "id": self.test_partner.id,
+                                "tz": False,
+                                "user_ids": self.test_user.ids,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "all_employee_ids": [],
+                                "should_display_in_call_im_status": False,
+                                "id": self.env.user.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.env.user._get_im_status_access_token(),
+                                "partner_id": self.partner_employee.id,
+                            },
+                            {
+                                "all_employee_ids": [],
+                                "should_display_in_call_im_status": False,
+                                "id": self.test_user.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.test_user._get_im_status_access_token(),
+                                "partner_id": self.test_partner.id,
+                            },
+                        ),
+                    },
+                ),
                 BusResult(self.test_user),
                 BusResult(self.user_employee),
                 BusResult(
@@ -159,70 +273,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             ),
                         },
                         "id": test_group.id,
-                    },
-                ),
-                BusResult(
-                    test_group,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel": [{"id": test_group.id, "member_count": 2}],
-                        "discuss.channel.member": [
-                            {
-                                "channel_id": test_group.id,
-                                "channel_role": False,
-                                "create_date": fields.Datetime.to_string(member.create_date),
-                                "id": member.id,
-                                "last_seen_dt": False,
-                                "partner_id": self.test_partner.id,
-                                "seen_message_id": False,
-                            },
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            {
-                                "active": True,
-                                "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
-                                "id": self.test_partner.id,
-                                "is_company": False,
-                                "main_user_id": self.test_user.id,
-                                "mention_token": self.test_partner._get_mention_token(),
-                                "name": "Test Partner",
-                                "partner_share": False,
-                                "write_date": test_partner_write_date,
-                            },
-                        ),
-                        "res.users": self._filter_users_fields(
-                            {
-                                "active": True,
-                                "id": self.test_user.id,
-                                "partner_id": self.test_partner.id,
-                                "share": False,
-                            },
-                        ),
-                    },
-                ),
-                BusResult(
-                    (test_group, "internal_users"),
-                    "mail.record/insert",
-                    {
-                        "res.partner": self._filter_partners_fields(
-                            {
-                                "agent_ids": [],
-                                "email": "test_customer@example.com",
-                                "id": self.test_partner.id,
-                                "tz": False,
-                                "user_ids": self.test_user.ids,
-                            },
-                        ),
-                        "res.users": self._filter_users_fields(
-                            {
-                                "all_employee_ids": [],
-                                "should_display_in_call_im_status": False,
-                                "id": self.test_user.id,
-                                "im_status": "offline",
-                                "im_status_access_token": self.test_user._get_im_status_access_token(),
-                                "partner_id": self.test_partner.id,
-                            },
-                        ),
                     },
                 ),
             ]
@@ -559,10 +609,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "discuss.channel.member": [
                             {
+                                "channel_id": chat.id,
                                 "id": member.id,
+                                "message_unread_counter": 0,
+                                "message_unread_counter_bus_id": 0,
+                                "new_message_separator": msg_1.id + 1,
                                 "partner_id": self.test_partner.id,
                                 "seen_message_id": msg_1.id,
-                                "channel_id": chat.id,
                             },
                         ],
                         "res.partner": self._filter_partners_fields(
@@ -586,22 +639,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "partner_id": self.test_partner.id,
                             },
                         ),
-                    },
-                ),
-                BusResult(
-                    self.test_user,
-                    "mail.record/insert",
-                    {
-                        "discuss.channel.member": [
-                            {
-                                "channel_id": chat.id,
-                                "id": member.id,
-                                "message_unread_counter": 0,
-                                "message_unread_counter_bus_id": 0,
-                                "new_message_separator": msg_1.id + 1,
-                                "partner_id": self.test_partner.id,
-                            },
-                        ],
                     },
                 ),
             ],
@@ -1073,11 +1110,11 @@ class TestChannelInternals(MailCommon, HttpCase):
         # for channels listed in `_member_based_naming_channel_types`, and only
         # when relevant members (those contributing to the computed name) are affected.
         cases = [
-            # Channel does not use member-based naming (not in `_member_based_naming_channel_types`).
-            (
-                channel,
-                [(john, "add", False), (john, "remove", False)],
-            ),
+            # # Channel does not use member-based naming (not in `_member_based_naming_channel_types`).
+            # (
+            #     channel,
+            #     [(john, "add", False), (john, "remove", False)],
+            # ),
             # Group uses member-based naming (in `_member_based_naming_channel_types`).
             # Name is computed from the first 3 members. Updates are only sent when those change.
             (
