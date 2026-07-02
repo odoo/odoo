@@ -30,8 +30,8 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
             timeout: 30000,
         },
         {
-            content: "Wait title is present before close tour",
-            trigger: ":iframe h2:contains(welcome to your)",
+            content: "Check that the editor is opened",
+            trigger: ":iframe #wrapwrap.odoo-editor-editable",
         },
     ],
 });
