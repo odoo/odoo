@@ -1,8 +1,6 @@
 id,name,model_id,group_id/id,operation,domain
 access_website_designer,website.website.designer,website,website.group_website_designer,crud,
-access_website_menu_public,access_website_menu,website.menu,base.group_public,r,
-access_website_menu_portal,access_website_menu,website.menu,base.group_portal,r,
-access_website_menu_employee,access_website_menu,website.menu,base.group_user,r,
+access_website_menu_public,access_website_menu,website.menu,base.group_everyone,r,
 access_website_menu_designer,Web Menu Manager,website.menu,website.group_website_designer,crud,
 website_menu,Website menu: group_ids,website.menu,,crud,"['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]"
 access_website_rewrite_designer,Web Rewrite Manager,website.rewrite,website.group_website_designer,crud,
@@ -13,9 +11,7 @@ website_group_system_edit_all_views,Administration Settings: Manage all views,ir
 website_designer_view,website_designer: global view,ir.ui.view,website.group_website_restricted_editor,r,"[('type', '!=', 'qweb')]"
 website_designer_edit_qweb,website_designer: Manage Website and qWeb view,ir.ui.view,website.group_website_designer,crud,"[('type', '=', 'qweb')]"
 access_website_ir_asset_designer,access_website_ir_asset_designer,ir.asset,website.group_website_designer,crud,
-access_seo_public_public,access_seo_public,website.seo.metadata,base.group_public,r,
-access_seo_public_portal,access_seo_public,website.seo.metadata,base.group_portal,r,
-access_seo_public_employee,access_seo_public,website.seo.metadata,base.group_user,r,
+access_seo_public_public,access_seo_public,website.seo.metadata,base.group_everyone,r,
 access_seo_designer,access_seo_designer,website.seo.metadata,website.group_website_designer,crud,
 access_website_page_properties_employee,access_website_page_properties,website.page.properties,base.group_user,r,
 access_website_page_properties_designer,access_website_page_properties,website.page.properties,website.group_website_designer,crud,

@@ -6,8 +6,7 @@ payment_provider_system,payment.provider.system,payment.provider,base.group_syst
 payment_provider_company_rule,Access providers in own companies only,payment.provider,,crud,"[('company_id', 'parent_of', company_ids)]"
 payment_method_system,payment.method.system,payment.method,base.group_system,crud,
 payment_method_rule,Restrict access based on provider,payment.method,,crud,"[('provider_id', 'access', 'read')]"
-payment_token_public_rule,Public users can access only their own tokens,payment.token,base.group_public,r,"[('partner_id', '=', user.partner_id.id)]"
-payment_token_portal_rule,Portal users can access only their own tokens,payment.token,base.group_portal,r,"[('partner_id', '=', user.partner_id.id)]"
+payment_token_public_rule,Public users can access only their own tokens,payment.token,base.group_everyone,r,"[('partner_id', '=', user.partner_id.id)]"
 payment_token_user_rule,Users can access only their own tokens,payment.token,base.group_user,r,"[('partner_id', '=', user.partner_id.id)]"
 payment_token_admin_rule,Access every token,payment.token,base.group_system,crud,
 payment_token_company_rule,Access tokens in own companies only,payment.token,,crud,"[('company_id', 'parent_of', company_ids)]"
