@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_jp_schedule_2_3_accumulation" model="account.report">
+        <field name="name">Schedule 2-3 (Sales Accumulation)</field>
+        <field name="name@ja_JP">付表2-3 (売上積上げ計算)</field>
+        <field name="country_id" ref="base.jp"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_jp_schedule_2_3_accumulation_col_balance_a" model="account.report.column">
+                <field name="name">Reduced rate (6.24%)</field>
+                <field name="name@ja_JP">6.24%適用分</field>
+                <field name="expression_label">balance_a</field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_col_balance_b" model="account.report.column">
+                <field name="name">Standard rate (7.8%)</field>
+                <field name="name@ja_JP">7.8%適用分</field>
+                <field name="expression_label">balance_b</field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_col_balance_c" model="account.report.column">
+                <field name="name">Total</field>
+                <field name="name@ja_JP">合計</field>
+                <field name="expression_label">balance_c</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_1" model="account.report.line">
+                <field name="name">1. Taxable sales amount (excluding tax)</field>
+                <field name="name@ja_JP">① 課税売上額（税抜き）</field>
+                <field name="code">ACC_S2_3_1</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">2</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_1_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-S2_3_1A</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_1_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-S2_3_1B</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_1_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_1.balance_a + ACC_S2_3_1.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_2" model="account.report.line">
+                <field name="name">2. Tax-free sales amount</field>
+                <field name="name@ja_JP">② 免税売上額</field>
+                <field name="code">ACC_S2_3_2</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">6</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_2_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-S2_3_2C</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_3" model="account.report.line">
+                <field name="name">3. Amount of exports, etc. of non-taxable assets, value of assets transferred to overseas branches, etc.</field>
+                <field name="name@ja_JP">③ 非課税資産の輸出等の金額、海外支店等へ移送した資産の価額</field>
+                <field name="code">ACC_S2_3_3</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">8</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_3_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-S2_3_3C</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_4" model="account.report.line">
+                <field name="name">4. Amount of consideration for transfer of taxable assets (1+2+3)</field>
+                <field name="name@ja_JP">④ 課税資産の譲渡等の対価の額（①＋②＋③）</field>
+                <field name="code">ACC_S2_3_4</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">10</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_4_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_1.balance_c + ACC_S2_3_2.balance_c + ACC_S2_3_3.balance_c</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_5" model="account.report.line">
+                <field name="name">5. Amount of consideration for transfer, etc. of taxable assets (amount in 4)</field>
+                <field name="name@ja_JP">⑤ 課税資産の譲渡等の対価の額（4の金額）</field>
+                <field name="code">ACC_S2_3_5</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">12</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_5_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_4.balance_c</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_6" model="account.report.line">
+                <field name="name">6. Tax-exempt sales amount</field>
+                <field name="name@ja_JP">⑥ 非課税売上額</field>
+                <field name="code">ACC_S2_3_6</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">14</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_6_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-S2_3_6C</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_7" model="account.report.line">
+                <field name="name">7. Amount of consideration for asset transfer, etc. (5+6)</field>
+                <field name="name@ja_JP">⑦ 資産の譲渡等の対価の額（⑤＋⑥）</field>
+                <field name="code">ACC_S2_3_7</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">16</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_7_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_5.balance_c + ACC_S2_3_6.balance_c</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_8" model="account.report.line">
+                <field name="name">8. Taxable sales ratio (4/7)</field>
+                <field name="name@ja_JP">⑧ 課税売上割合（④ / ⑦）</field>
+                <field name="code">ACC_S2_3_8</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">18</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_8_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_4.balance_c / ACC_S2_3_7.balance_c * 100</field>
+                        <field name="subformula">ignore_zero_division</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_8_sub_balance_c" model="account.report.expression">
+                        <field name="label">sub_balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_4.balance_c * 1000 / ACC_S2_3_7.balance_c</field>
+                        <field name="subformula">ignore_zero_division</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9" model="account.report.line">
+                <field name="name">9. Amount paid for taxable purchases (tax included)</field>
+                <field name="name@ja_JP">⑨ 課税仕入れに係る支払対価の額（税込み）</field>
+                <field name="code">ACC_S2_3_9</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">21</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_9.sub_balance_a1 + ACC_S2_3_9.sub_balance_a2</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_9.sub_balance_b1 + ACC_S2_3_9.sub_balance_b2</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_sub_balance_a1" model="account.report.expression">
+                        <field name="label">sub_balance_a1</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_9A</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_sub_balance_a2" model="account.report.expression">
+                        <field name="label">sub_balance_a2</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_10A</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_sub_balance_b1" model="account.report.expression">
+                        <field name="label">sub_balance_b1</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_9B</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_sub_balance_b2" model="account.report.expression">
+                        <field name="label">sub_balance_b2</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_10B</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_9_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_9.balance_a + ACC_S2_3_9.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_10" model="account.report.line">
+                <field name="name">10. Consumption tax amount on taxable purchases</field>
+                <field name="name@ja_JP">⑩ 課税仕入れに係る消費税額</field>
+                <field name="code">ACC_S2_3_10</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">29</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_10_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_9.sub_balance_a2 * 0.78</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_10_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_9.sub_balance_b2 * 0.78</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_10_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_10.balance_a + ACC_S2_3_10.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11" model="account.report.line">
+                <field name="name">11. Amount of consideration paid (tax included) for taxable purchases that are subject to transitional measures regarding taxable purchases made from parties other than qualified invoice issuing businesses</field>
+                <field name="name@ja_JP">⑪ 適格請求書発行事業者以外の者から行った課税仕入れに係る経過措置の適用を受ける課税仕入れに係る支払対価の額（税込み）</field>
+                <field name="code">ACC_S2_3_11</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">33</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_11.sub_balance_a_base_80 + ACC_S2_3_11.sub_balance_a_tax_80 + ACC_S2_3_11.sub_balance_a_base_50 + ACC_S2_3_11.sub_balance_a_tax_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_11.sub_balance_b_base_80 + ACC_S2_3_11.sub_balance_b_tax_80 + ACC_S2_3_11.sub_balance_b_base_50 + ACC_S2_3_11.sub_balance_b_tax_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_a_base_80" model="account.report.expression">
+                        <field name="label">sub_balance_a_base_80</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11A_80</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_a_tax_80" model="account.report.expression">
+                        <field name="label">sub_balance_a_tax_80</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12A_80</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_b_base_80" model="account.report.expression">
+                        <field name="label">sub_balance_b_base_80</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11B_80</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_b_tax_80" model="account.report.expression">
+                        <field name="label">sub_balance_b_tax_80</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12B_80</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_a_base_50" model="account.report.expression">
+                        <field name="label">sub_balance_a_base_50</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11A_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_a_tax_50" model="account.report.expression">
+                        <field name="label">sub_balance_a_tax_50</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12A_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_b_base_50" model="account.report.expression">
+                        <field name="label">sub_balance_b_base_50</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11B_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_sub_balance_b_tax_50" model="account.report.expression">
+                        <field name="label">sub_balance_b_tax_50</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12B_50</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_11_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_11.balance_a + ACC_S2_3_11.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_12" model="account.report.line">
+                <field name="name">12. Amount deemed to be the consumption tax amount related to taxable purchases due to transitional measures related to taxable purchases made from parties other than qualified invoice issuing businesses</field>
+                <field name="name@ja_JP">⑫ 適格請求書発行事業者以外の者から行った課税仕入れに係る経過措置により課税仕入れに係る消費税額とみなされる額</field>
+                <field name="code">ACC_S2_3_12</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">45</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_12_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_11.sub_balance_a_tax_80 * 0.78 * 0.8 + ACC_S2_3_11.sub_balance_a_tax_50 * 0.78 * 0.5</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_12_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_11.sub_balance_b_tax_80 * 0.78 * 0.8 + ACC_S2_3_11.sub_balance_b_tax_50 * 0.78 * 0.5</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_12_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_12.balance_a + ACC_S2_3_12.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_13" model="account.report.line">
+                <field name="name">13. Amount of consideration paid for specified taxable purchases</field>
+                <field name="name@ja_JP">⑬ 特定課税仕入れに係る支払対価の額</field>
+                <field name="code">ACC_S2_3_13</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">49</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_13_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_13.sub_balance</field>
+                        <field name="subformula">if_other_expr_below(ACC_S2_3_8.sub_balance_c, JPY(950))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_13_sub_balance" model="account.report.expression">
+                        <field name="label">sub_balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_13B</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_13_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_13.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_14" model="account.report.line">
+                <field name="name">14. Consumption tax amount on specified taxable purchases</field>
+                <field name="name@ja_JP">⑭ 特定課税仕入れに係る消費税額</field>
+                <field name="code">ACC_S2_3_14</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">53</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_14_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_13.balance_b * 7.8 / 100</field>
+                        <field name="subformula">if_other_expr_below(ACC_S2_3_8.sub_balance_c, JPY(950))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_14_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_14.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15" model="account.report.line">
+                <field name="name">15. Consumption tax amount on taxable cargo</field>
+                <field name="name@ja_JP">⑮ 課税貨物に係る消費税額</field>
+                <field name="code">ACC_S2_3_15</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">56</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_15.sub_balance_a * 0.78</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_15.sub_balance_b * 0.78</field>
+                        <field name="subformula">round(0, DOWN)</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15_sub_balance_a" model="account.report.expression">
+                        <field name="label">sub_balance_a</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_15A</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15_sub_balance_b" model="account.report.expression">
+                        <field name="label">sub_balance_b</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_15B</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_15_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_15.balance_a + ACC_S2_3_15.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_16" model="account.report.line">
+                <field name="name">16. Amount of consumption tax adjustment</field>
+                <field name="name@ja_JP">⑯ 納税義務の免除を受けない（受ける）こととなった場合における消費税額の調整（加算又は減算）額</field>
+                <field name="code">ACC_S2_3_16</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">62</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_16_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_16_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_16_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_16.balance_a + ACC_S2_3_16.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_17" model="account.report.line">
+                <field name="name">17. Amount of consumption tax adjustment (10+12+14+15±16)</field>
+                <field name="name@ja_JP">⑰ 課税仕入れ等の税額の合計額（⑩＋⑫＋⑭＋⑮ ± ⑯）</field>
+                <field name="code">ACC_S2_3_17</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">66</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_17_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_10.balance_a + ACC_S2_3_12.balance_a + ACC_S2_3_15.balance_a + ACC_S2_3_16.balance_a</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_17_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_10.balance_b + ACC_S2_3_12.balance_b + ACC_S2_3_14.balance_b + ACC_S2_3_15.balance_b + ACC_S2_3_16.balance_b</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_17_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_17.balance_a + ACC_S2_3_17.balance_b</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18" model="account.report.line">
+                <field name="name">18. If the taxable sales amount is 500 million yen or less and the taxable sales ratio is 95% or more, 18 (amount in 17)</field>
+                <field name="name@ja_JP">⑱ 課税売上高が５億円以下、かつ、課税売上割合が95％以上の場合（⑰の金額）</field>
+                <field name="code">ACC_S2_3_18</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">70</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_17.balance_a</field>
+                        <field name="subformula">if_other_expr_above(ACC_S2_3_18.combined_check, JPY(0))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_17.balance_b</field>
+                        <field name="subformula">if_other_expr_above(ACC_S2_3_18.combined_check, JPY(0))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_17.balance_c</field>
+                        <field name="subformula">if_other_expr_above(ACC_S2_3_18.combined_check, JPY(0))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_ratio_check" model="account.report.expression">
+                        <field name="label">ratio_check</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">1.0</field>
+                        <field name="subformula">if_other_expr_above(ACC_S2_3_18.full_deduction_gap, JPY(-1))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_taxable_sales_check" model="account.report.expression">
+                        <field name="label">taxable_sales_check</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">1.0</field>
+                        <field name="subformula">if_other_expr_below(ACC_S2_3_1.balance_c, JPY(500000001))</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_combined_check" model="account.report.expression">
+                        <field name="label">combined_check</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_18.ratio_check * ACC_S2_3_18.taxable_sales_check</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_18_full_deduction_gap" model="account.report.expression">
+                        <field name="label">full_deduction_gap</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_4.balance_c * 20 - ACC_S2_3_7.balance_c * 19</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_tsex" model="account.report.line">
+                <field name="name">If taxable sales exceed 500 million yen or taxable sales ratio is less than 95%</field>
+                <field name="name@ja_JP">課税売上高が５億円超又は課税売上割合が95％未満の場合</field>
+                <field name="code">ACC_S2_3_TSEX</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">77</field>
+                <field name="children_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_tsexi" model="account.report.line">
+                        <field name="name">Itemized Method</field>
+                        <field name="name@ja_JP">個別対応方</field>
+                        <field name="code">ACC_S2_3_TSEXI</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">78</field>
+                        <field name="children_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19" model="account.report.line">
+                                <field name="name">19. Of 17, those required only for taxable sales</field>
+                                <field name="name@ja_JP">⑲ ⑰のうち、課税売上げにのみ要するもの</field>
+                                <field name="code">ACC_S2_3_19</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="sequence">79</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19_balance_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_19.sub_balance_a * 0.78</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19_balance_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_19.sub_balance_b * 0.78</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19_sub_balance_a" model="account.report.expression">
+                                        <field name="label">sub_balance_a</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S2_3_19A</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19_sub_balance_b" model="account.report.expression">
+                                        <field name="label">sub_balance_b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S2_3_19B</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_19_balance_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_19.balance_a + ACC_S2_3_19.balance_b</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20" model="account.report.line">
+                                <field name="name">20. Of 17, what is required in common for taxable sales and non-taxable sales</field>
+                                <field name="name@ja_JP">⑳ ⑰のうち、課税売上げと非課税売上げに共通して要するもの</field>
+                                <field name="code">ACC_S2_3_20</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="sequence">85</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20_balance_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_20.sub_balance_a * 0.78</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20_balance_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_20.sub_balance_b * 0.78</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20_sub_balance_a" model="account.report.expression">
+                                        <field name="label">sub_balance_a</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S2_3_20A</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20_sub_balance_b" model="account.report.expression">
+                                        <field name="label">sub_balance_b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S2_3_20B</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_20_balance_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_20.balance_a + ACC_S2_3_20.balance_b</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_21" model="account.report.line">
+                                <field name="name">21. Tax amount of taxable purchases, etc. deducted using the itemized method  (19 + (20 * 4 / 7)</field>
+                                <field name="name@ja_JP">㉑ 個別対応方式により控除する課税仕入れ等の税額 （⑲＋（⑳ × ④ / ⑦））</field>
+                                <field name="code">ACC_S2_3_21</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="sequence">91</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_21_balance_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_19.balance_a +  (ACC_S2_3_20.balance_a * ACC_S2_3_8.sub_balance_c / 1000)</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_21_balance_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_19.balance_b +  (ACC_S2_3_20.balance_b * ACC_S2_3_8.sub_balance_c / 1000)</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_21_balance_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ACC_S2_3_21.balance_a + ACC_S2_3_21.balance_b</field>
+                                        <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22" model="account.report.line">
+                        <field name="name">22. Tax amount of taxable purchases, etc. deducted by lump-sum proportional distribution method (17 *  4 / 7)</field>
+                        <field name="name@ja_JP">㉒ 一括比例配分方式により控除する課税仕入れ等の税額 （⑰ × ④ / ⑦）</field>
+                        <field name="code">ACC_S2_3_22</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">95</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_17.balance_a * ACC_S2_3_8.sub_balance_c / 1000</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_22.combined_check, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_17.balance_b * ACC_S2_3_8.sub_balance_c / 1000</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_22.combined_check, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_22.balance_a + ACC_S2_3_22.balance_b</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_22.combined_check, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_ratio_taxable_check" model="account.report.expression">
+                                <field name="label">ratio_taxable_check</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1.0</field>
+                                <field name="subformula">if_other_expr_below(ACC_S2_3_18.combined_check, JPY(1))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_itemized_check" model="account.report.expression">
+                                <field name="label">itemized_check</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1.0</field>
+                                <field name="subformula">if_other_expr_below(ACC_S2_3_21.balance_c, JPY(1))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_22_combined_check" model="account.report.expression">
+                                <field name="label">combined_check</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_22.ratio_taxable_check * ACC_S2_3_22.itemized_check</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_ad" model="account.report.line">
+                <field name="name">Adjustment amount for deduction tax amount</field>
+                <field name="name@ja_JP">控除税額の調整居</field>
+                <field name="code">ACC_S2_3_AD</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">102</field>
+                <field name="children_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_23" model="account.report.line">
+                        <field name="name">23. Adjustment (addition or subtraction) amount of consumption tax related to fixed assets subject to adjustment when taxable sales ratio changes</field>
+                        <field name="name@ja_JP">㉓ 課税売上割合変動時の調整対象固定資産に係る消費税額の調整（加算又は減算）額</field>
+                        <field name="code">ACC_S2_3_23</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">103</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_23_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_23_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_23_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_23.balance_a + ACC_S2_3_23.balance_b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_24" model="account.report.line">
+                        <field name="name">24. Adjustment (addition or subtraction) amount when fixed assets subject to adjustment are converted to taxable business (tax-exempt business)</field>
+                        <field name="name@ja_JP">㉔ 調整対象固定資産を課税業務用（非課税業務用）に転用した場合の調整（加算又は減算）額</field>
+                        <field name="code">ACC_S2_3_24</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">107</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_24_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_24_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_24_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_24.balance_a + ACC_S2_3_24.balance_b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_25" model="account.report.line">
+                        <field name="name">25. Additional amount when a residential rental building is used for taxable rental (transfer)</field>
+                        <field name="name@ja_JP">㉕ 居住用賃貸建物を課税賃貸用に供した（譲渡した）場合の加算額</field>
+                        <field name="code">ACC_S2_3_25</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">111</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_25_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_25_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_25_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_25.balance_a + ACC_S2_3_25.balance_b</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_d" model="account.report.line">
+                <field name="name">Deduction</field>
+                <field name="name@ja_JP">差引</field>
+                <field name="code">ACC_S2_3_D</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">115</field>
+                <field name="children_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_26" model="account.report.line">
+                        <field name="name">26. When the deductible input tax amount [(18, 21 or 22 amount) ± 23 ± 24 + 25] is positive</field>
+                        <field name="name@ja_JP">㉖ 控除対象仕入税額［（⑱,㉑又は㉒の金額）± ㉓ ± ㉔ + ㉕］がプラスの時</field>
+                        <field name="code">ACC_S2_3_26</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">116</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_26_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_18.balance_a + ACC_S2_3_21.balance_a + ACC_S2_3_22.balance_a + ACC_S2_3_23.balance_a + ACC_S2_3_24.balance_a + ACC_S2_3_25.balance_a</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_26.sub_balance_c, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_26_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_18.balance_b + ACC_S2_3_21.balance_b + ACC_S2_3_22.balance_b + ACC_S2_3_23.balance_b + ACC_S2_3_24.balance_b + ACC_S2_3_25.balance_b</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_26.sub_balance_c, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_26_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_26.balance_a + ACC_S2_3_26.balance_b</field>
+                                <field name="subformula">if_above(JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_26_sub_balance_c" model="account.report.expression">
+                                <field name="label">sub_balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_18.balance_c + ACC_S2_3_21.balance_c + ACC_S2_3_22.balance_c + ACC_S2_3_23.balance_c + ACC_S2_3_24.balance_c + ACC_S2_3_25.balance_c</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_27" model="account.report.line">
+                        <field name="name">27. When the deduction excessive adjustment tax amount [(amount of 18, 21 or 22) ± 23 ± 24 + 25] is negative</field>
+                        <field name="name@ja_JP">㉗ 控除過大調整税額［（⑱,㉑又は㉒の金額）± ㉓ ± ㉔ + ㉕］がマイナスの時</field>
+                        <field name="code">ACC_S2_3_27</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="sequence">121</field>
+                        <field name="expression_ids">
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_27_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">- (ACC_S2_3_18.balance_a + ACC_S2_3_21.balance_a + ACC_S2_3_22.balance_a + ACC_S2_3_23.balance_a + ACC_S2_3_24.balance_a + ACC_S2_3_25.balance_a)</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_27.sub_balance_c, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_27_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">- (ACC_S2_3_18.balance_b + ACC_S2_3_21.balance_b + ACC_S2_3_22.balance_b + ACC_S2_3_23.balance_b + ACC_S2_3_24.balance_b + ACC_S2_3_25.balance_b)</field>
+                                <field name="subformula">if_other_expr_above(ACC_S2_3_27.sub_balance_c, JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_27_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ACC_S2_3_27.balance_a + ACC_S2_3_27.balance_b</field>
+                                <field name="subformula">if_above(JPY(0))</field>
+                            </record>
+                            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_27_sub_balance_c" model="account.report.expression">
+                                <field name="label">sub_balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">- (ACC_S2_3_18.balance_c + ACC_S2_3_21.balance_c + ACC_S2_3_22.balance_c + ACC_S2_3_23.balance_c + ACC_S2_3_24.balance_c + ACC_S2_3_25.balance_c)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_28" model="account.report.line">
+                <field name="name">28. Consumption tax amount related to bad debt collection</field>
+                <field name="name@ja_JP">㉘ 貸倒回収に係る消費税額</field>
+                <field name="code">ACC_S2_3_28</field>
+                <field name="hierarchy_level">1</field>
+                <field name="sequence">126</field>
+                <field name="expression_ids">
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_28_balance_a" model="account.report.expression">
+                        <field name="label">balance_a</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_28_balance_b" model="account.report.expression">
+                        <field name="label">balance_b</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_accumulation_acc_s2_3_28_balance_c" model="account.report.expression">
+                        <field name="label">balance_c</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_S2_3_28.balance_a + ACC_S2_3_28.balance_b</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

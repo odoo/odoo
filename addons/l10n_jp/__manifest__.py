@@ -28,7 +28,17 @@ Note:
     ],
     'auto_install': ['account'],
     'data': [
-        'data/account_tax_report_data.xml',
+        'data/account_report_jct_accumulation_form.xml',
+        'data/account_report_jct_accumulation_schedule_1_3.xml',
+        'data/account_report_jct_accumulation_schedule_2_3.xml',
+        'data/account_report_jct_accumulation_schedule_4_3.xml',
+        'data/account_report_jct_accumulation_schedule_5_3.xml',
+        'data/account_report_jct_deduction_form.xml',
+        'data/account_report_jct_deduction_schedule_1_3.xml',
+        'data/account_report_jct_deduction_schedule_2_3.xml',
+        'data/account_report_jct_deduction_schedule_4_3.xml',
+        'data/account_report_jct_deduction_schedule_5_3.xml',
+        'data/account_report_jct_return.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
