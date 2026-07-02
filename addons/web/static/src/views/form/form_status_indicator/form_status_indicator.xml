@@ -12,7 +12,7 @@
                     data-tooltip="Save manually"
                     aria-label="Save manually"
                     data-available-offline=""
-                    t-custom-ref="save">
+                    t-att-disabled="!this.props.isNew and this.indicatorMode === 'invalid'">
                     <i class="fa fa-cloud-upload fa-fw" />
                 </button>
                 <button
