@@ -1,5 +1,6 @@
+import { useEffect } from "@odoo/owl";
 import { DROPDOWN_GROUP } from "@web/core/dropdown/dropdown_group";
-import { useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 
 /**
  * @typedef {{
@@ -29,7 +30,7 @@ export function useDropdownGroup(state) {
     };
 
     if (group.isInGroup) {
-        useLayoutEffect(() => {
+        useEffect(() => {
             env[DROPDOWN_GROUP].add(state);
             return () => env[DROPDOWN_GROUP].delete(state);
         });
