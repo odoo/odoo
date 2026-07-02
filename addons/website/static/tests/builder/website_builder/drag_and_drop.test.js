@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -84,20 +84,28 @@ test("Drag and drop a column toggles the grid mode", async () => {
         loadIframeBundles: true,
     });
     await contains(":iframe section.s_text_image .row > div:nth-child(1)").click();
-    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
+    expect(".oe_overlay.oe_active").toBeVisible();
+    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toBeVisible();
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
     expect(":iframe section.s_text_image .row").not.toHaveClass("o_grid_mode");
 
     const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
+    await animationFrame();
+    expect(".oe_overlay.oe_active").not.toBeVisible();
+    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").not.toBeVisible();
     expect(":iframe .oe_drop_zone.oe_grid_zone").toHaveCount(1);
     expect(":iframe .oe_drop_zone:not(.oe_grid_zone)").toHaveCount(4);
 
     await moveTo(":iframe .oe_drop_zone.oe_grid_zone");
+    expect(".oe_overlay.oe_active").not.toBeVisible();
+    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").not.toBeVisible();
     expect(":iframe .oe_drop_zone.oe_grid_zone").toHaveClass("invisible");
     expect(":iframe section.s_text_image .row.o_grid_mode > .o_we_background_grid").toHaveCount(1);
     expect(":iframe section.s_text_image .row > .o_we_drag_helper").toHaveCount(1);
 
     await drop(getDragMoveHelper());
+    expect(".oe_overlay.oe_active").toBeVisible();
+    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toBeVisible();
     expect(":iframe .oe_drop_zone").toHaveCount(0);
     expect(":iframe section.s_text_image .row > .o_we_background_grid").toHaveCount(0);
     expect(":iframe section.s_text_image .row > .o_we_drag_helper").toHaveCount(0);
